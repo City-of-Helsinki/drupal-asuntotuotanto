@@ -6,6 +6,7 @@ dependencies:
     - search_api.server.local_elasticsearch
   module:
     - search_api
+    - elasticsearch_connector
     - node
 id: local_elasticsearch_index
 name: 'Local elasticsearch index'
@@ -23,8 +24,11 @@ datasource_settings:
 processor_settings:
   add_url: {  }
   aggregated_field: {  }
+  entity_status: {  }
   language_with_fallback: {  }
+  nested_entity: {  }
   rendered_item: {  }
+  reverse_entity_references: {  }
 tracker_settings:
   default:
     indexing_order: fifo
