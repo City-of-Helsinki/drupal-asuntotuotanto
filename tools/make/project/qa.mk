@@ -1,4 +1,4 @@
-TEST_TARGETS += lint-php
+TEST_TARGETS = lint-php
 
 lint-php: ## Customized code style checking for PHP files
 	$(call step,Check code style for PHP files...)
