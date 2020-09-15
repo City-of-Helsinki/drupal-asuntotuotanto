@@ -1,0 +1,9 @@
+uuid: b8fa4fb4-ae34-44af-a4aa-ca33c25d3c10
+langcode: en
+status: true
+dependencies: {  }
+index_id: asuntomyynti
+name: Asuntomyynti
+num_of_shards: 3
+num_of_replica: 1
+server: local_elasticsearch
