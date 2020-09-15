@@ -79,6 +79,15 @@
         },
         "hooks": {
             "pre-push": "make test"
+        },
+        "patches": {
+            "drupal/core": {
+                "https://www.drupal.org/project/drupal/issues/2868193#comment-12258614":"https://www.drupal.org/files/issues/2868193-10.patch",
+                "https://www.drupal.org/project/drupal/issues/2313309#comment-13800552":"https://www.drupal.org/files/issues/2020-08-25/2313309-67.patch",
+                "https://www.drupal.org/project/drupal/issues/3054641#comment-13385850":"https://www.drupal.org/files/issues/2019-12-10/3054641-14.patch",
+                "https://www.drupal.org/project/drupal/issues/2925297#comment-13274046": "https://www.drupal.org/files/issues/2019-09-26/core-typed_config_handle_missing_config-2925297-18.patch",
+                "https://www.drupal.org/project/drupal/issues/2466553": "https://www.drupal.org/files/issues/2020-05-14/2466553-75-d91x.patch"
+            }
         }
     },
     "repositories": [
