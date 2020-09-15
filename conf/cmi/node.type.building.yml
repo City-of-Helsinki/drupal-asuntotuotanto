@@ -1,0 +1,17 @@
+uuid: 4ce66bce-bc85-4457-91b2-fed353c2d5d0
+langcode: en
+status: true
+dependencies:
+  module:
+    - menu_ui
+third_party_settings:
+  menu_ui:
+    available_menus: {  }
+    parent: ''
+name: Building
+type: building
+description: ''
+help: ''
+new_revision: false
+preview_mode: 0
+display_submitted: false

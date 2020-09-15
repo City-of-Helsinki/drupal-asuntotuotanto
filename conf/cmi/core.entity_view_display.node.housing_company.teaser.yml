@@ -1,0 +1,28 @@
+uuid: 75b905e5-b50c-4ee4-8529-cb09c6095ea7
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.housing_company.field_hc_region
+    - field.field.node.housing_company.field_hc_street_address
+    - field.field.node.housing_company.field_hc_mode_of_habitation
+    - node.type.housing_company
+  module:
+    - user
+id: node.housing_company.teaser
+targetEntityType: node
+bundle: housing_company
+mode: teaser
+content:
+  links:
+    weight: 100
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+hidden:
+  field_hc_region: true
+  field_hc_street_address: true
+  field_hc_mode_of_habitation: true
+  langcode: true
+  search_api_excerpt: true

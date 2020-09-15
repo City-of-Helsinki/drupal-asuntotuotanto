@@ -1,0 +1,107 @@
+uuid: 16520694-4eb6-48cd-bded-4f4be78b01dd
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.housing_company.field_hc_region
+    - field.field.node.housing_company.field_hc_street_address
+    - field.field.node.housing_company.field_hc_mode_of_habitation
+    - node.type.housing_company
+  module:
+    - path
+id: node.housing_company.default
+targetEntityType: node
+bundle: housing_company
+mode: default
+content:
+  created:
+    type: datetime_timestamp
+    weight: 10
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_hc_region:
+    weight: 122
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_hc_street_address:
+    weight: 121
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_hc_mode_of_habitation:
+    weight: 123
+    settings: {  }
+    third_party_settings: {  }
+    type: options_select
+    region: content
+  langcode:
+    type: language_select
+    weight: 2
+    region: content
+    settings:
+      include_locked: true
+    third_party_settings: {  }
+  path:
+    type: path
+    weight: 30
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  promote:
+    type: boolean_checkbox
+    settings:
+      display_label: true
+    weight: 15
+    region: content
+    third_party_settings: {  }
+  status:
+    type: boolean_checkbox
+    settings:
+      display_label: true
+    weight: 120
+    region: content
+    third_party_settings: {  }
+  sticky:
+    type: boolean_checkbox
+    settings:
+      display_label: true
+    weight: 16
+    region: content
+    third_party_settings: {  }
+  title:
+    type: string_textfield
+    weight: -5
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  translation:
+    weight: 10
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+  uid:
+    type: entity_reference_autocomplete
+    weight: 5
+    settings:
+      match_operator: CONTAINS
+      size: 60
+      placeholder: ''
+      match_limit: 10
+    region: content
+    third_party_settings: {  }
+  url_redirects:
+    weight: 50
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+hidden: {  }

@@ -1,0 +1,33 @@
+uuid: 6c88aed5-2789-4b05-8adc-9ae0e337b4cc
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.apartment.field_ap_living_area
+    - node.type.apartment
+  module:
+    - user
+id: node.apartment.default
+targetEntityType: node
+bundle: apartment
+mode: default
+content:
+  field_ap_living_area:
+    weight: 101
+    label: above
+    settings:
+      thousand_separator: ''
+      decimal_separator: .
+      scale: 2
+      prefix_suffix: true
+    third_party_settings: {  }
+    type: number_decimal
+    region: content
+  links:
+    weight: 100
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+hidden:
+  langcode: true
+  search_api_excerpt: true

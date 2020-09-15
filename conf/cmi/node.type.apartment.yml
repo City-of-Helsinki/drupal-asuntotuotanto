@@ -1,0 +1,17 @@
+uuid: c5516fb2-7197-4f8b-b0c5-52c9da060177
+langcode: en
+status: true
+dependencies:
+  module:
+    - menu_ui
+third_party_settings:
+  menu_ui:
+    available_menus: {  }
+    parent: ''
+name: Apartment
+type: apartment
+description: ''
+help: ''
+new_revision: false
+preview_mode: 0
+display_submitted: false

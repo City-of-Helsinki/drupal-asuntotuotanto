@@ -1,0 +1,24 @@
+uuid: 71c3cff9-9d43-420a-a091-d58b91f3af5f
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.apartment.field_ap_living_area
+    - node.type.apartment
+  module:
+    - user
+id: node.apartment.teaser
+targetEntityType: node
+bundle: apartment
+mode: teaser
+content:
+  links:
+    weight: 100
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+hidden:
+  field_ap_living_area: true
+  langcode: true
+  search_api_excerpt: true

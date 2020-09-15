@@ -1,0 +1,16 @@
+uuid: 5e144bb8-31fe-4ca2-b0ed-b076eedce4b6
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.housing_company
+  module:
+    - content_translation
+third_party_settings:
+  content_translation:
+    enabled: true
+id: node.housing_company
+target_entity_type_id: node
+target_bundle: housing_company
+default_langcode: fi
+language_alterable: true

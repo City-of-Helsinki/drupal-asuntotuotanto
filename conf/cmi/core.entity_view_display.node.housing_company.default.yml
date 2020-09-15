@@ -1,0 +1,48 @@
+uuid: 3b1ab564-a9f7-4bfc-bd5d-f2a047ae74b2
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.housing_company.field_hc_region
+    - field.field.node.housing_company.field_hc_street_address
+    - field.field.node.housing_company.field_hc_mode_of_habitation
+    - node.type.housing_company
+  module:
+    - options
+    - user
+id: node.housing_company.default
+targetEntityType: node
+bundle: housing_company
+mode: default
+content:
+  field_hc_region:
+    weight: 102
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_hc_street_address:
+    weight: 101
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_hc_mode_of_habitation:
+    weight: 103
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: list_default
+    region: content
+  links:
+    weight: 100
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+hidden:
+  langcode: true
+  search_api_excerpt: true

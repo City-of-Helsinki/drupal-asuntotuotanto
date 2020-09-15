@@ -1,0 +1,20 @@
+uuid: 3e1926a5-d430-4d2c-9aef-700482e81a4e
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: node.field_ap_living_area
+field_name: field_ap_living_area
+entity_type: node
+type: decimal
+settings:
+  precision: 12
+  scale: 2
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

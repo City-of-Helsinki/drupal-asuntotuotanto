@@ -1,0 +1,22 @@
+uuid: b20023c7-8708-4e4d-9a78-c626cb09db33
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.housing_company
+id: node.housing_company.promote
+field_name: promote
+entity_type: node
+bundle: housing_company
+label: 'Promoted to front page'
+description: ''
+required: false
+translatable: true
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

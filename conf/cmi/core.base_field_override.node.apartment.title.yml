@@ -1,0 +1,18 @@
+uuid: 462a297f-dfb1-4904-b0e9-4c8572a61f4c
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.apartment
+id: node.apartment.title
+field_name: title
+entity_type: node
+bundle: apartment
+label: Apartment
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string
