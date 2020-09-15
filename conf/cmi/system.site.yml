@@ -1,0 +1,14 @@
+uuid: 7a0542bc-8c05-4a36-b221-0369a489204c
+name: 'City of Helsinki - Asuntotuotanto'
+mail: drupal-accounts@druid.fi
+slogan: ''
+page:
+  403: ''
+  404: ''
+  front: /user/login
+admin_compact_mode: false
+weight_select_max: 100
+langcode: en
+default_langcode: en
+_core:
+  default_config_hash: yXadRE77Va-G6dxhd2kPYapAvbnSvTF6hO4oXiOEynI

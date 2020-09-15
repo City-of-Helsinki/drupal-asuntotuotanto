@@ -1,0 +1,19 @@
+uuid: 7463bffe-faf3-4383-b195-a8f577a3d6dc
+langcode: en
+status: '1'
+dependencies: {  }
+cluster_id: local_elasticsearch
+name: 'Local elasticsearch'
+url: 'http://asuntotuotanto-elastic'
+options:
+  multiple_nodes_connection: false
+  use_authentication: 0
+  authentication_type: Basic
+  username: ''
+  password: ''
+  timeout: '3'
+  rewrite:
+    rewrite_index: 0
+    index:
+      prefix: ''
+      suffix: ''

@@ -1,0 +1,38 @@
+uuid: d98e0d7b-4638-403c-8d7f-25988034b387
+langcode: en
+status: true
+dependencies:
+  config:
+    - search_api.server.local_elasticsearch
+  module:
+    - search_api
+    - elasticsearch_connector
+    - node
+id: local_elasticsearch_index
+name: 'Local elasticsearch index'
+description: ''
+read_only: false
+field_settings: {  }
+datasource_settings:
+  'entity:node':
+    languages:
+      default: true
+      selected: {  }
+    bundles:
+      default: true
+      selected: {  }
+processor_settings:
+  add_url: {  }
+  aggregated_field: {  }
+  entity_status: {  }
+  language_with_fallback: {  }
+  nested_entity: {  }
+  rendered_item: {  }
+  reverse_entity_references: {  }
+tracker_settings:
+  default:
+    indexing_order: fifo
+options:
+  index_directly: false
+  cron_limit: 50
+server: local_elasticsearch
