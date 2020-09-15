@@ -88,28 +88,6 @@
         }
     ],
     "scripts": {
-        "fix": [
-            "phpcbf --colors --standard=Drupal --extensions=php,theme,module --ignore='*.css,*.md,node_modules' ./public/modules/custom ./public/themes/custom"
-        ],
-        "post-update-cmd": "cghooks update",
-        "test": [
-            "@test-behavioral",
-            "@test-static-js",
-            "@fix",
-            "@test-unit"
-        ],
-        "test-behavioral": [
-            "tools/behavioral-tests"
-        ],
-        "test-static-js": [
-            "node_modules/eslint/bin/eslint.js --color --ignore-pattern '**/vendor/*' --c ./public/core/.eslintrc.json --global nav,moment,responsiveNav:true ./public/modules/custom/*/js",
-            "node_modules/eslint/bin/eslint.js --color --ignore-pattern '**/vendor/*' --c ./public/core/.eslintrc.json --global nav,moment,responsiveNav:true ./public/themes/custom/*/js"
-        ],
-        "lint": [
-            "phpcs --colors --standard=Drupal --extensions=php,theme,module --ignore='*.css,*.md,node_modules' ./public/modules/custom ./public/themes/custom"
-        ],
-        "test-unit": [
-            "phpunit -c phpunit.xml.dist --testsuite unit"
-        ]
+        "post-update-cmd": "cghooks update"
     }
 }
