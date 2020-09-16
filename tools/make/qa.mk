@@ -1,8 +1,14 @@
-#TEST_TARGETS += lint-php lint-js test-phpunit
-TEST_TARGETS += lint-php test-phpunit
+TEST_TARGETS += lint-php lint-js test-phpunit
+FIX_TARGETS += lint-fix
 
 PHONY += fix
-fix: ## Fix code style
+fix: ## Run lint fixes
+	$(call step,Following test targets will be run: $(FIX_TARGETS))
+	@$(MAKE) $(FIX_TARGETS)
+	$(call step,Fixes completed.)
+
+PHONY += lint-fix
+lint-fix: ## Fix code style
 	$(call step,Fix code with PHP Code Beautifier and Fixer...)
 	@docker run --rm -it $(subst $(space),'',$(LINT_PATHS_PHP)) druidfi/drupal-qa:$(DRUPAL_VERSION) bash -c "phpcbf ."
 
