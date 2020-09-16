@@ -31,6 +31,7 @@ dependencies:
     - field.field.node.project.field_site_rent
     - field.field.node.project.field_site_type
     - field.field.node.project.field_street_address
+    - field.field.node.project.field_tasks
     - field.field.node.project.field_year_of_building
     - node.type.project
   module:
@@ -73,6 +74,7 @@ hidden:
   field_site_rent: true
   field_site_type: true
   field_street_address: true
+  field_tasks: true
   field_year_of_building: true
   langcode: true
   search_api_excerpt: true

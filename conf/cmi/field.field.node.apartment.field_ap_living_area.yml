@@ -19,5 +19,5 @@ settings:
   min: null
   max: null
   prefix: ''
-  suffix: ''
+  suffix: m<sup>2</sup>
 field_type: decimal

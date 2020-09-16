@@ -1,0 +1,21 @@
+uuid: 2a734072-a033-44b6-827c-405703cc71e8
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_tasks
+    - node.type.project
+  module:
+    - options
+id: node.project.field_tasks
+field_name: field_tasks
+entity_type: node
+bundle: project
+label: Tasks
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: list_string

@@ -5,13 +5,12 @@ dependencies:
   config:
     - core.entity_view_mode.node.teaser
     - field.field.node.apartment.field_ap_apartment_number
-    - field.field.node.apartment.field_ap_building
     - field.field.node.apartment.field_ap_floor
     - field.field.node.apartment.field_ap_general_condition
-    - field.field.node.apartment.field_ap_housing_company
     - field.field.node.apartment.field_ap_living_area
     - field.field.node.apartment.field_ap_number_of_rooms
     - field.field.node.apartment.field_ap_showing_date
+    - field.field.node.apartment.field_project
     - node.type.apartment
   module:
     - user
@@ -27,12 +26,11 @@ content:
     region: content
 hidden:
   field_ap_apartment_number: true
-  field_ap_building: true
   field_ap_floor: true
   field_ap_general_condition: true
-  field_ap_housing_company: true
   field_ap_living_area: true
   field_ap_number_of_rooms: true
   field_ap_showing_date: true
+  field_project: true
   langcode: true
   search_api_excerpt: true

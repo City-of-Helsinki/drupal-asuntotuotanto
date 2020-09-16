@@ -30,6 +30,7 @@ dependencies:
     - field.field.node.project.field_site_rent
     - field.field.node.project.field_site_type
     - field.field.node.project.field_street_address
+    - field.field.node.project.field_tasks
     - field.field.node.project.field_year_of_building
     - node.type.project
   module:
@@ -267,6 +268,13 @@ content:
       link_to_entity: false
     third_party_settings: {  }
     type: string
+    region: content
+  field_tasks:
+    weight: 131
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: list_default
     region: content
   field_year_of_building:
     weight: 108

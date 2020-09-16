@@ -4,13 +4,12 @@ status: true
 dependencies:
   config:
     - field.field.node.apartment.field_ap_apartment_number
-    - field.field.node.apartment.field_ap_building
     - field.field.node.apartment.field_ap_floor
     - field.field.node.apartment.field_ap_general_condition
-    - field.field.node.apartment.field_ap_housing_company
     - field.field.node.apartment.field_ap_living_area
     - field.field.node.apartment.field_ap_number_of_rooms
     - field.field.node.apartment.field_ap_showing_date
+    - field.field.node.apartment.field_project
     - node.type.apartment
   module:
     - datetime_range
@@ -59,15 +58,6 @@ content:
     third_party_settings: {  }
     type: string
     region: content
-  field_ap_building:
-    weight: 4
-    label: inline
-    settings:
-      view_mode: full
-      link: false
-    third_party_settings: {  }
-    type: entity_reference_entity_view
-    region: content
   field_ap_floor:
     weight: 6
     label: inline
@@ -83,15 +73,6 @@ content:
     settings: {  }
     third_party_settings: {  }
     type: list_default
-    region: content
-  field_ap_housing_company:
-    weight: 3
-    label: inline
-    settings:
-      view_mode: full
-      link: false
-    third_party_settings: {  }
-    type: entity_reference_entity_view
     region: content
   field_ap_living_area:
     weight: 3
@@ -122,6 +103,14 @@ content:
       timezone_override: ''
     third_party_settings: {  }
     type: daterange_default
+    region: content
+  field_project:
+    weight: 10
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
     region: content
   links:
     weight: 0

@@ -4,16 +4,16 @@ status: true
 dependencies:
   config:
     - field.field.node.apartment.field_ap_apartment_number
-    - field.field.node.apartment.field_ap_building
     - field.field.node.apartment.field_ap_floor
     - field.field.node.apartment.field_ap_general_condition
-    - field.field.node.apartment.field_ap_housing_company
     - field.field.node.apartment.field_ap_living_area
     - field.field.node.apartment.field_ap_number_of_rooms
     - field.field.node.apartment.field_ap_showing_date
+    - field.field.node.apartment.field_project
     - node.type.apartment
   module:
     - datetime_range
+    - inline_entity_form
     - path
 id: node.apartment.default
 targetEntityType: node
@@ -22,70 +22,67 @@ mode: default
 content:
   created:
     type: datetime_timestamp
-    weight: 7
+    weight: 2
     region: content
     settings: {  }
     third_party_settings: {  }
   field_ap_apartment_number:
-    weight: 4
+    weight: 10
     settings:
       size: 60
       placeholder: ''
     third_party_settings: {  }
     type: string_textfield
     region: content
-  field_ap_building:
-    weight: 3
-    settings:
-      match_operator: CONTAINS
-      match_limit: 10
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
-    type: entity_reference_autocomplete
-    region: content
   field_ap_floor:
-    weight: 14
+    weight: 12
     settings:
       placeholder: ''
     third_party_settings: {  }
     type: number
     region: content
   field_ap_general_condition:
-    weight: 17
+    weight: 15
     settings: {  }
     third_party_settings: {  }
     type: options_select
     region: content
-  field_ap_housing_company:
-    weight: 2
-    settings:
-      match_operator: CONTAINS
-      match_limit: 10
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
-    type: entity_reference_autocomplete
-    region: content
   field_ap_living_area:
-    weight: 5
+    weight: 11
     settings:
       placeholder: ''
     third_party_settings: {  }
     type: number
     region: content
   field_ap_number_of_rooms:
-    weight: 16
+    weight: 14
     settings:
       placeholder: ''
     third_party_settings: {  }
     type: number
     region: content
   field_ap_showing_date:
-    weight: 15
+    weight: 13
     settings: {  }
     third_party_settings: {  }
     type: daterange_default
+    region: content
+  field_project:
+    weight: 16
+    settings:
+      form_mode: default
+      label_singular: ''
+      label_plural: ''
+      collapsible: true
+      collapsed: true
+      allow_new: true
+      allow_existing: true
+      match_operator: CONTAINS
+      revision: false
+      override_labels: false
+      allow_duplicate: false
+    third_party_settings: {  }
+    type: inline_entity_form_complex
     region: content
   langcode:
     type: language_select
@@ -96,7 +93,7 @@ content:
     third_party_settings: {  }
   path:
     type: path
-    weight: 11
+    weight: 6
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -104,39 +101,39 @@ content:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 9
+    weight: 4
     region: content
     third_party_settings: {  }
   status:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 13
+    weight: 8
     region: content
     third_party_settings: {  }
   sticky:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 10
+    weight: 5
     region: content
     third_party_settings: {  }
   title:
     type: string_textfield
-    weight: 1
+    weight: 9
     region: content
     settings:
       size: 60
       placeholder: ''
     third_party_settings: {  }
   translation:
-    weight: 8
+    weight: 3
     region: content
     settings: {  }
     third_party_settings: {  }
   uid:
     type: entity_reference_autocomplete
-    weight: 6
+    weight: 1
     settings:
       match_operator: CONTAINS
       size: 60
@@ -145,7 +142,7 @@ content:
     region: content
     third_party_settings: {  }
   url_redirects:
-    weight: 12
+    weight: 7
     region: content
     settings: {  }
     third_party_settings: {  }
