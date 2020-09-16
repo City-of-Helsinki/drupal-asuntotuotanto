@@ -1,0 +1,21 @@
+uuid: aba13f44-226b-4c6b-8973-512798823bfa
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_street_address
+    - node.type.project
+  module:
+    - options
+id: node.project.field_street_address
+field_name: field_street_address
+entity_type: node
+bundle: project
+label: 'Street address'
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: list_string

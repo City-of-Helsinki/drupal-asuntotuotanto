@@ -1,0 +1,8 @@
+settings:
+  allowed_values:
+    -
+      label: Suunnitteilla
+    -
+      label: Rakenteilla
+    -
+      label: Valmis

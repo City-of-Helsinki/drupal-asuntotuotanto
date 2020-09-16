@@ -23,8 +23,6 @@ display:
           label: Polku
         count:
           label: Laskuri
-        timestamp:
-          label: 'Viimeksi käytetty'
         langcode:
           label: Kieli
         redirect_404_operations:
@@ -36,6 +34,5 @@ display:
         langcode:
           expose:
             label: Kieli
-      title: 'Korjaa 404-sivut'
   page_1:
     display_title: Sivu

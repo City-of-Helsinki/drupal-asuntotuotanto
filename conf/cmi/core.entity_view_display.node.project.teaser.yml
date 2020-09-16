@@ -1,0 +1,44 @@
+uuid: d1fbce14-79fa-475e-85a6-3b8b02623ef5
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.project.field_housing_company_name
+    - field.field.node.project.field_mode_of_habitation
+    - field.field.node.project.field_new_development_project
+    - field.field.node.project.field_new_development_status
+    - field.field.node.project.field_number_of_apartments
+    - field.field.node.project.field_post_office
+    - field.field.node.project.field_postal_code
+    - field.field.node.project.field_real_estate_id
+    - field.field.node.project.field_region
+    - field.field.node.project.field_street_address
+    - field.field.node.project.field_year_of_building
+    - node.type.project
+  module:
+    - user
+id: node.project.teaser
+targetEntityType: node
+bundle: project
+mode: teaser
+content:
+  links:
+    weight: 100
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+hidden:
+  field_housing_company_name: true
+  field_mode_of_habitation: true
+  field_new_development_project: true
+  field_new_development_status: true
+  field_number_of_apartments: true
+  field_post_office: true
+  field_postal_code: true
+  field_real_estate_id: true
+  field_region: true
+  field_street_address: true
+  field_year_of_building: true
+  langcode: true
+  search_api_excerpt: true

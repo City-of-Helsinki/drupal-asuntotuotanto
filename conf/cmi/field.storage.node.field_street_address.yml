@@ -1,0 +1,24 @@
+uuid: f93ed275-6595-48ae-8026-672f9d758b5a
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+    - options
+id: node.field_street_address
+field_name: field_street_address
+entity_type: node
+type: list_string
+settings:
+  allowed_values:
+    -
+      value: 'Insert street and number. F.e. Siltasaarenkatu 12'
+      label: 'Insert street and number. F.e. Siltasaarenkatu 12'
+  allowed_values_function: ''
+module: options
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

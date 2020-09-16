@@ -1,0 +1,23 @@
+uuid: d313b25f-babd-46a0-aa05-6dc904c69e66
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_mode_of_habitation
+    - node.type.project
+  module:
+    - options
+id: node.project.field_mode_of_habitation
+field_name: field_mode_of_habitation
+entity_type: node
+bundle: project
+label: 'Mode of habitation'
+description: ''
+required: true
+translatable: false
+default_value:
+  -
+    value: OM
+default_value_callback: ''
+settings: {  }
+field_type: list_string

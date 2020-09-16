@@ -1,0 +1,121 @@
+uuid: 1c4e2bf9-b85c-44d7-b0db-f4a755419467
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.project.field_housing_company_name
+    - field.field.node.project.field_mode_of_habitation
+    - field.field.node.project.field_new_development_project
+    - field.field.node.project.field_new_development_status
+    - field.field.node.project.field_number_of_apartments
+    - field.field.node.project.field_post_office
+    - field.field.node.project.field_postal_code
+    - field.field.node.project.field_real_estate_id
+    - field.field.node.project.field_region
+    - field.field.node.project.field_street_address
+    - field.field.node.project.field_year_of_building
+    - node.type.project
+  module:
+    - options
+    - user
+    - yearonly
+id: node.project.default
+targetEntityType: node
+bundle: project
+mode: default
+content:
+  field_housing_company_name:
+    weight: 101
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_mode_of_habitation:
+    weight: 102
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: list_default
+    region: content
+  field_new_development_project:
+    weight: 110
+    label: above
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    type: boolean
+    region: content
+  field_new_development_status:
+    weight: 109
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: list_default
+    region: content
+  field_number_of_apartments:
+    weight: 111
+    label: above
+    settings:
+      thousand_separator: ''
+      prefix_suffix: true
+    third_party_settings: {  }
+    type: number_integer
+    region: content
+  field_post_office:
+    weight: 105
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_postal_code:
+    weight: 104
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_real_estate_id:
+    weight: 107
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_region:
+    weight: 106
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_street_address:
+    weight: 103
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: list_default
+    region: content
+  field_year_of_building:
+    weight: 108
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: yearonly_default
+    region: content
+  links:
+    weight: 100
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+hidden:
+  langcode: true
+  search_api_excerpt: true
