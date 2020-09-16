@@ -21,8 +21,8 @@ content:
     third_party_settings: {  }
     region: content
 hidden:
+  field_hc_mode_of_habitation: true
   field_hc_region: true
   field_hc_street_address: true
-  field_hc_mode_of_habitation: true
   langcode: true
   search_api_excerpt: true

@@ -1,0 +1,19 @@
+uuid: 5f3bc982-c96f-4732-8ed0-984aa1a869bc
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: node.field_ap_building
+field_name: field_ap_building
+entity_type: node
+type: entity_reference
+settings:
+  target_type: node
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

@@ -1,0 +1,23 @@
+uuid: 9122e824-e3ed-4251-9665-1ec2e9200e78
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_ap_number_of_rooms
+    - node.type.apartment
+id: node.apartment.field_ap_number_of_rooms
+field_name: field_ap_number_of_rooms
+entity_type: node
+bundle: apartment
+label: 'Number of rooms'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: null
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: integer

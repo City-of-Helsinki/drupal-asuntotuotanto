@@ -3,9 +3,9 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.node.housing_company.field_hc_mode_of_habitation
     - field.field.node.housing_company.field_hc_region
     - field.field.node.housing_company.field_hc_street_address
-    - field.field.node.housing_company.field_hc_mode_of_habitation
     - node.type.housing_company
   module:
     - options
@@ -15,9 +15,16 @@ targetEntityType: node
 bundle: housing_company
 mode: default
 content:
+  field_hc_mode_of_habitation:
+    weight: 103
+    label: inline
+    settings: {  }
+    third_party_settings: {  }
+    type: list_default
+    region: content
   field_hc_region:
     weight: 102
-    label: above
+    label: inline
     settings:
       link_to_entity: false
     third_party_settings: {  }
@@ -25,24 +32,17 @@ content:
     region: content
   field_hc_street_address:
     weight: 101
-    label: above
+    label: inline
     settings:
       link_to_entity: false
     third_party_settings: {  }
     type: string
     region: content
-  field_hc_mode_of_habitation:
-    weight: 103
-    label: above
-    settings: {  }
-    third_party_settings: {  }
-    type: list_default
-    region: content
   links:
     weight: 100
+    region: content
     settings: {  }
     third_party_settings: {  }
-    region: content
 hidden:
   langcode: true
   search_api_excerpt: true

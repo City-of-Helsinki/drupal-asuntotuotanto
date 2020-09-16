@@ -1,0 +1,28 @@
+uuid: 19e37c01-ba90-4afe-a84e-70e2357b4b30
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_ap_housing_company
+    - node.type.apartment
+    - node.type.housing_company
+id: node.apartment.field_ap_housing_company
+field_name: field_ap_housing_company
+entity_type: node
+bundle: apartment
+label: 'Housing company'
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      housing_company: housing_company
+    sort:
+      field: _none
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

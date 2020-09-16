@@ -1,0 +1,10 @@
+settings:
+  allowed_values:
+    -
+      label: 'Ei luokiteltu'
+    -
+      label: Välttävä
+    -
+      label: Tyydyttävä
+    -
+      label: Hyvä

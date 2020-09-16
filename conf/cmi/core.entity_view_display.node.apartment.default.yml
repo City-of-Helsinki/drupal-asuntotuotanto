@@ -3,18 +3,99 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.node.apartment.field_ap_apartment_number
+    - field.field.node.apartment.field_ap_building
+    - field.field.node.apartment.field_ap_floor
+    - field.field.node.apartment.field_ap_general_condition
+    - field.field.node.apartment.field_ap_housing_company
     - field.field.node.apartment.field_ap_living_area
+    - field.field.node.apartment.field_ap_number_of_rooms
+    - field.field.node.apartment.field_ap_showing_date
     - node.type.apartment
   module:
+    - datetime_range
+    - field_group
+    - options
     - user
+third_party_settings:
+  field_group:
+    group_housing_company:
+      children:
+        - field_ap_housing_company
+      parent_name: ''
+      weight: 1
+      format_type: details
+      region: content
+      format_settings:
+        description: ''
+        open: true
+        id: ''
+        classes: ''
+      label: 'Housing company'
+    group_building:
+      children:
+        - field_ap_building
+      parent_name: ''
+      weight: 2
+      format_type: details
+      region: content
+      format_settings:
+        id: ''
+        classes: ''
+        description: ''
+        open: true
+        required_fields: false
+      label: Building
 id: node.apartment.default
 targetEntityType: node
 bundle: apartment
 mode: default
 content:
+  field_ap_apartment_number:
+    weight: 5
+    label: inline
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_ap_building:
+    weight: 4
+    label: inline
+    settings:
+      view_mode: full
+      link: false
+    third_party_settings: {  }
+    type: entity_reference_entity_view
+    region: content
+  field_ap_floor:
+    weight: 6
+    label: inline
+    settings:
+      thousand_separator: ''
+      prefix_suffix: true
+    third_party_settings: {  }
+    type: number_integer
+    region: content
+  field_ap_general_condition:
+    weight: 9
+    label: inline
+    settings: {  }
+    third_party_settings: {  }
+    type: list_default
+    region: content
+  field_ap_housing_company:
+    weight: 3
+    label: inline
+    settings:
+      view_mode: full
+      link: false
+    third_party_settings: {  }
+    type: entity_reference_entity_view
+    region: content
   field_ap_living_area:
-    weight: 101
-    label: above
+    weight: 3
+    label: inline
     settings:
       thousand_separator: ''
       decimal_separator: .
@@ -23,11 +104,30 @@ content:
     third_party_settings: {  }
     type: number_decimal
     region: content
+  field_ap_number_of_rooms:
+    weight: 8
+    label: inline
+    settings:
+      thousand_separator: ''
+      prefix_suffix: true
+    third_party_settings: {  }
+    type: number_integer
+    region: content
+  field_ap_showing_date:
+    weight: 7
+    label: inline
+    settings:
+      separator: '-'
+      format_type: medium
+      timezone_override: ''
+    third_party_settings: {  }
+    type: daterange_default
+    region: content
   links:
-    weight: 100
+    weight: 0
+    region: content
     settings: {  }
     third_party_settings: {  }
-    region: content
 hidden:
   langcode: true
   search_api_excerpt: true

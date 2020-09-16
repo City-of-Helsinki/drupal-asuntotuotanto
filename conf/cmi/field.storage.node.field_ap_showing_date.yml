@@ -1,0 +1,20 @@
+uuid: 9d32c8af-669f-44fa-959a-58a94e7b24f1
+langcode: en
+status: true
+dependencies:
+  module:
+    - datetime_range
+    - node
+id: node.field_ap_showing_date
+field_name: field_ap_showing_date
+entity_type: node
+type: daterange
+settings:
+  datetime_type: datetime
+module: datetime_range
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false
