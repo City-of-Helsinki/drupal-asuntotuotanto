@@ -1,0 +1,449 @@
+uuid: f608e444-0063-4eaf-92d2-98d921722730
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.project.field_attachments_url
+    - field.field.node.project.field_builder
+    - field.field.node.project.field_building_material
+    - field.field.node.project.field_building_type
+    - field.field.node.project.field_city_plan_pictures
+    - field.field.node.project.field_city_plan_situation
+    - field.field.node.project.field_energy_class
+    - field.field.node.project.field_heating
+    - field.field.node.project.field_housing_company_name
+    - field.field.node.project.field_lift
+    - field.field.node.project.field_mode_of_habitation
+    - field.field.node.project.field_new_development_project
+    - field.field.node.project.field_new_development_status
+    - field.field.node.project.field_number_of_apartments
+    - field.field.node.project.field_post_office
+    - field.field.node.project.field_postal_code
+    - field.field.node.project.field_project_description
+    - field.field.node.project.field_publication_dates
+    - field.field.node.project.field_real_estate_id
+    - field.field.node.project.field_region
+    - field.field.node.project.field_roof_material
+    - field.field.node.project.field_sanitation
+    - field.field.node.project.field_sauna
+    - field.field.node.project.field_site_area
+    - field.field.node.project.field_site_rent
+    - field.field.node.project.field_site_type
+    - field.field.node.project.field_street_address
+    - field.field.node.project.field_year_of_building
+    - node.type.project
+  module:
+    - datetime_range
+    - field_group
+    - link
+    - path
+    - text
+    - yearonly
+third_party_settings:
+  field_group:
+    group_project_tabs:
+      children:
+        - group_basic
+        - group_properties
+        - group_schedules
+        - group_pictures_and_videos
+        - group_persons_and_operators
+      parent_name: ''
+      weight: 9
+      format_type: tabs
+      region: content
+      format_settings:
+        direction: horizontal
+        id: ''
+        classes: ''
+      label: 'Project tabs'
+    group_basic:
+      children:
+        - title
+        - field_housing_company_name
+        - field_mode_of_habitation
+        - field_street_address
+        - field_postal_code
+        - field_post_office
+        - field_region
+        - field_real_estate_id
+        - field_year_of_building
+        - field_new_development_project
+        - field_new_development_status
+        - field_number_of_apartments
+      parent_name: group_project_tabs
+      weight: 19
+      format_type: tab
+      region: content
+      format_settings:
+        description: ''
+        formatter: closed
+        required_fields: true
+        id: ''
+        classes: ''
+      label: Basic
+    group_properties:
+      children:
+        - field_lift
+        - field_sauna
+        - field_building_material
+        - field_roof_material
+        - field_heating
+        - field_energy_class
+        - field_site_type
+        - field_site_area
+        - field_site_rent
+        - field_sanitation
+        - field_city_plan_pictures
+        - field_city_plan_situation
+        - field_building_type
+        - field_project_description
+      parent_name: group_project_tabs
+      weight: 20
+      format_type: tab
+      region: content
+      format_settings:
+        id: ''
+        classes: ''
+        description: ''
+        formatter: closed
+        required_fields: true
+      label: Properties
+    group_tasklist:
+      children: {  }
+      parent_name: ''
+      weight: 10
+      format_type: details_sidebar
+      region: content
+      format_settings:
+        id: ''
+        classes: ''
+        description: ''
+        open: true
+        required_fields: true
+        weight: 0
+      label: Tasklist
+    group_schedules:
+      children:
+        - field_publication_dates
+      parent_name: group_project_tabs
+      weight: 21
+      format_type: tab
+      region: content
+      format_settings:
+        id: ''
+        classes: ''
+        description: ''
+        formatter: closed
+        required_fields: true
+      label: Schedules
+    group_pictures_and_videos:
+      children:
+        - field_attachments_url
+      parent_name: group_project_tabs
+      weight: 22
+      format_type: tab
+      region: content
+      format_settings:
+        id: ''
+        classes: ''
+        description: ''
+        formatter: closed
+        required_fields: true
+      label: 'Pictures and videos'
+    group_persons_and_operators:
+      children:
+        - field_builder
+      parent_name: group_project_tabs
+      weight: 24
+      format_type: tab
+      region: content
+      format_settings:
+        id: ''
+        classes: ''
+        description: ''
+        formatter: closed
+        required_fields: true
+      label: 'Persons and operators'
+id: node.project.default
+targetEntityType: node
+bundle: project
+mode: default
+content:
+  created:
+    type: datetime_timestamp
+    weight: 3
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_attachments_url:
+    weight: 23
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: {  }
+    type: link_default
+    region: content
+  field_builder:
+    weight: 46
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_building_material:
+    weight: 33
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_building_type:
+    weight: 43
+    settings: {  }
+    third_party_settings: {  }
+    type: options_select
+    region: content
+  field_city_plan_pictures:
+    weight: 41
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_city_plan_situation:
+    weight: 42
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_energy_class:
+    weight: 36
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_heating:
+    weight: 35
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_housing_company_name:
+    type: string_textfield
+    weight: 1
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_lift:
+    weight: 31
+    settings:
+      display_label: true
+    third_party_settings: {  }
+    type: boolean_checkbox
+    region: content
+  field_mode_of_habitation:
+    weight: 2
+    settings: {  }
+    third_party_settings: {  }
+    type: options_select
+    region: content
+  field_new_development_project:
+    weight: 9
+    settings:
+      display_label: true
+    third_party_settings: {  }
+    type: boolean_checkbox
+    region: content
+  field_new_development_status:
+    weight: 10
+    settings: {  }
+    third_party_settings: {  }
+    type: options_select
+    region: content
+  field_number_of_apartments:
+    weight: 11
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+    type: number
+    region: content
+  field_post_office:
+    weight: 5
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_postal_code:
+    type: string_textfield
+    weight: 4
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_project_description:
+    weight: 44
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+    type: text_textarea
+    region: content
+  field_publication_dates:
+    weight: 45
+    settings: {  }
+    third_party_settings: {  }
+    type: daterange_default
+    region: content
+  field_real_estate_id:
+    weight: 7
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_region:
+    weight: 6
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_roof_material:
+    weight: 34
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_sanitation:
+    weight: 40
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_sauna:
+    weight: 32
+    settings:
+      display_label: true
+    third_party_settings: {  }
+    type: boolean_checkbox
+    region: content
+  field_site_area:
+    weight: 38
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_site_rent:
+    weight: 39
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_site_type:
+    weight: 37
+    settings: {  }
+    third_party_settings: {  }
+    type: options_select
+    region: content
+  field_street_address:
+    weight: 3
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_year_of_building:
+    weight: 8
+    settings: {  }
+    third_party_settings: {  }
+    type: yearonly_default
+    region: content
+  langcode:
+    type: language_select
+    weight: 0
+    region: content
+    settings:
+      include_locked: true
+    third_party_settings: {  }
+  path:
+    type: path
+    weight: 6
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  promote:
+    type: boolean_checkbox
+    settings:
+      display_label: true
+    weight: 4
+    region: content
+    third_party_settings: {  }
+  status:
+    type: boolean_checkbox
+    settings:
+      display_label: true
+    weight: 8
+    region: content
+    third_party_settings: {  }
+  sticky:
+    type: boolean_checkbox
+    settings:
+      display_label: true
+    weight: 5
+    region: content
+    third_party_settings: {  }
+  title:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  translation:
+    weight: 2
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  uid:
+    type: entity_reference_autocomplete
+    weight: 1
+    settings:
+      match_operator: CONTAINS
+      size: 60
+      placeholder: ''
+      match_limit: 10
+    region: content
+    third_party_settings: {  }
+  url_redirects:
+    weight: 7
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden: {  }

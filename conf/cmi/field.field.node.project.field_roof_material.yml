@@ -1,0 +1,19 @@
+uuid: ce275ba4-384c-4449-80a1-26fb3917a663
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_roof_material
+    - node.type.project
+id: node.project.field_roof_material
+field_name: field_roof_material
+entity_type: node
+bundle: project
+label: 'Roof material'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

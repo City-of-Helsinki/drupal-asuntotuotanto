@@ -1,0 +1,19 @@
+uuid: 23112264-a972-434f-8c1d-03121e4dd2ed
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_builder
+    - node.type.project
+id: node.project.field_builder
+field_name: field_builder
+entity_type: node
+bundle: project
+label: Builder
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

@@ -1,0 +1,23 @@
+uuid: 0cd3942f-285f-4a8a-92cc-f73b67003cbc
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_sauna
+    - node.type.project
+id: node.project.field_sauna
+field_name: field_sauna
+entity_type: node
+bundle: project
+label: Sauna
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'Yes'
+  off_label: 'No'
+field_type: boolean

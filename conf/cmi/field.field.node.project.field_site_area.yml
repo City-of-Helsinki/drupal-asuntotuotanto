@@ -1,0 +1,19 @@
+uuid: fd56667e-e6e7-4006-95e5-28fe6c309d69
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_site_area
+    - node.type.project
+id: node.project.field_site_area
+field_name: field_site_area
+entity_type: node
+bundle: project
+label: 'Site area'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

@@ -1,0 +1,19 @@
+uuid: fae4ee48-c844-4e67-a191-412c7a26bb21
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_heating
+    - node.type.project
+id: node.project.field_heating
+field_name: field_heating
+entity_type: node
+bundle: project
+label: Heating
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

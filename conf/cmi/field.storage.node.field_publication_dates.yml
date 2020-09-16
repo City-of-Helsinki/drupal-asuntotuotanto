@@ -1,0 +1,20 @@
+uuid: f6c4d793-4dec-464d-bf30-4d31fb4f9974
+langcode: en
+status: true
+dependencies:
+  module:
+    - datetime_range
+    - node
+id: node.field_publication_dates
+field_name: field_publication_dates
+entity_type: node
+type: daterange
+settings:
+  datetime_type: datetime
+module: datetime_range
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

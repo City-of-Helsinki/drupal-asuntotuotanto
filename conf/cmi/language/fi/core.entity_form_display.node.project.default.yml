@@ -1,0 +1,14 @@
+third_party_settings:
+  field_group:
+    group_basic:
+      label: Perustiedot
+    group_properties:
+      label: 'Kohteen ominaisuudet'
+    group_tasklist:
+      label: Tehtävälista
+    group_schedules:
+      label: Aikataulut
+    group_pictures_and_videos:
+      label: 'Kuvat ja videot'
+    group_persons_and_operators:
+      label: 'Henkilöt ja toimijat'
