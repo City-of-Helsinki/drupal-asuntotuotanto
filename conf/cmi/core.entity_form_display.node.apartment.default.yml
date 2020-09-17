@@ -13,8 +13,72 @@ dependencies:
     - node.type.apartment
   module:
     - datetime_range
+    - field_group
     - inline_entity_form
     - path
+third_party_settings:
+  field_group:
+    group_apartment_tabs:
+      children:
+        - group_ap_basic
+        - group_ap_project
+        - group_ap_building
+      parent_name: ''
+      weight: 17
+      format_type: tabs
+      region: content
+      format_settings:
+        id: ''
+        classes: ''
+        direction: horizontal
+      label: 'Apartment tabs'
+    group_ap_basic:
+      children:
+        - title
+        - field_ap_apartment_number
+        - field_ap_living_area
+        - field_ap_floor
+        - field_ap_showing_date
+        - field_ap_number_of_rooms
+        - field_ap_general_condition
+      parent_name: group_apartment_tabs
+      weight: 20
+      format_type: tab
+      region: content
+      format_settings:
+        id: ''
+        classes: ''
+        description: ''
+        formatter: open
+        required_fields: true
+      label: Basic
+    group_ap_building:
+      children: {  }
+      parent_name: group_apartment_tabs
+      weight: 22
+      format_type: tab
+      region: content
+      format_settings:
+        id: ''
+        classes: ''
+        description: ''
+        formatter: closed
+        required_fields: true
+      label: Building
+    group_ap_project:
+      children:
+        - field_project
+      parent_name: group_apartment_tabs
+      weight: 21
+      format_type: tab
+      region: content
+      format_settings:
+        id: ''
+        classes: ''
+        description: ''
+        formatter: closed
+        required_fields: true
+      label: Project
 id: node.apartment.default
 targetEntityType: node
 bundle: apartment
@@ -73,13 +137,13 @@ content:
       form_mode: default
       label_singular: ''
       label_plural: ''
-      collapsible: true
       collapsed: true
       allow_new: true
       allow_existing: true
       match_operator: CONTAINS
       revision: false
       override_labels: false
+      collapsible: false
       allow_duplicate: false
     third_party_settings: {  }
     type: inline_entity_form_complex

@@ -1,0 +1,10 @@
+third_party_settings:
+  field_group:
+    group_apartment_tabs:
+      label: 'Huoneiston valikko'
+    group_ap_basic:
+      label: Perustiedot
+    group_ap_building:
+      label: Rakennus
+    group_ap_project:
+      label: Kohde

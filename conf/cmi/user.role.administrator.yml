@@ -1,0 +1,22 @@
+uuid: 51dcaf2b-7748-4cf8-a6c4-8d5f6f1d340a
+langcode: en
+status: true
+dependencies: {  }
+id: administrator
+label: Administrator
+weight: 2
+is_admin: null
+permissions:
+  - 'access content overview'
+  - 'access toolbar'
+  - 'administer url aliases'
+  - 'create apartment content'
+  - 'create project content'
+  - 'create url aliases'
+  - 'delete any apartment content'
+  - 'delete any project content'
+  - 'edit any apartment content'
+  - 'edit any project content'
+  - 'edit own apartment content'
+  - 'edit own project content'
+  - 'view own unpublished content'
