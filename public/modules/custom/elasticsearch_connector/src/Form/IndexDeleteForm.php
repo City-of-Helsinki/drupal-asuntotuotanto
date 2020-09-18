@@ -41,9 +41,6 @@ class IndexDeleteForm extends EntityConfirmFormBase {
     $this->entityTypeManager = $entity_type_manager;
   }
 
-  /**
-   *
-   */
   static public function create(ContainerInterface $container) {
     return new static (
       $container->get('elasticsearch_connector.client_manager'),

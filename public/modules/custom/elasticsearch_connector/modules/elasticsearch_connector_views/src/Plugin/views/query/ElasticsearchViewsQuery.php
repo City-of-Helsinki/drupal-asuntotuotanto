@@ -549,16 +549,10 @@ class ElasticsearchViewsQuery extends QueryPluginBase {
     return $this->index;
   }
 
-  /**
-   *
-   */
   public function getClusterId() {
     return $this->elasticsearchCluster->cluster_id;
   }
 
-  /**
-   *
-   */
   public function getElasticsearchClient() {
     return $this->elasticsearchClient;
   }

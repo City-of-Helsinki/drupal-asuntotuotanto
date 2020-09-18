@@ -83,7 +83,7 @@ class ElasticsearchViewsEntity extends ElasticsearchViewsStandard {
     $view_modes = array();
     $bundles = array();
     if ($entity_type_id) {
-      $bundles = $this->getEntityManager()->getBundleInfo($entity_type_id);
+      $bundles = $this->getEntityFieldManager()->getBundleInfo($entity_type_id);
       // In case the field definition specifies the bundles to expect, restrict
       // the displayed bundles to those.
       $settings = $this->getFieldDefinition()->getSettings();
@@ -194,7 +194,7 @@ class ElasticsearchViewsEntity extends ElasticsearchViewsStandard {
       return;
     }
 
-    $entities = $this->getEntityManager()
+    $entities = $this->getEntityFieldManager()
                      ->getStorage($this->getTargetEntityTypeId())
                      ->loadMultiple(array_keys($to_load));
     $account = $this->getQuery()->getAccessAccount();
@@ -272,7 +272,7 @@ class ElasticsearchViewsEntity extends ElasticsearchViewsStandard {
     }
 
     $view_mode = $this->options['display_methods'][$bundle]['view_mode'];
-    $build = $this->getEntityManager()
+    $build = $this->getEntityFieldManager()
                   ->getViewBuilder($entity->getEntityTypeId())
                   ->view($entity, $view_mode);
     return array(

@@ -26,7 +26,7 @@ class IndexForm extends EntityForm {
    * This object members must be set to anything other than private in order for
    * \Drupal\Core\DependencyInjection\DependencySerialization to be detected.
    *
-   * @var \Drupal\Core\Entity\EntityTypeManager
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
   protected $entityTypeManager;
 
@@ -40,7 +40,7 @@ class IndexForm extends EntityForm {
   /**
    * Constructs an IndexForm object.
    *
-   * @param \Drupal\Core\Entity\EntityManager|\Drupal\Core\Entity\EntityTypeManagerInterface $entity_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_manager
    *   The entity type manager.
    * @param ClientManagerInterface $client_manager
    */
@@ -67,7 +67,7 @@ class IndexForm extends EntityForm {
   /**
    * Get the entity manager.
    *
-   * @return \Drupal\Core\Entity\EntityManager
+   * @return \Drupal\Core\Entity\EntityTypeManagerInterface
    *   An instance of EntityManager.
    */
   protected function getEntityManager() {

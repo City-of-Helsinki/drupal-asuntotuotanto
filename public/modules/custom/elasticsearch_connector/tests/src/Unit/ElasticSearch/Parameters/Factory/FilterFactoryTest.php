@@ -79,7 +79,7 @@ class FilterFactoryTest extends UnitTestCase {
     $condition->getField()
       ->willReturn('foo');
 
-    $this->setExpectedException(\Exception::class, 'Incorrect filter criteria');
+    $this->expectException(\Exception::class, 'Incorrect filter criteria');
     FilterFactory::filterFromCondition($condition->reveal());
   }
 
@@ -263,7 +263,7 @@ class FilterFactoryTest extends UnitTestCase {
     $condition->getField()
       ->willReturn('foo');
 
-    $this->setExpectedException(\Exception::class, 'Incorrect filter criteria');
+    $this->expectException(\Exception::class, 'Incorrect filter criteria');
     FilterFactory::filterFromCondition($condition->reveal());
   }
 

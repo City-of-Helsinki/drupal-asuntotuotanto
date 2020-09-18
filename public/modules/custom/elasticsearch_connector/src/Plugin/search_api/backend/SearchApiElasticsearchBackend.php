@@ -890,7 +890,7 @@ class SearchApiElasticsearchBackend extends BackendPluginBase implements PluginF
   protected function getFacetSearchFilter(QueryInterface $query, array $facet_info) {
     $index_fields = $this->getIndexFields($query);
 
-    if (isset($facet_info['operator']) && Unicode::strtolower($facet_info['operator']) == 'or') {
+    if (isset($facet_info['operator']) && mb_strtolower($facet_info['operator']) == 'or') {
       $facet_search_filter = $this->parseConditionGroup($query->getConditionGroup(), $index_fields, $facet_info['field']);
       if (!empty($facet_search_filter)) {
         $facet_search_filter = $facet_search_filter[0];
