@@ -2,3 +2,5 @@ vendor
 composer.lock
 .idea
 tests/src/Behat/behat.local.yml
+
+!index.php
