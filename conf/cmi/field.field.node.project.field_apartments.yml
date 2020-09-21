@@ -1,18 +1,18 @@
-uuid: 383bd176-267b-43d7-8207-805c9563e4f8
+uuid: 46246aed-3a52-467c-8083-db2b4206c41f
 langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.node.field_project
+    - field.storage.node.field_apartments
     - node.type.apartment
     - node.type.project
-id: node.apartment.field_project
-field_name: field_project
+id: node.project.field_apartments
+field_name: field_apartments
 entity_type: node
-bundle: apartment
-label: Project
+bundle: project
+label: Apartments
 description: ''
-required: true
+required: false
 translatable: false
 default_value: {  }
 default_value_callback: ''
@@ -20,10 +20,9 @@ settings:
   handler: 'default:node'
   handler_settings:
     target_bundles:
-      project: project
+      apartment: apartment
     sort:
-      field: title
-      direction: ASC
+      field: _none
     auto_create: true
     auto_create_bundle: ''
 field_type: entity_reference

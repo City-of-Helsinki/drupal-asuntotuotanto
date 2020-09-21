@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.node.project.field_apartments
     - field.field.node.project.field_attachments_url
     - field.field.node.project.field_builder
     - field.field.node.project.field_building_material
@@ -36,6 +37,7 @@ dependencies:
   module:
     - datetime_range
     - field_group
+    - inline_entity_form
     - link
     - path
     - text
@@ -46,9 +48,10 @@ third_party_settings:
       children:
         - group_basic
         - group_properties
-        - group_schedules
+        - group_apartments
         - group_pictures_and_videos
         - group_persons_and_operators
+        - group_schedules
       parent_name: ''
       weight: 10
       format_type: tabs
@@ -129,7 +132,7 @@ third_party_settings:
       children:
         - field_publication_dates
       parent_name: group_project_tabs
-      weight: 21
+      weight: 24
       format_type: tab
       region: content
       format_settings:
@@ -157,7 +160,7 @@ third_party_settings:
       children:
         - field_builder
       parent_name: group_project_tabs
-      weight: 24
+      weight: 23
       format_type: tab
       region: content
       format_settings:
@@ -167,6 +170,20 @@ third_party_settings:
         formatter: closed
         required_fields: true
       label: 'Persons and operators'
+    group_apartments:
+      children:
+        - field_apartments
+      parent_name: group_project_tabs
+      weight: 21
+      format_type: tab
+      region: content
+      format_settings:
+        id: ''
+        classes: ''
+        description: ''
+        formatter: closed
+        required_fields: true
+      label: Apartments
 id: node.project.default
 targetEntityType: node
 bundle: project
@@ -178,6 +195,23 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
+  field_apartments:
+    weight: 48
+    settings:
+      form_mode: default
+      override_labels: true
+      label_singular: apartment
+      label_plural: apartments
+      allow_new: true
+      match_operator: CONTAINS
+      revision: false
+      collapsible: false
+      collapsed: false
+      allow_existing: false
+      allow_duplicate: false
+    third_party_settings: {  }
+    type: inline_entity_form_complex
+    region: content
   field_attachments_url:
     weight: 23
     settings:

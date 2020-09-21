@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - core.entity_view_mode.node.teaser
+    - field.field.node.project.field_apartments
     - field.field.node.project.field_attachments_url
     - field.field.node.project.field_builder
     - field.field.node.project.field_building_material
@@ -47,6 +48,7 @@ content:
     third_party_settings: {  }
     region: content
 hidden:
+  field_apartments: true
   field_attachments_url: true
   field_builder: true
   field_building_material: true

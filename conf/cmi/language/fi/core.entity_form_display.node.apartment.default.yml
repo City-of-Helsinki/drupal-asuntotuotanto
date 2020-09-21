@@ -4,7 +4,3 @@ third_party_settings:
       label: 'Huoneiston valikko'
     group_ap_basic:
       label: Perustiedot
-    group_ap_building:
-      label: Rakennus
-    group_ap_project:
-      label: Kohde

@@ -28,7 +28,7 @@ const uglify = require("gulp-uglify-es").default;
 // ------
 const basePath = {
   src: "./src/",
-  dist: "./assets/",
+  dist: "./dist/",
   templates: "./templates/"
 };
 

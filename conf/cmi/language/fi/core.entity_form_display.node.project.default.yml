@@ -12,3 +12,10 @@ third_party_settings:
       label: 'Kuvat ja videot'
     group_persons_and_operators:
       label: 'Henkilöt ja toimijat'
+    group_apartments:
+      label: Huoneistot
+content:
+  field_apartments:
+    settings:
+      label_singular: huoneisto
+      label_plural: huoneistoja

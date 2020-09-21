@@ -1,20 +1,18 @@
-uuid: ea4b06a9-d11f-47b7-bca9-a025cde322d2
+uuid: 4d2a94e1-27c1-45d2-83df-4afe8e2ffa0b
 langcode: en
 status: true
 dependencies:
   module:
     - node
-id: node.field_hc_region
-field_name: field_hc_region
+id: node.field_apartments
+field_name: field_apartments
 entity_type: node
-type: string
+type: entity_reference
 settings:
-  max_length: 255
-  is_ascii: false
-  case_sensitive: false
+  target_type: node
 module: core
 locked: false
-cardinality: 1
+cardinality: -1
 translatable: true
 indexes: {  }
 persist_with_no_fields: false

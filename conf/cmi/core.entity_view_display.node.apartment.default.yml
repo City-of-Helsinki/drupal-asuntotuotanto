@@ -9,7 +9,6 @@ dependencies:
     - field.field.node.apartment.field_ap_living_area
     - field.field.node.apartment.field_ap_number_of_rooms
     - field.field.node.apartment.field_ap_showing_date
-    - field.field.node.apartment.field_project
     - node.type.apartment
   module:
     - datetime_range
@@ -103,14 +102,6 @@ content:
       timezone_override: ''
     third_party_settings: {  }
     type: daterange_default
-    region: content
-  field_project:
-    weight: 10
-    label: above
-    settings:
-      link: true
-    third_party_settings: {  }
-    type: entity_reference_label
     region: content
   links:
     weight: 0

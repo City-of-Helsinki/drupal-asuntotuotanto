@@ -10,7 +10,6 @@ dependencies:
     - field.field.node.apartment.field_ap_living_area
     - field.field.node.apartment.field_ap_number_of_rooms
     - field.field.node.apartment.field_ap_showing_date
-    - field.field.node.apartment.field_project
     - node.type.apartment
   module:
     - user
@@ -31,6 +30,5 @@ hidden:
   field_ap_living_area: true
   field_ap_number_of_rooms: true
   field_ap_showing_date: true
-  field_project: true
   langcode: true
   search_api_excerpt: true
