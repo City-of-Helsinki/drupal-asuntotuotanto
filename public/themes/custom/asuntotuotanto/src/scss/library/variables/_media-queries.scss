@@ -1,0 +1,24 @@
+//
+// @file
+//
+// This file includes all variables related to media queries
+//
+
+$for-small-mobile-portrait-up: 321px;
+$for-mobile-portrait-up: 420px;
+$for-mobile-landscape-up: 570px;
+$for-tablet-portrait-up: 769px;
+$for-tablet-landscape-up: 992px;
+$for-desktop-up: 1170px;
+
+// Custom breakpoint for navigation.
+$for-navigation-desktop: 900px;
+
+// Adjust value of container
+$container-tablet-portrait: 750px;
+$container-tablet-landscape: 970px;
+$container-desktop: 1170px;
+
+$content-area: 790px;
+
+$gutter: 15px;
