@@ -19,7 +19,7 @@ else
 endif
 
 PHONY += build-theme
-build-theme: DOCKER_NODE_IMG ?= node:8.16.0-alpine
+build-theme: DOCKER_NODE_IMG ?= node:12.18-alpine
 build-theme: WD := /usr/src/app
 build-theme: ## Install NPM packages and build theme
 ifeq ($(ENV),dev)
