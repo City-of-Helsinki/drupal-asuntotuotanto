@@ -1,0 +1,19 @@
+uuid: 6eef61ca-2a3a-4efc-9494-9b4d6074523c
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_view_description
+    - node.type.apartment
+id: node.apartment.field_view_description
+field_name: field_view_description
+entity_type: node
+bundle: apartment
+label: 'View description'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string_long

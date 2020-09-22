@@ -1,0 +1,23 @@
+uuid: f51a77d7-aba2-43b1-a12a-8b613eda34bf
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_has_terrace
+    - node.type.apartment
+id: node.apartment.field_has_terrace
+field_name: field_has_terrace
+entity_type: node
+bundle: apartment
+label: Terrace
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

@@ -1,0 +1,19 @@
+uuid: 1c97dcd8-888d-416f-8f3f-91e865a88241
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_services_description
+    - node.type.apartment
+id: node.apartment.field_services_description
+field_name: field_services_description
+entity_type: node
+bundle: apartment
+label: Services
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string_long

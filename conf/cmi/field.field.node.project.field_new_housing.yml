@@ -1,0 +1,23 @@
+uuid: 2c8287c2-4a35-4dc9-889b-09bd908cc6b3
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_new_housing
+    - node.type.project
+id: node.project.field_new_housing
+field_name: field_new_housing
+entity_type: node
+bundle: project
+label: 'New housing'
+description: ''
+required: true
+translatable: false
+default_value:
+  -
+    value: 1
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

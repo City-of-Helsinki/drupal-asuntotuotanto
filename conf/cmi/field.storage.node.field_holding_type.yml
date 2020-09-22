@@ -1,0 +1,27 @@
+uuid: ce22c857-169d-45cd-b22a-10145793a16a
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+    - options
+id: node.field_holding_type
+field_name: field_holding_type
+entity_type: node
+type: list_string
+settings:
+  allowed_values:
+    -
+      value: om
+      label: Condominium
+    -
+      value: ao
+      label: 'Right of residence apartment'
+  allowed_values_function: ''
+module: options
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

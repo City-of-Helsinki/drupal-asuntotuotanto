@@ -1,0 +1,19 @@
+uuid: d4f34e85-c335-4130-9967-51f7288372b4
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_apartment_holding_type
+    - node.type.apartment
+id: node.apartment.field_apartment_holding_type
+field_name: field_apartment_holding_type
+entity_type: node
+bundle: apartment
+label: 'Apartment holding type'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

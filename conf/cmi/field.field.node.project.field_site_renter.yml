@@ -1,0 +1,21 @@
+uuid: 665ad5be-ee87-4813-8e9d-f42b870e1a60
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_site_renter
+    - node.type.project
+id: node.project.field_site_renter
+field_name: field_site_renter
+entity_type: node
+bundle: project
+label: 'Site renter'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 'City of Helsinki'
+default_value_callback: ''
+settings: {  }
+field_type: string

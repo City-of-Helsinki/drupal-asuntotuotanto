@@ -1,5 +1,0 @@
-label: Uudiskohde
-description: 'Onko kohde uudiskohde?'
-settings:
-  on_label: Kyllä
-  off_label: Ei

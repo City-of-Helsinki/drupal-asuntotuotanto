@@ -1,0 +1,34 @@
+//
+// @file
+//
+// This file includes styles for a page layout.
+//
+.page-content {
+  padding: $gutter 0;
+
+  @include breakpoint($for-tablet-portrait-up) {
+    padding: $gutter * 2.4 0;
+  }
+}
+
+.content__wrapper {
+  display: block;
+
+  @include breakpoint($for-tablet-portrait-up) {
+    display: flex;
+  }
+}
+
+.sidebar--first {
+  @include breakpoint($for-tablet-portrait-up) {
+    margin-right: $gutter * 2;
+    max-width: 270px;
+    min-width: 270px;
+    padding: 35px 0 0 0;
+  }
+
+  @include breakpoint($for-tablet-landscape-up) {
+    max-width: 300px;
+    min-width: 300px;
+  }
+}

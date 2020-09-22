@@ -1,0 +1,23 @@
+uuid: b3e16d50-981b-453f-9abe-62c98efa0765
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_application_url
+    - node.type.apartment
+  module:
+    - link
+id: node.apartment.field_application_url
+field_name: field_application_url
+entity_type: node
+bundle: apartment
+label: 'Application URL'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  link_type: 17
+  title: 0
+field_type: link

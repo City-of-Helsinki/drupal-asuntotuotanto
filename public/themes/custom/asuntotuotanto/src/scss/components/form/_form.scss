@@ -1,0 +1,299 @@
+// All forms in content area
+.section--content form {
+  display: flex;
+  flex-direction: column;
+  padding-bottom: $gutter * 1.5;
+
+  &:not(.user-login-form) {
+    margin-bottom: $gutter * 1.5;
+  }
+
+  &.user-login-form {
+    .form-item {
+      max-width: 500px;
+    }
+  }
+
+  .container {
+    border-bottom: 1px solid $gray;
+    margin-bottom: $gutter * 2;
+    padding-bottom: $gutter;
+  }
+
+  .fieldset-legend {
+    @include font-size(18px, 26px);
+    @include font-weight($regular);
+    display: inline-block;
+    margin-bottom: $gutter / 1.5;
+  }
+
+  fieldset.form-item {
+    margin: 0 0 $gutter * 2;
+
+    .form-checkboxes,
+    .form-radios {
+      margin: 0;
+
+      label {
+        @include font-size(18px, 23px);
+        @include font-weight($regular);
+      }
+    }
+  }
+
+  details {
+    @include font-size(18px, 27px);
+    @include font-weight($regular);
+    background: $white;
+    border-radius: 5px;
+    letter-spacing: 0;
+    padding: $gutter;
+    transition-duration: 0.2s;
+    transition-property: all;
+    width: 100%;
+
+    fieldset {
+      border: 0 none;
+
+      .fieldset-wrapper {
+        .label {
+          @include font-size(17px, 24px);
+          @include font-weight($semibold);
+        }
+
+        .container-inline {
+          display: flex;
+
+          .form-item {
+            flex: 1 1 50%;
+            padding: 0 $gutter * 2 $gutter 0;
+          }
+        }
+      }
+    }
+  }
+
+  .form-item {
+    @include font-size(16px, 24px);
+    display: block;
+    margin: 0 0 $gutter;
+    padding: 0;
+
+    label:not(.visually-hidden) {
+      @include font-size(18px, 26px);
+      @include font-weight($regular);
+      color: $black;
+      display: inline-block;
+      letter-spacing: 0;
+      margin-bottom: $gutter / 1.5;
+      text-align: left;
+      width: 100%;
+    }
+
+    .description {
+      @include font-size(13px, 20px);
+    }
+
+    select,
+    textarea,
+    input[type="text"],
+    input[type="tel"],
+    input[type="password"],
+    input[type="url"],
+    input[type="email"],
+    input[type="date"],
+    .select2-container--default .select2-selection--single {
+      @include font-size(18px, 27px);
+      @include font-weight($regular);
+      background: $white;
+      border: 1px solid $gray-medium;
+      border-radius: 5px;
+      box-sizing: border-box;
+      height: 55px;
+      letter-spacing: 0;
+      padding: $gutter;
+      transition-duration: 0.2s;
+      transition-property: all;
+      width: 100%;
+
+      &::placeholder {
+        color: $gray-dark;
+      }
+
+      &:focus {
+        border-color: transparent;
+        box-shadow: none;
+        color: $black;
+        outline: $blue auto 3px;
+      }
+
+      &[disabled],
+      &[disabled]:active,
+      &[disabled]:focus,
+      &[disabled]:hover {
+        background-color: pink;
+      }
+
+      &::-ms-clear {
+        display: none;
+      }
+      &::-ms-expand {
+        display: none;
+      }
+    }
+
+    .form-textarea-wrapper textarea {
+      height: 120px;
+    }
+
+    input[type="search"] {
+      @include font-size(18px, 27px);
+      @include font-weight($regular);
+      background: $white;
+      border: 0 none;
+      height: 55px;
+      letter-spacing: 0;
+      padding: $gutter;
+      transition-duration: 0.2s;
+      transition-property: all;
+      width: 100%;
+    }
+
+    input[type="submit"] {
+      align-self: flex-end;
+      height: 2.5em;
+    }
+
+    .form-type-textarea + div {
+      display: none;
+    }
+
+    &.form-type-radio {
+      cursor: pointer;
+      display: inline;
+      margin-bottom: $gutter * 2;
+      margin-right: $gutter * 1.5;
+
+      input[type="radio"] {
+        opacity: 0;
+
+        &+ label:after {
+          content: none;
+        }
+
+        &:checked + label::after {
+          content: "";
+        }
+
+        &:focus + label::before {
+          outline: $cyan auto 3px;
+        }
+      }
+
+      label {
+        cursor: pointer;
+        display: inline;
+        margin-left: -#{$gutter};
+        padding-left: 40px;
+        position: relative;
+
+        &:before {
+          border: 1px solid $gray-medium;
+          border-radius: 50%;
+          content: "";
+          display: inline-block;
+          height: 30px;
+          left: 0;
+          position: absolute;
+          top: -5px;
+          width: 30px;
+        }
+
+        &:after {
+          background-color: $cyan;
+          border-radius: 50%;
+          content: "";
+          display: inline-block;
+          height: 20px;
+          left: 5px;
+          position: absolute;
+          top: 0;
+          width: 20px;
+        }
+      }
+    }
+
+    &.form-type-checkbox {
+      margin-bottom: $gutter;
+
+      &:last-of-type {
+        margin-bottom: $gutter * 10;
+      }
+
+      input[type="checkbox"] {
+        opacity: 0;
+
+        &+ label:after {
+          content: none;
+        }
+
+        &:checked + label::after {
+          content: "";
+        }
+
+        &:focus + label::before {
+          outline: $cyan auto 3px;
+        }
+      }
+
+      label {
+        cursor: pointer;
+        display: inline;
+        margin-left: -#{$gutter};
+        padding-left: 40px;
+        position: relative;
+
+        &:before{
+          border: 1px solid $gray-medium;
+          border-radius: 5px;
+          content: "";
+          display: inline-block;
+          height: 30px;
+          left: 0;
+          position: absolute;
+          top: -5px;
+          width: 30px;
+        }
+
+        &:after {
+          background-color: $cyan;
+          border-radius: 3px;
+          content: "";
+          display: inline-block;
+          height: 20px;
+          left: 5px;
+          position: absolute;
+          top: 0;
+          width: 20px;
+        }
+      }
+    }
+
+    &.form-type-textarea {
+      margin-bottom: $gutter * 2;
+    }
+  }
+
+  .form__group {
+    margin-bottom: $gutter * 2;
+
+    h3 {
+      @include font-size(20px);
+    }
+
+    &.form__divider {
+      border-top: 1px solid $gray-medium;
+      padding-top: $gutter;
+    }
+  }
+}

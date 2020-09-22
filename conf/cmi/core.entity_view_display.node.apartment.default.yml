@@ -3,24 +3,45 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.field.node.apartment.field_ap_apartment_number
-    - field.field.node.apartment.field_ap_floor
-    - field.field.node.apartment.field_ap_general_condition
-    - field.field.node.apartment.field_ap_living_area
-    - field.field.node.apartment.field_ap_number_of_rooms
-    - field.field.node.apartment.field_ap_showing_date
-    - field.field.node.apartment.field_project
+    - field.field.node.apartment.field_additional_information
+    - field.field.node.apartment.field_apartment_address
+    - field.field.node.apartment.field_apartment_holding_type
+    - field.field.node.apartment.field_apartment_number
+    - field.field.node.apartment.field_apartment_structure
+    - field.field.node.apartment.field_application_url
+    - field.field.node.apartment.field_balcony_description
+    - field.field.node.apartment.field_bathroom_appliances
+    - field.field.node.apartment.field_condition
+    - field.field.node.apartment.field_debt_free_sales_price
+    - field.field.node.apartment.field_financing_fee
+    - field.field.node.apartment.field_floor
+    - field.field.node.apartment.field_has_apartment_sauna
+    - field.field.node.apartment.field_has_balcony
+    - field.field.node.apartment.field_has_terrace
+    - field.field.node.apartment.field_has_yard
+    - field.field.node.apartment.field_kitchen_appliances
+    - field.field.node.apartment.field_living_area
+    - field.field.node.apartment.field_maintenance_fee
+    - field.field.node.apartment.field_other_fees
+    - field.field.node.apartment.field_parking_fee
+    - field.field.node.apartment.field_room_count
+    - field.field.node.apartment.field_sales_price
+    - field.field.node.apartment.field_services_description
+    - field.field.node.apartment.field_showing_time
+    - field.field.node.apartment.field_storage_description
+    - field.field.node.apartment.field_view_description
+    - field.field.node.apartment.field_water_fee
+    - field.field.node.apartment.field_water_fee_explanation
     - node.type.apartment
   module:
-    - datetime_range
+    - datetime
     - field_group
-    - options
+    - link
     - user
 third_party_settings:
   field_group:
     group_housing_company:
-      children:
-        - field_ap_housing_company
+      children: {  }
       parent_name: ''
       weight: 1
       format_type: details
@@ -32,8 +53,7 @@ third_party_settings:
         classes: ''
       label: 'Housing company'
     group_building:
-      children:
-        - field_ap_building
+      children: {  }
       parent_name: ''
       weight: 2
       format_type: details
@@ -50,33 +70,75 @@ targetEntityType: node
 bundle: apartment
 mode: default
 content:
-  field_ap_apartment_number:
+  field_additional_information:
+    weight: 31
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: basic_string
+    region: content
+  field_apartment_address:
     weight: 5
-    label: inline
+    label: above
     settings:
       link_to_entity: false
     third_party_settings: {  }
     type: string
     region: content
-  field_ap_floor:
-    weight: 6
-    label: inline
+  field_apartment_holding_type:
+    weight: 19
+    label: above
     settings:
-      thousand_separator: ''
-      prefix_suffix: true
+      link_to_entity: false
     third_party_settings: {  }
-    type: number_integer
+    type: string
     region: content
-  field_ap_general_condition:
+  field_apartment_number:
+    weight: 6
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_apartment_structure:
     weight: 9
-    label: inline
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_application_url:
+    weight: 32
+    label: above
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+    type: link
+    region: content
+  field_balcony_description:
+    weight: 15
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_bathroom_appliances:
+    weight: 16
+    label: above
     settings: {  }
     third_party_settings: {  }
-    type: list_default
+    type: basic_string
     region: content
-  field_ap_living_area:
-    weight: 3
-    label: inline
+  field_debt_free_sales_price:
+    weight: 23
+    label: above
     settings:
       thousand_separator: ''
       decimal_separator: .
@@ -85,32 +147,181 @@ content:
     third_party_settings: {  }
     type: number_decimal
     region: content
-  field_ap_number_of_rooms:
+  field_financing_fee:
+    weight: 24
+    label: above
+    settings:
+      thousand_separator: ''
+      decimal_separator: .
+      scale: 2
+      prefix_suffix: true
+    third_party_settings: {  }
+    type: number_decimal
+    region: content
+  field_floor:
     weight: 8
-    label: inline
+    label: above
     settings:
       thousand_separator: ''
       prefix_suffix: true
     third_party_settings: {  }
     type: number_integer
     region: content
-  field_ap_showing_date:
-    weight: 7
-    label: inline
+  field_has_apartment_sauna:
+    weight: 18
+    label: above
     settings:
-      separator: '-'
-      format_type: medium
-      timezone_override: ''
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
     third_party_settings: {  }
-    type: daterange_default
+    type: boolean
     region: content
-  field_project:
+  field_has_balcony:
+    weight: 14
+    label: above
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    type: boolean
+    region: content
+  field_has_terrace:
+    weight: 13
+    label: above
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    type: boolean
+    region: content
+  field_has_yard:
+    weight: 12
+    label: above
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    type: boolean
+    region: content
+  field_kitchen_appliances:
+    weight: 11
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_living_area:
+    weight: 7
+    label: above
+    settings:
+      thousand_separator: ''
+      decimal_separator: .
+      scale: 2
+      prefix_suffix: true
+    third_party_settings: {  }
+    type: number_decimal
+    region: content
+  field_maintenance_fee:
+    weight: 25
+    label: above
+    settings:
+      thousand_separator: ''
+      decimal_separator: .
+      scale: 2
+      prefix_suffix: true
+    third_party_settings: {  }
+    type: number_decimal
+    region: content
+  field_other_fees:
+    weight: 29
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: basic_string
+    region: content
+  field_parking_fee:
+    weight: 28
+    label: above
+    settings:
+      thousand_separator: ''
+      decimal_separator: .
+      scale: 2
+      prefix_suffix: true
+    third_party_settings: {  }
+    type: number_decimal
+    region: content
+  field_room_count:
     weight: 10
     label: above
     settings:
-      link: true
+      thousand_separator: ''
+      prefix_suffix: true
     third_party_settings: {  }
-    type: entity_reference_label
+    type: number_integer
+    region: content
+  field_sales_price:
+    weight: 22
+    label: above
+    settings:
+      thousand_separator: ''
+      decimal_separator: .
+      scale: 2
+      prefix_suffix: true
+    third_party_settings: {  }
+    type: number_decimal
+    region: content
+  field_services_description:
+    weight: 30
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: basic_string
+    region: content
+  field_showing_time:
+    weight: 21
+    label: above
+    settings:
+      format_type: medium
+      timezone_override: ''
+    third_party_settings: {  }
+    type: datetime_default
+    region: content
+  field_storage_description:
+    weight: 17
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: basic_string
+    region: content
+  field_view_description:
+    weight: 20
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: basic_string
+    region: content
+  field_water_fee:
+    weight: 26
+    label: above
+    settings:
+      thousand_separator: ''
+      decimal_separator: .
+      scale: 2
+      prefix_suffix: true
+    third_party_settings: {  }
+    type: number_decimal
+    region: content
+  field_water_fee_explanation:
+    weight: 27
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: basic_string
     region: content
   links:
     weight: 0
@@ -118,5 +329,6 @@ content:
     settings: {  }
     third_party_settings: {  }
 hidden:
+  field_condition: true
   langcode: true
   search_api_excerpt: true

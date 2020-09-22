@@ -4,13 +4,35 @@ status: true
 dependencies:
   config:
     - core.entity_view_mode.node.teaser
-    - field.field.node.apartment.field_ap_apartment_number
-    - field.field.node.apartment.field_ap_floor
-    - field.field.node.apartment.field_ap_general_condition
-    - field.field.node.apartment.field_ap_living_area
-    - field.field.node.apartment.field_ap_number_of_rooms
-    - field.field.node.apartment.field_ap_showing_date
-    - field.field.node.apartment.field_project
+    - field.field.node.apartment.field_additional_information
+    - field.field.node.apartment.field_apartment_address
+    - field.field.node.apartment.field_apartment_holding_type
+    - field.field.node.apartment.field_apartment_number
+    - field.field.node.apartment.field_apartment_structure
+    - field.field.node.apartment.field_application_url
+    - field.field.node.apartment.field_balcony_description
+    - field.field.node.apartment.field_bathroom_appliances
+    - field.field.node.apartment.field_condition
+    - field.field.node.apartment.field_debt_free_sales_price
+    - field.field.node.apartment.field_financing_fee
+    - field.field.node.apartment.field_floor
+    - field.field.node.apartment.field_has_apartment_sauna
+    - field.field.node.apartment.field_has_balcony
+    - field.field.node.apartment.field_has_terrace
+    - field.field.node.apartment.field_has_yard
+    - field.field.node.apartment.field_kitchen_appliances
+    - field.field.node.apartment.field_living_area
+    - field.field.node.apartment.field_maintenance_fee
+    - field.field.node.apartment.field_other_fees
+    - field.field.node.apartment.field_parking_fee
+    - field.field.node.apartment.field_room_count
+    - field.field.node.apartment.field_sales_price
+    - field.field.node.apartment.field_services_description
+    - field.field.node.apartment.field_showing_time
+    - field.field.node.apartment.field_storage_description
+    - field.field.node.apartment.field_view_description
+    - field.field.node.apartment.field_water_fee
+    - field.field.node.apartment.field_water_fee_explanation
     - node.type.apartment
   module:
     - user
@@ -25,12 +47,34 @@ content:
     third_party_settings: {  }
     region: content
 hidden:
-  field_ap_apartment_number: true
-  field_ap_floor: true
-  field_ap_general_condition: true
-  field_ap_living_area: true
-  field_ap_number_of_rooms: true
-  field_ap_showing_date: true
-  field_project: true
+  field_additional_information: true
+  field_apartment_address: true
+  field_apartment_holding_type: true
+  field_apartment_number: true
+  field_apartment_structure: true
+  field_application_url: true
+  field_balcony_description: true
+  field_bathroom_appliances: true
+  field_condition: true
+  field_debt_free_sales_price: true
+  field_financing_fee: true
+  field_floor: true
+  field_has_apartment_sauna: true
+  field_has_balcony: true
+  field_has_terrace: true
+  field_has_yard: true
+  field_kitchen_appliances: true
+  field_living_area: true
+  field_maintenance_fee: true
+  field_other_fees: true
+  field_parking_fee: true
+  field_room_count: true
+  field_sales_price: true
+  field_services_description: true
+  field_showing_time: true
+  field_storage_description: true
+  field_view_description: true
+  field_water_fee: true
+  field_water_fee_explanation: true
   langcode: true
   search_api_excerpt: true

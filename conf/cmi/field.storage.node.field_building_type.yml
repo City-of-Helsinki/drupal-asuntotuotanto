@@ -12,10 +12,10 @@ type: list_string
 settings:
   allowed_values:
     -
-      value: '0'
+      value: apartment_house
       label: 'Apartment house'
     -
-      value: '1'
+      value: terraced_house
       label: 'Terraced house'
   allowed_values_function: ''
 module: options

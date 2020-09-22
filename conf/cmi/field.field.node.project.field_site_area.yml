@@ -1,4 +1,4 @@
-uuid: fd56667e-e6e7-4006-95e5-28fe6c309d69
+uuid: b2bbbe78-bc77-4450-9d02-81eef843e58e
 langcode: en
 status: true
 dependencies:
@@ -12,8 +12,12 @@ bundle: project
 label: 'Site area'
 description: ''
 required: false
-translatable: true
+translatable: false
 default_value: {  }
 default_value_callback: ''
-settings: {  }
-field_type: string
+settings:
+  min: null
+  max: null
+  prefix: ''
+  suffix: m<sup>2</sup>
+field_type: decimal

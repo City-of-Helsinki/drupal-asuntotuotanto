@@ -1,0 +1,19 @@
+uuid: fa723607-f8e0-45dd-b6ee-ca1646a05e79
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_apartment_number
+    - node.type.apartment
+id: node.apartment.field_apartment_number
+field_name: field_apartment_number
+entity_type: node
+bundle: apartment
+label: 'Apartment number'
+description: 'For example: C 52'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

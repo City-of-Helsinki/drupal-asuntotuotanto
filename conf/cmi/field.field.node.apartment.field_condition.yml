@@ -1,0 +1,23 @@
+uuid: 6c48c400-f487-4d3f-ae9b-617d0937f7db
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_condition
+    - node.type.apartment
+  module:
+    - options
+id: node.apartment.field_condition
+field_name: field_condition
+entity_type: node
+bundle: apartment
+label: 'General condition'
+description: ''
+required: true
+translatable: false
+default_value:
+  -
+    value: 1
+default_value_callback: ''
+settings: {  }
+field_type: list_integer

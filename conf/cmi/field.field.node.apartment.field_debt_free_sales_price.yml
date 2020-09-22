@@ -1,0 +1,23 @@
+uuid: 135caeac-24e6-4986-a372-d8d2435ed4f6
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_debt_free_sales_price
+    - node.type.apartment
+id: node.apartment.field_debt_free_sales_price
+field_name: field_debt_free_sales_price
+entity_type: node
+bundle: apartment
+label: 'Debt free sales price'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: null
+  max: null
+  prefix: ''
+  suffix: €
+field_type: decimal

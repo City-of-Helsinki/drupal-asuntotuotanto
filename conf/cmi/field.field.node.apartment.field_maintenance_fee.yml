@@ -1,0 +1,23 @@
+uuid: b905b582-0d7d-432b-a264-fcaece5acaa7
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_maintenance_fee
+    - node.type.apartment
+id: node.apartment.field_maintenance_fee
+field_name: field_maintenance_fee
+entity_type: node
+bundle: apartment
+label: 'Maintenance fee'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: null
+  max: null
+  prefix: ''
+  suffix: '€ / month'
+field_type: decimal

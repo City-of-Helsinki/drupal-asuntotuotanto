@@ -1,0 +1,21 @@
+uuid: 99befbe5-205a-4914-ae61-91e2d850389b
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_city
+    - node.type.project
+id: node.project.field_city
+field_name: field_city
+entity_type: node
+bundle: project
+label: City
+description: ''
+required: true
+translatable: false
+default_value:
+  -
+    value: Helsinki
+default_value_callback: ''
+settings: {  }
+field_type: string

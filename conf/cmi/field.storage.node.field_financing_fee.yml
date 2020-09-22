@@ -1,0 +1,20 @@
+uuid: f1555dc1-08eb-4b4e-a77d-d50bcec5ef87
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: node.field_financing_fee
+field_name: field_financing_fee
+entity_type: node
+type: decimal
+settings:
+  precision: 10
+  scale: 2
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

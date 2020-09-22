@@ -1,0 +1,21 @@
+name: City of Helsinki - Asuntotuotanto
+description: A Drupal 9 theme - Based on stable.
+type: theme
+core_version_requirement: ^8 || ^9
+screenshot: asuntotuotanto.jpg
+base theme: stable
+
+# Define Libraries
+libraries:
+  - asuntotuotanto/global-styling
+
+# Define regions
+regions:
+  top: Top
+  header: Header
+  content: Content
+  sidebar_first: First Sidebar
+  sidebar_second: Second Sidebar
+  footer_top: Footer Top
+  footer: Footer
+  footer_bottom: Footer Bottom

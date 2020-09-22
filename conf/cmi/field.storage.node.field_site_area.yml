@@ -1,4 +1,4 @@
-uuid: ff66da2f-7577-4f20-8911-b637eef70248
+uuid: 1a4c166b-bd13-4d4f-ab97-95d8633cd5a7
 langcode: en
 status: true
 dependencies:
@@ -7,11 +7,10 @@ dependencies:
 id: node.field_site_area
 field_name: field_site_area
 entity_type: node
-type: string
+type: decimal
 settings:
-  max_length: 255
-  is_ascii: false
-  case_sensitive: false
+  precision: 10
+  scale: 2
 module: core
 locked: false
 cardinality: 1

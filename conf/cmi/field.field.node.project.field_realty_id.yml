@@ -1,0 +1,19 @@
+uuid: cc56178d-47b0-44a2-9322-89ee41da04cf
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_realty_id
+    - node.type.project
+id: node.project.field_realty_id
+field_name: field_realty_id
+entity_type: node
+bundle: project
+label: 'Realty ID'
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string
