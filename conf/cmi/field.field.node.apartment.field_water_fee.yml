@@ -1,0 +1,23 @@
+uuid: f6e730d6-c148-4957-82fb-b0c676fb47dc
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_water_fee
+    - node.type.apartment
+id: node.apartment.field_water_fee
+field_name: field_water_fee
+entity_type: node
+bundle: apartment
+label: 'Water fee'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: null
+  max: null
+  prefix: ''
+  suffix: €
+field_type: decimal

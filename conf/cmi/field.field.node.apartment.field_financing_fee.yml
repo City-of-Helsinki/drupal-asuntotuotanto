@@ -1,0 +1,23 @@
+uuid: 50c74b99-7489-43d1-be7c-0f263a4831d5
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_financing_fee
+    - node.type.apartment
+id: node.apartment.field_financing_fee
+field_name: field_financing_fee
+entity_type: node
+bundle: apartment
+label: 'Financing fee'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: null
+  max: null
+  prefix: ''
+  suffix: '€ / month'
+field_type: decimal

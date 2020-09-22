@@ -1,0 +1,23 @@
+uuid: 13b4c25f-9a66-4420-b8c4-3b6906725f43
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_has_yard
+    - node.type.apartment
+id: node.apartment.field_has_yard
+field_name: field_has_yard
+entity_type: node
+bundle: apartment
+label: Yard
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

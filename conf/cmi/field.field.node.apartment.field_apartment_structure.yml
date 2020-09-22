@@ -1,0 +1,19 @@
+uuid: 3ff2979f-d7a1-42a4-af7c-a9b8c8432123
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_apartment_structure
+    - node.type.apartment
+id: node.apartment.field_apartment_structure
+field_name: field_apartment_structure
+entity_type: node
+bundle: apartment
+label: 'Apartment structure'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

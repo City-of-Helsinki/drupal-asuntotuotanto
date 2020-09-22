@@ -1,0 +1,19 @@
+uuid: 906d1cbf-61db-4f29-b5f4-462ad8466b2c
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_balcony_description
+    - node.type.apartment
+id: node.apartment.field_balcony_description
+field_name: field_balcony_description
+entity_type: node
+bundle: apartment
+label: 'Balcony description'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string_long

@@ -1,22 +1,19 @@
-uuid: c66f70a5-66b3-48e3-9474-2fa95af9edda
+uuid: ce8ae421-7e19-4c8d-9233-69b34609555c
 langcode: en
 status: true
 dependencies:
   module:
     - node
     - options
-id: node.field_building_type
-field_name: field_building_type
+id: node.field_condition
+field_name: field_condition
 entity_type: node
-type: list_string
+type: list_integer
 settings:
   allowed_values:
     -
-      value: apartment_house
-      label: 'Apartment house'
-    -
-      value: terraced_house
-      label: 'Terraced house'
+      value: 1
+      label: New
   allowed_values_function: ''
 module: options
 locked: false

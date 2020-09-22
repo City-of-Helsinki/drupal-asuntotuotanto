@@ -1,0 +1,21 @@
+uuid: 984ff81f-e473-47f9-8167-1bc58158b234
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_showing_time
+    - node.type.apartment
+  module:
+    - datetime
+id: node.apartment.field_showing_time
+field_name: field_showing_time
+entity_type: node
+bundle: apartment
+label: 'Showing time'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: datetime
