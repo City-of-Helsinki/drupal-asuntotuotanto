@@ -1,5 +1,5 @@
 status: 1
-pattern: '[node:field_project:entity:field_street_address] [node:field_ap_apartment_number] '
+pattern: '[node:field_apartment_address]'
 escape: true
 dependencies:
   config:

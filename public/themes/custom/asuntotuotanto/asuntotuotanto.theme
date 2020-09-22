@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Functions to support theming in the City of Helsinkig - Asuntotuotanto theme.
+ * Functions to support theming in the City of Helsinki - Asuntotuotanto theme.
  */
 
 use Drupal\node\Entity\Node;
