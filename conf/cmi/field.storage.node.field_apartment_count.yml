@@ -1,16 +1,16 @@
-uuid: 1a4c166b-bd13-4d4f-ab97-95d8633cd5a7
+uuid: 99df81a3-5242-4dd2-95a9-faf1ac2dcacd
 langcode: en
 status: true
 dependencies:
   module:
     - node
-id: node.field_site_area
-field_name: field_site_area
+id: node.field_apartment_count
+field_name: field_apartment_count
 entity_type: node
-type: decimal
+type: integer
 settings:
-  precision: 10
-  scale: 2
+  unsigned: false
+  size: normal
 module: core
 locked: false
 cardinality: 1

@@ -1,16 +1,17 @@
-uuid: 1a4c166b-bd13-4d4f-ab97-95d8633cd5a7
+uuid: 8aa4567e-a189-4cde-a25b-85ee1ae167f2
 langcode: en
 status: true
 dependencies:
   module:
     - node
-id: node.field_site_area
-field_name: field_site_area
+id: node.field_construction_material
+field_name: field_construction_material
 entity_type: node
-type: decimal
+type: string
 settings:
-  precision: 10
-  scale: 2
+  max_length: 255
+  is_ascii: false
+  case_sensitive: false
 module: core
 locked: false
 cardinality: 1

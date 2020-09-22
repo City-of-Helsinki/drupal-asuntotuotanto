@@ -1,0 +1,23 @@
+uuid: b24c9db6-0452-4c64-a676-eb05fcf834dd
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_has_elevator
+    - node.type.project
+id: node.project.field_has_elevator
+field_name: field_has_elevator
+entity_type: node
+bundle: project
+label: Elevator
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

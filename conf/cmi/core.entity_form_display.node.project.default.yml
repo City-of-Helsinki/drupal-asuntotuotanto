@@ -3,36 +3,36 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.node.project.field_apartment_count
     - field.field.node.project.field_apartments
     - field.field.node.project.field_attachments_url
     - field.field.node.project.field_builder
-    - field.field.node.project.field_building_material
     - field.field.node.project.field_building_type
-    - field.field.node.project.field_city_plan_pictures
-    - field.field.node.project.field_city_plan_situation
+    - field.field.node.project.field_city
+    - field.field.node.project.field_construction_material
+    - field.field.node.project.field_construction_year
+    - field.field.node.project.field_district
     - field.field.node.project.field_energy_class
+    - field.field.node.project.field_has_elevator
+    - field.field.node.project.field_has_sauna
     - field.field.node.project.field_heating
-    - field.field.node.project.field_housing_company_name
-    - field.field.node.project.field_lift
-    - field.field.node.project.field_mode_of_habitation
-    - field.field.node.project.field_new_development_project
+    - field.field.node.project.field_holding_type
+    - field.field.node.project.field_housing_company
     - field.field.node.project.field_new_development_status
-    - field.field.node.project.field_number_of_apartments
-    - field.field.node.project.field_post_office
+    - field.field.node.project.field_new_housing
     - field.field.node.project.field_postal_code
     - field.field.node.project.field_project_description
     - field.field.node.project.field_publication_dates
-    - field.field.node.project.field_real_estate_id
-    - field.field.node.project.field_region
+    - field.field.node.project.field_realty_id
     - field.field.node.project.field_roof_material
     - field.field.node.project.field_sanitation
-    - field.field.node.project.field_sauna
     - field.field.node.project.field_site_area
-    - field.field.node.project.field_site_rent
-    - field.field.node.project.field_site_type
+    - field.field.node.project.field_site_owner
+    - field.field.node.project.field_site_renter
     - field.field.node.project.field_street_address
     - field.field.node.project.field_tasks
-    - field.field.node.project.field_year_of_building
+    - field.field.node.project.field_zoning_info
+    - field.field.node.project.field_zoning_status
     - node.type.project
   module:
     - datetime_range
@@ -41,7 +41,6 @@ dependencies:
     - link
     - path
     - text
-    - yearonly
 third_party_settings:
   field_group:
     group_project_tabs:
@@ -64,17 +63,16 @@ third_party_settings:
     group_basic:
       children:
         - title
-        - field_housing_company_name
-        - field_mode_of_habitation
+        - field_housing_company
+        - field_holding_type
         - field_street_address
         - field_postal_code
-        - field_post_office
-        - field_region
-        - field_real_estate_id
-        - field_year_of_building
-        - field_new_development_project
+        - field_city
+        - field_district
+        - field_realty_id
+        - field_construction_year
         - field_new_development_status
-        - field_number_of_apartments
+        - field_apartment_count
       parent_name: group_project_tabs
       weight: 19
       format_type: tab
@@ -88,20 +86,22 @@ third_party_settings:
       label: Basic
     group_properties:
       children:
-        - field_lift
-        - field_sauna
-        - field_building_material
+        - field_has_elevator
+        - field_has_sauna
+        - field_construction_material
         - field_roof_material
         - field_heating
         - field_energy_class
-        - field_site_type
         - field_site_area
-        - field_site_rent
+        - field_site_owner
+        - field_site_renter
         - field_sanitation
-        - field_city_plan_pictures
-        - field_city_plan_situation
+        - field_zoning_info
+        - field_zoning_status
         - field_building_type
         - field_project_description
+        - field_city_plan_pictures
+        - field_city_plan_situation
       parent_name: group_project_tabs
       weight: 20
       format_type: tab
@@ -195,6 +195,13 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
+  field_apartment_count:
+    weight: 62
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+    type: number
+    region: content
   field_apartments:
     weight: 48
     settings:
@@ -228,30 +235,38 @@ content:
     third_party_settings: {  }
     type: string_textfield
     region: content
-  field_building_material:
-    weight: 33
-    settings:
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
-    type: string_textfield
-    region: content
   field_building_type:
-    weight: 43
+    weight: 75
     settings: {  }
     third_party_settings: {  }
     type: options_select
     region: content
-  field_city_plan_pictures:
-    weight: 41
+  field_city:
+    weight: 56
     settings:
       size: 60
       placeholder: ''
     third_party_settings: {  }
     type: string_textfield
     region: content
-  field_city_plan_situation:
-    weight: 42
+  field_construction_material:
+    weight: 65
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_construction_year:
+    weight: 59
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_district:
+    weight: 57
     settings:
       size: 60
       placeholder: ''
@@ -259,80 +274,65 @@ content:
     type: string_textfield
     region: content
   field_energy_class:
-    weight: 36
+    weight: 68
     settings:
       size: 60
       placeholder: ''
     third_party_settings: {  }
     type: string_textfield
+    region: content
+  field_has_elevator:
+    weight: 63
+    settings:
+      display_label: true
+    third_party_settings: {  }
+    type: boolean_checkbox
+    region: content
+  field_has_sauna:
+    weight: 64
+    settings:
+      display_label: true
+    third_party_settings: {  }
+    type: boolean_checkbox
     region: content
   field_heating:
-    weight: 35
+    weight: 67
     settings:
       size: 60
       placeholder: ''
     third_party_settings: {  }
     type: string_textfield
     region: content
-  field_housing_company_name:
-    type: string_textfield
-    weight: 1
-    region: content
-    settings:
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
-  field_lift:
-    weight: 31
-    settings:
-      display_label: true
-    third_party_settings: {  }
-    type: boolean_checkbox
-    region: content
-  field_mode_of_habitation:
-    weight: 2
+  field_holding_type:
+    weight: 53
     settings: {  }
     third_party_settings: {  }
     type: options_select
     region: content
-  field_new_development_project:
-    weight: 9
+  field_housing_company:
+    weight: 52
     settings:
-      display_label: true
+      size: 60
+      placeholder: ''
     third_party_settings: {  }
-    type: boolean_checkbox
+    type: string_textfield
     region: content
   field_new_development_status:
-    weight: 10
+    weight: 60
     settings: {  }
     third_party_settings: {  }
     type: options_select
-    region: content
-  field_number_of_apartments:
-    weight: 11
-    settings:
-      placeholder: ''
-    third_party_settings: {  }
-    type: number
-    region: content
-  field_post_office:
-    weight: 5
-    settings:
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
-    type: string_textfield
     region: content
   field_postal_code:
     type: string_textfield
-    weight: 4
+    weight: 55
     region: content
     settings:
       size: 60
       placeholder: ''
     third_party_settings: {  }
   field_project_description:
-    weight: 44
+    weight: 76
     settings:
       rows: 5
       placeholder: ''
@@ -345,16 +345,8 @@ content:
     third_party_settings: {  }
     type: daterange_default
     region: content
-  field_real_estate_id:
-    weight: 7
-    settings:
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
-    type: string_textfield
-    region: content
-  field_region:
-    weight: 6
+  field_realty_id:
+    weight: 58
     settings:
       size: 60
       placeholder: ''
@@ -362,7 +354,7 @@ content:
     type: string_textfield
     region: content
   field_roof_material:
-    weight: 34
+    weight: 66
     settings:
       size: 60
       placeholder: ''
@@ -370,44 +362,36 @@ content:
     type: string_textfield
     region: content
   field_sanitation:
-    weight: 40
+    weight: 72
     settings:
       size: 60
       placeholder: ''
     third_party_settings: {  }
     type: string_textfield
-    region: content
-  field_sauna:
-    weight: 32
-    settings:
-      display_label: true
-    third_party_settings: {  }
-    type: boolean_checkbox
     region: content
   field_site_area:
-    weight: 38
+    weight: 69
     settings:
-      size: 60
       placeholder: ''
     third_party_settings: {  }
-    type: string_textfield
+    type: number
     region: content
-  field_site_rent:
-    weight: 39
-    settings:
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
-    type: string_textfield
-    region: content
-  field_site_type:
-    weight: 37
+  field_site_owner:
+    weight: 70
     settings: {  }
     third_party_settings: {  }
     type: options_select
     region: content
+  field_site_renter:
+    weight: 71
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
   field_street_address:
-    weight: 3
+    weight: 54
     settings:
       size: 60
       placeholder: ''
@@ -420,11 +404,21 @@ content:
     third_party_settings: {  }
     type: options_buttons
     region: content
-  field_year_of_building:
-    weight: 8
-    settings: {  }
+  field_zoning_info:
+    weight: 73
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
     third_party_settings: {  }
-    type: yearonly_default
+    type: link_default
+    region: content
+  field_zoning_status:
+    weight: 74
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
     region: content
   langcode:
     type: language_select
@@ -462,7 +456,7 @@ content:
     third_party_settings: {  }
   title:
     type: string_textfield
-    weight: 0
+    weight: 51
     region: content
     settings:
       size: 60
@@ -488,4 +482,5 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
-hidden: {  }
+hidden:
+  field_new_housing: true

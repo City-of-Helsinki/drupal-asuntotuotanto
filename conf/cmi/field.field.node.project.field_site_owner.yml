@@ -1,0 +1,23 @@
+uuid: d6e897f8-5810-4e39-8579-e8ab6300d4bb
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_site_owner
+    - node.type.project
+  module:
+    - options
+id: node.project.field_site_owner
+field_name: field_site_owner
+entity_type: node
+bundle: project
+label: 'Site owner'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: own
+default_value_callback: ''
+settings: {  }
+field_type: list_string

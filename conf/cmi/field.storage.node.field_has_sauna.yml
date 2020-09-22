@@ -1,16 +1,14 @@
-uuid: 1a4c166b-bd13-4d4f-ab97-95d8633cd5a7
+uuid: 91887a2a-11c5-4b50-9706-9c11cb0d1956
 langcode: en
 status: true
 dependencies:
   module:
     - node
-id: node.field_site_area
-field_name: field_site_area
+id: node.field_has_sauna
+field_name: field_has_sauna
 entity_type: node
-type: decimal
-settings:
-  precision: 10
-  scale: 2
+type: boolean
+settings: {  }
 module: core
 locked: false
 cardinality: 1

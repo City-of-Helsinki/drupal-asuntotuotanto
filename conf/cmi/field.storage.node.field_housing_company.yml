@@ -1,16 +1,17 @@
-uuid: 1a4c166b-bd13-4d4f-ab97-95d8633cd5a7
+uuid: 6003f8e4-9443-4680-8b32-99bd471a0543
 langcode: en
 status: true
 dependencies:
   module:
     - node
-id: node.field_site_area
-field_name: field_site_area
+id: node.field_housing_company
+field_name: field_housing_company
 entity_type: node
-type: decimal
+type: string
 settings:
-  precision: 10
-  scale: 2
+  max_length: 255
+  is_ascii: false
+  case_sensitive: false
 module: core
 locked: false
 cardinality: 1

@@ -1,16 +1,17 @@
-uuid: 1a4c166b-bd13-4d4f-ab97-95d8633cd5a7
+uuid: 0d45ffae-b558-4fbb-b9d0-61f94512b914
 langcode: en
 status: true
 dependencies:
   module:
     - node
-id: node.field_site_area
-field_name: field_site_area
+id: node.field_site_renter
+field_name: field_site_renter
 entity_type: node
-type: decimal
+type: string
 settings:
-  precision: 10
-  scale: 2
+  max_length: 255
+  is_ascii: false
+  case_sensitive: false
 module: core
 locked: false
 cardinality: 1

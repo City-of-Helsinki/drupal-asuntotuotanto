@@ -4,36 +4,36 @@ status: true
 dependencies:
   config:
     - core.entity_view_mode.node.teaser
+    - field.field.node.project.field_apartment_count
     - field.field.node.project.field_apartments
     - field.field.node.project.field_attachments_url
     - field.field.node.project.field_builder
-    - field.field.node.project.field_building_material
     - field.field.node.project.field_building_type
-    - field.field.node.project.field_city_plan_pictures
-    - field.field.node.project.field_city_plan_situation
+    - field.field.node.project.field_city
+    - field.field.node.project.field_construction_material
+    - field.field.node.project.field_construction_year
+    - field.field.node.project.field_district
     - field.field.node.project.field_energy_class
+    - field.field.node.project.field_has_elevator
+    - field.field.node.project.field_has_sauna
     - field.field.node.project.field_heating
-    - field.field.node.project.field_housing_company_name
-    - field.field.node.project.field_lift
-    - field.field.node.project.field_mode_of_habitation
-    - field.field.node.project.field_new_development_project
+    - field.field.node.project.field_holding_type
+    - field.field.node.project.field_housing_company
     - field.field.node.project.field_new_development_status
-    - field.field.node.project.field_number_of_apartments
-    - field.field.node.project.field_post_office
+    - field.field.node.project.field_new_housing
     - field.field.node.project.field_postal_code
     - field.field.node.project.field_project_description
     - field.field.node.project.field_publication_dates
-    - field.field.node.project.field_real_estate_id
-    - field.field.node.project.field_region
+    - field.field.node.project.field_realty_id
     - field.field.node.project.field_roof_material
     - field.field.node.project.field_sanitation
-    - field.field.node.project.field_sauna
     - field.field.node.project.field_site_area
-    - field.field.node.project.field_site_rent
-    - field.field.node.project.field_site_type
+    - field.field.node.project.field_site_owner
+    - field.field.node.project.field_site_renter
     - field.field.node.project.field_street_address
     - field.field.node.project.field_tasks
-    - field.field.node.project.field_year_of_building
+    - field.field.node.project.field_zoning_info
+    - field.field.node.project.field_zoning_status
     - node.type.project
   module:
     - user
@@ -48,35 +48,35 @@ content:
     third_party_settings: {  }
     region: content
 hidden:
+  field_apartment_count: true
   field_apartments: true
   field_attachments_url: true
   field_builder: true
-  field_building_material: true
   field_building_type: true
-  field_city_plan_pictures: true
-  field_city_plan_situation: true
+  field_city: true
+  field_construction_material: true
+  field_construction_year: true
+  field_district: true
   field_energy_class: true
+  field_has_elevator: true
+  field_has_sauna: true
   field_heating: true
-  field_housing_company_name: true
-  field_lift: true
-  field_mode_of_habitation: true
-  field_new_development_project: true
+  field_holding_type: true
+  field_housing_company: true
   field_new_development_status: true
-  field_number_of_apartments: true
-  field_post_office: true
+  field_new_housing: true
   field_postal_code: true
   field_project_description: true
   field_publication_dates: true
-  field_real_estate_id: true
-  field_region: true
+  field_realty_id: true
   field_roof_material: true
   field_sanitation: true
-  field_sauna: true
   field_site_area: true
-  field_site_rent: true
-  field_site_type: true
+  field_site_owner: true
+  field_site_renter: true
   field_street_address: true
   field_tasks: true
-  field_year_of_building: true
+  field_zoning_info: true
+  field_zoning_status: true
   langcode: true
   search_api_excerpt: true

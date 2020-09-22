@@ -1,16 +1,14 @@
-uuid: 1a4c166b-bd13-4d4f-ab97-95d8633cd5a7
+uuid: b00f9a25-352e-4f78-b405-f97f8d1ebb3f
 langcode: en
 status: true
 dependencies:
   module:
     - node
-id: node.field_site_area
-field_name: field_site_area
+id: node.field_new_housing
+field_name: field_new_housing
 entity_type: node
-type: decimal
-settings:
-  precision: 10
-  scale: 2
+type: boolean
+settings: {  }
 module: core
 locked: false
 cardinality: 1

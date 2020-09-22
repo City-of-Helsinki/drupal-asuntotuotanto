@@ -1,17 +1,16 @@
-uuid: 1a4c166b-bd13-4d4f-ab97-95d8633cd5a7
+uuid: dfe28832-5139-48f1-8a47-5bd69029426f
 langcode: en
 status: true
 dependencies:
   module:
+    - link
     - node
-id: node.field_site_area
-field_name: field_site_area
+id: node.field_zoning_info
+field_name: field_zoning_info
 entity_type: node
-type: decimal
-settings:
-  precision: 10
-  scale: 2
-module: core
+type: link
+settings: {  }
+module: link
 locked: false
 cardinality: 1
 translatable: true
