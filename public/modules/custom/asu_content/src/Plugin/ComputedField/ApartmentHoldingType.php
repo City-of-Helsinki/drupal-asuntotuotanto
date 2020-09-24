@@ -11,17 +11,17 @@ use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\node\Entity\Node;
 
 /**
- * Class StreetAddressField.
+ * Class ApartmentHoldingType.
  *
  * @ComputedField(
- *   id = "field_apartment_address",
- *   label = @Translation("Street address"),
+ *   id = "field_apartment_holding_type",
+ *   label = @Translation("Apartment holding type"),
  *   type = "computed_render_array",
  *   entity_types = {"node"},
  *   bundles = {"apartment"}
  * )
  */
-class StreetAddressField extends FieldItemList {
+class ApartmentHoldingType extends FieldItemList {
 
   use ComputedSingleItemTrait;
 
@@ -33,7 +33,7 @@ class StreetAddressField extends FieldItemList {
   protected $reverseEntities;
 
   /**
-   * Constructs a StreetAddressField object.
+   * Constructs a ApartmentHoldingType object.
    *
    * @param \Drupal\Core\TypedData\DataDefinitionInterface $definition
    *   The data definition.
@@ -50,7 +50,7 @@ class StreetAddressField extends FieldItemList {
   }
 
   /**
-   * Compute the street address value.
+   * Compute the apartment holding type value.
    *
    * @return mixed
    *   Returns the computed value.
@@ -66,14 +66,15 @@ class StreetAddressField extends FieldItemList {
     foreach ($reverse_references as $reference) {
       if (
         !empty($reference) &&
-        $reference['referring_entity'] instanceof Node &&
-        $this->getEntity()->hasField('field_apartment_number')
+        $reference['referring_entity'] instanceof Node
       ) {
         $referencing_node = $reference['referring_entity'];
-        $value = $referencing_node->field_street_address->value . ' ' . $current_entity->field_apartment_number->value;
+        $allowed_values = $referencing_node->field_holding_type->getSetting('allowed_values');
+        $value = $referencing_node->field_holding_type->value;
       }
     }
 
+    // TODO: When displaying the field in twig add value&label through theme.
     return [
       '#markup' => $value,
     ];

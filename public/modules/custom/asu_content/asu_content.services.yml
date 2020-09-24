@@ -1,0 +1,3 @@
+services:
+  asu_content.collect_reverse_entity:
+    class: Drupal\asu_content\CollectReverseEntity

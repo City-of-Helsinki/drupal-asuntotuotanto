@@ -12,6 +12,7 @@ const FORMS_TO_HIDE_TITLE_FROM = [
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\node\Entity\Node;
 
 /**
  * Implements hook_help().
@@ -61,15 +62,12 @@ function asu_content_entity_presave(EntityInterface $entity) {
     $entity instanceof EntityInterface &&
     method_exists($entity, 'getType')
   ) {
-    if ($entity->getType() == 'project') {
-
-    }
-
     if ($entity->getType() == 'apartment') {
       $title = t('Apartment');
 
-      if (!empty($entity->field_apartment_address->value)) {
-        $title = $entity->field_apartment_address->value;
+      if (!empty($entity->field_apartment_address->first()->getValue())) {
+        $markup = $entity->field_apartment_address->first()->getValue();
+        $title = reset($markup);
       }
       elseif (empty($entity->getTitle())) {
         $title = !empty($entity->field_apartment_number->value)
@@ -78,6 +76,24 @@ function asu_content_entity_presave(EntityInterface $entity) {
       }
 
       $entity->setTitle($title);
+    }
+  }
+}
+
+/**
+ * Implements hook_entity_update().
+ */
+function asu_content_entity_update($entity) {
+  if (
+    $entity->getType() == 'project' &&
+    $entity->hasField('field_apartments')
+  ) {
+    $apartments = $entity->field_apartments->getValue();
+    foreach ($apartments as $apartment) {
+      $node = Node::load($apartment['target_id']);
+      if ($node->bundle() == 'apartment') {
+        $node->save();
+      }
     }
   }
 }

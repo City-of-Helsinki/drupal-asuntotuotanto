@@ -14,6 +14,7 @@ services:
       DRUPAL_ROUTES: "https://varnish-${DRUPAL_HOSTNAME}"
       DRUSH_OPTIONS_URI: "https://${DRUPAL_HOSTNAME}"
       #XDEBUG_ENABLE: "true"
+      #XDEBUG_CONFIG: "remote_port=9001 remote_host=host.docker.internal remote_connect_back=0"
       SIMPLETEST_BASE_URL: "http://app:8080"
       SIMPLETEST_DB: "mysql://drupal:drupal@db:3306/drupal"
     networks:
