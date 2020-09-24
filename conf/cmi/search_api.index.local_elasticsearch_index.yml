@@ -6,7 +6,6 @@ dependencies:
     - field.storage.node.field_acc_financeofficer
     - field.storage.node.field_acc_salesperson
     - field.storage.node.field_additional_information
-    - field.storage.node.field_apartment_holding_type
     - field.storage.node.field_apartment_number
     - field.storage.node.field_apartment_structure
     - field.storage.node.field_application_end_time
@@ -82,6 +81,7 @@ dependencies:
     - field.storage.node.field_zoning_status
     - search_api.server.local_elasticsearch
   module:
+    - computed_field_plugin
     - node
     - search_api
     - elasticsearch_connector
@@ -90,6 +90,22 @@ name: 'Local elasticsearch index'
 description: ''
 read_only: false
 field_settings:
+  acc_financeofficer:
+    label: 'Accountable finance officer'
+    datasource_id: 'entity:node'
+    property_path: field_acc_financeofficer
+    type: string
+    dependencies:
+      config:
+        - field.storage.node.field_acc_financeofficer
+  acc_salesperson:
+    label: 'Accountable sales person'
+    datasource_id: 'entity:node'
+    property_path: field_acc_salesperson
+    type: string
+    dependencies:
+      config:
+        - field.storage.node.field_acc_salesperson
   additional_information:
     label: 'Additional information'
     datasource_id: 'entity:node'
@@ -98,6 +114,14 @@ field_settings:
     dependencies:
       config:
         - field.storage.node.field_additional_information
+  apartment_address:
+    label: 'Street address'
+    datasource_id: 'entity:node'
+    property_path: field_apartment_address
+    type: computed_array_string
+    dependencies:
+      module:
+        - computed_field_plugin
   apartment_count:
     label: 'Number of apartments'
     datasource_id: 'entity:node'
@@ -110,10 +134,10 @@ field_settings:
     label: 'Apartment holding type'
     datasource_id: 'entity:node'
     property_path: field_apartment_holding_type
-    type: string
+    type: computed_array_decimal
     dependencies:
-      config:
-        - field.storage.node.field_apartment_holding_type
+      module:
+        - computed_field_plugin
   apartment_number:
     label: 'Apartment number'
     datasource_id: 'entity:node'
@@ -130,6 +154,22 @@ field_settings:
     dependencies:
       config:
         - field.storage.node.field_apartment_structure
+  application_end_time:
+    label: 'Application end time'
+    datasource_id: 'entity:node'
+    property_path: field_application_end_time
+    type: date
+    dependencies:
+      config:
+        - field.storage.node.field_application_end_time
+  application_start_time:
+    label: 'Application start time'
+    datasource_id: 'entity:node'
+    property_path: field_application_start_time
+    type: date
+    dependencies:
+      config:
+        - field.storage.node.field_application_start_time
   application_url:
     label: 'Application URL'
     datasource_id: 'entity:node'
@@ -178,6 +218,14 @@ field_settings:
     dependencies:
       config:
         - field.storage.node.field_city
+  condition:
+    label: 'General condition'
+    datasource_id: 'entity:node'
+    property_path: field_condition
+    type: integer
+    dependencies:
+      config:
+        - field.storage.node.field_condition
   construction_material:
     label: 'Construction material'
     datasource_id: 'entity:node'
@@ -194,6 +242,30 @@ field_settings:
     dependencies:
       config:
         - field.storage.node.field_construction_year
+  constructor:
+    label: Constructor
+    datasource_id: 'entity:node'
+    property_path: field_constructor
+    type: string
+    dependencies:
+      config:
+        - field.storage.node.field_constructor
+  coordinate_lat:
+    label: 'Coordinate latitude'
+    datasource_id: 'entity:node'
+    property_path: field_coordinate_lat
+    type: string
+    dependencies:
+      config:
+        - field.storage.node.field_coordinate_lat
+  coordinate_lon:
+    label: 'Coordinate longitude'
+    datasource_id: 'entity:node'
+    property_path: field_coordinate_lon
+    type: string
+    dependencies:
+      config:
+        - field.storage.node.field_coordinate_lon
   debt_free_sales_price:
     label: 'Debt free sales price'
     datasource_id: 'entity:node'
@@ -218,71 +290,7 @@ field_settings:
     dependencies:
       config:
         - field.storage.node.field_energy_class
-  field_acc_financeofficer:
-    label: 'Accountable finance officer'
-    datasource_id: 'entity:node'
-    property_path: field_acc_financeofficer
-    type: string
-    dependencies:
-      config:
-        - field.storage.node.field_acc_financeofficer
-  field_acc_salesperson:
-    label: 'Accountable sales person'
-    datasource_id: 'entity:node'
-    property_path: field_acc_salesperson
-    type: string
-    dependencies:
-      config:
-        - field.storage.node.field_acc_salesperson
-  field_application_end_time:
-    label: 'Application end time'
-    datasource_id: 'entity:node'
-    property_path: field_application_end_time
-    type: date
-    dependencies:
-      config:
-        - field.storage.node.field_application_end_time
-  field_application_start_time:
-    label: 'Application start time'
-    datasource_id: 'entity:node'
-    property_path: field_application_start_time
-    type: date
-    dependencies:
-      config:
-        - field.storage.node.field_application_start_time
-  field_condition:
-    label: 'General condition'
-    datasource_id: 'entity:node'
-    property_path: field_condition
-    type: integer
-    dependencies:
-      config:
-        - field.storage.node.field_condition
-  field_constructor:
-    label: Constructor
-    datasource_id: 'entity:node'
-    property_path: field_constructor
-    type: string
-    dependencies:
-      config:
-        - field.storage.node.field_constructor
-  field_coordinate_lat:
-    label: 'Coordinate latitude'
-    datasource_id: 'entity:node'
-    property_path: field_coordinate_lat
-    type: string
-    dependencies:
-      config:
-        - field.storage.node.field_coordinate_lat
-  field_coordinate_lon:
-    label: 'Coordinate longitude'
-    datasource_id: 'entity:node'
-    property_path: field_coordinate_lon
-    type: string
-    dependencies:
-      config:
-        - field.storage.node.field_coordinate_lon
-  field_estate_agent:
+  estate_agent:
     label: 'Estate agent'
     datasource_id: 'entity:node'
     property_path: field_estate_agent
@@ -290,7 +298,7 @@ field_settings:
     dependencies:
       config:
         - field.storage.node.field_estate_agent
-  field_estate_agent_email:
+  estate_agent_email:
     label: 'Estate agent email'
     datasource_id: 'entity:node'
     property_path: field_estate_agent_email
@@ -298,7 +306,7 @@ field_settings:
     dependencies:
       config:
         - field.storage.node.field_estate_agent_email
-  field_estate_agent_phone:
+  estate_agent_phone:
     label: 'Estate agent telephone'
     datasource_id: 'entity:node'
     property_path: field_estate_agent_phone
@@ -306,7 +314,7 @@ field_settings:
     dependencies:
       config:
         - field.storage.node.field_estate_agent_phone
-  field_estimated_completion:
+  estimated_completion:
     label: 'Estimated completion'
     datasource_id: 'entity:node'
     property_path: field_estimated_completion
@@ -314,7 +322,7 @@ field_settings:
     dependencies:
       config:
         - field.storage.node.field_estimated_completion
-  field_estimated_completion_date:
+  estimated_completion_date:
     label: 'Estimated completion date'
     datasource_id: 'entity:node'
     property_path: field_estimated_completion_date
@@ -322,7 +330,7 @@ field_settings:
     dependencies:
       config:
         - field.storage.node.field_estimated_completion_date
-  field_estimated_completion_date_1:
+  estimated_completion_date_1:
     label: 'Estimated completion date'
     datasource_id: 'entity:node'
     property_path: field_estimated_completion_date
@@ -330,110 +338,6 @@ field_settings:
     dependencies:
       config:
         - field.storage.node.field_estimated_completion_date
-  field_holding_type:
-    label: 'Holding type'
-    datasource_id: 'entity:node'
-    property_path: field_holding_type
-    type: string
-    dependencies:
-      config:
-        - field.storage.node.field_holding_type
-  field_housing_manager:
-    label: Isännöinti
-    datasource_id: 'entity:node'
-    property_path: field_housing_manager
-    type: string
-    dependencies:
-      config:
-        - field.storage.node.field_housing_manager
-  field_loan_share:
-    label: 'Share of housing company loan'
-    datasource_id: 'entity:node'
-    property_path: field_loan_share
-    type: integer
-    dependencies:
-      config:
-        - field.storage.node.field_loan_share
-  field_main_image:
-    label: 'Main image'
-    datasource_id: 'entity:node'
-    property_path: field_main_image
-    type: integer
-    dependencies:
-      config:
-        - field.storage.node.field_main_image
-  field_material_choice_dl:
-    label: 'Material choice deadline'
-    datasource_id: 'entity:node'
-    property_path: field_material_choice_dl
-    type: date
-    dependencies:
-      config:
-        - field.storage.node.field_material_choice_dl
-  field_new_housing:
-    label: 'New housing'
-    datasource_id: 'entity:node'
-    property_path: field_new_housing
-    type: boolean
-    dependencies:
-      config:
-        - field.storage.node.field_new_housing
-  field_possession_transfer_date:
-    label: 'Transfer of possession'
-    datasource_id: 'entity:node'
-    property_path: field_possession_transfer_date
-    type: date
-    dependencies:
-      config:
-        - field.storage.node.field_possession_transfer_date
-  field_premarketing_start_time:
-    label: 'Pre-marketing start time'
-    datasource_id: 'entity:node'
-    property_path: field_premarketing_start_time
-    type: date
-    dependencies:
-      config:
-        - field.storage.node.field_premarketing_start_time
-  field_project_manager:
-    label: 'Project manager'
-    datasource_id: 'entity:node'
-    property_path: field_project_manager
-    type: string
-    dependencies:
-      config:
-        - field.storage.node.field_project_manager
-  field_publication_end_time:
-    label: 'Publication end time'
-    datasource_id: 'entity:node'
-    property_path: field_publication_end_time
-    type: date
-    dependencies:
-      config:
-        - field.storage.node.field_publication_end_time
-  field_publication_start_time:
-    label: 'Publication start time'
-    datasource_id: 'entity:node'
-    property_path: field_publication_start_time
-    type: date
-    dependencies:
-      config:
-        - field.storage.node.field_publication_start_time
-  field_shareholder_meeting_date:
-    label: 'Shareholder meeting date'
-    datasource_id: 'entity:node'
-    property_path: field_shareholder_meeting_date
-    type: date
-    dependencies:
-      config:
-        - field.storage.node.field_shareholder_meeting_date
-  field_virtual_presentation_url:
-    label: 'Virtual presentation'
-    datasource_id: 'entity:node'
-    property_path: field_virtual_presentation_url
-    type: string
-    dependencies:
-      config:
-        - field.storage.node.field_virtual_presentation_url
   financing_fee:
     label: 'Financing fee'
     datasource_id: 'entity:node'
@@ -506,6 +410,14 @@ field_settings:
     dependencies:
       config:
         - field.storage.node.field_heating
+  holding_type:
+    label: 'Holding type'
+    datasource_id: 'entity:node'
+    property_path: field_holding_type
+    type: string
+    dependencies:
+      config:
+        - field.storage.node.field_holding_type
   housing_company:
     label: 'Housing company'
     datasource_id: 'entity:node'
@@ -514,6 +426,22 @@ field_settings:
     dependencies:
       config:
         - field.storage.node.field_housing_company
+  housing_company_fee:
+    label: 'Housing company fee'
+    datasource_id: 'entity:node'
+    property_path: field_housing_company_fee
+    type: string
+    dependencies:
+      module:
+        - computed_field_plugin
+  housing_manager:
+    label: Isännöinti
+    datasource_id: 'entity:node'
+    property_path: field_housing_manager
+    type: string
+    dependencies:
+      config:
+        - field.storage.node.field_housing_manager
   kitchen_appliances:
     label: 'Kitchen appliances'
     datasource_id: 'entity:node'
@@ -530,6 +458,22 @@ field_settings:
     dependencies:
       config:
         - field.storage.node.field_living_area
+  loan_share:
+    label: 'Share of housing company loan'
+    datasource_id: 'entity:node'
+    property_path: field_loan_share
+    type: integer
+    dependencies:
+      config:
+        - field.storage.node.field_loan_share
+  main_image:
+    label: 'Main image'
+    datasource_id: 'entity:node'
+    property_path: field_main_image
+    type: integer
+    dependencies:
+      config:
+        - field.storage.node.field_main_image
   maintenance_fee:
     label: 'Maintenance fee'
     datasource_id: 'entity:node'
@@ -538,6 +482,14 @@ field_settings:
     dependencies:
       config:
         - field.storage.node.field_maintenance_fee
+  material_choice_dl:
+    label: 'Material choice deadline'
+    datasource_id: 'entity:node'
+    property_path: field_material_choice_dl
+    type: date
+    dependencies:
+      config:
+        - field.storage.node.field_material_choice_dl
   new_development_status:
     label: 'New development status'
     datasource_id: 'entity:node'
@@ -546,6 +498,14 @@ field_settings:
     dependencies:
       config:
         - field.storage.node.field_new_development_status
+  new_housing:
+    label: 'New housing'
+    datasource_id: 'entity:node'
+    property_path: field_new_housing
+    type: boolean
+    dependencies:
+      config:
+        - field.storage.node.field_new_housing
   other_fees:
     label: 'Other fees'
     datasource_id: 'entity:node'
@@ -562,6 +522,14 @@ field_settings:
     dependencies:
       config:
         - field.storage.node.field_parking_fee
+  possession_transfer_date:
+    label: 'Transfer of possession'
+    datasource_id: 'entity:node'
+    property_path: field_possession_transfer_date
+    type: date
+    dependencies:
+      config:
+        - field.storage.node.field_possession_transfer_date
   postal_code:
     label: 'Postal code'
     datasource_id: 'entity:node'
@@ -570,6 +538,22 @@ field_settings:
     dependencies:
       config:
         - field.storage.node.field_postal_code
+  premarketing_start_time:
+    label: 'Pre-marketing start time'
+    datasource_id: 'entity:node'
+    property_path: field_premarketing_start_time
+    type: date
+    dependencies:
+      config:
+        - field.storage.node.field_premarketing_start_time
+  price_m2:
+    label: 'Price per square meter'
+    datasource_id: 'entity:node'
+    property_path: field_price_m2
+    type: string
+    dependencies:
+      module:
+        - computed_field_plugin
   project_description:
     label: 'Project description'
     datasource_id: 'entity:node'
@@ -578,6 +562,30 @@ field_settings:
     dependencies:
       config:
         - field.storage.node.field_project_description
+  project_manager:
+    label: 'Project manager'
+    datasource_id: 'entity:node'
+    property_path: field_project_manager
+    type: string
+    dependencies:
+      config:
+        - field.storage.node.field_project_manager
+  publication_end_time:
+    label: 'Publication end time'
+    datasource_id: 'entity:node'
+    property_path: field_publication_end_time
+    type: date
+    dependencies:
+      config:
+        - field.storage.node.field_publication_end_time
+  publication_start_time:
+    label: 'Publication start time'
+    datasource_id: 'entity:node'
+    property_path: field_publication_start_time
+    type: date
+    dependencies:
+      config:
+        - field.storage.node.field_publication_start_time
   realty_id:
     label: 'Realty ID'
     datasource_id: 'entity:node'
@@ -626,6 +634,14 @@ field_settings:
     dependencies:
       config:
         - field.storage.node.field_services_description
+  shareholder_meeting_date:
+    label: 'Shareholder meeting date'
+    datasource_id: 'entity:node'
+    property_path: field_shareholder_meeting_date
+    type: date
+    dependencies:
+      config:
+        - field.storage.node.field_shareholder_meeting_date
   showing_time:
     label: 'Showing time'
     datasource_id: 'entity:node'
@@ -690,6 +706,14 @@ field_settings:
     dependencies:
       config:
         - field.storage.node.field_view_description
+  virtual_presentation_url:
+    label: 'Virtual presentation'
+    datasource_id: 'entity:node'
+    property_path: field_virtual_presentation_url
+    type: string
+    dependencies:
+      config:
+        - field.storage.node.field_virtual_presentation_url
   water_fee:
     label: 'Water fee'
     datasource_id: 'entity:node'

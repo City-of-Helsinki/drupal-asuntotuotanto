@@ -51,6 +51,7 @@ hidden:
   field_acc_salesperson: true
   field_additional_information: true
   field_apartment_address: true
+  field_apartment_holding_type: true
   field_apartment_number: true
   field_apartment_structure: true
   field_application_end_time: true
@@ -77,6 +78,7 @@ hidden:
   field_has_balcony: true
   field_has_terrace: true
   field_has_yard: true
+  field_housing_company_fee: true
   field_housing_manager: true
   field_kitchen_appliances: true
   field_living_area: true
@@ -88,6 +90,7 @@ hidden:
   field_parking_fee: true
   field_possession_transfer_date: true
   field_premarketing_start_time: true
+  field_price_m2: true
   field_project_manager: true
   field_publication_end_time: true
   field_room_count: true

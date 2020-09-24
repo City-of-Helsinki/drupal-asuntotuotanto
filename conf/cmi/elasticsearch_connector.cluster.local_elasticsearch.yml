@@ -4,7 +4,7 @@ status: '1'
 dependencies: {  }
 cluster_id: local_elasticsearch
 name: 'Local elasticsearch'
-url: 'http://asuntotuotanto-elastic'
+url: 'http://dev.asuntomyynti-elastic.druidfi.wod.by:80'
 options:
   multiple_nodes_connection: false
   use_authentication: 0

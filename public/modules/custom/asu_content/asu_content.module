@@ -65,7 +65,7 @@ function asu_content_entity_presave(EntityInterface $entity) {
     if ($entity->getType() == 'apartment') {
       $title = t('Apartment');
 
-      if (!empty($entity->field_apartment_address->first()->getValue())) {
+      if ($entity->field_apartment_address->first()->getValue()['#markup']) {
         $markup = $entity->field_apartment_address->first()->getValue();
         $title = reset($markup);
       }
@@ -85,6 +85,8 @@ function asu_content_entity_presave(EntityInterface $entity) {
  */
 function asu_content_entity_update($entity) {
   if (
+    $entity instanceof EntityInterface &&
+    method_exists($entity, 'getType') &&
     $entity->getType() == 'project' &&
     $entity->hasField('field_apartments')
   ) {
