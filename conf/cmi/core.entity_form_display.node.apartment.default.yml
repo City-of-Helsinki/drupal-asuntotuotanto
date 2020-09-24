@@ -4,7 +4,6 @@ status: true
 dependencies:
   config:
     - field.field.node.apartment.field_additional_information
-    - field.field.node.apartment.field_apartment_address
     - field.field.node.apartment.field_apartment_holding_type
     - field.field.node.apartment.field_apartment_number
     - field.field.node.apartment.field_apartment_structure
@@ -15,12 +14,14 @@ dependencies:
     - field.field.node.apartment.field_debt_free_sales_price
     - field.field.node.apartment.field_financing_fee
     - field.field.node.apartment.field_floor
+    - field.field.node.apartment.field_floor_max
     - field.field.node.apartment.field_has_apartment_sauna
     - field.field.node.apartment.field_has_balcony
     - field.field.node.apartment.field_has_terrace
     - field.field.node.apartment.field_has_yard
     - field.field.node.apartment.field_kitchen_appliances
     - field.field.node.apartment.field_living_area
+    - field.field.node.apartment.field_loan_share
     - field.field.node.apartment.field_maintenance_fee
     - field.field.node.apartment.field_other_fees
     - field.field.node.apartment.field_parking_fee
@@ -59,6 +60,7 @@ third_party_settings:
         - field_apartment_number
         - field_living_area
         - field_floor
+        - field_floor_max
         - field_apartment_structure
         - field_room_count
         - field_apartment_holding_type
@@ -90,6 +92,7 @@ third_party_settings:
       children:
         - field_sales_price
         - field_debt_free_sales_price
+        - field_loan_share
         - field_financing_fee
         - field_maintenance_fee
         - field_water_fee
@@ -119,7 +122,7 @@ content:
     settings: {  }
     third_party_settings: {  }
   field_additional_information:
-    weight: 28
+    weight: 29
     settings:
       rows: 5
       placeholder: ''
@@ -127,7 +130,7 @@ content:
     type: string_textarea
     region: content
   field_apartment_holding_type:
-    weight: 15
+    weight: 16
     settings:
       size: 60
       placeholder: ''
@@ -143,7 +146,7 @@ content:
     type: string_textfield
     region: content
   field_apartment_structure:
-    weight: 13
+    weight: 14
     settings:
       size: 60
       placeholder: ''
@@ -151,7 +154,7 @@ content:
     type: string_textfield
     region: content
   field_application_url:
-    weight: 16
+    weight: 17
     settings:
       placeholder_url: ''
       placeholder_title: ''
@@ -159,7 +162,7 @@ content:
     type: link_default
     region: content
   field_balcony_description:
-    weight: 23
+    weight: 24
     settings:
       placeholder: ''
       rows: 5
@@ -167,7 +170,7 @@ content:
     type: string_textarea
     region: content
   field_bathroom_appliances:
-    weight: 24
+    weight: 25
     settings:
       rows: 5
       placeholder: ''
@@ -182,7 +185,7 @@ content:
     type: number
     region: content
   field_financing_fee:
-    weight: 28
+    weight: 29
     settings:
       placeholder: ''
     third_party_settings: {  }
@@ -195,36 +198,43 @@ content:
     third_party_settings: {  }
     type: number
     region: content
+  field_floor_max:
+    weight: 13
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+    type: number
+    region: content
   field_has_apartment_sauna:
-    weight: 21
+    weight: 22
     settings:
       display_label: true
     third_party_settings: {  }
     type: boolean_checkbox
     region: content
   field_has_balcony:
-    weight: 20
+    weight: 21
     settings:
       display_label: true
     third_party_settings: {  }
     type: boolean_checkbox
     region: content
   field_has_terrace:
-    weight: 19
+    weight: 20
     settings:
       display_label: true
     third_party_settings: {  }
     type: boolean_checkbox
     region: content
   field_has_yard:
-    weight: 18
+    weight: 19
     settings:
       display_label: true
     third_party_settings: {  }
     type: boolean_checkbox
     region: content
   field_kitchen_appliances:
-    weight: 22
+    weight: 23
     settings:
       placeholder: ''
       rows: 5
@@ -233,6 +243,13 @@ content:
     region: content
   field_living_area:
     weight: 11
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+    type: number
+    region: content
+  field_loan_share:
+    weight: 28
     settings:
       placeholder: ''
     third_party_settings: {  }
@@ -261,7 +278,7 @@ content:
     type: number
     region: content
   field_room_count:
-    weight: 14
+    weight: 15
     settings:
       placeholder: ''
     third_party_settings: {  }
@@ -275,7 +292,7 @@ content:
     type: number
     region: content
   field_services_description:
-    weight: 27
+    weight: 28
     settings:
       rows: 5
       placeholder: ''
@@ -283,13 +300,13 @@ content:
     type: string_textarea
     region: content
   field_showing_time:
-    weight: 17
+    weight: 18
     settings: {  }
     third_party_settings: {  }
     type: datetime_default
     region: content
   field_storage_description:
-    weight: 25
+    weight: 26
     settings:
       rows: 5
       placeholder: ''
@@ -297,7 +314,7 @@ content:
     type: string_textarea
     region: content
   field_view_description:
-    weight: 26
+    weight: 27
     settings:
       rows: 5
       placeholder: ''
@@ -382,5 +399,4 @@ content:
     settings: {  }
     third_party_settings: {  }
 hidden:
-  field_apartment_address: true
   field_condition: true

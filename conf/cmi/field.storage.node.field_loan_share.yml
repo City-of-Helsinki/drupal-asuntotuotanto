@@ -1,17 +1,17 @@
-uuid: f6c4d793-4dec-464d-bf30-4d31fb4f9974
+uuid: 73518dac-47e0-4c2e-8055-94dad7e5f8fd
 langcode: en
 status: true
 dependencies:
   module:
-    - datetime_range
     - node
-id: node.field_publication_dates
-field_name: field_publication_dates
+id: node.field_loan_share
+field_name: field_loan_share
 entity_type: node
-type: daterange
+type: integer
 settings:
-  datetime_type: datetime
-module: datetime_range
+  unsigned: false
+  size: normal
+module: core
 locked: false
 cardinality: 1
 translatable: true

@@ -1,17 +1,17 @@
-uuid: 23112264-a972-434f-8c1d-03121e4dd2ed
+uuid: 470d1ead-d44d-4086-8315-94e137cbb8cc
 langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.node.field_builder
+    - field.storage.node.field_estimated_completion
     - node.type.project
-id: node.project.field_builder
-field_name: field_builder
+id: node.project.field_estimated_completion
+field_name: field_estimated_completion
 entity_type: node
 bundle: project
-label: Builder
+label: 'Estimated completion'
 description: ''
-required: false
+required: true
 translatable: false
 default_value: {  }
 default_value_callback: ''

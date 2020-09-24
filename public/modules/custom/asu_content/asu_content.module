@@ -1,0 +1,83 @@
+<?php
+
+/**
+ * @file
+ * Contains asu_content.module.
+ */
+
+const FORMS_TO_HIDE_TITLE_FROM = [
+  'node_apartment_edit_form',
+  'node_apartment_form',
+];
+
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function asu_content_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the asu_content module.
+    case 'help.page.asu_content':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('ASU - Content provides functionalities for creating, providing and altering content.') . '</p>';
+      return $output;
+
+    default:
+  }
+}
+
+/**
+ * Implements hook_form_BASE_FORM_ID_alter().
+ *
+ * {@inheritdoc}
+ */
+function asu_content_form_alter(&$form, $form_state) {
+  asu_content_hide_node_title($form, $form_state);
+}
+
+/**
+ * Hide node title from specified node forms.
+ *
+ * {@inheritDoc}
+ */
+function asu_content_hide_node_title(&$form, $form_state) {
+  if (!in_array($form['#form_id'], FORMS_TO_HIDE_TITLE_FROM)) {
+    return;
+  }
+
+  if (isset($form['title'])) {
+    $form['title']['#access'] = FALSE;
+  }
+}
+
+/**
+ * Implements hook_entity_presave().
+ */
+function asu_content_entity_presave(EntityInterface $entity) {
+  if (
+    $entity instanceof EntityInterface &&
+    method_exists($entity, 'getType')
+  ) {
+    if ($entity->getType() == 'project') {
+
+    }
+
+    if ($entity->getType() == 'apartment') {
+      $title = t('Apartment');
+
+      if (!empty($entity->field_apartment_address->value)) {
+        $title = $entity->field_apartment_address->value;
+      }
+      elseif (empty($entity->getTitle())) {
+        $title = !empty($entity->field_apartment_number->value)
+          ? $entity->field_apartment_number->value
+          : $title;
+      }
+
+      $entity->setTitle($title);
+    }
+  }
+}

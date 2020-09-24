@@ -1,11 +1,11 @@
-uuid: e33419f2-ea37-4c65-affe-6636420a70ad
+uuid: 202fbcb3-e7de-47e1-9f6c-f8027661d175
 langcode: en
 status: true
 dependencies:
   module:
     - node
-id: node.field_builder
-field_name: field_builder
+id: node.field_estate_agent
+field_name: field_estate_agent
 entity_type: node
 type: string
 settings:

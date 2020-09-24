@@ -1,0 +1,23 @@
+uuid: ffec01c2-b488-4776-9870-ca80a68e301a
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_loan_share
+    - node.type.apartment
+id: node.apartment.field_loan_share
+field_name: field_loan_share
+entity_type: node
+bundle: apartment
+label: 'Share of housing company loan'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: null
+  max: null
+  prefix: ''
+  suffix: €
+field_type: integer
