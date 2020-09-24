@@ -7,10 +7,10 @@ dependencies:
 id: node.field_loan_share
 field_name: field_loan_share
 entity_type: node
-type: integer
+type: decimal
 settings:
-  unsigned: false
-  size: normal
+  precision: 10
+  scale: 2
 module: core
 locked: false
 cardinality: 1

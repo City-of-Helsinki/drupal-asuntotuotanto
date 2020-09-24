@@ -82,6 +82,7 @@ dependencies:
     - search_api.server.local_elasticsearch
   module:
     - computed_field_plugin
+    - asu_content
     - node
     - search_api
     - elasticsearch_connector
@@ -270,7 +271,7 @@ field_settings:
     label: 'Debt free sales price'
     datasource_id: 'entity:node'
     property_path: field_debt_free_sales_price
-    type: string
+    type: decimal
     dependencies:
       config:
         - field.storage.node.field_debt_free_sales_price
@@ -342,7 +343,7 @@ field_settings:
     label: 'Financing fee'
     datasource_id: 'entity:node'
     property_path: field_financing_fee
-    type: string
+    type: decimal
     dependencies:
       config:
         - field.storage.node.field_financing_fee
@@ -462,7 +463,7 @@ field_settings:
     label: 'Share of housing company loan'
     datasource_id: 'entity:node'
     property_path: field_loan_share
-    type: integer
+    type: decimal
     dependencies:
       config:
         - field.storage.node.field_loan_share
@@ -478,7 +479,7 @@ field_settings:
     label: 'Maintenance fee'
     datasource_id: 'entity:node'
     property_path: field_maintenance_fee
-    type: string
+    type: decimal
     dependencies:
       config:
         - field.storage.node.field_maintenance_fee
@@ -518,7 +519,7 @@ field_settings:
     label: 'Parking fee'
     datasource_id: 'entity:node'
     property_path: field_parking_fee
-    type: string
+    type: decimal
     dependencies:
       config:
         - field.storage.node.field_parking_fee
@@ -614,7 +615,7 @@ field_settings:
     label: 'Sales price'
     datasource_id: 'entity:node'
     property_path: field_sales_price
-    type: string
+    type: decimal
     dependencies:
       config:
         - field.storage.node.field_sales_price
@@ -718,7 +719,7 @@ field_settings:
     label: 'Water fee'
     datasource_id: 'entity:node'
     property_path: field_water_fee
-    type: string
+    type: decimal
     dependencies:
       config:
         - field.storage.node.field_water_fee
