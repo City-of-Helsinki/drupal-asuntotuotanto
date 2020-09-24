@@ -1,0 +1,19 @@
+uuid: 5e79ffc7-4708-442a-b584-ac6db545e121
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_acc_financeofficer
+    - node.type.project
+id: node.project.field_acc_financeofficer
+field_name: field_acc_financeofficer
+entity_type: node
+bundle: project
+label: 'Accountable finance officer'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

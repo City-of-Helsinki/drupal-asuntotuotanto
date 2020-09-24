@@ -1,0 +1,21 @@
+uuid: 6cf7a518-f2b7-4d83-8d80-1fc232953d1e
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_premarketing_start_time
+    - node.type.project
+  module:
+    - datetime
+id: node.project.field_premarketing_start_time
+field_name: field_premarketing_start_time
+entity_type: node
+bundle: project
+label: 'Pre-marketing start time'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: datetime

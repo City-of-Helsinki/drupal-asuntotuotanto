@@ -1,4 +1,4 @@
-status: 1
+status: 0
 pattern: '[node:field_apartment_address]'
 escape: true
 dependencies:

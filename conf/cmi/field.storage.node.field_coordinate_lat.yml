@@ -1,0 +1,21 @@
+uuid: dabbca61-6708-48b6-a67c-c360e29e708b
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: node.field_coordinate_lat
+field_name: field_coordinate_lat
+entity_type: node
+type: string
+settings:
+  max_length: 255
+  is_ascii: false
+  case_sensitive: false
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

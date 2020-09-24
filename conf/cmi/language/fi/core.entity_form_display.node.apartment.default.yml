@@ -4,3 +4,5 @@ third_party_settings:
       label: 'Huoneiston valikko'
     group_ap_basic:
       label: Perustiedot
+    group_price_information:
+      label: Hintatiedot

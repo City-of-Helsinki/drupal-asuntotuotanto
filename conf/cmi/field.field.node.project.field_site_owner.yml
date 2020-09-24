@@ -13,7 +13,7 @@ entity_type: node
 bundle: project
 label: 'Site owner'
 description: ''
-required: false
+required: true
 translatable: false
 default_value:
   -

@@ -1,0 +1,21 @@
+uuid: 5cd0a248-7500-4cfb-aae1-b1d1597e8651
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: node.field_estimated_completion
+field_name: field_estimated_completion
+entity_type: node
+type: string
+settings:
+  max_length: 255
+  is_ascii: false
+  case_sensitive: false
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

@@ -1,10 +1,12 @@
-uuid: 4243c464-bf5f-47a5-ae57-3accd471428a
+uuid: 3adaec18-07da-4463-a677-832889efb3d8
 langcode: en
 status: true
 dependencies:
   config:
     - field.storage.node.field_energy_class
     - node.type.project
+  module:
+    - options
 id: node.project.field_energy_class
 field_name: field_energy_class
 entity_type: node
@@ -12,8 +14,10 @@ bundle: project
 label: 'Energy class'
 description: ''
 required: false
-translatable: true
-default_value: {  }
+translatable: false
+default_value:
+  -
+    value: A
 default_value_callback: ''
 settings: {  }
-field_type: string
+field_type: list_string

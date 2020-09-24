@@ -1,18 +1,39 @@
-uuid: a0502dfb-ab19-44f1-968a-429ba0a17860
+uuid: 05d93459-518f-4971-803e-f6349191b41f
 langcode: en
 status: true
 dependencies:
   module:
     - node
+    - options
 id: node.field_energy_class
 field_name: field_energy_class
 entity_type: node
-type: string
+type: list_string
 settings:
-  max_length: 255
-  is_ascii: false
-  case_sensitive: false
-module: core
+  allowed_values:
+    -
+      value: A
+      label: A
+    -
+      value: B
+      label: B
+    -
+      value: C
+      label: C
+    -
+      value: D
+      label: D
+    -
+      value: E
+      label: E
+    -
+      value: F
+      label: F
+    -
+      value: G
+      label: G
+  allowed_values_function: ''
+module: options
 locked: false
 cardinality: 1
 translatable: true

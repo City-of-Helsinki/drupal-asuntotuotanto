@@ -1,0 +1,21 @@
+uuid: dbe8229d-c066-4fc0-8fa5-38bcab249d28
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_publication_start_time
+    - node.type.project
+  module:
+    - datetime
+id: node.project.field_publication_start_time
+field_name: field_publication_start_time
+entity_type: node
+bundle: project
+label: 'Publication start time'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: datetime

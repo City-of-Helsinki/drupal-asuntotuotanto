@@ -1,0 +1,21 @@
+uuid: 6c974d7f-b025-4fd5-a475-4ed91be5cb1b
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_possession_transfer_date
+    - node.type.project
+  module:
+    - datetime
+id: node.project.field_possession_transfer_date
+field_name: field_possession_transfer_date
+entity_type: node
+bundle: project
+label: 'Transfer of possession'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: datetime

@@ -3,39 +3,60 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.node.project.field_acc_financeofficer
+    - field.field.node.project.field_acc_salesperson
     - field.field.node.project.field_apartment_count
     - field.field.node.project.field_apartments
+    - field.field.node.project.field_application_end_time
+    - field.field.node.project.field_application_start_time
     - field.field.node.project.field_attachments_url
-    - field.field.node.project.field_builder
     - field.field.node.project.field_building_type
     - field.field.node.project.field_city
+    - field.field.node.project.field_completion_date
     - field.field.node.project.field_construction_material
     - field.field.node.project.field_construction_year
+    - field.field.node.project.field_constructor
+    - field.field.node.project.field_coordinate_lat
+    - field.field.node.project.field_coordinate_lon
     - field.field.node.project.field_district
     - field.field.node.project.field_energy_class
+    - field.field.node.project.field_estate_agent
+    - field.field.node.project.field_estate_agent_email
+    - field.field.node.project.field_estate_agent_phone
+    - field.field.node.project.field_estimated_completion
+    - field.field.node.project.field_estimated_completion_date
     - field.field.node.project.field_has_elevator
     - field.field.node.project.field_has_sauna
     - field.field.node.project.field_heating
     - field.field.node.project.field_holding_type
     - field.field.node.project.field_housing_company
+    - field.field.node.project.field_housing_manager
+    - field.field.node.project.field_main_image
+    - field.field.node.project.field_material_choice_dl
     - field.field.node.project.field_new_development_status
     - field.field.node.project.field_new_housing
+    - field.field.node.project.field_possession_transfer_date
     - field.field.node.project.field_postal_code
+    - field.field.node.project.field_premarketing_start_time
     - field.field.node.project.field_project_description
-    - field.field.node.project.field_publication_dates
+    - field.field.node.project.field_project_manager
+    - field.field.node.project.field_publication_end_time
+    - field.field.node.project.field_publication_start_time
     - field.field.node.project.field_realty_id
     - field.field.node.project.field_roof_material
     - field.field.node.project.field_sanitation
+    - field.field.node.project.field_shareholder_meeting_date
     - field.field.node.project.field_site_area
     - field.field.node.project.field_site_owner
     - field.field.node.project.field_site_renter
     - field.field.node.project.field_street_address
     - field.field.node.project.field_tasks
+    - field.field.node.project.field_virtual_presentation_url
     - field.field.node.project.field_zoning_info
     - field.field.node.project.field_zoning_status
     - node.type.project
   module:
-    - datetime_range
+    - datetime
     - link
     - options
     - text
@@ -73,14 +94,6 @@ content:
       target: ''
     third_party_settings: {  }
     type: link
-    region: content
-  field_builder:
-    weight: 130
-    label: above
-    settings:
-      link_to_entity: false
-    third_party_settings: {  }
-    type: string
     region: content
   field_building_type:
     weight: 127
@@ -122,12 +135,11 @@ content:
     type: string
     region: content
   field_energy_class:
-    weight: 118
+    weight: 149
     label: above
-    settings:
-      link_to_entity: false
+    settings: {  }
     third_party_settings: {  }
-    type: string
+    type: list_default
     region: content
   field_has_elevator:
     weight: 141
@@ -204,15 +216,14 @@ content:
     third_party_settings: {  }
     type: text_default
     region: content
-  field_publication_dates:
-    weight: 128
+  field_publication_start_time:
+    weight: 150
     label: above
     settings:
-      separator: '-'
       format_type: medium
       timezone_override: ''
     third_party_settings: {  }
-    type: daterange_default
+    type: datetime_default
     region: content
   field_realty_id:
     weight: 137
@@ -305,5 +316,27 @@ content:
     third_party_settings: {  }
     region: content
 hidden:
+  field_acc_financeofficer: true
+  field_acc_salesperson: true
+  field_application_end_time: true
+  field_application_start_time: true
+  field_completion_date: true
+  field_constructor: true
+  field_coordinate_lat: true
+  field_coordinate_lon: true
+  field_estate_agent: true
+  field_estate_agent_email: true
+  field_estate_agent_phone: true
+  field_estimated_completion: true
+  field_estimated_completion_date: true
+  field_housing_manager: true
+  field_main_image: true
+  field_material_choice_dl: true
+  field_possession_transfer_date: true
+  field_premarketing_start_time: true
+  field_project_manager: true
+  field_publication_end_time: true
+  field_shareholder_meeting_date: true
+  field_virtual_presentation_url: true
   langcode: true
   search_api_excerpt: true

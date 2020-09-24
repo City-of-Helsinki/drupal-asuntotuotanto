@@ -1,0 +1,19 @@
+uuid: babf9d72-62e9-4e2b-88b8-d14a18955447
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_coordinate_lon
+    - node.type.project
+id: node.project.field_coordinate_lon
+field_name: field_coordinate_lon
+entity_type: node
+bundle: project
+label: 'Coordinate longitude'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

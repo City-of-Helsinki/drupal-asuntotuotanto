@@ -1,0 +1,20 @@
+uuid: dabaf4f1-cd8d-4834-ab2f-ee238f894688
+langcode: en
+status: true
+dependencies:
+  module:
+    - datetime
+    - node
+id: node.field_publication_end_time
+field_name: field_publication_end_time
+entity_type: node
+type: datetime
+settings:
+  datetime_type: datetime
+module: datetime
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

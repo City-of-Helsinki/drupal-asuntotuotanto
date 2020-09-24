@@ -1,17 +1,18 @@
-uuid: f6c4d793-4dec-464d-bf30-4d31fb4f9974
+uuid: 9f04987b-93c5-4296-a0fd-f1d3154db5be
 langcode: en
 status: true
 dependencies:
   module:
-    - datetime_range
     - node
-id: node.field_publication_dates
-field_name: field_publication_dates
+id: node.field_constructor
+field_name: field_constructor
 entity_type: node
-type: daterange
+type: string
 settings:
-  datetime_type: datetime
-module: datetime_range
+  max_length: 255
+  is_ascii: false
+  case_sensitive: false
+module: core
 locked: false
 cardinality: 1
 translatable: true

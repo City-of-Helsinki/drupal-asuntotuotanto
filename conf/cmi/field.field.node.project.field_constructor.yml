@@ -1,0 +1,19 @@
+uuid: e76381ed-28c9-440d-968b-f4bbe7a81c0d
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_constructor
+    - node.type.project
+id: node.project.field_constructor
+field_name: field_constructor
+entity_type: node
+bundle: project
+label: Constructor
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

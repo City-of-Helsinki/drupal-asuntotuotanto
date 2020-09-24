@@ -1,0 +1,21 @@
+uuid: cd507e2c-012e-4dec-bd22-7dc83597c888
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_publication_end_time
+    - node.type.project
+  module:
+    - datetime
+id: node.project.field_publication_end_time
+field_name: field_publication_end_time
+entity_type: node
+bundle: project
+label: 'Publication end time'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: datetime
