@@ -22,6 +22,7 @@ dependencies:
     - field.field.node.apartment.field_has_yard
     - field.field.node.apartment.field_kitchen_appliances
     - field.field.node.apartment.field_living_area
+    - field.field.node.apartment.field_loan_share
     - field.field.node.apartment.field_maintenance_fee
     - field.field.node.apartment.field_other_fees
     - field.field.node.apartment.field_parking_fee
@@ -81,6 +82,7 @@ hidden:
   field_housing_manager: true
   field_kitchen_appliances: true
   field_living_area: true
+  field_loan_share: true
   field_main_image: true
   field_maintenance_fee: true
   field_material_choice_dl: true

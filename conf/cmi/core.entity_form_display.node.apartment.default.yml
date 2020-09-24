@@ -21,6 +21,7 @@ dependencies:
     - field.field.node.apartment.field_has_yard
     - field.field.node.apartment.field_kitchen_appliances
     - field.field.node.apartment.field_living_area
+    - field.field.node.apartment.field_loan_share
     - field.field.node.apartment.field_maintenance_fee
     - field.field.node.apartment.field_other_fees
     - field.field.node.apartment.field_parking_fee
@@ -91,6 +92,7 @@ third_party_settings:
       children:
         - field_sales_price
         - field_debt_free_sales_price
+        - field_loan_share
         - field_financing_fee
         - field_maintenance_fee
         - field_water_fee
@@ -183,7 +185,7 @@ content:
     type: number
     region: content
   field_financing_fee:
-    weight: 28
+    weight: 29
     settings:
       placeholder: ''
     third_party_settings: {  }
@@ -241,6 +243,13 @@ content:
     region: content
   field_living_area:
     weight: 11
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+    type: number
+    region: content
+  field_loan_share:
+    weight: 28
     settings:
       placeholder: ''
     third_party_settings: {  }

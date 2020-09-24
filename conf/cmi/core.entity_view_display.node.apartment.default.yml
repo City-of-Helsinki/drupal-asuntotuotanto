@@ -21,6 +21,7 @@ dependencies:
     - field.field.node.apartment.field_has_yard
     - field.field.node.apartment.field_kitchen_appliances
     - field.field.node.apartment.field_living_area
+    - field.field.node.apartment.field_loan_share
     - field.field.node.apartment.field_maintenance_fee
     - field.field.node.apartment.field_other_fees
     - field.field.node.apartment.field_parking_fee
@@ -223,6 +224,15 @@ content:
       prefix_suffix: true
     third_party_settings: {  }
     type: number_decimal
+    region: content
+  field_loan_share:
+    weight: 49
+    label: above
+    settings:
+      thousand_separator: ''
+      prefix_suffix: true
+    third_party_settings: {  }
+    type: number_integer
     region: content
   field_maintenance_fee:
     weight: 23
