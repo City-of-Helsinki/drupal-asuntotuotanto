@@ -16,7 +16,7 @@ use Drupal\node\Entity\Node;
  * @ComputedField(
  *   id = "field_apartment_address",
  *   label = @Translation("Street address"),
- *   type = "computed_render_array",
+ *   type = "asu_computed_render_array",
  *   entity_types = {"node"},
  *   bundles = {"apartment"}
  * )

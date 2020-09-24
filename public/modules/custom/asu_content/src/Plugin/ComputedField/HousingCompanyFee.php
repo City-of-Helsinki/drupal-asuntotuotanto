@@ -15,7 +15,7 @@ use Drupal\Core\TypedData\TypedDataInterface;
  * @ComputedField(
  *   id = "field_housing_company_fee",
  *   label = @Translation("Housing company fee"),
- *   type = "computed_render_array",
+ *   type = "asu_computed_render_array",
  *   entity_types = {"node"},
  *   bundles = {"apartment"}
  * )

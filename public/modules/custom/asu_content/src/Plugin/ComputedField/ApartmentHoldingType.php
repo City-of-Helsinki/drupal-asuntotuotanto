@@ -6,6 +6,8 @@ use Drupal\computed_field_plugin\Annotation\ComputedField;
 use Drupal\computed_field_plugin\Traits\ComputedSingleItemTrait;
 use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Field\FieldItemList;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\Core\TypedData\DataDefinition;
 use Drupal\Core\TypedData\DataDefinitionInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\node\Entity\Node;
@@ -16,7 +18,7 @@ use Drupal\node\Entity\Node;
  * @ComputedField(
  *   id = "field_apartment_holding_type",
  *   label = @Translation("Apartment holding type"),
- *   type = "computed_render_array",
+ *   type = "asu_computed_render_array",
  *   entity_types = {"node"},
  *   bundles = {"apartment"}
  * )

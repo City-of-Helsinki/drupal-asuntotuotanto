@@ -134,7 +134,7 @@ field_settings:
     label: 'Apartment holding type'
     datasource_id: 'entity:node'
     property_path: field_apartment_holding_type
-    type: computed_array_decimal
+    type: computed_array_string
     dependencies:
       module:
         - computed_field_plugin
@@ -142,7 +142,7 @@ field_settings:
     label: 'Apartment number'
     datasource_id: 'entity:node'
     property_path: field_apartment_number
-    type: string
+    type: computed_array_string
     dependencies:
       config:
         - field.storage.node.field_apartment_number
@@ -430,7 +430,7 @@ field_settings:
     label: 'Housing company fee'
     datasource_id: 'entity:node'
     property_path: field_housing_company_fee
-    type: string
+    type: computed_array_decimal
     dependencies:
       module:
         - computed_field_plugin
@@ -550,7 +550,7 @@ field_settings:
     label: 'Price per square meter'
     datasource_id: 'entity:node'
     property_path: field_price_m2
-    type: string
+    type: computed_array_decimal
     dependencies:
       module:
         - computed_field_plugin

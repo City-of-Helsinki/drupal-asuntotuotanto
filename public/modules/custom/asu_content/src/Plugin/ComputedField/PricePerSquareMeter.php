@@ -15,7 +15,7 @@ use Drupal\Core\TypedData\TypedDataInterface;
  * @ComputedField(
  *   id = "field_price_m2",
  *   label = @Translation("Price per square meter"),
- *   type = "computed_render_array",
+ *   type = "asu_computed_render_array",
  *   entity_types = {"node"},
  *   bundles = {"apartment"}
  * )
