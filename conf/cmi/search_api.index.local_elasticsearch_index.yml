@@ -749,10 +749,11 @@ field_settings:
         - field.storage.node.field_zoning_status
 datasource_settings:
   'entity:node':
-    languages:
-      default: true
-      selected: {  }
     bundles:
+      default: false
+      selected:
+        - apartment
+    languages:
       default: true
       selected: {  }
 processor_settings:
