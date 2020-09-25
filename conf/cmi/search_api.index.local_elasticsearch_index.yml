@@ -127,8 +127,8 @@ field_settings:
         - field.storage.node.field_application_url
   attachments_url:
     label: 'Attachments / URL'
-    datasource_id: 'search_api_reverse_entity_references_node__field_apartments:node'
-    property_path: field_attachments_url
+    datasource_id: 'entity:node'
+    property_path: 'search_api_reverse_entity_references_node__field_apartments:field_attachments_url'
     type: string
   balcony_description:
     label: 'Balcony description'
@@ -148,8 +148,8 @@ field_settings:
         - field.storage.node.field_bathroom_appliances
   building_type:
     label: 'Building type'
-    datasource_id: 'search_api_reverse_entity_references_node__field_apartments:node'
-    property_path: field_building_type
+    datasource_id: 'entity:node'
+    property_path: 'search_api_reverse_entity_references_node__field_apartments:field_building_type'
     type: string
   city:
     label: City
