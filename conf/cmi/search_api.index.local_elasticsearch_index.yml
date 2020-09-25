@@ -48,13 +48,13 @@ read_only: false
 field_settings:
   acc_financeofficer:
     label: 'Accountable finance officer'
-    datasource_id: 'search_api_reverse_entity_references_node__field_apartments:node'
-    property_path: field_acc_financeofficer
+    datasource_id: 'entity:node'
+    property_path: 'search_api_reverse_entity_references_node__field_apartments:field_acc_financeofficer'
     type: string
   acc_salesperson:
     label: 'Accountable sales person'
-    datasource_id: 'search_api_reverse_entity_references_node__field_apartments:node'
-    property_path: field_acc_salesperson
+    datasource_id: 'entity:node'
+    property_path: 'search_api_reverse_entity_references_node__field_apartments:field_acc_salesperson'
     type: string
   additional_information:
     label: 'Additional information'
