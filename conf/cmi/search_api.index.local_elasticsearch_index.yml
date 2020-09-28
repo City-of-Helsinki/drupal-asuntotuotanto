@@ -105,7 +105,7 @@ field_settings:
     label: 'Application end time'
     datasource_id: 'entity:node'
     property_path: field_application_end_time
-    type: date
+    type: object
     dependencies:
       config:
         - field.storage.node.field_application_end_time
@@ -113,7 +113,7 @@ field_settings:
     label: 'Application start time'
     datasource_id: 'entity:node'
     property_path: field_application_start_time
-    type: date
+    type: object
     dependencies:
       config:
         - field.storage.node.field_application_start_time
@@ -234,7 +234,7 @@ field_settings:
     label: 'Estimated completion date'
     datasource_id: 'entity:node'
     property_path: 'search_api_reverse_entity_references_node__field_apartments:field_estimated_completion_date'
-    type: date
+    type: object
   financing_fee:
     label: 'Financing fee'
     datasource_id: 'entity:node'
@@ -393,7 +393,7 @@ field_settings:
     label: 'Transfer of possession'
     datasource_id: 'entity:node'
     property_path: 'search_api_reverse_entity_references_node__field_apartments:field_possession_transfer_date'
-    type: date
+    type: object
   postal_code:
     label: 'Postal code'
     datasource_id: 'entity:node'
@@ -403,7 +403,7 @@ field_settings:
     label: 'Pre-marketing start time'
     datasource_id: 'entity:node'
     property_path: 'search_api_reverse_entity_references_node__field_apartments:field_premarketing_start_time'
-    type: date
+    type: object
   price_m2:
     label: 'Price per square meter'
     datasource_id: 'entity:node'
@@ -426,12 +426,12 @@ field_settings:
     label: 'Publication end time'
     datasource_id: 'entity:node'
     property_path: 'search_api_reverse_entity_references_node__field_apartments:field_publication_end_time'
-    type: date
+    type: object
   publication_start_time:
     label: 'Publication start time'
     datasource_id: 'entity:node'
     property_path: 'search_api_reverse_entity_references_node__field_apartments:field_publication_start_time'
-    type: date
+    type: object
   realty_id:
     label: 'Realty ID'
     datasource_id: 'entity:node'
@@ -475,12 +475,12 @@ field_settings:
     label: 'Shareholder meeting date'
     datasource_id: 'entity:node'
     property_path: 'search_api_reverse_entity_references_node__field_apartments:field_shareholder_meeting_date'
-    type: date
+    type: object
   showing_time:
     label: 'Showing time'
     datasource_id: 'entity:node'
     property_path: field_showing_time
-    type: date
+    type: object
     dependencies:
       config:
         - field.storage.node.field_showing_time
