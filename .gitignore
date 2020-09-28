@@ -19,6 +19,8 @@ vendor
 drush/sites/.checksums
 .phpunit.result.cache
 
+*.sql
+
 # Ignore the folder created by PhpStorm
 .idea/*
 
