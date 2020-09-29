@@ -1,0 +1,21 @@
+uuid: 6f78fde1-8114-4791-8a66-90e11713f83b
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_pre_marketing_end_time
+    - node.type.project
+  module:
+    - datetime
+id: node.project.field_pre_marketing_end_time
+field_name: field_pre_marketing_end_time
+entity_type: node
+bundle: project
+label: 'Pre-marketing end time'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: datetime

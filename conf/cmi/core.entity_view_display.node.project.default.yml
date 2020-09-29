@@ -37,6 +37,7 @@ dependencies:
     - field.field.node.project.field_new_housing
     - field.field.node.project.field_possession_transfer_date
     - field.field.node.project.field_postal_code
+    - field.field.node.project.field_pre_marketing_end_time
     - field.field.node.project.field_premarketing_start_time
     - field.field.node.project.field_project_description
     - field.field.node.project.field_project_manager
@@ -131,7 +132,7 @@ content:
     settings:
       thousand_separator: ''
       decimal_separator: .
-      scale: 2
+      scale: 6
       prefix_suffix: true
     third_party_settings: {  }
     type: number_decimal
@@ -142,7 +143,7 @@ content:
     settings:
       thousand_separator: ''
       decimal_separator: .
-      scale: 2
+      scale: 6
       prefix_suffix: true
     third_party_settings: {  }
     type: number_decimal
@@ -334,9 +335,9 @@ content:
     region: content
   links:
     weight: 100
+    region: content
     settings: {  }
     third_party_settings: {  }
-    region: content
 hidden:
   field_acc_financeofficer: true
   field_acc_salesperson: true
@@ -344,8 +345,6 @@ hidden:
   field_application_start_time: true
   field_completion_date: true
   field_constructor: true
-  field_coordinate_lat: true
-  field_coordinate_lon: true
   field_estate_agent: true
   field_estate_agent_email: true
   field_estate_agent_phone: true
@@ -355,6 +354,7 @@ hidden:
   field_main_image: true
   field_material_choice_dl: true
   field_possession_transfer_date: true
+  field_pre_marketing_end_time: true
   field_premarketing_start_time: true
   field_project_manager: true
   field_publication_end_time: true

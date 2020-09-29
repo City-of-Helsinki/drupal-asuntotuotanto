@@ -1,0 +1,7 @@
+This module uses patch to remove excess arrays from indexed data:
+
+ISSUE:
+https://www.drupal.org/project/elasticsearch_connector/issues/2977537
+
+PATCH:
+https://www.drupal.org/files/issues/2018-09-06/elasticsearch_connector-array-value-fix-2977537-1.patch

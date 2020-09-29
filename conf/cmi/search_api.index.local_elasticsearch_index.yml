@@ -372,6 +372,11 @@ field_settings:
     datasource_id: 'entity:node'
     property_path: 'search_api_reverse_entity_references_node__field_apartments:field_postal_code'
     type: string
+  pre_marketing_end_time:
+    label: 'Pre-marketing end time'
+    datasource_id: 'entity:node'
+    property_path: 'search_api_reverse_entity_references_node__field_apartments:field_pre_marketing_end_time'
+    type: object
   premarketing_start_time:
     label: 'Pre-marketing start time'
     datasource_id: 'entity:node'
