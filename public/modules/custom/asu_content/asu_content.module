@@ -100,6 +100,9 @@ function asu_content_entity_update($entity) {
   }
 }
 
+/**
+ * Implements hook_elasticsearch_connector_supported_data_types_alter().
+ */
 function asu_content_elasticsearch_connector_supported_data_types_alter(array &$data_types) {
   $data_types[] = 'cent';
   $data_types[] = 'computed_array_decimal';

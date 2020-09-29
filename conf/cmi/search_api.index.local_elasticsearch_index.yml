@@ -196,7 +196,7 @@ field_settings:
     label: 'Debt free sales price'
     datasource_id: 'entity:node'
     property_path: field_debt_free_sales_price
-    type: decimal
+    type: cent
     dependencies:
       config:
         - field.storage.node.field_debt_free_sales_price
@@ -239,7 +239,7 @@ field_settings:
     label: 'Financing fee'
     datasource_id: 'entity:node'
     property_path: field_financing_fee
-    type: decimal
+    type: cent
     dependencies:
       config:
         - field.storage.node.field_financing_fee
@@ -341,7 +341,7 @@ field_settings:
     label: 'Share of housing company loan'
     datasource_id: 'entity:node'
     property_path: field_loan_share
-    type: decimal
+    type: cent
     dependencies:
       config:
         - field.storage.node.field_loan_share
@@ -349,12 +349,12 @@ field_settings:
     label: 'Main image'
     datasource_id: 'entity:node'
     property_path: 'search_api_reverse_entity_references_node__field_apartments:field_main_image'
-    type: integer
+    type: object
   maintenance_fee:
     label: 'Maintenance fee'
     datasource_id: 'entity:node'
     property_path: field_maintenance_fee
-    type: decimal
+    type: cent
     dependencies:
       config:
         - field.storage.node.field_maintenance_fee
@@ -385,7 +385,7 @@ field_settings:
     label: 'Parking fee'
     datasource_id: 'entity:node'
     property_path: field_parking_fee
-    type: decimal
+    type: cent
     dependencies:
       config:
         - field.storage.node.field_parking_fee
@@ -408,7 +408,7 @@ field_settings:
     label: 'Price per square meter'
     datasource_id: 'entity:node'
     property_path: field_price_m2
-    type: computed_array_decimal
+    type: cent
     dependencies:
       module:
         - computed_field_plugin
@@ -416,7 +416,7 @@ field_settings:
     label: 'Project description'
     datasource_id: 'entity:node'
     property_path: 'search_api_reverse_entity_references_node__field_apartments:field_project_description'
-    type: string
+    type: object
   project_manager:
     label: 'Project manager'
     datasource_id: 'entity:node'
@@ -454,7 +454,7 @@ field_settings:
     label: 'Sales price'
     datasource_id: 'entity:node'
     property_path: field_sales_price
-    type: decimal
+    type: cent
     dependencies:
       config:
         - field.storage.node.field_sales_price
@@ -537,7 +537,7 @@ field_settings:
     label: 'Water fee'
     datasource_id: 'entity:node'
     property_path: field_water_fee
-    type: decimal
+    type: cent
     dependencies:
       config:
         - field.storage.node.field_water_fee
@@ -578,6 +578,21 @@ processor_settings:
   add_url: {  }
   aggregated_field: {  }
   entity_status: {  }
+  html_filter:
+    all_fields: false
+    fields:
+      - additional_information
+      - balcony_description
+      - other_fees
+      - storage_description
+      - view_description
+      - water_fee_explanation
+    title: true
+    alt: true
+    tags: {  }
+    weights:
+      preprocess_index: 0
+      preprocess_query: 0
   language_with_fallback: {  }
   nested_entity: {  }
   rendered_item: {  }
