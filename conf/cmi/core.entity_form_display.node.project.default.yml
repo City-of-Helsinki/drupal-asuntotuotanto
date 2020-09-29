@@ -346,18 +346,16 @@ content:
   field_coordinate_lat:
     weight: 77
     settings:
-      size: 60
       placeholder: ''
     third_party_settings: {  }
-    type: string_textfield
+    type: number
     region: content
   field_coordinate_lon:
     weight: 78
     settings:
-      size: 60
       placeholder: ''
     third_party_settings: {  }
-    type: string_textfield
+    type: number
     region: content
   field_district:
     weight: 57

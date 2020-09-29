@@ -186,12 +186,12 @@ field_settings:
     label: 'Coordinate latitude'
     datasource_id: 'entity:node'
     property_path: 'search_api_reverse_entity_references_node__field_apartments:field_coordinate_lat'
-    type: string
+    type: decimal
   coordinate_lon:
     label: 'Coordinate longitude'
     datasource_id: 'entity:node'
     property_path: 'search_api_reverse_entity_references_node__field_apartments:field_coordinate_lon'
-    type: string
+    type: decimal
   debt_free_sales_price:
     label: 'Debt free sales price'
     datasource_id: 'entity:node'

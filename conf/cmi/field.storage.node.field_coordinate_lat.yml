@@ -1,4 +1,4 @@
-uuid: dabbca61-6708-48b6-a67c-c360e29e708b
+uuid: d5f02631-dd55-4ea1-8775-15e80d7094ba
 langcode: en
 status: true
 dependencies:
@@ -7,11 +7,10 @@ dependencies:
 id: node.field_coordinate_lat
 field_name: field_coordinate_lat
 entity_type: node
-type: string
+type: decimal
 settings:
-  max_length: 255
-  is_ascii: false
-  case_sensitive: false
+  precision: 10
+  scale: 6
 module: core
 locked: false
 cardinality: 1
