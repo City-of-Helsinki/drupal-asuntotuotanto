@@ -37,6 +37,7 @@ dependencies:
     - field.field.node.project.field_new_housing
     - field.field.node.project.field_possession_transfer_date
     - field.field.node.project.field_postal_code
+    - field.field.node.project.field_pre_marketing_end_time
     - field.field.node.project.field_premarketing_start_time
     - field.field.node.project.field_project_description
     - field.field.node.project.field_project_manager
@@ -231,6 +232,15 @@ content:
     third_party_settings: {  }
     type: string
     region: content
+  field_pre_marketing_end_time:
+    weight: 153
+    label: above
+    settings:
+      format_type: medium
+      timezone_override: ''
+    third_party_settings: {  }
+    type: datetime_default
+    region: content
   field_project_description:
     weight: 126
     label: above
@@ -344,8 +354,6 @@ hidden:
   field_application_start_time: true
   field_completion_date: true
   field_constructor: true
-  field_coordinate_lat: true
-  field_coordinate_lon: true
   field_estate_agent: true
   field_estate_agent_email: true
   field_estate_agent_phone: true

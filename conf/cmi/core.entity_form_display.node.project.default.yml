@@ -37,6 +37,7 @@ dependencies:
     - field.field.node.project.field_new_housing
     - field.field.node.project.field_possession_transfer_date
     - field.field.node.project.field_postal_code
+    - field.field.node.project.field_pre_marketing_end_time
     - field.field.node.project.field_premarketing_start_time
     - field.field.node.project.field_project_description
     - field.field.node.project.field_project_manager
@@ -494,6 +495,12 @@ content:
       size: 60
       placeholder: ''
     third_party_settings: {  }
+  field_pre_marketing_end_time:
+    weight: 79
+    settings: {  }
+    third_party_settings: {  }
+    type: datetime_default
+    region: content
   field_premarketing_start_time:
     weight: 13
     settings: {  }
