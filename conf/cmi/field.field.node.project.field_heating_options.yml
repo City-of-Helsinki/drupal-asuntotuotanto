@@ -1,16 +1,16 @@
-uuid: 9900369c-494d-47a9-97b2-0c78d0bb33de
+uuid: 2c3c94e1-854a-465b-ad37-d3eaaea26023
 langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.node.field_energy_class
+    - field.storage.node.field_heating_options
     - node.type.project
-    - taxonomy.vocabulary.energy_classes
-id: node.project.field_energy_class
-field_name: field_energy_class
+    - taxonomy.vocabulary.heating_options
+id: node.project.field_heating_options
+field_name: field_heating_options
 entity_type: node
 bundle: project
-label: 'Energy class'
+label: 'Heating options'
 description: ''
 required: false
 translatable: false
@@ -20,7 +20,7 @@ settings:
   handler: 'default:taxonomy_term'
   handler_settings:
     target_bundles:
-      energy_classes: energy_classes
+      heating_options: heating_options
     sort:
       field: name
       direction: asc

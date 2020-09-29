@@ -25,6 +25,7 @@ dependencies:
     - field.field.node.apartment.field_maintenance_fee
     - field.field.node.apartment.field_other_fees
     - field.field.node.apartment.field_parking_fee
+    - field.field.node.apartment.field_parking_fee_explanation
     - field.field.node.apartment.field_room_count
     - field.field.node.apartment.field_sales_price
     - field.field.node.apartment.field_services_description
@@ -88,6 +89,7 @@ hidden:
   field_material_choice_dl: true
   field_other_fees: true
   field_parking_fee: true
+  field_parking_fee_explanation: true
   field_possession_transfer_date: true
   field_premarketing_start_time: true
   field_price_m2: true

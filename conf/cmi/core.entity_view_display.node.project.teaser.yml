@@ -14,7 +14,7 @@ dependencies:
     - field.field.node.project.field_building_type
     - field.field.node.project.field_city
     - field.field.node.project.field_completion_date
-    - field.field.node.project.field_construction_material
+    - field.field.node.project.field_construction_materials
     - field.field.node.project.field_construction_year
     - field.field.node.project.field_constructor
     - field.field.node.project.field_coordinate_lat
@@ -28,7 +28,7 @@ dependencies:
     - field.field.node.project.field_estimated_completion_date
     - field.field.node.project.field_has_elevator
     - field.field.node.project.field_has_sauna
-    - field.field.node.project.field_heating
+    - field.field.node.project.field_heating_options
     - field.field.node.project.field_holding_type
     - field.field.node.project.field_housing_company
     - field.field.node.project.field_housing_manager
@@ -79,7 +79,7 @@ hidden:
   field_building_type: true
   field_city: true
   field_completion_date: true
-  field_construction_material: true
+  field_construction_materials: true
   field_construction_year: true
   field_constructor: true
   field_coordinate_lat: true
@@ -93,7 +93,7 @@ hidden:
   field_estimated_completion_date: true
   field_has_elevator: true
   field_has_sauna: true
-  field_heating: true
+  field_heating_options: true
   field_holding_type: true
   field_housing_company: true
   field_housing_manager: true

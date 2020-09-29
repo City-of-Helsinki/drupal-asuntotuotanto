@@ -13,7 +13,7 @@ dependencies:
     - field.field.node.project.field_building_type
     - field.field.node.project.field_city
     - field.field.node.project.field_completion_date
-    - field.field.node.project.field_construction_material
+    - field.field.node.project.field_construction_materials
     - field.field.node.project.field_construction_year
     - field.field.node.project.field_constructor
     - field.field.node.project.field_coordinate_lat
@@ -27,7 +27,7 @@ dependencies:
     - field.field.node.project.field_estimated_completion_date
     - field.field.node.project.field_has_elevator
     - field.field.node.project.field_has_sauna
-    - field.field.node.project.field_heating
+    - field.field.node.project.field_heating_options
     - field.field.node.project.field_holding_type
     - field.field.node.project.field_housing_company
     - field.field.node.project.field_housing_manager
@@ -63,7 +63,6 @@ dependencies:
     - inline_entity_form
     - link
     - path
-    - text
 third_party_settings:
   field_group:
     group_project_tabs:
@@ -319,13 +318,15 @@ content:
     third_party_settings: {  }
     type: datetime_default
     region: content
-  field_construction_material:
-    weight: 65
+  field_construction_materials:
+    weight: 80
     settings:
+      match_operator: CONTAINS
+      match_limit: 10
       size: 60
       placeholder: ''
     third_party_settings: {  }
-    type: string_textfield
+    type: entity_reference_autocomplete
     region: content
   field_construction_year:
     weight: 59
@@ -366,10 +367,14 @@ content:
     type: string_textfield
     region: content
   field_energy_class:
-    weight: 68
-    settings: {  }
+    weight: 82
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
     third_party_settings: {  }
-    type: options_select
+    type: entity_reference_autocomplete
     region: content
   field_estate_agent:
     weight: 29
@@ -423,13 +428,15 @@ content:
     third_party_settings: {  }
     type: boolean_checkbox
     region: content
-  field_heating:
-    weight: 67
+  field_heating_options:
+    weight: 81
     settings:
+      match_operator: CONTAINS
+      match_limit: 10
       size: 60
       placeholder: ''
     third_party_settings: {  }
-    type: string_textfield
+    type: entity_reference_autocomplete
     region: content
   field_holding_type:
     weight: 53
@@ -501,12 +508,12 @@ content:
     type: datetime_default
     region: content
   field_project_description:
-    weight: 76
+    weight: 79
     settings:
       rows: 5
       placeholder: ''
     third_party_settings: {  }
-    type: text_textarea
+    type: string_textarea
     region: content
   field_project_manager:
     weight: 26

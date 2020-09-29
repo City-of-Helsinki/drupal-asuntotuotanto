@@ -1,12 +1,10 @@
-uuid: d01ec96a-eed4-455d-9021-906a96bf6534
+uuid: 8620ed88-12f4-4882-9b9d-39d70dda4c81
 langcode: en
 status: true
 dependencies:
   config:
     - field.storage.node.field_project_description
     - node.type.project
-  module:
-    - text
 id: node.project.field_project_description
 field_name: field_project_description
 entity_type: node
@@ -18,4 +16,4 @@ translatable: true
 default_value: {  }
 default_value_callback: ''
 settings: {  }
-field_type: text_long
+field_type: string_long

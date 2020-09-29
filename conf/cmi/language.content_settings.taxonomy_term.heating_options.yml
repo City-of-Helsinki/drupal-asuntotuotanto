@@ -1,0 +1,16 @@
+uuid: f9bbff25-4a6d-4e3d-b0e0-815ecbe2c5d8
+langcode: en
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.heating_options
+  module:
+    - content_translation
+third_party_settings:
+  content_translation:
+    enabled: true
+id: taxonomy_term.heating_options
+target_entity_type_id: taxonomy_term
+target_bundle: heating_options
+default_langcode: fi
+language_alterable: true

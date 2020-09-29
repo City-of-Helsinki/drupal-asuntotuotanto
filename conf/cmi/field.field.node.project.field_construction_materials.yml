@@ -1,16 +1,16 @@
-uuid: 9900369c-494d-47a9-97b2-0c78d0bb33de
+uuid: 26335bf4-e4a7-4024-8247-bcbc25b21bd3
 langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.node.field_energy_class
+    - field.storage.node.field_construction_materials
     - node.type.project
-    - taxonomy.vocabulary.energy_classes
-id: node.project.field_energy_class
-field_name: field_energy_class
+    - taxonomy.vocabulary.construction_materials
+id: node.project.field_construction_materials
+field_name: field_construction_materials
 entity_type: node
 bundle: project
-label: 'Energy class'
+label: 'Construction materials'
 description: ''
 required: false
 translatable: false
@@ -20,7 +20,7 @@ settings:
   handler: 'default:taxonomy_term'
   handler_settings:
     target_bundles:
-      energy_classes: energy_classes
+      construction_materials: construction_materials
     sort:
       field: name
       direction: asc

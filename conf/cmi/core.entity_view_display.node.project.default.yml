@@ -13,7 +13,7 @@ dependencies:
     - field.field.node.project.field_building_type
     - field.field.node.project.field_city
     - field.field.node.project.field_completion_date
-    - field.field.node.project.field_construction_material
+    - field.field.node.project.field_construction_materials
     - field.field.node.project.field_construction_year
     - field.field.node.project.field_constructor
     - field.field.node.project.field_coordinate_lat
@@ -27,7 +27,7 @@ dependencies:
     - field.field.node.project.field_estimated_completion_date
     - field.field.node.project.field_has_elevator
     - field.field.node.project.field_has_sauna
-    - field.field.node.project.field_heating
+    - field.field.node.project.field_heating_options
     - field.field.node.project.field_holding_type
     - field.field.node.project.field_housing_company
     - field.field.node.project.field_housing_manager
@@ -59,7 +59,6 @@ dependencies:
     - datetime
     - link
     - options
-    - text
     - user
 id: node.project.default
 targetEntityType: node
@@ -110,13 +109,13 @@ content:
     third_party_settings: {  }
     type: string
     region: content
-  field_construction_material:
-    weight: 143
+  field_construction_materials:
+    weight: 154
     label: above
     settings:
-      link_to_entity: false
+      link: true
     third_party_settings: {  }
-    type: string
+    type: entity_reference_label
     region: content
   field_construction_year:
     weight: 138
@@ -157,11 +156,12 @@ content:
     type: string
     region: content
   field_energy_class:
-    weight: 149
+    weight: 156
     label: above
-    settings: {  }
+    settings:
+      link: true
     third_party_settings: {  }
-    type: list_default
+    type: entity_reference_label
     region: content
   field_has_elevator:
     weight: 141
@@ -183,13 +183,13 @@ content:
     third_party_settings: {  }
     type: boolean
     region: content
-  field_heating:
-    weight: 117
+  field_heating_options:
+    weight: 155
     label: above
     settings:
-      link_to_entity: false
+      link: true
     third_party_settings: {  }
-    type: string
+    type: entity_reference_label
     region: content
   field_holding_type:
     weight: 134
@@ -232,11 +232,11 @@ content:
     type: string
     region: content
   field_project_description:
-    weight: 126
+    weight: 153
     label: above
     settings: {  }
     third_party_settings: {  }
-    type: text_default
+    type: basic_string
     region: content
   field_publication_start_time:
     weight: 150
