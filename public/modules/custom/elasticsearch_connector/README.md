@@ -14,3 +14,4 @@ https://www.drupal.org/files/issues/2019-03-26/3043047-support-automated-nested-
 Applied patches: 
 - https://www.drupal.org/project/elasticsearch_connector/issues/3110970
 - https://www.drupal.org/files/issues/2020-05-28/3110970-drupal9-readiness.patch
+- NOTICE PATCHES.txt https://www.drupal.org/files/issues/2018-09-06/elasticsearch_connector-array-value-fix-2977537-1.patch
