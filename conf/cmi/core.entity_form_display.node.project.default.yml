@@ -166,6 +166,7 @@ third_party_settings:
         - field_estimated_completion_date
         - field_completion_date
         - field_possession_transfer_date
+        - field_pre_marketing_end_time
       parent_name: group_project_tabs
       weight: 21
       format_type: tab
@@ -496,7 +497,7 @@ content:
       placeholder: ''
     third_party_settings: {  }
   field_pre_marketing_end_time:
-    weight: 79
+    weight: 13
     settings: {  }
     third_party_settings: {  }
     type: datetime_default
