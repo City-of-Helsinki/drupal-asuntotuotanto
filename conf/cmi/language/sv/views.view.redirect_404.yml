@@ -23,6 +23,8 @@ display:
           label: Sökväg
         count:
           label: Antal
+        timestamp:
+          label: 'Last accessed'
         langcode:
           label: Språk
         redirect_404_operations:
