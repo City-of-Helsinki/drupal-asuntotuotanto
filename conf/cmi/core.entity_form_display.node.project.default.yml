@@ -112,9 +112,9 @@ third_party_settings:
       children:
         - field_has_elevator
         - field_has_sauna
-        - field_construction_material
+        - field_construction_materials
         - field_roof_material
-        - field_heating
+        - field_heating_options
         - field_energy_class
         - field_site_area
         - field_site_owner
@@ -123,9 +123,9 @@ third_party_settings:
         - field_zoning_info
         - field_zoning_status
         - field_building_type
-        - field_project_description
         - field_coordinate_lat
         - field_coordinate_lon
+        - field_project_description
       parent_name: group_project_tabs
       weight: 20
       format_type: tab
@@ -156,6 +156,7 @@ third_party_settings:
       children:
         - field_publication_start_time
         - field_publication_end_time
+        - field_pre_marketing_end_time
         - field_premarketing_start_time
         - field_application_start_time
         - field_application_end_time
@@ -165,7 +166,6 @@ third_party_settings:
         - field_estimated_completion_date
         - field_completion_date
         - field_possession_transfer_date
-        - field_pre_marketing_end_time
       parent_name: group_project_tabs
       weight: 21
       format_type: tab
@@ -180,7 +180,6 @@ third_party_settings:
     group_pictures_and_videos:
       children:
         - field_main_image
-        - field_attachments
         - field_attachments_url
         - field_virtual_presentation_url
       parent_name: group_project_tabs
@@ -321,7 +320,7 @@ content:
     type: datetime_default
     region: content
   field_construction_materials:
-    weight: 80
+    weight: 65
     settings:
       match_operator: CONTAINS
       match_limit: 10
@@ -347,14 +346,14 @@ content:
     type: string_textfield
     region: content
   field_coordinate_lat:
-    weight: 77
+    weight: 76
     settings:
       placeholder: ''
     third_party_settings: {  }
     type: number
     region: content
   field_coordinate_lon:
-    weight: 78
+    weight: 77
     settings:
       placeholder: ''
     third_party_settings: {  }
@@ -369,7 +368,7 @@ content:
     type: string_textfield
     region: content
   field_energy_class:
-    weight: 82
+    weight: 68
     settings:
       match_operator: CONTAINS
       match_limit: 10
@@ -431,7 +430,7 @@ content:
     type: boolean_checkbox
     region: content
   field_heating_options:
-    weight: 81
+    weight: 67
     settings:
       match_operator: CONTAINS
       match_limit: 10
@@ -516,7 +515,7 @@ content:
     type: datetime_default
     region: content
   field_project_description:
-    weight: 79
+    weight: 78
     settings:
       rows: 5
       placeholder: ''
