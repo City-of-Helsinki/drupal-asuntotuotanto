@@ -107,7 +107,7 @@ field_settings:
     dependencies:
       config:
         - field.storage.node.field_application_url
-  attachments_url:
+  attachment_urls:
     label: 'Attachments / URL'
     datasource_id: 'entity:node'
     property_path: 'search_api_reverse_entity_references_node__field_apartments:field_attachments_url'
@@ -150,7 +150,7 @@ field_settings:
     label: 'Construction materials'
     datasource_id: 'entity:node'
     property_path: 'search_api_reverse_entity_references_node__field_apartments:field_construction_materials:entity:name'
-    type: string
+    type: object
   constructor:
     label: Constructor
     datasource_id: 'entity:node'
@@ -208,6 +208,11 @@ field_settings:
     label: 'Estimated completion date'
     datasource_id: 'entity:node'
     property_path: 'search_api_reverse_entity_references_node__field_apartments:field_estimated_completion_date'
+    type: object
+  field_construction_materials:
+    label: 'Reverse reference: <em class="placeholder">Content</em> using <em class="placeholder">Apartments</em> » Construction materials'
+    datasource_id: 'entity:node'
+    property_path: 'search_api_reverse_entity_references_node__field_apartments:field_construction_materials'
     type: object
   field_parking_fee_explanation:
     label: 'Parking fee explanation'
@@ -299,10 +304,15 @@ field_settings:
       module:
         - computed_field_plugin
   housing_manager:
-    label: 'Housing manager'
+    label: Isännöinti
     datasource_id: 'entity:node'
     property_path: 'search_api_reverse_entity_references_node__field_apartments:field_housing_manager'
     type: string
+  image_urls:
+    label: 'Images'
+    datasource_id: 'entity:node'
+    property_path: 'search_api_reverse_entity_references_node__field_apartments:field_images'
+    type: object
   kitchen_appliances:
     label: 'Kitchen appliances'
     datasource_id: 'entity:node'
@@ -327,7 +337,7 @@ field_settings:
     dependencies:
       config:
         - field.storage.node.field_loan_share
-  main_image:
+  main_image_url:
     label: 'Main image'
     datasource_id: 'entity:node'
     property_path: 'search_api_reverse_entity_references_node__field_apartments:field_main_image'
@@ -381,11 +391,6 @@ field_settings:
     datasource_id: 'entity:node'
     property_path: 'search_api_reverse_entity_references_node__field_apartments:field_postal_code'
     type: string
-  premarketing_end_time:
-    label: 'Pre-marketing end time'
-    datasource_id: 'entity:node'
-    property_path: 'search_api_reverse_entity_references_node__field_apartments:field_pre_marketing_end_time'
-    type: object
   premarketing_start_time:
     label: 'Pre-marketing start time'
     datasource_id: 'entity:node'
@@ -463,7 +468,7 @@ field_settings:
     datasource_id: 'entity:node'
     property_path: 'search_api_reverse_entity_references_node__field_apartments:field_shareholder_meeting_date'
     type: object
-  showing_time:
+  showing_times:
     label: 'Showing time'
     datasource_id: 'entity:node'
     property_path: field_showing_time

@@ -31,6 +31,7 @@ dependencies:
     - field.field.node.project.field_holding_type
     - field.field.node.project.field_housing_company
     - field.field.node.project.field_housing_manager
+    - field.field.node.project.field_images
     - field.field.node.project.field_main_image
     - field.field.node.project.field_material_choice_dl
     - field.field.node.project.field_new_development_status
@@ -351,6 +352,7 @@ hidden:
   field_estimated_completion: true
   field_estimated_completion_date: true
   field_housing_manager: true
+  field_images: true
   field_main_image: true
   field_material_choice_dl: true
   field_possession_transfer_date: true
