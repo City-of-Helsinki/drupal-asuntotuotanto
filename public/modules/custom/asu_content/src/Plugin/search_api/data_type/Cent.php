@@ -20,6 +20,7 @@ class Cent extends DataTypePluginBase {
    * {@inheritdoc}
    */
   public function getValue($value) {
-    return (int) ((float)$value*100);
+    return (int) ((float) $value * 100);
   }
+
 }
