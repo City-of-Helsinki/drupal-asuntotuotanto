@@ -1,4 +1,4 @@
-uuid: babf9d72-62e9-4e2b-88b8-d14a18955447
+uuid: 4a7fef58-6e24-46de-8481-5705a0709bab
 langcode: en
 status: true
 dependencies:
@@ -15,5 +15,9 @@ required: false
 translatable: false
 default_value: {  }
 default_value_callback: ''
-settings: {  }
-field_type: string
+settings:
+  min: !!float -180
+  max: !!float 180
+  prefix: ''
+  suffix: ''
+field_type: decimal

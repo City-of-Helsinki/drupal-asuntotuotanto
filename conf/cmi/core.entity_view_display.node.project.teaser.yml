@@ -14,7 +14,7 @@ dependencies:
     - field.field.node.project.field_building_type
     - field.field.node.project.field_city
     - field.field.node.project.field_completion_date
-    - field.field.node.project.field_construction_material
+    - field.field.node.project.field_construction_materials
     - field.field.node.project.field_construction_year
     - field.field.node.project.field_constructor
     - field.field.node.project.field_coordinate_lat
@@ -28,16 +28,18 @@ dependencies:
     - field.field.node.project.field_estimated_completion_date
     - field.field.node.project.field_has_elevator
     - field.field.node.project.field_has_sauna
-    - field.field.node.project.field_heating
+    - field.field.node.project.field_heating_options
     - field.field.node.project.field_holding_type
     - field.field.node.project.field_housing_company
     - field.field.node.project.field_housing_manager
     - field.field.node.project.field_main_image
+    - field.field.node.project.field_images
     - field.field.node.project.field_material_choice_dl
     - field.field.node.project.field_new_development_status
     - field.field.node.project.field_new_housing
     - field.field.node.project.field_possession_transfer_date
     - field.field.node.project.field_postal_code
+    - field.field.node.project.field_pre_marketing_end_time
     - field.field.node.project.field_premarketing_start_time
     - field.field.node.project.field_project_description
     - field.field.node.project.field_project_manager
@@ -79,7 +81,7 @@ hidden:
   field_building_type: true
   field_city: true
   field_completion_date: true
-  field_construction_material: true
+  field_construction_materials: true
   field_construction_year: true
   field_constructor: true
   field_coordinate_lat: true
@@ -93,16 +95,18 @@ hidden:
   field_estimated_completion_date: true
   field_has_elevator: true
   field_has_sauna: true
-  field_heating: true
+  field_heating_options: true
   field_holding_type: true
   field_housing_company: true
   field_housing_manager: true
+  field_images: true
   field_main_image: true
   field_material_choice_dl: true
   field_new_development_status: true
   field_new_housing: true
   field_possession_transfer_date: true
   field_postal_code: true
+  field_pre_marketing_end_time: true
   field_premarketing_start_time: true
   field_project_description: true
   field_project_manager: true

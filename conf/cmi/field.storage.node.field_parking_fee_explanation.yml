@@ -1,16 +1,14 @@
-uuid: 8aa4567e-a189-4cde-a25b-85ee1ae167f2
+uuid: 2b1a7e80-645c-4dd9-bbfb-c62e4f8e8399
 langcode: en
 status: true
 dependencies:
   module:
     - node
-id: node.field_construction_material
-field_name: field_construction_material
+id: node.field_parking_fee_explanation
+field_name: field_parking_fee_explanation
 entity_type: node
-type: string
+type: string_long
 settings:
-  max_length: 255
-  is_ascii: false
   case_sensitive: false
 module: core
 locked: false

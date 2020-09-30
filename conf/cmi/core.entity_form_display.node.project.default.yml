@@ -13,7 +13,7 @@ dependencies:
     - field.field.node.project.field_building_type
     - field.field.node.project.field_city
     - field.field.node.project.field_completion_date
-    - field.field.node.project.field_construction_material
+    - field.field.node.project.field_construction_materials
     - field.field.node.project.field_construction_year
     - field.field.node.project.field_constructor
     - field.field.node.project.field_coordinate_lat
@@ -27,16 +27,18 @@ dependencies:
     - field.field.node.project.field_estimated_completion_date
     - field.field.node.project.field_has_elevator
     - field.field.node.project.field_has_sauna
-    - field.field.node.project.field_heating
+    - field.field.node.project.field_heating_options
     - field.field.node.project.field_holding_type
     - field.field.node.project.field_housing_company
     - field.field.node.project.field_housing_manager
+    - field.field.node.project.field_images
     - field.field.node.project.field_main_image
     - field.field.node.project.field_material_choice_dl
     - field.field.node.project.field_new_development_status
     - field.field.node.project.field_new_housing
     - field.field.node.project.field_possession_transfer_date
     - field.field.node.project.field_postal_code
+    - field.field.node.project.field_pre_marketing_end_time
     - field.field.node.project.field_premarketing_start_time
     - field.field.node.project.field_project_description
     - field.field.node.project.field_project_manager
@@ -63,7 +65,6 @@ dependencies:
     - inline_entity_form
     - link
     - path
-    - text
 third_party_settings:
   field_group:
     group_project_tabs:
@@ -112,9 +113,9 @@ third_party_settings:
       children:
         - field_has_elevator
         - field_has_sauna
-        - field_construction_material
+        - field_construction_materials
         - field_roof_material
-        - field_heating
+        - field_heating_options
         - field_energy_class
         - field_site_area
         - field_site_owner
@@ -123,9 +124,9 @@ third_party_settings:
         - field_zoning_info
         - field_zoning_status
         - field_building_type
-        - field_project_description
         - field_coordinate_lat
         - field_coordinate_lon
+        - field_project_description
       parent_name: group_project_tabs
       weight: 20
       format_type: tab
@@ -156,6 +157,7 @@ third_party_settings:
       children:
         - field_publication_start_time
         - field_publication_end_time
+        - field_pre_marketing_end_time
         - field_premarketing_start_time
         - field_application_start_time
         - field_application_end_time
@@ -178,9 +180,9 @@ third_party_settings:
       label: Schedules
     group_pictures_and_videos:
       children:
-        - field_main_image
-        - field_attachments
         - field_attachments_url
+        - field_main_image
+        - field_images
         - field_virtual_presentation_url
       parent_name: group_project_tabs
       weight: 22
@@ -319,13 +321,15 @@ content:
     third_party_settings: {  }
     type: datetime_default
     region: content
-  field_construction_material:
+  field_construction_materials:
     weight: 65
     settings:
+      match_operator: CONTAINS
+      match_limit: 10
       size: 60
       placeholder: ''
     third_party_settings: {  }
-    type: string_textfield
+    type: entity_reference_autocomplete
     region: content
   field_construction_year:
     weight: 59
@@ -344,20 +348,18 @@ content:
     type: string_textfield
     region: content
   field_coordinate_lat:
-    weight: 77
+    weight: 76
     settings:
-      size: 60
       placeholder: ''
     third_party_settings: {  }
-    type: string_textfield
+    type: number
     region: content
   field_coordinate_lon:
-    weight: 78
+    weight: 77
     settings:
-      size: 60
       placeholder: ''
     third_party_settings: {  }
-    type: string_textfield
+    type: number
     region: content
   field_district:
     weight: 57
@@ -369,9 +371,13 @@ content:
     region: content
   field_energy_class:
     weight: 68
-    settings: {  }
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
     third_party_settings: {  }
-    type: options_select
+    type: entity_reference_autocomplete
     region: content
   field_estate_agent:
     weight: 29
@@ -425,13 +431,15 @@ content:
     third_party_settings: {  }
     type: boolean_checkbox
     region: content
-  field_heating:
+  field_heating_options:
     weight: 67
     settings:
+      match_operator: CONTAINS
+      match_limit: 10
       size: 60
       placeholder: ''
     third_party_settings: {  }
-    type: string_textfield
+    type: entity_reference_autocomplete
     region: content
   field_holding_type:
     weight: 53
@@ -455,8 +463,16 @@ content:
     third_party_settings: {  }
     type: string_textfield
     region: content
+  field_images:
+    weight: 26
+    settings:
+      progress_indicator: throbber
+      preview_image_style: thumbnail
+    third_party_settings: {  }
+    type: image_image
+    region: content
   field_main_image:
-    weight: 22
+    weight: 25
     settings:
       progress_indicator: throbber
       preview_image_style: thumbnail
@@ -496,6 +512,12 @@ content:
       size: 60
       placeholder: ''
     third_party_settings: {  }
+  field_pre_marketing_end_time:
+    weight: 13
+    settings: {  }
+    third_party_settings: {  }
+    type: datetime_default
+    region: content
   field_premarketing_start_time:
     weight: 13
     settings: {  }
@@ -503,12 +525,12 @@ content:
     type: datetime_default
     region: content
   field_project_description:
-    weight: 76
+    weight: 78
     settings:
       rows: 5
       placeholder: ''
     third_party_settings: {  }
-    type: text_textarea
+    type: string_textarea
     region: content
   field_project_manager:
     weight: 26
@@ -596,7 +618,7 @@ content:
     type: options_buttons
     region: content
   field_virtual_presentation_url:
-    weight: 25
+    weight: 27
     settings:
       placeholder_url: ''
       placeholder_title: ''

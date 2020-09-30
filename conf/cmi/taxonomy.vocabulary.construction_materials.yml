@@ -1,0 +1,8 @@
+uuid: 2669b989-d4a8-4718-81fd-38b941308939
+langcode: en
+status: true
+dependencies: {  }
+name: 'Construction materials'
+vid: construction_materials
+description: ''
+weight: 0

@@ -1,4 +1,4 @@
-uuid: c8f363ae-b962-4803-88e2-66202f5bb0be
+uuid: 5138774f-56b7-4de4-a815-e35413088b96
 langcode: en
 status: true
 dependencies:
@@ -7,11 +7,10 @@ dependencies:
 id: node.field_coordinate_lon
 field_name: field_coordinate_lon
 entity_type: node
-type: string
+type: decimal
 settings:
-  max_length: 255
-  is_ascii: false
-  case_sensitive: false
+  precision: 10
+  scale: 6
 module: core
 locked: false
 cardinality: 1

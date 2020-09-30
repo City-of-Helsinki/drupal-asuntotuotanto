@@ -1,0 +1,16 @@
+uuid: a5ca6576-62b4-4b85-a71b-0c0a2f199842
+langcode: en
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.construction_materials
+  module:
+    - content_translation
+third_party_settings:
+  content_translation:
+    enabled: true
+id: taxonomy_term.construction_materials
+target_entity_type_id: taxonomy_term
+target_bundle: construction_materials
+default_langcode: fi
+language_alterable: true

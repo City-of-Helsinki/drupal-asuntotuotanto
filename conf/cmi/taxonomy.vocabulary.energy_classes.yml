@@ -1,0 +1,8 @@
+uuid: b9d54013-1b32-4005-b386-cda3f10bc283
+langcode: en
+status: true
+dependencies: {  }
+name: 'Energy classes'
+vid: energy_classes
+description: ''
+weight: 0

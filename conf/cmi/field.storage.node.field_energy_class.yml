@@ -1,39 +1,17 @@
-uuid: 05d93459-518f-4971-803e-f6349191b41f
+uuid: 5ddd1432-64c3-4cea-a906-a19ff14abf86
 langcode: en
 status: true
 dependencies:
   module:
     - node
-    - options
+    - taxonomy
 id: node.field_energy_class
 field_name: field_energy_class
 entity_type: node
-type: list_string
+type: entity_reference
 settings:
-  allowed_values:
-    -
-      value: A
-      label: A
-    -
-      value: B
-      label: B
-    -
-      value: C
-      label: C
-    -
-      value: D
-      label: D
-    -
-      value: E
-      label: E
-    -
-      value: F
-      label: F
-    -
-      value: G
-      label: G
-  allowed_values_function: ''
-module: options
+  target_type: taxonomy_term
+module: core
 locked: false
 cardinality: 1
 translatable: true

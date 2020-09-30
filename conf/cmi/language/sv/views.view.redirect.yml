@@ -1,3 +1,5 @@
+label: Redirect
+description: 'List of redirects'
 display:
   default:
     display_title: Huvud
@@ -21,6 +23,8 @@ display:
             items_per_page_options_all_label: '- Alla -'
             offset_label: Kompensera
       fields:
+        redirect_bulk_form:
+          action_title: 'With selection'
         redirect_source__path:
           label: Från
           separator: ', '
@@ -33,8 +37,17 @@ display:
         redirect_redirect__uri:
           expose:
             label: Till
+        status_code:
+          expose:
+            label: 'Status code'
+          group_info:
+            label: 'Status code'
         language:
           expose:
             label: Ursprungsspråk
+      title: Redirect
+      empty:
+        area_text_custom:
+          content: 'There is no redirect yet.'
   page_1:
     display_title: Sida

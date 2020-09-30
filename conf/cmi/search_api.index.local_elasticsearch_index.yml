@@ -20,20 +20,18 @@ dependencies:
     - field.storage.node.field_room_count
     - field.storage.node.field_other_fees
     - field.storage.node.field_parking_fee
+    - field.storage.node.field_parking_fee_explanation
     - field.storage.node.field_sales_price
+    - field.storage.node.field_has_apartment_sauna
     - field.storage.node.field_services_description
     - field.storage.node.field_loan_share
     - field.storage.node.field_showing_time
     - field.storage.node.field_storage_description
-    - field.storage.node.field_has_sauna
     - field.storage.node.field_has_terrace
     - field.storage.node.field_view_description
     - field.storage.node.field_water_fee
     - field.storage.node.field_water_fee_explanation
     - field.storage.node.field_has_yard
-    - field.storage.node.field_construction_year
-    - field.storage.node.field_zoning_info
-    - field.storage.node.field_zoning_status
     - search_api.server.local_elasticsearch
   module:
     - computed_field_plugin
@@ -101,22 +99,6 @@ field_settings:
     dependencies:
       config:
         - field.storage.node.field_apartment_structure
-  application_end_time:
-    label: 'Application end time'
-    datasource_id: 'entity:node'
-    property_path: field_application_end_time
-    type: date
-    dependencies:
-      config:
-        - field.storage.node.field_application_end_time
-  application_start_time:
-    label: 'Application start time'
-    datasource_id: 'entity:node'
-    property_path: field_application_start_time
-    type: date
-    dependencies:
-      config:
-        - field.storage.node.field_application_start_time
   application_url:
     label: 'Application URL'
     datasource_id: 'entity:node'
@@ -125,7 +107,7 @@ field_settings:
     dependencies:
       config:
         - field.storage.node.field_application_url
-  attachments_url:
+  attachment_urls:
     label: 'Attachments / URL'
     datasource_id: 'entity:node'
     property_path: 'search_api_reverse_entity_references_node__field_apartments:field_attachments_url'
@@ -164,19 +146,11 @@ field_settings:
     dependencies:
       config:
         - field.storage.node.field_condition
-  construction_material:
-    label: 'Construction material'
+  construction_materials:
+    label: 'Construction materials'
     datasource_id: 'entity:node'
-    property_path: 'search_api_reverse_entity_references_node__field_apartments:field_construction_material'
-    type: string
-  construction_year:
-    label: 'Year of construction'
-    datasource_id: 'entity:node'
-    property_path: field_construction_year
-    type: string
-    dependencies:
-      config:
-        - field.storage.node.field_construction_year
+    property_path: 'search_api_reverse_entity_references_node__field_apartments:field_construction_materials'
+    type: object
   constructor:
     label: Constructor
     datasource_id: 'entity:node'
@@ -186,17 +160,17 @@ field_settings:
     label: 'Coordinate latitude'
     datasource_id: 'entity:node'
     property_path: 'search_api_reverse_entity_references_node__field_apartments:field_coordinate_lat'
-    type: string
+    type: decimal
   coordinate_lon:
     label: 'Coordinate longitude'
     datasource_id: 'entity:node'
     property_path: 'search_api_reverse_entity_references_node__field_apartments:field_coordinate_lon'
-    type: string
+    type: decimal
   debt_free_sales_price:
     label: 'Debt free sales price'
     datasource_id: 'entity:node'
     property_path: field_debt_free_sales_price
-    type: decimal
+    type: cent
     dependencies:
       config:
         - field.storage.node.field_debt_free_sales_price
@@ -209,7 +183,7 @@ field_settings:
     label: 'Energy class'
     datasource_id: 'entity:node'
     property_path: 'search_api_reverse_entity_references_node__field_apartments:field_energy_class'
-    type: string
+    type: object
   estate_agent:
     label: 'Estate agent'
     datasource_id: 'entity:node'
@@ -234,12 +208,20 @@ field_settings:
     label: 'Estimated completion date'
     datasource_id: 'entity:node'
     property_path: 'search_api_reverse_entity_references_node__field_apartments:field_estimated_completion_date'
-    type: date
+    type: object
+  field_parking_fee_explanation:
+    label: 'Parking fee explanation'
+    datasource_id: 'entity:node'
+    property_path: field_parking_fee_explanation
+    type: text
+    dependencies:
+      config:
+        - field.storage.node.field_parking_fee_explanation
   financing_fee:
     label: 'Financing fee'
     datasource_id: 'entity:node'
     property_path: field_financing_fee
-    type: decimal
+    type: cent
     dependencies:
       config:
         - field.storage.node.field_financing_fee
@@ -293,11 +275,11 @@ field_settings:
     dependencies:
       config:
         - field.storage.node.field_has_yard
-  heating:
-    label: Heating
+  heating_options:
+    label: 'Heating options'
     datasource_id: 'entity:node'
-    property_path: 'search_api_reverse_entity_references_node__field_apartments:field_heating'
-    type: string
+    property_path: 'search_api_reverse_entity_references_node__field_apartments:field_heating_options'
+    type: object
   holding_type:
     label: 'Holding type'
     datasource_id: 'entity:node'
@@ -321,6 +303,11 @@ field_settings:
     datasource_id: 'entity:node'
     property_path: 'search_api_reverse_entity_references_node__field_apartments:field_housing_manager'
     type: string
+  image_urls:
+    label: Images
+    datasource_id: 'entity:node'
+    property_path: 'search_api_reverse_entity_references_node__field_apartments:field_images'
+    type: object
   kitchen_appliances:
     label: 'Kitchen appliances'
     datasource_id: 'entity:node'
@@ -341,20 +328,20 @@ field_settings:
     label: 'Share of housing company loan'
     datasource_id: 'entity:node'
     property_path: field_loan_share
-    type: decimal
+    type: cent
     dependencies:
       config:
         - field.storage.node.field_loan_share
-  main_image:
+  main_image_url:
     label: 'Main image'
     datasource_id: 'entity:node'
     property_path: 'search_api_reverse_entity_references_node__field_apartments:field_main_image'
-    type: integer
+    type: object
   maintenance_fee:
     label: 'Maintenance fee'
     datasource_id: 'entity:node'
     property_path: field_maintenance_fee
-    type: decimal
+    type: cent
     dependencies:
       config:
         - field.storage.node.field_maintenance_fee
@@ -385,7 +372,7 @@ field_settings:
     label: 'Parking fee'
     datasource_id: 'entity:node'
     property_path: field_parking_fee
-    type: decimal
+    type: cent
     dependencies:
       config:
         - field.storage.node.field_parking_fee
@@ -393,7 +380,7 @@ field_settings:
     label: 'Transfer of possession'
     datasource_id: 'entity:node'
     property_path: 'search_api_reverse_entity_references_node__field_apartments:field_possession_transfer_date'
-    type: date
+    type: object
   postal_code:
     label: 'Postal code'
     datasource_id: 'entity:node'
@@ -403,12 +390,12 @@ field_settings:
     label: 'Pre-marketing start time'
     datasource_id: 'entity:node'
     property_path: 'search_api_reverse_entity_references_node__field_apartments:field_premarketing_start_time'
-    type: date
+    type: object
   price_m2:
     label: 'Price per square meter'
     datasource_id: 'entity:node'
     property_path: field_price_m2
-    type: computed_array_decimal
+    type: cent
     dependencies:
       module:
         - computed_field_plugin
@@ -416,7 +403,7 @@ field_settings:
     label: 'Project description'
     datasource_id: 'entity:node'
     property_path: 'search_api_reverse_entity_references_node__field_apartments:field_project_description'
-    type: string
+    type: object
   project_manager:
     label: 'Project manager'
     datasource_id: 'entity:node'
@@ -426,12 +413,12 @@ field_settings:
     label: 'Publication end time'
     datasource_id: 'entity:node'
     property_path: 'search_api_reverse_entity_references_node__field_apartments:field_publication_end_time'
-    type: date
+    type: object
   publication_start_time:
     label: 'Publication start time'
     datasource_id: 'entity:node'
     property_path: 'search_api_reverse_entity_references_node__field_apartments:field_publication_start_time'
-    type: date
+    type: object
   realty_id:
     label: 'Realty ID'
     datasource_id: 'entity:node'
@@ -454,7 +441,7 @@ field_settings:
     label: 'Sales price'
     datasource_id: 'entity:node'
     property_path: field_sales_price
-    type: decimal
+    type: cent
     dependencies:
       config:
         - field.storage.node.field_sales_price
@@ -475,12 +462,12 @@ field_settings:
     label: 'Shareholder meeting date'
     datasource_id: 'entity:node'
     property_path: 'search_api_reverse_entity_references_node__field_apartments:field_shareholder_meeting_date'
-    type: date
-  showing_time:
+    type: object
+  showing_times:
     label: 'Showing time'
     datasource_id: 'entity:node'
     property_path: field_showing_time
-    type: date
+    type: object
     dependencies:
       config:
         - field.storage.node.field_showing_time
@@ -537,7 +524,7 @@ field_settings:
     label: 'Water fee'
     datasource_id: 'entity:node'
     property_path: field_water_fee
-    type: decimal
+    type: cent
     dependencies:
       config:
         - field.storage.node.field_water_fee
@@ -549,22 +536,6 @@ field_settings:
     dependencies:
       config:
         - field.storage.node.field_water_fee_explanation
-  zoning_info:
-    label: 'Zoning information'
-    datasource_id: 'entity:node'
-    property_path: field_zoning_info
-    type: string
-    dependencies:
-      config:
-        - field.storage.node.field_zoning_info
-  zoning_status:
-    label: 'Zoning status'
-    datasource_id: 'entity:node'
-    property_path: field_zoning_status
-    type: string
-    dependencies:
-      config:
-        - field.storage.node.field_zoning_status
 datasource_settings:
   'entity:node':
     bundles:
@@ -578,6 +549,21 @@ processor_settings:
   add_url: {  }
   aggregated_field: {  }
   entity_status: {  }
+  html_filter:
+    all_fields: false
+    fields:
+      - additional_information
+      - balcony_description
+      - other_fees
+      - storage_description
+      - view_description
+      - water_fee_explanation
+    title: true
+    alt: true
+    tags: {  }
+    weights:
+      preprocess_index: 0
+      preprocess_query: 0
   language_with_fallback: {  }
   nested_entity: {  }
   rendered_item: {  }

@@ -1,12 +1,11 @@
-uuid: 3adaec18-07da-4463-a677-832889efb3d8
+uuid: 9900369c-494d-47a9-97b2-0c78d0bb33de
 langcode: en
 status: true
 dependencies:
   config:
     - field.storage.node.field_energy_class
     - node.type.project
-  module:
-    - options
+    - taxonomy.vocabulary.energy_classes
 id: node.project.field_energy_class
 field_name: field_energy_class
 entity_type: node
@@ -15,9 +14,16 @@ label: 'Energy class'
 description: ''
 required: false
 translatable: false
-default_value:
-  -
-    value: A
+default_value: {  }
 default_value_callback: ''
-settings: {  }
-field_type: list_string
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      energy_classes: energy_classes
+    sort:
+      field: name
+      direction: asc
+    auto_create: true
+    auto_create_bundle: ''
+field_type: entity_reference

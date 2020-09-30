@@ -22,9 +22,9 @@ class ComputedArrayToDecimalDataType extends DataTypePluginBase {
   public function getValue($value) {
     $value = (float) $value;
     if (!strpos((string) $value, '.')) {
-      return (int) $value;
+      return (int) ($value * 100);
     }
-    return $value;
+    return (int) ($value * 100);
   }
 
 }

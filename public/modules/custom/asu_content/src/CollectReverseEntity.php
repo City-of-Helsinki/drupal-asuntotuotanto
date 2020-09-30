@@ -140,7 +140,7 @@ class CollectReverseEntity {
             'referring_entity_type' => $referring_entity,
             'field_name' => $field_name,
             'referring_entity_id' => $referrer_id,
-            'referring_entity' => $node_storage->load($referrer_id)
+            'referring_entity' => $node_storage->load($referrer_id),
           ];
         }
       }

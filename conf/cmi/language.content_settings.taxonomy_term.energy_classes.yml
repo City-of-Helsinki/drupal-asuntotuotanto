@@ -1,0 +1,16 @@
+uuid: 1c983402-925b-4275-87dd-a59b58aac4a8
+langcode: en
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.energy_classes
+  module:
+    - content_translation
+third_party_settings:
+  content_translation:
+    enabled: true
+id: taxonomy_term.energy_classes
+target_entity_type_id: taxonomy_term
+target_bundle: energy_classes
+default_langcode: fi
+language_alterable: true
