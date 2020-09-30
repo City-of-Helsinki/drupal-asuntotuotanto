@@ -9,6 +9,7 @@ use Drupal\elasticsearch_connector\Event\BuildIndexParamsEvent;
 use Drupal\search_api\Utility\Utility;
 use Drupal\search_api_autocomplete\Suggester\SuggesterInterface;
 use Drupal\elasticsearch_connector\Entity\Cluster;
+use Drupal\taxonomy\Entity\Term;
 
 /**
  * Create Elasticsearch Indices.
@@ -113,19 +114,34 @@ class IndexFactory {
       ];
       /** @var \Drupal\search_api\Item\FieldInterface $field */
       foreach ($item as $name => $field) {
-        $field_type = $field->getType();
-
-        // Set to list only if list.
+      if($name == 'construction_materials') {
+        $a = 1;
+      }
+        // TODO: Is this what we want as a default value in index?
         $value = NULL;
-        if (self::isFieldList($index, $field)) {
-          $value = [];
-        }
+
         if (!empty($field->getValues())) {
-          foreach ($field->getValues() as $val) {
-            if (self::isFieldList($index, $field)) {
-              $value[] = self::getFieldValue($field_type, $val);
+
+          $cardinality = $field->getDataDefinition()
+            ->getFieldDefinition()
+            ->getFieldStorageDefinition()
+            ->getCardinality();
+
+          // Single is indexed as a string.
+          if ($cardinality == 1) {
+            $val = $field->getValues();
+            $value = reset($val);
+          }
+          // Field with multiple values are indexed as array of strings.
+          else {
+            // We are dealing with entity reference
+            if( 'entity_reference' == $field->getDataDefinition()->getFieldDefinition()->getType() ) {
+              foreach($field->getValues() as $val){
+                $term = Term::load($val);
+                $value[] = $term->getName();
+              }
             } else {
-              $value = self::getFieldValue($field_type, $val);
+              $value = $field->getValues();
             }
           }
         }

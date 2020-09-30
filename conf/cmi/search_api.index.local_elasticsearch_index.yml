@@ -149,7 +149,7 @@ field_settings:
   construction_materials:
     label: 'Construction materials'
     datasource_id: 'entity:node'
-    property_path: 'search_api_reverse_entity_references_node__field_apartments:field_construction_materials:entity:name'
+    property_path: 'search_api_reverse_entity_references_node__field_apartments:field_construction_materials'
     type: object
   constructor:
     label: Constructor
@@ -182,8 +182,8 @@ field_settings:
   energy_class:
     label: 'Energy class'
     datasource_id: 'entity:node'
-    property_path: 'search_api_reverse_entity_references_node__field_apartments:field_energy_class:entity:name'
-    type: string
+    property_path: 'search_api_reverse_entity_references_node__field_apartments:field_energy_class'
+    type: object
   estate_agent:
     label: 'Estate agent'
     datasource_id: 'entity:node'
@@ -208,11 +208,6 @@ field_settings:
     label: 'Estimated completion date'
     datasource_id: 'entity:node'
     property_path: 'search_api_reverse_entity_references_node__field_apartments:field_estimated_completion_date'
-    type: object
-  field_construction_materials:
-    label: 'Reverse reference: <em class="placeholder">Content</em> using <em class="placeholder">Apartments</em> » Construction materials'
-    datasource_id: 'entity:node'
-    property_path: 'search_api_reverse_entity_references_node__field_apartments:field_construction_materials'
     type: object
   field_parking_fee_explanation:
     label: 'Parking fee explanation'
@@ -283,8 +278,8 @@ field_settings:
   heating_options:
     label: 'Heating options'
     datasource_id: 'entity:node'
-    property_path: 'search_api_reverse_entity_references_node__field_apartments:field_heating_options:entity:name'
-    type: string
+    property_path: 'search_api_reverse_entity_references_node__field_apartments:field_heating_options'
+    type: object
   holding_type:
     label: 'Holding type'
     datasource_id: 'entity:node'
@@ -309,7 +304,7 @@ field_settings:
     property_path: 'search_api_reverse_entity_references_node__field_apartments:field_housing_manager'
     type: string
   image_urls:
-    label: 'Images'
+    label: Images
     datasource_id: 'entity:node'
     property_path: 'search_api_reverse_entity_references_node__field_apartments:field_images'
     type: object
