@@ -320,7 +320,7 @@ field_settings:
     label: 'Living area'
     datasource_id: 'entity:node'
     property_path: field_living_area
-    type: string
+    type: decimal
     dependencies:
       config:
         - field.storage.node.field_living_area
@@ -475,7 +475,7 @@ field_settings:
     label: 'Site area'
     datasource_id: 'entity:node'
     property_path: 'search_api_reverse_entity_references_node__field_apartments:field_site_area'
-    type: string
+    type: decimal
   site_owner:
     label: 'Site owner'
     datasource_id: 'entity:node'
