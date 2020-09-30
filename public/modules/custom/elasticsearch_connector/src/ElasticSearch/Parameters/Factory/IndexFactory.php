@@ -114,14 +114,10 @@ class IndexFactory {
       ];
       /** @var \Drupal\search_api\Item\FieldInterface $field */
       foreach ($item as $name => $field) {
-      if($name == 'construction_materials') {
-        $a = 1;
-      }
         // TODO: Is this what we want as a default value in index?
         $value = NULL;
 
         if (!empty($field->getValues())) {
-
           $cardinality = $field->getDataDefinition()
             ->getFieldDefinition()
             ->getFieldStorageDefinition()
