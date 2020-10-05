@@ -40,7 +40,7 @@ dependencies:
     - search_api
     - elasticsearch_connector
 id: local_elasticsearch_index
-name: 'Apartments index'
+name: 'Local elasticsearch index'
 description: ''
 read_only: false
 field_settings:
@@ -213,10 +213,20 @@ field_settings:
     label: 'Parking fee explanation'
     datasource_id: 'entity:node'
     property_path: field_parking_fee_explanation
-    type: text
+    type: string
     dependencies:
       config:
         - field.storage.node.field_parking_fee_explanation
+  field_zoning_info:
+    label: 'Zoning information'
+    datasource_id: 'entity:node'
+    property_path: 'search_api_reverse_entity_references_node__field_apartments:field_zoning_info'
+    type: object
+  field_zoning_status:
+    label: 'Zoning status'
+    datasource_id: 'entity:node'
+    property_path: 'search_api_reverse_entity_references_node__field_apartments:field_zoning_status'
+    type: string
   financing_fee:
     label: 'Financing fee'
     datasource_id: 'entity:node'
