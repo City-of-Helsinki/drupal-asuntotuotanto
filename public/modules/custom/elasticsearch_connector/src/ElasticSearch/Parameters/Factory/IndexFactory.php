@@ -2,6 +2,7 @@
 
 namespace Drupal\elasticsearch_connector\ElasticSearch\Parameters\Factory;
 
+use Drupal\file\Entity\File;
 use Drupal\search_api\IndexInterface;
 use Drupal\elasticsearch_connector\Event\PrepareIndexEvent;
 use Drupal\elasticsearch_connector\Event\PrepareIndexMappingEvent;
@@ -114,7 +115,6 @@ class IndexFactory {
       ];
       /** @var \Drupal\search_api\Item\FieldInterface $field */
       foreach ($item as $name => $field) {
-        // TODO: Is this what we want as a default value in index?
         $value = NULL;
 
         if (!empty($field->getValues())) {
@@ -123,13 +123,19 @@ class IndexFactory {
             ->getFieldStorageDefinition()
             ->getCardinality();
 
+          $field_type = $field->getDataDefinition()->getFieldDefinition()->getType();
+
           // Single is indexed as a string.
           if ($cardinality == 1) {
-            if('list_string' == $field->getDataDefinition()->getFieldDefinition()->getType()) {
+            if('list_string' == $field_type) {
               $value = $field->getDataDefinition()->getSetting('allowed_values')[reset($field->getValues())];
-            } else if( 'entity_reference' == $field->getDataDefinition()->getFieldDefinition()->getType() ){
+            } else if( 'entity_reference' == $field_type){
               $term = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->load(reset($field->getValues()));
               $value = $term->getName();
+            } else if('image' == $field_type) {
+              if($file = File::load(reset($field->getValues()))){
+                $value = $file->createFileUrl(FALSE);
+              }
             }
             else {
               $val = reset($field->getValues());
@@ -149,7 +155,15 @@ class IndexFactory {
                   $value[] = $term->getName();
                 }
               }
-            } else {
+            }
+            elseif('image' == $field_type) {
+              foreach($field->getValues() as $val){
+                if($file = File::load($val)){
+                  $value[] = $file->createFileUrl(FALSE);
+                }
+              }
+            }
+            else {
               $value = $field->getValues();
             }
           }
