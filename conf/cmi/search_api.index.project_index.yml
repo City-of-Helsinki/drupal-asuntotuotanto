@@ -5,33 +5,36 @@ dependencies:
   config:
     - field.storage.node.field_acc_financeofficer
     - field.storage.node.field_acc_salesperson
+    - field.storage.node.field_apartment_count
     - field.storage.node.field_apartments
     - field.storage.node.field_application_end_time
     - field.storage.node.field_application_start_time
     - field.storage.node.field_attachments_url
     - field.storage.node.field_building_type
     - field.storage.node.field_city
+    - field.storage.node.field_completion_date
     - field.storage.node.field_construction_materials
+    - field.storage.node.field_construction_year
     - field.storage.node.field_constructor
     - field.storage.node.field_coordinate_lat
     - field.storage.node.field_coordinate_lon
     - field.storage.node.field_district
-    - field.storage.node.field_has_elevator
     - field.storage.node.field_energy_class
     - field.storage.node.field_estate_agent
     - field.storage.node.field_estate_agent_email
     - field.storage.node.field_estate_agent_phone
     - field.storage.node.field_estimated_completion
     - field.storage.node.field_estimated_completion_date
+    - field.storage.node.field_has_elevator
+    - field.storage.node.field_has_sauna
     - field.storage.node.field_heating_options
     - field.storage.node.field_holding_type
     - field.storage.node.field_housing_company
     - field.storage.node.field_housing_manager
     - field.storage.node.field_main_image
     - field.storage.node.field_material_choice_dl
-    - field.storage.node.field_new_development_status
     - field.storage.node.field_new_housing
-    - field.storage.node.field_apartment_count
+    - field.storage.node.field_possession_transfer_date
     - field.storage.node.field_postal_code
     - field.storage.node.field_pre_marketing_end_time
     - field.storage.node.field_premarketing_start_time
@@ -42,16 +45,11 @@ dependencies:
     - field.storage.node.field_realty_id
     - field.storage.node.field_roof_material
     - field.storage.node.field_sanitation
-    - field.storage.node.field_has_sauna
     - field.storage.node.field_shareholder_meeting_date
     - field.storage.node.field_site_area
-    - field.storage.node.field_site_owner
     - field.storage.node.field_site_renter
     - field.storage.node.field_street_address
-    - field.storage.node.field_completion_date
-    - field.storage.node.field_possession_transfer_date
     - field.storage.node.field_virtual_presentation_url
-    - field.storage.node.field_construction_year
     - field.storage.node.field_zoning_info
     - field.storage.node.field_zoning_status
     - search_api.server.local_elasticsearch
@@ -304,14 +302,6 @@ field_settings:
     dependencies:
       config:
         - field.storage.node.field_material_choice_dl
-  field_new_development_status:
-    label: 'New development status'
-    datasource_id: 'entity:node'
-    property_path: field_new_development_status
-    type: string
-    dependencies:
-      config:
-        - field.storage.node.field_new_development_status
   field_new_housing:
     label: 'New housing'
     datasource_id: 'entity:node'
@@ -424,14 +414,6 @@ field_settings:
     dependencies:
       config:
         - field.storage.node.field_site_area
-  field_site_owner:
-    label: 'Site owner'
-    datasource_id: 'entity:node'
-    property_path: field_site_owner
-    type: string
-    dependencies:
-      config:
-        - field.storage.node.field_site_owner
   field_site_renter:
     label: 'Site renter'
     datasource_id: 'entity:node'

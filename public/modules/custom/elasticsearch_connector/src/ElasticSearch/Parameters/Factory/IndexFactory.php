@@ -125,16 +125,29 @@ class IndexFactory {
 
           // Single is indexed as a string.
           if ($cardinality == 1) {
-            $val = $field->getValues();
-            $value = reset($val);
+            if('list_string' == $field->getDataDefinition()->getFieldDefinition()->getType()) {
+              $value = $field->getDataDefinition()->getSetting('allowed_values')[reset($field->getValues())];
+            } else if( 'entity_reference' == $field->getDataDefinition()->getFieldDefinition()->getType() ){
+              $term = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->load(reset($field->getValues()));
+              $value = $term->getName();
+            }
+            else {
+              $val = reset($field->getValues());
+              $value = count($val) > 1 ? $val['name'] : $val;
+            }
           }
           // Field with multiple values are indexed as array of strings.
           else {
             // We are dealing with entity reference
             if( 'entity_reference' == $field->getDataDefinition()->getFieldDefinition()->getType() ) {
+              #here
               foreach($field->getValues() as $val){
-                $term = Term::load($val);
-                $value[] = $term->getName();
+                if(is_array($val)) {
+                  $value[] = $val['name'];
+                } else {
+                  $term = Term::load($val);
+                  $value[] = $term->getName();
+                }
               }
             } else {
               $value = $field->getValues();

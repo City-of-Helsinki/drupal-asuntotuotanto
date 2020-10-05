@@ -486,10 +486,14 @@ content:
     type: datetime_default
     region: content
   field_new_development_status:
-    weight: 60
-    settings: {  }
+    weight: 79
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
     third_party_settings: {  }
-    type: options_buttons
+    type: entity_reference_autocomplete
     region: content
   field_new_housing:
     type: boolean_checkbox
@@ -590,10 +594,14 @@ content:
     type: number
     region: content
   field_site_owner:
-    weight: 70
-    settings: {  }
+    weight: 80
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
     third_party_settings: {  }
-    type: options_buttons
+    type: entity_reference_autocomplete
     region: content
   field_site_renter:
     weight: 71

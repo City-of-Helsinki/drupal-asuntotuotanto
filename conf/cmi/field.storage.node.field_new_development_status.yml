@@ -1,27 +1,17 @@
-uuid: e12d5f5e-8620-45f3-85b6-322b62305fa1
+uuid: 608b74d4-e675-4d94-b36f-d817c9346bdd
 langcode: en
 status: true
 dependencies:
   module:
     - node
-    - options
+    - taxonomy
 id: node.field_new_development_status
 field_name: field_new_development_status
 entity_type: node
-type: list_string
+type: entity_reference
 settings:
-  allowed_values:
-    -
-      value: '1'
-      label: 'Under planning'
-    -
-      value: '2'
-      label: 'Under construction'
-    -
-      value: '3'
-      label: 'Ready to move in'
-  allowed_values_function: ''
-module: options
+  target_type: taxonomy_term
+module: core
 locked: false
 cardinality: 1
 translatable: true

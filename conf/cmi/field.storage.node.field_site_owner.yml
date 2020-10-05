@@ -1,24 +1,17 @@
-uuid: af93d51c-58fb-4994-8ba0-0db1149a6915
+uuid: 7173a9b3-0477-41a3-aac8-ebdc26a7d314
 langcode: en
 status: true
 dependencies:
   module:
     - node
-    - options
+    - taxonomy
 id: node.field_site_owner
 field_name: field_site_owner
 entity_type: node
-type: list_string
+type: entity_reference
 settings:
-  allowed_values:
-    -
-      value: own
-      label: Own
-    -
-      value: rental
-      label: Rental
-  allowed_values_function: ''
-module: options
+  target_type: taxonomy_term
+module: core
 locked: false
 cardinality: 1
 translatable: true

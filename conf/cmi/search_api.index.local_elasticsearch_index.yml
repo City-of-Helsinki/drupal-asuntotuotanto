@@ -32,6 +32,8 @@ dependencies:
     - field.storage.node.field_water_fee
     - field.storage.node.field_water_fee_explanation
     - field.storage.node.field_has_yard
+    - field.storage.node.field_zoning_info
+    - field.storage.node.field_zoning_status
     - search_api.server.local_elasticsearch
   module:
     - computed_field_plugin
@@ -536,6 +538,22 @@ field_settings:
     dependencies:
       config:
         - field.storage.node.field_water_fee_explanation
+  zoning_info:
+    label: 'Zoning information'
+    datasource_id: 'entity:node'
+    property_path: field_zoning_info
+    type: string
+    dependencies:
+      config:
+        - field.storage.node.field_zoning_info
+  zoning_status:
+    label: 'Zoning status'
+    datasource_id: 'entity:node'
+    property_path: field_zoning_status
+    type: string
+    dependencies:
+      config:
+        - field.storage.node.field_zoning_status
 datasource_settings:
   'entity:node':
     bundles:

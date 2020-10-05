@@ -32,8 +32,8 @@ dependencies:
     - field.field.node.project.field_holding_type
     - field.field.node.project.field_housing_company
     - field.field.node.project.field_housing_manager
-    - field.field.node.project.field_main_image
     - field.field.node.project.field_images
+    - field.field.node.project.field_main_image
     - field.field.node.project.field_material_choice_dl
     - field.field.node.project.field_new_development_status
     - field.field.node.project.field_new_housing

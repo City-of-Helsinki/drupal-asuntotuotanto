@@ -209,11 +209,12 @@ content:
     type: string
     region: content
   field_new_development_status:
-    weight: 109
+    weight: 157
     label: above
-    settings: {  }
+    settings:
+      link: true
     third_party_settings: {  }
-    type: list_default
+    type: entity_reference_label
     region: content
   field_new_housing:
     weight: 139
@@ -285,11 +286,12 @@ content:
     type: number_decimal
     region: content
   field_site_owner:
-    weight: 144
+    weight: 158
     label: above
-    settings: {  }
+    settings:
+      link: true
     third_party_settings: {  }
-    type: list_default
+    type: entity_reference_label
     region: content
   field_site_renter:
     weight: 145
