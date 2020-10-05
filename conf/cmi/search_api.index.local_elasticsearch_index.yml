@@ -209,14 +209,6 @@ field_settings:
     datasource_id: 'entity:node'
     property_path: 'search_api_reverse_entity_references_node__field_apartments:field_estimated_completion_date'
     type: object
-  field_parking_fee_explanation:
-    label: 'Parking fee explanation'
-    datasource_id: 'entity:node'
-    property_path: field_parking_fee_explanation
-    type: text
-    dependencies:
-      config:
-        - field.storage.node.field_parking_fee_explanation
   financing_fee:
     label: 'Financing fee'
     datasource_id: 'entity:node'
@@ -320,7 +312,7 @@ field_settings:
     label: 'Living area'
     datasource_id: 'entity:node'
     property_path: field_living_area
-    type: string
+    type: decimal
     dependencies:
       config:
         - field.storage.node.field_living_area
@@ -376,6 +368,14 @@ field_settings:
     dependencies:
       config:
         - field.storage.node.field_parking_fee
+  parking_fee_explanation:
+    label: 'Parking fee explanation'
+    datasource_id: 'entity:node'
+    property_path: field_parking_fee_explanation
+    type: string
+    dependencies:
+      config:
+        - field.storage.node.field_parking_fee_explanation
   possession_transfer_date:
     label: 'Transfer of possession'
     datasource_id: 'entity:node'
@@ -386,6 +386,11 @@ field_settings:
     datasource_id: 'entity:node'
     property_path: 'search_api_reverse_entity_references_node__field_apartments:field_postal_code'
     type: string
+  premarketing_end_time:
+    label: 'Pre-marketing start time'
+    datasource_id: 'entity:node'
+    property_path: 'search_api_reverse_entity_references_node__field_apartments:field_pre_marketing_end_time'
+    type: object
   premarketing_start_time:
     label: 'Pre-marketing start time'
     datasource_id: 'entity:node'
@@ -475,7 +480,7 @@ field_settings:
     label: 'Site area'
     datasource_id: 'entity:node'
     property_path: 'search_api_reverse_entity_references_node__field_apartments:field_site_area'
-    type: string
+    type: decimal
   site_owner:
     label: 'Site owner'
     datasource_id: 'entity:node'
@@ -536,6 +541,16 @@ field_settings:
     dependencies:
       config:
         - field.storage.node.field_water_fee_explanation
+  zoning_info:
+    label: 'Zoning information'
+    datasource_id: 'entity:node'
+    property_path: 'search_api_reverse_entity_references_node__field_apartments:field_zoning_info'
+    type: object
+  zoning_status:
+    label: 'Zoning status'
+    datasource_id: 'entity:node'
+    property_path: 'search_api_reverse_entity_references_node__field_apartments:field_zoning_status'
+    type: string
 datasource_settings:
   'entity:node':
     bundles:

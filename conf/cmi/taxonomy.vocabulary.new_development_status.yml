@@ -1,0 +1,8 @@
+uuid: 560627fe-4e47-4537-aaf8-dd214c599c6d
+langcode: en
+status: true
+dependencies: {  }
+name: 'New development status'
+vid: new_development_status
+description: ''
+weight: 0
