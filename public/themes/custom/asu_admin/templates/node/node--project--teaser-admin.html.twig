@@ -1,0 +1,42 @@
+{#
+/**
+ * @file
+ * Theme override to display a node.
+#}
+{%
+  set classes = [
+  'node',
+  'node--type-' ~ node.bundle|clean_class,
+  node.isPromoted() ? 'node--promoted',
+  node.isSticky() ? 'node--sticky',
+  not node.isPublished() ? 'node--unpublished',
+  view_mode ? 'node--view-mode-' ~ view_mode|clean_class,
+]
+%}
+{{ attach_library('claro/classy.node') }}
+<article{{ attributes.addClass(classes) }}>
+  <header>
+    {% if content.field_housing_company|render %}
+      <h2>
+        {{ content.field_housing_company }}
+      </h2>
+    {% endif %}
+
+    {% if content.field_ingress|render %}
+      <div class="legislation-collection__ingress">
+        {{ content.field_ingress }}
+      </div>
+    {% endif %}
+
+    {% if content.field_header_image|render %}
+      <div class="legislation-collection__header-image">
+        {{ content.field_header_image }}
+      </div>
+    {% endif %}
+
+    puup
+      {{ content.field_housing_company }}
+    ppa
+  </header>
+  {{ content }}
+</article>

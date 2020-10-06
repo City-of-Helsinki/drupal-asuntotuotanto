@@ -1,0 +1,22 @@
+uuid: 760dd346-0b94-43c8-9967-03a5ae1821a3
+langcode: en
+status: true
+dependencies:
+  module:
+    - system
+  theme:
+    - asu_admin
+_core:
+  default_config_hash: y9X3xgCsO59pQyzNLzY1D3SDJJxCHILLWkpPnmuTJ2E
+id: asu_admin_breadcrumbs
+theme: asu_admin
+region: breadcrumb
+weight: 0
+provider: null
+plugin: system_breadcrumb_block
+settings:
+  id: system_breadcrumb_block
+  label: Murupolku
+  provider: system
+  label_display: '0'
+visibility: {  }

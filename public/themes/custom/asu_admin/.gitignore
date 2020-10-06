@@ -1,0 +1,7 @@
+# Node and npm
+node_modules
+npm-debug.log
+.gulp
+
+# Other
+.DS_Store

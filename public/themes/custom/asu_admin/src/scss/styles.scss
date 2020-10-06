@@ -1,0 +1,89 @@
+//
+// @file
+//
+// This file includes all imports
+//
+
+body {
+  --colorGinAppBackground: #f6f7f7;
+}
+
+.project {
+  &__title {
+    font-size: 30px;
+    margin-top: 10px;
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+  }
+
+  &__title {
+    margin: 0 30px 0 0;
+  }
+
+  &__tabs {
+    display: flex;
+    align-items: center;
+    flex-flow: row;
+    flex-wrap: wrap;
+    margin: 0 -15px;
+    padding: 0;
+  }
+
+  &__tab {
+    list-style: none;
+    padding: 5px 15px;
+
+    a {
+      font-size: 16px;
+      font-weight: 700;
+      color: #000;
+      border: 2px solid #989898;
+      padding: 5px 10px;
+
+      &:active,
+      &:hover,
+      &.is-active {
+        text-decoration: none;
+        border-color: #0000bf;
+      }
+    }
+  }
+
+  &__container {
+    margin-top: 30px;
+
+    .views-row {
+      background-color: #eaebec;
+      margin-top: 30px;
+      padding: 30px;
+    }
+  }
+
+  &__list {
+    display: none;
+
+    &.is-active {
+      display: block;
+    }
+  }
+
+  &__item {
+    padding: 0 10px;
+
+    &__title {
+      font-size: 16px;
+      text-transform: uppercase;
+      font-family: futura-pt,sans-serif;
+      font-weight: 700;
+      color: #000;
+    }
+
+    &__description {
+      font-size: 14px;
+      line-height: 18px;
+    }
+  }
+}
