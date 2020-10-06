@@ -1,0 +1,49 @@
+{#
+/**
+* @file
+* Default theme implementation to display a block.
+*
+* @see template_preprocess_block()
+*
+* @ingroup themeable
+*/
+#}
+{% set classes = [
+  'menu',
+  'menu--content-creation',
+] %}
+
+<div class="project-wrapper">
+  <div class="project__header">
+    <h2 class="project__title">{{ label }}</h2>
+    <ul id="project-tabs" class="project__tabs">
+      <li class="project__tab">
+        <a href="#"
+           data-project="own"
+           class="is-active"
+           role="tab"
+           aria-controls="projects"
+           aria-selected="true">
+          {{ 'Own projects'|t }}
+        </a>
+      </li>
+      <li class="project__tab">
+        <a href="#"
+           data-project="all"
+           role="tab"
+           aria-controls="projects"
+           aria-selected="false">
+          {{ 'All projects'|t }}
+        </a>
+      </li>
+    </ul>
+  </div>
+  <div id="projects" class="project__container">
+    <div class="project__list is-active" data-project-id="own">
+      {{ projects_own }}
+    </div>
+    <div class="project__list" data-project-id="all">
+      {{ projects_all }}
+    </div>
+  </div>
+</div>

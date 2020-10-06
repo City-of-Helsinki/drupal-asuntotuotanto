@@ -1,0 +1,35 @@
+<?php
+
+/**
+ * @file
+ * Contains asu_editorial.module.
+ */
+
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+
+
+/**
+ * Implements hook_local_tasks_alter().
+ */
+function asu_editorial_local_tasks_alter(&$local_tasks) {
+  // Change user 'Edit' and 'View' local tasks to 'Edit profile' and
+  // 'View profile' when in user page.
+  $local_tasks['entity.user.canonical']['title'] = new TranslatableMarkup('View profile');
+  $local_tasks['entity.user.edit_form']['title'] = new TranslatableMarkup('Edit profile');
+}
+
+/**
+ * Implements hook_theme().
+ */
+function asu_editorial_theme() {
+  return [
+    'project_tabs_block' => [
+      'variables' => [
+        'label' => NULL,
+        'projects_own' => NULL,
+        'projects_all' => NULL,
+      ],
+      'render element' => 'children',
+    ],
+  ];
+}
