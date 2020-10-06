@@ -2,21 +2,21 @@ body {
   --colorGinAppBackground: #f6f7f7;
 }
 
-.project__title {
+.projects__title {
   font-size: 30px;
   margin-top: 10px;
 }
 
-.project__header {
+.projects__header {
   display: flex;
   align-items: center;
 }
 
-.project__title {
+.projects__title {
   margin: 0 30px 0 0;
 }
 
-.project__tabs {
+.projects__tabs {
   display: flex;
   align-items: center;
   flex-flow: row;
@@ -25,12 +25,12 @@ body {
   padding: 0;
 }
 
-.project__tab {
+.projects__tab {
   list-style: none;
   padding: 5px 15px;
 }
 
-.project__tab a {
+.projects__tab a {
   font-size: 16px;
   font-weight: 700;
   color: #000;
@@ -38,34 +38,34 @@ body {
   padding: 5px 10px;
 }
 
-.project__tab a:active, .project__tab a:hover, .project__tab a.is-active {
+.projects__tab a:active, .projects__tab a:hover, .projects__tab a.is-active {
   text-decoration: none;
   border-color: #0000bf;
 }
 
-.project__container {
+.projects__container {
   margin-top: 30px;
 }
 
-.project__container .views-row {
+.projects__container .views-row {
   background-color: #eaebec;
   margin-top: 30px;
   padding: 30px;
 }
 
-.project__list {
+.projects__list {
   display: none;
 }
 
-.project__list.is-active {
+.projects__list.is-active {
   display: block;
 }
 
-.project__item {
+.projects__item {
   padding: 0 10px;
 }
 
-.project__item__title {
+.projects__item__title {
   font-size: 16px;
   text-transform: uppercase;
   font-family: futura-pt,sans-serif;
@@ -73,7 +73,44 @@ body {
   color: #000;
 }
 
-.project__item__description {
+.projects__item__description {
   font-size: 14px;
   line-height: 18px;
+}
+
+.project__header {
+  display: flex;
+  flex-flow: column;
+  margin-bottom: 15px;
+}
+
+.project__header__title {
+  display: block;
+  margin: 0 0 10px;
+}
+
+.project__header__title a {
+  color: black;
+}
+
+.project__header__address {
+  display: flex;
+}
+
+.project__header__completion {
+  display: flex;
+  align-items: center;
+}
+
+.project__header__completion .holding-type {
+  font-size: 14px;
+  background-color: #f5da4e;
+  color: black;
+  padding: 5px;
+  margin-right: 10px;
+}
+
+.project__content {
+  background-color: white;
+  padding: 15px;
 }

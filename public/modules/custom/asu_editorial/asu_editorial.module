@@ -7,7 +7,6 @@
 
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 
-
 /**
  * Implements hook_local_tasks_alter().
  */
