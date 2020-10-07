@@ -108,3 +108,18 @@ function asu_content_elasticsearch_connector_supported_data_types_alter(array &$
   $data_types[] = 'computed_array_decimal';
   $data_types[] = 'computed_array_string';
 }
+
+/**
+ * Implements hook_form_alter().
+ */
+function asu_content_form_search_api_index_fields_alter() {
+  /** @var \Drupal\asu_content\TranslationFileWriter $po_writer */
+  $po_writer = \Drupal::service('asu_content.translation_file_writer');
+
+  $index = \Drupal\search_api\Entity\Index::load('local_elasticsearch_index');
+  $fields = $index->getFields();
+
+  if($fields) {
+    $po_writer->writePoFile($fields);
+  }
+}
