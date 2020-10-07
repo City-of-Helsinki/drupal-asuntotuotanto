@@ -9,3 +9,6 @@
 $settings['cache']['bins']['render'] = 'cache.backend.null';
 $settings['cache']['bins']['page'] = 'cache.backend.null';
 $settings['cache']['bins']['dynamic_page_cache'] = 'cache.backend.null';
+
+// Use local Elastic search.
+$config['elasticsearch_connector.cluster.local_elasticsearch']['url'] = 'http://asuntotuotanto-elastic';
