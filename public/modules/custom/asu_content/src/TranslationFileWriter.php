@@ -1,0 +1,133 @@
+<?php
+
+namespace Drupal\asu_content;
+
+use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Entity\Query\QueryException;
+use Drupal\Core\Language\LanguageManager;
+use Drupal\Core\StringTranslation\TranslationManager;
+use Drupal\field\Entity\FieldConfig;
+use Drupal\node\Entity\Node;
+
+/**
+ * Class TranslationFileWriter.
+ */
+class TranslationFileWriter {
+
+  /**
+   * The entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
+   * The language manager.
+   *
+   * @var \Drupal\Core\Language\LanguageManager $languageManager
+   */
+  protected $languageManager;
+
+  /**
+   * The translation manager.
+   *
+   * @var \Drupal\Core\StringTranslation\TranslationManager $languageManager
+   */
+  protected $translationManager;
+
+  /**
+   * The configuration object factory.
+   *
+   * @var \Drupal\Core\Logger\LoggerChannelInterface
+   */
+  protected $logger;
+
+  /**
+   * Constructs a StreetAddressField object.
+   */
+  public function __construct() {
+    $this->entityTypeManager = \Drupal::service('entity_type.manager');
+    $this->languageManager = \Drupal::languageManager();
+    $this->translationManager = \Drupal::translation();
+    $this->logger = \Drupal::logger('reverse_entity_reference');
+  }
+
+  /**
+   * Write PO files for fields.
+   *
+   * @param Array $fields
+   *   Fields to add to the translation files.
+   */
+  public function writePoFile($fields = []) {
+    $translations = $this->getFieldTranslations($fields);
+    $this->doWriteTranslationFiles($translations);
+  }
+
+  /**
+   * Get translations for the fields.
+   *
+   * @param Array $fields
+   */
+  protected function getFieldTranslations(Array $fields) {
+    $original_language = $this->languageManager->getCurrentLanguage();
+    $translations = [];
+    foreach($this->languageManager->getLanguages() as $langcode => $language) {
+      $this->languageManager->setConfigOverrideLanguage($language);
+
+      foreach($fields as $field) {
+        $type = $field->getDataDefinition()->getFieldDefinition()->getTargetEntityTypeId();
+        $bundle = $field->getDataDefinition()->getFieldDefinition()->getTargetBundle();
+        $name = $field->getDataDefinition()->getFieldDefinition()->getName();
+
+        $field_config = \Drupal\field\Entity\FieldConfig::loadByName($type, $bundle, $name);
+
+        if($field_config) {
+          $translations[$langcode][$field->getFieldIdentifier()] = $field_config->getLabel();
+        } else {
+          $config_name = "field.field.node.$bundle.$name";
+          $config_translation = $this->languageManager->getLanguageConfigOverride($langcode, $config_name);
+
+          if($config_translation && !$config_translation->isNew()) {
+            $translations[$langcode][$field->getFieldIdentifier()] = $config_translation->getLabel();
+          }
+          else {
+            // Computed field translations are in UI translations.
+            if($translation = $this->translationManager->getStringTranslation($langcode, strtolower($field->getLabel()), 'node_fields')) {
+              $translations[$langcode][$field->getFieldIdentifier()] = $translation;
+            }
+          }
+
+        }
+      }
+    }
+
+    $this->languageManager->setConfigOverrideLanguage($original_language);
+    return $translations;
+  }
+
+  /**
+   * Write the po files.
+   *
+   * @param array $translations
+   */
+  protected function doWriteTranslationFiles(Array $translations) {
+    foreach($translations as $langcode => $translation_list) {
+      $fh = fopen("public://$langcode.po",'w');
+
+      fwrite($fh, "#\n");
+      fwrite($fh, "msgid \"\"\n");
+      fwrite($fh,  "msgstr \"\"\n");
+
+      foreach($translation_list as $msgid => $msgstr){
+        $key = addslashes($msgid);
+        $value = addslashes($msgstr);
+        fwrite($fh, "\n");
+        fwrite($fh, "msgid \"$key\"\n");
+        fwrite($fh, "msgstr \"$value\"\n");
+      }
+      file_save_data($fh, 'public://<filename>');
+      fclose($fh);
+    }
+  }
+
+}
