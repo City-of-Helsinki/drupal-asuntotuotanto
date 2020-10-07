@@ -1,0 +1,178 @@
+uuid: ef921602-b443-490e-b234-7aad22bb2abd
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser_admin
+    - field.field.node.project.field_acc_financeofficer
+    - field.field.node.project.field_acc_salesperson
+    - field.field.node.project.field_apartment_count
+    - field.field.node.project.field_apartments
+    - field.field.node.project.field_application_end_time
+    - field.field.node.project.field_application_start_time
+    - field.field.node.project.field_attachments_url
+    - field.field.node.project.field_building_type
+    - field.field.node.project.field_city
+    - field.field.node.project.field_completion_date
+    - field.field.node.project.field_construction_materials
+    - field.field.node.project.field_construction_year
+    - field.field.node.project.field_constructor
+    - field.field.node.project.field_coordinate_lat
+    - field.field.node.project.field_coordinate_lon
+    - field.field.node.project.field_district
+    - field.field.node.project.field_energy_class
+    - field.field.node.project.field_estate_agent
+    - field.field.node.project.field_estate_agent_email
+    - field.field.node.project.field_estate_agent_phone
+    - field.field.node.project.field_estimated_completion
+    - field.field.node.project.field_estimated_completion_date
+    - field.field.node.project.field_has_elevator
+    - field.field.node.project.field_has_sauna
+    - field.field.node.project.field_heating_options
+    - field.field.node.project.field_holding_type
+    - field.field.node.project.field_housing_company
+    - field.field.node.project.field_housing_manager
+    - field.field.node.project.field_images
+    - field.field.node.project.field_main_image
+    - field.field.node.project.field_material_choice_dl
+    - field.field.node.project.field_new_development_status
+    - field.field.node.project.field_new_housing
+    - field.field.node.project.field_possession_transfer_date
+    - field.field.node.project.field_postal_code
+    - field.field.node.project.field_pre_marketing_end_time
+    - field.field.node.project.field_premarketing_start_time
+    - field.field.node.project.field_project_description
+    - field.field.node.project.field_project_manager
+    - field.field.node.project.field_publication_end_time
+    - field.field.node.project.field_publication_start_time
+    - field.field.node.project.field_realty_id
+    - field.field.node.project.field_roof_material
+    - field.field.node.project.field_sanitation
+    - field.field.node.project.field_shareholder_meeting_date
+    - field.field.node.project.field_site_area
+    - field.field.node.project.field_site_owner
+    - field.field.node.project.field_site_renter
+    - field.field.node.project.field_street_address
+    - field.field.node.project.field_tasks
+    - field.field.node.project.field_virtual_presentation_url
+    - field.field.node.project.field_zoning_info
+    - field.field.node.project.field_zoning_status
+    - node.type.project
+  module:
+    - options
+    - user
+id: node.project.teaser_admin
+targetEntityType: node
+bundle: project
+mode: teaser_admin
+content:
+  field_apartment_count:
+    weight: 7
+    label: inline
+    settings:
+      thousand_separator: ''
+      prefix_suffix: true
+    third_party_settings: {  }
+    type: number_integer
+    region: content
+  field_apartments:
+    weight: 8
+    label: hidden
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+  field_district:
+    weight: 3
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_estimated_completion:
+    type: string
+    weight: 6
+    region: content
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+  field_holding_type:
+    weight: 5
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    type: list_default
+    region: content
+  field_housing_company:
+    weight: 2
+    label: hidden
+    settings:
+      link_to_entity: true
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_street_address:
+    weight: 4
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  links:
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  field_acc_financeofficer: true
+  field_acc_salesperson: true
+  field_application_end_time: true
+  field_application_start_time: true
+  field_attachments_url: true
+  field_building_type: true
+  field_city: true
+  field_completion_date: true
+  field_construction_materials: true
+  field_construction_year: true
+  field_constructor: true
+  field_coordinate_lat: true
+  field_coordinate_lon: true
+  field_energy_class: true
+  field_estate_agent: true
+  field_estate_agent_email: true
+  field_estate_agent_phone: true
+  field_estimated_completion_date: true
+  field_has_elevator: true
+  field_has_sauna: true
+  field_heating_options: true
+  field_housing_manager: true
+  field_images: true
+  field_main_image: true
+  field_material_choice_dl: true
+  field_new_development_status: true
+  field_new_housing: true
+  field_possession_transfer_date: true
+  field_postal_code: true
+  field_pre_marketing_end_time: true
+  field_premarketing_start_time: true
+  field_project_description: true
+  field_project_manager: true
+  field_publication_end_time: true
+  field_publication_start_time: true
+  field_realty_id: true
+  field_roof_material: true
+  field_sanitation: true
+  field_shareholder_meeting_date: true
+  field_site_area: true
+  field_site_owner: true
+  field_site_renter: true
+  field_tasks: true
+  field_virtual_presentation_url: true
+  field_zoning_info: true
+  field_zoning_status: true
+  langcode: true
+  search_api_excerpt: true
