@@ -15,6 +15,7 @@ public/sites/default/files
 public/sites/simpletest
 tools/init-tools-status
 vendor
+web/
 
 drush/sites/.checksums
 .phpunit.result.cache

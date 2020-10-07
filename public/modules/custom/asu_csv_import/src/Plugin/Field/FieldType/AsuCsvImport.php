@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\csv_import\Plugin\Field\FieldType;
+namespace Drupal\asu_csv_import\Plugin\Field\FieldType;
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\file\Plugin\Field\FieldType\FileItem;
@@ -9,15 +9,15 @@ use Drupal\file\Plugin\Field\FieldType\FileItem;
  * Plugin implementation for csv file upload field.
  *
  * @FieldType(
- *   id = "csv_import",
- *   label = @Translation("Csv import"),
+ *   id = "asu_csv_import",
+ *   label = @Translation("ASU - Csv import"),
  *   category = @Translation("Reference"),
  *   default_widget = "file_generic",
  *   default_formatter = "file_default",
  *   constraints = {"ReferenceAccess" = {}, "FileValidation" = {}}
  * )
  */
-class CsvImport extends FileItem {
+class AsuCsvImport extends FileItem {
 
   /**
    * {@inheritdoc}

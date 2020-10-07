@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\csv_import;
+namespace Drupal\asu_csv_import;
 
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Plugin\PluginBase;

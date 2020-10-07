@@ -25,7 +25,7 @@ function csv_import_housing_company_form_submit($form, FormStateInterface $form_
     $fields = $form_object->getEntity()->getFields();
     foreach ($fields as $field) {
       $type = $field->getFieldDefinition()->getType();
-      if ($type == 'csv_import') {
+      if ($type == 'asu_csv_import') {
         $fileUploadField = $field;
         break;
       }
@@ -49,12 +49,13 @@ function csv_import_housing_company_form_submit($form, FormStateInterface $form_
 /**
  * Implements hook hook_form_alter().
  *
- * Add download button to forms with field of type "csv_import".
+ * Add download button to forms with field of type "asu_csv_import".
  */
-function csv_import_form_node_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+function csv_import_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  $x = 1;
   foreach ($form_state->getFormObject()->getEntity()->getFields() as $field) {
     $type = $field->getFieldDefinition()->getType();
-    if ($type == 'csv_import') {
+    if ($type == 'asu_csv_import') {
       $form['actions']['csv_template_create'] = $form['download_template'] = [
         '#type' => 'submit',
         '#value' => t('Download csv-template'),
