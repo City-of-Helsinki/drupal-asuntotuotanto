@@ -15,11 +15,17 @@ public/sites/default/files
 public/sites/simpletest
 tools/init-tools-status
 vendor
+web/
+
 
 drush/sites/.checksums
 .phpunit.result.cache
 
 *.sql
+
+# Ingore files that are only for the current local environment
+/public/sites/*/local.settings.php
+/public/sites/*/local.services.yml
 
 # Ignore the folder created by PhpStorm
 .idea/*
