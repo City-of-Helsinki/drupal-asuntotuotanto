@@ -1,0 +1,4 @@
+services:
+  csv_importer.parser:
+    class: Drupal\csv_import\Parser
+    arguments: ['@entity_type.manager']

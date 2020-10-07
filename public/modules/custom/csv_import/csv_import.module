@@ -1,0 +1,102 @@
+<?php
+
+/**
+ * @file
+ * Csv import.
+ */
+
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\csv_import\CreateTemplateEvent;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+
+/**
+ * Implements hook hook_form_submit().
+ *
+ * Import apartments from csv file.
+ */
+function csv_import_housing_company_form_submit($form, FormStateInterface $form_state) {
+  $bundle = FALSE;
+  $form_object = $form_state->getFormObject();
+  $fileUploadField = false;
+
+  if ($form_object instanceof ContentEntityForm) {
+    /** @var \Drupal\Core\Entity\EntityBase $entity */
+    $fields = $form_object->getEntity()->getFields();
+    foreach ($fields as $field) {
+      $type = $field->getFieldDefinition()->getType();
+      if ($type == 'csv_import') {
+        $fileUploadField = $field;
+        break;
+      }
+    }
+
+    if (!$fileUploadField) {
+      return;
+    }
+
+    # import csv
+
+    /** @var Drupal\csv_import\Parser $parser */
+    $parser = \Drupal::service('csv_importer.parser');
+
+    #$parser->data($csv);
+
+  }
+
+}
+
+/**
+ * Implements hook hook_form_alter().
+ *
+ * Add download button to forms with field of type "csv_import".
+ */
+function csv_import_form_node_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  foreach ($form_state->getFormObject()->getEntity()->getFields() as $field) {
+    $type = $field->getFieldDefinition()->getType();
+    if ($type == 'csv_import') {
+      $form['actions']['csv_template_create'] = $form['download_template'] = [
+        '#type' => 'submit',
+        '#value' => t('Download csv-template'),
+        '#limit_validation_errors' => [],
+        '#submit' => ['csv_import_download_template'],
+      ];
+      break;
+    }
+  }
+}
+
+/**
+ * Form submission callback function for download button.
+ */
+function csv_import_download_template(&$form, FormStateInterface $form_state) {
+  $node = $form_state->getFormObject()->getEntity();
+
+  // TODO there is a better way of figuring out the bundle.
+  $bundle = 'apartment';
+
+  /** @var \Drupal\Core\Entity\EntityFieldManager $entityFieldManager */
+  $entityFieldManager = \Drupal::service('entity_field.manager');
+
+  // TODO: waiting for field changes.
+  $fields = $entityFieldManager->getFieldDefinitions('node', $bundle);
+  $csv_header_string = '';
+  foreach ($fields as $field_name => $field_definition) {
+    if (strpos($field_name, 'field_') !== FALSE || in_array($field_name, ['title', 'nid'])) {
+      $csv_header_string .= $field_name . ',';
+      $csv_headers[] = $field_name;
+    }
+  }
+
+  $csv_header_string = rtrim($csv_header_string, ',');
+  $csv_header_string .= ';';
+
+  $response = new Response($csv_header_string);
+  $disposition = $response->headers->makeDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, 'apartments.csv');
+  $response->headers->set('Content-type', 'text/csv');
+  $response->headers->set('Content-Disposition', $disposition);
+  $response->headers->set('Content-Transfer-Encoding', 'binary');
+  $response->headers->set('Content-length', strlen($csv_header_string));
+  $form_state->setResponse($response);
+
+}

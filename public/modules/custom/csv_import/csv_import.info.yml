@@ -1,0 +1,6 @@
+name: 'Csv import'
+description: 'Customized functionality to create csv template and import content from csv files'
+core: 8.x
+core_version_requirement: ^8 || ^9
+package: ASU_importer
+type: module
