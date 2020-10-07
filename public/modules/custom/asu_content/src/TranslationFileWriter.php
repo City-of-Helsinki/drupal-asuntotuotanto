@@ -1,8 +1,8 @@
 <?php
 
-use Drupal\field\Entity\FieldConfig;
-
 namespace Drupal\asu_content;
+
+use Drupal\field\Entity\FieldConfig;
 
 /**
  * Class TranslationFileWriter.
@@ -53,7 +53,7 @@ class TranslationFileWriter {
    * @param array $fields
    *   Fields to add to the translation files.
    */
-  public function writePoFile($fields = []) {
+  public function writePoFile(array $fields = []) {
     $translations = $this->getFieldTranslations($fields);
     $this->doWriteTranslationFiles($translations);
   }
@@ -62,8 +62,9 @@ class TranslationFileWriter {
    * Get translations for the fields.
    *
    * @param array $fields
+   *   Fields to add to the translation files.
    */
-  protected function getFieldTranslations(Array $fields) {
+  protected function getFieldTranslations(array $fields) {
     $original_language = $this->languageManager->getCurrentLanguage();
     $translations = [];
     foreach ($this->languageManager->getLanguages() as $langcode => $language) {
@@ -105,8 +106,9 @@ class TranslationFileWriter {
    * Write the po files.
    *
    * @param array $translations
+   *   Translation array.
    */
-  protected function doWriteTranslationFiles(Array $translations) {
+  protected function doWriteTranslationFiles(array $translations) {
     foreach ($translations as $langcode => $translation_list) {
       $fh = fopen("public://$langcode.po", 'w');
 
