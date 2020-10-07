@@ -1,0 +1,41 @@
+uuid: d2a40ee2-0a9d-4546-9440-68a9489f9a8f
+langcode: en
+status: true
+dependencies:
+  module:
+    - route_condition
+name: profile
+label: Profile
+group: null
+description: ''
+requireAllConditions: false
+disabled: false
+conditions:
+  route:
+    id: route
+    routes: entity.user.canonical
+    negate: 0
+    uuid: f2742879-2edf-43dd-8f87-e17e98880fa4
+    context_mapping: {  }
+reactions:
+  blocks:
+    blocks:
+      7706fdad-7d04-400b-a8af-3712cc91d459:
+        id: project_tabs_block
+        label: 'Project tabs block'
+        provider: asu_editorial
+        label_display: '0'
+        region: content
+        weight: '0'
+        context_mapping: {  }
+        custom_id: project_tabs_block
+        theme: asu_admin
+        css_class: ''
+        unique: 0
+        context_id: profile
+        uuid: 7706fdad-7d04-400b-a8af-3712cc91d459
+    id: blocks
+    saved: false
+    uuid: e1a6ab59-190c-4316-b903-0aa1308bd8c6
+    include_default_blocks: 0
+weight: 0

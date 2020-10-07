@@ -20,5 +20,5 @@ asu-lint-js: ## Check code style for JS files
 	$(call step,Check code style for JS files: $(LINT_PATHS_JS))
 	@docker run --rm -v "$(CURDIR)":$(WD):cached -w $(WD) $(DOCKER_NODE_IMG) \
 		$(WEBROOT)/core/node_modules/eslint/bin/eslint.js --resolve-plugins-relative-to ./$(WEBROOT)/core \
-		--color --ignore-pattern '**/vendor/*' --ignore-pattern '**/node_modules/*' --ignore-pattern '**/dist/*' --ignore-pattern '**/elasticsearch_connector/*' \
-		--no-error-on-unmatched-pattern --ext .js  -c ./$(WEBROOT)/core/.eslintrc.json --global nav,moment,responsiveNav:true $(LINT_PATHS_JS)
+		--color --quiet --ignore-pattern '**/vendor/*' --ignore-pattern '**/node_modules/*' --ignore-pattern '**/dist/*' --ignore-pattern '**/elasticsearch_connector/*' \
+		--no-error-on-unmatched-pattern --ext .js -c ./$(WEBROOT)/core/.eslintrc.json --global nav,moment,responsiveNav:true $(LINT_PATHS_JS)
