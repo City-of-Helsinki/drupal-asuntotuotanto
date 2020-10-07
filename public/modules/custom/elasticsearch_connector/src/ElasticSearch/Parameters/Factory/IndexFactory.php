@@ -131,7 +131,9 @@ class IndexFactory {
               $value = $field->getDataDefinition()->getSetting('allowed_values')[reset($field->getValues())];
             } else if( 'entity_reference' == $field_type){
               $term = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->load(reset($field->getValues()));
-              $value = $term->getName();
+              if ($term instanceof Term) {
+                $value = $term->getName();
+              }
             } else if('image' == $field_type) {
               if($file = File::load(reset($field->getValues()))){
                 $value = $file->createFileUrl(FALSE);
