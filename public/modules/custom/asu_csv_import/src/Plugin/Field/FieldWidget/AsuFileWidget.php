@@ -48,8 +48,8 @@ class AsuFileWidget extends WidgetBase implements ContainerFactoryPluginInterfac
    */
   public static function defaultSettings() {
     return [
-        'progress_indicator' => 'throbber',
-      ] + parent::defaultSettings();
+      'progress_indicator' => 'throbber',
+    ] + parent::defaultSettings();
   }
 
   /**

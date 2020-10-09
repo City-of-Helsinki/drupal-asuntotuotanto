@@ -3,7 +3,6 @@
 namespace Drupal\asu_csv_import\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Field\FieldItemListInterface;
-use \Drupal\file\Plugin\Field\FieldFormatter\BaseFieldFileFormatterBase;
 use Drupal\file\Plugin\Field\FieldFormatter\DescriptionAwareFileFormatterBase;
 
 /**
@@ -18,11 +17,11 @@ use Drupal\file\Plugin\Field\FieldFormatter\DescriptionAwareFileFormatterBase;
  * )
  */
 class AsuCsvFileFormatter extends DescriptionAwareFileFormatterBase {
+
   /**
    * {@inheritdoc}
    */
-  public function viewElements(FieldItemListInterface $items, $langcode)
-  {
+  public function viewElements(FieldItemListInterface $items, $langcode) {
     $elements = [];
 
     foreach ($this->getEntitiesToView($items, $langcode) as $delta => $file) {
@@ -47,4 +46,5 @@ class AsuCsvFileFormatter extends DescriptionAwareFileFormatterBase {
 
     return $elements;
   }
+
 }
