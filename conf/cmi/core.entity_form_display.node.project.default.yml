@@ -36,6 +36,7 @@ dependencies:
     - field.field.node.project.field_material_choice_dl
     - field.field.node.project.field_new_development_status
     - field.field.node.project.field_new_housing
+    - field.field.node.project.field_ownership_type
     - field.field.node.project.field_possession_transfer_date
     - field.field.node.project.field_postal_code
     - field.field.node.project.field_pre_marketing_end_time
@@ -89,15 +90,16 @@ third_party_settings:
         - title
         - field_housing_company
         - field_holding_type
+        - field_ownership_type
         - field_street_address
         - field_postal_code
         - field_city
         - field_district
         - field_realty_id
         - field_construction_year
-        - field_new_development_status
         - field_new_housing
         - field_apartment_count
+        - field_new_development_status
       parent_name: group_project_tabs
       weight: 19
       format_type: tab
@@ -118,7 +120,6 @@ third_party_settings:
         - field_heating_options
         - field_energy_class
         - field_site_area
-        - field_site_owner
         - field_site_renter
         - field_sanitation
         - field_zoning_info
@@ -127,6 +128,7 @@ third_party_settings:
         - field_coordinate_lat
         - field_coordinate_lon
         - field_project_description
+        - field_site_owner
       parent_name: group_project_tabs
       weight: 20
       format_type: tab
@@ -308,7 +310,7 @@ content:
     type: options_buttons
     region: content
   field_city:
-    weight: 56
+    weight: 57
     settings:
       size: 60
       placeholder: ''
@@ -332,7 +334,7 @@ content:
     type: entity_reference_autocomplete
     region: content
   field_construction_year:
-    weight: 59
+    weight: 60
     settings:
       size: 60
       placeholder: ''
@@ -362,7 +364,7 @@ content:
     type: number
     region: content
   field_district:
-    weight: 57
+    weight: 58
     settings:
       size: 60
       placeholder: ''
@@ -486,7 +488,7 @@ content:
     type: datetime_default
     region: content
   field_new_development_status:
-    weight: 79
+    weight: 63
     settings:
       match_operator: CONTAINS
       match_limit: 10
@@ -502,6 +504,12 @@ content:
     settings:
       display_label: true
     third_party_settings: {  }
+  field_ownership_type:
+    weight: 54
+    settings: {  }
+    third_party_settings: {  }
+    type: options_buttons
+    region: content
   field_possession_transfer_date:
     weight: 21
     settings: {  }
@@ -510,7 +518,7 @@ content:
     region: content
   field_postal_code:
     type: string_textfield
-    weight: 55
+    weight: 56
     region: content
     settings:
       size: 60
@@ -557,7 +565,7 @@ content:
     type: datetime_default
     region: content
   field_realty_id:
-    weight: 58
+    weight: 59
     settings:
       size: 60
       placeholder: ''
@@ -612,7 +620,7 @@ content:
     type: string_textfield
     region: content
   field_street_address:
-    weight: 54
+    weight: 55
     settings:
       size: 60
       placeholder: ''
