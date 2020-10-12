@@ -565,8 +565,8 @@ field_settings:
     dependencies:
       module:
         - node
-  url:
-    label: 'Apartment url'
+  apartment_url:
+    label: 'Apartment URL'
     datasource_id: 'entity:node'
     property_path: nid
     type: asu_url
