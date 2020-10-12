@@ -21,9 +21,9 @@ class IdToUrl extends DataTypePluginBase {
    * {@inheritdoc}
    */
   public function getValue($value) {
-    if($node = Node::load((int)$value)){
+    if ($node = Node::load((int) $value)) {
       $host = \Drupal::request()->getHost();
-      return $host.$node->toUrl()->toString();
+      return $host . $node->toUrl()->toString();
     }
     return NULL;
   }
