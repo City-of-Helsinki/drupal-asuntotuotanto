@@ -1,0 +1,16 @@
+uuid: 50edc9c0-a8b3-4061-8cfb-b0773bfb20d1
+langcode: fi
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.ownership_type
+  module:
+    - content_translation
+third_party_settings:
+  content_translation:
+    enabled: true
+id: taxonomy_term.ownership_type
+target_entity_type_id: taxonomy_term
+target_bundle: ownership_type
+default_langcode: site_default
+language_alterable: false

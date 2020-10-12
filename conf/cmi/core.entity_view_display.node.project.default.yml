@@ -36,6 +36,7 @@ dependencies:
     - field.field.node.project.field_material_choice_dl
     - field.field.node.project.field_new_development_status
     - field.field.node.project.field_new_housing
+    - field.field.node.project.field_ownership_type
     - field.field.node.project.field_possession_transfer_date
     - field.field.node.project.field_postal_code
     - field.field.node.project.field_pre_marketing_end_time
@@ -225,6 +226,14 @@ content:
       format_custom_true: ''
     third_party_settings: {  }
     type: boolean
+    region: content
+  field_ownership_type:
+    weight: 159
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
     region: content
   field_postal_code:
     weight: 104

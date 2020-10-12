@@ -1,0 +1,8 @@
+uuid: f5f8638e-f85f-4a52-9648-be8ba3aeeaae
+langcode: en
+status: true
+dependencies: {  }
+name: 'Ownership type'
+vid: ownership_type
+description: ''
+weight: 0
