@@ -31,20 +31,12 @@ class TranslationFileWriter {
   protected $translationManager;
 
   /**
-   * The configuration object factory.
-   *
-   * @var \Drupal\Core\Logger\LoggerChannelInterface
-   */
-  protected $logger;
-
-  /**
-   * Constructs a StreetAddressField object.
+   * Constructor.
    */
   public function __construct() {
     $this->entityTypeManager = \Drupal::service('entity_type.manager');
     $this->languageManager = \Drupal::languageManager();
     $this->translationManager = \Drupal::translation();
-    $this->logger = \Drupal::logger('reverse_entity_reference');
   }
 
   /**
