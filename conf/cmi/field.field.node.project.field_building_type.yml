@@ -1,12 +1,11 @@
-uuid: f914f5e2-ea49-45fc-a003-7a0044ecac68
+uuid: ef22305c-95f0-485d-a52a-5dfce3067d79
 langcode: en
 status: true
 dependencies:
   config:
     - field.storage.node.field_building_type
     - node.type.project
-  module:
-    - options
+    - taxonomy.vocabulary.building_type
 id: node.project.field_building_type
 field_name: field_building_type
 entity_type: node
@@ -15,9 +14,16 @@ label: 'Building type'
 description: ''
 required: true
 translatable: false
-default_value:
-  -
-    value: apartment_house
+default_value: {  }
 default_value_callback: ''
-settings: {  }
-field_type: list_string
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      building_type: building_type
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

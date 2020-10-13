@@ -1,0 +1,8 @@
+uuid: 55fd4031-8cb3-4180-a852-8c77abb12fda
+langcode: en
+status: true
+dependencies: {  }
+name: District
+vid: district
+description: ''
+weight: 0

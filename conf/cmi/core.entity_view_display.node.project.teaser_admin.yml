@@ -83,14 +83,6 @@ content:
     third_party_settings: {  }
     type: entity_reference_label
     region: content
-  field_district:
-    weight: 3
-    label: hidden
-    settings:
-      link_to_entity: false
-    third_party_settings: {  }
-    type: string
-    region: content
   field_estimated_completion:
     type: string
     weight: 6
@@ -141,6 +133,7 @@ hidden:
   field_constructor: true
   field_coordinate_lat: true
   field_coordinate_lon: true
+  field_district: true
   field_energy_class: true
   field_estate_agent: true
   field_estate_agent_email: true

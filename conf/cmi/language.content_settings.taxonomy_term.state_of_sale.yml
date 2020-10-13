@@ -1,0 +1,11 @@
+uuid: 63444f4f-77f2-4358-af48-68a40268e11c
+langcode: en
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.state_of_sale
+id: taxonomy_term.state_of_sale
+target_entity_type_id: taxonomy_term
+target_bundle: state_of_sale
+default_langcode: site_default
+language_alterable: false
