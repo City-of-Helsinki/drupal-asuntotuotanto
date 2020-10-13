@@ -44,16 +44,6 @@ name: 'Local elasticsearch index'
 description: ''
 read_only: false
 field_settings:
-  acc_financeofficer:
-    label: 'Accountable finance officer'
-    datasource_id: 'entity:node'
-    property_path: 'search_api_reverse_entity_references_node__field_apartments:field_acc_financeofficer'
-    type: string
-  acc_salesperson:
-    label: 'Accountable sales person'
-    datasource_id: 'entity:node'
-    property_path: 'search_api_reverse_entity_references_node__field_apartments:field_acc_salesperson'
-    type: string
   additional_information:
     label: 'Additional information'
     datasource_id: 'entity:node'
@@ -222,6 +212,14 @@ field_settings:
     dependencies:
       config:
         - field.storage.node.field_maintenance_fee
+  nid:
+    label: ID
+    datasource_id: 'entity:node'
+    property_path: nid
+    type: integer
+    dependencies:
+      module:
+        - node
   other_fees:
     label: 'Other fees'
     datasource_id: 'entity:node'
@@ -254,18 +252,28 @@ field_settings:
     dependencies:
       module:
         - computed_field_plugin
+  project_acc_financeofficer:
+    label: 'Accountable finance officer'
+    datasource_id: 'entity:node'
+    property_path: 'search_api_reverse_entity_references_node__field_apartments:field_acc_financeofficer'
+    type: string
+  project_acc_salesperson:
+    label: 'Accountable sales person'
+    datasource_id: 'entity:node'
+    property_path: 'search_api_reverse_entity_references_node__field_apartments:field_acc_salesperson'
+    type: string
   project_apartment_count:
     label: 'Number of apartments'
     datasource_id: 'entity:node'
     property_path: 'search_api_reverse_entity_references_node__field_apartments:field_apartment_count'
     type: integer
   project_application_end_time:
-    label: 'Reverse reference: <em class="placeholder">Sisältö</em> using <em class="placeholder">Huoneistot</em> » Hakuajan päättymisaika'
+    label: 'Application end time'
     datasource_id: 'entity:node'
     property_path: 'search_api_reverse_entity_references_node__field_apartments:field_application_end_time'
     type: date
   project_application_start_time:
-    label: 'Reverse reference: <em class="placeholder">Sisältö</em> using <em class="placeholder">Huoneistot</em> » Hakuajan aloitusaika'
+    label: 'Application start time'
     datasource_id: 'entity:node'
     property_path: 'search_api_reverse_entity_references_node__field_apartments:field_application_start_time'
     type: date
@@ -474,6 +482,11 @@ field_settings:
     datasource_id: 'entity:node'
     property_path: 'search_api_reverse_entity_references_node__field_apartments:field_street_address'
     type: string
+  project_url:
+    label: 'Project url'
+    datasource_id: 'entity:node'
+    property_path: 'search_api_reverse_entity_references_node__field_apartments:nid'
+    type: computed_array_string
   project_uuid:
     label: 'Project UUID'
     datasource_id: 'entity:node'
@@ -531,6 +544,11 @@ field_settings:
     datasource_id: 'entity:node'
     property_path: 'search_api_reverse_entity_references_node__field_apartments:field_site_owner'
     type: string
+  state_of_sale:
+    label: 'State of sale'
+    datasource_id: 'entity:node'
+    property_path: 'search_api_reverse_entity_references_node__field_apartments:field_state_of_sale'
+    type: string
   storage_description:
     label: 'Storage description'
     datasource_id: 'entity:node'
@@ -544,6 +562,14 @@ field_settings:
     datasource_id: 'entity:node'
     property_path: title
     type: string
+    dependencies:
+      module:
+        - node
+  url:
+    label: 'Apartment url'
+    datasource_id: 'entity:node'
+    property_path: nid
+    type: computed_array_string
     dependencies:
       module:
         - node
