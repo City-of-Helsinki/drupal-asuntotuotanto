@@ -1,8 +1,0 @@
-uuid: c32f2462-565c-49e9-bec4-d7eb1fa117f4
-langcode: en
-status: true
-dependencies: {  }
-name: 'Building type'
-vid: building_type
-description: ''
-weight: 0

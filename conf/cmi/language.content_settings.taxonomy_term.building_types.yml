@@ -1,16 +1,16 @@
-uuid: ad678bc7-40ce-4417-86d1-97bdcb002a32
+uuid: 9336eb23-d317-4437-8654-1b0b337e0abd
 langcode: en
 status: true
 dependencies:
   config:
-    - taxonomy.vocabulary.building_type
+    - taxonomy.vocabulary.building_types
   module:
     - content_translation
 third_party_settings:
   content_translation:
     enabled: true
-id: taxonomy_term.building_type
+id: taxonomy_term.building_types
 target_entity_type_id: taxonomy_term
-target_bundle: building_type
+target_bundle: building_types
 default_langcode: site_default
 language_alterable: false

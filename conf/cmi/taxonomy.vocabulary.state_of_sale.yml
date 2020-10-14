@@ -1,8 +1,0 @@
-uuid: f7cd1a72-3747-4150-9fdd-45ff80f4e88c
-langcode: en
-status: true
-dependencies: {  }
-name: 'State of sale'
-vid: state_of_sale
-description: ''
-weight: 0

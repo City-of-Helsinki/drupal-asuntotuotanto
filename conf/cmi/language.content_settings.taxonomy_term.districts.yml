@@ -1,11 +1,11 @@
-uuid: 63444f4f-77f2-4358-af48-68a40268e11c
+uuid: d42f1c19-eac2-4eea-b0a9-664c085cce96
 langcode: en
 status: true
 dependencies:
   config:
-    - taxonomy.vocabulary.state_of_sale
-id: taxonomy_term.state_of_sale
+    - taxonomy.vocabulary.districts
+id: taxonomy_term.districts
 target_entity_type_id: taxonomy_term
-target_bundle: state_of_sale
+target_bundle: districts
 default_langcode: site_default
 language_alterable: false
