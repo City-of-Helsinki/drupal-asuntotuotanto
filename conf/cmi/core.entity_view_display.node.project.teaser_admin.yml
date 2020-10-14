@@ -37,6 +37,7 @@ dependencies:
     - field.field.node.project.field_material_choice_dl
     - field.field.node.project.field_new_development_status
     - field.field.node.project.field_new_housing
+    - field.field.node.project.field_ownership_type
     - field.field.node.project.field_possession_transfer_date
     - field.field.node.project.field_postal_code
     - field.field.node.project.field_pre_marketing_end_time
@@ -148,6 +149,7 @@ hidden:
   field_material_choice_dl: true
   field_new_development_status: true
   field_new_housing: true
+  field_ownership_type: true
   field_possession_transfer_date: true
   field_postal_code: true
   field_pre_marketing_end_time: true

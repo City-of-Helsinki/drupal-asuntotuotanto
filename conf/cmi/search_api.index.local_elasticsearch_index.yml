@@ -84,6 +84,14 @@ field_settings:
     dependencies:
       config:
         - field.storage.node.field_apartment_structure
+  apartment_url:
+    label: 'Apartment URL'
+    datasource_id: 'entity:node'
+    property_path: nid
+    type: asu_url
+    dependencies:
+      module:
+        - node
   application_url:
     label: 'Application URL'
     datasource_id: 'entity:node'
@@ -112,7 +120,7 @@ field_settings:
     label: 'General condition'
     datasource_id: 'entity:node'
     property_path: field_condition
-    type: integer
+    type: string
     dependencies:
       config:
         - field.storage.node.field_condition
@@ -417,6 +425,11 @@ field_settings:
     datasource_id: 'entity:node'
     property_path: 'search_api_reverse_entity_references_node__field_apartments:field_new_housing'
     type: boolean
+  project_ownership_type:
+    label: 'Ownership type'
+    datasource_id: 'entity:node'
+    property_path: 'search_api_reverse_entity_references_node__field_apartments:field_ownership_type'
+    type: string
   project_possession_transfer_date:
     label: 'Transfer of possession'
     datasource_id: 'entity:node'
@@ -486,7 +499,7 @@ field_settings:
     label: 'Project url'
     datasource_id: 'entity:node'
     property_path: 'search_api_reverse_entity_references_node__field_apartments:nid'
-    type: computed_array_string
+    type: asu_url
   project_uuid:
     label: 'Project UUID'
     datasource_id: 'entity:node'
