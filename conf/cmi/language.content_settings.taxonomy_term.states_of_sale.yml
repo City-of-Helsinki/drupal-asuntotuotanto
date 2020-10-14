@@ -3,7 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
-    - taxonomy.vocabulary.states_of_sales
+    - taxonomy.vocabulary.states_of_sale
 id: taxonomy_term.states_of_sale
 target_entity_type_id: taxonomy_term
 target_bundle: states_of_sale
