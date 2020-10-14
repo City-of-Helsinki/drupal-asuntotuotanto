@@ -557,6 +557,11 @@ field_settings:
     datasource_id: 'entity:node'
     property_path: 'search_api_reverse_entity_references_node__field_apartments:field_site_owner'
     type: string
+  state_of_sale:
+    label: 'State of sale'
+    datasource_id: 'entity:node'
+    property_path: 'search_api_reverse_entity_references_node__field_apartments:field_state_of_sale'
+    type: string
   storage_description:
     label: 'Storage description'
     datasource_id: 'entity:node'
@@ -570,6 +575,14 @@ field_settings:
     datasource_id: 'entity:node'
     property_path: title
     type: string
+    dependencies:
+      module:
+        - node
+  url:
+    label: 'Apartment url'
+    datasource_id: 'entity:node'
+    property_path: nid
+    type: computed_array_string
     dependencies:
       module:
         - node

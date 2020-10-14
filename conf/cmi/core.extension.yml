@@ -3,6 +3,7 @@ module:
   admin_toolbar_tools: 0
   asu_content: 0
   asu_editorial: 0
+  asu_rest: 0
   auto_entitylabel: 0
   block: 0
   block_content: 0
@@ -52,8 +53,11 @@ module:
   redirect: 0
   redirect_404: 0
   responsive_image: 0
+  rest: 0
+  restui: 0
   route_condition: 0
   search_api: 0
+  serialization: 0
   syslog: 0
   system: 0
   taxonomy: 0

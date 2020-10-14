@@ -1,12 +1,12 @@
-uuid: ceb18166-fae5-4629-b95d-b2d93c6aacf2
+uuid: 6a6dfe8c-9615-49ee-86ee-5e48c491bc46
 langcode: en
 status: true
 dependencies:
   module:
     - node
     - taxonomy
-id: node.field_building_type
-field_name: field_building_type
+id: node.field_state_of_sale
+field_name: field_state_of_sale
 entity_type: node
 type: entity_reference
 settings:
