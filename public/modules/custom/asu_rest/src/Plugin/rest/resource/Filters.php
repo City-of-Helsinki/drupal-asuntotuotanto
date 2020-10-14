@@ -110,6 +110,7 @@ final class Filters extends ResourceBase {
    * Get list of properties.
    *
    * @return array
+   *   Array of apartment and room properties
    */
   protected function getProperties() {
     return [
@@ -126,6 +127,7 @@ final class Filters extends ResourceBase {
    * Get list of room counts.
    *
    * @return array
+   *   Array of room counts
    */
   protected function getRoomCount() {
     $count = array_map('strval', range(1, 4, 1));
