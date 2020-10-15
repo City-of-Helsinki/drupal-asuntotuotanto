@@ -307,10 +307,14 @@ content:
     type: link_default
     region: content
   field_building_type:
-    weight: 75
-    settings: {  }
+    weight: 82
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
     third_party_settings: {  }
-    type: options_buttons
+    type: entity_reference_autocomplete
     region: content
   field_city:
     weight: 57
@@ -369,10 +373,12 @@ content:
   field_district:
     weight: 58
     settings:
+      match_operator: CONTAINS
+      match_limit: 10
       size: 60
       placeholder: ''
     third_party_settings: {  }
-    type: string_textfield
+    type: entity_reference_autocomplete
     region: content
   field_energy_class:
     weight: 68
