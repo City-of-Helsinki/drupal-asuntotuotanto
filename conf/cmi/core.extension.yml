@@ -2,6 +2,7 @@ module:
   admin_toolbar: 0
   admin_toolbar_tools: 0
   asu_content: 0
+  asu_csv_import: 0
   asu_editorial: 0
   auto_entitylabel: 0
   block: 0
