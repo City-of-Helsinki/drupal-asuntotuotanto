@@ -1,0 +1,7 @@
+asu_apartment_search.content:
+  path: '/asuntohaku'
+  defaults:
+    _controller: '\Drupal\asu_apartment_search\Controller\ApartmentSearchController::content'
+    _title: 'Asuntohaku'
+  requirements:
+    _permission: 'access content'

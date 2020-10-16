@@ -14,6 +14,7 @@
     "prefer-stable": true,
     "require": {
         "brainmaestro/composer-git-hooks": "^2.7",
+        "city-of-helsinki/asuntomyynti-react": "0.0.1",
         "composer/installers": "^1.9",
         "cweagans/composer-patches": "^1.6.7",
         "druidfi/omen": "^0.2.0",
@@ -96,6 +97,9 @@
                 "https://www.drupal.org/project/drupal/issues/3054641#comment-13385850":"https://www.drupal.org/files/issues/2019-12-10/3054641-14.patch",
                 "https://www.drupal.org/project/drupal/issues/2925297#comment-13274046": "https://www.drupal.org/files/issues/2019-09-26/core-typed_config_handle_missing_config-2925297-18.patch",
                 "https://www.drupal.org/project/drupal/issues/2466553": "https://www.drupal.org/files/issues/2020-05-14/2466553-75-d91x.patch"
+            },
+            "drupal/coffee":{
+                "https://www.drupal.org/project/coffee/issues/3164536": "https://www.drupal.org/files/issues/2020-08-29/3164536-fixed-ajax-multilang-url-2.patch"
             }
         }
     },
@@ -103,6 +107,19 @@
         {
             "type": "composer",
             "url": "https://packages.drupal.org/8"
+        },
+        {
+            "type": "package",
+            "package": {
+                "name": "city-of-helsinki/asuntomyynti-react",
+                "version": "0.0.1",
+                "type": "drupal-library",
+                "source": {
+                    "url": "https://github.com/City-of-Helsinki/asuntomyynti-react",
+                    "type": "git",
+                    "reference": "ec97d4d92bde563ff5dac3c89bb06488307647a9"
+                }
+            }
         }
     ],
     "scripts": {
