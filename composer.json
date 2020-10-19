@@ -14,7 +14,6 @@
     "prefer-stable": true,
     "require": {
         "brainmaestro/composer-git-hooks": "^2.7",
-        "city-of-helsinki/asuntomyynti-react": "0.0.1",
         "composer/installers": "^1.9",
         "cweagans/composer-patches": "^1.6.7",
         "druidfi/omen": "^0.2.0",
@@ -107,19 +106,6 @@
         {
             "type": "composer",
             "url": "https://packages.drupal.org/8"
-        },
-        {
-            "type": "package",
-            "package": {
-                "name": "city-of-helsinki/asuntomyynti-react",
-                "version": "0.0.1",
-                "type": "drupal-library",
-                "source": {
-                    "url": "https://github.com/City-of-Helsinki/asuntomyynti-react",
-                    "type": "git",
-                    "reference": "ec97d4d92bde563ff5dac3c89bb06488307647a9"
-                }
-            }
         }
     ],
     "scripts": {

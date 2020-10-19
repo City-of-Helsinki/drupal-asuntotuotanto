@@ -6,4 +6,9 @@ apartment-search:
     name: MIT
     url: https://github.com/City-of-Helsinki/asuntomyynti-react/blob/develop/README.md
   js:
-    /libraries/asuntomyynti-react/build/static/js/bundle.min.js: { }
+    /libraries/asuntomyynti-react/build/drupal/runtime-main.js: { weight: -3 }
+    /libraries/asuntomyynti-react/build/drupal/vendors.js: { weight: -2 }
+    /libraries/asuntomyynti-react/build/drupal/main.js: { weight: -1 }
+  css:
+    theme:
+      /libraries/asuntomyynti-react/build/drupal/main.css: { }

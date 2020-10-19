@@ -1,0 +1,29 @@
+{
+    "name": "city-of-helsinki/asu_apartment_search",
+    "type": "drupal-module",
+    "description": "Provides an integration between Asuntotuotanto React Search and Drupal.",
+    "homepage": "https://www.hel.fi/asuntotuotanto",
+    "minimum-stability": "dev",
+    "require": {
+        "city-of-helsinki/asuntomyynti-react": "0.0.1"
+    },
+    "scripts": {
+        "post-autoload-dump": [
+            "rsync -rv --exclude=.git vendor/city-of-helsinki/asuntomyynti-react/ assets/js && cd assets/js && yarn install && yarn build && yarn build:dist"
+        ]
+    },
+    "repositories": [
+        {
+            "type": "package",
+            "package": {
+                "name": "city-of-helsinki/asuntomyynti-react",
+                "version": "0.0.1",
+                "source": {
+                    "url": "https://github.com/City-of-Helsinki/asuntomyynti-react",
+                    "type": "git",
+                    "reference": "1b7a645b42cad53fe91bdcaf6fec8af2e9a176a7"
+                }
+            }
+        }
+    ]
+}

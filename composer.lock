@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9e3a5986a60c76481e918600223a5beb",
+    "content-hash": "16f44f0c108a35a48adc77a334af3a1b",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -181,7 +181,7 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/City-of-Helsinki/asuntomyynti-react",
-                "reference": "ec97d4d92bde563ff5dac3c89bb06488307647a9"
+                "reference": "1b7a645b42cad53fe91bdcaf6fec8af2e9a176a7"
             },
             "type": "drupal-library"
         },
