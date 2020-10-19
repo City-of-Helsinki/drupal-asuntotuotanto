@@ -53,10 +53,10 @@ final class Filters extends ResourceBase {
 
     // Taxonomy_id => elastic_index_id.
     $taxonomies_as_filters = [
-      'building_type' => 'project_building_type',
-      'district' => 'project_district',
+      'building_types' => 'project_building_type',
+      'districts' => 'project_district',
       'new_development_status' => 'project_new_development_status',
-      'state_of_sale' => 'state_of_sale',
+      'states_of_sale' => 'state_of_sale',
     ];
 
     $vocabularies = Vocabulary::loadMultiple();
@@ -65,6 +65,10 @@ final class Filters extends ResourceBase {
       $terms = \Drupal::entityTypeManager()
         ->getStorage('taxonomy_term')
         ->loadTree($taxonomy_name, 0, NULL, TRUE);
+
+      if (!$terms) {
+        continue;
+      }
 
       $items = [];
       foreach ($terms as $term) {
