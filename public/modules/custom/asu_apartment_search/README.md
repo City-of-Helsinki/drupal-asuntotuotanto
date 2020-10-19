@@ -1,8 +1,11 @@
 # City of Helsinki - Asuntotuotanto Apartment Search
 
+Initial setup for implementing Apartment Search (React app) to Asuntotuotanto Drupal.
+Note! This is not the preferred way to implement applications in to Drupal. Consult hel.fi developers for more preferable way to implement widgets. 
+
 ## Requirements
 
-Make sure NodeJS v12.18 is installed globally. 
+Make sure NodeJS (minimum v12.18) is installed. 
 
 ## How to install
 
@@ -10,39 +13,6 @@ Run `composer install`. This will install asuntomyynti-react package from City o
 
 ## How to update
 
-Update the composer.json package and
-Env | Branch | Drush alias | URL
---- | ------ | ----------- | ---
-development | * | - | https://asuntotuotanto.docker.sh/
-production | main | @main | TBD
-
-## Requirements
-
-You need to have these applications installed to operate on all environments:
-
-- [Docker](https://github.com/druidfi/guidelines/blob/master/docs/docker.md)
-- [Stonehenge](https://github.com/druidfi/stonehenge)
-
-## Create and start the environment
-
-For the first time (new project):
-
-```
-$ make new
-```
-
-And following times to create and start the environment:
-
-```
-$ make fresh
-```
-
-NOTE: Change these according of the state of your project.
-
-## Login to Drupal container
-
-This will log you inside the app container:
-
-```
-$ make shell
-```
+Update the Asuntomyynti React package by running `composer update vendor/package:version`. For version see: https://github.com/City-of-Helsinki/asuntomyynti-react.  
+After updating the package run `composer install`.
+Commit the changed files and push them to repository.
