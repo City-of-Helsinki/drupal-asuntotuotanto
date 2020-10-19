@@ -9,7 +9,10 @@
     },
     "scripts": {
         "post-autoload-dump": [
-            "rsync -rv --exclude=.git vendor/city-of-helsinki/asuntomyynti-react/ assets/js && cd assets/js && yarn install && yarn build && yarn build:dist"
+            "yarn install --frozen-lockfile --cwd vendor/city-of-helsinki/asuntomyynti-react",
+            "yarn --cwd vendor/city-of-helsinki/asuntomyynti-react build",
+            "yarn --cwd vendor/city-of-helsinki/asuntomyynti-react build:dist",
+            "cp -r vendor/city-of-helsinki/asuntomyynti-react/build/drupal/ assets/js"
         ]
     },
     "repositories": [
