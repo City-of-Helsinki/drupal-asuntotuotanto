@@ -12,7 +12,7 @@
             "yarn install --frozen-lockfile --cwd vendor/city-of-helsinki/asuntomyynti-react",
             "yarn --cwd vendor/city-of-helsinki/asuntomyynti-react build",
             "yarn --cwd vendor/city-of-helsinki/asuntomyynti-react build:dist",
-            "cp -r vendor/city-of-helsinki/asuntomyynti-react/build/drupal/ assets/js"
+            "cp -r vendor/city-of-helsinki/asuntomyynti-react/build/drupal/ assets/react"
         ]
     },
     "repositories": [
