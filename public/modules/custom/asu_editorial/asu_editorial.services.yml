@@ -1,0 +1,5 @@
+services:
+  asu_editorial.apply_theme:
+    class: Drupal\asu_editorial\Theme\ApplyTheme
+    tags:
+      - { name: theme_negotiator, priority: 1000 }
