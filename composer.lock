@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "16f44f0c108a35a48adc77a334af3a1b",
+    "content-hash": "fc8902f7fc96cfac359164550929043e",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -174,16 +174,6 @@
             ],
             "description": "Drupal code generator",
             "time": "2020-10-11T16:56:42+00:00"
-        },
-        {
-            "name": "city-of-helsinki/asuntomyynti-react",
-            "version": "0.0.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/City-of-Helsinki/asuntomyynti-react",
-                "reference": "1b7a645b42cad53fe91bdcaf6fec8af2e9a176a7"
-            },
-            "type": "drupal-library"
         },
         {
             "name": "composer/installers",
