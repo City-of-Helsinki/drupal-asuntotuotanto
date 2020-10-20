@@ -1,0 +1,22 @@
+uuid: dc7f5dff-8860-404b-8254-3e63ae6fa9cc
+langcode: en
+status: true
+dependencies:
+  theme:
+    - asuntotuotanto
+_core:
+  default_config_hash: Hh01DLj9k7UnNdPpOQXHZHW7GHf2OPNDQyCJF7_R9ac
+id: asuntotuotanto_primary_local_tasks
+theme: asuntotuotanto
+region: header
+weight: 0
+provider: null
+plugin: local_tasks_block
+settings:
+  id: local_tasks_block
+  label: 'Ensisijaiset välilehdet'
+  provider: core
+  label_display: '0'
+  primary: true
+  secondary: false
+visibility: {  }

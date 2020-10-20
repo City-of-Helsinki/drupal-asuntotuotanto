@@ -1,0 +1,20 @@
+uuid: 353e0736-39a8-4abc-8c07-46779c5c7be8
+langcode: en
+status: true
+dependencies:
+  theme:
+    - asuntotuotanto
+_core:
+  default_config_hash: HLQY2xgby8K3vN_98hiOSasOhm9pdCsH234-s0duJ8Q
+id: asuntotuotanto_page_title
+theme: asuntotuotanto
+region: header
+weight: -30
+provider: null
+plugin: page_title_block
+settings:
+  id: page_title_block
+  label: 'Sivun otsikko'
+  provider: core
+  label_display: '0'
+visibility: {  }
