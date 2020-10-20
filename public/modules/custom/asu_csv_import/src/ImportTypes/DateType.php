@@ -2,6 +2,9 @@
 
 namespace Drupal\asu_csv_import\ImportTypes;
 
+/**
+ *
+ */
 class DateType extends ImportType {
 
   protected $value;
@@ -9,11 +12,11 @@ class DateType extends ImportType {
   /**
    * {@inheritdoc}
    */
-  public function __construct($date)
-  {
-    if($this->isAllowedValue($date)){
+  public function __construct($date) {
+    if ($this->isAllowedValue($date)) {
       $this->value = $date;
-    } else {
+    }
+    else {
       throw new \Exception('Date is not valid type');
     }
   }
@@ -21,39 +24,41 @@ class DateType extends ImportType {
   /**
    * {@inheritdoc}
    */
-  public function getValue()
-  {
+  public function getValue() {
     return $this->value ? strtotime($this->value) : '';
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getImportValue(){
+  public function getImportValue() {
     return strtotime($this->getValue());
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getExportValue(){
-    if($this->value){
+  public function getExportValue() {
+    if ($this->value) {
       return date('d.m.Y H:i', strtotime($this->value));
     }
     return '';
   }
 
-  private function isAllowedValue($date): bool
-  {
-    if(empty($date)){
-      return true;
+  /**
+   *
+   */
+  private function isAllowedValue($date): bool {
+    if (empty($date)) {
+      return TRUE;
     }
     try {
       $dt = new \DateTime($date);
-      return true;
+      return TRUE;
     }
-    catch(\Exception $e){
-      return false;
+    catch (\Exception $e) {
+      return FALSE;
     }
   }
+
 }

@@ -264,7 +264,8 @@ class AsuFileWidget extends WidgetBase implements ContainerFactoryPluginInterfac
       $element['#multiple'] = $cardinality != 1 ? TRUE : FALSE;
       if ($cardinality != 1 && $cardinality != -1) {
         $element['#element_validate'] = [
-          [get_class($this), 'validateMultipleCount']];
+          [get_class($this), 'validateMultipleCount'],
+        ];
       }
     }
 
@@ -377,12 +378,12 @@ class AsuFileWidget extends WidgetBase implements ContainerFactoryPluginInterfac
   public static function validateCsvFieldValues($element, FormStateInterface $form_state, $form) {
     $trigger = $form_state->getTriggeringElement()['#name'];
 
-    // Remove field error if file is removed
-    if($trigger == 'field_import_apartments_0_remove_button'){
+    // Remove field error if file is removed.
+    if ($trigger == 'field_import_apartments_0_remove_button') {
       $form_errors = $form_state->getErrors();
 
       $form_state->clearErrors();
-      if(isset($form_errors['field_import_apartments'])){
+      if (isset($form_errors['field_import_apartments'])) {
         unset($form_errors['field_import_apartments']);
       }
 
@@ -392,19 +393,19 @@ class AsuFileWidget extends WidgetBase implements ContainerFactoryPluginInterfac
     }
 
     // Validate csv and add errors to upload field if csv is invalid.
-    if($trigger == 'field_import_apartments_0_upload_button'){
+    if ($trigger == 'field_import_apartments_0_upload_button') {
       $uploadFileHandler = \Drupal::service('asu_csv_import.upload_file_handler');
-      $errors = false;
+      $errors = FALSE;
 
-      // Get csv file, validate it and
-      if($file_id = $element['#value']['fids'][0]){
+      // Get csv file, validate it and.
+      if ($file_id = $element['#value']['fids'][0]) {
         $file = File::load($file_id);
         $errors = $uploadFileHandler->validateImportData($file);
 
         // Add errors to upload field if necessary.
-        if(!empty($errors)){
+        if (!empty($errors)) {
           $form_state->unsetValue('field_import_apartments');
-          foreach($errors as $error){
+          foreach ($errors as $error) {
             $form_state->setErrorByName('field_import_apartments', $error);
           }
         }

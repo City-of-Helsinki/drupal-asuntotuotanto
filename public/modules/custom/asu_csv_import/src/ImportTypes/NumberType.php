@@ -2,6 +2,9 @@
 
 namespace Drupal\asu_csv_import\ImportTypes;
 
+/**
+ *
+ */
 class NumberType extends ImportType {
 
   protected $value;
@@ -9,47 +12,44 @@ class NumberType extends ImportType {
   /**
    * {@inheritdoc}
    */
-  public function __construct($number)
-  {
+  public function __construct($number) {
     if ($this->isAllowedValue($number)) {
       $this->value = $number ? $number : 0;
-    } else {
-      Throw new \Exception('NumberType expects proper numeric value');
+    }
+    else {
+      throw new \Exception('NumberType expects proper numeric value');
     }
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getValue()
-  {
-    return (int)$this->value;
+  public function getValue() {
+    return (int) $this->value;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getImportValue()
-  {
-    return (int)$this->value;
+  public function getImportValue() {
+    return (int) $this->value;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getExportValue()
-  {
-    return (int)$this->value;
+  public function getExportValue() {
+    return (int) $this->value;
   }
 
   /**
    * Number needs to be numeric or empty.
    *
-   * @param $number int
+   * @param int $number
+   *
    * @return bool
    */
-  private function isAllowedValue($number): bool
-  {
+  private function isAllowedValue($number): bool {
     return is_numeric($number) || empty($number);
   }
 

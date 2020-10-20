@@ -2,6 +2,9 @@
 
 namespace Drupal\asu_csv_import\ImportTypes;
 
+/**
+ *
+ */
 class TextType extends ImportType {
 
   protected $value;
@@ -9,9 +12,8 @@ class TextType extends ImportType {
   /**
    * {@inheritdoc}
    */
-  public function __construct($text)
-  {
-    if($this->isAllowedValue($text)){
+  public function __construct($text) {
+    if ($this->isAllowedValue($text)) {
       $this->value = $text;
     }
   }
@@ -19,36 +21,33 @@ class TextType extends ImportType {
   /**
    * {@inheritdoc}
    */
-  public function getValue() : string
-  {
-    return (string)$this->value;
+  public function getValue() : string {
+    return (string) $this->value;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getExportValue()
-  {
-    return (string)$this->value;
+  public function getExportValue() {
+    return (string) $this->value;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getImportValue()
-  {
-    return (string)$this->value;
+  public function getImportValue() {
+    return (string) $this->value;
   }
 
   /**
    * Text is valid.
    *
    * @param $text
+   *
    * @return bool
    */
-  private function isAllowedValue($text): bool
-  {
-    return true;
+  private function isAllowedValue($text): bool {
+    return TRUE;
   }
 
 }

@@ -2,6 +2,9 @@
 
 namespace Drupal\asu_csv_import\ImportTypes;
 
+/**
+ *
+ */
 class BooleanType extends ImportType {
   /**
    * Allowed values for TRUE.
@@ -26,11 +29,11 @@ class BooleanType extends ImportType {
     'ei',
     'e',
     'no',
-    'n'
+    'n',
   ];
 
   /**
-   * Value of this object
+   * Value of this object.
    *
    * @var int
    */
@@ -39,20 +42,21 @@ class BooleanType extends ImportType {
   /**
    * BooleanType constructor.
    *
-   * @param $bool bool
+   * @param bool $bool
+   *
    * @throws \Exception
    */
-  public function __construct($bool)
-  {
-    if($this->isAllowedValue($bool)){
-      if($this->isTrue($bool)) {
+  public function __construct($bool) {
+    if ($this->isAllowedValue($bool)) {
+      if ($this->isTrue($bool)) {
         $this->value = 1;
       }
-      if($this->isFalse($bool)) {
+      if ($this->isFalse($bool)) {
         $this->value = 0;
       }
-    } else {
-      Throw new \Exception('BooleanType expects proper boolean value');
+    }
+    else {
+      throw new \Exception('BooleanType expects proper boolean value');
     }
   }
 
@@ -66,26 +70,26 @@ class BooleanType extends ImportType {
   /**
    * {@inheritdoc}
    */
-  public function getImportValue(){
+  public function getImportValue() {
     return $this->getValue();
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getExportValue(){
+  public function getExportValue() {
     return $this->value === 1 ? 'Kyllä' : 'Ei';
   }
 
   /**
-   * Is
+   * Is.
    */
   private function isAllowedValue($bool): bool {
     return $this->isTrue($bool) || $this->isFalse($bool);
   }
 
   /**
-   * Check if
+   * Check if.
    */
   private function isTrue($bool) {
     return in_array($bool, self::ALLOWED_TRUE_VALUES);

@@ -2,6 +2,9 @@
 
 namespace Drupal\asu_csv_import\ImportTypes;
 
+/**
+ *
+ */
 class DecimalType extends ImportType {
 
   protected $value;
@@ -9,37 +12,34 @@ class DecimalType extends ImportType {
   /**
    * {@inheritdoc}
    */
-  public function __construct($decimal)
-  {
-    if($this->isAllowedValue($decimal)){
+  public function __construct($decimal) {
+    if ($this->isAllowedValue($decimal)) {
       $this->value = $decimal;
-    } else {
-      Throw new \Exception('DecimalType expects proper decimal value');
+    }
+    else {
+      throw new \Exception('DecimalType expects proper decimal value');
     }
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getValue()
-  {
-    return (string)$this->value;
+  public function getValue() {
+    return (string) $this->value;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getExportValue()
-  {
-    return (string)$this->value;
+  public function getExportValue() {
+    return (string) $this->value;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getImportValue()
-  {
-    return (string)$this->value;
+  public function getImportValue() {
+    return (string) $this->value;
   }
 
   /**
@@ -49,23 +49,25 @@ class DecimalType extends ImportType {
    * Must pass is_float check.
    *
    * @param $decimal
+   *
    * @return bool
    */
-  private function isAllowedValue($decimal): bool
-  {
-    if(empty($decimal)){
-      return true;
-    } else {
-      if(!empty($decimal) && !is_numeric($decimal)) {
-        return false;
+  private function isAllowedValue($decimal): bool {
+    if (empty($decimal)) {
+      return TRUE;
+    }
+    else {
+      if (!empty($decimal) && !is_numeric($decimal)) {
+        return FALSE;
       }
-      if(is_string($decimal) && is_numeric($decimal)){
-        return true;
-      } else if(is_float($decimal)){
-        return true;
+      if (is_string($decimal) && is_numeric($decimal)) {
+        return TRUE;
+      }
+      elseif (is_float($decimal)) {
+        return TRUE;
       }
     }
-    return false;
+    return FALSE;
   }
 
 }
