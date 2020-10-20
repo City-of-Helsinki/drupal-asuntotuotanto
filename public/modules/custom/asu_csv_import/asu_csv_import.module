@@ -84,7 +84,6 @@ function csv_import_download_template(&$form, FormStateInterface $form_state) {
         catch (\Exception $e) {
           $row[] = '';
         }
-
       }
       $rows[] = $row;
     }
@@ -103,7 +102,6 @@ function csv_import_download_template(&$form, FormStateInterface $form_state) {
   $response->headers->set('Content-type', 'text/csv');
   $response->headers->set('Content-Disposition', 'attachment; filename=apartments.csv');
   $form_state->setResponse($response);
-
 }
 
 /**
@@ -123,8 +121,6 @@ function asu_csv_import_process($form, FormStateInterface &$form_state) {
   }
 
   $nodes = $upload_file_handler->createNodes($file, $fields);
-
-  $x = 1;
 
   foreach ($nodes['create'] as $node) {
     $node->save();
