@@ -11,39 +11,6 @@ use Drupal\Core\Form\FormStateInterface;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Implements hook hook_form_submit().
- *
- * Import apartments from csv file.
- */
-function asu_csv_import_project_form_submit($form, FormStateInterface $form_state) {
-  $bundle = FALSE;
-  $form_object = $form_state->getFormObject();
-  $fileUploadField = FALSE;
-
-  if ($form_object instanceof ContentEntityForm) {
-    /** @var \Drupal\Core\Entity\EntityBase $entity */
-    $fields = $form_object->getEntity()->getFields();
-    foreach ($fields as $field) {
-      $type = $field->getFieldDefinition()->getType();
-      if ($type == 'asu_csv_import') {
-        $fileUploadField = $field;
-        break;
-      }
-    }
-
-    if (!$fileUploadField) {
-      return;
-    }
-
-    // Import csv.
-
-    /** @var Drupal\csv_import\Parser $parser */
-    $parser = \Drupal::service('csv_importer.parser');
-    // $parser->data($csv);
-  }
-}
-
-/**
  * Implements hook hook_form_alter().
  *
  * Add download button to forms with field of type "asu_csv_import".
@@ -80,74 +47,50 @@ function asu_csv_import_form_node_form_alter(&$form, FormStateInterface $form_st
 function csv_import_download_template(&$form, FormStateInterface $form_state) {
   $node = $form_state->getFormObject()->getEntity();
   $bundle = 'apartment';
-
+  $upload_file_handler = \Drupal::service('asu_csv_import.upload_file_handler');
   /** @var \Drupal\Core\Entity\EntityFieldManager $entityFieldManager */
   $entityFieldManager = \Drupal::service('entity_field.manager');
 
-  // TODO: better mapping.
-  $fieldsWeWant = [
-    "nid",
-    "langcode",
-    "field_apartment_number",
-    "field_apartment_structure",
-    "field_room_count",
-    "field_additional_information",
-    "field_application_url",
-    "field_has_balcony",
-    "field_balcony_description",
-    "field_bathroom_appliances",
-    "field_condition",
-    "field_debt_free_sales_price",
-    "field_floor",
-    "field_floor_max",
-    "field_has_apartment_sauna",
-    "field_has_terrace",
-    "field_has_yard",
-    "field_kitchen_appliances",
-    "field_living_area",
-    "field_loan_share",
-    "field_sales_price",
-    "field_services_description",
-    "field_showing_time",
-    "field_storage_description",
-    "field_view_description",
-    "field_housing_company_fee",
-    "field_maintenance_fee",
-    "field_other_fees",
-    "field_parking_fee",
-    "field_parking_fee_explanation",
-    "field_water_fee",
-    "field_water_fee_explanation",
-    "field_financing_fee",
-  ];
+  $fields_in_order = Drupal::config('asu_csv_import.apartment_fields')->get('apartment_fields');
 
   $fields = $entityFieldManager->getFieldDefinitions('node', $bundle);
   $csv_headers = [];
 
-  foreach ($fieldsWeWant as $field_name) {
+  // Get field definitions for csv fields.
+  foreach ($fields_in_order as $field_name) {
     if ($fields[$field_name]) {
       $csv_headers[] = $field_name;
     }
   }
 
   $rows = [];
+  // Pre-fill csv with existing data.
   if ($node->field_apartments) {
     foreach ($node->field_apartments as $apartment) {
       $row = [];
       $apt = Node::load($apartment->getValue()['target_id']);
-      foreach ($fieldsWeWant as $f) {
-        if($apt->getType() == 'datetime'){
-          $row[] = date('d-m-Y H:i', $apt->{$f}->value);
-        } else {
-          $row[] = $apt->{$f}->value;
+      foreach ($fields_in_order as $field) {
+        $data = null;
+        try {
+          $value = $apt->{$field}->value ? $apt->{$field}->value : $apt->{$field}->getString();
+          $type = $apt->{$field}->getFieldDefinition()->getType();
+          $data = $upload_file_handler->createValue($value, $type);
+          if($data){
+            $row[] = $data->getExportValue();
+          } else {
+            $row[] = '';
+          }
+        } catch(\Exception $e) {
+          $row[] = '';
         }
+
       }
       $rows[] = $row;
     }
   }
 
   $fp = fopen('php://output', 'w');
-  $delimiter = ',';
+  $delimiter = ';';
   $enclosure = '"';
   $escape_char = '\\';
   foreach (array_merge([$csv_headers], $rows) as $csv_row) {
@@ -169,137 +112,33 @@ function csv_import_download_template(&$form, FormStateInterface $form_state) {
  */
 function asu_csv_import_process($form, FormStateInterface &$form_state) {
   $form_object = $form_state->getFormObject();
-  $upload_field = FALSE;
-
-  /** @var \Drupal\Core\Entity\EntityBase $entity */
   $fields = $form_object->getEntity()->getFields();
+  $project_apartments_field = $fields['field_apartments'];
+  $upload_file_handler = \Drupal::service('asu_csv_import.upload_file_handler');
 
-  if (!is_importable($fields)) {
+  /** @var \Drupal\file\Entity\File $file */
+  if (!$file = $upload_file_handler->getUploadedFile($fields)) {
     return;
   }
 
-  $entityManager = Drupal::service('entity_field.manager');
-  $field_definitions = $entityManager->getFieldDefinitions('node', 'apartment');
-  $file_id = $upload_field->getValue()[0]['target_id'];
+  $nodes = $upload_file_handler->createNodes($file, $fields);
 
-  /** @var \Drupal\file\Entity\File $file */
-  $file = File::load($file_id);
+  $x = 1;
 
-  /** @var Drupal\csv_import\Parser $parser */
-
-  // LOOP THROUGH CSV AND CREATE NODES.
-  if (($handle = fopen($file->getFileUri(), "r")) !== FALSE) {
-    $i = 0;
-    $header = [];
-    /** @var \Drupal\Core\Field\EntityReferenceFieldItemList $project_apartments */
-    $project_apartments = $fields['field_apartments'];
-    // Each row represents old or new apartment node
-    while (($row = fgetcsv($handle, 0, ';', '"', '\\')) !== FALSE) {
-      if ($i == 0) {
-        $header = $row;
-        $i++;
-        continue;
-      }
-
-      #predefine fields
-      $node_fields = [
-        'type' => 'apartment',
-        'title' => '',
-      ];
-
-      foreach ($row as $key => $data) {
-        if(!$data){
-          continue;
-        }
-
-        $type = $field_definitions[$header[$key]]->getType();
-
-        $requires_processing_types = [
-          'datetime',
-        ];
-
-        if (in_array($type, $requires_processing_types)) {
-          if($type == 'datetime'){
-            if(field_has_multiple_values($data)){
-              $array = [];
-              foreach(explode('|', $data) as $value){
-                $array[] = strtotime($value);
-              }
-              $data = $array;
-            } else {
-              $data = strtotime($data);
-            }
-          }
-        }
-
-        $node_fields[$header[$key]] = $data;
-      }
-
-      if ($node_fields) {
-        if (update_node($node_fields)) {
-          $node = Node::load($node_fields['nid']);
-          foreach($node_fields as $key => $val){
-            if(!$val || $node->{$key} === $val){
-              continue;
-            }
-            $node->{$key} = $val;
-          }
-          $node->save();
-        } else {
-          $node = Node::create($node_fields);
-          $node->save();
-          $project_apartments->appendItem($node->id());
-        }
-        $form_object->getEntity()->save();
-      }
-
-      $i++;
-    }
-    fclose($handle);
+  foreach($nodes['create'] as $node){
+    $node->save();
+    $project_apartments_field->appendItem($node->id());
   }
 
-  #$file->delete();
-
-  \Drupal::messenger()->addMessage('Added apartments to project from csv');
-
-}
-
-function resolve($type) {
-  $all_types = [
-    "integer",
-    "string",
-    "asu_computed_render_array",
-    "string_long",
-    "link",
-    "list_integer",
-    "decimal",
-    "boolean",
-    "datetime"
-  ];
-}
-
-function update_node($fields){
-  return isset($fields['nid']) && $fields['nid'];
-}
-
-function field_has_multiple_values($field) {
-  return 1 <= explode('|',$field);
-}
-
-function is_importable(array $fields) {
-  foreach ($fields as $field) {
-    $type = $field->getFieldDefinition()->getType();
-    if ($type == 'asu_csv_import') {
-      return true;
-    }
+  foreach($nodes['update'] as $node){
+    $node->save();
   }
-  return false;
+
+  $file->delete();
+  $form_state->unsetValue('field_import_apartments');
+
+  $form_object->getEntity()->save();
+
+  \Drupal::messenger()->addMessage("Added apartments to project from csv");
 }
 
-function asu_update_node(){
-
-}
-
-function asu_create_node(){
-
-}
