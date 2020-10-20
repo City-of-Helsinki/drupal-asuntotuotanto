@@ -17,7 +17,6 @@ tools/init-tools-status
 vendor
 web/
 
-
 drush/sites/.checksums
 .phpunit.result.cache
 

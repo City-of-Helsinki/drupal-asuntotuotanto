@@ -31,6 +31,8 @@ dependencies:
     - field.field.node.apartment.field_services_description
     - field.field.node.apartment.field_showing_time
     - field.field.node.apartment.field_state_of_sale
+    - field.field.node.apartment.field_stock_end_number
+    - field.field.node.apartment.field_stock_start_number
     - field.field.node.apartment.field_storage_description
     - field.field.node.apartment.field_view_description
     - field.field.node.apartment.field_water_fee
@@ -102,6 +104,8 @@ hidden:
   field_shareholder_meeting_date: true
   field_showing_time: true
   field_state_of_sale: true
+  field_stock_end_number: true
+  field_stock_start_number: true
   field_storage_description: true
   field_view_description: true
   field_virtual_presentation_url: true

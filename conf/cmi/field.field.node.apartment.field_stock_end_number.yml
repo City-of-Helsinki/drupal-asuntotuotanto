@@ -1,0 +1,23 @@
+uuid: 08571222-68d5-4466-a0bb-5048a11c794d
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_stock_end_number
+    - node.type.apartment
+id: node.apartment.field_stock_end_number
+field_name: field_stock_end_number
+entity_type: node
+bundle: apartment
+label: 'Stock end number'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: 1
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: integer

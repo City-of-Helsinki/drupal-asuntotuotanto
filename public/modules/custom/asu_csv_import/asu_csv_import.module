@@ -1,0 +1,140 @@
+<?php
+
+/**
+ * @file
+ * Csv import.
+ */
+
+use Drupal\node\Entity\Node;
+use Drupal\Core\Form\FormStateInterface;
+use Symfony\Component\HttpFoundation\Response;
+
+/**
+ * Implements hook hook_form_alter().
+ *
+ * Add download button to forms with field of type "asu_csv_import".
+ * Add submit handler for the csv file.
+ */
+function asu_csv_import_form_node_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  $form_object = $form_state->getFormObject();
+
+  if (!$form_object) {
+    return;
+  }
+
+  foreach ($form_object->getEntity()->getFields() as $field) {
+    $type = $field->getFieldDefinition()->getType();
+
+    if ($type == 'asu_csv_import') {
+      $form['actions']['csv_template_create'] = $form['download_template'] = [
+        '#type' => 'submit',
+        '#value' => t('Download csv-template'),
+        '#limit_validation_errors' => [],
+        '#submit' => ['csv_import_download_template'],
+      ];
+
+      $form['actions']['submit']['#submit'][] = 'asu_csv_import_process';
+
+      break;
+    }
+  }
+}
+
+/**
+ * Form submission callback function for download button.
+ */
+function csv_import_download_template(&$form, FormStateInterface $form_state) {
+  $node = $form_state->getFormObject()->getEntity();
+  $bundle = 'apartment';
+  $upload_file_handler = \Drupal::service('asu_csv_import.upload_file_handler');
+  /** @var \Drupal\Core\Entity\EntityFieldManager $entityFieldManager */
+  $entityFieldManager = \Drupal::service('entity_field.manager');
+
+  $fields_in_order = Drupal::config('asu_csv_import.apartment_fields')->get('apartment_fields');
+
+  $fields = $entityFieldManager->getFieldDefinitions('node', $bundle);
+  $csv_headers = [];
+
+  // Get field definitions for csv fields.
+  foreach ($fields_in_order as $field_name) {
+    if ($fields[$field_name]) {
+      $csv_headers[] = $field_name;
+    }
+  }
+
+  $rows = [];
+  // Pre-fill csv with existing data.
+  if ($node->field_apartments) {
+    foreach ($node->field_apartments as $apartment) {
+      $row = [];
+      $apt = Node::load($apartment->getValue()['target_id']);
+      foreach ($fields_in_order as $field) {
+        $data = NULL;
+        try {
+          $value = $apt->{$field}->value ? $apt->{$field}->value : $apt->{$field}->getString();
+          $type = $apt->{$field}->getFieldDefinition()->getType();
+          $data = $upload_file_handler->createValue($value, $type);
+          if ($data) {
+            $row[] = $data->getExportValue();
+          }
+          else {
+            $row[] = '';
+          }
+        }
+        catch (\Exception $e) {
+          $row[] = '';
+        }
+      }
+      $rows[] = $row;
+    }
+  }
+
+  $fp = fopen('php://output', 'w');
+  $delimiter = ';';
+  $enclosure = '"';
+  $escape_char = '\\';
+  foreach (array_merge([$csv_headers], $rows) as $csv_row) {
+    fputcsv($fp, $csv_row, $delimiter, $enclosure, $escape_char);
+  }
+  fclose($fp);
+
+  $response = new Response();
+  $response->headers->set('Content-type', 'text/csv');
+  $response->headers->set('Content-Disposition', 'attachment; filename=apartments.csv');
+  $form_state->setResponse($response);
+}
+
+/**
+ * Submit handler used in node form alter.
+ *
+ * Handles the actual data import after the node has been saved.
+ */
+function asu_csv_import_process($form, FormStateInterface &$form_state) {
+  $form_object = $form_state->getFormObject();
+  $fields = $form_object->getEntity()->getFields();
+  $project_apartments_field = $fields['field_apartments'];
+  $upload_file_handler = \Drupal::service('asu_csv_import.upload_file_handler');
+
+  /** @var \Drupal\file\Entity\File $file */
+  if (!$file = $upload_file_handler->getUploadedFile($fields)) {
+    return;
+  }
+
+  $nodes = $upload_file_handler->createNodes($file, $fields);
+
+  foreach ($nodes['create'] as $node) {
+    $node->save();
+    $project_apartments_field->appendItem($node->id());
+  }
+
+  foreach ($nodes['update'] as $node) {
+    $node->save();
+  }
+
+  $file->delete();
+  $form_state->unsetValue('field_import_apartments');
+
+  $form_object->getEntity()->save();
+
+  \Drupal::messenger()->addMessage("Added apartments to project from csv");
+}

@@ -1,0 +1,4 @@
+services:
+  asu_csv_import.upload_file_handler:
+    class: Drupal\asu_csv_import\UploadFileHandler
+    arguments: ['@entity_type.manager']
