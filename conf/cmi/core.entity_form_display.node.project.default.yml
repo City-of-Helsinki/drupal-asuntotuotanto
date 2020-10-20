@@ -112,7 +112,7 @@ third_party_settings:
         required_fields: true
         id: ''
         classes: ''
-      label: Basic
+      label: Perustiedot
     group_properties:
       children:
         - field_has_elevator
@@ -141,7 +141,7 @@ third_party_settings:
         description: ''
         formatter: closed
         required_fields: true
-      label: Properties
+      label: 'Kohteen ominaisuudet'
     group_tasklist:
       children:
         - field_tasks
@@ -156,7 +156,7 @@ third_party_settings:
         open: true
         required_fields: true
         weight: 0
-      label: Tasklist
+      label: Tehtävälista
     group_schedules:
       children:
         - field_publication_start_time
@@ -181,7 +181,7 @@ third_party_settings:
         description: ''
         formatter: closed
         required_fields: true
-      label: Schedules
+      label: Aikataulut
     group_pictures_and_videos:
       children:
         - field_attachments_url
@@ -198,7 +198,7 @@ third_party_settings:
         description: ''
         formatter: closed
         required_fields: true
-      label: 'Pictures and videos'
+      label: 'Kuvat ja videot'
     group_persons_and_operators:
       children:
         - field_acc_salesperson
@@ -219,7 +219,7 @@ third_party_settings:
         description: ''
         formatter: closed
         required_fields: true
-      label: 'Persons and operators'
+      label: 'Henkilöt ja toimijat'
     group_apartments:
       children:
         - field_apartments
@@ -234,7 +234,7 @@ third_party_settings:
         description: ''
         formatter: closed
         required_fields: true
-      label: Apartments
+      label: Huoneistot
 id: node.project.default
 targetEntityType: node
 bundle: project
@@ -274,8 +274,8 @@ content:
     settings:
       form_mode: default
       override_labels: true
-      label_singular: apartment
-      label_plural: apartments
+      label_singular: huoneisto
+      label_plural: huoneistoja
       allow_new: true
       allow_existing: true
       match_operator: CONTAINS
