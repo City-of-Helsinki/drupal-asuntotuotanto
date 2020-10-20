@@ -244,7 +244,7 @@ class AsuFileWidget extends WidgetBase implements ContainerFactoryPluginInterfac
     ];
 
     $element['#weight'] = $delta;
-
+    $element['#element_validate'][] = [get_class($this), 'validateCsvFieldValues'];
     // Field stores FID value in a single mode, so we need to transform it for
     // form element to recognize it correctly.
     if (!isset($items[$delta]->fids) && isset($items[$delta]->target_id)) {
@@ -263,7 +263,8 @@ class AsuFileWidget extends WidgetBase implements ContainerFactoryPluginInterfac
       $element['#description'] = \Drupal::service('renderer')->renderPlain($file_upload_help);
       $element['#multiple'] = $cardinality != 1 ? TRUE : FALSE;
       if ($cardinality != 1 && $cardinality != -1) {
-        $element['#element_validate'] = [[get_class($this), 'validateMultipleCount']];
+        $element['#element_validate'] = [
+          [get_class($this), 'validateMultipleCount']];
       }
     }
 
@@ -367,6 +368,48 @@ class AsuFileWidget extends WidgetBase implements ContainerFactoryPluginInterfac
       \Drupal::messenger()->addWarning($message);
       $values['fids'] = array_slice($values['fids'], 0, $keep);
       NestedArray::setValue($form_state->getValues(), $element['#parents'], $values);
+    }
+  }
+
+  /**
+   * Validate csv data before saving.
+   */
+  public static function validateCsvFieldValues($element, FormStateInterface $form_state, $form) {
+    $trigger = $form_state->getTriggeringElement()['#name'];
+
+    // Remove field error if file is removed
+    if($trigger == 'field_import_apartments_0_remove_button'){
+      $form_errors = $form_state->getErrors();
+
+      $form_state->clearErrors();
+      if(isset($form_errors['field_import_apartments'])){
+        unset($form_errors['field_import_apartments']);
+      }
+
+      foreach ($form_errors as $name => $error_message) {
+        $form_state->setErrorByName($name, $error_message);
+      }
+    }
+
+    // Validate csv and add errors to upload field if csv is invalid.
+    if($trigger == 'field_import_apartments_0_upload_button'){
+      $uploadFileHandler = \Drupal::service('asu_csv_import.upload_file_handler');
+      $errors = false;
+
+      // Get csv file, validate it and
+      if($file_id = $element['#value']['fids'][0]){
+        $file = File::load($file_id);
+        $errors = $uploadFileHandler->validateImportData($file);
+
+        // Add errors to upload field if necessary.
+        if(!empty($errors)){
+          $form_state->unsetValue('field_import_apartments');
+          foreach($errors as $error){
+            $form_state->setErrorByName('field_import_apartments', $error);
+          }
+        }
+
+      }
     }
   }
 
