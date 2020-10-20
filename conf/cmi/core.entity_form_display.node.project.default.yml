@@ -126,11 +126,11 @@ third_party_settings:
         - field_sanitation
         - field_zoning_info
         - field_zoning_status
-        - field_building_type
         - field_coordinate_lat
         - field_coordinate_lon
         - field_project_description
         - field_site_owner
+        - field_building_type
       parent_name: group_project_tabs
       weight: 20
       format_type: tab
@@ -161,8 +161,8 @@ third_party_settings:
       children:
         - field_publication_start_time
         - field_publication_end_time
-        - field_premarketing_start_time
         - field_pre_marketing_end_time
+        - field_premarketing_start_time
         - field_application_start_time
         - field_application_end_time
         - field_material_choice_dl
@@ -308,13 +308,9 @@ content:
     region: content
   field_building_type:
     weight: 82
-    settings:
-      match_operator: CONTAINS
-      match_limit: 10
-      size: 60
-      placeholder: ''
+    settings: {  }
     third_party_settings: {  }
-    type: entity_reference_autocomplete
+    type: options_select
     region: content
   field_city:
     weight: 57
@@ -332,13 +328,9 @@ content:
     region: content
   field_construction_materials:
     weight: 65
-    settings:
-      match_operator: CONTAINS
-      match_limit: 10
-      size: 60
-      placeholder: ''
+    settings: {  }
     third_party_settings: {  }
-    type: entity_reference_autocomplete
+    type: options_buttons
     region: content
   field_construction_year:
     weight: 60
@@ -372,23 +364,15 @@ content:
     region: content
   field_district:
     weight: 58
-    settings:
-      match_operator: CONTAINS
-      match_limit: 10
-      size: 60
-      placeholder: ''
+    settings: {  }
     third_party_settings: {  }
-    type: entity_reference_autocomplete
+    type: options_select
     region: content
   field_energy_class:
     weight: 68
-    settings:
-      match_operator: CONTAINS
-      match_limit: 10
-      size: 60
-      placeholder: ''
+    settings: {  }
     third_party_settings: {  }
-    type: entity_reference_autocomplete
+    type: options_buttons
     region: content
   field_estate_agent:
     weight: 29
@@ -444,13 +428,9 @@ content:
     region: content
   field_heating_options:
     weight: 67
-    settings:
-      match_operator: CONTAINS
-      match_limit: 10
-      size: 60
-      placeholder: ''
+    settings: {  }
     third_party_settings: {  }
-    type: entity_reference_autocomplete
+    type: options_buttons
     region: content
   field_holding_type:
     weight: 53
@@ -505,13 +485,9 @@ content:
     region: content
   field_new_development_status:
     weight: 63
-    settings:
-      match_operator: CONTAINS
-      match_limit: 10
-      size: 60
-      placeholder: ''
+    settings: {  }
     third_party_settings: {  }
-    type: entity_reference_autocomplete
+    type: options_buttons
     region: content
   field_new_housing:
     type: boolean_checkbox

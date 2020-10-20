@@ -1,0 +1,22 @@
+uuid: 1aec68c2-fb41-4e58-ac3d-06325f6e8a1c
+langcode: en
+status: true
+dependencies:
+  module:
+    - system
+  theme:
+    - asuntotuotanto
+_core:
+  default_config_hash: y9X3xgCsO59pQyzNLzY1D3SDJJxCHILLWkpPnmuTJ2E
+id: asuntotuotanto_breadcrumbs
+theme: asuntotuotanto
+region: top
+weight: 0
+provider: null
+plugin: system_breadcrumb_block
+settings:
+  id: system_breadcrumb_block
+  label: Murupolku
+  provider: system
+  label_display: '0'
+visibility: {  }

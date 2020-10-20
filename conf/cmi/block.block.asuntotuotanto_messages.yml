@@ -1,0 +1,22 @@
+uuid: 2cb2596d-bb43-4742-ae94-537d567a7147
+langcode: en
+status: true
+dependencies:
+  module:
+    - system
+  theme:
+    - asuntotuotanto
+_core:
+  default_config_hash: WvPhI8OwllG0gE69-F8qL3ai3nd5SbYD6JpmEuZcyok
+id: asuntotuotanto_messages
+theme: asuntotuotanto
+region: top
+weight: 0
+provider: null
+plugin: system_messages_block
+settings:
+  id: system_messages_block
+  label: Tilaviestit
+  provider: system
+  label_display: '0'
+visibility: {  }
