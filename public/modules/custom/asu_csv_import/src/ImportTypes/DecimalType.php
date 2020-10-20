@@ -3,14 +3,21 @@
 namespace Drupal\asu_csv_import\ImportTypes;
 
 /**
- *
+ * Decimal type.
  */
 class DecimalType extends ImportType {
-
+  /**
+   * {@inheritdoc}
+   */
   protected $value;
 
   /**
-   * {@inheritdoc}
+   * DecimalType constructor.
+   *
+   * @param float $decimal
+   *   Decimal.
+   *
+   * @throws \Exception
    */
   public function __construct($decimal) {
     if ($this->isAllowedValue($decimal)) {
@@ -43,14 +50,13 @@ class DecimalType extends ImportType {
   }
 
   /**
-   * Decimal is valid if it passes one of the following checks.
-   * Must be empty or.
-   * Must be numeric string or.
-   * Must pass is_float check.
+   * Decimal is valid if it passes one of the three checks.
    *
-   * @param $decimal
+   * @param float $decimal
+   *   Decimal.
    *
    * @return bool
+   *   Is allowed.
    */
   private function isAllowedValue($decimal): bool {
     if (empty($decimal)) {

@@ -3,14 +3,21 @@
 namespace Drupal\asu_csv_import\ImportTypes;
 
 /**
- *
+ * Link type.
  */
 class LinkType extends ImportType {
-
+  /**
+   * {@inheritdoc}
+   */
   protected $value;
 
   /**
-   * {@inheritdoc}
+   * LinkType constructor.
+   *
+   * @param string $url
+   *   Url.
+   *
+   * @throws \Exception
    */
   public function __construct($url) {
     if ($this->isAllowedValue($url)) {
@@ -43,11 +50,13 @@ class LinkType extends ImportType {
   }
 
   /**
-   * Url must be valid url or empty.
+   * Is url.
    *
-   * @param $date
+   * @param string $url
+   *   Url.
    *
    * @return bool
+   *   Is allowed.
    */
   private function isAllowedValue($url): bool {
     if (empty($url)) {

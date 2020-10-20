@@ -17,6 +17,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 
 /**
+ * FieldWidget.
+ *
  * @FieldWidget(
  *   id = "asu_csv_file_widget",
  *   label = @Translation("Csv file widget"),
@@ -335,10 +337,7 @@ class AsuFileWidget extends WidgetBase implements ContainerFactoryPluginInterfac
   }
 
   /**
-   * Form element validation callback for upload element on file widget. Checks
-   * if user has uploaded more files than allowed.
-   *
-   * This validator is used only when cardinality not set to 1 or unlimited.
+   * Form element validation callback for upload element on file widget.
    */
   public static function validateMultipleCount($element, FormStateInterface $form_state, $form) {
     $values = NestedArray::getValue($form_state->getValues(), $element['#parents']);
@@ -485,7 +484,8 @@ class AsuFileWidget extends WidgetBase implements ContainerFactoryPluginInterfac
     // not just the individual item, to be valid.
     foreach (['upload_button', 'remove_button'] as $key) {
       $element[$key]['#submit'][] = [get_called_class(), 'submit'];
-      $element[$key]['#limit_validation_errors'] = [array_slice($element['#parents'], 0, -1)];
+      $element[$key]['#limit_validation_errors'] =
+        [array_slice($element['#parents'], 0, -1)];
     }
 
     return $element;
@@ -558,7 +558,7 @@ class AsuFileWidget extends WidgetBase implements ContainerFactoryPluginInterfac
    *   A description of the file suitable for use in the administrative
    *   interface.
    */
-  protected static function getDescriptionFromElement($element) {
+  protected static function getDescriptionFromElement(array $element) {
     // Use the actual file description, if it's available.
     if (!empty($element['#default_value']['description'])) {
       return $element['#default_value']['description'];

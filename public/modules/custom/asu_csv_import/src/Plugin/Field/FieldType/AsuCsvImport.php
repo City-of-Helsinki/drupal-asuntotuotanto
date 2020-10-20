@@ -263,7 +263,7 @@ class AsuCsvImport extends EntityReferenceItem {
    *
    * @see \Drupal\Core\Utility\Token::replace()
    */
-  public function getUploadLocation($data = []) {
+  public function getUploadLocation(array $data = []) {
     return static::doGetUploadLocation($this->getSettings(), $data);
   }
 
@@ -281,7 +281,7 @@ class AsuCsvImport extends EntityReferenceItem {
    *
    * @see \Drupal\Core\Utility\Token::replace()
    */
-  protected static function doGetUploadLocation(array $settings, $data = []) {
+  protected static function doGetUploadLocation(array $settings, array $data = []) {
     $destination = trim($settings['file_directory'], '/');
 
     // Replace tokens. As the tokens might contain HTML we convert it to plain

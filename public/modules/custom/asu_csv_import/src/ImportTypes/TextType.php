@@ -3,10 +3,12 @@
 namespace Drupal\asu_csv_import\ImportTypes;
 
 /**
- *
+ * Text type.
  */
 class TextType extends ImportType {
-
+  /**
+   * {@inheritdoc}
+   */
   protected $value;
 
   /**
@@ -42,9 +44,11 @@ class TextType extends ImportType {
   /**
    * Text is valid.
    *
-   * @param $text
+   * @param string $text
+   *   Text.
    *
    * @return bool
+   *   Is Valid.
    */
   private function isAllowedValue($text): bool {
     return TRUE;

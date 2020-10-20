@@ -3,10 +3,13 @@
 namespace Drupal\asu_csv_import\ImportTypes;
 
 /**
- *
+ * Date type.
  */
 class DateType extends ImportType {
 
+  /**
+   * {@inheritdoc}
+   */
   protected $value;
 
   /**
@@ -46,7 +49,13 @@ class DateType extends ImportType {
   }
 
   /**
+   * Check if value is allowed.
    *
+   * @param mixed $date
+   *   Date.
+   *
+   * @return bool
+   *   Is allowed value.
    */
   private function isAllowedValue($date): bool {
     if (empty($date)) {

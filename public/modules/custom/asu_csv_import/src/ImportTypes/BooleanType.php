@@ -3,7 +3,7 @@
 namespace Drupal\asu_csv_import\ImportTypes;
 
 /**
- *
+ * Boolean type.
  */
 class BooleanType extends ImportType {
   /**
@@ -43,6 +43,7 @@ class BooleanType extends ImportType {
    * BooleanType constructor.
    *
    * @param bool $bool
+   *   Boolean from csv.
    *
    * @throws \Exception
    */

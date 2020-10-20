@@ -3,10 +3,12 @@
 namespace Drupal\asu_csv_import\ImportTypes;
 
 /**
- *
+ * Number type.
  */
 class NumberType extends ImportType {
-
+  /**
+   * {@inheritdoc}
+   */
   protected $value;
 
   /**
@@ -46,8 +48,10 @@ class NumberType extends ImportType {
    * Number needs to be numeric or empty.
    *
    * @param int $number
+   *   Number.
    *
    * @return bool
+   *   Is allowed.
    */
   private function isAllowedValue($number): bool {
     return is_numeric($number) || empty($number);

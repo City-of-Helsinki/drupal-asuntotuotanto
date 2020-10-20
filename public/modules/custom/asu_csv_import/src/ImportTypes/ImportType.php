@@ -2,18 +2,25 @@
 
 namespace Drupal\asu_csv_import\ImportTypes;
 
+use phpDocumentor\Reflection\Types\Mixed_;
+
 /**
- *
+ * Import type.
  */
 abstract class ImportType {
 
+  /**
+   * Value.
+   *
+   * @var mixed
+   */
   protected $value;
 
   /**
-   * Constructor validates and sets the $value.
-   * In case of invalid value throw an exception.
+   * Constructor validates and sets the $value. In case of invalid value throw an exception.
    *
-   * @param Mixed $value
+   * @param mixed $value
+   *   Value.
    *
    * @throws \Exception
    */
@@ -23,6 +30,7 @@ abstract class ImportType {
    * Original value.
    *
    * @return mixed
+   *   Value.
    */
   abstract public function getValue();
 
@@ -30,6 +38,7 @@ abstract class ImportType {
    * Machine readable value for Drupal.
    *
    * @return mixed
+   *   Value.
    */
   abstract public function getImportValue();
 
@@ -37,6 +46,7 @@ abstract class ImportType {
    * Human readable value to write in csv export file.
    *
    * @return mixed
+   *   Value.
    */
   abstract public function getExportValue();
 
@@ -44,6 +54,7 @@ abstract class ImportType {
    * Tostring.
    *
    * @return string
+   *   Value.
    */
   public function __toString() {
     return (string) $this->value;
