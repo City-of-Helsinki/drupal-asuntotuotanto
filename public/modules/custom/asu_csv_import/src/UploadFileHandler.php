@@ -187,7 +187,7 @@ class UploadFileHandler {
   public function getUploadedFile(array $fields) {
     foreach ($fields as $field) {
       $type = $field->getFieldDefinition()->getType();
-      if ($type == 'asu_csv_import') {
+      if ($type == 'asu_csv_import' && !$field->isEmpty()) {
         $file_id = $field->getValue()[0]['target_id'];
         $file = File::load($file_id);
         return $file;
