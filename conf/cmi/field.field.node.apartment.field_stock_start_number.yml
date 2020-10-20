@@ -1,0 +1,23 @@
+uuid: ee4b14c6-2f69-49c8-b4a5-0b23edbaf108
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_stock_start_number
+    - node.type.apartment
+id: node.apartment.field_stock_start_number
+field_name: field_stock_start_number
+entity_type: node
+bundle: apartment
+label: 'Stock start number'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: 1
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: integer

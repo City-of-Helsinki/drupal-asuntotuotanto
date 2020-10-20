@@ -30,6 +30,8 @@ dependencies:
     - field.field.node.apartment.field_services_description
     - field.field.node.apartment.field_showing_time
     - field.field.node.apartment.field_state_of_sale
+    - field.field.node.apartment.field_stock_end_number
+    - field.field.node.apartment.field_stock_start_number
     - field.field.node.apartment.field_storage_description
     - field.field.node.apartment.field_view_description
     - field.field.node.apartment.field_water_fee
@@ -315,6 +317,20 @@ content:
       placeholder: ''
     third_party_settings: {  }
     type: entity_reference_autocomplete
+    region: content
+  field_stock_end_number:
+    weight: 38
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+    type: number
+    region: content
+  field_stock_start_number:
+    weight: 37
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+    type: number
     region: content
   field_storage_description:
     weight: 26
