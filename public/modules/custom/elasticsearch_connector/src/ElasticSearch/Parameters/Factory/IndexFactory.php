@@ -125,48 +125,52 @@ class IndexFactory {
 
           $field_type = $field->getDataDefinition()->getFieldDefinition()->getType();
 
-          // Single is indexed as a string.
-          if ($cardinality == 1) {
-            if('list_string' == $field_type) {
-              $value = $field->getDataDefinition()->getSetting('allowed_values')[reset($field->getValues())];
-            } else if( 'entity_reference' == $field_type){
-              $term = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->load(reset($field->getValues()));
-              if ($term instanceof Term) {
-                $value = $term->getName();
-              }
-            } else if('image' == $field_type) {
-              if($file = File::load(reset($field->getValues()))){
-                $value = $file->createFileUrl(FALSE);
-              }
-            }
-            else {
-              $val = reset($field->getValues());
-              $value = count($val) > 1 ? $val['name'] : $val;
-            }
-          }
-          // Field with multiple values are indexed as array of strings.
-          else {
-            // We are dealing with entity reference
-            if( 'entity_reference' == $field->getDataDefinition()->getFieldDefinition()->getType() ) {
-              #here
-              foreach($field->getValues() as $val){
-                if(is_array($val)) {
-                  $value[] = $val['name'];
-                } else {
-                  $term = Term::load($val);
-                  $value[] = $term->getName();
+          if($field_type === 'asu_computed_render_array'){
+            $value = $field->getValues();
+          } else {
+            // Single is indexed as a string.
+            if ($cardinality == 1) {
+              if('list_string' == $field_type) {
+                $value = $field->getDataDefinition()->getSetting('allowed_values')[reset($field->getValues())];
+              } else if( 'entity_reference' == $field_type){
+                $term = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->load(reset($field->getValues()));
+                if ($term instanceof Term) {
+                  $value = $term->getName();
+                }
+              } else if('image' == $field_type) {
+                if($file = File::load(reset($field->getValues()))){
+                  $value = $file->createFileUrl(FALSE);
                 }
               }
-            }
-            elseif('image' == $field_type) {
-              foreach($field->getValues() as $val){
-                if($file = File::load($val)){
-                  $value[] = $file->createFileUrl(FALSE);
-                }
+              else {
+                $val = reset($field->getValues());
+                $value = count($val) > 1 ? $val['name'] : $val; //val might not be array
               }
             }
+            // Field with multiple values are indexed as array of strings.
             else {
-              $value = $field->getValues();
+              // We are dealing with entity reference
+              if( 'entity_reference' == $field->getDataDefinition()->getFieldDefinition()->getType() ) {
+
+                foreach($field->getValues() as $val){
+                  if(is_array($val)) {
+                    $value[] = $val['name'];
+                  } else {
+                    $term = Term::load($val);
+                    $value[] = $term->getName();
+                  }
+                }
+              }
+              elseif('image' == $field_type) {
+                foreach($field->getValues() as $val){
+                  if($file = File::load($val)){
+                    $value[] = $file->createFileUrl(FALSE);
+                  }
+                }
+              }
+              else {
+                $value = $field->getValues();
+              }
             }
           }
         }
