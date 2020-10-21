@@ -2,4 +2,4 @@ global-styling:
   version: 1.x
   css:
     theme:
-      dist/css/styles.css: {}
+      dist/css/common.css: {}
