@@ -7,7 +7,7 @@
   display: flex;
   flex-wrap: wrap;
   list-style: none;
-  margin: $gutter -5px;
+  margin: $spacing-s -5px;
   padding: 0;
 
   .local-task {
@@ -30,7 +30,7 @@
       transition-property: background-color;
       width: auto;
 
-      @media screen and (min-width: $for-tablet-portrait-up) {
+      @media screen and (min-width: $breakpoint-l) {
         display: flex;
         max-width: none;
         padding: 0.3rem 1.5rem;

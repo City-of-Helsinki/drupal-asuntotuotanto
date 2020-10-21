@@ -35,16 +35,17 @@ main {
 input[type="submit"] {
   @include font-size(20px, 26px);
   @include font-weight($regular);
-  background: $gray-medium linear-gradient(180deg, $gray-dark 0%, $gray-dark 100%) 0 0 no-repeat padding-box;
-  border-radius: $gutter / 3;
+  background: $gray-medium
+    linear-gradient(180deg, $gray-dark 0%, $gray-dark 100%) 0 0 no-repeat
+    padding-box;
   color: $white;
   display: inline-block;
   letter-spacing: 0;
   margin: 0;
-  padding: $gutter $gutter * 2;
+  padding: $spacing-s $spacing-l;
   text-decoration: none;
   text-shadow: 1px 1px 1px $gray-dark;
-  transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 
   &:active,
   &:focus,

@@ -6,42 +6,42 @@
 
 // Open Sans
 @font-face {
-  font-family: 'Open Sans';
+  font-family: "Open Sans";
   font-weight: 400;
-  src: url('../fonts/Open_Sans/OpenSans-Regular.ttf') format("truetype");
+  src: url("../fonts/Open_Sans/OpenSans-Regular.ttf") format("truetype");
 }
 
 @font-face {
-  font-family: 'Open Sans';
+  font-family: "Open Sans";
   font-style: italic;
   font-weight: 400;
-  src: url('../fonts/Open_Sans/OpenSans-Italic.ttf') format("truetype");
+  src: url("../fonts/Open_Sans/OpenSans-Italic.ttf") format("truetype");
 }
 
 @font-face {
-  font-family: 'Open Sans';
+  font-family: "Open Sans";
   font-weight: 600;
-  src: url('../fonts/Open_Sans/OpenSans-SemiBold.ttf') format("truetype");
+  src: url("../fonts/Open_Sans/OpenSans-SemiBold.ttf") format("truetype");
 }
 
 @font-face {
-  font-family: 'Open Sans';
+  font-family: "Open Sans";
   font-style: italic;
   font-weight: 600;
-  src: url('../fonts/Open_Sans/OpenSans-SemiBoldItalic.ttf') format("truetype");
+  src: url("../fonts/Open_Sans/OpenSans-SemiBoldItalic.ttf") format("truetype");
 }
 
 @font-face {
-  font-family: 'Open Sans';
+  font-family: "Open Sans";
   font-weight: 700;
-  src: url('../fonts/Open_Sans/OpenSans-Bold.ttf') format("truetype");
+  src: url("../fonts/Open_Sans/OpenSans-Bold.ttf") format("truetype");
 }
 
 @font-face {
-  font-family: 'Open Sans';
+  font-family: "Open Sans";
   font-style: italic;
   font-weight: 700;
-  src: url('../fonts/Open_Sans/OpenSans-BoldItalic.ttf') format("truetype");
+  src: url("../fonts/Open_Sans/OpenSans-BoldItalic.ttf") format("truetype");
 }
 
 // ########## General ########## //
@@ -50,7 +50,7 @@ body {
   color: $black;
   font-family: $default-font-family;
   font-weight: 200;
-  @include breakpoint($for-tablet-portrait-up) {
+  @include breakpoint($breakpoint-l) {
     @include font-size($font-size-body, $font-line-height-body);
   }
 }
@@ -94,61 +94,79 @@ h6 {
 }
 
 h1 {
-  @include font-size($font-size-mobile-heading-1, $font-line-height-mobile-heading-1);
+  @include font-size(
+    $font-size-mobile-heading-1,
+    $font-line-height-mobile-heading-1
+  );
   @include font-weight($semibold);
-  margin-bottom: $gutter * 2;
+  margin-bottom: $spacing-l;
 
-  @include breakpoint($for-tablet-portrait-up) {
+  @include breakpoint($breakpoint-l) {
     @include font-size($font-size-heading-1, $font-line-height-heading-1);
   }
 }
 
 h2 {
-  @include font-size($font-size-mobile-heading-2, $font-line-height-mobile-heading-2);
+  @include font-size(
+    $font-size-mobile-heading-2,
+    $font-line-height-mobile-heading-2
+  );
   @include font-weight($semibold);
-  margin-bottom: $gutter;
+  margin-bottom: $spacing-s;
 
-  @include breakpoint($for-tablet-portrait-up) {
+  @include breakpoint($breakpoint-l) {
     @include font-size($font-size-heading-2, $font-line-height-heading-2);
   }
 }
 
 h3 {
-  @include font-size($font-size-mobile-heading-3, $font-line-height-mobile-heading-3);
+  @include font-size(
+    $font-size-mobile-heading-3,
+    $font-line-height-mobile-heading-3
+  );
   @include font-weight($semibold);
-  margin-bottom: $gutter;
+  margin-bottom: $spacing-s;
 
-  @include breakpoint($for-tablet-portrait-up) {
+  @include breakpoint($breakpoint-l) {
     @include font-size($font-size-heading-3, $font-line-height-heading-3);
   }
 }
 
 h4 {
-  @include font-size($font-size-mobile-heading-4, $font-line-height-mobile-heading-4);
+  @include font-size(
+    $font-size-mobile-heading-4,
+    $font-line-height-mobile-heading-4
+  );
   @include font-weight($semibold);
-  margin-bottom: $gutter;
+  margin-bottom: $spacing-s;
 
-  @include breakpoint($for-tablet-portrait-up) {
+  @include breakpoint($breakpoint-l) {
     @include font-size($font-size-heading-4, $font-line-height-heading-4);
   }
 }
 
 h5 {
-  @include font-size($font-size-mobile-heading-5, $font-line-height-mobile-heading-5);
+  @include font-size(
+    $font-size-mobile-heading-5,
+    $font-line-height-mobile-heading-5
+  );
   @include font-weight($semibold);
-  margin-bottom: .5rem;
+  margin-bottom: $spacing-2-xs;
 
-  @include breakpoint($for-tablet-portrait-up) {
+  @include breakpoint($breakpoint-l) {
     @include font-size($font-size-heading-5, $font-line-height-heading-5);
   }
 }
 
 h6 {
-  @include font-size($font-size-mobile-heading-6, $font-line-height-mobile-heading-6);
+  @include font-size(
+    $font-size-mobile-heading-6,
+    $font-line-height-mobile-heading-6
+  );
   @include font-weight($semibold);
-  margin-bottom: .25rem;
+  margin-bottom: $spacing-3-xs;
 
-  @include breakpoint($for-tablet-portrait-up) {
+  @include breakpoint($breakpoint-l) {
     @include font-size($font-size-heading-6, $font-line-height-heading-6);
   }
 }
@@ -156,10 +174,10 @@ h6 {
 p {
   @include font-size($font-size-mobile-body, $font-line-height-body);
   @include font-weight($regular);
-  margin-bottom: 23px;
+  margin-bottom: $spacing-m;
   margin-top: 0;
 
-  @include breakpoint($for-tablet-portrait-up) {
+  @include breakpoint($breakpoint-l) {
     @include font-size($font-size-body, $font-line-height-body);
   }
 }
@@ -168,37 +186,36 @@ p,
 ul,
 ol {
   + h2 {
-    margin-top: 2rem;
+    margin-top: $spacing-l;
   }
 
   + h3 {
-    margin-top: 1.5rem;
+    margin-top: $spacing-m;
   }
 
   + h4 {
-    margin-top: 1.25rem;
+    margin-top: $spacing-s;
   }
 }
 
 ul,
 ol {
-
   ul,
   ol {
-    margin-top: .5rem;
+    margin-top: $spacing-2-xs;
   }
 
   + p {
-    margin-top: 1rem;
+    margin-top: $spacing-s;
   }
 }
 
 ul {
-  padding-left: 1.25rem;
+  padding-left: $spacing-s;
 }
 
 ol {
-  padding-left: 1.3125rem;
+  padding-left: $spacing-s;
 }
 
 blockquote {
@@ -207,7 +224,7 @@ blockquote {
   border-left: 5px solid $gray;
   color: $gray-dark;
   letter-spacing: 0;
-  margin: $gutter * 3;
+  margin: $spacing-2-xl;
   padding-left: 25px;
 
   p {
