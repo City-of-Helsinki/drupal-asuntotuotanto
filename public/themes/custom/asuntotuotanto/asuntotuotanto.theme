@@ -50,3 +50,26 @@ function asuntotuotanto_theme_suggestions_page_alter(array &$suggestions, array 
     }
   }
 }
+
+/**
+ * Implements hook_preprocess_HOOK().
+ *
+ * {@inheritdoc}
+ */
+function asuntotuotanto_preprocess_links__language_block(&$variables) {
+  foreach ($variables['links'] as $langCode => &$link) {
+    switch ($langCode) {
+      case 'en':
+        $link['text'] = 'English';
+        break;
+
+      case 'sv':
+        $link['text'] = 'Svenska';
+        break;
+
+      case 'fi':
+        $link['text'] = 'Suomi';
+        break;
+    }
+  }
+}

@@ -38,7 +38,7 @@ input[type="submit"] {
   background: $gray-medium
     linear-gradient(180deg, $gray-dark 0%, $gray-dark 100%) 0 0 no-repeat
     padding-box;
-  color: $white;
+  color: $color-white;
   display: inline-block;
   letter-spacing: 0;
   margin: 0;
@@ -51,7 +51,7 @@ input[type="submit"] {
   &:focus,
   &:hover {
     background: $gray-dark;
-    color: $white;
+    color: $color-white;
     cursor: pointer;
     outline: none;
     text-decoration: none;

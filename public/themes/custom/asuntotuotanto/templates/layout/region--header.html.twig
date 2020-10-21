@@ -21,5 +21,8 @@
 {% if content %}
   <div{{ attributes.addClass(classes) }}>
     {{ content }}
+    <div class="page-header__actions">
+      {{ drupal_block('language_block:language_interface') }}
+    </div>
   </div>
 {% endif %}

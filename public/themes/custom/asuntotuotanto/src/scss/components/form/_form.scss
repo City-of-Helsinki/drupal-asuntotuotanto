@@ -44,7 +44,7 @@
   details {
     @include font-size(18px, 27px);
     @include font-weight($regular);
-    background: $white;
+    background: $color-white;
     border-radius: 5px;
     letter-spacing: 0;
     padding: $spacing-s;
@@ -82,7 +82,7 @@
     label:not(.visually-hidden) {
       @include font-size(18px, 26px);
       @include font-weight($regular);
-      color: $black;
+      color: $color-black;
       display: inline-block;
       letter-spacing: 0;
       margin-bottom: $spacing-xs;
@@ -105,7 +105,7 @@
     .select2-container--default .select2-selection--single {
       @include font-size(18px, 27px);
       @include font-weight($regular);
-      background: $white;
+      background: $color-white;
       border: 1px solid $gray-medium;
       border-radius: 5px;
       box-sizing: border-box;
@@ -123,7 +123,7 @@
       &:focus {
         border-color: transparent;
         box-shadow: none;
-        color: $black;
+        color: $color-black;
         outline: $blue auto 3px;
       }
 
@@ -149,7 +149,7 @@
     input[type="search"] {
       @include font-size(18px, 27px);
       @include font-weight($regular);
-      background: $white;
+      background: $color-white;
       border: 0 none;
       height: 55px;
       letter-spacing: 0;

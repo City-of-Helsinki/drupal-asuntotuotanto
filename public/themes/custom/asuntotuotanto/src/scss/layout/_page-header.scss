@@ -5,6 +5,12 @@
 //
 
 .page-header__container {
+  align-items: center;
+  display: flex;
   padding-bottom: $spacing-s;
   padding-top: $spacing-s;
+}
+
+.page-header__actions {
+  margin-left: auto;
 }

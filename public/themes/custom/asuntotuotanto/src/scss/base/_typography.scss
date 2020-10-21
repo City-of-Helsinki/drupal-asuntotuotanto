@@ -48,7 +48,7 @@
 body {
   @include font-size($fontsize-body-l);
   @include font-weight($regular);
-  color: $black;
+  color: $color-black;
   font-family: $default-font-family;
   line-height: $lineheight-l;
 }
@@ -59,7 +59,7 @@ a {
 
   &:hover,
   &:focus {
-    color: $black;
+    color: $color-black;
     text-decoration: underline;
   }
 }
