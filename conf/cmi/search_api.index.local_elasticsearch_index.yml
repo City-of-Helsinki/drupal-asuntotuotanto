@@ -188,6 +188,14 @@ field_settings:
     dependencies:
       module:
         - computed_field_plugin
+  image_urls:
+    label: Images
+    datasource_id: 'entity:node'
+    property_path: asu_computed_apartment_images
+    type: any
+    dependencies:
+      module:
+        - computed_field_plugin
   kitchen_appliances:
     label: 'Kitchen appliances'
     datasource_id: 'entity:node'
