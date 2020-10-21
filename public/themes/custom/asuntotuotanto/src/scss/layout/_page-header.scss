@@ -3,6 +3,8 @@
 //
 // This file includes everything related to the page header styling.
 //
-.page-header {
 
+.page-header__container {
+  padding-bottom: $spacing-s;
+  padding-top: $spacing-s;
 }

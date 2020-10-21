@@ -1,4 +1,3 @@
-{% extends "block.html.twig" %}
 {#
 /**
  * @file
@@ -30,11 +29,9 @@
 {% set attributes = attributes.addClass(block_classes) %}
 {% set logo_attributes = create_attribute() %}
 
-{% block content %}
-  <div{{ attributes }}>
-    <a{{ logo_attributes.addClass(logo_classes) }} href="{{ path('<front>') }}" title="{{ 'Home'|t }}"rel="home">
-      {% include '@asuntotuotanto/misc/logo--black.html.twig' %}
-    </a>
-    <span class="branding__slogan">{{ site_slogan }}</span>
-  </div>
-{% endblock %}
+<div{{ attributes }}>
+  <a{{ logo_attributes.addClass(logo_classes) }} href="{{ path('<front>') }}" title="{{ 'Home'|t }}"rel="home">
+    {% include '@asuntotuotanto/misc/logo--black.html.twig' %}
+  </a>
+  <span class="branding__slogan">{{ site_slogan }}</span>
+</div>
