@@ -22,6 +22,9 @@
   <div{{ attributes.addClass(classes) }}>
     {{ content }}
     <div class="page-header__actions">
+      <a href="{{ path('user.login') }}" class="login-link">
+        {% include '@asuntotuotanto/misc/icon--login.html.twig' %} {{ 'Login'|t }}
+      </a>
       {{ drupal_block('language_block:language_interface') }}
     </div>
   </div>

@@ -12,5 +12,11 @@
 }
 
 .page-header__actions {
+  align-items: center;
+  display: inline-flex;
   margin-left: auto;
+
+  .login-link {
+    margin-right: $spacing-l;
+  }
 }
