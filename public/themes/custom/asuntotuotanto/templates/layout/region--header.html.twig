@@ -22,9 +22,15 @@
   <div{{ attributes.addClass(classes) }}>
     {{ content }}
     <div class="page-header__actions">
-      <a href="{{ path('user.login') }}" class="login-link">
-        {% include '@asuntotuotanto/misc/icon--login.html.twig' %} {{ 'Login'|t }}
-      </a>
+      {% if logged_in %}
+        <span class="user-action">
+          {% include '@asuntotuotanto/misc/icon--person.html.twig' %} {{ username }}
+        </span>
+      {% else %}
+        <a href="{{ path('user.login') }}" class="login-link">
+          {% include '@asuntotuotanto/misc/icon--login.html.twig' %} {{ 'Login'|t }}
+        </a>
+      {% endif %}
       {{ drupal_block('language_block:language_interface') }}
     </div>
   </div>

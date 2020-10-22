@@ -6,6 +6,7 @@
  */
 
 use Drupal\node\Entity\Node;
+use Drupal\user\Entity\User;
 
 /**
  * Implements hook_preprocess().
@@ -72,4 +73,15 @@ function asuntotuotanto_preprocess_links__language_block(&$variables) {
         break;
     }
   }
+}
+
+/**
+ * Implements hook_preprocess_region().
+ *
+ * {@inheritdoc}
+ */
+function asuntotuotanto_preprocess_region(&$variables) {
+  $user = User::load(\Drupal::currentUser()->id());
+  $variables['username'] = $user->getAccountName();
+  $variables['logged_in'] = \Drupal::currentUser()->isAuthenticated();
 }

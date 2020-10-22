@@ -16,7 +16,8 @@
   display: inline-flex;
   margin-left: auto;
 
-  .login-link {
+  .login-link,
+  .user-action {
     margin-right: $spacing-l;
   }
 }
