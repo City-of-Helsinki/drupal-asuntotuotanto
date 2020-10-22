@@ -1,6 +1,10 @@
 .branding {
   align-items: center;
   display: inline-flex;
+
+  @include breakpoint($container-width-l) {
+    margin-right: $spacing-l;
+  }
 }
 
 .branding__logo {

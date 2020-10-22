@@ -30,15 +30,27 @@
   {% import _self as menus %}
   {% if items %}
     {% if menu_level == 0 %}
-      <ul{{ attributes }}>
+      <ul{{ attributes.addClass('menu', 'menu--main') }}>
     {% else %}
-      <ul>
+      <ul class="sub-menu is-level--{{ menu_level }}">
     {% endif %}
     {% for item in items %}
-      <li{{ item.attributes }}>
-        {{ link(item.title, item.url) }}
+      <li{{ item.attributes.addClass(menu_level == 0 ? 'menu__item' : 'sub-menu__item', item.in_active_trail ? 'is-active') }}>
+        {%
+          set menuLinkClasses = [
+            menu_level == 0 ? 'menu__link' : 'sub-menu__link',
+            item.in_active_trail ? 'is-active',
+          ]
+        %}
+        {{ link(item.title, item.url, { 'class': menuLinkClasses }) }}
         {% if item.below %}
-          {{ menus.menu_links(item.below, attributes, menu_level + 1) }}
+          {% if menu_level == 0 %}
+            <div class="menu__dropdown js-menu__dropdown is-hidden" aria-hidden="true">
+          {% endif %}
+            {{ menus.menu_links(item.below, attributes, menu_level + 1) }}
+          {% if menu_level == 0 %}
+            </div>
+          {% endif %}
         {% endif %}
       </li>
     {% endfor %}
