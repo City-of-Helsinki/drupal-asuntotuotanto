@@ -85,3 +85,25 @@ function asuntotuotanto_preprocess_region(&$variables) {
   $variables['username'] = $user->getAccountName();
   $variables['logged_in'] = \Drupal::currentUser()->isAuthenticated();
 }
+
+/**
+ * Implements hook_theme_suggestions_menu_alter().
+ *
+ * {@inheritdoc}
+ */
+function asuntotuotanto_theme_suggestions_menu_alter(&$suggestions, $variables) {
+  if (!empty($variables['menu_block_configuration']['custom_suggestion']) && $variables['menu_block_configuration']['custom_suggestion'] === 'block__menu_block__main__desktop') {
+    $suggestions[] = 'menu__main__desktop';
+  }
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK().
+ */
+function asuntotuotanto_theme_suggestions_block_alter(&$suggestions, $variables) {
+  $element = $variables['elements'];
+
+  if (isset($element['#configuration']['custom_suggestion'])) {
+    $suggestions[] = $element['#configuration']['custom_suggestion'];
+  }
+}

@@ -21,6 +21,7 @@
 {% if content %}
   <div{{ attributes.addClass(classes) }}>
     {{ content }}
+    {{ drupal_block('menu_block:main', {custom_suggestion: 'block__menu_block__main__desktop'}) }}
     <div class="page-header__actions">
       <span class="search-link">
         {% include '@asuntotuotanto/misc/icon--search.html.twig' %} {{ 'Search'|t }}
