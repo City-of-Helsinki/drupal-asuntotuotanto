@@ -10,20 +10,20 @@ This theme requires Drupal core >= 8.8.0 that includes the Gin theme.
 
 Requirements for developing:
 - [NodeJS ( ^ 12.18 )](https://nodejs.org/en/)
-- [Yarn](https://yarnpkg.com/) 
+- [NPM](https://npmjs.com/) 
 
 ## Commands
 
 | Command       | Description                                                         |
 | ------------- | ------------------------------------------------------------------- |
-| yarn          | Install dependencies and link local packages.                       |
-| yarn dev      | Compile styles for development environment. and watch file changes. |
-| yarn build    | Build packages for production. Minify CSS/JS.                       |
+| npm i         | Install dependencies and link local packages.                       |
+| npm run dev   | Compile styles for development environment. and watch file changes. |
+| npm run build | Build packages for production. Minify CSS/JS.                       |
 
 Setup the developing environment by running
 
     nvm use 
-    yarn 
+    npm i 
 
 ## Structure for files and folders
 
