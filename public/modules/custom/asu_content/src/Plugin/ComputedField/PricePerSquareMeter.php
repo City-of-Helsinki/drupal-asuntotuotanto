@@ -54,7 +54,12 @@ class PricePerSquareMeter extends FieldItemList {
     ) {
       $price = $current_entity->field_debt_free_sales_price->value;
       $living_area = $current_entity->field_living_area->value;
-      $value = number_format((float) $price / $living_area, 2, '.', '');
+
+      if(!$price || !$living_area){
+        $value = 0;
+      } else {
+        $value = number_format((float) $price / $living_area, 2, '.', '');
+      }
     }
 
     return [
