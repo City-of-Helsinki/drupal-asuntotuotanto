@@ -57,7 +57,8 @@ class PricePerSquareMeter extends FieldItemList {
 
       if (!$price || !$living_area) {
         $value = 0;
-      } else {
+      }
+      else {
         $value = number_format((float) $price / $living_area, 2, '.', '');
       }
     }
