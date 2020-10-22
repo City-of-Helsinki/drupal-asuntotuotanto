@@ -6,6 +6,7 @@
  */
 
 use Drupal\node\Entity\Node;
+use Drupal\user\Entity\User;
 
 /**
  * Implements hook_preprocess().
@@ -48,5 +49,61 @@ function asuntotuotanto_theme_suggestions_page_alter(array &$suggestions, array 
     if (in_array($status_code, [401, 403, 404])) {
       $suggestions[] = 'page__' . $status_code;
     }
+  }
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ *
+ * {@inheritdoc}
+ */
+function asuntotuotanto_preprocess_links__language_block(&$variables) {
+  foreach ($variables['links'] as $langCode => &$link) {
+    switch ($langCode) {
+      case 'en':
+        $link['text'] = 'English';
+        break;
+
+      case 'sv':
+        $link['text'] = 'Svenska';
+        break;
+
+      case 'fi':
+        $link['text'] = 'Suomi';
+        break;
+    }
+  }
+}
+
+/**
+ * Implements hook_preprocess_region().
+ *
+ * {@inheritdoc}
+ */
+function asuntotuotanto_preprocess_region(&$variables) {
+  $user = User::load(\Drupal::currentUser()->id());
+  $variables['username'] = $user->getAccountName();
+  $variables['logged_in'] = \Drupal::currentUser()->isAuthenticated();
+}
+
+/**
+ * Implements hook_theme_suggestions_menu_alter().
+ *
+ * {@inheritdoc}
+ */
+function asuntotuotanto_theme_suggestions_menu_alter(&$suggestions, $variables) {
+  if (!empty($variables['menu_block_configuration']['custom_suggestion']) && $variables['menu_block_configuration']['custom_suggestion'] === 'block__menu_block__main__desktop') {
+    $suggestions[] = 'menu__main__desktop';
+  }
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK().
+ */
+function asuntotuotanto_theme_suggestions_block_alter(&$suggestions, $variables) {
+  $element = $variables['elements'];
+
+  if (isset($element['#configuration']['custom_suggestion'])) {
+    $suggestions[] = $element['#configuration']['custom_suggestion'];
   }
 }

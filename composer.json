@@ -40,7 +40,7 @@
         "drupal/restui": "^1.18",
         "drupal/route_condition": "^1.1",
         "drupal/search_api": "^1.17",
-        "drupal/twig_tweak": "^2.7",
+        "drupal/twig_tweak": "^3.0@RC",
         "drupal/ultimate_cron": "^2.0@alpha",
         "drupal/yearonly": "^9.0",
         "drush/drush": "^10.3",
