@@ -77,7 +77,7 @@ class UploadFileHandler {
         foreach ($row as $key => $data) {
           $type = $field_types[$key];
           try {
-            $this->createValue($data, $type);
+            $this->createValue(trim($data), $type);
           }
           catch (\Exception $e) {
             $line = $i + 1;
@@ -106,10 +106,11 @@ class UploadFileHandler {
    * @return array
    *   Array of nodes to update or create.
    */
-  public function createNodes(File $file) {
+  public function createNodes(File $file, $langcode) {
     $field_definitions = $this->entityFieldManager->getFieldDefinitions('node', 'apartment');
     $update_nodes = [];
     $create_nodes = [];
+    $userid = \Drupal::currentUser()->id();
 
     if (($handle = fopen($file->getFileUri(), "r")) !== FALSE) {
       $i = 0;
@@ -128,6 +129,8 @@ class UploadFileHandler {
         $node_fields = [
           'type' => 'apartment',
           'title' => '',
+          'uid' => $userid,
+          'langcode' => $langcode,
         ];
 
         // Create data array which is used to update or create node.
@@ -138,9 +141,15 @@ class UploadFileHandler {
           $type = $field_types[$key];
 
           /** @var \Drupal\asu_csv_import\ImportTypes\ImportType $data */
-          $data = $this->createValue($data, $type);
+          $value = $this->createValue($data, $type);
 
-          $node_fields[$header[$key]] = $data->getImportValue();
+          if($value  && is_object($value)){
+            $value = $value ->getImportValue();
+          } else {
+            $value = '';
+          }
+
+          $node_fields[$header[$key]] = $value;
         }
 
         // Update existing or create new node.

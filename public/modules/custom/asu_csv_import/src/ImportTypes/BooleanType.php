@@ -13,10 +13,7 @@ class BooleanType extends ImportType {
     1,
     '1',
     'kyllä',
-    'k',
     'on',
-    'yes',
-    'y',
   ];
 
   /**
@@ -27,9 +24,6 @@ class BooleanType extends ImportType {
     0,
     '0',
     'ei',
-    'e',
-    'no',
-    'n',
   ];
 
   /**
@@ -48,6 +42,7 @@ class BooleanType extends ImportType {
    * @throws \Exception
    */
   public function __construct($bool) {
+    $bool = is_string($bool) ? strtolower($bool) : $bool;
     if ($this->isAllowedValue($bool)) {
       if ($this->isTrue($bool)) {
         $this->value = 1;
@@ -72,7 +67,7 @@ class BooleanType extends ImportType {
    * {@inheritdoc}
    */
   public function getImportValue() {
-    return $this->getValue();
+    return (bool)$this->getValue();
   }
 
   /**
@@ -93,14 +88,14 @@ class BooleanType extends ImportType {
    * Check if.
    */
   private function isTrue($bool) {
-    return in_array($bool, self::ALLOWED_TRUE_VALUES);
+    return in_array($bool, self::ALLOWED_TRUE_VALUES, TRUE);
   }
 
   /**
    * {@inheritdoc}
    */
   private function isFalse($bool) {
-    return in_array($bool, self::ALLOWED_FALSE_VALUES);
+    return in_array($bool, self::ALLOWED_FALSE_VALUES, TRUE);
   }
 
 }

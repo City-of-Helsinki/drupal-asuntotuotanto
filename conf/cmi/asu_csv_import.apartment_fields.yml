@@ -7,7 +7,6 @@ apartment_fields:
   - field_stock_start_number
   - field_stock_end_number
   - field_showing_time
-  - field_condition
   - field_kitchen_appliances
   - field_has_yard
   - field_has_terrace
@@ -31,7 +30,6 @@ apartment_fields:
   - field_services_description
   - field_additional_information
   - field_application_url
-  - langcode
   - nid
 _core:
   default_config_hash: IiDKmr0u3dO1fcXlffZEM36Tsdue6wOjbawIq9DefmQ
