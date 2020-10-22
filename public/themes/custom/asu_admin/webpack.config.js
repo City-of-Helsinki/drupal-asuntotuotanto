@@ -35,8 +35,7 @@ module.exports = {
         ]
       },
       {
-        test: /\.(png|jpe?g|gif|svg)$/,
-        exclude: /sprite\.svg$/,
+        test: /\.(png|jpe?g|gif)$/,
         use: [{
             loader: 'file-loader',
             options: {
@@ -46,11 +45,19 @@ module.exports = {
         ],
       },
       {
-        test: /sprite\.svg$/,
-        use: [{
+        test: /\.svg$/,
+        use: [
+          {
             loader: 'file-loader',
             options: {
-              name: 'media/[name].[ext]',
+              name: 'templates/icons/[name].html.twig',
+            },
+          },
+          {
+            loader: 'image-webpack-loader',
+            options: {
+              bypassOnDebug: true, // webpack@1.x
+              disable: true, // webpack@2.x and newer
             },
           },
         ],
@@ -114,9 +121,12 @@ module.exports = {
     new CleanWebpackPlugin(['dist'], {
       root: path.resolve(__dirname),
     }),
-    new SVGSpritemapPlugin(path.resolve(__dirname, 'media/icons/**/*.svg'), {
+    new SVGSpritemapPlugin([
+      path.resolve(__dirname, 'src/icons/**/*.svg'),
+      path.resolve(__dirname, 'node_modules/helsinki-design-system/packages/core/src/svg/**/*.svg')
+    ], {
       output: {
-        filename: './media/sprite.svg',
+        filename: './icons/sprite.svg',
         svg: {
           sizes: false
         }
@@ -131,11 +141,11 @@ module.exports = {
           view: '-view'
         }
       },
-      styles: {
-        filename: path.resolve(__dirname, 'styles/helpers/_svg-sprite.scss'),
+      // styles: {
+      //   filename: path.resolve(__dirname, 'styles/helpers/_svg-sprite.scss'),
         // Fragment does not yet work with Firefox with mask-image.
         // format: 'fragment'
-      }
+      // }
     }),
     new MiniCssExtractPlugin({
       filename: 'css/[name].css',
