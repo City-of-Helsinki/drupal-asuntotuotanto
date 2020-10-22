@@ -14,8 +14,6 @@
 ]
 %}
 
-{% include "@asu_admin/misc/icon.twig" with {icon: 'help-filled', label: 'puuppa'} %}
-
 {% if content.field_district|render %}
   {% set address = content.field_district.0['#context'].value %}
 {% endif %}
