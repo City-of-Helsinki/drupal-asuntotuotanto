@@ -1,10 +1,9 @@
-.user-action {
+.search-link {
   @include font-size(16px);
   align-items: center;
   display: inline-flex;
   line-height: $lineheight-s;
   text-decoration: none;
-  text-transform: capitalize;
 
   > svg {
     margin-right: $spacing-3-xs;

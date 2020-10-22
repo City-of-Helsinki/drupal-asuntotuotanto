@@ -22,6 +22,9 @@
   <div{{ attributes.addClass(classes) }}>
     {{ content }}
     <div class="page-header__actions">
+      <span class="search-link">
+        {% include '@asuntotuotanto/misc/icon--search.html.twig' %} {{ 'Search'|t }}
+      </span>
       {% if logged_in %}
         <span class="user-action">
           {% include '@asuntotuotanto/misc/icon--person.html.twig' %} {{ username }}
