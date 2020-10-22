@@ -102,6 +102,8 @@ class UploadFileHandler {
    *
    * @param Drupal\file\Entity\File $file
    *   Csv file.
+   * @param string $langcode
+   *   Language code from the form state.
    *
    * @return array
    *   Array of nodes to update or create.
@@ -143,9 +145,10 @@ class UploadFileHandler {
           /** @var \Drupal\asu_csv_import\ImportTypes\ImportType $data */
           $value = $this->createValue($data, $type);
 
-          if($value  && is_object($value)){
-            $value = $value ->getImportValue();
-          } else {
+          if ($value  && is_object($value)) {
+            $value = $value->getImportValue();
+          }
+          else {
             $value = '';
           }
 

@@ -67,7 +67,7 @@ class BooleanType extends ImportType {
    * {@inheritdoc}
    */
   public function getImportValue() {
-    return (bool)$this->getValue();
+    return (bool) $this->getValue();
   }
 
   /**
