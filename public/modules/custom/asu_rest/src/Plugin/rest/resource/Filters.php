@@ -107,6 +107,14 @@ final class Filters extends ResourceBase {
       'suffix' => 'm2',
     ];
 
+    $responseData['sales_price'] = [
+      'items' => [
+        $this->t('Price at least'),
+      ],
+      'label' => $this->t('Price'),
+      'suffix' => '€',
+    ];
+
     return new JsonResponse($responseData);
   }
 

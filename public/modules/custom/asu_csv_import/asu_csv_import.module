@@ -70,6 +70,9 @@ function csv_import_download_template(&$form, FormStateInterface $form_state) {
       $apt = Node::load($apartment->getValue()['target_id']);
       foreach ($fields_in_order as $field) {
         $data = NULL;
+        if (!$apt) {
+          continue;
+        }
         try {
           $value = $apt->{$field}->value ? $apt->{$field}->value : $apt->{$field}->getString();
           $type = $apt->{$field}->getFieldDefinition()->getType();
