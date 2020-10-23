@@ -1,6 +1,12 @@
 "use strict";
 
-(function ($, Drupal) {
+(($, Drupal, drupalSettings) => {
+  Drupal.behaviors.asuAdminCommon = {
+    attach: function attach() {
+      // Code here.
+    },
+  };
+
   Drupal.behaviors.languageSwitcher = {
     attach: function attach(context) {
       var languageSwitcherToggleButton = $(
@@ -58,4 +64,4 @@
       });
     },
   };
-})(jQuery, Drupal);
+})(jQuery, Drupal, drupalSettings);
