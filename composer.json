@@ -24,6 +24,7 @@
         "drupal/context": "^4.0@beta",
         "drupal/core-composer-scaffold": "^9.0",
         "drupal/core-recommended": "^9.0",
+        "drupal/elasticsearch_connector": "^7.0@alpha",
         "drupal/field_group": "^3.1",
         "drupal/gin": "^3.0",
         "drupal/gin_login": "^1.0",
@@ -44,7 +45,6 @@
         "drupal/ultimate_cron": "^2.0@alpha",
         "drupal/yearonly": "^9.0",
         "drush/drush": "^10.3",
-        "nodespark/des-connector": "5.x-dev",
         "zaporylie/composer-drupal-optimizations": "^1.0"
     },
     "require-dev": {
