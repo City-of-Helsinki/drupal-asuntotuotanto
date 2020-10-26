@@ -18,7 +18,7 @@ module.exports = {
     path: path.resolve(__dirname, "dist"),
     chunkFilename: "js/async/[name].chunk.js",
     pathinfo: true,
-    filename: "js/bundle.js",
+    filename: "js/bundle.min.js",
     publicPath: "../",
   },
   module: {
@@ -166,7 +166,7 @@ module.exports = {
       }
     ),
     new MiniCssExtractPlugin({
-      filename: "css/styles.css",
+      filename: "css/styles.min.css",
     }),
   ],
   watchOptions: {

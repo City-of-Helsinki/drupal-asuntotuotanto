@@ -9,12 +9,9 @@
 //@import 'library/variables/*';
 //@import 'library/classes/*';
 //@import 'library/mixins/*';
+@import 'hds';
 @import 'base/**/*.*';
 //@import 'layout/*';
 @import 'components/**/*.*';
 //@import 'state/*';
 //@import 'print/*';
-
-#toolbar-administration {
-  background-color: red !important;
-}

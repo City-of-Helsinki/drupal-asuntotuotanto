@@ -33,17 +33,15 @@ asuntotuotanto
 │   README.md
 └───src
 │   └───scss
-│   │   │   common.scss
+│   │   │   styles.scss
 │   └───js
-│       │   common.js
-└───media
+│   │   │   common.js
 │   └───icons
-│   │   └───component
-│   │   │      some-icon.svg
-│   │   sprite.svg
-│   │   some-media.jpg
+│       |   sprite.svg
+│       └───subdir
+│           |   some-icon.svg
 └───dist
     └───css
-    └───js
-    └───media
+    └───js 
+    └───icons 
 ```

@@ -11,14 +11,14 @@ const autoprefixer = require('autoprefixer');
 
 module.exports = {
   entry: {
-    common: ['./src/js/common.js', './src/scss/common.scss'],
+    common: ['./src/js/common.js', './src/scss/styles.scss'],
   },
   output: {
     devtoolLineToLine: true,
     path: path.resolve(__dirname, 'dist'),
     chunkFilename: 'js/async/[name].chunk.js',
     pathinfo: true,
-    filename: 'js/[name].js',
+    filename: 'js/[name].min.js',
     publicPath: '../',
   },
   module: {
@@ -49,9 +49,6 @@ module.exports = {
         use: [
           {
             loader: 'file-loader',
-            options: {
-              name: 'templates/icons/[name].html.twig',
-            },
           },
           {
             loader: 'image-webpack-loader',
@@ -148,7 +145,7 @@ module.exports = {
       // }
     }),
     new MiniCssExtractPlugin({
-      filename: 'css/[name].css',
+      filename: 'css/styles.min.css',
     }),
   ],
   watchOptions: {
