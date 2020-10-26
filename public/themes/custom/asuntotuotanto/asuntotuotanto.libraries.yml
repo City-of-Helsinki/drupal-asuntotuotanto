@@ -1,5 +1,16 @@
+language-switcher:
+  js:
+    dist/js/language-switcher.min.js: {}
+
 global-styling:
   version: 1.x
   css:
     theme:
       dist/css/styles.css: {}
+
+global-scripting:
+  version: 1.x
+  dependencies:
+    - core/drupal
+    - core/jquery
+    - asuntotuotanto/language-switcher
