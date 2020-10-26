@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "fc8902f7fc96cfac359164550929043e",
+    "content-hash": "5dc013052bea6a0851110c586e543c7d",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -3424,21 +3424,22 @@
         },
         {
             "name": "drupal/twig_tweak",
-            "version": "2.8.0",
+            "version": "3.0.0-rc2",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/twig_tweak.git",
-                "reference": "8.x-2.8"
+                "reference": "3.0.0-rc2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/twig_tweak-8.x-2.8.zip",
-                "reference": "8.x-2.8",
-                "shasum": "11ae232159fc1139e00980736dff39bf2bfcfa6d"
+                "url": "https://ftp.drupal.org/files/projects/twig_tweak-3.0.0-rc2.zip",
+                "reference": "3.0.0-rc2",
+                "shasum": "14d3ca1dd8e95c895345172678591b4e6ca99ab1"
             },
             "require": {
-                "drupal/core": "^8.7 || ^9.0",
-                "twig/twig": "^1.41 || ^2.12"
+                "drupal/core": "^9.0",
+                "php": ">=7.3",
+                "twig/twig": "^2.12"
             },
             "suggest": {
                 "symfony/var-dumper": "Better dump() function for debugging Twig variables"
@@ -3446,17 +3447,17 @@
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "8.x-2.8",
-                    "datestamp": "1602156806",
+                    "version": "3.0.0-rc2",
+                    "datestamp": "1599738229",
                     "security-coverage": {
-                        "status": "covered",
-                        "message": "Covered by Drupal's security advisory policy"
+                        "status": "not-covered",
+                        "message": "RC releases are not covered by Drupal security advisories."
                     }
                 }
             },
             "notification-url": "https://packages.drupal.org/8/downloads",
             "license": [
-                "GPL-2.0+"
+                "GPL-2.0-or-later"
             ],
             "authors": [
                 {
@@ -12436,6 +12437,7 @@
         "drupal/context": 10,
         "drupal/gin_toolbar": 10,
         "drupal/rabbit_hole": 10,
+        "drupal/twig_tweak": 5,
         "drupal/ultimate_cron": 15,
         "nodespark/des-connector": 20
     },

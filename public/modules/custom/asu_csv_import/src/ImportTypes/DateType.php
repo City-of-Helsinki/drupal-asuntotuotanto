@@ -28,14 +28,15 @@ class DateType extends ImportType {
    * {@inheritdoc}
    */
   public function getValue() {
-    return $this->value ? strtotime($this->value) : '';
+    return $this->value;
   }
 
   /**
    * {@inheritdoc}
    */
   public function getImportValue() {
-    return strtotime($this->getValue());
+    $d = new \DateTime($this->getValue());
+    return $d->format('Y-m-d\TH:i:s');
   }
 
   /**

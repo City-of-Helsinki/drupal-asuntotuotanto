@@ -1,0 +1,32 @@
+uuid: 7779b8e5-fd38-4775-9d29-651c774fd810
+langcode: en
+status: true
+dependencies:
+  module:
+    - context
+    - system
+  theme:
+    - asuntotuotanto
+id: branding
+theme: asuntotuotanto
+region: header
+weight: 0
+provider: null
+plugin: system_branding_block
+settings:
+  id: system_branding_block
+  label: Branding
+  provider: system
+  label_display: '0'
+  use_site_logo: false
+  use_site_name: false
+  use_site_slogan: true
+visibility:
+  view_inclusion:
+    id: view_inclusion
+    negate: null
+    view_inclusion: {  }
+  request_path_exclusion:
+    id: request_path_exclusion
+    pages: ''
+    negate: null

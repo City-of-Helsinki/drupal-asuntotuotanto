@@ -3,8 +3,5 @@ node_modules
 npm-debug.log
 .gulp
 
-# Distribution folder
-dist
-
 # Other
 .DS_Store

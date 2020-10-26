@@ -3,3 +3,11 @@ global-styling:
   css:
     theme:
       dist/css/styles.css: {}
+
+global-scripting:
+  js:
+    dist/js/bundle.js: {}
+  version: 1.x
+  dependencies:
+    - core/drupal
+    - core/jquery

@@ -8,8 +8,8 @@ _core:
   default_config_hash: Hh01DLj9k7UnNdPpOQXHZHW7GHf2OPNDQyCJF7_R9ac
 id: asuntotuotanto_primary_local_tasks
 theme: asuntotuotanto
-region: header
-weight: 0
+region: content
+weight: -2
 provider: null
 plugin: local_tasks_block
 settings:

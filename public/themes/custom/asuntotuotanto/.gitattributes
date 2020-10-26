@@ -1,1 +1,6 @@
-dist/css/*.css -diff
+# Treat Fonts as Binaries
+*.otf binary
+*.eot binary
+*.svg binary
+*.ttf binary
+*.woff binary

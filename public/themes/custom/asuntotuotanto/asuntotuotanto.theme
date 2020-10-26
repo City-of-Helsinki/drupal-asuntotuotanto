@@ -6,12 +6,37 @@
  */
 
 use Drupal\node\Entity\Node;
+use Drupal\user\Entity\User;
+
+/**
+ * Helper function to get the icons path.
+ *
+ * @return string|null
+ *   Returns path for the Telia icons SVG or null.
+ */
+function asuntotuotanto_get_icons_path() {
+  static $icon_path;
+  if (!isset($icon_path)) {
+    global $base_secure_url;
+    $icon_path = $base_secure_url . '/' . drupal_get_path('theme', 'asuntotuotanto') . '/dist/icons/sprite.svg';
+
+    if (!empty($icon_path)) {
+      // Add icons path as a global variable.
+      return $icon_path;
+    }
+  }
+  return $icon_path;
+}
 
 /**
  * Implements hook_preprocess().
  */
 function asuntotuotanto_preprocess(&$variables) {
-  $variables['current_language'] = Drupal::languageManager()->getCurrentLanguage()->getId();
+  $variables['icons_path'] = asuntotuotanto_get_icons_path();
+  $variables['current_language'] = Drupal::languageManager()
+    ->getCurrentLanguage()
+    ->getId();
+  $variables['#attached']['drupalSettings']['iconsPath'] = $variables['icons_path'];
 }
 
 /**
@@ -48,5 +73,61 @@ function asuntotuotanto_theme_suggestions_page_alter(array &$suggestions, array 
     if (in_array($status_code, [401, 403, 404])) {
       $suggestions[] = 'page__' . $status_code;
     }
+  }
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ *
+ * {@inheritdoc}
+ */
+function asuntotuotanto_preprocess_links__language_block(&$variables) {
+  foreach ($variables['links'] as $langCode => &$link) {
+    switch ($langCode) {
+      case 'en':
+        $link['text'] = 'English';
+        break;
+
+      case 'sv':
+        $link['text'] = 'Svenska';
+        break;
+
+      case 'fi':
+        $link['text'] = 'Suomi';
+        break;
+    }
+  }
+}
+
+/**
+ * Implements hook_preprocess_region().
+ *
+ * {@inheritdoc}
+ */
+function asuntotuotanto_preprocess_region(&$variables) {
+  $user = User::load(\Drupal::currentUser()->id());
+  $variables['username'] = $user->getAccountName();
+  $variables['logged_in'] = \Drupal::currentUser()->isAuthenticated();
+}
+
+/**
+ * Implements hook_theme_suggestions_menu_alter().
+ *
+ * {@inheritdoc}
+ */
+function asuntotuotanto_theme_suggestions_menu_alter(&$suggestions, $variables) {
+  if (!empty($variables['menu_block_configuration']['custom_suggestion']) && $variables['menu_block_configuration']['custom_suggestion'] === 'block__menu_block__main__desktop') {
+    $suggestions[] = 'menu__main__desktop';
+  }
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK().
+ */
+function asuntotuotanto_theme_suggestions_block_alter(&$suggestions, $variables) {
+  $element = $variables['elements'];
+
+  if (isset($element['#configuration']['custom_suggestion'])) {
+    $suggestions[] = $element['#configuration']['custom_suggestion'];
   }
 }
