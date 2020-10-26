@@ -119,7 +119,7 @@ function asu_content_form_search_api_index_fields_alter() {
   $po_writer = \Drupal::service('asu_content.translation_file_writer');
 
   $index = Index::load('apartment');
-  if($index){
+  if ($index) {
     $fields = $index->getFields();
 
     if ($fields) {
