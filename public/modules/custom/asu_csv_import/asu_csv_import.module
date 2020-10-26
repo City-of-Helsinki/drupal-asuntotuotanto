@@ -70,6 +70,9 @@ function csv_import_download_template(&$form, FormStateInterface $form_state) {
       $apt = Node::load($apartment->getValue()['target_id']);
       foreach ($fields_in_order as $field) {
         $data = NULL;
+        if (!$apt) {
+          continue;
+        }
         try {
           $value = $apt->{$field}->value ? $apt->{$field}->value : $apt->{$field}->getString();
           $type = $apt->{$field}->getFieldDefinition()->getType();
@@ -112,6 +115,7 @@ function csv_import_download_template(&$form, FormStateInterface $form_state) {
 function asu_csv_import_process($form, FormStateInterface &$form_state) {
   $form_object = $form_state->getFormObject();
   $fields = $form_object->getEntity()->getFields();
+  $langcode = $form_object->getEntity()->langcode->value;
   $project_apartments_field = $fields['field_apartments'];
   $upload_file_handler = \Drupal::service('asu_csv_import.upload_file_handler');
 
@@ -120,7 +124,7 @@ function asu_csv_import_process($form, FormStateInterface &$form_state) {
     return;
   }
 
-  $nodes = $upload_file_handler->createNodes($file, $fields);
+  $nodes = $upload_file_handler->createNodes($file, $langcode);
 
   foreach ($nodes['create'] as $node) {
     $node->save();

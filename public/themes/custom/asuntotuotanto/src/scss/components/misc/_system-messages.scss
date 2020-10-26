@@ -9,10 +9,10 @@
   padding: 1.25rem;
 
   li {
-    margin-top: .25rem;
+    margin-top: 0.25rem;
 
     &:first-child {
-      margin-top: 0;;
+      margin-top: 0;
     }
   }
 
@@ -20,7 +20,7 @@
   &--status,
   &--warning,
   a {
-    color: $white;
+    color: $color-white;
   }
 
   a {
