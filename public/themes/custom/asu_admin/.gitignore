@@ -2,5 +2,8 @@
 node_modules
 npm-debug.log
 
+# HDS icons
+src/icons/hds
+
 # Other
 .DS_Store

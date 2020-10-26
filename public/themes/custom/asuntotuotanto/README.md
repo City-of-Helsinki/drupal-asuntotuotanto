@@ -1,21 +1,49 @@
-All style changes are done in the src/scss folder and generated into css automatically using gulp.
-Note!
-None of the assets files are included in git, which means less conflicts of compiled css files.
-The assets files are compiled when deploying to test/prodcution.
+# Asuntotuotanto Theme
 
-For everything to work correctly you need to install required modules. Run the following:
+## Introduction
 
-    npm install
+Style follows the [BEM methodology](http://getbem.com/) and javascript is written as ES6. The JS and SCSS files are compiled and minified with webpack.
 
-After this you can run the command that compiles your sass files to css. It will compile the css into human-readable form and begins watching the scss/js source folders.
+## Requirements
 
-    npm run gulp
+This theme requires Drupal core >= 9.0.
 
-or you can run
+Requirements for developing:
 
-    npm run gulp development
+- [NodeJS ( ^ 12.18 )](https://nodejs.org/en/)
+- [NPM](https://npmjs.com/)
 
-If you want to test how the css and js is compiled in production (minified), you can run:
+## Commands
 
-    npm run gulp production
+| Command       | Description                                                         |
+| ------------- | ------------------------------------------------------------------- |
+| npm i         | Install dependencies and link local packages.                       |
+| npm run dev   | Compile styles for development environment. and watch file changes. |
+| npm run build | Build packages for production. Minify CSS/JS.                       |
 
+Setup the developing environment by running
+
+    nvm use
+    npm i
+
+## Structure for files and folders
+
+```
+asuntotuotanto
+│   README.md
+└───src
+│   └───scss
+│   │   │   common.scss
+│   └───js
+│       │   common.js
+└───media
+│   └───icons
+│   │   └───component
+│   │   │      some-icon.svg
+│   │   sprite.svg
+│   │   some-media.jpg
+└───dist
+    └───css
+    └───js
+    └───media
+```
