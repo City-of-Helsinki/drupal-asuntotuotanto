@@ -1,4 +1,4 @@
-# Asuntotuotanto Admin Theme
+# Asuntotuotanto Theme
 
 ## Introduction
 
@@ -6,7 +6,7 @@ Style follows the [BEM methodology](http://getbem.com/) and javascript is writte
 
 ## Requirements
 
-This theme requires Drupal core >= 8.8.0 that includes the Gin theme.
+This theme requires Drupal core >= 9.0.
 
 Requirements for developing:
 
@@ -29,7 +29,7 @@ Setup the developing environment by running
 ## Structure for files and folders
 
 ```
-asu_admin
+asuntotuotanto
 │   README.md
 └───src
 │   └───scss

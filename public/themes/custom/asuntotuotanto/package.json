@@ -1,7 +1,7 @@
 {
-  "name": "asu_admin",
+  "name": "asuntotuotanto",
   "version": "1.0.0",
-  "description": "Gulp configuration for Asuntotuotanto Drupal 9 Admin theme",
+  "description": "Webpack configuration for Asuntotuotanto Drupal 9 theme",
   "author": "Druid",
   "license": "MIT",
   "repository": "github:City-of-Helsinki/drupal-asuntotuotanto",
