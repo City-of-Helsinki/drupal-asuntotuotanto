@@ -286,12 +286,12 @@ field_settings:
     label: 'Application end time'
     datasource_id: 'entity:node'
     property_path: 'search_api_reverse_entity_references_node__field_apartments:field_application_end_time'
-    type: date
+    type: object
   project_application_start_time:
     label: 'Application start time'
     datasource_id: 'entity:node'
     property_path: 'search_api_reverse_entity_references_node__field_apartments:field_application_start_time'
-    type: date
+    type: object
   project_attachment_urls:
     label: 'Attachments / URL'
     datasource_id: 'entity:node'
@@ -421,7 +421,7 @@ field_settings:
     label: 'Material choice deadline'
     datasource_id: 'entity:node'
     property_path: 'search_api_reverse_entity_references_node__field_apartments:field_material_choice_dl'
-    type: date
+    type: object
   project_new_development_status:
     label: 'New development status'
     datasource_id: 'entity:node'
