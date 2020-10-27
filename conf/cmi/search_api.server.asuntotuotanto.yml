@@ -9,6 +9,7 @@ name: Asuntotuotanto
 description: ''
 backend: elasticsearch
 backend_config:
+  server_description: ''
   cluster_settings:
     cluster: asuntotuotanto
   fuzziness: auto
