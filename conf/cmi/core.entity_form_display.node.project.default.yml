@@ -49,6 +49,7 @@ dependencies:
     - field.field.node.project.field_realty_id
     - field.field.node.project.field_roof_material
     - field.field.node.project.field_sanitation
+    - field.field.node.project.field_shared_apartment_images
     - field.field.node.project.field_shareholder_meeting_date
     - field.field.node.project.field_site_area
     - field.field.node.project.field_site_owner
@@ -161,8 +162,8 @@ third_party_settings:
       children:
         - field_publication_start_time
         - field_publication_end_time
-        - field_pre_marketing_end_time
         - field_premarketing_start_time
+        - field_pre_marketing_end_time
         - field_application_start_time
         - field_application_end_time
         - field_material_choice_dl
@@ -187,6 +188,7 @@ third_party_settings:
         - field_attachments_url
         - field_main_image
         - field_images
+        - field_shared_apartment_images
         - field_virtual_presentation_url
       parent_name: group_project_tabs
       weight: 22
@@ -580,6 +582,14 @@ content:
     third_party_settings: {  }
     type: string_textfield
     region: content
+  field_shared_apartment_images:
+    weight: 27
+    settings:
+      progress_indicator: throbber
+      preview_image_style: thumbnail
+    third_party_settings: {  }
+    type: image_image
+    region: content
   field_shareholder_meeting_date:
     weight: 17
     settings: {  }
@@ -626,7 +636,7 @@ content:
     type: options_buttons
     region: content
   field_virtual_presentation_url:
-    weight: 27
+    weight: 28
     settings:
       placeholder_url: ''
       placeholder_title: ''
