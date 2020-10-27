@@ -50,6 +50,7 @@ dependencies:
     - field.field.node.project.field_realty_id
     - field.field.node.project.field_roof_material
     - field.field.node.project.field_sanitation
+    - field.field.node.project.field_shared_apartment_images
     - field.field.node.project.field_shareholder_meeting_date
     - field.field.node.project.field_site_area
     - field.field.node.project.field_site_owner
@@ -163,6 +164,7 @@ hidden:
   field_realty_id: true
   field_roof_material: true
   field_sanitation: true
+  field_shared_apartment_images: true
   field_shareholder_meeting_date: true
   field_site_area: true
   field_site_owner: true
