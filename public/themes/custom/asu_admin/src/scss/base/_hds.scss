@@ -1,0 +1,5 @@
+.button--primary, input[type="submit"] {
+  @extend .hds-button;
+  @extend .hds-button--primary;
+}
+

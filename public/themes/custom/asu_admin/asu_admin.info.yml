@@ -20,3 +20,9 @@ regions:
 # Define Libraries
 libraries:
   - asu_admin/global-styling
+
+libraries-override:
+  gin/gin:
+    css:
+      theme:
+        dist/css/gin.css: dist/css/gin-override.min.css

@@ -3,3 +3,4 @@ global-styling:
   css:
     theme:
       dist/css/styles.min.css: {}
+      dist/css/gin-override.min.css: {}

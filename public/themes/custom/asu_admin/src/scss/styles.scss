@@ -4,14 +4,15 @@
 // This file includes all imports
 //
 
-//@import "breakpoint";
+@use "breakpoint-sass";
 
-//@import 'library/variables/*';
-//@import 'library/classes/*';
-//@import 'library/mixins/*';
-@import 'hds';
-@import 'base/**/*.*';
-//@import 'layout/*';
-@import 'components/**/*.*';
-//@import 'state/*';
-//@import 'print/*';
+@use "_hds.scss";
+@import-glob "base/**/*.scss";
+@import-glob "components/**/*.scss";
+
+//@import "library/variables/*";
+//@import "library/classes/*";
+//@import "library/mixins/*";
+//@import "layout/*";
+//@import "state/*";
+//@import "print/*";

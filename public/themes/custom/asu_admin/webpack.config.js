@@ -5,13 +5,12 @@ const CleanWebpackPlugin = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const SVGSpritemapPlugin = require('svg-spritemap-webpack-plugin');
 const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
-const globImporter = require('node-sass-glob-importer');
 const FixStyleOnlyEntriesPlugin = require('webpack-fix-style-only-entries');
-const autoprefixer = require('autoprefixer');
 
 module.exports = {
   entry: {
-    common: ['./src/js/common.js', './src/scss/styles.scss'],
+    styles: ['./src/js/common.js', './src/scss/styles.scss'],
+    'gin-override': ['./src/scss/gin-override/gin.scss'],
   },
   output: {
     devtoolLineToLine: true,
@@ -89,17 +88,17 @@ module.exports = {
           {
             loader: 'postcss-loader',
             options: {
-              plugins: () => [autoprefixer()],
+              'postcssOptions': {
+                'config': path.join(__dirname, 'postcss.config.js'),
+              },
               sourceMap: isDev,
             },
           },
           {
             loader: 'sass-loader',
             options: {
+              implementation: require('sass'),
               sourceMap: isDev,
-              sassOptions: {
-                importer: globImporter()
-              },
             },
           },
         ],
@@ -145,7 +144,7 @@ module.exports = {
       // }
     }),
     new MiniCssExtractPlugin({
-      filename: 'css/styles.min.css',
+      filename: 'css/[name].min.css',
     }),
   ],
   watchOptions: {
