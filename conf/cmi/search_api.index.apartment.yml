@@ -2,12 +2,42 @@ uuid: 7c7b8beb-6b6f-4c03-b89e-e696fbdc4acb
 langcode: en
 status: true
 dependencies:
+  config:
+    - field.storage.node.field_additional_information
+    - field.storage.node.field_apartment_number
+    - field.storage.node.field_apartment_structure
+    - field.storage.node.field_application_url
+    - field.storage.node.field_has_balcony
+    - field.storage.node.field_balcony_description
+    - field.storage.node.field_bathroom_appliances
+    - field.storage.node.field_debt_free_sales_price
+    - field.storage.node.field_financing_fee
+    - field.storage.node.field_floor
+    - field.storage.node.field_condition
+    - field.storage.node.field_kitchen_appliances
+    - field.storage.node.field_living_area
+    - field.storage.node.field_maintenance_fee
+    - field.storage.node.field_room_count
+    - field.storage.node.field_other_fees
+    - field.storage.node.field_parking_fee
+    - field.storage.node.field_parking_fee_explanation
+    - field.storage.node.field_sales_price
+    - field.storage.node.field_has_apartment_sauna
+    - field.storage.node.field_services_description
+    - field.storage.node.field_loan_share
+    - field.storage.node.field_showing_time
+    - field.storage.node.field_storage_description
+    - field.storage.node.field_has_terrace
+    - field.storage.node.field_view_description
+    - field.storage.node.field_water_fee
+    - field.storage.node.field_water_fee_explanation
+    - field.storage.node.field_has_yard
+    - search_api.server.asuntotuotanto
   module:
+    - computed_field_plugin
+    - asu_content
     - node
     - search_api
-    - elasticsearch_connector
-  config:
-    - search_api.server.asuntotuotanto
 id: apartment
 name: Apartment
 description: ''
@@ -33,7 +63,7 @@ field_settings:
     label: 'Apartment holding type'
     datasource_id: 'entity:node'
     property_path: field_apartment_holding_type
-    type: computed_array_string
+    type: object
     dependencies:
       module:
         - computed_field_plugin
@@ -89,7 +119,7 @@ field_settings:
     label: 'General condition'
     datasource_id: 'entity:node'
     property_path: field_condition
-    type: string
+    type: object
     dependencies:
       config:
         - field.storage.node.field_condition
@@ -263,7 +293,7 @@ field_settings:
     label: 'Building type'
     datasource_id: 'entity:node'
     property_path: 'search_api_reverse_entity_references_node__field_apartments:field_building_type'
-    type: string
+    type: object
   project_city:
     label: City
     datasource_id: 'entity:node'
@@ -298,7 +328,7 @@ field_settings:
     label: District
     datasource_id: 'entity:node'
     property_path: 'search_api_reverse_entity_references_node__field_apartments:field_district'
-    type: string
+    type: object
   project_energy_class:
     label: 'Energy class'
     datasource_id: 'entity:node'
