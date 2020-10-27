@@ -435,10 +435,14 @@ content:
     type: options_buttons
     region: content
   field_holding_type:
-    weight: 53
-    settings: {  }
+    weight: 83
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
     third_party_settings: {  }
-    type: options_buttons
+    type: entity_reference_autocomplete
     region: content
   field_housing_company:
     weight: 52

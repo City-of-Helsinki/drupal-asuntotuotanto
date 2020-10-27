@@ -121,10 +121,13 @@ function asu_content_form_search_api_index_fields_alter() {
   /** @var \Drupal\asu_content\TranslationFileWriter $po_writer */
   $po_writer = \Drupal::service('asu_content.translation_file_writer');
 
-  $index = Index::load('local_elasticsearch_index');
-  $fields = $index->getFields();
+  $index = Index::load('apartment');
+  if ($index) {
+    $fields = $index->getFields();
 
-  if ($fields) {
-    $po_writer->writePoFile($fields);
+    if ($fields) {
+      $po_writer->writePoFile($fields);
+    }
   }
+
 }
