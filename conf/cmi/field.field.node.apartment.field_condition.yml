@@ -1,23 +1,33 @@
-uuid: 6c48c400-f487-4d3f-ae9b-617d0937f7db
+uuid: 1f16461e-760b-4321-92d4-b2be7693b8b9
 langcode: en
 status: true
 dependencies:
   config:
     - field.storage.node.field_condition
     - node.type.apartment
-  module:
-    - options
+    - taxonomy.vocabulary.general_condition
+  content:
+    - 'taxonomy_term:general_condition:ea2a8c94-7ea1-487a-8d16-bc4169c03130'
 id: node.apartment.field_condition
 field_name: field_condition
 entity_type: node
 bundle: apartment
-label: 'General condition'
+label: Condition
 description: ''
-required: true
+required: false
 translatable: false
 default_value:
   -
-    value: 1
+    target_uuid: ea2a8c94-7ea1-487a-8d16-bc4169c03130
 default_value_callback: ''
-settings: {  }
-field_type: list_integer
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      general_condition: general_condition
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

@@ -112,12 +112,13 @@ content:
     type: basic_string
     region: content
   field_condition:
-    type: list_default
-    weight: 8
-    region: content
-    label: inline
-    settings: {  }
+    weight: 53
+    label: above
+    settings:
+      link: true
     third_party_settings: {  }
+    type: entity_reference_label
+    region: content
   field_debt_free_sales_price:
     weight: 20
     label: inline

@@ -1,21 +1,17 @@
-uuid: ce8ae421-7e19-4c8d-9233-69b34609555c
+uuid: c530fd87-3314-4b2b-9ad8-4b09db005d4f
 langcode: en
 status: true
 dependencies:
   module:
     - node
-    - options
+    - taxonomy
 id: node.field_condition
 field_name: field_condition
 entity_type: node
-type: list_integer
+type: entity_reference
 settings:
-  allowed_values:
-    -
-      value: 1
-      label: New
-  allowed_values_function: ''
-module: options
+  target_type: taxonomy_term
+module: core
 locked: false
 cardinality: 1
 translatable: true
