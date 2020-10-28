@@ -1,24 +1,17 @@
-uuid: ce22c857-169d-45cd-b22a-10145793a16a
+uuid: 0eab3b05-cf7d-4fe7-9a5f-ebf836ebef84
 langcode: en
 status: true
 dependencies:
   module:
     - node
-    - options
+    - taxonomy
 id: node.field_holding_type
 field_name: field_holding_type
 entity_type: node
-type: list_string
+type: entity_reference
 settings:
-  allowed_values:
-    -
-      value: om
-      label: Condominium
-    -
-      value: ao
-      label: 'Right of residence apartment'
-  allowed_values_function: ''
-module: options
+  target_type: taxonomy_term
+module: core
 locked: false
 cardinality: 1
 translatable: true

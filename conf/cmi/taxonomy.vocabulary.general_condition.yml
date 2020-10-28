@@ -1,0 +1,8 @@
+uuid: ed403634-d7f8-4db2-88c2-a9a041ed5481
+langcode: en
+status: true
+dependencies: {  }
+name: 'General condition'
+vid: general_condition
+description: ''
+weight: 0

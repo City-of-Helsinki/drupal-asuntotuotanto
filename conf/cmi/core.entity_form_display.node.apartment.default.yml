@@ -18,6 +18,7 @@ dependencies:
     - field.field.node.apartment.field_has_balcony
     - field.field.node.apartment.field_has_terrace
     - field.field.node.apartment.field_has_yard
+    - field.field.node.apartment.field_images
     - field.field.node.apartment.field_kitchen_appliances
     - field.field.node.apartment.field_living_area
     - field.field.node.apartment.field_loan_share
@@ -36,10 +37,12 @@ dependencies:
     - field.field.node.apartment.field_view_description
     - field.field.node.apartment.field_water_fee
     - field.field.node.apartment.field_water_fee_explanation
+    - image.style.thumbnail
     - node.type.apartment
   module:
     - datetime
     - field_group
+    - image
     - link
     - path
 third_party_settings:
@@ -172,6 +175,16 @@ content:
     third_party_settings: {  }
     type: string_textarea
     region: content
+  field_condition:
+    weight: 39
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
+    region: content
   field_debt_free_sales_price:
     weight: 27
     settings:
@@ -227,6 +240,14 @@ content:
       display_label: true
     third_party_settings: {  }
     type: boolean_checkbox
+    region: content
+  field_images:
+    weight: 39
+    settings:
+      progress_indicator: throbber
+      preview_image_style: thumbnail
+    third_party_settings: {  }
+    type: image_image
     region: content
   field_kitchen_appliances:
     weight: 23

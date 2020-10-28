@@ -18,6 +18,7 @@ dependencies:
     - field.field.node.apartment.field_has_balcony
     - field.field.node.apartment.field_has_terrace
     - field.field.node.apartment.field_has_yard
+    - field.field.node.apartment.field_images
     - field.field.node.apartment.field_kitchen_appliances
     - field.field.node.apartment.field_living_area
     - field.field.node.apartment.field_loan_share
@@ -38,8 +39,8 @@ dependencies:
     - field.field.node.apartment.field_water_fee_explanation
     - node.type.apartment
   module:
-    - computed_field_plugin
     - datetime
+    - image
     - link
     - options
     - user
@@ -55,20 +56,6 @@ content:
     third_party_settings: {  }
     type: basic_string
     region: content
-  field_apartment_address:
-    type: computed_render_array_formatter
-    weight: 1
-    region: content
-    label: inline
-    settings: {  }
-    third_party_settings: {  }
-  field_apartment_holding_type:
-    type: computed_render_array_formatter
-    weight: 26
-    region: content
-    label: inline
-    settings: {  }
-    third_party_settings: {  }
   field_apartment_number:
     weight: 2
     label: inline
@@ -112,12 +99,13 @@ content:
     type: basic_string
     region: content
   field_condition:
-    type: list_default
-    weight: 8
-    region: content
-    label: inline
-    settings: {  }
+    weight: 53
+    label: above
+    settings:
+      link: true
     third_party_settings: {  }
+    type: entity_reference_label
+    region: content
   field_debt_free_sales_price:
     weight: 20
     label: inline
@@ -198,13 +186,6 @@ content:
     third_party_settings: {  }
     type: boolean
     region: content
-  field_housing_company_fee:
-    type: computed_render_array_formatter
-    weight: 32
-    region: content
-    label: inline
-    settings: {  }
-    third_party_settings: {  }
   field_housing_manager:
     weight: 48
     label: above
@@ -212,6 +193,15 @@ content:
       link_to_entity: false
     third_party_settings: {  }
     type: string
+    region: content
+  field_images:
+    weight: 53
+    label: above
+    settings:
+      image_style: ''
+      image_link: ''
+    third_party_settings: {  }
+    type: image
     region: content
   field_kitchen_appliances:
     weight: 9
@@ -276,13 +266,6 @@ content:
     third_party_settings: {  }
     type: basic_string
     region: content
-  field_price_m2:
-    type: computed_render_array_formatter
-    weight: 33
-    region: content
-    label: inline
-    settings: {  }
-    third_party_settings: {  }
   field_room_count:
     weight: 7
     label: inline
@@ -390,5 +373,11 @@ content:
     settings: {  }
     third_party_settings: {  }
 hidden:
+  asu_computed_apartment_images: true
+  field_apartment_address: true
+  field_apartment_holding_type: true
+  field_apartment_images: true
+  field_housing_company_fee: true
+  field_price_m2: true
   langcode: true
   search_api_excerpt: true

@@ -50,6 +50,7 @@ dependencies:
     - field.field.node.project.field_realty_id
     - field.field.node.project.field_roof_material
     - field.field.node.project.field_sanitation
+    - field.field.node.project.field_shared_apartment_images
     - field.field.node.project.field_shareholder_meeting_date
     - field.field.node.project.field_site_area
     - field.field.node.project.field_site_owner
@@ -61,7 +62,6 @@ dependencies:
     - field.field.node.project.field_zoning_status
     - node.type.project
   module:
-    - options
     - user
 id: node.project.teaser_admin
 targetEntityType: node
@@ -93,13 +93,6 @@ content:
     settings:
       link_to_entity: false
     third_party_settings: {  }
-  field_holding_type:
-    weight: 5
-    label: hidden
-    settings: {  }
-    third_party_settings: {  }
-    type: list_default
-    region: content
   field_housing_company:
     weight: 2
     label: hidden
@@ -144,6 +137,7 @@ hidden:
   field_has_elevator: true
   field_has_sauna: true
   field_heating_options: true
+  field_holding_type: true
   field_housing_manager: true
   field_images: true
   field_import_apartments: true
@@ -163,6 +157,7 @@ hidden:
   field_realty_id: true
   field_roof_material: true
   field_sanitation: true
+  field_shared_apartment_images: true
   field_shareholder_meeting_date: true
   field_site_area: true
   field_site_owner: true

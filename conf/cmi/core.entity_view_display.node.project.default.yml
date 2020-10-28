@@ -49,6 +49,7 @@ dependencies:
     - field.field.node.project.field_realty_id
     - field.field.node.project.field_roof_material
     - field.field.node.project.field_sanitation
+    - field.field.node.project.field_shared_apartment_images
     - field.field.node.project.field_shareholder_meeting_date
     - field.field.node.project.field_site_area
     - field.field.node.project.field_site_owner
@@ -61,6 +62,7 @@ dependencies:
     - node.type.project
   module:
     - datetime
+    - image
     - link
     - options
     - user
@@ -197,11 +199,12 @@ content:
     type: entity_reference_label
     region: content
   field_holding_type:
-    weight: 134
+    weight: 161
     label: above
-    settings: {  }
+    settings:
+      link: true
     third_party_settings: {  }
-    type: list_default
+    type: entity_reference_label
     region: content
   field_housing_company:
     weight: 133
@@ -284,6 +287,15 @@ content:
       link_to_entity: false
     third_party_settings: {  }
     type: string
+    region: content
+  field_shared_apartment_images:
+    weight: 161
+    label: above
+    settings:
+      image_style: ''
+      image_link: ''
+    third_party_settings: {  }
+    type: image
     region: content
   field_site_area:
     weight: 146
@@ -374,6 +386,7 @@ hidden:
   field_premarketing_start_time: true
   field_project_manager: true
   field_publication_end_time: true
+  field_shared_apartment_images: true
   field_shareholder_meeting_date: true
   field_virtual_presentation_url: true
   langcode: true
