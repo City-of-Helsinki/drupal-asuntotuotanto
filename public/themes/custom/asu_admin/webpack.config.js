@@ -5,12 +5,14 @@ const CleanWebpackPlugin = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const SVGSpritemapPlugin = require('svg-spritemap-webpack-plugin');
 const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
+const globImporter = require('node-sass-glob-importer');
 const FixStyleOnlyEntriesPlugin = require('webpack-fix-style-only-entries');
 
 module.exports = {
   entry: {
-    styles: ['./src/js/common.js', './src/scss/styles.scss'],
-    'gin-override': ['./src/scss/gin-override/gin.scss'],
+    styles: ['./src/scss/styles.scss'],
+    'gin-overrides': ['./src/scss/gin-overrides/gin.scss'],
+    'bundle': ['./src/js/common.js'],
   },
   output: {
     devtoolLineToLine: true,
@@ -97,8 +99,10 @@ module.exports = {
           {
             loader: 'sass-loader',
             options: {
-              implementation: require('sass'),
               sourceMap: isDev,
+              sassOptions: {
+                importer: globImporter()
+              },
             },
           },
         ],
@@ -119,7 +123,6 @@ module.exports = {
     }),
     new SVGSpritemapPlugin([
       path.resolve(__dirname, 'src/icons/**/*.svg'),
-      path.resolve(__dirname, 'node_modules/helsinki-design-system/packages/core/src/svg/**/*.svg')
     ], {
       output: {
         filename: './icons/sprite.svg',

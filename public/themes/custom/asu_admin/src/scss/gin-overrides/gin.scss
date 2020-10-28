@@ -1,0 +1,77 @@
+// Import breakpoint
+@import "breakpoint-sass";
+
+// Import variables, abstractions, base styles and components using globbing.
+//
+// Globbing will always import files alphabetically. Optimally, all your
+// components should be self-contained and explicit enough to not have any
+// contained styles leak into unrelated components: The import order should not
+// affect the result.
+//
+// If there are variables, functions or mixins that depend on each other and
+// therefore need to be imported in a specific order you can import them
+// directly. Variables-, function- or mixin providing partials should never
+// output any styles themselves: Importing them multiple times to resolve
+// dependencies shouldn't be a problem.
+
+// Helpers
+@import "../../../../../contrib/gin/styles/helpers/__tools.scss";
+@import "../../../../../contrib/gin/styles/helpers/_svg-sprite.scss";
+
+// Settings
+@import "../../../../../contrib/gin/styles/settings/_vars.scss";
+
+// Components
+@import "../../../../../contrib/gin/styles/components/_defaults.scss";
+@import "../../../../../contrib/gin/styles/components/_body.scss";
+@import "../../../../../contrib/gin/styles/components/_color-overrides.scss";
+@import "../../../../../contrib/gin/styles/components/_regions.scss";
+@import "../../../../../contrib/gin/styles/components/_layers.scss";
+@import "../../../../../contrib/gin/styles/components/_title.scss";
+@import "components/_user.scss";
+@import "../../../../../contrib/gin/styles/components/_breadcrumbs.scss";
+@import "../../../../../contrib/gin/styles/components/_claro_improvements.scss";
+@import "../../../../../contrib/gin/styles/components/_entity_reference_layout.scss";
+@import "../../../../../contrib/gin/styles/components/_layout_node_form.scss";
+@import "../../../../../contrib/gin/styles/components/_paragraphs.scss";
+@import "../../../../../contrib/gin/styles/components/_paragraphs_ee.scss";
+@import "../../../../../contrib/gin/styles/components/_tabs.scss";
+@import "../../../../../contrib/gin/styles/components/_views.scss";
+@import "../../../../../contrib/gin/styles/components/_media-library.scss";
+@import "../../../../../contrib/gin/styles/components/_table.scss";
+@import "../../../../../contrib/gin/styles/components/_tabledrag.scss";
+@import "../../../../../contrib/gin/styles/components/_ckeditor.scss";
+@import "../../../../../contrib/gin/styles/components/_form.scss";
+// @import "../../../../../contrib/gin/styles/components/_custom-select.scss";
+@import "../../../../../contrib/gin/styles/components/_button.scss";
+@import "../../../../../contrib/gin/styles/components/_dropbutton.scss";
+@import "../../../../../contrib/gin/styles/components/_action-link.scss";
+@import "../../../../../contrib/gin/styles/components/_chosen.scss";
+@import "../../../../../contrib/gin/styles/components/_pager.scss";
+@import "../../../../../contrib/gin/styles/components/_help.scss";
+@import "../../../../../contrib/gin/styles/components/_system-report.scss";
+@import "../../../../../contrib/gin/styles/components/_messages.scss";
+@import "../../../../../contrib/gin/styles/components/_field-ui.scss";
+@import "../../../../../contrib/gin/styles/components/_card.scss";
+@import "../../../../../contrib/gin/styles/components/_elements.scss";
+@import "../../../../../contrib/gin/styles/components/_admin-item.scss";
+@import "../../../../../contrib/gin/styles/components/_focus.scss";
+@import "../../../../../contrib/gin/styles/components/_system-modules.scss";
+@import "../../../../../contrib/gin/styles/components/_dialog.scss";
+@import "../../../../../contrib/gin/styles/components/_throbber.scss";
+@import "../../../../../contrib/gin/styles/components/_update.scss";
+@import "../../../../../contrib/gin/styles/components/_ief.scss";
+@import "../../../../../contrib/gin/styles/components/_status-report.scss";
+@import "../../../../../contrib/gin/styles/components/_divider.scss";
+@import "../../../../../contrib/gin/styles/components/_progress.scss";
+@import "../../../../../contrib/gin/styles/components/_upgrade-status.scss";
+@import "../../../../../contrib/gin/styles/components/_insert.scss";
+@import "../../../../../contrib/gin/styles/components/_system-themes.scss";
+@import "../../../../../contrib/gin/styles/components/_panel.scss";
+@import "../../../../../contrib/gin/styles/components/_blocks.scss";
+@import "../../../../../contrib/gin/styles/components/_webform.scss";
+@import "components/_settings.scss";
+@import "../../../../../contrib/gin/styles/components/_module-filter.scss";
+@import "../../../../../contrib/gin/styles/components/_batch.scss";
+@import "../../../../../contrib/gin/styles/components/_linkit.scss";
+@import "../../../../../contrib/gin/styles/components/_contextual.scss";

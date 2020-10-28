@@ -3,4 +3,14 @@ global-styling:
   css:
     theme:
       dist/css/styles.min.css: {}
-      dist/css/gin-override.min.css: {}
+      dist/css/gin-overrides.min.css: {}
+
+global-scripting:
+  version: 1.x
+  js:
+    dist/js/bundle.min.js: {}
+  dependencies:
+    - core/drupal
+    - core/drupal.ajax
+    - core/jquery
+    - core/jquery.once

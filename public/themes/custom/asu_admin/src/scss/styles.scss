@@ -4,9 +4,9 @@
 // This file includes all imports
 //
 
-@use "breakpoint-sass";
+@import "breakpoint-sass";
 
-@use "_hds.scss";
+@import "_hds.scss";
 @import-glob "base/**/*.scss";
 @import-glob "components/**/*.scss";
 
