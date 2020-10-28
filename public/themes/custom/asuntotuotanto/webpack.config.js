@@ -7,18 +7,18 @@ const SVGSpritemapPlugin = require("svg-spritemap-webpack-plugin");
 const FriendlyErrorsWebpackPlugin = require("friendly-errors-webpack-plugin");
 const globImporter = require("node-sass-glob-importer");
 const FixStyleOnlyEntriesPlugin = require("webpack-fix-style-only-entries");
-const autoprefixer = require("autoprefixer");
 
 module.exports = {
   entry: {
-    common: ["./src/js/common.js", "./src/scss/styles.scss"],
+    styles: ["./src/scss/styles.scss"],
+    bundle: ["./src/js/common.js"],
   },
   output: {
     devtoolLineToLine: true,
     path: path.resolve(__dirname, "dist"),
     chunkFilename: "js/async/[name].chunk.js",
     pathinfo: true,
-    filename: "js/bundle.min.js",
+    filename: "js/[name].min.js",
     publicPath: "../",
   },
   module: {
@@ -63,9 +63,6 @@ module.exports = {
         use: [
           {
             loader: "file-loader",
-            options: {
-              name: "templates/icons/[name].html.twig",
-            },
           },
           {
             loader: "image-webpack-loader",
@@ -106,7 +103,9 @@ module.exports = {
           {
             loader: "postcss-loader",
             options: {
-              plugins: () => [autoprefixer()],
+              "postcssOptions": {
+                "config": path.join(__dirname, "postcss.config.js"),
+              },
               sourceMap: isDev,
             },
           },
@@ -124,7 +123,9 @@ module.exports = {
     ],
   },
   resolve: {
-    modules: [path.join(__dirname, "node_modules")],
+    modules: [
+      path.join(__dirname, "node_modules")
+    ],
     extensions: [".js", ".json"],
   },
   plugins: [
@@ -133,40 +134,28 @@ module.exports = {
     new CleanWebpackPlugin(["dist"], {
       root: path.resolve(__dirname),
     }),
-    new SVGSpritemapPlugin(
-      [
-        path.resolve(__dirname, "src/icons/**/*.svg"),
-        path.resolve(
-          __dirname,
-          "node_modules/helsinki-design-system/packages/core/src/svg/**/*.svg"
-        ),
-      ],
-      {
-        output: {
-          filename: "./icons/sprite.svg",
-          svg: {
-            sizes: false,
-          },
-        },
-        sprite: {
-          prefix: false,
-          gutter: 0,
-          generate: {
-            title: false,
-            symbol: true,
-            use: true,
-            view: "-view",
-          },
-        },
-        // styles: {
-        //   filename: path.resolve(__dirname, 'styles/helpers/_svg-sprite.scss'),
-        // Fragment does not yet work with Firefox with mask-image.
-        // format: 'fragment'
-        // }
-      }
-    ),
+    new SVGSpritemapPlugin([
+      path.resolve(__dirname, "src/icons/**/*.svg"),
+    ], {
+      output: {
+        filename: "./icons/sprite.svg",
+        svg: {
+          sizes: false
+        }
+      },
+      sprite: {
+        prefix: false,
+        gutter: 0,
+        generate: {
+          title: false,
+          symbol: true,
+          use: true,
+          view: "-view"
+        }
+      },
+    }),
     new MiniCssExtractPlugin({
-      filename: "css/styles.min.css",
+      filename: "css/[name].min.css",
     }),
   ],
   watchOptions: {
