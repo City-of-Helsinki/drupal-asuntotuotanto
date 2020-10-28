@@ -1,36 +1,36 @@
-const path = require('path');
-const isDev = (process.env.NODE_ENV !== 'production');
+const path = require("path");
+const isDev = (process.env.NODE_ENV !== "production");
 
-const CleanWebpackPlugin = require('clean-webpack-plugin');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const SVGSpritemapPlugin = require('svg-spritemap-webpack-plugin');
-const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
-const globImporter = require('node-sass-glob-importer');
-const FixStyleOnlyEntriesPlugin = require('webpack-fix-style-only-entries');
+const CleanWebpackPlugin = require("clean-webpack-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const SVGSpritemapPlugin = require("svg-spritemap-webpack-plugin");
+const FriendlyErrorsWebpackPlugin = require("friendly-errors-webpack-plugin");
+const globImporter = require("node-sass-glob-importer");
+const FixStyleOnlyEntriesPlugin = require("webpack-fix-style-only-entries");
 
 module.exports = {
   entry: {
-    styles: ['./src/scss/styles.scss'],
-    'gin-overrides': ['./src/scss/gin-overrides/gin.scss'],
-    'bundle': ['./src/js/common.js'],
+    styles: ["./src/scss/styles.scss"],
+    "gin-overrides": ["./src/scss/gin-overrides/gin.scss"],
+    "bundle": ["./src/js/common.js"],
   },
   output: {
     devtoolLineToLine: true,
-    path: path.resolve(__dirname, 'dist'),
-    chunkFilename: 'js/async/[name].chunk.js',
+    path: path.resolve(__dirname, "dist"),
+    chunkFilename: "js/async/[name].chunk.js",
     pathinfo: true,
-    filename: 'js/[name].min.js',
-    publicPath: '../',
+    filename: "js/[name].min.js",
+    publicPath: "../",
   },
   module: {
     rules: [{
         test: /\.(config.js)$/,
         use: [
           {
-            loader: 'file-loader',
+            loader: "file-loader",
             options: {
-              name: '[path][name].[ext]',
-              outputPath: './'
+              name: "[path][name].[ext]",
+              outputPath: "./"
             }
           }
         ]
@@ -38,9 +38,9 @@ module.exports = {
       {
         test: /\.(png|jpe?g|gif)$/,
         use: [{
-            loader: 'file-loader',
+            loader: "file-loader",
             options: {
-              name: 'media/[name].[ext]?[hash]',
+              name: "media/[name].[ext]?[hash]",
             },
           },
         ],
@@ -49,10 +49,10 @@ module.exports = {
         test: /\.svg$/,
         use: [
           {
-            loader: 'file-loader',
+            loader: "file-loader",
           },
           {
-            loader: 'image-webpack-loader',
+            loader: "image-webpack-loader",
             options: {
               bypassOnDebug: true, // webpack@1.x
               disable: true, // webpack@2.x and newer
@@ -62,13 +62,13 @@ module.exports = {
       },
       {
         test: /modernizrrc\.js$/,
-        loader: 'expose-loader?Modernizr!webpack-modernizr-loader',
+        loader: "expose-loader?Modernizr!webpack-modernizr-loader",
       },
       {
         test: /\.js$/,
         exclude: /node_modules/,
         use: {
-          loader: 'babel-loader',
+          loader: "babel-loader",
         },
       },
       {
@@ -77,27 +77,27 @@ module.exports = {
           {
             loader: MiniCssExtractPlugin.loader,
             options: {
-              name: '[name].[ext]?[hash]',
+              name: "[name].[ext]?[hash]",
             }
           },
           {
-            loader: 'css-loader',
+            loader: "css-loader",
             options: {
               sourceMap: isDev,
               importLoaders: 2,
             },
           },
           {
-            loader: 'postcss-loader',
+            loader: "postcss-loader",
             options: {
-              'postcssOptions': {
-                'config': path.join(__dirname, 'postcss.config.js'),
+              "postcssOptions": {
+                "config": path.join(__dirname, "postcss.config.js"),
               },
               sourceMap: isDev,
             },
           },
           {
-            loader: 'sass-loader',
+            loader: "sass-loader",
             options: {
               sourceMap: isDev,
               sassOptions: {
@@ -111,21 +111,21 @@ module.exports = {
   },
   resolve: {
     modules: [
-      path.join(__dirname, 'node_modules'),
+      path.join(__dirname, "node_modules"),
     ],
-    extensions: ['.js', '.json'],
+    extensions: [".js", ".json"],
   },
   plugins: [
     new FriendlyErrorsWebpackPlugin(),
     new FixStyleOnlyEntriesPlugin(),
-    new CleanWebpackPlugin(['dist'], {
+    new CleanWebpackPlugin(["dist"], {
       root: path.resolve(__dirname),
     }),
     new SVGSpritemapPlugin([
-      path.resolve(__dirname, 'src/icons/**/*.svg'),
+      path.resolve(__dirname, "src/icons/**/*.svg"),
     ], {
       output: {
-        filename: './icons/sprite.svg',
+        filename: "./icons/sprite.svg",
         svg: {
           sizes: false
         }
@@ -137,17 +137,17 @@ module.exports = {
           title: false,
           symbol: true,
           use: true,
-          view: '-view'
+          view: "-view"
         }
       },
       // styles: {
-      //   filename: path.resolve(__dirname, 'styles/helpers/_svg-sprite.scss'),
+      //   filename: path.resolve(__dirname, "styles/helpers/_svg-sprite.scss"),
         // Fragment does not yet work with Firefox with mask-image.
-        // format: 'fragment'
+        // format: "fragment"
       // }
     }),
     new MiniCssExtractPlugin({
-      filename: 'css/[name].min.css',
+      filename: "css/[name].min.css",
     }),
   ],
   watchOptions: {

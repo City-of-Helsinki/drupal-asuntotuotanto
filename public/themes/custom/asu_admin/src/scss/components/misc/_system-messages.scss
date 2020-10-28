@@ -1,0 +1,11 @@
+//
+// @file
+// System messages
+//
+.hds-notification {
+  &__label {
+    .icon {
+      margin-right: var(--spacing-2-xs);
+    }
+  }
+}

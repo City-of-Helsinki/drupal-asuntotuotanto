@@ -4,11 +4,11 @@
 // This file includes all imports
 //
 
-@import "breakpoint-sass";
+@import "~breakpoint-sass";
 
-@import "_hds.scss";
-@import-glob "base/**/*.scss";
-@import-glob "components/**/*.scss";
+@import "hds";
+@import "base/**/*.*";
+@import "components/**/*.*";
 
 //@import "library/variables/*";
 //@import "library/classes/*";
