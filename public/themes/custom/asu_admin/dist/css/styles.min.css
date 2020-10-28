@@ -512,7 +512,7 @@ template {
   line-height: var(--lineheight-xl);
 }
 
-.hds-button, .button--primary, input[type="submit"] {
+.hds-button {
   --border-width: 2px;
   --color: inherit;
   --outline-gutter: 2px;
@@ -533,60 +533,60 @@ template {
   vertical-align: top;
 }
 
-.hds-button, .hds-button::before, .hds-button::after, .hds-button *, .hds-button *::before, .hds-button *::after, .button--primary, input[type="submit"], .button--primary::before, input[type="submit"]::before, .button--primary::after, input[type="submit"]::after, .button--primary *, input[type="submit"] *, .button--primary *::before, input[type="submit"] *::before, .button--primary *::after, input[type="submit"] *::after {
+.hds-button, .hds-button::before, .hds-button::after, .hds-button *, .hds-button *::before, .hds-button *::after {
   box-sizing: border-box;
 }
 
 /* button transitions */
 
-.hds-button:hover, .hds-button:focus, .button--primary:hover, input[type="submit"]:hover, .button--primary:focus, input[type="submit"]:focus {
+.hds-button:hover, .hds-button:focus {
   transition-property: background-color, border-color, color;
   transition-duration: 85ms;
   transition-timing-function: ease-out;
 }
 
-.hds-button:hover, .button--primary:hover, input[type="submit"]:hover {
+.hds-button:hover {
   background-color: var(--background-color-hover, transparent);
   color: var(--color-hover);
 }
 
-.hds-button:focus, .button--primary:focus, input[type="submit"]:focus {
+.hds-button:focus {
   background-color: var(--background-color-focus, transparent);
   color: var(--color-focus);
   outline: none;
 }
 
-.hds-button:focus:hover, .button--primary:focus:hover, input[type="submit"]:focus:hover {
+.hds-button:focus:hover {
   background-color: var(--background-color-hover-focus, transparent);
 }
 
-.hds-button:disabled, .button--primary:disabled, input[type="submit"]:disabled {
+.hds-button:disabled {
   background-color: var(--background-color-disabled, transparent);
   border-color: var(--border-color-disabled, transparent);
   color: var(--color-disabled);
   cursor: not-allowed;
 }
 
-.hds-button:not(:disabled), .button--primary:not(:disabled), input[type="submit"]:not(:disabled) {
+.hds-button:not(:disabled) {
   border-color: var(--border-color, transparent);
 }
 
-.hds-button:not(:disabled):hover, .button--primary:not(:disabled):hover, input[type="submit"]:not(:disabled):hover {
+.hds-button:not(:disabled):hover {
   border-color: var(--border-color-hover, transparent);
 }
 
-.hds-button:not(:disabled):focus, .button--primary:not(:disabled):focus, input[type="submit"]:not(:disabled):focus {
+.hds-button:not(:disabled):focus {
   border-color: var(--border-color-focus, transparent);
 }
 
-.hds-button:not(:disabled):focus:hover, .button--primary:not(:disabled):focus:hover, input[type="submit"]:not(:disabled):focus:hover {
+.hds-button:not(:disabled):focus:hover {
   border-color: var(--border-color-hover-focus, transparent);
   color: var(--color-hover-focus);
 }
 
 /* FOCUS OUTLINE */
 
-.hds-button::after, .button--primary::after, input[type="submit"]::after {
+.hds-button::after {
   --size: 100%;
 
   border: var(--outline-width) solid transparent;
@@ -596,7 +596,7 @@ template {
   width: var(--size);
 }
 
-.hds-button:focus::after, .button--primary:focus::after, input[type="submit"]:focus::after {
+.hds-button:focus::after {
   --size: calc(100% + calc(var(--outline-width) * 2 + var(--border-width) * 2 + var(--outline-gutter) * 2));
   border-color: var(--focus-outline-color);
 }
@@ -663,7 +663,7 @@ input[type="submit"].hds-button--small {
 
 /* left */
 
-.hds-button .hds-icon, .button--primary .hds-icon, input[type="submit"] .hds-icon {
+.hds-button .hds-icon {
   height: var(--spacing-m);
   margin-left: var(--spacing-s);
   width: var(--spacing-m);
@@ -685,19 +685,19 @@ input[type="submit"].hds-button--small {
 
 /* right - small */
 
-.hds-button .hds-button--small .hds-button__label ~ .hds-icon, .button--primary .hds-button--small .hds-button__label ~ .hds-icon, input[type="submit"] .hds-button--small .hds-button__label ~ .hds-icon {
+.hds-button .hds-button--small .hds-button__label ~ .hds-icon {
   margin: 0 var(--spacing-xs) 0 0;
 }
 
 /* both icons - left */
 
-.hds-button .hds-icon:first-of-type:not(:last-of-type), .button--primary .hds-icon:first-of-type:not(:last-of-type), input[type="submit"] .hds-icon:first-of-type:not(:last-of-type) {
+.hds-button .hds-icon:first-of-type:not(:last-of-type) {
   margin: 0 0 0 var(--spacing-2-xs);
 }
 
 /* both icons - right */
 
-.hds-button .hds-icon:last-of-type:not(:first-of-type), .button--primary .hds-icon:last-of-type:not(:first-of-type), input[type="submit"] .hds-icon:last-of-type:not(:first-of-type) {
+.hds-button .hds-icon:last-of-type:not(:first-of-type) {
   margin: 0 var(--spacing-2-xs) 0 0;
 }
 
@@ -717,7 +717,7 @@ input[type="submit"].hds-button--small {
 
 /* default (bus) */
 
-.hds-button--primary, .button--primary, input[type="submit"] {
+.hds-button--primary {
   --background-color: var(--color-bus);
   --background-color-hover: var(--color-bus-dark-50);
   --background-color-focus: var(--color-bus);
@@ -840,7 +840,7 @@ input[type="submit"].hds-button--small {
 
 /* coat */
 
-.hds-button--primary.hds-button--theme-coat, .button--primary.hds-button--theme-coat, input[type="submit"].hds-button--theme-coat {
+.hds-button--primary.hds-button--theme-coat {
   --background-color: var(--color-coat-of-arms-blue);
   --background-color-hover: var(--color-coat-of-arms-blue-dark-50);
   --background-color-focus: var(--color-coat-of-arms-blue);
@@ -893,7 +893,7 @@ input[type="submit"].hds-button--small {
 
 /* black */
 
-.hds-button--primary.hds-button--theme-black, .button--primary.hds-button--theme-black, input[type="submit"].hds-button--theme-black {
+.hds-button--primary.hds-button--theme-black {
   --background-color: var(--color-black);
   --background-color-hover: var(--color-black);
   --background-color-focus: var(--color-black);
@@ -1734,7 +1734,11 @@ input[type="submit"].hds-button--small {
 }
 
 body {
-  --colorGinAppBackground: #f6f7f7;
+  --colorGinAppBackground: rgb(235, 244, 251);
+  --colorGinLayerBorder: rgb(231, 240, 247);
+  --colorGinLayerBackground: rgb(255, 255, 255);
+  --colorGinSwitch: rgb(0, 0, 191);
+  --colorGinFocus: rgb(0, 0, 191);
 }
 
 .projects__title {
