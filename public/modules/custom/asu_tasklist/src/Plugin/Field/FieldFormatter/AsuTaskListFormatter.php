@@ -33,20 +33,20 @@ class AsuTaskListFormatter extends FormatterBase {
     /** @var \Drupal\taxonomy\Entity\Term[] $terms */
     $terms = \Drupal::service('entity_type.manager')->getStorage("taxonomy_term")->loadTree($vocabulary->get('originalId'), 0, 1, TRUE);
 
-    if(!$terms){
+    if (!$terms) {
       return [];
     }
 
     $count = 0;
-    if($items[0]->value){
+    if ($items[0]->value) {
       $data = unserialize($items[0]->value);
-      foreach($data as $d){
-        $count += $d['value'];
+      foreach ($data as $values) {
+        $count += $values['value'];
       }
     }
 
     $total_task_count = count($terms);
-    $template = $this->t('Tasks'). ': '. $count . '/' . $total_task_count ;
+    $template = $this->t('Tasks') . ': ' . $count . '/' . $total_task_count;
 
     $element = [
       '#type' => 'inline_template',

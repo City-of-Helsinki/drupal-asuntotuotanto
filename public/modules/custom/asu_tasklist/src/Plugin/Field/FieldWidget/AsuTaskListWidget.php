@@ -43,7 +43,7 @@ class AsuTaskListWidget extends WidgetBase {
 
     $elements = [];
     foreach ($term_list as $id => $name) {
-      $bool = false;
+      $bool = FALSE;
       $description = '';
 
       if (isset($task_list_values[$id])) {
