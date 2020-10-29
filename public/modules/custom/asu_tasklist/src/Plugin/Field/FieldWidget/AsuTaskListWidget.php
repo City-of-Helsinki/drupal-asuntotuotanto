@@ -43,6 +43,9 @@ class AsuTaskListWidget extends WidgetBase {
 
     $elements = [];
     foreach ($term_list as $id => $name) {
+      $bool = false;
+      $description = '';
+
       if (isset($task_list_values[$id])) {
         $bool = $task_list_values[$id]['value'];
         $description = $task_list_values[$id]['description'];
@@ -51,7 +54,7 @@ class AsuTaskListWidget extends WidgetBase {
       $elements["task:$id"] = [
         '#type' => 'checkbox',
         '#title' => $this->t($name),
-        '#default_value' => $bool ?? FALSE,
+        '#default_value' => $bool,
       ];
 
       $elements["description:$id"] = [
@@ -59,7 +62,7 @@ class AsuTaskListWidget extends WidgetBase {
         '#title' => $this->t('Description'),
         '#title_display' => 'invisible',
         '#placeholder' => $this->t('Description'),
-        '#default_value' => $description ?? '',
+        '#default_value' => $description,
         '#maxlength' => 255,
       ];
     }

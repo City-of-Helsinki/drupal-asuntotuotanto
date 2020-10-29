@@ -28,13 +28,13 @@ class AsuTaskListFormatter extends FormatterBase {
     $template = '';
 
     if (!isset($vocabulary)) {
-      return;
+      return [];
     }
     /** @var \Drupal\taxonomy\Entity\Term[] $terms */
     $terms = \Drupal::service('entity_type.manager')->getStorage("taxonomy_term")->loadTree($vocabulary->get('originalId'), 0, 1, TRUE);
 
     if(!$terms){
-      return;
+      return [];
     }
 
     $count = 0;
