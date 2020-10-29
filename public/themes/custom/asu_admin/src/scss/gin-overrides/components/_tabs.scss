@@ -3,8 +3,7 @@
 }
 
 // Tabs
-.tabs-wrapper,
-.horizontal-tabs ul.horizontal-tabs-list {
+.tabs-wrapper {
   padding: 0 .5rem;
   margin-left: -.5rem;
   margin-right: -.5rem;
@@ -44,8 +43,7 @@
 
 .tabs__link,
 .claro-details__summary,
-.horizontal-tabs ul.horizontal-tabs-list li.horizontal-tab-button a
-{
+.horizontal-tabs ul.horizontal-tabs-list li.horizontal-tab-button a {
   color: var(--colorGinText);
   font-weight: 600;
   padding-top: 1.25rem;
@@ -57,13 +55,11 @@
 }
 
 .tabs__link.is-active,
-.claro-details__summary[aria-expanded=true],
-.horizontal-tabs ul.horizontal-tabs-list li.horizontal-tab-button.selected a {
+.claro-details__summary[aria-expanded=true] {
   font-weight: 700;
 }
 
-.is-horizontal .tabs__link,
-.horizontal-tabs ul.horizontal-tabs-list li.horizontal-tab-button a {
+.is-horizontal .tabs__link {
   &:hover,
   &:focus {
     color: var(--colorGinPrimary);
@@ -90,8 +86,7 @@
 }
 
 .is-horizontal .tabs--primary,
-.is-horizontal .tabs--secondary,
-.horizontal-tabs ul.horizontal-tabs-list {
+.is-horizontal .tabs--secondary {
   position: relative;
 
   @include mq($breakpointSmall) {
@@ -117,13 +112,6 @@
       bottom: 1.5rem;
       max-width: calc(100% - 1rem);
     }
-  }
-}
-
-.horizontal-tabs ul.horizontal-tabs-list {
-  &::after {
-    left: .5rem;
-    max-width: calc(100% - 1rem);
   }
 }
 
@@ -168,79 +156,6 @@
     padding: 0.75rem 1.5rem;
     font-size: .875rem;
     border-radius: 3px 3px 0 0;
-  }
-}
-
-// Horizontal Tabs in Claro style
-.horizontal-tabs {
-  position: static !important;
-  display: flex;
-  flex-wrap: wrap;
-  width: 100%;
-  border: 0 none;
-  margin-top: -1rem;
-
-  ul.horizontal-tabs-list {
-    background: none;
-    border-right: 0 none;
-    border-bottom: 0 none;
-    overflow: hidden;
-
-    &:after {
-      @include mq($breakpointSmall) {
-        left: .5rem;
-        max-width: calc(100% - 1rem);
-      }
-    }
-
-    li.horizontal-tab-button {
-      background: none;
-      border-right: 0 none;
-      border-bottom: 0 none;
-
-      a {
-        padding-right: 1.5rem;
-        padding-left: 1.5rem;
-        border-radius: 2px 2px 0 0;
-
-        &:before {
-          content: '';
-          display: block;
-          position: absolute;
-        }
-      }
-
-      &.selected a {
-        color: var(--colorGinPrimary);
-
-        &:before {
-          z-index: 1;
-          border-left: none;
-          border-right: none;
-          border-bottom: 3px solid var(--colorGinPrimary);
-          top: auto;
-          bottom: 0;
-          left: 0;
-          right: 0;
-          height: 3px;
-          width: 100%;
-        }
-      }
-    }
-  }
-
-  .horizontal-tabs-panes {
-    width: 100%;
-  }
-
-  .horizontal-tabs-pane {
-    padding: 0;
-    margin: 0;
-    box-shadow: none;
-
-    > .details-wrapper {
-      margin: 0;
-    }
   }
 }
 
@@ -326,5 +241,161 @@
     overflow: visible;
     float: left;
     width: 100%;
+  }
+}
+
+// Horizontal tabs
+.horizontal-tabs {
+  position: static !important;
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  border: 0 none;
+  margin-top: -1rem;
+
+  .horizontal-tabs-panes {
+    width: 100%;
+    background-color: $color-white;
+    padding: 0 2.5rem;
+
+    .horizontal-tabs-pane {
+      padding: 0;
+      margin: 0;
+      box-shadow: none;
+
+      > .details-wrapper {
+        margin: 0;
+      }
+    }
+  }
+
+
+  ul.horizontal-tabs-list {
+    background-color: var(--colorGinAppBackground);
+
+    @include mq($breakpointSmall) {
+      margin-top: -8px;
+      display: flex;
+      padding: 0;
+      border-bottom: 2px solid var(--colorGinAppBackground);
+    }
+
+    li.horizontal-tab-button {
+      background: rgb(207, 228, 245);
+      border: none;
+      margin: 0 6px 6px 0;
+      padding: 0;
+
+      a {
+        @include font-size(14px);
+        @include font-weight($regular);
+        align-items: center;
+        display: flex;
+        flex-flow: column;
+        justify-content: center;
+        margin: 0;
+        padding: $spacing-s;
+        height: calc(100% - 32px);
+
+        strong {
+          display: none;
+          margin-top: 6px;
+        }
+
+        &::before {
+          width: 24px;
+          height: 24px;
+          background-repeat: no-repeat;
+          background-position: center;
+          content: '';
+          display: block;
+        }
+      }
+
+      &:hover,
+      &:focus,
+      &.selected {
+        background-color: $color-white;
+        border-bottom: 2px solid transparent;
+        width: 100%;
+
+        @include mq($breakpointSmall) {
+          width: auto;
+          strong {
+            display: block;
+          }
+        }
+      }
+
+      &.selected {
+        border-bottom: 2px solid $color-black;
+      }
+
+      &.edit-group-basic a::before {
+        background-image: url('../../icons/hds/ui/info-circle.svg');
+      }
+
+      &.edit-group-properties a::before {
+        background-image: url('../../icons/hds/ui/home.svg');
+      }
+
+      &.edit-group-schedules a::before {
+        background-image: url('../../icons/hds/ui/location.svg');
+      }
+
+      &.edit-group-pictures-and-videos a::before {
+        background-image: url('../../icons/hds/ui/photo-plus.svg');
+      }
+
+      &.edit-group-persons-and-operators a::before {
+        background-image: url('../../icons/hds/ui/group.svg');
+      }
+
+      &.edit-group-apartments a::before {
+        background-image: url('../../icons/apartments.svg');
+      }
+    }
+  }
+}
+
+// Customize tabs wrapper.
+nav.tabs-wrapper.is-horizontal {
+  @include mq($breakpointSmall) {
+    .tabs--primary {
+      width: 100%;
+      margin: .5rem .5rem 1.5rem;
+      padding: 0;
+
+      &::after {
+        border: 0 none;
+      }
+    }
+
+    .tabs__tab {
+      background-color: rgb(207, 228, 245);
+      border-bottom: 2px solid transparent;
+
+      &.is-active {
+        background-color: $color-white;
+        border-bottom-color: $color-black;
+      }
+    }
+  }
+}
+
+// Fix width problem.
+.gin--edit-form .page-wrapper__node-edit-form .node-form {
+  padding: 0.75rem;
+  background-color: $color-white;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+
+  @include mq($breakpointSmall) {
+    background-color: transparent;
+    box-shadow: none;
+    padding: 0;
+  }
+
+  @include mq($breakpointBig) {
+    padding: 0;
   }
 }

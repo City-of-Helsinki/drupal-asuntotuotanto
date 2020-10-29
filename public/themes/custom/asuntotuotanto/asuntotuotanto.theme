@@ -12,7 +12,7 @@ use Drupal\user\Entity\User;
  * Helper function to get the icons path.
  *
  * @return string|null
- *   Returns path for the Telia icons SVG or null.
+ *   Returns path for the icons SVG or null.
  */
 function asuntotuotanto_get_icons_path() {
   static $icon_path;

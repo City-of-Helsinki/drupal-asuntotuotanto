@@ -26,9 +26,9 @@ function asu_csv_import_form_node_form_alter(&$form, FormStateInterface $form_st
     $type = $field->getFieldDefinition()->getType();
 
     if ($type == 'asu_csv_import') {
-      $form['actions']['csv_template_create'] = $form['download_template'] = [
+      $form["field_import_apartments"]["widget"][0]['download_template'] = [
         '#type' => 'submit',
-        '#value' => t('Download csv-template'),
+        '#value' => t('Download CSV Template'),
         '#limit_validation_errors' => [],
         '#submit' => ['csv_import_download_template'],
       ];

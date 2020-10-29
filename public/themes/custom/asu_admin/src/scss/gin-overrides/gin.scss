@@ -14,6 +14,10 @@
 // output any styles themselves: Importing them multiple times to resolve
 // dependencies shouldn't be a problem.
 
+// Mixins
+@import "../library/mixins/*.*";
+@import "../library/variables/*.*";
+
 // HDS
 @import "../_hds.scss";
 

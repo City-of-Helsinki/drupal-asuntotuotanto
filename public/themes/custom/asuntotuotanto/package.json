@@ -54,6 +54,7 @@
     "postcss-import-ext-glob": "^1.1.0",
     "postcss-loader": "^4.0.4",
     "postcss-nested": "^5.0.1",
+    "postcss-nesting": "^7.0.1",
     "postcss-preset-env": "^6.7.0",
     "postcss-scss": "^3.0.2",
     "postcss-strip-inline-comments": "^0.1.5",
