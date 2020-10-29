@@ -1,143 +1,19 @@
-uuid: d2f95756-2d82-4aee-9b65-7fda695b1058
-langcode: en
+uuid: 9e24a914-bbab-4427-9c1a-cdce259c2da4
+langcode: fi
 status: true
 dependencies:
   module:
+    - asu_tasklist
     - node
-    - options
 id: node.field_tasks
 field_name: field_tasks
 entity_type: node
-type: list_string
+type: asu_tasklist
 settings:
-  allowed_values:
-    -
-      value: '1'
-      label: '1. Kohteen perustiedot tallennettu'
-    -
-      value: '2'
-      label: '2. Uutiskirjeet ja sisällöt on julkaistu'
-    -
-      value: '3'
-      label: '3. RS-paperit koottu ja tarkistettu'
-    -
-      value: 3a
-      label: 'a. Yhtiön perustamissopimus'
-    -
-      value: 3b
-      label: 'b. Kaupparekisterinote'
-    -
-      value: 3c
-      label: 'c. Yhtiöjärjestys'
-    -
-      value: 3d
-      label: 'd. Pitkäaikainen tontinvuokrasopimus tai lainhuutotodistus'
-    -
-      value: 3e
-      label: 'e. Rasitustodistus'
-    -
-      value: 3f
-      label: 'f. Kiinteistörekisteriote'
-    -
-      value: 3g
-      label: 'g. Rakennuslupa'
-    -
-      value: 3h
-      label: 'h. Pääpiirustussarja'
-    -
-      value: 3i
-      label: 'i. Rakennustapaselostus'
-    -
-      value: 3j
-      label: 'j. Allekirjoitettu energiatodistus'
-    -
-      value: 3k
-      label: 'k. Hinnasto (taloussuunnitelman liite)'
-    -
-      value: 3l
-      label: 'l. Urakkasopimukset pää-, LVIA- ja sähköurakoista työselityksineen'
-    -
-      value: 3m
-      label: 'm. Luottotarjous'
-    -
-      value: 3n
-      label: 'n. Rakennusaikainen vakuus'
-    -
-      value: 3o
-      label: 'o. Rakentamisvaiheen vakuus'
-    -
-      value: 3p
-      label: 'p. Taloussuunnitelma'
-    -
-      value: 3q
-      label: 'q. Kauppakirjan ja taloussuunnitelman liite'
-    -
-      value: 3r
-      label: 'r. RS-sopimus'
-    -
-      value: 3s
-      label: 's. Mahdolliset rasitesopimukset'
-    -
-      value: 3t
-      label: 't. Mahdolliset muut asunto-osakeyhtiötä koskevat sopimukset'
-    -
-      value: '4'
-      label: '4. Kohdetiedot lähetetty asuntopalveluille tarkistettavaksi - 2 viikkoa ennen julkaisua (Tarkistetaan hakuohje, hinnasto ja hakuaika)'
-    -
-      value: '5'
-      label: '5. Asuntopalvelut tarkistanut kohteen. (tulee päivämäärä)'
-    -
-      value: '6'
-      label: '6. Lisää kohteelle huoneistotiedot.'
-    -
-      value: '7'
-      label: '7. Hakuaika lisätty kohteelle.'
-    -
-      value: '8'
-      label: '8. Kohde ja tiedot tulevasta hakuajasta julkaistu (julk. 2 viikkoa)'
-    -
-      value: '9'
-      label: '9. Hakuaika käynnistynyt.'
-    -
-      value: '10'
-      label: '10. Hakemukset tarkistettu ja arvonta suoritettu'
-    -
-      value: '11'
-      label: '11. Arvontatulos ja -pöytäkirja toimitettu Asuntopalveluille.'
-    -
-      value: '12'
-      label: '12. Tarjoukset (ensimmäiselle 5:lle ja jononumerotieto muille) lähetetty'
-    -
-      value: '13'
-      label: '13. Olen tarkistanut, onko asuntoja jäänyt myymättä'
-    -
-      value: '14'
-      label: '14. Massaviesti arvontaan osallistuneille lähetetty ja status kotisivuille päivitetty'
-    -
-      value: '15'
-      label: '15. Arvottujen asuntojen kauppa- ja laskutustiedot hoidettu'
-    -
-      value: '16'
-      label: '16. Massaviestin kohteen materiaalivalinnoista lähetetty'
-    -
-      value: '17'
-      label: '17. Kutsut osakkeenostajien kokoukseen lähetetty'
-    -
-      value: '18'
-      label: '18. Isännöitsijävalinta lisätty'
-    -
-      value: '19'
-      label: '19. Hitas-omistukset tarkistettu'
-    -
-      value: '20'
-      label: '20. Avaimet luovutettu'
-    -
-      value: '21'
-      label: '21. RS-tietoihin kirjattu hallinnon luovutuskokous pidetyksi'
-  allowed_values_function: ''
-module: options
+  selected_taxonomy_id: 79782167-ce98-4b26-931d-48b368b28218
+module: asu_tasklist
 locked: false
-cardinality: -1
+cardinality: 1
 translatable: true
 indexes: {  }
 persist_with_no_fields: false
