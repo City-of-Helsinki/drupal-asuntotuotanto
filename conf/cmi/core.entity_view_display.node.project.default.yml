@@ -61,6 +61,7 @@ dependencies:
     - field.field.node.project.field_zoning_status
     - node.type.project
   module:
+    - asu_tasklist
     - datetime
     - image
     - link
@@ -333,11 +334,11 @@ content:
     type: string
     region: content
   field_tasks:
-    weight: 131
+    weight: 162
     label: above
     settings: {  }
     third_party_settings: {  }
-    type: list_default
+    type: tasklist_formatter
     region: content
   field_zoning_info:
     weight: 147

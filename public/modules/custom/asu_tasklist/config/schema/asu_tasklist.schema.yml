@@ -1,0 +1,7 @@
+field.storage_settings.asu_tasklist:
+  type: mapping
+  label: 'Storage settings'
+  mapping:
+    selected_taxonomy_id:
+      type: string
+      label: 'Taxonomy id'
