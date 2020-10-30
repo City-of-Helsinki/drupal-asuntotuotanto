@@ -63,6 +63,7 @@ dependencies:
     - node.type.project
   module:
     - asu_csv_import
+    - asu_tasklist
     - datetime
     - field_group
     - image
