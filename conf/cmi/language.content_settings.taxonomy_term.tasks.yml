@@ -1,0 +1,16 @@
+uuid: 959bc2a5-f642-494d-81f8-2333cc79fb1b
+langcode: en
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.tasks
+  module:
+    - content_translation
+third_party_settings:
+  content_translation:
+    enabled: true
+id: taxonomy_term.tasks
+target_entity_type_id: taxonomy_term
+target_bundle: tasks
+default_langcode: site_default
+language_alterable: false

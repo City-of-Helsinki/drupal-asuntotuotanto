@@ -6,6 +6,7 @@ module:
   asu_csv_import: 0
   asu_editorial: 0
   asu_rest: 0
+  asu_tasklist: 0
   auto_entitylabel: 0
   block: 0
   block_content: 0
