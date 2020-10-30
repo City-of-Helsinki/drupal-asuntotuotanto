@@ -26,14 +26,14 @@ final class Mailinglist extends ResourceBase {
   /**
    * Responds to POST requests.
    *
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   The request.
+   * @param array $subscription_data
+   *   Parameters for mailinglist subscription.
    *
    * @return \Symfony\Component\HttpFoundation\Response
    *   The HTTP response object.
    */
   public function post(array $subscription_data = []): ModifiedResourceResponse {
-    /** @var ParameterBag $parameters */
+    /** @var \Symfony\Component\HttpFoundation\ParameterBag $parameters */
     $parameters = new ParameterBag($subscription_data);
     $required = [
       'user_email',
@@ -48,7 +48,6 @@ final class Mailinglist extends ResourceBase {
     }
 
     // TODO: create logic.
-
     return new ModifiedResourceResponse('OK', 200);
   }
 
