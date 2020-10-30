@@ -90,9 +90,9 @@ third_party_settings:
       label: 'Project tabs'
     group_basic:
       children:
+        - langcode
         - title
         - field_housing_company
-        - field_holding_type
         - field_ownership_type
         - field_street_address
         - field_postal_code
@@ -103,6 +103,7 @@ third_party_settings:
         - field_new_housing
         - field_apartment_count
         - field_new_development_status
+        - field_holding_type
       parent_name: group_project_tabs
       weight: 19
       format_type: tab
@@ -113,7 +114,7 @@ third_party_settings:
         required_fields: true
         id: ''
         classes: ''
-      label: 'Basic information'
+      label: Information
     group_properties:
       children:
         - field_has_elevator
@@ -162,8 +163,8 @@ third_party_settings:
       children:
         - field_publication_start_time
         - field_publication_end_time
-        - field_premarketing_start_time
         - field_pre_marketing_end_time
+        - field_premarketing_start_time
         - field_application_start_time
         - field_application_end_time
         - field_material_choice_dl
@@ -200,7 +201,7 @@ third_party_settings:
         description: ''
         formatter: closed
         required_fields: true
-      label: 'Pictures and videos'
+      label: Media
     group_persons_and_operators:
       children:
         - field_acc_salesperson
@@ -221,7 +222,7 @@ third_party_settings:
         description: ''
         formatter: closed
         required_fields: true
-      label: 'Persons and operators'
+      label: People
     group_apartments:
       children:
         - field_apartments
@@ -265,7 +266,7 @@ content:
     type: string_textfield
     region: content
   field_apartment_count:
-    weight: 62
+    weight: 12
     settings:
       placeholder: ''
     third_party_settings: {  }
@@ -315,7 +316,7 @@ content:
     type: options_select
     region: content
   field_city:
-    weight: 57
+    weight: 7
     settings:
       size: 60
       placeholder: ''
@@ -335,7 +336,7 @@ content:
     type: options_buttons
     region: content
   field_construction_year:
-    weight: 60
+    weight: 10
     settings:
       size: 60
       placeholder: ''
@@ -365,7 +366,7 @@ content:
     type: number
     region: content
   field_district:
-    weight: 58
+    weight: 8
     settings: {  }
     third_party_settings: {  }
     type: options_select
@@ -435,7 +436,7 @@ content:
     type: options_buttons
     region: content
   field_holding_type:
-    weight: 83
+    weight: 14
     settings:
       match_operator: CONTAINS
       match_limit: 10
@@ -445,7 +446,7 @@ content:
     type: entity_reference_autocomplete
     region: content
   field_housing_company:
-    weight: 52
+    weight: 3
     settings:
       size: 60
       placeholder: ''
@@ -490,20 +491,20 @@ content:
     type: datetime_default
     region: content
   field_new_development_status:
-    weight: 63
+    weight: 13
     settings: {  }
     third_party_settings: {  }
     type: options_buttons
     region: content
   field_new_housing:
     type: boolean_checkbox
-    weight: 61
+    weight: 11
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
   field_ownership_type:
-    weight: 54
+    weight: 4
     settings: {  }
     third_party_settings: {  }
     type: options_buttons
@@ -516,7 +517,7 @@ content:
     region: content
   field_postal_code:
     type: string_textfield
-    weight: 56
+    weight: 6
     region: content
     settings:
       size: 60
@@ -563,7 +564,7 @@ content:
     type: datetime_default
     region: content
   field_realty_id:
-    weight: 59
+    weight: 9
     settings:
       size: 60
       placeholder: ''
@@ -626,7 +627,7 @@ content:
     type: string_textfield
     region: content
   field_street_address:
-    weight: 55
+    weight: 5
     settings:
       size: 60
       placeholder: ''
@@ -699,7 +700,7 @@ content:
     third_party_settings: {  }
   title:
     type: string_textfield
-    weight: 51
+    weight: 2
     region: content
     settings:
       size: 60

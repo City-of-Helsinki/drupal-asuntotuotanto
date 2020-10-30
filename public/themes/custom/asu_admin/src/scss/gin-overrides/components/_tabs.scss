@@ -294,8 +294,10 @@
         flex-flow: column;
         justify-content: center;
         margin: 0;
-        padding: $spacing-s;
-        height: calc(100% - 32px);
+        padding: $spacing-s $spacing-2-xs;
+        min-width: 80px;
+        max-width: 80px;
+        height: calc(100% - #{$spacing-l});
 
         strong {
           display: none;

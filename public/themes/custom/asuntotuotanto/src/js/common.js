@@ -1,33 +1,36 @@
-"use strict";
-
 (($, Drupal, drupalSettings) => {
   Drupal.behaviors.asuAdminCommon = {
     attach: function attach() {
       // Code here.
-    },
+    }
   };
 
   Drupal.behaviors.languageSwitcher = {
     attach: function attach(context) {
-      var languageSwitcherToggleButton = $(
+      const languageSwitcherToggleButton = $(
         ".language-switcher__button",
         context
       );
-      var languageSwitcherWrapper = $(".language-switcher__dropdown", context);
+      const languageSwitcherWrapper = $(
+        ".language-switcher__dropdown",
+        context
+      );
 
-      var outsideClickListener = function outsideClickListener(event) {
-        var target = $(event.target);
+      const outsideClickListener = function outsideClickListener(event) {
+        const target = $(event.target);
 
         if (
           !target.closest(".language-switcher__dropdown").length &&
           $(".language-switcher__dropdown").is(":visible")
         ) {
+          // eslint-disable-next-line no-use-before-define
           handleInteraction(event);
+          // eslint-disable-next-line no-use-before-define
           removeClickListener();
         }
       };
 
-      var removeClickListener = function removeClickListener() {
+      const removeClickListener = function removeClickListener() {
         document.removeEventListener("click", outsideClickListener);
       };
 
@@ -60,8 +63,8 @@
             languageSwitcherToggleButton.attr("aria-expanded", "false");
             removeClickListener();
           }
-        },
+        }
       });
-    },
+    }
   };
 })(jQuery, Drupal, drupalSettings);
