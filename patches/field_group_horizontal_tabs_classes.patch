@@ -1,0 +1,13 @@
+diff --git a/formatters/tabs/horizontal-tabs.js b/formatters/tabs/horizontal-tabs.js
+index 865da55..0dbd782 100644
+--- a/formatters/tabs/horizontal-tabs.js
++++ b/formatters/tabs/horizontal-tabs.js
+@@ -238,7 +238,7 @@
+     var tab = {};
+     var idAttr = settings.details.attr('id');
+ 
+-    tab.item = $('<li class="horizontal-tab-button" tabindex="-1"></li>')
++    tab.item = $('<li class="horizontal-tab-button ' + idAttr + '" tabindex="-1"></li>')
+       .append(tab.link = $('<a href="#' + idAttr + '"></a>')
+         .append(tab.title = $('<strong></strong>').text(settings.title))
+       );

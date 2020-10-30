@@ -2,4 +2,15 @@ global-styling:
   version: 1.x
   css:
     theme:
-      dist/css/styles.css: {}
+      dist/css/styles.min.css: {}
+      dist/css/gin-overrides.min.css: {}
+
+global-scripting:
+  version: 1.x
+  js:
+    dist/js/bundle.min.js: {}
+  dependencies:
+    - core/drupal
+    - core/drupal.ajax
+    - core/jquery
+    - core/jquery.once
