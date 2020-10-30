@@ -5,10 +5,11 @@ dependencies: {  }
 _core:
   default_config_hash: j5zLMOdJBqC0bMvSdth5UebkprJB8g_2FXHqhfpJzow
 id: anonymous
-label: 'Anonymous user'
+label: 'Anonyymi käyttäjä'
 weight: 0
 is_admin: false
 permissions:
   - 'access content'
   - 'restful get filter_rest_resource'
+  - 'restful post mailinglist_rest_resource'
   - 'view media'
