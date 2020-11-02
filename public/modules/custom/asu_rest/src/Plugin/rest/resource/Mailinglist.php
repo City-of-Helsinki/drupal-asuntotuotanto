@@ -2,7 +2,6 @@
 
 namespace Drupal\asu_rest\Plugin\rest\resource;
 
-use Drupal\Console\Command\Shared\TranslationTrait;
 use Drupal\rest\ModifiedResourceResponse;
 use Drupal\rest\Plugin\ResourceBase;
 use Symfony\Component\HttpFoundation\ParameterBag;
@@ -22,7 +21,6 @@ use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
  * )
  */
 final class Mailinglist extends ResourceBase {
-  use TranslationTrait;
 
   /**
    * Responds to POST requests.
