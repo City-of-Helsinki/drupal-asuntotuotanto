@@ -67,8 +67,10 @@ class ApartmentHoldingType extends FieldItemList {
         $reference['referring_entity'] instanceof Node
       ) {
         $referencing_node = $reference['referring_entity'];
-        $label = $referencing_node->field_holding_type->value;
-        $value = $referencing_node->field_holding_type->getSetting('allowed_values')[$label];
+        $id = $referencing_node->field_holding_type->value;
+        if ($id && $term = Term::load($id)) {
+          $value = $term->getName();
+        }
       }
     }
 
