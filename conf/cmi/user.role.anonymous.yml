@@ -11,5 +11,6 @@ is_admin: false
 permissions:
   - 'access content'
   - 'restful get filter_rest_resource'
+  - 'restful post mailinglist'
   - 'restful post mailinglist_rest_resource'
   - 'view media'
