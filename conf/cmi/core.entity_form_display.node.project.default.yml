@@ -49,6 +49,7 @@ dependencies:
     - field.field.node.project.field_realty_id
     - field.field.node.project.field_roof_material
     - field.field.node.project.field_sanitation
+    - field.field.node.project.field_services
     - field.field.node.project.field_shared_apartment_images
     - field.field.node.project.field_shareholder_meeting_date
     - field.field.node.project.field_site_area
@@ -62,8 +63,8 @@ dependencies:
     - image.style.thumbnail
     - node.type.project
   module:
+    - asu_content
     - asu_csv_import
-    - asu_tasklist
     - datetime
     - field_group
     - image
@@ -587,6 +588,12 @@ content:
       placeholder: ''
     third_party_settings: {  }
     type: string_textfield
+    region: content
+  field_services:
+    weight: 83
+    settings: {  }
+    third_party_settings: {  }
+    type: asu_service_widget
     region: content
   field_shared_apartment_images:
     weight: 27
