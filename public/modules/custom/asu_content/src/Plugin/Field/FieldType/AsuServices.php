@@ -17,6 +17,7 @@ use Drupal\taxonomy\Entity\Vocabulary;
  *   label = @Translation("Services"),
  *   default_formatter = "asu_service_formatter",
  *   default_widget = "asu_service_widget",
+ *   cardinality = -1,
  * )
  */
 class AsuServices extends FieldItemBase implements FieldItemInterface {
@@ -56,8 +57,8 @@ class AsuServices extends FieldItemBase implements FieldItemInterface {
    * {@inheritdoc}
    */
   public static function propertyDefinitions(FieldStorageDefinitionInterface $field_definition) {
-    $properties['value'] = DataDefinition::create('string');
-
+    $properties['term_id'] = DataDefinition::create('integer');
+    $properties['distance'] = DataDefinition::create('integer');
     return $properties;
   }
 
@@ -85,8 +86,8 @@ class AsuServices extends FieldItemBase implements FieldItemInterface {
    */
   public function isEmpty() {
     $term = $this->get('term_id')->getValue();
-    $distance = $this->get('term_id')->getValue();
-    return ($term === NULL || $term === '') || ($distance === NULL || $distance === '');
+    $distance = $this->get('distance')->getValue();
+    return ($term === NULL || $term === 0) || ($distance === null || $distance === 0);
   }
 
 }

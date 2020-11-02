@@ -1,0 +1,21 @@
+uuid: e4cf27af-2126-4210-a080-84156aabdec9
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_services
+    - node.type.project
+  module:
+    - asu_content
+id: node.project.field_services
+field_name: field_services
+entity_type: node
+bundle: project
+label: Services
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: asu_services
