@@ -27,8 +27,8 @@ class AsuServices extends FieldItemBase implements FieldItemInterface {
    */
   public static function defaultStorageSettings() {
     return [
-        'selected_taxonomy_id' => 'taxonomy_id',
-      ] + parent::defaultStorageSettings();
+      'selected_taxonomy_id' => 'taxonomy_id',
+    ] + parent::defaultStorageSettings();
   }
 
   /**
@@ -87,7 +87,7 @@ class AsuServices extends FieldItemBase implements FieldItemInterface {
   public function isEmpty() {
     $term = $this->get('term_id')->getValue();
     $distance = $this->get('distance')->getValue();
-    return ($term === NULL || $term === 0) || ($distance === null || $distance === 0);
+    return ($term === NULL || $term === 0) || ($distance === NULL || $distance === 0);
   }
 
 }

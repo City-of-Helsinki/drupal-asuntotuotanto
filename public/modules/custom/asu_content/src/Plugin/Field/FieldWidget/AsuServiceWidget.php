@@ -35,25 +35,25 @@ class AsuServiceWidget extends WidgetBase {
       }
     }
 
-    $service = $items[$delta]->service ?? 0;
+    $term_id = $items[$delta]->term_id ?? 0;
     $distance = $items[$delta]->distance ?? 0;
 
     $elements['term_id'] = [
       '#type' => 'select',
       '#options' => $term_list,
       '#title' => $this->t('Service'),
-      '#default_value' => $service
+      '#default_value' => $term_id,
     ];
 
     $elements['distance'] = [
       '#type' => 'number',
       '#title' => $this->t('Distance'),
-      '#default_value' => $distance
+      '#default_value' => $distance,
     ];
 
     $element += $elements;
     return $element;
-    #return ['value' => $element];
+    // Return ['value' => $element];.
   }
 
 }

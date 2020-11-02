@@ -24,8 +24,8 @@ class AsuServiceFormatter extends FormatterBase {
    */
   public function viewElements(FieldItemListInterface $items, $langcode) {
     $element = [];
-    foreach($items as $delta => $item) {
-      if($term = Term::load($item->get('term_id')->getValue())){
+    foreach ($items as $delta => $item) {
+      if ($term = Term::load($item->get('term_id')->getValue())) {
         $term_name = $term->getName();
         $distance = $item->get('distance')->getValue();
         $element[$delta] = ['#markup' => "$term_name $distance m"];
