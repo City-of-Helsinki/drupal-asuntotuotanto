@@ -24,15 +24,15 @@
     {{ drupal_block('menu_block:main', {custom_suggestion: 'block__menu_block__main__desktop'}) }}
     <div class="page-header__actions">
       <span class="search-link">
-        {% include '@asuntotuotanto/misc/icon--search.html.twig' %} {{ 'Search'|t }}
+        {% include "@asuntotuotanto/misc/icon.twig" with {icon: 'search', label: 'Search'} %} {{ 'Search'|t }}
       </span>
       {% if logged_in %}
         <span class="user-action">
-          {% include '@asuntotuotanto/misc/icon--person.html.twig' %} {{ username }}
+          {% include "@asuntotuotanto/misc/icon.twig" with {icon: 'user', label: 'User'} %} {{ username }}
         </span>
       {% else %}
         <a href="{{ path('user.login') }}" class="login-link">
-          {% include '@asuntotuotanto/misc/icon--login.html.twig' %} {{ 'Login'|t }}
+          {% include "@asuntotuotanto/misc/icon.twig" with {icon: 'signin', label: 'Sign in'} %} {{ 'Login'|t }}
         </a>
       {% endif %}
       {{ drupal_block('language_block:language_interface') }}

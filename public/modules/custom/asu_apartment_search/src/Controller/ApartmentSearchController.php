@@ -17,7 +17,7 @@ class ApartmentSearchController extends ControllerBase {
     $build = [
       '#markup' => '<div id="search"></div>',
       '#attached' => [
-        'library' => 'asu_apartment_search/apartment-search'
+        'library' => 'asu_apartment_search/apartment-search',
       ],
     ];
     return $build;

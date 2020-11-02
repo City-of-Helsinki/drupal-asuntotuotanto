@@ -3,15 +3,15 @@ third_party_settings:
     group_basic:
       label: Perustiedot
     group_properties:
-      label: 'Kohteen ominaisuudet'
+      label: Ominaisuudet
     group_tasklist:
       label: Tehtävälista
     group_schedules:
       label: Aikataulut
     group_pictures_and_videos:
-      label: 'Kuvat ja videot'
+      label: Liitteet
     group_persons_and_operators:
-      label: 'Henkilöt ja toimijat'
+      label: Toimijat
     group_apartments:
       label: Huoneistot
 content:

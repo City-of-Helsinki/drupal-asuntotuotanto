@@ -2,8 +2,6 @@
 
 namespace Drupal\asu_csv_import\ImportTypes;
 
-use phpDocumentor\Reflection\Types\Mixed_;
-
 /**
  * Import type.
  */

@@ -37,7 +37,7 @@
     <button class="language-switcher__button" aria-expanded="false" aria-controls="language-switcher-dropdown" aria-haspopup="menu" aria-label="{{ 'Select language'|t }}">
       {% if current_language %}
         {{ current_language|upper }}
-        <span class="language-switcher__button-expand">{% include '@asuntotuotanto/misc/icon--expand--down.html.twig' %}</span>
+        <span class="language-switcher__button-expand">{% include "@asuntotuotanto/misc/icon.twig" with {icon: 'angle-down', label: 'Angle down'} %}</span>
       {% endif %}
     </button>
     <div aria-hidden="true" id="language-switcher-dropdown" class="language-switcher__dropdown animation--fade-in-vertical-up">
@@ -53,7 +53,7 @@
           {% else %}
               <li class="language-links__item">
                 <span class="language-links__link is-active">
-                  {{ item.text }} {% include "@asuntotuotanto/misc/icon--done.html.twig" %}
+                  {{ item.text }} {% include "@asuntotuotanto/misc/icon.twig" with {icon: 'check', label: 'Check'} %}
                 </span>
               </li>
           {% endif %}
