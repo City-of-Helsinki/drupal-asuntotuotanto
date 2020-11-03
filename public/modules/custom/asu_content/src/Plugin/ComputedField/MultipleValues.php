@@ -66,8 +66,8 @@ class MultipleValues extends FieldItemList {
         $field = $referencing_node->field_services;
 
         if ($field && !$field->isEmpty()) {
-          foreach($field as $delta => $single_service){
-            if($service = Term::load($single_service->get('term_id')->getValue())){
+          foreach ($field as $delta => $single_service) {
+            if ($service = Term::load($single_service->get('term_id')->getValue())) {
               $distance = $single_service->get('distance')->getValue();
               $data = "{$service->getName()} {$distance}m";
               $this->list[$delta] = $this->createItem($delta, $data);
