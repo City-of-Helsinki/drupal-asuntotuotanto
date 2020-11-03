@@ -1,0 +1,32 @@
+uuid: edceb1b0-c836-4137-adc3-4d62b9907955
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.taxonomy_term.states_of_sale.field_machine_readable_name
+    - taxonomy.vocabulary.states_of_sale
+  module:
+    - text
+id: taxonomy_term.states_of_sale.default
+targetEntityType: taxonomy_term
+bundle: states_of_sale
+mode: default
+content:
+  description:
+    label: hidden
+    type: text_default
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_machine_readable_name:
+    weight: 1
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+hidden:
+  langcode: true
+  search_api_excerpt: true

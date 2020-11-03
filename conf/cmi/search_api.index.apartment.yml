@@ -577,13 +577,11 @@ field_settings:
   state_of_sale:
     label: 'State of sale'
     datasource_id: 'entity:node'
-    property_path: 'field_state_of_sale:entity:name'
+    property_path: asu_state_of_sale
     type: string
     dependencies:
-      config:
-        - field.storage.node.field_state_of_sale
       module:
-        - taxonomy
+        - computed_field_plugin
   storage_description:
     label: 'Storage description'
     datasource_id: 'entity:node'

@@ -116,5 +116,6 @@ hidden:
   field_water_fee: true
   field_water_fee_explanation: true
   langcode: true
+  multiple_values_field: true
   search_api_excerpt: true
   street_address: true
