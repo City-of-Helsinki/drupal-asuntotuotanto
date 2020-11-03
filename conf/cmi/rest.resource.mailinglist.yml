@@ -1,0 +1,17 @@
+uuid: 27d9e985-65ce-4fb7-aaf2-04f56fe1f1b8
+langcode: en
+status: true
+dependencies:
+  module:
+    - asu_rest
+    - serialization
+    - user
+id: mailinglist
+plugin_id: mailinglist
+granularity: method
+configuration:
+  POST:
+    supported_formats:
+      - json
+    supported_auth:
+      - cookie
