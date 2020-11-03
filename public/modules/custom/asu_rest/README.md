@@ -34,3 +34,25 @@ returns:
   }
 }
 ```
+
+### Mailing list
+```
+Example:
+
+POST /fi/en/sv/mailinglist
+
+Parameters:
+- string  : user_email (required field) - "example@example.com"
+- int     : project_id (required field) - 32
+- Boolean : subscribe_mailinglist       - 1/0, "true"/"false"
+
+By default subscribe_mailinglist is false.
+
+Returns: Status code with success / error message.
+200 : OK
+400 : Missing required field: {fieldname}
+422 : Data is not valid: {fieldaname}
+
+Future:
+404 : Resource not found :: Either the project is not found or the premarketing start time has already gone.
+```
