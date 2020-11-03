@@ -65,6 +65,7 @@ dependencies:
   module:
     - asu_content
     - asu_csv_import
+    - asu_tasklist
     - datetime
     - field_group
     - image
@@ -135,6 +136,7 @@ third_party_settings:
         - field_project_description
         - field_site_owner
         - field_building_type
+        - field_services
       parent_name: group_project_tabs
       weight: 20
       format_type: tab
@@ -312,7 +314,7 @@ content:
     type: link_default
     region: content
   field_building_type:
-    weight: 82
+    weight: 78
     settings: {  }
     third_party_settings: {  }
     type: options_select
@@ -354,14 +356,14 @@ content:
     type: string_textfield
     region: content
   field_coordinate_lat:
-    weight: 76
+    weight: 74
     settings:
       placeholder: ''
     third_party_settings: {  }
     type: number
     region: content
   field_coordinate_lon:
-    weight: 77
+    weight: 75
     settings:
       placeholder: ''
     third_party_settings: {  }
@@ -538,7 +540,7 @@ content:
     type: datetime_default
     region: content
   field_project_description:
-    weight: 78
+    weight: 76
     settings:
       rows: 5
       placeholder: ''
@@ -582,7 +584,7 @@ content:
     type: string_textfield
     region: content
   field_sanitation:
-    weight: 72
+    weight: 71
     settings:
       size: 60
       placeholder: ''
@@ -590,7 +592,7 @@ content:
     type: string_textfield
     region: content
   field_services:
-    weight: 83
+    weight: 79
     settings: {  }
     third_party_settings: {  }
     type: asu_service_widget
@@ -617,7 +619,7 @@ content:
     type: number
     region: content
   field_site_owner:
-    weight: 80
+    weight: 77
     settings:
       match_operator: CONTAINS
       match_limit: 10
@@ -627,7 +629,7 @@ content:
     type: entity_reference_autocomplete
     region: content
   field_site_renter:
-    weight: 71
+    weight: 70
     settings:
       size: 60
       placeholder: ''
@@ -646,7 +648,7 @@ content:
     weight: 47
     settings: {  }
     third_party_settings: {  }
-    type: options_buttons
+    type: tasklist_widget
     region: content
   field_virtual_presentation_url:
     weight: 28
@@ -657,7 +659,7 @@ content:
     type: link_default
     region: content
   field_zoning_info:
-    weight: 73
+    weight: 72
     settings:
       placeholder_url: ''
       placeholder_title: ''
@@ -665,7 +667,7 @@ content:
     type: link_default
     region: content
   field_zoning_status:
-    weight: 74
+    weight: 73
     settings:
       size: 60
       placeholder: ''
