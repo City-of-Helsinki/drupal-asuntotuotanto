@@ -1,0 +1,20 @@
+uuid: d7f9ed1c-52c4-40b3-8cd1-425f9800a83e
+langcode: en
+status: true
+dependencies:
+  module:
+    - asu_content
+    - node
+id: node.field_services
+field_name: field_services
+entity_type: node
+type: asu_services
+settings:
+  selected_taxonomy_id: 6da93c19-f57e-49b9-a7e4-9d1285faa648
+module: asu_content
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

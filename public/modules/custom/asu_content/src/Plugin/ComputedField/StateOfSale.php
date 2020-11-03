@@ -6,29 +6,21 @@ use Drupal\computed_field_plugin\Traits\ComputedSingleItemTrait;
 use Drupal\Core\Field\FieldItemList;
 use Drupal\Core\TypedData\DataDefinitionInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
-use Drupal\node\Entity\Node;
+use Drupal\taxonomy\Entity\Term;
 
 /**
  * Class ApartmentHoldingType.
  *
  * @ComputedField(
- *   id = "field_apartment_holding_type",
+ *   id = "asu_state_of_sale",
  *   label = @Translation("Apartment holding type"),
  *   type = "asu_computed_render_array",
  *   entity_types = {"node"},
  *   bundles = {"apartment"}
  * )
  */
-class ApartmentHoldingType extends FieldItemList {
-
+class StateOfSale extends FieldItemList {
   use ComputedSingleItemTrait;
-
-  /**
-   * The reverse entity service.
-   *
-   * @var \Drupal\asu_content\CollectReverseEntity
-   */
-  protected $reverseEntities;
 
   /**
    * Constructs a ApartmentHoldingType object.
@@ -44,7 +36,6 @@ class ApartmentHoldingType extends FieldItemList {
    */
   public function __construct(DataDefinitionInterface $definition, $name = NULL, TypedDataInterface $parent = NULL) {
     parent::__construct($definition, $name, $parent);
-    $this->reverseEntities = \Drupal::service('asu_content.collect_reverse_entity');
   }
 
   /**
@@ -58,20 +49,11 @@ class ApartmentHoldingType extends FieldItemList {
    */
   protected function singleComputeValue() {
     $current_entity = $this->getEntity();
-    $reverse_references = $this->reverseEntities->getReverseReferences($current_entity);
-    $value = FALSE;
 
-    foreach ($reverse_references as $reference) {
-      if (
-        !empty($reference) &&
-        $reference['referring_entity'] instanceof Node
-      ) {
-        $referencing_node = $reference['referring_entity'];
-        $id = $referencing_node->field_holding_type->value;
-        if ($id && $term = Term::load($id)) {
-          $value = $term->getName();
-        }
-      }
+    $value = FALSE;
+    $id = $current_entity->field_state_of_sale->target_id;
+    if ($id && $term = Term::load($id)) {
+      $value = $term->field_machine_readable_name->value;
     }
 
     // TODO: When displaying the field in twig add value&label through theme.

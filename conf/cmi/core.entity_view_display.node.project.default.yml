@@ -49,6 +49,7 @@ dependencies:
     - field.field.node.project.field_realty_id
     - field.field.node.project.field_roof_material
     - field.field.node.project.field_sanitation
+    - field.field.node.project.field_services
     - field.field.node.project.field_shared_apartment_images
     - field.field.node.project.field_shareholder_meeting_date
     - field.field.node.project.field_site_area
@@ -61,11 +62,11 @@ dependencies:
     - field.field.node.project.field_zoning_status
     - node.type.project
   module:
+    - asu_content
     - asu_tasklist
     - datetime
     - image
     - link
-    - options
     - user
 id: node.project.default
 targetEntityType: node
@@ -288,6 +289,13 @@ content:
       link_to_entity: false
     third_party_settings: {  }
     type: string
+    region: content
+  field_services:
+    weight: 163
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: asu_service_formatter
     region: content
   field_shared_apartment_images:
     weight: 161
