@@ -16,7 +16,7 @@ translatable: false
 default_value: {  }
 default_value_callback: ''
 settings:
-  min: !!float -90
+  min: !!float 0
   max: !!float 90
   prefix: ''
   suffix: ''

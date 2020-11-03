@@ -91,7 +91,6 @@ function csv_import_download_template(&$form, FormStateInterface $form_state) {
       $rows[] = $row;
     }
   }
-
   $fp = fopen('php://output', 'w');
   $delimiter = ';';
   $enclosure = '"';
