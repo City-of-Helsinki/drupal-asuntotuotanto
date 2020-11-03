@@ -1,5 +1,5 @@
 diff --git a/src/ElasticSearch/Parameters/Factory/IndexFactory.php b/src/ElasticSearch/Parameters/Factory/IndexFactory.php
-index 20cffea..ca44761 100644
+index 20cffea..1ac4096 100644
 --- a/src/ElasticSearch/Parameters/Factory/IndexFactory.php
 +++ b/src/ElasticSearch/Parameters/Factory/IndexFactory.php
 @@ -2,10 +2,13 @@
@@ -16,6 +16,53 @@ index 20cffea..ca44761 100644
  use Drupal\search_api_autocomplete\Suggester\SuggesterInterface;
  use Drupal\elasticsearch_connector\Entity\Cluster;
 
+@@ -48,26 +51,26 @@ class IndexFactory {
+    *
+    * @return array
+    */
+-   public static function create(IndexInterface $index) {
+-     $indexName = static::getIndexName($index);
+-     $indexConfig =  [
+-       'index' => $indexName,
+-       'body' => [
+-         'settings' => [
+-           'number_of_shards' => $index->getOption('number_of_shards', 5),
+-           'number_of_replicas' => $index->getOption('number_of_replicas', 1),
+-         ],
+-       ],
+-     ];
+-
+-     // Allow other modules to alter index config before we create it.
+-     $dispatcher = \Drupal::service('event_dispatcher');
+-     $prepareIndexEvent = new PrepareIndexEvent($indexConfig, $indexName);
+-     $event = $dispatcher->dispatch(PrepareIndexEvent::PREPARE_INDEX, $prepareIndexEvent);
+-     $indexConfig = $event->getIndexConfig();
+-
+-     return $indexConfig;
+-   }
++  public static function create(IndexInterface $index) {
++    $indexName = static::getIndexName($index);
++    $indexConfig =  [
++      'index' => $indexName,
++      'body' => [
++        'settings' => [
++          'number_of_shards' => $index->getOption('number_of_shards', 5),
++          'number_of_replicas' => $index->getOption('number_of_replicas', 1),
++        ],
++      ],
++    ];
++
++    // Allow other modules to alter index config before we create it.
++    $dispatcher = \Drupal::service('event_dispatcher');
++    $prepareIndexEvent = new PrepareIndexEvent($indexConfig, $indexName);
++    $event = $dispatcher->dispatch(PrepareIndexEvent::PREPARE_INDEX, $prepareIndexEvent);
++    $indexConfig = $event->getIndexConfig();
++
++    return $indexConfig;
++  }
+
+   /**
+    * Build parameters to bulk delete indexes.
 @@ -114,26 +117,16 @@ class IndexFactory {
        foreach ($item as $name => $field) {
          $field_type = $field->getType();
@@ -51,21 +98,33 @@ index 20cffea..ca44761 100644
          }
        }
        $params['body'][] = ['index' => ['_id' => $id]];
-@@ -260,4 +253,104 @@ class IndexFactory {
+@@ -191,7 +184,7 @@ class IndexFactory {
+         // Collect autocompletion fields in an array keyed by field id.
+         $all_autocompletion_fields += array_flip($autocompletion_fields);
+       }
+-     }
++    }
+
+     // Map index fields.
+     foreach ($index->getFields() as $field_id => $field_data) {
+@@ -260,4 +253,116 @@ class IndexFactory {
      ));
    }
 
 +  /**
 +   * Helper function. Returns the elasticsearch value for a given field.
 +   *
-+   * @param string $field_type
++   * @param string $field
 +   * @param mixed $value
 +   *
 +   * @return string
 +   */
 +  protected static function getFieldValue($field, $raw) {
 +    $field_type = $field->getType();
-+
++    if($field->getFieldIdentifier() == 'image_urls'){
++      $x = 1;
++    }
++    $field->getValues();
 +    switch ($field_type) {
 +      case 'string':
 +        $value = (string) $raw;
@@ -92,7 +151,13 @@ index 20cffea..ca44761 100644
 +          }
 +        }
 +        if($target == 'datetime' || $target == 'date'){
-+          $value = $raw;
++          $format = $target == 'datetime' ? 'd.m.Y H:i' : 'd.m.Y';
++          try{
++            $dt = new \DateTime($raw);
++            $value = $dt->format($format);
++          } catch(\Exception $e) {
++            $value = '';
++          }
 +        }
 +        break;
 +      case 'integer':
@@ -101,6 +166,9 @@ index 20cffea..ca44761 100644
 +
 +      case 'decimal':
 +        $value = (float) $raw;
++        break;
++      case 'any':
++        $value = $field->getValues();
 +        break;
 +      default:
 +        $value = $raw;
@@ -118,20 +186,20 @@ index 20cffea..ca44761 100644
 +   * @return bool
 +   */
 +  protected static function isFieldList($index, $field) {
-+      $is_list = FALSE;
++    $is_list = FALSE;
 +
-+      // Ensure we get the field definition for the root/parent field item (ie tags).
-+      $property_definitions =  $index->getPropertyDefinitions($field->getDatasourceId());
-+      $root_property = Utility::splitPropertyPath($field->getPropertyPath(), FALSE)[0];
-+      $field_definition = $property_definitions[$root_property];
++    // Ensure we get the field definition for the root/parent field item (ie tags).
++    $property_definitions =  $index->getPropertyDefinitions($field->getDatasourceId());
++    $root_property = Utility::splitPropertyPath($field->getPropertyPath(), FALSE)[0];
++    $field_definition = $property_definitions[$root_property];
 +
-+      // Using $field_definition->isList() doesn't seem to be accurate, so we
-+      // check the fieldStorage cardinality !=1.
-+      if ($field_definition instanceof FieldDefinitionInterface) {
-+          $storage = $field_definition->getFieldStorageDefinition();
-+          if (1 != $storage->getCardinality()) {
-+              $is_list = TRUE;
-+            }
++    // Using $field_definition->isList() doesn't seem to be accurate, so we
++    // check the fieldStorage cardinality !=1.
++    if ($field_definition instanceof FieldDefinitionInterface) {
++      $storage = $field_definition->getFieldStorageDefinition();
++      if (1 != $storage->getCardinality()) {
++        $is_list = TRUE;
++      }
 +    }
 +    return $is_list;
 +  }
