@@ -69,6 +69,8 @@ third_party_settings:
         - field_apartment_structure
         - field_room_count
         - field_application_url
+        - field_stock_start_number
+        - field_stock_end_number
         - field_showing_time
         - field_has_yard
         - field_has_terrace
@@ -81,6 +83,8 @@ third_party_settings:
         - field_view_description
         - field_services_description
         - field_additional_information
+        - field_condition
+        - field_images
       parent_name: group_apartment_tabs
       weight: 22
       format_type: tab
@@ -105,7 +109,7 @@ third_party_settings:
         - field_parking_fee_explanation
         - field_other_fees
       parent_name: group_apartment_tabs
-      weight: 23
+      weight: 24
       format_type: tab
       region: content
       format_settings:
@@ -127,7 +131,7 @@ content:
     settings: {  }
     third_party_settings: {  }
   field_additional_information:
-    weight: 29
+    weight: 30
     settings:
       rows: 5
       placeholder: ''
@@ -151,7 +155,7 @@ content:
     type: string_textfield
     region: content
   field_application_url:
-    weight: 17
+    weight: 16
     settings:
       placeholder_url: ''
       placeholder_title: ''
@@ -159,7 +163,7 @@ content:
     type: link_default
     region: content
   field_balcony_description:
-    weight: 24
+    weight: 25
     settings:
       placeholder: ''
       rows: 5
@@ -167,7 +171,7 @@ content:
     type: string_textarea
     region: content
   field_bathroom_appliances:
-    weight: 25
+    weight: 26
     settings:
       rows: 5
       placeholder: ''
@@ -175,7 +179,7 @@ content:
     type: string_textarea
     region: content
   field_condition:
-    weight: 39
+    weight: 31
     settings:
       match_operator: CONTAINS
       match_limit: 10
@@ -213,35 +217,35 @@ content:
     type: number
     region: content
   field_has_apartment_sauna:
-    weight: 22
+    weight: 23
     settings:
       display_label: true
     third_party_settings: {  }
     type: boolean_checkbox
     region: content
   field_has_balcony:
-    weight: 21
+    weight: 22
     settings:
       display_label: true
     third_party_settings: {  }
     type: boolean_checkbox
     region: content
   field_has_terrace:
-    weight: 20
+    weight: 21
     settings:
       display_label: true
     third_party_settings: {  }
     type: boolean_checkbox
     region: content
   field_has_yard:
-    weight: 19
+    weight: 20
     settings:
       display_label: true
     third_party_settings: {  }
     type: boolean_checkbox
     region: content
   field_images:
-    weight: 39
+    weight: 32
     settings:
       progress_indicator: throbber
       preview_image_style: thumbnail
@@ -249,7 +253,7 @@ content:
     type: image_image
     region: content
   field_kitchen_appliances:
-    weight: 23
+    weight: 24
     settings:
       placeholder: ''
       rows: 5
@@ -315,7 +319,7 @@ content:
     type: number
     region: content
   field_services_description:
-    weight: 28
+    weight: 29
     settings:
       rows: 5
       placeholder: ''
@@ -323,27 +327,27 @@ content:
     type: string_textarea
     region: content
   field_showing_time:
-    weight: 18
+    weight: 19
     settings: {  }
     third_party_settings: {  }
     type: datetime_default
     region: content
   field_stock_end_number:
-    weight: 38
+    weight: 18
     settings:
       placeholder: ''
     third_party_settings: {  }
     type: number
     region: content
   field_stock_start_number:
-    weight: 37
+    weight: 17
     settings:
       placeholder: ''
     third_party_settings: {  }
     type: number
     region: content
   field_storage_description:
-    weight: 26
+    weight: 27
     settings:
       rows: 5
       placeholder: ''
@@ -351,7 +355,7 @@ content:
     type: string_textarea
     region: content
   field_view_description:
-    weight: 27
+    weight: 28
     settings:
       rows: 5
       placeholder: ''
@@ -435,5 +439,4 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
-hidden:
-  field_condition: true
+hidden: {  }
