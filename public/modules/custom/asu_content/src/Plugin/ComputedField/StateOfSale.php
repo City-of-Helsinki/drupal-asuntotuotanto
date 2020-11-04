@@ -59,7 +59,6 @@ class StateOfSale extends FieldItemList {
   protected function singleComputeValue() {
     $current_entity = $this->getEntity();
 
-
     $current_entity = $this->getEntity();
     $reverse_references = $this->reverseEntities->getReverseReferences($current_entity);
     $value = FALSE;
