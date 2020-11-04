@@ -187,9 +187,12 @@ class UploadFileHandler {
     ];
   }
 
-  public function createCsvOutput(array $input){
-    // Write the file
-    $csv = fopen('php://temp/maxmemory:'. (5*1024*1024), 'r+');
+  /**
+   * Create csv template file for user to download.
+   */
+  public function createCsvOutput(array $input) {
+    // Write the file.
+    $csv = fopen('php://temp/maxmemory:' . (5 * 1024 * 1024), 'r+');
     foreach ($input as $csv_row) {
       fputcsv($csv, $csv_row, ';', '"', '\\');;
     }
@@ -210,7 +213,7 @@ class UploadFileHandler {
    * @return array
    *   Array of rows to be written in csv
    */
-  public function createCsvTemplateRows(Node $node, array $fields_in_order){
+  public function createCsvTemplateRows(Node $node, array $fields_in_order) {
     $rows = [];
 
     foreach ($node->field_apartments as $apartment) {

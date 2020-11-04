@@ -68,7 +68,6 @@ final class Mailinglist extends ResourceBase {
     // User needs mailing list flag.
     // User's mailinglist flag needs to be set to true if it is true.
     // Use cron to send email (when?, unspecified) with information (what information?, unspecified).
-
     return new ModifiedResourceResponse('OK', 200);
 
   }
