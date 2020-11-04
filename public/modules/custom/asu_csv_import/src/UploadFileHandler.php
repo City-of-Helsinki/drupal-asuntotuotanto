@@ -188,6 +188,63 @@ class UploadFileHandler {
   }
 
   /**
+   * Create csv template file for user to download.
+   */
+  public function createCsvOutput(array $input) {
+    // Write the file.
+    $csv = fopen('php://temp/maxmemory:' . (5 * 1024 * 1024), 'r+');
+    foreach ($input as $csv_row) {
+      fputcsv($csv, $csv_row, ';', '"', '\\');;
+    }
+    rewind($csv);
+    $output = stream_get_contents($csv);
+    fclose($csv);
+    return $output;
+  }
+
+  /**
+   * Creates rows that can be written into a csv file.
+   *
+   * @param Drupal\node\Entity\Node $node
+   *   Node from form.
+   * @param array $fields_in_order
+   *   Array of fields that needs to be in the csv's header.
+   *
+   * @return array
+   *   Array of rows to be written in csv
+   */
+  public function createCsvTemplateRows(Node $node, array $fields_in_order) {
+    $rows = [];
+
+    foreach ($node->field_apartments as $apartment) {
+      $row = [];
+      $apt = Node::load($apartment->getValue()['target_id']);
+      foreach ($fields_in_order as $field) {
+        $data = NULL;
+        if (!$apt) {
+          continue;
+        }
+        try {
+          $value = $apt->{$field}->value ? $apt->{$field}->value : $apt->{$field}->getString();
+          $type = $apt->{$field}->getFieldDefinition()->getType();
+          $data = $this->createValue($value, $type);
+          if ($data) {
+            $row[] = $data->getExportValue();
+          }
+          else {
+            $row[] = '';
+          }
+        }
+        catch (\Exception $e) {
+          $row[] = '';
+        }
+      }
+      $rows[] = $row;
+    }
+    return $rows;
+  }
+
+  /**
    * Get uploaded csv file from form.
    *
    * @param array $fields

@@ -151,7 +151,7 @@ index 20cffea..1ac4096 100644
 +          }
 +        }
 +        if($target == 'datetime' || $target == 'date'){
-+          $format = $target == 'datetime' ? 'd.m.Y H:i' : 'd.m.Y';
++          $format = 'c';
 +          try{
 +            $dt = new \DateTime($raw);
 +            $value = $dt->format($format);

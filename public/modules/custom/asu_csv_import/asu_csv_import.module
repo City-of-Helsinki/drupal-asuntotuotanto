@@ -5,7 +5,6 @@
  * Csv import.
  */
 
-use Drupal\node\Entity\Node;
 use Drupal\Core\Form\FormStateInterface;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -45,65 +44,21 @@ function asu_csv_import_form_node_form_alter(&$form, FormStateInterface $form_st
  */
 function csv_import_download_template(&$form, FormStateInterface $form_state) {
   $node = $form_state->getFormObject()->getEntity();
-  $bundle = 'apartment';
   $upload_file_handler = \Drupal::service('asu_csv_import.upload_file_handler');
-  /** @var \Drupal\Core\Entity\EntityFieldManager $entityFieldManager */
-  $entityFieldManager = \Drupal::service('entity_field.manager');
 
-  $fields_in_order = Drupal::config('asu_csv_import.apartment_fields')->get('apartment_fields');
-
-  $fields = $entityFieldManager->getFieldDefinitions('node', $bundle);
-  $csv_headers = [];
-
-  // Get field definitions for csv fields.
-  foreach ($fields_in_order as $field_name) {
-    if ($fields[$field_name]) {
-      $csv_headers[] = $field_name;
-    }
+  $fields_order = Drupal::config('asu_csv_import.apartment_fields')->get('apartment_fields');
+  $rows = $upload_file_handler->createCsvTemplateRows($node, $fields_order);
+  try {
+    $csv = $upload_file_handler->createCsvOutput(array_merge([$fields_order], $rows));
+    $response = new Response($csv);
+    $response->headers->set('Content-type', 'text/csv');
+    $response->headers->set('Content-Disposition', 'attachment; filename=apartments.csv');
+    $form_state->setRebuild();
+    $form_state->setResponse($response);
   }
-
-  $rows = [];
-  // Pre-fill csv with existing data.
-  if ($node->field_apartments) {
-    foreach ($node->field_apartments as $apartment) {
-      $row = [];
-      $apt = Node::load($apartment->getValue()['target_id']);
-      foreach ($fields_in_order as $field) {
-        $data = NULL;
-        if (!$apt) {
-          continue;
-        }
-        try {
-          $value = $apt->{$field}->value ? $apt->{$field}->value : $apt->{$field}->getString();
-          $type = $apt->{$field}->getFieldDefinition()->getType();
-          $data = $upload_file_handler->createValue($value, $type);
-          if ($data) {
-            $row[] = $data->getExportValue();
-          }
-          else {
-            $row[] = '';
-          }
-        }
-        catch (\Exception $e) {
-          $row[] = '';
-        }
-      }
-      $rows[] = $row;
-    }
+  catch (\Exception $e) {
+    $form_state->setRebuild();
   }
-  $fp = fopen('php://output', 'w');
-  $delimiter = ';';
-  $enclosure = '"';
-  $escape_char = '\\';
-  foreach (array_merge([$csv_headers], $rows) as $csv_row) {
-    fputcsv($fp, $csv_row, $delimiter, $enclosure, $escape_char);
-  }
-  fclose($fp);
-
-  $response = new Response();
-  $response->headers->set('Content-type', 'text/csv');
-  $response->headers->set('Content-Disposition', 'attachment; filename=apartments.csv');
-  $form_state->setResponse($response);
 }
 
 /**
