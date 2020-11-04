@@ -30,7 +30,6 @@ dependencies:
     - field.field.node.apartment.field_sales_price
     - field.field.node.apartment.field_services_description
     - field.field.node.apartment.field_showing_time
-    - field.field.node.apartment.field_state_of_sale
     - field.field.node.apartment.field_stock_end_number
     - field.field.node.apartment.field_stock_start_number
     - field.field.node.apartment.field_storage_description
@@ -328,16 +327,6 @@ content:
     settings: {  }
     third_party_settings: {  }
     type: datetime_default
-    region: content
-  field_state_of_sale:
-    weight: 36
-    settings:
-      match_operator: CONTAINS
-      match_limit: 10
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
-    type: entity_reference_autocomplete
     region: content
   field_stock_end_number:
     weight: 38

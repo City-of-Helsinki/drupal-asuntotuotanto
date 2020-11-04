@@ -31,7 +31,6 @@ dependencies:
     - field.field.node.apartment.field_sales_price
     - field.field.node.apartment.field_services_description
     - field.field.node.apartment.field_showing_time
-    - field.field.node.apartment.field_state_of_sale
     - field.field.node.apartment.field_stock_end_number
     - field.field.node.apartment.field_stock_start_number
     - field.field.node.apartment.field_storage_description
@@ -53,6 +52,7 @@ content:
     region: content
 hidden:
   asu_computed_apartment_images: true
+  asu_state_of_sale: true
   field_acc_financeofficer: true
   field_acc_salesperson: true
   field_additional_information: true
@@ -107,7 +107,6 @@ hidden:
   field_services_description: true
   field_shareholder_meeting_date: true
   field_showing_time: true
-  field_state_of_sale: true
   field_stock_end_number: true
   field_stock_start_number: true
   field_storage_description: true

@@ -56,6 +56,7 @@ dependencies:
     - field.field.node.project.field_site_area
     - field.field.node.project.field_site_owner
     - field.field.node.project.field_site_renter
+    - field.field.node.project.field_state_of_sale
     - field.field.node.project.field_street_address
     - field.field.node.project.field_tasks
     - field.field.node.project.field_virtual_presentation_url
@@ -164,6 +165,7 @@ hidden:
   field_site_area: true
   field_site_owner: true
   field_site_renter: true
+  field_state_of_sale: true
   field_tasks: true
   field_virtual_presentation_url: true
   field_zoning_info: true

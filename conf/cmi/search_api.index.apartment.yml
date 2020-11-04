@@ -26,7 +26,6 @@ dependencies:
     - field.storage.node.field_services_description
     - field.storage.node.field_loan_share
     - field.storage.node.field_showing_time
-    - field.storage.node.field_state_of_sale
     - field.storage.node.field_storage_description
     - field.storage.node.field_has_terrace
     - field.storage.node.field_view_description
@@ -38,7 +37,6 @@ dependencies:
     - computed_field_plugin
     - asu_content
     - node
-    - taxonomy
     - search_api
 id: apartment
 name: Apartment
@@ -499,6 +497,14 @@ field_settings:
     datasource_id: 'entity:node'
     property_path: 'search_api_reverse_entity_references_node__field_apartments:field_site_renter'
     type: string
+  project_state_of_sale:
+    label: 'State of sale'
+    datasource_id: 'entity:node'
+    property_path: asu_state_of_sale
+    type: string
+    dependencies:
+      module:
+        - computed_field_plugin
   project_street_address:
     label: 'Street address'
     datasource_id: 'entity:node'
@@ -574,14 +580,6 @@ field_settings:
     datasource_id: 'entity:node'
     property_path: 'search_api_reverse_entity_references_node__field_apartments:field_site_owner'
     type: string
-  state_of_sale:
-    label: 'State of sale'
-    datasource_id: 'entity:node'
-    property_path: asu_state_of_sale
-    type: string
-    dependencies:
-      module:
-        - computed_field_plugin
   storage_description:
     label: 'Storage description'
     datasource_id: 'entity:node'

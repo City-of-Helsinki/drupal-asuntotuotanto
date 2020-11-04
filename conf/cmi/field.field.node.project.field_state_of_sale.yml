@@ -1,19 +1,19 @@
-uuid: 9bce2632-116a-4a45-b7bb-b882554c258a
-langcode: en
+uuid: d99fbeed-a3e2-4ab1-a69d-86475f7c52cf
+langcode: fi
 status: true
 dependencies:
   config:
     - field.storage.node.field_state_of_sale
-    - node.type.apartment
+    - node.type.project
     - taxonomy.vocabulary.states_of_sale
-id: node.apartment.field_state_of_sale
+id: node.project.field_state_of_sale
 field_name: field_state_of_sale
 entity_type: node
-bundle: apartment
-label: 'State of sale'
+bundle: project
+label: 'Myynnin tila'
 description: ''
 required: false
-translatable: false
+translatable: true
 default_value: {  }
 default_value_callback: ''
 settings:
