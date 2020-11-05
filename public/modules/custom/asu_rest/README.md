@@ -52,7 +52,7 @@ Parameters: (* = mandatory field)
 - project_id            : * int      - 32
 - subscribe_mailinglist : boolean    - 1/0, "true"/"false"
 
-Returns: Success/error message with approproate status code.
+Returns: Success/error message with appropriate status code.
 200 : OK
 400 : Missing required field: {fieldname}
 422 : Data is not valid: {fieldaname}
