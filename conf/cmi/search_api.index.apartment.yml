@@ -34,9 +34,9 @@ dependencies:
     - field.storage.node.field_has_yard
     - search_api.server.asuntotuotanto
   module:
-    - computed_field_plugin
     - asu_content
     - node
+    - computed_field_plugin
     - search_api
 id: apartment
 name: Apartment
@@ -62,11 +62,8 @@ field_settings:
   apartment_holding_type:
     label: 'Apartment holding type'
     datasource_id: 'entity:node'
-    property_path: field_apartment_holding_type
-    type: object
-    dependencies:
-      module:
-        - computed_field_plugin
+    property_path: 'search_api_reverse_entity_references_node__field_apartments:field_holding_type:entity:name'
+    type: string
   apartment_number:
     label: 'Apartment number'
     datasource_id: 'entity:node'
@@ -425,7 +422,7 @@ field_settings:
   project_new_development_status:
     label: 'New development status'
     datasource_id: 'entity:node'
-    property_path: 'search_api_reverse_entity_references_node__field_apartments:field_new_development_status'
+    property_path: 'search_api_reverse_entity_references_node__field_apartments:field_new_development_status:entity:name'
     type: string
   project_new_housing:
     label: 'New housing'
@@ -435,7 +432,7 @@ field_settings:
   project_ownership_type:
     label: 'Ownership type'
     datasource_id: 'entity:node'
-    property_path: 'search_api_reverse_entity_references_node__field_apartments:field_ownership_type'
+    property_path: 'search_api_reverse_entity_references_node__field_apartments:field_ownership_type:entity:name'
     type: string
   project_possession_transfer_date:
     label: 'Transfer of possession'
@@ -529,7 +526,7 @@ field_settings:
     label: 'Zoning information'
     datasource_id: 'entity:node'
     property_path: 'search_api_reverse_entity_references_node__field_apartments:field_zoning_info'
-    type: object
+    type: string
   project_zoning_status:
     label: 'Zoning status'
     datasource_id: 'entity:node'
@@ -578,7 +575,7 @@ field_settings:
   site_owner:
     label: 'Site owner'
     datasource_id: 'entity:node'
-    property_path: 'search_api_reverse_entity_references_node__field_apartments:field_site_owner'
+    property_path: 'search_api_reverse_entity_references_node__field_apartments:field_site_owner:entity:name'
     type: string
   storage_description:
     label: 'Storage description'
@@ -600,7 +597,7 @@ field_settings:
     label: 'Apartment url'
     datasource_id: 'entity:node'
     property_path: nid
-    type: computed_array_string
+    type: asu_url
     dependencies:
       module:
         - node

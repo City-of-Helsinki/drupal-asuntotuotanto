@@ -65,6 +65,7 @@ class ApartmentImages extends FieldItemList {
     $reverse_references = $this->reverseEntities->getReverseReferences($current_entity);
 
     $host = \Drupal::request()->getHost();
+    $images = [];
 
     foreach ($reverse_references as $reference) {
       if (
@@ -73,7 +74,6 @@ class ApartmentImages extends FieldItemList {
       ) {
         $referencing_node = $reference['referring_entity'];
 
-        $images = [];
         if (!$referencing_node->field_shared_apartment_images->isEmpty()) {
           $images = array_merge($images, $referencing_node->field_shared_apartment_images->getValue());
         }
