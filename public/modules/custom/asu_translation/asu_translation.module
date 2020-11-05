@@ -6,11 +6,10 @@
  */
 
 use Drupal\search_api\Entity\Index;
-use \Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
- * Implements hook_form_alter().
- *   Updates translation files when ElasticSearch index is is updated.
+ * Implements hook_form_alter(). Updates translation files when ElasticSearch index is is updated.
  */
 function asu_content_form_search_api_index_fields_alter(&$form, FormStateInterface $form_state) {
   $form['actions']['submit']['#submit'][] = 'asu_translation_create_translations';
@@ -22,7 +21,7 @@ function asu_content_form_search_api_index_fields_alter(&$form, FormStateInterfa
  * @param array $fields
  *   Fields array.
  */
-function asu_translation_create_translations($fields){
+function asu_translation_create_translations(array $fields) {
   /** @var \Drupal\asu_content\TranslationFileWriter $po_writer */
   $po_writer = \Drupal::service('asu_translation.translation_file_writer');
 

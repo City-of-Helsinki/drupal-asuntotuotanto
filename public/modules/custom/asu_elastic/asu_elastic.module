@@ -7,7 +7,6 @@
 
 /**
  * Implements hook_elasticsearch_connector_supported_data_types_alter().
- *   Add support for custom datatypes.
  */
 function asu_content_elasticsearch_connector_supported_data_types_alter(array &$data_types) {
   $data_types = [
