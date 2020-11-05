@@ -328,7 +328,7 @@ field_settings:
     label: 'Project description'
     datasource_id: 'entity:node'
     property_path: 'search_api_reverse_entity_references_node__field_apartments:field_project_description'
-    type: object
+    type: string
   project_district:
     label: District
     datasource_id: 'entity:node'
