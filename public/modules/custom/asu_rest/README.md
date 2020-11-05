@@ -1,14 +1,15 @@
 #ASU - REST
 
-Module for different APIs exposed for external systems.
+Custom module which extends core REST module.
+
+## Endpoints
 
 ###Filters 
 
 - Mainly used by react apartment filtering widget.
 - Returns filters that can be used to filter data indexed in ElasticSearch.
   - Filters are returned as json.
-  - Data is translated by langcode given in url.
-  
+  - Supports translations.
 
 ```
 example:
@@ -36,19 +37,22 @@ returns:
 ```
 
 ### Mailing list
+
+- Adding users to mailinglist.
+- User can:
+  - Request a notification for certain project. 
+  - Request to be added to a mailinglist.
+  
 ```
 Example:
-
 POST /fi/en/sv/mailinglist
 
-Parameters:
-- string  : user_email (required field) - "example@example.com"
-- int     : project_id (required field) - 32
-- Boolean : subscribe_mailinglist       - 1/0, "true"/"false"
+Parameters: (* = mandatory field)
+- user_email            : * string   - "example@example.com"
+- project_id            : * int      - 32
+- subscribe_mailinglist : boolean    - 1/0, "true"/"false"
 
-By default subscribe_mailinglist is false.
-
-Returns: Status code with success / error message.
+Returns: Success/error message with appropriate status code.
 200 : OK
 400 : Missing required field: {fieldname}
 422 : Data is not valid: {fieldaname}

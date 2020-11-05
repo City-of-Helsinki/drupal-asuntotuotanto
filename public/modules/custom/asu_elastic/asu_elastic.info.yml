@@ -1,0 +1,6 @@
+name: 'ASU - Elastic'
+type: module
+description: 'ASU - Elastic contains the extensions and customizations to SearchApi and ElasticSearch modules.'
+core: 8.x
+core_version_requirement: ^8 || ^9
+package: 'ASU'

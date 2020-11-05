@@ -4,7 +4,7 @@ status: '1'
 dependencies: {  }
 cluster_id: asuntotuotanto
 name: Asuntotuotanto
-url: 'http://asuntotuotanto-elastic'
+url: 'dev.asuntomyynti-elastic.druidfi.wod.by:80'
 options:
   multiple_nodes_connection: false
   use_authentication: 0
