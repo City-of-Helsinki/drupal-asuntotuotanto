@@ -5,13 +5,26 @@
  * Contains asu_translation.module.
  */
 
+use Drupal\search_api\Entity\Index;
+use \Drupal\Core\Form\FormStateInterface;
+
 /**
  * Implements hook_form_alter().
  *   Updates translation files when ElasticSearch index is is updated.
  */
-function asu_content_form_search_api_index_fields_alter() {
+function asu_content_form_search_api_index_fields_alter(&$form, FormStateInterface $form_state) {
+  $form['actions']['submit']['#submit'][] = 'asu_translation_create_translations';
+}
+
+/**
+ * Submit handler for search api index form.
+ *
+ * @param array $fields
+ *   Fields array.
+ */
+function asu_translation_create_translations($fields){
   /** @var \Drupal\asu_content\TranslationFileWriter $po_writer */
-  $po_writer = \Drupal::service('asu_content.translation_file_writer');
+  $po_writer = \Drupal::service('asu_translation.translation_file_writer');
 
   $index = Index::load('apartment');
   if ($index) {
@@ -22,4 +35,3 @@ function asu_content_form_search_api_index_fields_alter() {
     }
   }
 }
-

@@ -10,7 +10,6 @@ const FORMS_TO_HIDE_TITLE_FROM = [
   'node_apartment_form',
 ];
 
-use Drupal\search_api\Entity\Index;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\node\Entity\Node;

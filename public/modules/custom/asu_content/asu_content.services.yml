@@ -1,3 +1,7 @@
 services:
+  logger.channel.asu:
+    parent: logger.channel_base
+    arguments: ['asu']
   asu_content.collect_reverse_entity:
     class: Drupal\asu_content\CollectReverseEntity
+    arguments: ['@entity_type.manager','@entity_field.manager','@plugin.manager.field.field_type', '@logger.channel.asu']

@@ -2,8 +2,12 @@
 
 namespace Drupal\asu_content;
 
+use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\Query\QueryException;
+use Drupal\Core\Field\FieldTypePluginManagerInterface;
+use Drupal\Core\Logger\LoggerChannel;
 use Drupal\node\Entity\Node;
 
 /**
@@ -49,11 +53,11 @@ class CollectReverseEntity {
   /**
    * Constructs a StreetAddressField object.
    */
-  public function __construct() {
-    $this->entityTypeManager = \Drupal::service('entity_type.manager');
-    $this->entityFieldManager = \Drupal::service('entity_field.manager');
-    $this->fieldTypeManager = \Drupal::service('plugin.manager.field.field_type');
-    $this->logger = \Drupal::logger('reverse_entity_reference');
+  public function __construct(EntityTypeManagerInterface $entityTypeManager, EntityFieldManagerInterface $entityFieldManager, FieldTypePluginManagerInterface $fieldTypeManager, LoggerChannel $logger) {
+    $this->entityTypeManager = $entityTypeManager;
+    $this->entityFieldManager = $entityFieldManager;
+    $this->fieldTypeManager = $fieldTypeManager;
+    $this->logger = $logger;
   }
 
   /**
