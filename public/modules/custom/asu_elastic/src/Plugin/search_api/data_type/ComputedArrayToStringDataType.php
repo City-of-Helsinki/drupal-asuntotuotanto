@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\asu_content\Plugin\search_api\data_type;
+namespace Drupal\asu_elastic\Plugin\search_api\data_type;
 
 use Drupal\search_api\DataType\DataTypePluginBase;
 

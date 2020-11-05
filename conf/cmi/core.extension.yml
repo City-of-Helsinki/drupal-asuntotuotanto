@@ -5,6 +5,7 @@ module:
   asu_content: 0
   asu_csv_import: 0
   asu_editorial: 0
+  asu_elastic: 0
   asu_rest: 0
   asu_tasklist: 0
   asu_translation: 0
