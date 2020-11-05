@@ -113,21 +113,3 @@ function asu_content_elasticsearch_connector_supported_data_types_alter(array &$
     'any',
   ];
 }
-
-/**
- * Implements hook_form_alter().
- */
-function asu_content_form_search_api_index_fields_alter() {
-  /** @var \Drupal\asu_content\TranslationFileWriter $po_writer */
-  $po_writer = \Drupal::service('asu_content.translation_file_writer');
-
-  $index = Index::load('apartment');
-  if ($index) {
-    $fields = $index->getFields();
-
-    if ($fields) {
-      $po_writer->writePoFile($fields);
-    }
-  }
-
-}

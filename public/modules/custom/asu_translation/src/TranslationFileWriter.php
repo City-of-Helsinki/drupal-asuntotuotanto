@@ -1,7 +1,10 @@
 <?php
 
-namespace Drupal\asu_content;
+namespace Drupal\asu_translation;
 
+use Drupal\Core\Entity\EntityTypeManager;
+use Drupal\Core\Language\LanguageManager;
+use Drupal\Core\StringTranslation\TranslationManager;
 use Drupal\field\Entity\FieldConfig;
 
 /**
@@ -33,10 +36,10 @@ class TranslationFileWriter {
   /**
    * Constructor.
    */
-  public function __construct() {
-    $this->entityTypeManager = \Drupal::service('entity_type.manager');
-    $this->languageManager = \Drupal::languageManager();
-    $this->translationManager = \Drupal::translation();
+  public function __construct(EntityTypeManager $entityTypeManager, LanguageManager $languageManager, TranslationManager $translationManager) {
+    $this->entityTypeManager = $entityTypeManager;
+    $this->languageManager = $languageManager;
+    $this->translationManager = $translationManager;
   }
 
   /**
