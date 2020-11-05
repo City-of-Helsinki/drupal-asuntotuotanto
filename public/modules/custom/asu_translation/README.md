@@ -1,7 +1,11 @@
 # Asu translation
 
-A module which creates translation file for elasticsearch index keys and saves them to {langcode}.po file
+A module which creates translation file for elasticsearch index keys and saves them to {langcode}.po file.
 
-### How it works ?
+#### TranslationFileWriter -service
 
-When ElasticSearch index is updated, translation files are recreated based on the index.
+Writes translation files in public folder.
+
+### How it works
+
+Translation file generation is hooked to SearchApi's index form's submit handler.
