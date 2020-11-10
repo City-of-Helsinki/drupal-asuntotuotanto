@@ -34,7 +34,7 @@ dependencies:
     - field.storage.node.field_has_yard
     - search_api.server.asuntotuotanto
   module:
-    - asu_content
+    - asu_elastic
     - node
     - computed_field_plugin
     - search_api
