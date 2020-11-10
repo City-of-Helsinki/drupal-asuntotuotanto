@@ -56,7 +56,10 @@ final class Filters extends ResourceBase {
       'building_types' => 'project_building_type',
       'districts' => 'project_district',
       'new_development_status' => 'project_new_development_status',
-      'states_of_sale' => 'state_of_sale',
+    ];
+
+    $taxomy_machinenames_as_filters = [
+      'states_of_sale' => 'project_state_of_sale',
     ];
 
     $vocabularies = Vocabulary::loadMultiple();
@@ -74,6 +77,30 @@ final class Filters extends ResourceBase {
       foreach ($terms as $term) {
         $items[] = $term->hasTranslation($currentLanguage->getId()) ?
           $term->getTranslation($currentLanguage->getId())->getName() : $term->getName();
+      }
+
+      $vocabulary_name = $vocabularies[$terms[0]->bundle()]->get('name');
+      $index_data = [
+        'label' => $vocabulary_name,
+        'items' => $items,
+        'suffix' => NULL,
+      ];
+
+      $responseData[$elastic_index_name] = $index_data;
+    }
+
+    foreach ($taxomy_machinenames_as_filters as $taxonomy_name => $elastic_index_name) {
+      $terms = \Drupal::entityTypeManager()
+        ->getStorage('taxonomy_term')
+        ->loadTree($taxonomy_name, 0, NULL, TRUE);
+
+      if (!$terms) {
+        continue;
+      }
+
+      $items = [];
+      foreach ($terms as $term) {
+        $items[] = $term->field_machine_readable_name->value;
       }
 
       $vocabulary_name = $vocabularies[$terms[0]->bundle()]->get('name');

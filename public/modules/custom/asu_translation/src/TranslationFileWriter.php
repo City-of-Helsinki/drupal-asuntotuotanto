@@ -105,7 +105,7 @@ class TranslationFileWriter {
    */
   protected function doWriteTranslationFiles(array $translations) {
     foreach ($translations as $langcode => $translation_list) {
-      $fh = fopen("public://$langcode.po", 'w');
+      $fh = fopen("public://$langcode.po", 'w+');
 
       fwrite($fh, "#\n");
       fwrite($fh, "msgid \"\"\n");

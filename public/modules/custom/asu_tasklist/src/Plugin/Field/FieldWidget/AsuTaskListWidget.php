@@ -23,6 +23,9 @@ class AsuTaskListWidget extends WidgetBase {
    * {@inheritdoc}
    */
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
+    // Add tasklist javascript to the form.
+    $form['#attached']['library'][] = 'asu_tasklist/tasklist';
+
     $selected_vocabylary_id = $items[$delta]->getFieldDefinition()->getSettings()['selected_taxonomy_id'];
     $vocabulary = \Drupal::service('entity.repository')->loadEntityByUuid('taxonomy_vocabulary', $selected_vocabylary_id);
     $term_list = [];
@@ -51,13 +54,18 @@ class AsuTaskListWidget extends WidgetBase {
         $description = $task_list_values[$id]['description'];
       }
 
-      $elements["task:$id"] = [
+      $elements["task_$id"] = [
+        '#prefix' => '<div class="asu_task_wrapper">',
+        '#suffix' => '</div>',
+      ];
+
+      $elements["task_$id"]["task:$id"] = [
         '#type' => 'checkbox',
         '#title' => $this->t($name),
         '#default_value' => $bool,
       ];
 
-      $elements["description:$id"] = [
+      $elements["task_$id"]["description:$id"] = [
         '#type' => 'textfield',
         '#title' => $this->t('Description'),
         '#title_display' => 'invisible',
@@ -76,17 +84,18 @@ class AsuTaskListWidget extends WidgetBase {
    */
   public function massageFormValues(array $values, array $form, FormStateInterface $form_state) {
     $data = [];
-    foreach ($values[0]['value'] as $key => $value) {
-      $val = explode(':', $key);
-      if ($val[0] == 'task') {
-        $data[$val[1]]['tid'] = $val[1];
-        $data[$val[1]]['value'] = $value;
-      }
-      if ($val[0] == 'description') {
-        $data[$val[1]]['description'] = $value;
+    foreach ($values[0]['value'] as $key => $task_wrapper) {
+      $id = explode('_', $key)[1];
+      foreach ($task_wrapper as $field_name => $value) {
+        if ($field_name === "task:$id") {
+          $data[$id]['tid'] = $id;
+          $data[$id]['value'] = $value;
+        }
+        if ($field_name === "description:$id") {
+          $data[$id]['description'] = $data[$id]['value'] ? $value : '';
+        }
       }
     }
-
     return ['value' => serialize($data)];
   }
 
