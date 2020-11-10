@@ -1,4 +1,5 @@
 <?php
+
 namespace Drupal\asu_rest\Plugin\rest\resource;
 
 use Drupal\Core\StringTranslation\StringTranslationTrait;
