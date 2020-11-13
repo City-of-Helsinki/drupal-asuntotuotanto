@@ -1,22 +1,23 @@
 diff --git a/src/ElasticSearch/Parameters/Factory/IndexFactory.php b/src/ElasticSearch/Parameters/Factory/IndexFactory.php
-index 20cffea..1ac4096 100644
+index 20cffea..1eb83c7 100644
 --- a/src/ElasticSearch/Parameters/Factory/IndexFactory.php
 +++ b/src/ElasticSearch/Parameters/Factory/IndexFactory.php
-@@ -2,10 +2,13 @@
-
+@@ -2,10 +2,14 @@
+ 
  namespace Drupal\elasticsearch_connector\ElasticSearch\Parameters\Factory;
-
+ 
 +use Drupal\Core\Field\FieldDefinitionInterface;
 +use Drupal\file\Entity\File;
  use Drupal\search_api\IndexInterface;
  use Drupal\elasticsearch_connector\Event\PrepareIndexEvent;
  use Drupal\elasticsearch_connector\Event\PrepareIndexMappingEvent;
  use Drupal\elasticsearch_connector\Event\BuildIndexParamsEvent;
++use Drupal\search_api\Processor\EntityProcessorProperty;
 +use Drupal\search_api\Utility\Utility;
  use Drupal\search_api_autocomplete\Suggester\SuggesterInterface;
  use Drupal\elasticsearch_connector\Entity\Cluster;
-
-@@ -48,26 +51,26 @@ class IndexFactory {
+ 
+@@ -48,26 +52,26 @@ class IndexFactory {
     *
     * @return array
     */
@@ -60,12 +61,14 @@ index 20cffea..1ac4096 100644
 +
 +    return $indexConfig;
 +  }
-
+ 
    /**
     * Build parameters to bulk delete indexes.
-@@ -114,26 +117,16 @@ class IndexFactory {
+@@ -112,28 +116,17 @@ class IndexFactory {
+       ];
+       /** @var \Drupal\search_api\Item\FieldInterface $field */
        foreach ($item as $name => $field) {
-         $field_type = $field->getType();
+-        $field_type = $field->getType();
          if (!empty($field->getValues())) {
 -          $values = array();
 -          foreach ($field->getValues() as $value) {
@@ -84,9 +87,9 @@ index 20cffea..1ac4096 100644
 -
 -              default:
 -                $values[] = $value;
++          $value = [];
 +          foreach ($field->getValues() as $val) {
 +            if (self::isFieldList($index, $field)) {
-+              $value = [];
 +              $value[] = self::getFieldValue($field, $val);
 +            }
 +            else {
@@ -104,13 +107,21 @@ index 20cffea..1ac4096 100644
        }
 -     }
 +    }
-
+ 
      // Map index fields.
      foreach ($index->getFields() as $field_id => $field_data) {
-@@ -260,4 +253,116 @@ class IndexFactory {
+@@ -228,7 +221,6 @@ class IndexFactory {
+    *   uniqueness, the database name, and index machine name.
+    */
+   public static function getIndexName(IndexInterface $index) {
+-
+     // Get index machine name.
+     $index_machine_name = is_string($index) ? $index : $index->id();
+ 
+@@ -260,4 +252,112 @@ class IndexFactory {
      ));
    }
-
+ 
 +  /**
 +   * Helper function. Returns the elasticsearch value for a given field.
 +   *
@@ -121,10 +132,6 @@ index 20cffea..1ac4096 100644
 +   */
 +  protected static function getFieldValue($field, $raw) {
 +    $field_type = $field->getType();
-+    if($field->getFieldIdentifier() == 'image_urls'){
-+      $x = 1;
-+    }
-+    $field->getValues();
 +    switch ($field_type) {
 +      case 'string':
 +        $value = (string) $raw;
@@ -176,7 +183,6 @@ index 20cffea..1ac4096 100644
 +    return $value;
 +  }
 +
-+
 +  /**
 +   * Helper function. Returns true if the field is a list of values.
 +   *
@@ -198,8 +204,11 @@ index 20cffea..1ac4096 100644
 +    if ($field_definition instanceof FieldDefinitionInterface) {
 +      $storage = $field_definition->getFieldStorageDefinition();
 +      if (1 != $storage->getCardinality()) {
-+        $is_list = TRUE;
++        return TRUE;
 +      }
++    }
++    if($field->getDataDefinition()->getFieldDefinition()->getFieldStorageDefinition()->getCardinality() === -1){
++      return TRUE;
 +    }
 +    return $is_list;
 +  }
@@ -221,6 +230,4 @@ index 20cffea..1ac4096 100644
 +    }
 +  }
 +
-+
  }
-+
