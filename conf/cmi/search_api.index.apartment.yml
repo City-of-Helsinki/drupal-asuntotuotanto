@@ -382,7 +382,7 @@ field_settings:
   project_holding_type:
     label: 'Holding type'
     datasource_id: 'entity:node'
-    property_path: 'search_api_reverse_entity_references_node__field_apartments:field_holding_type'
+    property_path: 'search_api_reverse_entity_references_node__field_apartments:field_holding_type:entity:name'
     type: string
   project_housing_company:
     label: 'Housing company'
