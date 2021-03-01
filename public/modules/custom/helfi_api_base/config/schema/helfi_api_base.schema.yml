@@ -1,3 +1,0 @@
-action.configuration.remote_entity:migration_update:*:
-  type: action_configuration_default
-  label: 'Update given remote entity'
