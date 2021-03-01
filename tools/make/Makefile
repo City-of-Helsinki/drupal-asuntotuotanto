@@ -1,7 +1,7 @@
 .DEFAULT_GOAL := help
 
 BUILD_TARGETS :=
-CLEAN_FOLDERS := node_modules
+CLEAN_FOLDERS :=
 COMPOSER_BIN := $(shell which composer || echo no)
 COMPOSER_JSON_EXISTS := $(shell test -f composer.json && echo yes || echo no)
 DOCKER_COMPOSE_BIN := $(shell which docker-compose > /dev/null 2>&1 && which docker-compose || echo no)
@@ -16,9 +16,9 @@ UPDATE_SCRIPT_URL := https://git.io/fh771
 WEBROOT ?= public
 
 # Detect app
-IS_DRUPAL := $(shell test -f $(WEBROOT)/sites/default/settings.php && echo yes || echo no)
-IS_SYMFONY := $(shell test -f config/bundles.php && echo yes || echo no)
-IS_WP := $(shell test -f $(WEBROOT)/wp-settings.php && echo yes || echo no)
+IS_DRUPAL ?= $(shell test -f $(WEBROOT)/sites/default/settings.php && echo yes || echo no)
+IS_SYMFONY ?= $(shell test -f config/bundles.php && echo yes || echo no)
+IS_WP ?= $(shell (test -f $(WEBROOT)/wp-settings.php || test -f conf/wp-config.php) && echo yes || echo no)
 
 # Detect additional tooling
 AMAZEEIO_LEGACY := $(shell test -f .amazeeio.yml && echo yes || echo no)

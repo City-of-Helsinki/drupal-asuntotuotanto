@@ -1,4 +1,4 @@
-uuid: 04c2a075-5f82-46e6-afc2-0746bf1a4b22
+uuid: 705f5163-6930-4960-92b5-ce09f0389400
 langcode: en
 status: true
 dependencies: {  }
@@ -10,7 +10,5 @@ weight: 0
 is_admin: false
 permissions:
   - 'access content'
-  - 'restful get filter_rest_resource'
-  - 'restful post mailinglist'
-  - 'restful post mailinglist_rest_resource'
+  - 'display eu cookie compliance popup'
   - 'view media'

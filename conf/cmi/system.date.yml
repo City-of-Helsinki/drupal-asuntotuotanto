@@ -1,6 +1,6 @@
 country:
-  default: FI
-first_day: 1
+  default: ''
+first_day: 0
 timezone:
   default: Europe/Helsinki
   user:

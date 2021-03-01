@@ -4,7 +4,7 @@ description: 'Admin theme for Asuntotuotanto'
 package: Other
 core: 8.x
 core_version_requirement: ^8 || ^9
-base theme: gin
+base theme: hdbt_admin
 
 regions:
   header: 'Header'

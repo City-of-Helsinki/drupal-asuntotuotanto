@@ -1,0 +1,67 @@
+component-library:
+  css:
+    theme:
+      dist/css/component-library.min.css: {}
+  js:
+    dist/js/component-library.min.js: {}
+
+# Should be removed when all major browsers on most used operating systems
+# can handle CSS3 hyphens: auto. See. https://caniuse.com/#search=hyphens or
+# https://www.w3schools.com/cssref/css3_pr_hyphens.asp.
+hyphenopoly:
+  version: 4.9.0
+  header: true
+  js:
+    /themes/custom/hdbt/dist/js/hyphenopoly/Hyphenopoly_Loader.js: {type: external, preprocess: false}
+
+splide:
+  version: 2.4.21
+  js:
+    dist/js/splide/splide.min.js: {}
+  css:
+    theme:
+      dist/css/splide/splide-core.min.css: {}
+
+tiny-slider:
+  version: 2.9.3
+  js:
+    dist/js/tiny-slider/tiny-slider.js: {}
+  css:
+    theme:
+      dist/css/tiny-slider/tiny-slider.css: {}
+
+gallery:
+  version: 1.x
+  js:
+    dist/js/gallery-settings.min.js: {}
+  dependencies:
+    - hdbt/splide
+    - hdbt/tiny-slider
+
+handorgel:
+  version: 0.5.0
+  js:
+    dist/js/handorgel/handorgel.min.js: {}
+  css:
+    theme:
+      dist/css/handorgel/handorgel.min.css: {}
+
+accordion:
+  version: 1.x
+  js:
+    dist/js/accordion-settings.min.js: {}
+  dependencies:
+    - hdbt/handorgel
+
+global-styling:
+  version: 1.x
+  css:
+    theme:
+      dist/css/styles.min.css: {}
+
+global-scripting:
+  version: 1.x
+  js:
+    dist/js/bundle.min.js: {}
+  dependencies:
+    - core/drupal

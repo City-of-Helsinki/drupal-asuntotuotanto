@@ -1,0 +1,27 @@
+<?php
+
+/**
+ * @file
+ * Contains helfi_hauki installation procedures.
+ */
+
+use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+
+/**
+ * Install hauki resource_type field.
+ */
+function helfi_hauki_update_8001() : void {
+  $manager = \Drupal::entityDefinitionUpdateManager();
+  $fields = [];
+  $fields['resource_type'] = BaseFieldDefinition::create('string')
+    ->setLabel(new TranslatableMarkup('Resource type'))
+    ->setSettings([
+      'is_ascii' => TRUE,
+    ])
+    ->setReadOnly(TRUE);
+
+  foreach ($fields as $name => $field) {
+    $manager->installFieldStorageDefinition($name, 'hauki_resource', 'helfi_hauki', $field);
+  }
+}

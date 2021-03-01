@@ -1,0 +1,11 @@
+entity.ahjo_issue.settings:
+  title: Ahjo - Issue settings
+  description: Configure Ahjo issue entity type
+  route_name:  ahjo_issue.settings
+  parent: system.admin_structure
+
+entity.ahjo_issue.collection:
+  title: Ahjo - Issue entities
+  description: List of TPR unit entities
+  route_name: entity.ahjo_issue.collection
+  parent: system.admin_content

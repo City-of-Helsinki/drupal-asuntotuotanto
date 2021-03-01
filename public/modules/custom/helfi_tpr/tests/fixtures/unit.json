@@ -1,0 +1,274 @@
+[
+  {
+    "id": 22736,
+    "org_id": "6eb955d1-63a9-4df4-a802-dd00a52b838c",
+    "dept_id": "6eb955d1-63a9-4df4-a802-dd00a52b838c",
+    "provider_type": "SELF_PRODUCED",
+    "data_source_url": "www.omnia.fi",
+    "name_fi": "InnoOmnia",
+    "ontologyword_ids": [
+      68
+    ],
+    "ontologytree_ids": [
+      1381,
+      2138
+    ],
+    "latitude": 60.195263,
+    "longitude": 24.766584,
+    "northing_etrs_gk25": 6675851,
+    "easting_etrs_gk25": 25487052,
+    "northing_etrs_tm35fin": 6675252,
+    "easting_etrs_tm35fin": 376176,
+    "manual_coordinates": true,
+    "street_address_fi": "Mankkaantie 2-4 A 16-17",
+    "street_address_sv": "Mankansvägen 2-4 A 16-17",
+    "address_zip": "02180",
+    "address_city_fi": "Espoo",
+    "address_city_sv": "Esbo",
+    "address_city_en": "Espoo",
+    "phone": "+358 9 231 999",
+    "call_charge_info_fi": "pvm/mpm",
+    "call_charge_info_sv": "lna/msa",
+    "call_charge_info_en": "local network charge/mobile call charge",
+    "www_fi": "http://www.omnia.fi/Resource.phx/osio/osio-innoomnia/index.htx",
+    "www_sv": "http://www.omnia.fi/Resource.phx/osio/osio-innoomnia/index.htx",
+    "www_en": "http://www.omnia.fi/Resource.phx/osio/osio-innoomnia/index.htx",
+    "extra_searchwords_fi": "tukipalveluja yrittäjyyskasvatukseen, tukipalveluja yrittäjäkoulutukseen, tuote- ja palvelukonseptien kehittämistä, tuotekonseptien testaamista, työpisteitä kulkukorttiyrittäjille, työpisteitä opiskelijayrittäjille, vuokrattavia paja- toimisto- ja neuvottelutiloja, yritystoiminnan kehittämispalveluja, yritystoiminnan käynnistäminen",
+    "accessibility_viewpoints": "00:unknown,11:unknown,12:unknown,13:unknown,21:unknown,22:unknown,23:unknown,31:unknown,32:unknown,33:unknown,41:unknown,51:unknown,52:unknown,61:unknown",
+    "created_time": "2015-11-03T12:03:45",
+    "modified_time": "2015-11-03T12:03:45"
+  },
+  {
+    "id": 57331,
+    "org_id": "520a4492-cb78-498b-9c82-86504de88dce",
+    "dept_id": "d8dab34f-a68f-4244-b906-84e7f651b8e1",
+    "provider_type": "SELF_PRODUCED",
+    "data_source_url": "www.espoo.fi",
+    "name_fi": "Esteetön testireitti / Leppävaara",
+    "ontologyword_ids": [
+      364
+    ],
+    "ontologytree_ids": [
+      582
+    ],
+    "sources": [
+      {
+        "source": "lipas",
+        "id": "529182"
+      }
+    ],
+    "latitude": 60.215233,
+    "longitude": 24.810305,
+    "northing_etrs_gk25": 6678068,
+    "easting_etrs_gk25": 25489484,
+    "northing_etrs_tm35fin": 6677394,
+    "easting_etrs_tm35fin": 378673,
+    "manual_coordinates": true,
+    "street_address_fi": "Säterinkatu 3",
+    "street_address_sv": "Säterigatan 3",
+    "street_address_en": "Säterinkatu 3",
+    "address_zip": "02600",
+    "address_city_fi": "Espoo",
+    "address_city_sv": "Esbo",
+    "address_city_en": "Espoo",
+    "phone": "+358 9 8162 5000",
+    "call_charge_info_fi": "pvm/mpm",
+    "call_charge_info_sv": "lna/msa",
+    "call_charge_info_en": "local network charge/mobile call charge",
+    "email": "etunimi.sukunimi@espoo.fi",
+    "www_fi": "https://www.espoo.fi/fi-FI/Asuminen_ja_ymparisto/Asiakaspalvelu",
+    "www_sv": "https://www.espoo.fi/fi-FI/Asuminen_ja_ymparisto/Asiakaspalvelu",
+    "www_en": "https://www.espoo.fi/fi-FI/Asuminen_ja_ymparisto/Asiakaspalvelu",
+    "accessibility_viewpoints": "00:unknown,11:unknown,12:unknown,13:unknown,21:unknown,22:unknown,23:unknown,31:unknown,32:unknown,33:unknown,41:unknown,51:unknown,52:unknown,61:unknown",
+    "created_time": "2018-06-29T02:41:58",
+    "modified_time": "2018-06-29T02:42:21"
+  },
+  {
+    "id": 57362,
+    "org_id": "520a4492-cb78-498b-9c82-86504de88dce",
+    "dept_id": "d8dab34f-a68f-4244-b906-84e7f651b8e1",
+    "provider_type": "SELF_PRODUCED",
+    "data_source_url": "www.espoo.fi",
+    "name_fi": "Oittaan polkujuoksureitti 10km (GPS) - Testi",
+    "name_sv": "Oitans trail running rutt 10km (GPS) - Test",
+    "ontologyword_ids": [
+      413
+    ],
+    "ontologytree_ids": [
+      584
+    ],
+    "sources": [
+      {
+        "source": "lipas",
+        "id": "529242"
+      }
+    ],
+    "desc_fi": "Suomen Latu on laatinut Oittaalle polkujuoksun omatoimista harrastamista varten neljä suositusreittiä: 2.4 km, 4.7 km, 6.4 km &amp; 10.1 km. Suositusreitit ovat käytössä sulan maan aikaan.",
+    "latitude": 60.23469,
+    "longitude": 24.67902,
+    "northing_etrs_gk25": 6680264,
+    "easting_etrs_gk25": 25482216,
+    "northing_etrs_tm35fin": 6679809,
+    "easting_etrs_tm35fin": 371477,
+    "manual_coordinates": true,
+    "street_address_fi": "Kunnarlantie 33-39",
+    "street_address_sv": "Gunnarsvägen 33-39",
+    "street_address_en": "Kunnarlantie 33-39",
+    "address_zip": "02740",
+    "address_city_fi": "Espoo",
+    "address_city_sv": "Esbo",
+    "address_city_en": "Espoo",
+    "phone": "+358 50 466 7190",
+    "call_charge_info_fi": "pvm/mpm",
+    "call_charge_info_sv": "lna/msa",
+    "call_charge_info_en": "local network charge/mobile call charge",
+    "email": "oittaa@suomenlatu.fi",
+    "www_fi": "https://www.suomenlatu.fi/oittaa/polkujuoksureitit-oittaalla.html",
+    "www_sv": "https://www.suomenlatu.fi/oittaa/polkujuoksureitit-oittaalla.html",
+    "www_en": "https://www.suomenlatu.fi/oittaa/polkujuoksureitit-oittaalla.html",
+    "accessibility_viewpoints": "00:unknown,11:unknown,12:unknown,13:unknown,21:unknown,22:unknown,23:unknown,31:unknown,32:unknown,33:unknown,41:unknown,51:unknown,52:unknown,61:unknown",
+    "created_time": "2018-07-11T02:42:06",
+    "modified_time": "2018-07-11T02:42:32"
+  },
+  {
+    "id": 57363,
+    "org_id": "520a4492-cb78-498b-9c82-86504de88dce",
+    "dept_id": "d8dab34f-a68f-4244-b906-84e7f651b8e1",
+    "provider_type": "SELF_PRODUCED",
+    "data_source_url": "www.espoo.fi",
+    "name_fi": "Oittaan polkujuoksureitti 2,4km (GPS) - Testi",
+    "name_sv": "Oitans trail running rutt 2,4km (GPS) - Test",
+    "ontologyword_ids": [
+      413
+    ],
+    "ontologytree_ids": [
+      584
+    ],
+    "sources": [
+      {
+        "source": "lipas",
+        "id": "529239"
+      }
+    ],
+    "desc_fi": "Suomen Latu on laatinut Oittaalle polkujuoksun omatoimista harrastamista varten neljä suositusreittiä: 2.4 km, 4.7 km, 6.4 km &amp; 10.1 km. Suositusreitit ovat käytössä sulan maan aikaan.",
+    "latitude": 60.241558,
+    "longitude": 24.67044,
+    "northing_etrs_gk25": 6681031,
+    "easting_etrs_gk25": 25481745,
+    "northing_etrs_tm35fin": 6680590,
+    "easting_etrs_tm35fin": 371029,
+    "manual_coordinates": true,
+    "street_address_fi": "Kunnarlantie 33-39",
+    "street_address_sv": "Gunnarsvägen 33-39",
+    "street_address_en": "Kunnarlantie 33-39",
+    "address_zip": "02740",
+    "address_city_fi": "Espoo",
+    "address_city_sv": "Esbo",
+    "address_city_en": "Espoo",
+    "phone": "+358 50 466 7190",
+    "call_charge_info_fi": "pvm/mpm",
+    "call_charge_info_sv": "lna/msa",
+    "call_charge_info_en": "local network charge/mobile call charge",
+    "email": "oittaa@suomenlatu.fi",
+    "www_fi": "https://www.suomenlatu.fi/oittaa/polkujuoksureitit-oittaalla.html",
+    "www_sv": "https://www.suomenlatu.fi/oittaa/polkujuoksureitit-oittaalla.html",
+    "www_en": "https://www.suomenlatu.fi/oittaa/polkujuoksureitit-oittaalla.html",
+    "accessibility_viewpoints": "00:unknown,11:unknown,12:unknown,13:unknown,21:unknown,22:unknown,23:unknown,31:unknown,32:unknown,33:unknown,41:unknown,51:unknown,52:unknown,61:unknown",
+    "created_time": "2018-07-11T02:42:06",
+    "modified_time": "2018-07-11T02:42:32"
+  },
+  {
+    "id": 57364,
+    "org_id": "520a4492-cb78-498b-9c82-86504de88dce",
+    "dept_id": "d8dab34f-a68f-4244-b906-84e7f651b8e1",
+    "provider_type": "SELF_PRODUCED",
+    "data_source_url": "www.espoo.fi",
+    "name_fi": "Oittaan polkujuoksureitti 6,4km (GPS) - Testi",
+    "name_sv": "Oitans trail running rutt 6,4km (GPS) - Test",
+    "ontologyword_ids": [
+      413
+    ],
+    "ontologytree_ids": [
+      584
+    ],
+    "sources": [
+      {
+        "source": "lipas",
+        "id": "529241"
+      }
+    ],
+    "desc_fi": "Suomen Latu on laatinut Oittaalle polkujuoksun omatoimista harrastamista varten neljä suositusreittiä: 2.4 km, 4.7 km, 6.4 km &amp; 10.1 km. Suositusreitit ovat käytössä sulan maan aikaan.",
+    "latitude": 60.235645,
+    "longitude": 24.676586,
+    "northing_etrs_gk25": 6680371,
+    "easting_etrs_gk25": 25482082,
+    "northing_etrs_tm35fin": 6679920,
+    "easting_etrs_tm35fin": 371346,
+    "manual_coordinates": true,
+    "street_address_fi": "Kunnarlantie 33-39",
+    "street_address_sv": "Gunnarsvägen 33-39",
+    "street_address_en": "Kunnarlantie 33-39",
+    "address_zip": "02740",
+    "address_city_fi": "Espoo",
+    "address_city_sv": "Esbo",
+    "address_city_en": "Espoo",
+    "phone": "+358 50 466 7190",
+    "call_charge_info_fi": "pvm/mpm",
+    "call_charge_info_sv": "lna/msa",
+    "call_charge_info_en": "local network charge/mobile call charge",
+    "email": "oittaa@suomenlatu.fi",
+    "www_fi": "https://www.suomenlatu.fi/oittaa/polkujuoksureitit-oittaalla.html",
+    "www_sv": "https://www.suomenlatu.fi/oittaa/polkujuoksureitit-oittaalla.html",
+    "www_en": "https://www.suomenlatu.fi/oittaa/polkujuoksureitit-oittaalla.html",
+    "accessibility_viewpoints": "00:unknown,11:unknown,12:unknown,13:unknown,21:unknown,22:unknown,23:unknown,31:unknown,32:unknown,33:unknown,41:unknown,51:unknown,52:unknown,61:unknown",
+    "created_time": "2018-07-11T02:42:06",
+    "modified_time": "2018-07-11T02:42:32"
+  },
+  {
+    "id": 57365,
+    "org_id": "520a4492-cb78-498b-9c82-86504de88dce",
+    "dept_id": "d8dab34f-a68f-4244-b906-84e7f651b8e1",
+    "provider_type": "SELF_PRODUCED",
+    "data_source_url": "www.espoo.fi",
+    "name_fi": "Oittaan polkujuoksureitti 4,7km (GPS) - Testi",
+    "name_sv": "Oitans trail runningrutt 4,7km (GPS) - Test",
+    "ontologyword_ids": [
+      413
+    ],
+    "ontologytree_ids": [
+      584
+    ],
+    "sources": [
+      {
+        "source": "lipas",
+        "id": "529240"
+      }
+    ],
+    "desc_fi": "Suomen Latu on laatinut Oittaalle polkujuoksun omatoimista harrastamista varten neljä suositusreittiä: 2.4 km, 4.7 km, 6.4 km &amp; 10.1 km. Suositusreitit ovat käytössä sulan maan aikaan.",
+    "latitude": 60.24054,
+    "longitude": 24.673439,
+    "northing_etrs_gk25": 6680917,
+    "easting_etrs_gk25": 25481910,
+    "northing_etrs_tm35fin": 6680471,
+    "easting_etrs_tm35fin": 371191,
+    "manual_coordinates": true,
+    "street_address_fi": "Kunnarlantie 33-39",
+    "street_address_sv": "Gunnarsvägen 33-39",
+    "street_address_en": "Kunnarlantie 33-39",
+    "address_zip": "02740",
+    "address_city_fi": "Espoo",
+    "address_city_sv": "Esbo",
+    "address_city_en": "Espoo",
+    "phone": "+358 50 466 7190",
+    "call_charge_info_fi": "pvm/mpm",
+    "call_charge_info_sv": "lna/msa",
+    "call_charge_info_en": "local network charge/mobile call charge",
+    "email": "oittaa@suomenlatu.fi",
+    "www_fi": "https://www.suomenlatu.fi/oittaa/polkujuoksureitit-oittaalla.html",
+    "www_sv": "https://www.suomenlatu.fi/oittaa/polkujuoksureitit-oittaalla.html",
+    "www_en": "https://www.suomenlatu.fi/oittaa/polkujuoksureitit-oittaalla.html",
+    "accessibility_viewpoints": "00:unknown,11:unknown,12:unknown,13:unknown,21:unknown,22:unknown,23:unknown,31:unknown,32:unknown,33:unknown,41:unknown,51:unknown,52:unknown,61:unknown",
+    "created_time": "2018-07-11T02:42:06",
+    "modified_time": "2018-07-11T02:42:32"
+  }
+]

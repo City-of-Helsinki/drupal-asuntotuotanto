@@ -1,0 +1,53 @@
+.text {
+  @include font-size(18px, 27px);
+  margin-top: $spacing-double - $spacing-and-half;
+
+  @include breakpoint($breakpoint-l) {
+    margin-top: $spacing-quadruple - $spacing-and-half;
+  }
+
+  .text__text-content {
+    max-width: $content-width-max;
+
+    @include breakpoint($breakpoint-m) {
+      padding-left: $spacing-triple * 2;
+    }
+
+    > *:first-child {
+      margin-top: $spacing-double - $spacing-and-half;
+
+      @include breakpoint($breakpoint-m) {
+        margin-top: $spacing-quadruple - $spacing-and-half;
+      }
+    }
+
+    > p:first-child {
+      margin-top: 0;
+    }
+
+    > *:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  + .text {
+    margin-top: 0;
+  }
+
+  ul, ol {
+    padding: 0;
+
+    li {
+      margin-left: $spacing-double;
+      padding-left: $spacing;
+    }
+
+    ul, ol {
+      margin-top: $spacing;
+
+      li {
+        margin-left: $spacing;
+      }
+    }
+  }
+}

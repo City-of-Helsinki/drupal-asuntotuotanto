@@ -1,0 +1,22 @@
+name: 'HELfi Media'
+description: 'Media configuration for platform.'
+type: module
+core: 8.x
+core_version_requirement: '^8 || ^9'
+dependencies:
+  - content_translation
+  - crop
+  - field
+  - file
+  - focal_point
+  - image
+  - image_style_quality
+  - language
+  - media
+  - media_entity_soundcloud
+  - media_library
+  - path
+  - responsive_image
+  - system
+  - user
+package: HELfi

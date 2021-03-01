@@ -1,0 +1,53 @@
+langcode: en
+status: true
+dependencies:
+  enforced:
+    module:
+      - helfi_tpr
+id: tpr_unit
+migration_tags:
+  - tpr
+label: 'TPR unit'
+source:
+  plugin: tpr_service_map
+  track_changes: true
+  url: 'https://www.hel.fi/palvelukarttaws/rest/v4/unit/'
+  ids:
+    id:
+      type: string
+process:
+  id: id
+  service_map_embed: id
+  latitude: latitude
+  longitude: longitude
+  streetview_entrance_url/uri: streetview_entrance_url
+  description/format:
+    plugin: default_value
+    default_value: filtered_html
+  address/postal_code: address_zip
+  address/country_code:
+    plugin: default_value
+    default_value: FI
+  phone:
+    plugin: explode
+    source: phone
+    delimiter: ','
+    strict: false
+  changed:
+    -
+      plugin: format_date
+      source: modified_time
+      from_format: 'Y-m-d\TH:i:s'
+      to_format: U
+      from_timezone: Europe/Helsinki
+      to_timezone: UTC
+  created:
+    plugin: format_date
+    source: created_time
+    from_format: 'Y-m-d\TH:i:s'
+    to_format: U
+    from_timezone: Europe/Helsinki
+    to_timezone: UTC
+destination:
+  plugin: tpr_unit
+migration_dependencies: {  }
