@@ -45,3 +45,4 @@ hidden:
   field_has_hero: true
   field_liftup_image: true
   langcode: true
+  search_api_excerpt: true

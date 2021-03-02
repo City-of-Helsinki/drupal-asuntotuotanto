@@ -37,3 +37,4 @@ hidden:
   field_has_hero: true
   field_hero: true
   langcode: true
+  search_api_excerpt: true

@@ -31,21 +31,18 @@ settings:
       banner: banner
       list_of_links: list_of_links
     target_bundles_drag_drop:
-      columns:
-        enabled: true
-        weight: 1
-      banner:
-        enabled: true
-        weight: 2
-      list_of_links:
-        enabled: true
-        weight: 3
       accordion:
         weight: 4
         enabled: false
       accordion_item:
         weight: 5
         enabled: false
+      banner:
+        enabled: true
+        weight: 2
+      columns:
+        enabled: true
+        weight: 1
       gallery:
         weight: 6
         enabled: false
@@ -58,6 +55,9 @@ settings:
       image:
         weight: 9
         enabled: false
+      list_of_links:
+        enabled: true
+        weight: 3
       list_of_links_item:
         weight: 10
         enabled: false
