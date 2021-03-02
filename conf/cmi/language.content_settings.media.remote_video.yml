@@ -1,0 +1,18 @@
+uuid: 12e53df1-8977-42b2-9d32-cf645e295bbb
+langcode: en
+status: true
+dependencies:
+  config:
+    - media.type.remote_video
+  module:
+    - content_translation
+third_party_settings:
+  content_translation:
+    enabled: true
+_core:
+  default_config_hash: W7YfIhAOIwvyPQmKlhuh5d94_oZSSsj83AYQaegVafs
+id: media.remote_video
+target_entity_type_id: media
+target_bundle: remote_video
+default_langcode: fi
+language_alterable: true

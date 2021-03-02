@@ -3,7 +3,7 @@ description: A Drupal 9 theme - Based on stable.
 type: theme
 core_version_requirement: ^8 || ^9
 screenshot: asuntotuotanto.jpg
-base theme: stable
+base theme: hdbt
 
 # Define Libraries
 libraries:

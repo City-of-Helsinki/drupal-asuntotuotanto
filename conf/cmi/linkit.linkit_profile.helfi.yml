@@ -1,0 +1,23 @@
+uuid: ab0e08f5-463e-48b3-9599-d5e6ed1b4462
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+_core:
+  default_config_hash: 9MilJc3w4sqLnabw-oBXlTosaHizFXK0TP6QbZbsIzw
+id: helfi
+label: Helfi
+description: 'A Linkit profile for Helfi.'
+matchers:
+  49b7eb26-ed0f-47be-8b6b-3c2ab7a70069:
+    uuid: 49b7eb26-ed0f-47be-8b6b-3c2ab7a70069
+    id: 'entity:node'
+    weight: 0
+    settings:
+      include_unpublished: false
+      metadata: 'by [node:author] | [node:created:medium]'
+      bundles: {  }
+      group_by_bundle: false
+      substitution_type: canonical
+      limit: 100

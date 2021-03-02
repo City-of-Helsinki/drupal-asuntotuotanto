@@ -1,0 +1,21 @@
+uuid: 3d3bbcfb-e5ca-4a7f-82a9-d8f41c03c620
+langcode: en
+status: true
+dependencies:
+  module:
+    - paragraphs
+    - text
+_core:
+  default_config_hash: edGUBG1QEid6aYr_X2dfEvLYsBH6UvdvAYTfZXsi5RA
+id: paragraph.field_banner_desc
+field_name: field_banner_desc
+entity_type: paragraph
+type: text_long
+settings: {  }
+module: text
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

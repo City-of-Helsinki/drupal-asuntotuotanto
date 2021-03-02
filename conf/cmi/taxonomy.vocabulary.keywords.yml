@@ -1,0 +1,10 @@
+uuid: 12ef809d-7dcb-458d-8de7-0fab9b33b92c
+langcode: en
+status: true
+dependencies: {  }
+_core:
+  default_config_hash: d5rETFNsjsIV5l3mRop-SdWxiSRJFUvK2YnOGFn4pUw
+name: Keywords
+vid: keywords
+description: ''
+weight: 0

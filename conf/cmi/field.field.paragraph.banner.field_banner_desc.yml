@@ -1,0 +1,23 @@
+uuid: 7669505f-3987-4081-b4a0-7e0b20ee347b
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_banner_desc
+    - paragraphs.paragraphs_type.banner
+  module:
+    - text
+_core:
+  default_config_hash: 26cesp__Ipvs9-qumv2FtKQx4YidhWZIP3DDyK6accQ
+id: paragraph.banner.field_banner_desc
+field_name: field_banner_desc
+entity_type: paragraph
+bundle: banner
+label: Description
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long
