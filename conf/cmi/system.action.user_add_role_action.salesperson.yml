@@ -1,0 +1,14 @@
+uuid: 0b41e48e-8ed5-45f7-8746-d4b6400c7850
+langcode: en
+status: true
+dependencies:
+  config:
+    - user.role.salesperson
+  module:
+    - user
+id: user_add_role_action.salesperson
+label: 'Add the Salesperson role to the selected user(s)'
+type: user
+plugin: user_add_role_action
+configuration:
+  rid: salesperson
