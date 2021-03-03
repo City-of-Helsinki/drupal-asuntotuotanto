@@ -1,0 +1,22 @@
+uuid: b3b59208-cbbe-4b6f-ac36-1a849ebb102b
+langcode: en
+status: true
+dependencies:
+  module:
+    - personal_id
+    - user
+id: user.field_identification_number
+field_name: field_identification_number
+entity_type: user
+type: personal_id
+settings:
+  max_length: 255
+  is_ascii: false
+  case_sensitive: false
+module: personal_id
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

@@ -7,10 +7,12 @@ dependencies:
     - field.field.user.user.field_bank_account_number
     - field.field.user.user.field_email_address
     - field.field.user.user.field_full_name
+    - field.field.user.user.field_identification_number
     - field.field.user.user.field_nickname
     - field.field.user.user.field_phone_number
   module:
     - path
+    - personal_id
     - user
 id: user.user.default
 targetEntityType: user
@@ -53,6 +55,14 @@ content:
       placeholder: ''
     third_party_settings: {  }
     type: string_textfield
+    region: content
+  field_identification_number:
+    weight: 37
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: personal_id_plain_widget
     region: content
   field_nickname:
     weight: 32
