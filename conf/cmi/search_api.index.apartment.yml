@@ -28,6 +28,7 @@ dependencies:
     - field.storage.node.field_showing_time
     - field.storage.node.field_storage_description
     - field.storage.node.field_has_terrace
+    - field.storage.node.field_floor_max
     - field.storage.node.field_view_description
     - field.storage.node.field_water_fee
     - field.storage.node.field_water_fee_explanation
@@ -144,6 +145,14 @@ field_settings:
     dependencies:
       config:
         - field.storage.node.field_floor
+  floor_max:
+    label: 'Amount of floors'
+    datasource_id: 'entity:node'
+    property_path: field_floor_max
+    type: integer
+    dependencies:
+      config:
+        - field.storage.node.field_floor_max
   has_apartment_sauna:
     label: Sauna
     datasource_id: 'entity:node'
@@ -370,7 +379,7 @@ field_settings:
     property_path: 'search_api_reverse_entity_references_node__field_apartments:field_has_elevator'
     type: boolean
   project_has_sauna:
-    label: 'Taloyhtiössä on sauna'
+    label: 'Project has sauna'
     datasource_id: 'entity:node'
     property_path: 'search_api_reverse_entity_references_node__field_apartments:field_has_sauna'
     type: boolean
