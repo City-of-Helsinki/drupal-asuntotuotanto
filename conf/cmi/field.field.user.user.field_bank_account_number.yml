@@ -1,0 +1,20 @@
+uuid: 81a1156b-4ecf-4700-9b5f-652ab96d98e5
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.user.field_bank_account_number
+  module:
+    - user
+id: user.user.field_bank_account_number
+field_name: field_bank_account_number
+entity_type: user
+bundle: user
+label: 'Bank account number'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string
