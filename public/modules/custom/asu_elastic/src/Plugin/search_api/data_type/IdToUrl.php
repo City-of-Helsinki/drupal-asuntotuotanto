@@ -6,7 +6,7 @@ use Drupal\node\Entity\Node;
 use Drupal\search_api\DataType\DataTypePluginBase;
 
 /**
- * Provides a cent data type.
+ * Node id to url.
  *
  * @SearchApiDataType(
  *   id = "asu_url",

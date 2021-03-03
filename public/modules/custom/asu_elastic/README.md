@@ -15,3 +15,11 @@ SearchApi data types can be used to easily alter the indexed data:
 ### Adding computed fields to elastic index
 
 Computed fields are handled by asu_content -module. See asu_computed README.md
+
+
+## Development
+
+If ElasticSearch Docker container is running you can query the indexed data
+ - Open your browser
+ - Browse to address 0.0.0.0:9200/_search
+ - You can add queries as queryparameter: for example ?size=100 return 100 results.
