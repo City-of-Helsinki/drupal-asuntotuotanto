@@ -36,6 +36,7 @@
         "drupal/paragraphs": "^1.12",
         "drupal/paragraphs_asymmetric_translation_widgets": "^1.0@beta",
         "drupal/pathauto": "^1.8",
+        "drupal/personal_id": "^2.0@beta",
         "drupal/rabbit_hole": "^1.0@beta",
         "drupal/redirect": "^1.6",
         "drupal/restui": "^1.19",
