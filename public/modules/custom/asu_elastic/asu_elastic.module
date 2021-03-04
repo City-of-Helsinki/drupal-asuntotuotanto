@@ -14,6 +14,7 @@ function asu_content_elasticsearch_connector_supported_data_types_alter(array &$
     'computed_array_decimal',
     'computed_array_string',
     'asu_url',
+    'asu_file_url',
     'any',
   ];
 }
