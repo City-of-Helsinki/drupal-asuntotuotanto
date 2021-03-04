@@ -1,0 +1,47 @@
+uuid: f867f123-ee6b-4e78-9b95-e52e2d7e77bf
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_form_mode.user.register
+    - field.field.user.user.field_address
+    - field.field.user.user.field_bank_account_number
+    - field.field.user.user.field_full_name
+    - field.field.user.user.field_identification_number
+    - field.field.user.user.field_nickname
+    - field.field.user.user.field_phone_number
+  module:
+    - user
+id: user.user.register
+targetEntityType: user
+bundle: user
+mode: register
+content:
+  account:
+    weight: 1
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_full_name:
+    weight: 0
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  translation:
+    weight: 10
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+hidden:
+  field_address: true
+  field_bank_account_number: true
+  field_identification_number: true
+  field_nickname: true
+  field_phone_number: true
+  langcode: true
+  language: true
+  path: true
+  timezone: true
