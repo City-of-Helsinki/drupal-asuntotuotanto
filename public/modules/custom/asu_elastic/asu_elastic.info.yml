@@ -4,3 +4,5 @@ description: 'ASU - Elastic contains the extensions and customizations to Search
 core: 8.x
 core_version_requirement: ^8 || ^9
 package: 'ASU'
+dependencies:
+  - elasticsearch_connector
