@@ -17,19 +17,16 @@ jobs:
         ports:
           - 3306:3306
 
+      elastic:
+        image: docker.elastic.co/elasticsearch/elasticsearch:7.9.1
+        env:
+          - cluster.name=es-docker-cluster
+          - bootstrap.memory_lock=true
+          - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+        ports:
+          - 9200:9200
+
     steps:
-      - name: Configure sysctl limits
-        run: |
-          sudo swapoff -a
-          sudo sysctl -w vm.swappiness=1
-          sudo sysctl -w fs.file-max=262144
-          sudo sysctl -w vm.max_map_count=262144
-
-      - name: Runs Elasticsearch
-        uses: elastic/elastic-github-actions/elasticsearch@master
-        with:
-          stack-version: 7.9.1
-
       - uses: actions/checkout@v2
         with:
           fetch-depth: 1
