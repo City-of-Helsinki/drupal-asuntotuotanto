@@ -232,7 +232,9 @@ class AsuFileWidget extends WidgetBase implements ContainerFactoryPluginInterfac
       '#upload_location' => $items[$delta]->getUploadLocation(),
       '#upload_validators' => $items[$delta]->getUploadValidators(),
       '#value_callback' => [get_class($this), 'value'],
-      '#process' => array_merge($element_info['#process'], [[get_class($this), 'process']]),
+      '#process' => array_merge($element_info['#process'],
+        [[get_class($this), 'process']]
+      ),
       '#progress_indicator' => $this->getSetting('progress_indicator'),
       // Allows this field to return an array instead of a single value.
       '#extended' => TRUE,
@@ -246,7 +248,10 @@ class AsuFileWidget extends WidgetBase implements ContainerFactoryPluginInterfac
     ];
 
     $element['#weight'] = $delta;
-    $element['#element_validate'][] = [get_class($this), 'validateCsvFieldValues'];
+    $element['#element_validate'][] = [
+      get_class($this),
+      'validateCsvFieldValues',
+    ];
     // Field stores FID value in a single mode, so we need to transform it for
     // form element to recognize it correctly.
     if (!isset($items[$delta]->fids) && isset($items[$delta]->target_id)) {
