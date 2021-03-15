@@ -329,17 +329,9 @@ class UploadFileHandler {
 
       default:
         $value = FALSE;
-
-      return $value;
-      /*
-      case 'list_integer':
-      // Lists should not be used, use taxonomies instead.
-      break;
-      case 'asu_computed_render_array':
-      // Computed fields should be skipped.
-      break;
-       */
     }
+
+    return $value;
   }
 
 }
