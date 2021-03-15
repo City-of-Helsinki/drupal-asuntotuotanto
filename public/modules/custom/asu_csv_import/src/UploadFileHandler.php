@@ -194,7 +194,8 @@ class UploadFileHandler {
     // Write the file.
     $csv = fopen('php://temp/maxmemory:' . (5 * 1024 * 1024), 'r+');
     foreach ($input as $csv_row) {
-      fputcsv($csv, $csv_row, ';', '"', '\\');;
+      fputcsv($csv, $csv_row, ';', '"', '\\');
+      ;
     }
     rewind($csv);
     $output = stream_get_contents($csv);

@@ -77,7 +77,7 @@ class StateOfSale extends FieldItemList {
       }
     }
 
-    // TODO: When displaying the field in twig add value&label through theme.
+    // @todo When displaying the field in twig add value&label through theme.
     // But do make note of search api index before adding theme function.
     return [
       '#markup' => $value,
