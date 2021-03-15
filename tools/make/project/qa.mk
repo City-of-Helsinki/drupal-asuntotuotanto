@@ -5,12 +5,12 @@ LINT_PATHS_JS += /app/$(WEBROOT)/themes/custom/**/src/js/*
 
 asu-lint-php: ## Customized code style checking for PHP files
 	$(call step,Check code style for PHP files...)
-	@docker run --rm $(subst $(space),'',$(LINT_PATHS_PHP)) druidfi/drupal-qa:$(DRUPAL_VERSION) bash -c "phpcs -n . --ignore='*/elasticsearch_connector/*,*.css,*.md,node_modules'."
+	@docker run --rm $(subst $(space),'',$(LINT_PATHS_PHP)) druidfi/drupal-qa:$(DRUPAL_VERSION) bash -c "phpcs -n . --ignore='*/elasticsearch_connector/*,*.css,*/helfi_*/*,*.md,node_modules'."
 	$(call test_result,lint-php,"[OK]")
 
 asu-lint-fix: ## Fix code style
 	$(call step,Fix code with PHP Code Beautifier and Fixer...)
-	@docker run --rm -it $(subst $(space),'',$(LINT_PATHS_PHP)) druidfi/drupal-qa:$(DRUPAL_VERSION) bash -c "phpcbf .  --ignore='*/elasticsearch_connector/*,*.css,*.md,node_modules'."
+	@docker run --rm -it $(subst $(space),'',$(LINT_PATHS_PHP)) druidfi/drupal-qa:$(DRUPAL_VERSION) bash -c "phpcbf .  --ignore='*/elasticsearch_connector/*,*.css,*/helfi_*/*,*.md,node_modules'."
 
 asu-lint-js: DOCKER_NODE_IMG ?= node:12.18-alpine
 asu-lint-js: WD := /app
