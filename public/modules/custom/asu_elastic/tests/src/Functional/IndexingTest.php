@@ -6,9 +6,7 @@ namespace Drupal\Tests\asu_elastic\Functional;
 
 use Drupal\node\NodeInterface;
 use Drupal\search_api\Entity\Index;
-use Drupal\search_api\Entity\Server;
 use Drupal\taxonomy\Entity\Vocabulary;
-use GuzzleHttp\ClientInterface;
 use weitzman\DrupalTestTraits\ExistingSiteBase;
 
 /**
@@ -26,12 +24,12 @@ final class IndexingTest extends ExistingSiteBase {
     $index->clear();
 
     $index->getServerId();
-    /** @var Server $server */
+    /** @var \Drupal\search_api\Entity\Server $server */
     $server = $index->getServerInstance();
 
     $elastic_url = 'http://elastic:9200/_search';
 
-    /** @var ClientInterface $client */
+    /** @var \GuzzleHttp\ClientInterface $client */
     $client = $this->container->get('http_client');
     $result = json_decode($client->request('GET', $elastic_url)->getBody()->getContents(), TRUE);
 
@@ -90,7 +88,7 @@ final class IndexingTest extends ExistingSiteBase {
    * @return array
    *   Values for createnode function.
    */
-  private function apartmentData(){
+  private function apartmentData() {
     $d = new \DateTime();
 
     return [
@@ -105,11 +103,12 @@ final class IndexingTest extends ExistingSiteBase {
    * Get project data.
    *
    * @param \Drupal\node\NodeInterface $apartment
-   *  The content entity.
+   *   The content entity.
+   *
    * @return array
-   *  Values for createnode function.
+   *   Values for createnode function.
    */
-  private function projectData(NodeInterface $apartment){
+  private function projectData(NodeInterface $apartment) {
     $heating_option = $this->createTerm(Vocabulary::load('heating_options'), ['Maalämpö']);
     $construction_material = $this->createTerm(Vocabulary::load('construction_materials'), ['Puu']);
 
@@ -125,4 +124,3 @@ final class IndexingTest extends ExistingSiteBase {
   }
 
 }
-
