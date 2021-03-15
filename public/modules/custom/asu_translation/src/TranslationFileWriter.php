@@ -8,7 +8,7 @@ use Drupal\Core\StringTranslation\TranslationManager;
 use Drupal\field\Entity\FieldConfig;
 
 /**
- * Class TranslationFileWriter.
+ * Writes translation file.
  */
 class TranslationFileWriter {
 

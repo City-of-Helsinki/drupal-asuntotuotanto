@@ -63,11 +63,10 @@ final class Mailinglist extends ResourceBase {
       $subscribe = FALSE;
     }
 
-    // TODO: create logic. This task is not yet defined properly.
-    // Check if project with id exists and premarketing time is somewhere in the future.
-    // User needs mailing list flag.
-    // User's mailinglist flag needs to be set to true if it is true.
-    // Use cron to send email (when?, unspecified) with information (what information?, unspecified).
+    // @todo Create logic, this task is not yet defined properly.
+    // Check that project exists and premarketing end time < now.
+    // Add user id & project id in database.
+    // Create view which shows mailinglist subscriptions by project.
     return new ModifiedResourceResponse('OK', 200);
 
   }

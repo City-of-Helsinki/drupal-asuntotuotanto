@@ -15,7 +15,7 @@ abstract class ImportType {
   protected $value;
 
   /**
-   * Constructor validates and sets the $value. In case of invalid value throw an exception.
+   * Constructor validates and sets the $value.
    *
    * @param mixed $value
    *   Value.
@@ -49,7 +49,7 @@ abstract class ImportType {
   abstract public function getExportValue();
 
   /**
-   * Tostring.
+   * To string.
    *
    * @return string
    *   Value.

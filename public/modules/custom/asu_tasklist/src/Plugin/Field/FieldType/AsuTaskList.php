@@ -36,7 +36,7 @@ class AsuTaskList extends FieldItemBase implements FieldItemInterface {
   public function storageSettingsForm(array &$form, FormStateInterface $form_state, $has_data) {
     $vocabularies = Vocabulary::loadMultiple();
     $vocabularies_list = [];
-    foreach ($vocabularies as $vid => $vocabulary) {
+    foreach ($vocabularies as $vocabulary) {
       $vocabularies_list[$vocabulary->uuid()] = $vocabulary->get('name');
     }
 

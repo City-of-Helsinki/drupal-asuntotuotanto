@@ -13,7 +13,7 @@ class ApartmentSearchController extends ControllerBase {
    * Returns a renderable array for a asuntohaku page.
    */
   public function content() {
-    // @TODO: Should be replaced with block when frontend theme is available.
+    // @todo Should be replaced with block when frontend theme is available.
     $build = [
       '#markup' => '<div id="search"></div>',
       '#attached' => [

@@ -10,7 +10,7 @@ use Drupal\node\Entity\Node;
 use Drupal\taxonomy\Entity\Term;
 
 /**
- * Class ApartmentHoldingType.
+ * Computer field ApartmentHoldingType.
  *
  * @ComputedField(
  *   id = "field_apartment_holding_type",
@@ -75,7 +75,7 @@ class ApartmentHoldingType extends FieldItemList {
       }
     }
 
-    // TODO: When displaying the field in twig add value&label through theme.
+    // @todo When displaying the field in twig add value&label through theme.
     // But do make note of search api index before adding theme function.
     return [
       '#markup' => $value,

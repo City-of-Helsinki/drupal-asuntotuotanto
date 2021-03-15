@@ -5,8 +5,6 @@ namespace Drupal\asu_rest\Plugin\rest\resource;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\rest\Plugin\ResourceBase;
-use Psr\Log\LoggerInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -24,20 +22,6 @@ use Symfony\Component\HttpFoundation\Request;
  */
 final class Filters extends ResourceBase {
   use StringTranslationTrait;
-
-  /**
-   * Constructor.
-   */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, array $serializer_formats, LoggerInterface $logger) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition, $serializer_formats, $logger);
-  }
-
-  /**
-   * Create.
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return parent::create($container, $configuration, $plugin_id, $plugin_definition);
-  }
 
   /**
    * Responds to GET requests.

@@ -73,7 +73,6 @@ class UploadFileHandler {
           continue;
         }
 
-        // Loop through the fields. Create function throws exception if data is invalid.
         foreach ($row as $key => $data) {
           $type = $field_types[$key];
           try {
@@ -194,7 +193,8 @@ class UploadFileHandler {
     // Write the file.
     $csv = fopen('php://temp/maxmemory:' . (5 * 1024 * 1024), 'r+');
     foreach ($input as $csv_row) {
-      fputcsv($csv, $csv_row, ';', '"', '\\');;
+      fputcsv($csv, $csv_row, ';', '"', '\\');
+      ;
     }
     rewind($csv);
     $output = stream_get_contents($csv);
@@ -300,43 +300,38 @@ class UploadFileHandler {
    * @throws \Exception
    */
   public function createValue($data, $type) {
+    $value = NULL;
     switch ($type) {
       case 'integer':
-        return new NumberType($data);
+        $value = new NumberType($data);
+        break;
 
-      break;
       case 'string':
       case 'string_long':
-        return new TextType($data);
+        $value = new TextType($data);
+        break;
 
-      break;
       case 'link':
-        return new LinkType($data);
+        $value = new LinkType($data);
+        break;
 
-      break;
       case 'decimal':
-        return new DecimalType($data);
+        $value = new DecimalType($data);
+        break;
 
-      break;
       case 'boolean':
-        return new BooleanType($data);
+        $value = new BooleanType($data);
+        break;
 
-      break;
       case 'datetime':
-        return new DateType($data);
+        $value = new DateType($data);
+        break;
 
-      break;
       default:
-        return FALSE;
-      /*
-      case 'list_integer':
-      // Lists should not be used, use taxonomies instead.
-      break;
-      case 'asu_computed_render_array':
-      // Computed fields should be skipped.
-      break;
-       */
+        $value = FALSE;
     }
+
+    return $value;
   }
 
 }
