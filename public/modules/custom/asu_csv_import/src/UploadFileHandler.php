@@ -304,28 +304,28 @@ class UploadFileHandler {
     switch ($type) {
       case 'integer':
         $value = new NumberType($data);
-      break;
+        break;
 
       case 'string':
       case 'string_long':
         $value = new TextType($data);
-      break;
+        break;
 
       case 'link':
         $value = new LinkType($data);
-      break;
+        break;
 
       case 'decimal':
         $value = new DecimalType($data);
-      break;
+        break;
 
       case 'boolean':
         $value = new BooleanType($data);
-      break;
+        break;
 
       case 'datetime':
         $value = new DateType($data);
-      break;
+        break;
 
       default:
         $value = FALSE;
