@@ -11,6 +11,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Render\ElementInfoManagerInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\file\Element\ManagedFile;
 use Drupal\file\Entity\File;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -29,6 +30,8 @@ use Symfony\Component\Validator\ConstraintViolationListInterface;
  * )
  */
 class AsuFileWidget extends WidgetBase implements ContainerFactoryPluginInterface {
+
+  use StringTranslationTrait;
 
   /**
    * {@inheritdoc}
@@ -60,13 +63,13 @@ class AsuFileWidget extends WidgetBase implements ContainerFactoryPluginInterfac
   public function settingsForm(array $form, FormStateInterface $form_state) {
     $element['progress_indicator'] = [
       '#type' => 'radios',
-      '#title' => t('Progress indicator'),
+      '#title' => $this->t('Progress indicator'),
       '#options' => [
-        'throbber' => t('Throbber'),
-        'bar' => t('Bar with progress meter'),
+        'throbber' => $this->t('Throbber'),
+        'bar' => $this->t('Bar with progress meter'),
       ],
       '#default_value' => $this->getSetting('progress_indicator'),
-      '#description' => t('The throbber display does not show the status of uploads but takes up less space. The progress bar is helpful for monitoring progress on large uploads.'),
+      '#description' => $this->t('The throbber display does not show the status of uploads but takes up less space. The progress bar is helpful for monitoring progress on large uploads.'),
       '#weight' => 16,
       '#access' => file_progress_implementation(),
     ];
@@ -78,7 +81,7 @@ class AsuFileWidget extends WidgetBase implements ContainerFactoryPluginInterfac
    */
   public function settingsSummary() {
     $summary = [];
-    $summary[] = t('Progress indicator: @progress_indicator', ['@progress_indicator' => $this->getSetting('progress_indicator')]);
+    $summary[] = $this->t('Progress indicator: @progress_indicator', ['@progress_indicator' => $this->getSetting('progress_indicator')]);
     return $summary;
   }
 
@@ -134,7 +137,7 @@ class AsuFileWidget extends WidgetBase implements ContainerFactoryPluginInterfac
           // defined by widget.
           $element['_weight'] = [
             '#type' => 'weight',
-            '#title' => t('Weight for row @number', ['@number' => $delta + 1]),
+            '#title' => $this->t('Weight for row @number', ['@number' => $delta + 1]),
             '#title_display' => 'invisible',
             // Note: this 'delta' is the FAPI #type 'weight' element's property.
             '#delta' => $max,
@@ -190,7 +193,7 @@ class AsuFileWidget extends WidgetBase implements ContainerFactoryPluginInterfac
       // Add some properties that will eventually be added to the file upload
       // field. These are added here so that they may be referenced easily
       // through a hook_form_alter().
-      $elements['#file_upload_title'] = t('Add a new file');
+      $elements['#file_upload_title'] = $this->t('Add a new file');
       $elements['#file_upload_description'] = [
         '#theme' => 'file_upload_help',
         '#description' => '',
@@ -232,7 +235,9 @@ class AsuFileWidget extends WidgetBase implements ContainerFactoryPluginInterfac
       '#upload_location' => $items[$delta]->getUploadLocation(),
       '#upload_validators' => $items[$delta]->getUploadValidators(),
       '#value_callback' => [get_class($this), 'value'],
-      '#process' => array_merge($element_info['#process'], [[get_class($this), 'process']]),
+      '#process' => array_merge($element_info['#process'],
+        [[get_class($this), 'process']]
+      ),
       '#progress_indicator' => $this->getSetting('progress_indicator'),
       // Allows this field to return an array instead of a single value.
       '#extended' => TRUE,
@@ -246,7 +251,10 @@ class AsuFileWidget extends WidgetBase implements ContainerFactoryPluginInterfac
     ];
 
     $element['#weight'] = $delta;
-    $element['#element_validate'][] = [get_class($this), 'validateCsvFieldValues'];
+    $element['#element_validate'][] = [
+      get_class($this),
+      'validateCsvFieldValues',
+    ];
     // Field stores FID value in a single mode, so we need to transform it for
     // form element to recognize it correctly.
     if (!isset($items[$delta]->fids) && isset($items[$delta]->target_id)) {

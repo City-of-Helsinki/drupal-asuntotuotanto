@@ -6,7 +6,7 @@ use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Theme\ThemeNegotiatorInterface;
 
 /**
- * Class ApplyTheme.
+ * An ApplyTheme class.
  *
  * @package Drupal\asu_editorial\Theme
  */

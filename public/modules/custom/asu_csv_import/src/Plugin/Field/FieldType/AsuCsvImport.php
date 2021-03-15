@@ -12,6 +12,7 @@ use Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StreamWrapper\StreamWrapperInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\TypedData\DataDefinition;
 
 /**
@@ -29,6 +30,8 @@ use Drupal\Core\TypedData\DataDefinition;
  * )
  */
 class AsuCsvImport extends EntityReferenceItem {
+
+  use StringTranslationTrait;
 
   /**
    * {@inheritdoc}
@@ -115,15 +118,15 @@ class AsuCsvImport extends EntityReferenceItem {
 
     $element['display_field'] = [
       '#type' => 'checkbox',
-      '#title' => t('Enable <em>Display</em> field'),
+      '#title' => $this->t('Enable <em>Display</em> field'),
       '#default_value' => $this->getSetting('display_field'),
-      '#description' => t('The display option allows users to choose if a file should be shown when viewing the content.'),
+      '#description' => $this->t('The display option allows users to choose if a file should be shown when viewing the content.'),
     ];
     $element['display_default'] = [
       '#type' => 'checkbox',
-      '#title' => t('Files displayed by default'),
+      '#title' => $this->t('Files displayed by default'),
       '#default_value' => $this->getSetting('display_default'),
-      '#description' => t('This setting only has an effect if the display option is enabled.'),
+      '#description' => $this->t('This setting only has an effect if the display option is enabled.'),
       '#states' => [
         'visible' => [
           ':input[name="settings[display_field]"]' => ['checked' => TRUE],
@@ -134,10 +137,10 @@ class AsuCsvImport extends EntityReferenceItem {
     $scheme_options = \Drupal::service('stream_wrapper_manager')->getNames(StreamWrapperInterface::WRITE_VISIBLE);
     $element['uri_scheme'] = [
       '#type' => 'radios',
-      '#title' => t('Upload destination'),
+      '#title' => $this->t('Upload destination'),
       '#options' => $scheme_options,
       '#default_value' => $this->getSetting('uri_scheme'),
-      '#description' => t('Select where the final files should be stored. Private file storage has significantly more overhead than public files, but allows restricted access to files within this field.'),
+      '#description' => $this->t('Select where the final files should be stored. Private file storage has significantly more overhead than public files, but allows restricted access to files within this field.'),
       '#disabled' => $has_data,
     ];
 
@@ -153,9 +156,9 @@ class AsuCsvImport extends EntityReferenceItem {
 
     $element['file_directory'] = [
       '#type' => 'textfield',
-      '#title' => t('File directory'),
+      '#title' => $this->t('File directory'),
       '#default_value' => $settings['file_directory'],
-      '#description' => t('Optional subdirectory within the upload destination where files will be stored. Do not include preceding or trailing slashes.'),
+      '#description' => $this->t('Optional subdirectory within the upload destination where files will be stored. Do not include preceding or trailing slashes.'),
       '#element_validate' => [[get_class($this), 'validateDirectory']],
       '#weight' => 3,
     ];
@@ -164,9 +167,9 @@ class AsuCsvImport extends EntityReferenceItem {
     $extensions = str_replace(' ', ', ', $settings['file_extensions']);
     $element['file_extensions'] = [
       '#type' => 'textfield',
-      '#title' => t('Allowed file extensions'),
+      '#title' => $this->t('Allowed file extensions'),
       '#default_value' => $extensions,
-      '#description' => t('Separate extensions with a space or comma and do not include the leading dot.'),
+      '#description' => $this->t('Separate extensions with a space or comma and do not include the leading dot.'),
       '#element_validate' => [[get_class($this), 'validateExtensions']],
       '#weight' => 1,
       '#maxlength' => 256,
@@ -177,9 +180,9 @@ class AsuCsvImport extends EntityReferenceItem {
 
     $element['max_filesize'] = [
       '#type' => 'textfield',
-      '#title' => t('Maximum upload size'),
+      '#title' => $this->t('Maximum upload size'),
       '#default_value' => $settings['max_filesize'],
-      '#description' => t('Enter a value like "512" (bytes), "80 KB" (kilobytes) or "50 MB" (megabytes) in order to restrict the allowed file size. If left empty the file sizes will be limited only by PHP\'s maximum post and file upload sizes (current limit <strong>%limit</strong>).', ['%limit' => format_size(Environment::getUploadMaxSize())]),
+      '#description' => $this->t('Enter a value like "512" (bytes), "80 KB" (kilobytes) or "50 MB" (megabytes) in order to restrict the allowed file size. If left empty the file sizes will be limited only by PHP\'s maximum post and file upload sizes (current limit <strong>%limit</strong>).', ['%limit' => format_size(Environment::getUploadMaxSize())]),
       '#size' => 10,
       '#element_validate' => [[get_class($this), 'validateMaxFilesize']],
       '#weight' => 5,
@@ -187,7 +190,7 @@ class AsuCsvImport extends EntityReferenceItem {
 
     $element['description_field'] = [
       '#type' => 'checkbox',
-      '#title' => t('Enable <em>Description</em> field'),
+      '#title' => $this->t('Enable <em>Description</em> field'),
       '#default_value' => isset($settings['description_field']) ? $settings['description_field'] : '',
       '#description' => t('The description field allows users to enter a description about the uploaded file.'),
       '#weight' => 11,
@@ -199,9 +202,10 @@ class AsuCsvImport extends EntityReferenceItem {
   /**
    * Form API callback.
    *
-   * Removes slashes from the beginning and end of the destination value and
-   * ensures that the file directory path is not included at the beginning of the
-   * value.
+   * Removes slashes from the beginning
+   * and end of the destination value and
+   * ensures that file directory path isn't included
+   * at the beginning of the value.
    *
    * This function is assigned as an #element_validate callback in
    * fieldSettingsForm().
@@ -220,7 +224,7 @@ class AsuCsvImport extends EntityReferenceItem {
    *
    * This doubles as a convenience clean-up function and a validation routine.
    * Commas are allowed by the end-user, but ultimately the value will be stored
-   * as a space-separated list for compatibility with file_validate_extensions().
+   * as space-separated list for compatibility with file_validate_extensions().
    */
   public static function validateExtensions($element, FormStateInterface $form_state) {
     if (!empty($element['#value'])) {

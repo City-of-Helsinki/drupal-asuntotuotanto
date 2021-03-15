@@ -10,7 +10,7 @@ use Drupal\node\Entity\Node;
 use Drupal\taxonomy\Entity\Term;
 
 /**
- * Class PricePerSquareMeter.
+ * Computed field PricePerSquareMeter.
  *
  * @ComputedField(
  *   id = "multiple_values_field",
