@@ -1,8 +1,5 @@
 project-tabs:
   js:
     assets/js/project-tabs.js: {}
-  css:
-    theme:
-      assets/css/project-tabs.css: {}
   dependencies:
     - core/jquery
