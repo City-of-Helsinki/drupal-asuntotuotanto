@@ -33,7 +33,7 @@ class AsuTaskListWidget extends WidgetBase {
     if (isset($vocabulary)) {
       /** @var \Drupal\taxonomy\Entity\Term[] $terms */
       $terms = \Drupal::service('entity_type.manager')->getStorage("taxonomy_term")->loadTree($vocabulary->get('originalId'), 0, 1, TRUE);
-      foreach ($terms as $key => $term) {
+      foreach ($terms as $term) {
         $term_list[$term->id()] = $term->getName();
       }
     }

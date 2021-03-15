@@ -10,7 +10,7 @@ use Drupal\node\Entity\Node;
 use Drupal\taxonomy\Entity\Term;
 
 /**
- * Class ApartmentHoldingType.
+ * Computer field ApartmentHoldingType.
  *
  * @ComputedField(
  *   id = "field_apartment_holding_type",

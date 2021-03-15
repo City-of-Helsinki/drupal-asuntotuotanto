@@ -10,7 +10,7 @@ use Drupal\node\Entity\Node;
 use Drupal\taxonomy\Entity\Term;
 
 /**
- * Class ApartmentHoldingType.
+ * Computed field ApartmentHoldingType.
  *
  * @ComputedField(
  *   id = "asu_state_of_sale",

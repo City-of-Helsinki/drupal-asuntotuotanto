@@ -9,7 +9,7 @@ use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\node\Entity\Node;
 
 /**
- * Class StreetAddressField.
+ * Computed field StreetAddressField.
  *
  * @ComputedField(
  *   id = "field_apartment_address",

@@ -8,7 +8,7 @@ use Drupal\Core\TypedData\DataDefinitionInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
 
 /**
- * Class PricePerSquareMeter.
+ * Computed field PricePerSquareMeter.
  *
  * @ComputedField(
  *   id = "field_price_m2",

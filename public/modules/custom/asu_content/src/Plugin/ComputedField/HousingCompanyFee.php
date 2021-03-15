@@ -8,7 +8,7 @@ use Drupal\Core\TypedData\DataDefinitionInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
 
 /**
- * Class HousingCompanyFee.
+ * Computed field HousingCompanyFee.
  *
  * @ComputedField(
  *   id = "field_housing_company_fee",

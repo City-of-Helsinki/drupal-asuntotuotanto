@@ -9,7 +9,9 @@ use Drupal\search_api\Entity\Index;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
- * Implements hook_form_alter(). Updates translation files when ElasticSearch index is is updated.
+ * Implements hook_form_FORM_ID_alter().
+ *
+ * Updates translation files when ElasticSearch index is is updated.
  */
 function asu_content_form_search_api_index_fields_alter(&$form, FormStateInterface $form_state) {
   $form['actions']['submit']['#submit'][] = 'asu_translation_create_translations';
