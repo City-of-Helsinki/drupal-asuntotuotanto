@@ -23,22 +23,6 @@ class HousingCompanyFee extends FieldItemList {
   use ComputedSingleItemTrait;
 
   /**
-   * Constructs a HousingCompanyFee object.
-   *
-   * @param \Drupal\Core\TypedData\DataDefinitionInterface $definition
-   *   The data definition.
-   * @param string $name
-   *   (optional) The name of the created property, or NULL if it is the root
-   *   of a typed data tree. Defaults to NULL.
-   * @param \Drupal\Core\TypedData\TypedDataInterface $parent
-   *   (optional) The parent object of the data property, or NULL if it is the
-   *   root of a typed data tree. Defaults to NULL.
-   */
-  public function __construct(DataDefinitionInterface $definition, $name = NULL, TypedDataInterface $parent = NULL) {
-    parent::__construct($definition, $name, $parent);
-  }
-
-  /**
    * Compute the housing company fee value.
    *
    * @return mixed

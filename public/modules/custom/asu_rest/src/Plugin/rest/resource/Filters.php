@@ -26,20 +26,6 @@ final class Filters extends ResourceBase {
   use StringTranslationTrait;
 
   /**
-   * Constructor.
-   */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, array $serializer_formats, LoggerInterface $logger) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition, $serializer_formats, $logger);
-  }
-
-  /**
-   * Create.
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return parent::create($container, $configuration, $plugin_id, $plugin_definition);
-  }
-
-  /**
    * Responds to GET requests.
    *
    * @param \Symfony\Component\HttpFoundation\Request $request

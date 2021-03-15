@@ -45,8 +45,9 @@ class AsuTaskListFormatter extends FormatterBase {
       }
     }
 
+    $task_string = $this->t('Tasks');
     $total_task_count = count($terms);
-    $template = $this->t('Tasks') . ': ' . $count . '/' . $total_task_count;
+    $template = $task_string . ': ' . $count . '/' . $total_task_count;
 
     $element = [
       '#type' => 'inline_template',

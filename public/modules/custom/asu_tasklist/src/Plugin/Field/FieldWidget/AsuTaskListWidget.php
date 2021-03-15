@@ -61,7 +61,7 @@ class AsuTaskListWidget extends WidgetBase {
 
       $elements["task_$id"]["task:$id"] = [
         '#type' => 'checkbox',
-        '#title' => $this->t($name),
+        '#title' => $name,
         '#default_value' => $bool,
       ];
 
