@@ -124,9 +124,9 @@ class AsuCsvImport extends EntityReferenceItem {
     ];
     $element['display_default'] = [
       '#type' => 'checkbox',
-      '#title' =>$this->t('Files displayed by default'),
+      '#title' => $this->t('Files displayed by default'),
       '#default_value' => $this->getSetting('display_default'),
-      '#description' =>$this->t('This setting only has an effect if the display option is enabled.'),
+      '#description' => $this->t('This setting only has an effect if the display option is enabled.'),
       '#states' => [
         'visible' => [
           ':input[name="settings[display_field]"]' => ['checked' => TRUE],
@@ -137,10 +137,10 @@ class AsuCsvImport extends EntityReferenceItem {
     $scheme_options = \Drupal::service('stream_wrapper_manager')->getNames(StreamWrapperInterface::WRITE_VISIBLE);
     $element['uri_scheme'] = [
       '#type' => 'radios',
-      '#title' =>$this->t('Upload destination'),
+      '#title' => $this->t('Upload destination'),
       '#options' => $scheme_options,
       '#default_value' => $this->getSetting('uri_scheme'),
-      '#description' =>$this->t('Select where the final files should be stored. Private file storage has significantly more overhead than public files, but allows restricted access to files within this field.'),
+      '#description' => $this->t('Select where the final files should be stored. Private file storage has significantly more overhead than public files, but allows restricted access to files within this field.'),
       '#disabled' => $has_data,
     ];
 
@@ -156,9 +156,9 @@ class AsuCsvImport extends EntityReferenceItem {
 
     $element['file_directory'] = [
       '#type' => 'textfield',
-      '#title' =>$this->t('File directory'),
+      '#title' => $this->t('File directory'),
       '#default_value' => $settings['file_directory'],
-      '#description' =>$this->t('Optional subdirectory within the upload destination where files will be stored. Do not include preceding or trailing slashes.'),
+      '#description' => $this->t('Optional subdirectory within the upload destination where files will be stored. Do not include preceding or trailing slashes.'),
       '#element_validate' => [[get_class($this), 'validateDirectory']],
       '#weight' => 3,
     ];
@@ -167,9 +167,9 @@ class AsuCsvImport extends EntityReferenceItem {
     $extensions = str_replace(' ', ', ', $settings['file_extensions']);
     $element['file_extensions'] = [
       '#type' => 'textfield',
-      '#title' =>$this->t('Allowed file extensions'),
+      '#title' => $this->t('Allowed file extensions'),
       '#default_value' => $extensions,
-      '#description' =>$this->t('Separate extensions with a space or comma and do not include the leading dot.'),
+      '#description' => $this->t('Separate extensions with a space or comma and do not include the leading dot.'),
       '#element_validate' => [[get_class($this), 'validateExtensions']],
       '#weight' => 1,
       '#maxlength' => 256,
@@ -224,7 +224,7 @@ class AsuCsvImport extends EntityReferenceItem {
    *
    * This doubles as a convenience clean-up function and a validation routine.
    * Commas are allowed by the end-user, but ultimately the value will be stored
-   * as a space-separated list for compatibility with file_validate_extensions().
+   * as space-separated list for compatibility with file_validate_extensions().
    */
   public static function validateExtensions($element, FormStateInterface $form_state) {
     if (!empty($element['#value'])) {

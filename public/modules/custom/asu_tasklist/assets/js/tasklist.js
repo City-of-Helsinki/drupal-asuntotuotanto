@@ -3,11 +3,11 @@
  *
  * Script to Show/hide asu tasklist description field if checkbox has been checked.
  */
-(function($) {
+(function ($) {
   const tasklistWrapperClass = ".field--type-asu-tasklist";
   $(tasklistWrapperClass)
     .find(".asu_task_wrapper")
-    .each(function(index, taskWrapper) {
+    .each(function (index, taskWrapper) {
       const checkbox = $(taskWrapper)
         .children()
         .find("input[type='checkbox']");
@@ -23,7 +23,7 @@
       }
 
       // Set eventlistener
-      $(checkbox[0]).click(function(event) {
+      $(checkbox[0]).click(function (event) {
         if ($(event.target).is(":checked")) {
           $(description).show();
         } else {

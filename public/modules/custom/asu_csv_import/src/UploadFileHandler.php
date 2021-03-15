@@ -73,7 +73,6 @@ class UploadFileHandler {
           continue;
         }
 
-        // Loop through the fields. Create function throws exception if data is invalid.
         foreach ($row as $key => $data) {
           $type = $field_types[$key];
           try {
@@ -301,34 +300,37 @@ class UploadFileHandler {
    * @throws \Exception
    */
   public function createValue($data, $type) {
+    $value = NULL;
     switch ($type) {
       case 'integer':
-        return new NumberType($data);
+        $value = new NumberType($data);
 
       break;
       case 'string':
       case 'string_long':
-        return new TextType($data);
+        $value = new TextType($data);
 
       break;
       case 'link':
-        return new LinkType($data);
+        $value = new LinkType($data);
 
       break;
       case 'decimal':
-        return new DecimalType($data);
+        $value = new DecimalType($data);
 
       break;
       case 'boolean':
-        return new BooleanType($data);
+        $value = new BooleanType($data);
 
       break;
       case 'datetime':
-        return new DateType($data);
+        $value = new DateType($data);
 
       break;
       default:
-        return FALSE;
+        $value = FALSE;
+
+      return $value;
       /*
       case 'list_integer':
       // Lists should not be used, use taxonomies instead.
