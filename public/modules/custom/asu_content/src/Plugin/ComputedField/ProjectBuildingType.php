@@ -69,8 +69,9 @@ class ProjectBuildingType extends FieldItemList {
         $reverse_entity = $reference['referring_entity'];
         $id = $reverse_entity->field_building_type->target_id;
         if ($id && $term = Term::load($id)) {
-          // If machine name has not been set manually, create one from the term name.
-          if(!$term->field_machine_readable_name || !$value = $term->field_machine_readable_name->value){
+          // If machine name has not been set, create one from the term name.
+          if (!$term->field_machine_readable_name ||
+              !$value = $term->field_machine_readable_name->value) {
             $name = trim($term->getName());
             $value = strtoupper(
               str_replace(' ', '_', $name)
