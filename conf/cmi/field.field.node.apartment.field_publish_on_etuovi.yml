@@ -1,0 +1,23 @@
+uuid: 6a4e8638-ccee-4a6f-a934-33a670a19f0e
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_publish_on_etuovi
+    - node.type.apartment
+id: node.apartment.field_publish_on_etuovi
+field_name: field_publish_on_etuovi
+entity_type: node
+bundle: apartment
+label: 'Publish on etuovi'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'True'
+  off_label: 'False'
+field_type: boolean

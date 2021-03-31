@@ -26,6 +26,8 @@ dependencies:
     - field.field.node.apartment.field_other_fees
     - field.field.node.apartment.field_parking_fee
     - field.field.node.apartment.field_parking_fee_explanation
+    - field.field.node.apartment.field_publish_on_etuovi
+    - field.field.node.apartment.field_publish_on_oikotie
     - field.field.node.apartment.field_room_count
     - field.field.node.apartment.field_sales_price
     - field.field.node.apartment.field_services_description
@@ -299,6 +301,20 @@ content:
       placeholder: ''
     third_party_settings: {  }
     type: string_textarea
+    region: content
+  field_publish_on_etuovi:
+    weight: 36
+    settings:
+      display_label: true
+    third_party_settings: {  }
+    type: boolean_checkbox
+    region: content
+  field_publish_on_oikotie:
+    weight: 37
+    settings:
+      display_label: true
+    third_party_settings: {  }
+    type: boolean_checkbox
     region: content
   field_room_count:
     weight: 15

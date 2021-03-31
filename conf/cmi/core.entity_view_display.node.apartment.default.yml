@@ -26,6 +26,8 @@ dependencies:
     - field.field.node.apartment.field_other_fees
     - field.field.node.apartment.field_parking_fee
     - field.field.node.apartment.field_parking_fee_explanation
+    - field.field.node.apartment.field_publish_on_etuovi
+    - field.field.node.apartment.field_publish_on_oikotie
     - field.field.node.apartment.field_room_count
     - field.field.node.apartment.field_sales_price
     - field.field.node.apartment.field_services_description
@@ -264,6 +266,26 @@ content:
     third_party_settings: {  }
     type: basic_string
     region: content
+  field_publish_on_etuovi:
+    weight: 54
+    label: above
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    type: boolean
+    region: content
+  field_publish_on_oikotie:
+    weight: 55
+    label: above
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    type: boolean
+    region: content
   field_room_count:
     weight: 7
     label: inline
@@ -364,6 +386,8 @@ content:
     third_party_settings: {  }
 hidden:
   asu_computed_apartment_images: true
+  asu_project_building_type: true
+  asu_project_holding_type: true
   asu_state_of_sale: true
   field_apartment_address: true
   field_apartment_holding_type: true
