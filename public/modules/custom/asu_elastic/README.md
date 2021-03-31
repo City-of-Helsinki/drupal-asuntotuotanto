@@ -17,6 +17,12 @@ SearchApi data types can be used to easily alter the indexed data:
 Computed fields are handled by asu_content -module. See asu_computed README.md
 
 
+### Indexing a taxonomy term as enum
+
+Some of the taxonomy terms are indexed as enums (For example state_of_sale).
+This can be done by adding computed field to elasticsearch index.
+Check out asu_content README for more information.
+
 ## Development
 
 If ElasticSearch Docker container is running you can query the indexed data

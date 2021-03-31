@@ -306,8 +306,11 @@ field_settings:
   project_building_type:
     label: 'Building type'
     datasource_id: 'entity:node'
-    property_path: 'search_api_reverse_entity_references_node__field_apartments:field_building_type'
-    type: object
+    property_path: asu_project_building_type
+    type: string
+    dependencies:
+      module:
+        - computed_field_plugin
   project_city:
     label: City
     datasource_id: 'entity:node'
@@ -391,8 +394,11 @@ field_settings:
   project_holding_type:
     label: 'Holding type'
     datasource_id: 'entity:node'
-    property_path: 'search_api_reverse_entity_references_node__field_apartments:field_holding_type:entity:name'
+    property_path: asu_project_holding_type
     type: string
+    dependencies:
+      module:
+        - computed_field_plugin
   project_housing_company:
     label: 'Housing company'
     datasource_id: 'entity:node'
