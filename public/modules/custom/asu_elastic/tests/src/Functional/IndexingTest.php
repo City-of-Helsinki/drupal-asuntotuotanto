@@ -126,7 +126,7 @@ final class IndexingTest extends ExistingSiteBase {
       'field_construction materials' => [$construction_material],
       'field_heating_options' => [$heating_option],
       'field_apartments' => [$apartment->ID()],
-      'field_holding_type' => [$holding_type],
+      'field_holding_type' => $holding_type,
     ];
   }
 
