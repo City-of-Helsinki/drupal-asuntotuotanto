@@ -1,0 +1,32 @@
+uuid: d3e5ccbf-e183-407a-9b83-aadd0508426f
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.taxonomy_term.building_types.field_machine_readable_name
+    - taxonomy.vocabulary.building_types
+  module:
+    - text
+id: taxonomy_term.building_types.default
+targetEntityType: taxonomy_term
+bundle: building_types
+mode: default
+content:
+  description:
+    label: hidden
+    type: text_default
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_machine_readable_name:
+    weight: 1
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+hidden:
+  langcode: true
+  search_api_excerpt: true

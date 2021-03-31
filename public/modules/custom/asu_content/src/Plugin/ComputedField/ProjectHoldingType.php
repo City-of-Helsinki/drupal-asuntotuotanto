@@ -13,14 +13,14 @@ use Drupal\taxonomy\Entity\Term;
  * Computed field ApartmentHoldingType.
  *
  * @ComputedField(
- *   id = "asu_state_of_sale",
- *   label = @Translation("Apartment holding type"),
+ *   id = "asu_project_holding_type",
+ *   label = @Translation("Holding type"),
  *   type = "asu_computed_render_array",
  *   entity_types = {"node"},
  *   bundles = {"apartment"}
  * )
  */
-class StateOfSale extends FieldItemList {
+class ProjectHoldingType extends FieldItemList {
   use ComputedSingleItemTrait;
 
   /**
@@ -31,7 +31,7 @@ class StateOfSale extends FieldItemList {
   protected $reverseEntities;
 
   /**
-   * Constructs a ApartmentHoldingType object.
+   * Constructs an enum.
    *
    * @param \Drupal\Core\TypedData\DataDefinitionInterface $definition
    *   The data definition.
@@ -48,7 +48,7 @@ class StateOfSale extends FieldItemList {
   }
 
   /**
-   * Compute the state of sale value.
+   * Compute the apartment holding type value.
    *
    * @return mixed
    *   Returns the computed value.
@@ -67,11 +67,17 @@ class StateOfSale extends FieldItemList {
         $reference['referring_entity'] instanceof Node
       ) {
         $reverse_entity = $reference['referring_entity'];
-        $id = $reverse_entity->field_state_of_sale->target_id;
+        $id = $reverse_entity->field_holding_type->target_id;
         if ($id && $term = Term::load($id)) {
-          $value = $term->field_machine_readable_name->value;
+          // If machine name has not been set, create one from the term name.
+          if (!$term->field_machine_readable_name ||
+              !$value = $term->field_machine_readable_name->value) {
+            $name = trim($term->getName());
+            $value = strtoupper(
+              str_replace(' ', '_', $name)
+            );
+          }
         }
-
       }
     }
 
