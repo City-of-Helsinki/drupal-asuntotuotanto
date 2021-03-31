@@ -1,0 +1,23 @@
+uuid: 82faed77-ea36-47bd-bb93-0e2357b6454b
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_publish_on_oikotie
+    - node.type.apartment
+id: node.apartment.field_publish_on_oikotie
+field_name: field_publish_on_oikotie
+entity_type: node
+bundle: apartment
+label: 'Publish on oikotie'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'True'
+  off_label: 'False'
+field_type: boolean
