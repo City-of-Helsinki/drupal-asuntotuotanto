@@ -78,8 +78,11 @@ class ApplicationFormUrl extends FieldItemList
           93 => 'haso',
         ];
 
+        $config = \Drupal::config('asu_content.asu_application_url');
+        $baseurl = $config->get('asu_application_form_baseurl');
+
         $apartment_type = $referencing_node->field_holding_type->target_id;
-        $value = 'http://dev.asuntotuotanto-public.druidfi.wod.by/' . $apartment_types[$apartment_type] . '/' . $referencing_node->id() . '/add';
+        $value = $baseurl . '/' . $apartment_types[$apartment_type] . '/' . $referencing_node->id() . '/add';
       }
     }
 
