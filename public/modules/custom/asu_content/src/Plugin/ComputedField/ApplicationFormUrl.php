@@ -71,7 +71,7 @@ class ApplicationFormUrl extends FieldItemList {
         $config = \Drupal::config('asu_content.asu_application');
         $baseurl = $config->get('asu_application_form_baseurl');
 
-        if($apartment_type = $config->get('apartment_types')[$referencing_node->field_holding_type->target_id]){
+        if ($apartment_type = $config->get('apartment_types')[$referencing_node->field_holding_type->target_id]) {
           $value = $baseurl . '/application/add/' . $apartment_type . '/' . $referencing_node->id();
         }
       }
