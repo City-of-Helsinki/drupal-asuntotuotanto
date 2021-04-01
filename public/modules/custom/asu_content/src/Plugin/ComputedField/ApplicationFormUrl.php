@@ -19,8 +19,7 @@ use Drupal\node\Entity\Node;
  *   bundles = {"apartment"}
  * )
  */
-class ApplicationFormUrl extends FieldItemList
-{
+class ApplicationFormUrl extends FieldItemList {
 
   use ComputedSingleItemTrait;
 
@@ -43,8 +42,7 @@ class ApplicationFormUrl extends FieldItemList
    *   (optional) The parent object of the data property, or NULL if it is the
    *   root of a typed data tree. Defaults to NULL.
    */
-  public function __construct(DataDefinitionInterface $definition, $name = NULL, TypedDataInterface $parent = NULL)
-  {
+  public function __construct(DataDefinitionInterface $definition, $name = NULL, TypedDataInterface $parent = NULL) {
     parent::__construct($definition, $name, $parent);
     $this->reverseEntities = \Drupal::service('asu_content.collect_reverse_entity');
   }
@@ -58,8 +56,7 @@ class ApplicationFormUrl extends FieldItemList
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
-  protected function singleComputeValue()
-  {
+  protected function singleComputeValue() {
     $current_entity = $this->getEntity();
     $reverse_references = $this->reverseEntities->getReverseReferences($current_entity);
     $value = FALSE;
@@ -72,17 +69,12 @@ class ApplicationFormUrl extends FieldItemList
       ) {
         $referencing_node = $reference['referring_entity'];
 
-        // Base url / application/{project_type}/{project_id}/add
-        $apartment_types = [
-          92 => 'hitas',
-          93 => 'haso',
-        ];
+        $config = \Drupal::config('asu_content.asu_application');
 
-        $config = \Drupal::config('asu_content.asu_application_url');
         $baseurl = $config->get('asu_application_form_baseurl');
+        $apartment_type = $config->get('apartment_types')[$referencing_node->field_holding_type->target_id];
 
-        $apartment_type = $referencing_node->field_holding_type->target_id;
-        $value = $baseurl . '/' . $apartment_types[$apartment_type] . '/' . $referencing_node->id() . '/add';
+        $value = $baseurl . '/application/add/' . $apartment_type . '/' . $referencing_node->id();
       }
     }
 
