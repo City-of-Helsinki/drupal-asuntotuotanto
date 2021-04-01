@@ -72,7 +72,6 @@ class ApplicationFormUrl extends FieldItemList {
         $baseurl = $config->get('asu_application_form_baseurl');
 
         if($apartment_type = $config->get('apartment_types')[$referencing_node->field_holding_type->target_id]){
-          $apartment_type = $config->get('apartment_types')[$referencing_node->field_holding_type->target_id];
           $value = $baseurl . '/application/add/' . $apartment_type . '/' . $referencing_node->id();
         }
       }
