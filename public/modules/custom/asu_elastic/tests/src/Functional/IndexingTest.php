@@ -111,7 +111,6 @@ final class IndexingTest extends ExistingSiteBase {
   private function projectData(NodeInterface $apartment) {
     $heating_option = $this->createTerm(Vocabulary::load('heating_options'), ['Maalämpö']);
     $construction_material = $this->createTerm(Vocabulary::load('construction_materials'), ['Puu']);
-    $holding_type = $this->createTerm(Vocabulary::load('holding_type'), ['Right of residence apartment']);
 
     return [
       'type' => 'project',
@@ -121,7 +120,6 @@ final class IndexingTest extends ExistingSiteBase {
       'field_construction materials' => [$construction_material],
       'field_heating_options' => [$heating_option],
       'field_apartments' => [$apartment->ID()],
-      'field_holding_type' => $holding_type,
     ];
   }
 
