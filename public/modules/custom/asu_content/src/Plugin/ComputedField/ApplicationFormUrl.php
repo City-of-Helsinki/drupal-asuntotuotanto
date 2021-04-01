@@ -68,13 +68,13 @@ class ApplicationFormUrl extends FieldItemList {
         $this->getEntity()->hasField('field_apartment_number')
       ) {
         $referencing_node = $reference['referring_entity'];
-
         $config = \Drupal::config('asu_content.asu_application');
-
         $baseurl = $config->get('asu_application_form_baseurl');
-        $apartment_type = $config->get('apartment_types')[$referencing_node->field_holding_type->target_id];
 
-        $value = $baseurl . '/application/add/' . $apartment_type . '/' . $referencing_node->id();
+        if($apartment_type = $config->get('apartment_types')[$referencing_node->field_holding_type->target_id]){
+          $apartment_type = $config->get('apartment_types')[$referencing_node->field_holding_type->target_id];
+          $value = $baseurl . '/application/add/' . $apartment_type . '/' . $referencing_node->id();
+        }
       }
     }
 
