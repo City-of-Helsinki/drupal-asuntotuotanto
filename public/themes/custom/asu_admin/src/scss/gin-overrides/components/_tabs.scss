@@ -333,8 +333,13 @@
         border-bottom: 2px solid $color-black;
       }
 
-      &.edit-group-basic a::before {
+      &.edit-group-basic a::before,
+      &.edit-group-ap-basic a::before {
         background-image: url('../../icons/hds/ui/info-circle.svg');
+      }
+
+      &.edit-group-price-information a::before {
+        background-image: url('../../icons/hds/svg/ui/glyph-euro.svg');
       }
 
       &.edit-group-properties a::before {
