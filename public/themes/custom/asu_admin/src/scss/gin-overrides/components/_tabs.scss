@@ -370,7 +370,7 @@ nav.tabs-wrapper.is-horizontal {
   @include mq($breakpointSmall) {
     .tabs--primary {
       width: 100%;
-      margin: .5rem .5rem 1.5rem;
+      margin: .5rem .5rem 1rem !important;
       padding: 0;
 
       &::after {
@@ -379,13 +379,7 @@ nav.tabs-wrapper.is-horizontal {
     }
 
     .tabs__tab {
-      background-color: rgb(207, 228, 245);
       border-bottom: 2px solid transparent;
-
-      &.is-active {
-        background-color: $color-white;
-        border-bottom-color: $color-black;
-      }
     }
   }
 }
