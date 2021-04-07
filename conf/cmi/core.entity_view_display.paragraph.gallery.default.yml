@@ -23,5 +23,4 @@ content:
       link: ''
     third_party_settings: {  }
     region: content
-hidden:
-  search_api_excerpt: true
+hidden: {  }

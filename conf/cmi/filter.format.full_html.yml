@@ -4,6 +4,7 @@ status: true
 dependencies:
   module:
     - linkit
+    - token_filter
 _core:
   default_config_hash: Xnc1NCaxLRjc__pG1lJwQ0IFw2tWM5qDHECrtpCljaE
 name: HTML
@@ -45,3 +46,10 @@ filters:
     weight: 0
     settings:
       title: true
+  token_filter:
+    id: token_filter
+    provider: token_filter
+    status: true
+    weight: 0
+    settings:
+      replace_empty: '0'

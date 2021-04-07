@@ -6,7 +6,7 @@ _core:
   default_config_hash: j5zLMOdJBqC0bMvSdth5UebkprJB8g_2FXHqhfpJzow
 id: anonymous
 label: 'Anonymous user'
-weight: -10
+weight: 0
 is_admin: false
 permissions:
   - 'access content'
@@ -15,3 +15,4 @@ permissions:
   - 'restful get filter_rest_resource'
   - 'restful post mailinglist'
   - 'view media'
+  - 'view remote entities'
