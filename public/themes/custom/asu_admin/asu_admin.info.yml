@@ -2,7 +2,6 @@ name: ASU Admin
 type: theme
 description: 'Admin theme for Asuntotuotanto'
 package: Other
-core: 8.x
 core_version_requirement: ^8 || ^9
 base theme: hdbt_admin
 

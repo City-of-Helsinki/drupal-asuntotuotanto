@@ -63,6 +63,7 @@ third_party_settings:
       label: 'Apartment tabs'
     group_ap_basic:
       children:
+        - langcode
         - title
         - field_apartment_number
         - field_living_area
@@ -133,7 +134,7 @@ content:
     settings: {  }
     third_party_settings: {  }
   field_additional_information:
-    weight: 30
+    weight: 22
     settings:
       rows: 5
       placeholder: ''
@@ -141,7 +142,7 @@ content:
     type: string_textarea
     region: content
   field_apartment_number:
-    weight: 10
+    weight: 2
     settings:
       size: 60
       placeholder: ''
@@ -149,7 +150,7 @@ content:
     type: string_textfield
     region: content
   field_apartment_structure:
-    weight: 14
+    weight: 6
     settings:
       size: 60
       placeholder: ''
@@ -157,7 +158,7 @@ content:
     type: string_textfield
     region: content
   field_application_url:
-    weight: 16
+    weight: 8
     settings:
       placeholder_url: ''
       placeholder_title: ''
@@ -165,7 +166,7 @@ content:
     type: link_default
     region: content
   field_balcony_description:
-    weight: 25
+    weight: 17
     settings:
       placeholder: ''
       rows: 5
@@ -173,7 +174,7 @@ content:
     type: string_textarea
     region: content
   field_bathroom_appliances:
-    weight: 26
+    weight: 18
     settings:
       rows: 5
       placeholder: ''
@@ -181,7 +182,7 @@ content:
     type: string_textarea
     region: content
   field_condition:
-    weight: 31
+    weight: 23
     settings: {  }
     third_party_settings: {  }
     type: options_select
@@ -201,49 +202,49 @@ content:
     type: number
     region: content
   field_floor:
-    weight: 12
+    weight: 4
     settings:
       placeholder: ''
     third_party_settings: {  }
     type: number
     region: content
   field_floor_max:
-    weight: 13
+    weight: 5
     settings:
       placeholder: ''
     third_party_settings: {  }
     type: number
     region: content
   field_has_apartment_sauna:
-    weight: 23
+    weight: 15
     settings:
       display_label: true
     third_party_settings: {  }
     type: boolean_checkbox
     region: content
   field_has_balcony:
-    weight: 22
+    weight: 14
     settings:
       display_label: true
     third_party_settings: {  }
     type: boolean_checkbox
     region: content
   field_has_terrace:
-    weight: 21
+    weight: 13
     settings:
       display_label: true
     third_party_settings: {  }
     type: boolean_checkbox
     region: content
   field_has_yard:
-    weight: 20
+    weight: 12
     settings:
       display_label: true
     third_party_settings: {  }
     type: boolean_checkbox
     region: content
   field_images:
-    weight: 32
+    weight: 24
     settings:
       progress_indicator: throbber
       preview_image_style: thumbnail
@@ -251,7 +252,7 @@ content:
     type: image_image
     region: content
   field_kitchen_appliances:
-    weight: 24
+    weight: 16
     settings:
       placeholder: ''
       rows: 5
@@ -259,7 +260,7 @@ content:
     type: string_textarea
     region: content
   field_living_area:
-    weight: 11
+    weight: 3
     settings:
       placeholder: ''
     third_party_settings: {  }
@@ -317,7 +318,7 @@ content:
     type: boolean_checkbox
     region: content
   field_room_count:
-    weight: 15
+    weight: 7
     settings:
       placeholder: ''
     third_party_settings: {  }
@@ -331,7 +332,7 @@ content:
     type: number
     region: content
   field_services_description:
-    weight: 29
+    weight: 21
     settings:
       rows: 5
       placeholder: ''
@@ -339,27 +340,27 @@ content:
     type: string_textarea
     region: content
   field_showing_time:
-    weight: 19
+    weight: 11
     settings: {  }
     third_party_settings: {  }
     type: datetime_default
     region: content
   field_stock_end_number:
-    weight: 18
+    weight: 10
     settings:
       placeholder: ''
     third_party_settings: {  }
     type: number
     region: content
   field_stock_start_number:
-    weight: 17
+    weight: 9
     settings:
       placeholder: ''
     third_party_settings: {  }
     type: number
     region: content
   field_storage_description:
-    weight: 27
+    weight: 19
     settings:
       rows: 5
       placeholder: ''
@@ -367,7 +368,7 @@ content:
     type: string_textarea
     region: content
   field_view_description:
-    weight: 28
+    weight: 20
     settings:
       rows: 5
       placeholder: ''
@@ -425,7 +426,7 @@ content:
     third_party_settings: {  }
   title:
     type: string_textfield
-    weight: 9
+    weight: 1
     region: content
     settings:
       size: 60
