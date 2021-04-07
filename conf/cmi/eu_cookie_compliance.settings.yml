@@ -1,4 +1,4 @@
-uuid: 794fc11b-a1b4-41a7-a351-aaa84516c2c5
+uuid: 9714fc58-af3b-45ec-9587-794d5e46dc5b
 cookie_lifetime: 100
 containing_element: body
 domain: ''
@@ -71,3 +71,4 @@ cookie_session: 0
 set_cookie_session_zero_on_disagree: 0
 _core:
   default_config_hash: hQ7DNLHTlQh0_X_bDls8Gwa7MA_vHoOePmKn2NASjM4
+whitelisted_cookies: ''

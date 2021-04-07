@@ -48,18 +48,9 @@ module:
   hdbt_component_library: 0
   hdbt_content: 0
   hdbt_hyphenopoly: 0
-  helfi_api_base: 0
-  helfi_base_config: 0
-  helfi_content: 0
-  helfi_example_content: 0
-  helfi_gdpr_compliance: 0
-  helfi_languages: 0
-  helfi_media: 0
-  helfi_platform_config: 0
-  helfi_units: 0
   image: 0
-  image_cache_external: 0
   image_style_quality: 0
+  imagecache_external: 0
   inline_entity_form: 0
   key: 0
   language: 0
@@ -92,8 +83,8 @@ module:
   rest: 0
   restui: 0
   route_condition: 0
-  search_api: 0
   scheduler: 0
+  search_api: 0
   select2: 0
   select2_icon: 0
   serialization: 0
