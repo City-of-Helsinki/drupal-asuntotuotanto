@@ -6,6 +6,7 @@ dependencies:
     - core.entity_view_mode.node.teaser
     - field.field.node.apartment.field_additional_information
     - field.field.node.apartment.field_apartment_number
+    - field.field.node.apartment.field_apartment_state_of_sale
     - field.field.node.apartment.field_apartment_structure
     - field.field.node.apartment.field_application_url
     - field.field.node.apartment.field_balcony_description
@@ -64,6 +65,7 @@ hidden:
   field_apartment_holding_type: true
   field_apartment_images: true
   field_apartment_number: true
+  field_apartment_state_of_sale: true
   field_apartment_structure: true
   field_application_end_time: true
   field_application_start_time: true
