@@ -1,0 +1,12 @@
+uuid: 61579dd3-bd14-4523-bf19-fbe9e48b8182
+langcode: en
+status: true
+dependencies: {  }
+_core:
+  default_config_hash: ut9kCjel1-qjn3zFgsASesp77nZ_cVGas9AsvpU_104
+id: content_cards
+label: 'Content cards'
+icon_uuid: null
+icon_default: null
+description: 'With content cards you can reference to content inside this site. The information about the content is automatically fetched through the reference.'
+behavior_plugins: {  }

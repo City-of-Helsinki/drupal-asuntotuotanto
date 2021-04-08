@@ -5,6 +5,7 @@ dependencies:
   config:
     - field.field.node.apartment.field_additional_information
     - field.field.node.apartment.field_apartment_number
+    - field.field.node.apartment.field_apartment_state_of_sale
     - field.field.node.apartment.field_apartment_structure
     - field.field.node.apartment.field_application_url
     - field.field.node.apartment.field_balcony_description
@@ -46,6 +47,7 @@ dependencies:
     - image
     - link
     - path
+    - scheduler
 third_party_settings:
   field_group:
     group_apartment_tabs:
@@ -148,6 +150,16 @@ content:
       placeholder: ''
     third_party_settings: {  }
     type: string_textfield
+    region: content
+  field_apartment_state_of_sale:
+    weight: 38
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
     region: content
   field_apartment_structure:
     weight: 6
@@ -410,6 +422,12 @@ content:
     weight: 4
     region: content
     third_party_settings: {  }
+  publish_on:
+    type: datetime_timestamp_no_default
+    weight: 30
+    region: content
+    settings: {  }
+    third_party_settings: {  }
   status:
     type: boolean_checkbox
     settings:
@@ -446,6 +464,12 @@ content:
       placeholder: ''
       match_limit: 10
     region: content
+    third_party_settings: {  }
+  unpublish_on:
+    type: datetime_timestamp_no_default
+    weight: 30
+    region: content
+    settings: {  }
     third_party_settings: {  }
   url_redirects:
     weight: 7

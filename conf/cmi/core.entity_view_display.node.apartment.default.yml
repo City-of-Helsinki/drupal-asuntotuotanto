@@ -5,6 +5,7 @@ dependencies:
   config:
     - field.field.node.apartment.field_additional_information
     - field.field.node.apartment.field_apartment_number
+    - field.field.node.apartment.field_apartment_state_of_sale
     - field.field.node.apartment.field_apartment_structure
     - field.field.node.apartment.field_application_url
     - field.field.node.apartment.field_balcony_description
@@ -63,6 +64,14 @@ content:
       link_to_entity: false
     third_party_settings: {  }
     type: string
+    region: content
+  field_apartment_state_of_sale:
+    weight: 56
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
     region: content
   field_apartment_structure:
     weight: 6
