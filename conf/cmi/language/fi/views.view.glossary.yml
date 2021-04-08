@@ -8,8 +8,8 @@ display:
           submit_button: Käytä
           reset_button_label: Palauta
           exposed_sorts_label: Lajittele
-          sort_asc_label: Asc
-          sort_desc_label: Desc
+          sort_asc_label: Nousevasti
+          sort_desc_label: Laskevasti
       pager:
         options:
           expose:
@@ -23,7 +23,7 @@ display:
         title:
           label: Otsikko
         name:
-          label: Tekijä
+          label: Kirjoittaja
         changed:
           label: 'Viimeksi päivitetty'
   attachment_1:
