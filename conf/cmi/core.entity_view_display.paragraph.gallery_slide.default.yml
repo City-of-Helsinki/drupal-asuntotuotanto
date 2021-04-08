@@ -7,7 +7,7 @@ dependencies:
     - field.field.paragraph.gallery_slide.field_gallery_slide_media
     - paragraphs.paragraphs_type.gallery_slide
 _core:
-  default_config_hash: WXGUrRzR8g-obOMMq5uDE81GkOYokcd5Y-X9oz95yqU
+  default_config_hash: 1gOPocP4wZc4p4xU8WlYTuVsVgW5JzjrNGdSPAB7PTw
 id: paragraph.gallery_slide.default
 targetEntityType: paragraph
 bundle: gallery_slide

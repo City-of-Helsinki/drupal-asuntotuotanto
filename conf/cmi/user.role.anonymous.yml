@@ -3,16 +3,13 @@ langcode: en
 status: true
 dependencies: {  }
 _core:
-  default_config_hash: j5zLMOdJBqC0bMvSdth5UebkprJB8g_2FXHqhfpJzow
+  default_config_hash: EDyVdaROG6pYzyEct43c01Wq4gpATszrk-qR6gqnQ84
 id: anonymous
 label: 'Anonymous user'
 weight: 0
 is_admin: false
 permissions:
   - 'access content'
-  - 'administer rest resources'
   - 'display eu cookie compliance popup'
-  - 'restful get filter_rest_resource'
-  - 'restful post mailinglist'
   - 'view media'
   - 'view remote entities'

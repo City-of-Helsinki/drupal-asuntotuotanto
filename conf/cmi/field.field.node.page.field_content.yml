@@ -15,7 +15,7 @@ dependencies:
   module:
     - entity_reference_revisions
 _core:
-  default_config_hash: HeIFaD6AhJzNT9WOX0T8FIbGJL4YwN7ywxtHqAwqLeI
+  default_config_hash: OAszLBpmZFYzCk6m40IBOPGFaX9s5i1DcOQXojCVnZU
 id: node.page.field_content
 field_name: field_content
 entity_type: node

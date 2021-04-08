@@ -13,7 +13,7 @@ dependencies:
   module:
     - entity_reference_revisions
 _core:
-  default_config_hash: dxGaCW__9bHxnVKAOs8ENDzcnNTdzKTdOCm1pVM4MrA
+  default_config_hash: VuuTI6N8J827CZsvm_RrLmPzFcwY5kjDh9oF94YecsI
 id: node.landing_page.field_content
 field_name: field_content
 entity_type: node

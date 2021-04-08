@@ -13,6 +13,8 @@ dependencies:
     - image.style.23_10_xl_2x
     - image.style.23_10_xs
     - image.style.23_10_xs_2x
+  theme:
+    - hdbt
 _core:
   default_config_hash: 2PYa4F1Fz0M3VwEAzRkuKfoDHvycMeao3Idz0KYL4W8
 id: hero__bottom

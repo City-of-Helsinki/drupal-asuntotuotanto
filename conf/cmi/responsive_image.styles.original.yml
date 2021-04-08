@@ -13,6 +13,8 @@ dependencies:
     - image.style.original_xs_2x
     - image.style.original_xxs
     - image.style.original_xxs_2x
+  theme:
+    - hdbt
 _core:
   default_config_hash: GHc3XCdV80PXDojpCaQ7DsBPaBAXpeDpebYof1ne27A
 id: original

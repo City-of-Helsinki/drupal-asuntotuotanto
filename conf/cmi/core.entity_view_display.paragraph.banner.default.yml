@@ -16,7 +16,7 @@ dependencies:
     - select2_icon
     - text
 _core:
-  default_config_hash: OdCRcV75MyH8GcyDvhFVPoFlvSgQ6-ElU8Vp3uPhlyU
+  default_config_hash: 6sXm0gwP7Lq-5wEAkZWbRYwhvZsBBQASOR_gKjINHMU
 id: paragraph.banner.default
 targetEntityType: paragraph
 bundle: banner

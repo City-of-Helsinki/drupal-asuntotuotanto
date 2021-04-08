@@ -16,7 +16,7 @@ dependencies:
     - path
     - scheduler
 _core:
-  default_config_hash: w5-wlvA5D1grlc1wSGRvqGnME-pEk6uFPMtDKJHvYag
+  default_config_hash: uWCKvc6Qkbv4g-yJo8d9K8_nh63x2luB4wpQk1a8eHQ
 id: node.page.default
 targetEntityType: node
 bundle: page

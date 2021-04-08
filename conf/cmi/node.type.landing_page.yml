@@ -24,7 +24,7 @@ third_party_settings:
     unpublish_required: false
     unpublish_revision: false
 _core:
-  default_config_hash: 9AZLshC0aPM9jjvchyn7kEh_A4pmWjE-NJ21-CZjoRs
+  default_config_hash: ah3vIiRAXEYtaITIDXDkTMxz_d55Eu7rV-nNz1ZknEU
 name: 'Landing page'
 type: landing_page
 description: 'Content type for pages which serves as an entry point for a particular section of the site. Use landing page when you want to create a collection of links and information about a certain subject. '

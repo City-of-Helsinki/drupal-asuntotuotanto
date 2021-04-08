@@ -5,6 +5,8 @@ dependencies:
   config:
     - image.style.1_1_thumbnail
     - image.style.1_1_thumbnail_2x
+  theme:
+    - hdbt
 _core:
   default_config_hash: tRylWJSJK7hdRcmTxsffZOTS9BrButW2HHWXToXNxO0
 id: gallery_thumbnail

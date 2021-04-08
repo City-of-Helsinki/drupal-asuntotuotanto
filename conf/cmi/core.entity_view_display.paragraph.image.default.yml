@@ -8,7 +8,7 @@ dependencies:
     - field.field.paragraph.image.field_original_aspect_ratio
     - paragraphs.paragraphs_type.image
 _core:
-  default_config_hash: 7O7uUyUjc6kAeySMwmmC8sRbveJCZmLf6w-cxwdMUho
+  default_config_hash: WOIjdvfdwRn0wIU-TyaRDV4PKTm77QLskpKljuLGk5Q
 id: paragraph.image.default
 targetEntityType: paragraph
 bundle: image

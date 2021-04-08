@@ -11,7 +11,7 @@ dependencies:
     - hdbt_admin_editorial
     - media_library
 _core:
-  default_config_hash: 9ElpMw3fHqZspnclfXzt4bkZQZCgDAZfel_Kk40HOFM
+  default_config_hash: U-gNAaUoB_zo65wA8j_8yoVi4ZXBwhsrIEyzS8OMkeg
 id: paragraph.list_of_links_item.default
 targetEntityType: paragraph
 bundle: list_of_links_item

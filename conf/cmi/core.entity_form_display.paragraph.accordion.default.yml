@@ -11,7 +11,7 @@ dependencies:
     - hdbt_admin_editorial
     - paragraphs
 _core:
-  default_config_hash: TiWwtk_I3j9njmRly3T5kpIQ7v784uV0-r36I2WRVg4
+  default_config_hash: tZ6NtHmnjneasCaF7pacBXWuaSGMMI-LdkayZNerXro
 id: paragraph.accordion.default
 targetEntityType: paragraph
 bundle: accordion

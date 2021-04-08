@@ -16,7 +16,7 @@ dependencies:
     - path
     - scheduler
 _core:
-  default_config_hash: 3NE7RTbvp62bswLY4fzyYm9iOCctoBUqCCRV2qUjenw
+  default_config_hash: EpKucMjH6qBboFur_x0R89tX9KYcPmS9ijWcfK2fQPA
 id: node.landing_page.default
 targetEntityType: node
 bundle: landing_page

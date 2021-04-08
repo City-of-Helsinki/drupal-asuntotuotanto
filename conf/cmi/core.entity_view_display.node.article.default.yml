@@ -15,7 +15,7 @@ dependencies:
     - metatag
     - user
 _core:
-  default_config_hash: FYYyQKnbt3iwuxMA9vDrA5docsN-l9cy_g0J0RfBzq8
+  default_config_hash: iP63ruNj8P30AR0u-V9j_M03qHUEpzx-qneyWJtGvNw
 id: node.article.default
 targetEntityType: node
 bundle: article
