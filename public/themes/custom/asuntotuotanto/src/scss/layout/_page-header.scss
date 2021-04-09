@@ -6,6 +6,11 @@
 
 .page-header {
   border-bottom: 1px solid $color-black-20;
+
+  // NOTE ONLY FOR DEVELOPMENT PURPOSES
+  @media screen and (max-width: $breakpoint-s - 1px) {
+    display: none;
+  }
 }
 
 .page-header__container {

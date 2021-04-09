@@ -75,7 +75,7 @@ content:
     region: content
   field_apartment_structure:
     weight: 6
-    label: inline
+    label: hidden
     settings:
       link_to_entity: false
     third_party_settings: {  }
@@ -83,13 +83,13 @@ content:
     region: content
   field_application_url:
     weight: 30
-    label: inline
+    label: hidden
     settings:
-      trim_length: 80
-      url_only: false
-      url_plain: false
-      rel: ''
-      target: ''
+      trim_length: null
+      url_only: true
+      url_plain: true
+      rel: '0'
+      target: '0'
     third_party_settings: {  }
     type: link
     region: content
@@ -205,7 +205,7 @@ content:
     region: content
   field_images:
     weight: 53
-    label: above
+    label: hidden
     settings:
       image_style: ''
       image_link: ''
@@ -221,11 +221,11 @@ content:
     region: content
   field_living_area:
     weight: 3
-    label: inline
+    label: hidden
     settings:
       thousand_separator: ''
       decimal_separator: .
-      scale: 2
+      scale: 0
       prefix_suffix: true
     third_party_settings: {  }
     type: number_decimal
@@ -233,11 +233,9 @@ content:
   field_loan_share:
     weight: 31
     label: inline
-    settings:
-      thousand_separator: ''
-      prefix_suffix: true
+    settings: {  }
     third_party_settings: {  }
-    type: number_integer
+    type: number_unformatted
     region: content
   field_maintenance_fee:
     weight: 22

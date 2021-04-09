@@ -1,0 +1,49 @@
+.apartment {
+  .hds-button {
+    @media screen and (max-width: $breakpoint-m - 1px) {
+      width: 100%;
+    }
+  }
+}
+
+.apartment__label {
+  @include font-size($font-size-heading-2, $lineheight-heading-l);
+  @include font-weight($bold);
+  color: $color-gray-5;
+  margin-bottom: $spacing-2-xs;
+}
+
+.apartment__lead {
+  @include font-size($font-size-heading-4, $lineheight-heading-s);
+  @include font-weight($regular);
+  align-items: center;
+  color: $color-gray-5;
+  display: inline-flex;
+  margin-bottom: $spacing-m;
+
+  span[aria-hidden="true"] {
+    background-color: $color-gray-4;
+    display: inline-block;
+    height: 1px;
+    width: 35px;
+    margin: 0 $spacing-xs;
+  }
+}
+
+.apartment__images {
+  margin-top: $spacing-m;
+}
+
+.apartment__content-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-m;
+  margin-top: $spacing-m;
+}
+
+.apartment__application-information {
+  @include font-size($font-size-heading-6, 24px);
+  @include font-weight($medium);
+  margin: 0;
+  color: $color-gray-5;
+}

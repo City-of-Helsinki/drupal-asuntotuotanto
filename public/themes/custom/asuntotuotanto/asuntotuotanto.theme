@@ -157,16 +157,32 @@ function asuntotuotanto_preprocess_node(&$variables) {
         $parent_node_nid = key($parent_node_results);
         $parent_node = Node::load($parent_node_nid);
 
-        $application_start_time = $parent_node->get('field_application_start_time')->value;
-        $application_end_time = $parent_node->get('field_application_end_time')->value;
-        $current_time = date("Y-m-d\TH:i:s", time());
+        $application_start_time_value = $parent_node->get('field_application_start_time')->value;
+        $application_start_time_timestamp = format_date_to_unix_timestamp($application_start_time_value);
+        $application_end_time_value = $parent_node->get('field_application_end_time')->value;
+        $application_end_time_timestamp = format_date_to_unix_timestamp($application_end_time_value);
+        $current_timestamp = time();
 
-        if ($current_time >= $application_start_time && $current_time <= $application_end_time) {
+        if ($current_timestamp >= $application_start_time_timestamp && $current_timestamp <= $application_end_time_timestamp) {
           $is_application_period_active = TRUE;
         }
 
+        $variables['application_start_time'] = format_timestamp_to_custom_format($application_start_time_timestamp);
+        $variables['application_end_time'] = format_timestamp_to_custom_format($application_end_time_timestamp);
         $variables['is_application_period_active'] = $is_application_period_active;
       }
       break;
   }
+}
+
+function format_date_to_unix_timestamp($string) {
+  $value = $string; // e.g. '2021-01-01T10:00:00'
+  $date = new DateTime($value);
+  $timestamp = $date->format('U');
+
+  return $timestamp;
+}
+
+function format_timestamp_to_custom_format($timestamp, $format = 'short') {
+  return \Drupal::service('date.formatter')->format($timestamp, $format);
 }

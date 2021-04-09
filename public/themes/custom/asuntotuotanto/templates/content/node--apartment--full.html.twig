@@ -85,6 +85,7 @@
 {% set apartment_structure = content.field_apartment_structure.0 %}
 {% set living_area_size_m2 = content.field_living_area.0 %}
 {% set application_url = content.field_application_url.0 %}
+{% set images = content.field_images %}
 
 <article{{ attributes.addClass(classes) }}>
   <div class="apartment__header container">
@@ -113,6 +114,24 @@
         %}
       </div>
     {% endif %}
+  </div>
+
+  {% if images|render %}
+    <div class="apartment__images">
+    {{ images }}
+    </div>
+  {% endif %}
+
+  <div class="apartment__content-wrapper container">
+    <aside class="apartment__sidebar">
+      <h3 class="apartment__application-information">
+        {% trans %}
+          The application period for the destination starts on {{ application_start_time }} and ends on {{ application_end_time }}.
+        {% endtrans %}
+      </h3>
+    </aside>
+    <div class="apartment__content">
+    </div>
   </div>
 
   <div{{ content_attributes }}>
