@@ -226,7 +226,7 @@ content:
       thousand_separator: ''
       decimal_separator: .
       scale: 0
-      prefix_suffix: true
+      prefix_suffix: false
     third_party_settings: {  }
     type: number_decimal
     region: content

@@ -86,6 +86,9 @@
 {% set living_area_size_m2 = content.field_living_area.0 %}
 {% set application_url = content.field_application_url.0 %}
 {% set images = content.field_images %}
+{% set floor = content.field_floor.0 %}
+{% set sales_price = content.field_sales_price.0 %}
+{% set debt_free_sales_price = content.field_debt_free_sales_price.0 %}
 
 <article{{ attributes.addClass(classes) }}>
   <div class="apartment__header container">
@@ -98,7 +101,7 @@
           {% endif %}
           <span aria-hidden="true"></span>
           {% if living_area_size_m2|render %}
-            <span class="apartment__living-area-size">{{ living_area_size_m2 }}</span>
+            <span class="apartment__living-area-size">{{ living_area_size_m2 }} m<sup>2</sup></span>
           {% endif %}
         </h2>
       {% endif %}
@@ -131,11 +134,100 @@
       </h3>
     </aside>
     <div class="apartment__content">
+      <div class="apartment__type-and-address">
+        {% if ownership_type|render %}
+          <p class="apartment__ownership-type">
+            <span class="visually-hidden">({{ 'Ownership type'|t }})</span>
+            {{ ownership_type }}
+          </p>
+        {% endif %}
+        {% if district|render and address|render %}
+          <p class="apartment__address">{{ district }}, {{ address }}</p>
+        {% endif %}
+      </div>
+      {% if project_description|render %}
+        <div class="apartment__information">
+          <h2 class="apartment__information-label">
+            {% trans %}
+              Apartment information
+            {% endtrans %}
+          </h2>
+          <p class="apartment__project-description">{{ project_description }}</p>
+        </div>
+      {% endif %}
+      <div class="apartment__details">
+        <h2 class="apartment__details-label">
+          {% trans %}
+            Details
+          {% endtrans %}
+        </h2>
+        <ul class="apartment__details-list">
+          {% if district|render %}
+            <li class="apartment__details-item">
+              <p>
+                <span>{% trans %}District{% endtrans %}</span>
+                <span>{{ district }}</span>
+              </p>
+            </li>
+          {% endif %}
+          {% if building_type|render %}
+            <li class="apartment__details-item">
+              <p>
+                <span>{% trans %}Building type{% endtrans %}</span>
+                <span>{{ building_type }}</span>
+              </p>
+            </li>
+          {% endif %}
+          {% if apartment_structure|render %}
+            <li class="apartment__details-item">
+              <p>
+                <span>{% trans %}Apartment structure{% endtrans %}</span>
+                <span>{{ apartment_structure }}</span>
+              </p>
+            </li>
+          {% endif %}
+          {% if living_area_size_m2|render %}
+            <li class="apartment__details-item">
+              <p>
+                <span>{% trans %}Living area size{% endtrans %} (m<sup>2</sup>)</span>
+                <span>{{ living_area_size_m2 }}</span>
+              </p>
+            </li>
+          {% endif %}
+          {% if floor|render %}
+            <li class="apartment__details-item">
+              <p>
+                <span>{% trans %}Floor{% endtrans %}</span>
+                <span>{{ floor }}</span>
+              </p>
+            </li>
+          {% endif %}
+          {% if sales_price|render %}
+            <li class="apartment__details-item">
+              <p>
+                <span>{% trans %}Sales price{% endtrans %}</span>
+                <span>{{ sales_price }}</span>
+              </p>
+            </li>
+          {% endif %}
+          {% if debt_free_sales_price|render %}
+            <li class="apartment__details-item">
+              <p>
+                <span>{% trans %}Debt free sales price{% endtrans %}</span>
+                <span>{{ debt_free_sales_price }}</span>
+              </p>
+            </li>
+          {% endif %}
+          {% if energy_class|render %}
+            <li class="apartment__details-item">
+              <p>
+                <span>{% trans %}Energy class{% endtrans %}</span>
+                <span>{{ energy_class }}</span>
+              </p>
+            </li>
+          {% endif %}
+        </ul>
+      </div>
     </div>
   </div>
-
-  <div{{ content_attributes }}>
-    {{ content }}
-  </div>
-
 </article>

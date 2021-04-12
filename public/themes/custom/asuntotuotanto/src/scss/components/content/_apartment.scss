@@ -9,7 +9,7 @@
 .apartment__label {
   @include font-size($font-size-heading-2, $lineheight-heading-l);
   @include font-weight($bold);
-  color: $color-gray-5;
+  color: var(--color-black-90);
   margin-bottom: $spacing-2-xs;
 }
 
@@ -17,7 +17,7 @@
   @include font-size($font-size-heading-4, $lineheight-heading-s);
   @include font-weight($regular);
   align-items: center;
-  color: $color-gray-5;
+  color: var(--color-black-90);
   display: inline-flex;
   margin-bottom: $spacing-m;
 
@@ -45,5 +45,84 @@
   @include font-size($font-size-heading-6, 24px);
   @include font-weight($medium);
   margin: 0;
-  color: $color-gray-5;
+  color: var(--color-black-90);
+}
+
+.apartment__type-and-address {
+  align-items: center;
+  display: flex;
+  gap: $spacing-xs;
+  margin-bottom: $spacing-m;
+}
+
+.apartment__ownership-type {
+  @include font-size($fontsize-body-s, 26px);
+  background-color: var(--color-engel);
+  color: var(--color-black-90);
+  flex-shrink: 0;
+  margin: 0;
+  padding: $spacing-3-xs $spacing-2-xs;
+}
+
+.apartment__address {
+  @include font-size($fontsize-body-m, 24px);
+  color: var(--color-black-90);
+  margin: 0;
+}
+
+.apartment__information {
+  margin-bottom: $spacing-m;
+}
+
+.apartment__information-label {
+  @include font-size($font-size-heading-3, 29px);
+  @include font-weight($bold);
+  color: var(--color-black-90);
+  margin-bottom: $spacing-2-xs;
+  margin-top: 0;
+}
+
+.apartment__project-description {
+  @include font-size($fontsize-body-m, 24px);
+  color: var(--color-black-90);
+  margin: 0;
+}
+
+.apartment__details {
+  margin-bottom: $spacing-m;
+}
+
+.apartment__details-label {
+  @include font-size($font-size-heading-3, 29px);
+  @include font-weight($bold);
+  color: var(--color-black-90);
+  margin-bottom: $spacing-2-xs;
+  margin-top: 0;
+}
+
+.apartment__details-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.apartment__details-item {
+  & + & {
+    margin-top: $spacing-3-xs;
+  }
+
+  p {
+    @include font-size($fontsize-body-m, 28px);
+    margin: 0;
+
+    span {
+      &:first-of-type {
+        @include font-weight($bold);
+
+        &:after {
+          content: ":";
+        }
+      }
+    }
+  }
 }

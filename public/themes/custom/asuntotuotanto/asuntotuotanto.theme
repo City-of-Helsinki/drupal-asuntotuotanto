@@ -7,6 +7,7 @@
 
 use Drupal\node\Entity\Node;
 use Drupal\user\Entity\User;
+use \Drupal\taxonomy\Entity\Term;
 
 /**
  * Helper function to get the icons path.
@@ -153,9 +154,9 @@ function asuntotuotanto_preprocess_node(&$variables) {
       );
 
       if ($parent_node_results) {
-        $is_application_period_active = FALSE;
         $parent_node_nid = key($parent_node_results);
         $parent_node = Node::load($parent_node_nid);
+        $is_application_period_active = FALSE;
 
         $application_start_time_value = $parent_node->get('field_application_start_time')->value;
         $application_start_time_timestamp = format_date_to_unix_timestamp($application_start_time_value);
@@ -167,9 +168,25 @@ function asuntotuotanto_preprocess_node(&$variables) {
           $is_application_period_active = TRUE;
         }
 
+        $street_address = $parent_node->get('field_street_address')->value;
+        $postal_code = $parent_node->get('field_postal_code')->value;
+        $city = $parent_node->get('field_city')->value;
+        $district = Term::load($parent_node->get('field_district')->target_id)->name->value;
+        $ownership_type = Term::load($parent_node->get('field_ownership_type')->target_id)->name->value;
+
+        $project_description = $parent_node->get('field_project_description')->value;
+        $building_type = Term::load($parent_node->get('field_building_type')->target_id)->name->value;
+        $energy_class = Term::load($parent_node->get('field_energy_class')->target_id)->name->value;
+
         $variables['application_start_time'] = format_timestamp_to_custom_format($application_start_time_timestamp);
         $variables['application_end_time'] = format_timestamp_to_custom_format($application_end_time_timestamp);
         $variables['is_application_period_active'] = $is_application_period_active;
+        $variables['district'] = $district ?? NULL;
+        $variables['address'] = "$street_address, $postal_code $city" ?? NULL;
+        $variables['ownership_type'] = $ownership_type ?? NULL;
+        $variables['project_description'] = $project_description ?? NULL;
+        $variables['building_type'] = $building_type ?? NULL;
+        $variables['energy_class'] = $energy_class ?? NULL;
       }
       break;
   }
