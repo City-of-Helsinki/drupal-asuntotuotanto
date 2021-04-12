@@ -1,7 +1,25 @@
 .apartment {
+  // Make button full width for mobile breakpoints.
   .hds-button {
     @media screen and (max-width: $breakpoint-m - 1px) {
       width: 100%;
+    }
+  }
+}
+
+.apartment__header {
+  @media screen and (min-width: $breakpoint-m) {
+    align-items: center;
+    display: flex;
+    gap: $spacing-s;
+    justify-content: space-between;
+  }
+}
+
+.apartment__header-section {
+  &--actions {
+    @media screen and (min-width: $breakpoint-m) {
+      flex-shrink: 0;
     }
   }
 }
@@ -11,6 +29,11 @@
   @include font-weight($bold);
   color: var(--color-black-90);
   margin-bottom: $spacing-2-xs;
+
+  @media screen and (min-width: $breakpoint-l) {
+    @include font-size($font-size-heading-1, $lineheight-heading-xl);
+    margin-bottom: $spacing-s;
+  }
 }
 
 .apartment__lead {
