@@ -40,10 +40,11 @@ dependencies:
     - field.field.node.apartment.field_water_fee
     - field.field.node.apartment.field_water_fee_explanation
     - node.type.apartment
+    - responsive_image.styles.showcase_gallery
   module:
     - datetime
-    - image
     - link
+    - responsive_image
     - user
 id: node.apartment.default
 targetEntityType: node
@@ -207,10 +208,10 @@ content:
     weight: 53
     label: hidden
     settings:
-      image_style: ''
+      responsive_image_style: showcase_gallery
       image_link: ''
     third_party_settings: {  }
-    type: image
+    type: responsive_image
     region: content
   field_kitchen_appliances:
     weight: 9
