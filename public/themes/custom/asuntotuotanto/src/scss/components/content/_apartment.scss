@@ -62,6 +62,31 @@
   flex-direction: column;
   gap: $spacing-m;
   margin-top: $spacing-m;
+
+  @media screen and (min-width: $breakpoint-l) {
+    flex-direction: row;
+    gap: $spacing-4-xl;
+    justify-content: space-between;
+    margin-top: $spacing-4-xl;
+  }
+
+  @media screen and (min-width: $breakpoint-xl) {
+    gap: $spacing-layout-2-xl;
+  }
+}
+
+.apartment__sidebar {
+  @media screen and (min-width: $breakpoint-l) {
+    max-width: 285px;
+    width: 100%;
+  }
+}
+
+.apartment__content {
+  @media screen and (min-width: $breakpoint-l) {
+    max-width: 800px;
+    width: 100%;
+  }
 }
 
 .apartment__application-information {
@@ -69,6 +94,11 @@
   @include font-weight($medium);
   margin: 0;
   color: var(--color-black-90);
+
+  @media screen and (min-width: $breakpoint-m) {
+    @include font-size($font-size-heading-4, 26px);
+    @include font-weight($bold);
+  }
 }
 
 .apartment__type-and-address {
@@ -76,6 +106,10 @@
   display: flex;
   gap: $spacing-xs;
   margin-bottom: $spacing-m;
+
+  @media screen and (min-width: $breakpoint-m) {
+    margin-bottom: $spacing-4-xl;
+  }
 }
 
 .apartment__ownership-type {
@@ -91,10 +125,18 @@
   @include font-size($fontsize-body-m, 24px);
   color: var(--color-black-90);
   margin: 0;
+
+  @media screen and (min-width: $breakpoint-m) {
+    @include font-size($fontsize-body-l, 24px);
+  }
 }
 
 .apartment__information {
   margin-bottom: $spacing-m;
+
+  @media screen and (min-width: $breakpoint-m) {
+    margin-bottom: $spacing-4-xl;
+  }
 }
 
 .apartment__information-label {
@@ -103,12 +145,21 @@
   color: var(--color-black-90);
   margin-bottom: $spacing-2-xs;
   margin-top: 0;
+
+  @media screen and (min-width: $breakpoint-m) {
+    @include font-size($font-size-heading-2, 43px);
+    margin-bottom: $spacing-m;
+  }
 }
 
 .apartment__project-description {
   @include font-size($fontsize-body-m, 24px);
   color: var(--color-black-90);
   margin: 0;
+
+  @media screen and (min-width: $breakpoint-m) {
+    @include font-size($fontsize-body-l, 27px);
+  }
 }
 
 .apartment__details {
@@ -121,6 +172,11 @@
   color: var(--color-black-90);
   margin-bottom: $spacing-2-xs;
   margin-top: 0;
+
+  @media screen and (min-width: $breakpoint-m) {
+    @include font-size($font-size-heading-2, 43px);
+    margin-bottom: $spacing-m;
+  }
 }
 
 .apartment__details-list {
@@ -138,9 +194,18 @@
     @include font-size($fontsize-body-m, 28px);
     margin: 0;
 
+    @media screen and (min-width: $breakpoint-m) {
+      @include font-size($fontsize-body-l, 28px);
+    }
+
     span {
       &:first-of-type {
         @include font-weight($bold);
+
+        @media screen and (min-width: $breakpoint-m) {
+          display: inline-block;
+          width: 225px;
+        }
 
         &:after {
           content: ":";
