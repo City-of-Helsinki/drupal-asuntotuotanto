@@ -120,10 +120,49 @@
   </div>
 
   {% if images|render %}
-    <div class="apartment__images container showcase-gallery">
+    <div class="apartment__images container showcase-gallery" id="showcase_gallery">
     {{ images }}
     </div>
   {% endif %}
+
+  <nav class="apartment__anchor-navigation container">
+    <ul class="apartment__anchor-list">
+      <li class="apartment__anchor-item">
+        <a href="#showcase_gallery" class="apartment__anchor-link">
+          {% include "@asuntotuotanto/misc/icon.twig" with {icon: 'photo-plus', label: ''} %}
+          {% trans %}
+            Images
+          {% endtrans %}
+        </a>
+      </li>
+      <li class="apartment__anchor-item">
+        <a href="#apartment_information" class="apartment__anchor-link">
+          {% include "@asuntotuotanto/misc/icon.twig" with {icon: 'info-circle', label: ''} %}
+          {% trans %}
+            Information
+          {% endtrans %}
+        </a>
+      </li>
+      <li class="apartment__anchor-item">
+        {# TODO: Create correct anchor link #}
+        <a href="#apartment_information" class="apartment__anchor-link">
+          {% include "@asuntotuotanto/misc/icon.twig" with {icon: 'home', label: ''} %}
+          {% trans %}
+            Floor plan
+          {% endtrans %}
+        </a>
+      </li>
+      <li class="apartment__anchor-item">
+        {# TODO: Create correct anchor link #}
+        <a href="#apartment_information" class="apartment__anchor-link">
+          {% include "@asuntotuotanto/misc/icon.twig" with {icon: 'location', label: ''} %}
+          {% trans %}
+            Location
+          {% endtrans %}
+        </a>
+      </li>
+    </ul>
+  </nav>
 
   <div class="apartment__content-wrapper container">
     <aside class="apartment__sidebar">
@@ -147,7 +186,7 @@
       </div>
       {% if project_description|render %}
         <div class="apartment__information">
-          <h2 class="apartment__information-label">
+          <h2 class="apartment__information-label" id="apartment_information">
             {% trans %}
               Apartment information
             {% endtrans %}
