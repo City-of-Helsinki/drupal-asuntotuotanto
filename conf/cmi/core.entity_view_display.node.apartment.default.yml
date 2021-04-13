@@ -39,6 +39,7 @@ dependencies:
     - field.field.node.apartment.field_view_description
     - field.field.node.apartment.field_water_fee
     - field.field.node.apartment.field_water_fee_explanation
+    - image.style.3_2_m
     - node.type.apartment
     - responsive_image.styles.showcase_gallery
   module:
@@ -213,7 +214,7 @@ content:
       optionset_thumbnail: ''
       skin: ''
       skin_thumbnail: ''
-      image_style: ''
+      image_style: 3_2_m
       responsive_image_style: showcase_gallery
       thumbnail_effect: ''
       thumbnail_position: ''
