@@ -44,7 +44,7 @@ dependencies:
   module:
     - datetime
     - link
-    - responsive_image
+    - slick
     - user
 id: node.apartment.default
 targetEntityType: node
@@ -208,10 +208,56 @@ content:
     weight: 53
     label: hidden
     settings:
+      style: ''
+      optionset: default
+      optionset_thumbnail: ''
+      skin: ''
+      skin_thumbnail: ''
+      image_style: ''
       responsive_image_style: showcase_gallery
-      image_link: ''
+      thumbnail_effect: ''
+      thumbnail_position: ''
+      media_switch: ''
+      thumbnail_style: ''
+      ratio: ''
+      grid: null
+      grid_medium: null
+      grid_small: null
+      visible_items: null
+      layout: ''
+      thumbnail_caption: ''
+      cache: 0
+      current_view_mode: default
+      background: false
+      caption:
+        title: '0'
+        alt: '0'
+      preserve_keys: false
+      override: false
+      overridables:
+        arrows: '0'
+        autoplay: '0'
+        dots: '0'
+        draggable: '0'
+        infinite: '0'
+        mouseWheel: '0'
+        randomize: '0'
+        variableWidth: '0'
+      skin_arrows: ''
+      skin_dots: ''
+      fx: ''
+      icon: ''
+      view_mode: ''
+      box_caption: ''
+      box_caption_custom: ''
+      box_media_style: ''
+      box_style: ''
+      _uri: ''
+      breakpoints: {  }
+      sizes: ''
+      grid_header: ''
     third_party_settings: {  }
-    type: responsive_image
+    type: slick_image
     region: content
   field_kitchen_appliances:
     weight: 9
