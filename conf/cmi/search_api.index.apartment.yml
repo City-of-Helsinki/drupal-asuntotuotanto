@@ -94,11 +94,11 @@ field_settings:
   application_url:
     label: 'Application URL'
     datasource_id: 'entity:node'
-    property_path: field_application_url
+    property_path: asu_application_form_url
     type: string
     dependencies:
-      config:
-        - field.storage.node.field_application_url
+      module:
+        - computed_field_plugin
   balcony_description:
     label: 'Balcony description'
     datasource_id: 'entity:node'
