@@ -42,6 +42,7 @@ dependencies:
     - field.field.node.project.field_postal_code
     - field.field.node.project.field_pre_marketing_end_time
     - field.field.node.project.field_premarketing_start_time
+    - field.field.node.project.field_project_accessibility
     - field.field.node.project.field_project_description
     - field.field.node.project.field_project_manager
     - field.field.node.project.field_publication_end_time
@@ -245,6 +246,14 @@ content:
     region: content
   field_postal_code:
     weight: 104
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_project_accessibility:
+    weight: 165
     label: above
     settings:
       link_to_entity: false

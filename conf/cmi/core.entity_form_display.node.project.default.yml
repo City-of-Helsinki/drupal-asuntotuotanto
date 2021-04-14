@@ -42,6 +42,7 @@ dependencies:
     - field.field.node.project.field_postal_code
     - field.field.node.project.field_pre_marketing_end_time
     - field.field.node.project.field_premarketing_start_time
+    - field.field.node.project.field_project_accessibility
     - field.field.node.project.field_project_description
     - field.field.node.project.field_project_manager
     - field.field.node.project.field_publication_end_time
@@ -73,6 +74,7 @@ dependencies:
     - inline_entity_form
     - link
     - path
+    - scheduler
 third_party_settings:
   field_group:
     group_project_tabs:
@@ -119,7 +121,7 @@ third_party_settings:
         required_fields: true
         id: ''
         classes: ''
-      label: Information
+      label: Perustiedot
     group_properties:
       children:
         - field_has_elevator
@@ -138,6 +140,7 @@ third_party_settings:
         - field_project_description
         - field_site_owner
         - field_building_type
+        - field_project_accessibility
         - field_services
       parent_name: group_project_tabs
       weight: 20
@@ -149,7 +152,7 @@ third_party_settings:
         description: ''
         formatter: closed
         required_fields: true
-      label: Properties
+      label: Ominaisuudet
     group_tasklist:
       children:
         - field_tasks
@@ -164,7 +167,7 @@ third_party_settings:
         open: true
         required_fields: true
         weight: 0
-      label: Tasklist
+      label: Tehtävälista
     group_schedules:
       children:
         - field_publication_start_time
@@ -189,7 +192,7 @@ third_party_settings:
         description: ''
         formatter: closed
         required_fields: true
-      label: Schedules
+      label: Aikataulut
     group_pictures_and_videos:
       children:
         - field_attachments_url
@@ -207,7 +210,7 @@ third_party_settings:
         description: ''
         formatter: closed
         required_fields: true
-      label: Media
+      label: Liitteet
     group_persons_and_operators:
       children:
         - field_acc_salesperson
@@ -228,7 +231,7 @@ third_party_settings:
         description: ''
         formatter: closed
         required_fields: true
-      label: People
+      label: Toimijat
     group_apartments:
       children:
         - field_apartments
@@ -243,7 +246,7 @@ third_party_settings:
         description: ''
         formatter: closed
         required_fields: true
-      label: Apartments
+      label: Huoneistot
 id: node.project.default
 targetEntityType: node
 bundle: project
@@ -283,8 +286,8 @@ content:
     settings:
       form_mode: default
       override_labels: true
-      label_singular: apartment
-      label_plural: apartments
+      label_singular: huoneisto
+      label_plural: huoneistoja
       allow_new: true
       allow_existing: true
       match_operator: CONTAINS
@@ -296,13 +299,13 @@ content:
     type: inline_entity_form_complex
     region: content
   field_application_end_time:
-    weight: 15
+    weight: 16
     settings: {  }
     third_party_settings: {  }
     type: datetime_default
     region: content
   field_application_start_time:
-    weight: 14
+    weight: 15
     settings: {  }
     third_party_settings: {  }
     type: datetime_default
@@ -330,7 +333,7 @@ content:
     type: string_textfield
     region: content
   field_completion_date:
-    weight: 20
+    weight: 22
     settings: {  }
     third_party_settings: {  }
     type: datetime_default
@@ -350,7 +353,7 @@ content:
     type: string_textfield
     region: content
   field_constructor:
-    weight: 27
+    weight: 28
     settings:
       size: 60
       placeholder: ''
@@ -384,7 +387,7 @@ content:
     type: options_buttons
     region: content
   field_estate_agent:
-    weight: 29
+    weight: 30
     settings:
       size: 60
       placeholder: ''
@@ -392,7 +395,7 @@ content:
     type: string_textfield
     region: content
   field_estate_agent_email:
-    weight: 30
+    weight: 31
     settings:
       size: 60
       placeholder: ''
@@ -400,7 +403,7 @@ content:
     type: email_default
     region: content
   field_estate_agent_phone:
-    weight: 31
+    weight: 32
     settings:
       size: 60
       placeholder: ''
@@ -408,7 +411,7 @@ content:
     type: string_textfield
     region: content
   field_estimated_completion:
-    weight: 18
+    weight: 20
     settings:
       size: 60
       placeholder: ''
@@ -416,7 +419,7 @@ content:
     type: string_textfield
     region: content
   field_estimated_completion_date:
-    weight: 19
+    weight: 21
     settings: {  }
     third_party_settings: {  }
     type: datetime_default
@@ -456,7 +459,7 @@ content:
     type: string_textfield
     region: content
   field_housing_manager:
-    weight: 28
+    weight: 29
     settings:
       size: 60
       placeholder: ''
@@ -464,7 +467,7 @@ content:
     type: string_textfield
     region: content
   field_images:
-    weight: 26
+    weight: 27
     settings:
       progress_indicator: throbber
       preview_image_style: thumbnail
@@ -479,7 +482,7 @@ content:
     type: asu_csv_file_widget
     region: content
   field_main_image:
-    weight: 25
+    weight: 26
     settings:
       progress_indicator: throbber
       preview_image_style: thumbnail
@@ -487,7 +490,7 @@ content:
     type: image_image
     region: content
   field_material_choice_dl:
-    weight: 16
+    weight: 17
     settings: {  }
     third_party_settings: {  }
     type: datetime_default
@@ -512,7 +515,7 @@ content:
     type: options_buttons
     region: content
   field_possession_transfer_date:
-    weight: 21
+    weight: 23
     settings: {  }
     third_party_settings: {  }
     type: datetime_default
@@ -526,7 +529,7 @@ content:
       placeholder: ''
     third_party_settings: {  }
   field_pre_marketing_end_time:
-    weight: 13
+    weight: 14
     settings: {  }
     third_party_settings: {  }
     type: datetime_default
@@ -537,6 +540,14 @@ content:
     third_party_settings: {  }
     type: datetime_default
     region: content
+  field_project_accessibility:
+    weight: 79
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
   field_project_description:
     weight: 76
     settings:
@@ -546,7 +557,7 @@ content:
     type: string_textarea
     region: content
   field_project_manager:
-    weight: 26
+    weight: 27
     settings:
       size: 60
       placeholder: ''
@@ -575,9 +586,11 @@ content:
     region: content
   field_roof_material:
     weight: 66
-    settings: {  }
+    settings:
+      size: 60
+      placeholder: ''
     third_party_settings: {  }
-    type: options_select
+    type: string_textfield
     region: content
   field_sanitation:
     weight: 71
@@ -588,13 +601,13 @@ content:
     type: string_textfield
     region: content
   field_services:
-    weight: 79
+    weight: 80
     settings: {  }
     third_party_settings: {  }
     type: asu_service_widget
     region: content
   field_shared_apartment_images:
-    weight: 27
+    weight: 28
     settings:
       progress_indicator: throbber
       preview_image_style: thumbnail
@@ -602,7 +615,7 @@ content:
     type: image_image
     region: content
   field_shareholder_meeting_date:
-    weight: 17
+    weight: 18
     settings: {  }
     third_party_settings: {  }
     type: datetime_default
@@ -649,7 +662,7 @@ content:
     type: tasklist_widget
     region: content
   field_virtual_presentation_url:
-    weight: 28
+    weight: 29
     settings:
       placeholder_url: ''
       placeholder_title: ''
@@ -692,6 +705,12 @@ content:
     weight: 5
     region: content
     third_party_settings: {  }
+  publish_on:
+    type: datetime_timestamp_no_default
+    weight: 30
+    region: content
+    settings: {  }
+    third_party_settings: {  }
   status:
     type: boolean_checkbox
     settings:
@@ -728,6 +747,12 @@ content:
       placeholder: ''
       match_limit: 10
     region: content
+    third_party_settings: {  }
+  unpublish_on:
+    type: datetime_timestamp_no_default
+    weight: 30
+    region: content
+    settings: {  }
     third_party_settings: {  }
   url_redirects:
     weight: 8
