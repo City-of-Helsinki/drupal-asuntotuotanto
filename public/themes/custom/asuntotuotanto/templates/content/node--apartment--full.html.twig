@@ -146,15 +146,14 @@
       <li class="apartment__anchor-item">
         {# TODO: Create correct anchor link #}
         <a href="#apartment_information" class="apartment__anchor-link">
-          {% include "@asuntotuotanto/misc/icon.twig" with {icon: 'home', label: ''} %}
+          {% include "@asuntotuotanto/misc/icon.twig" with {icon: 'floor-plan', label: ''} %}
           {% trans %}
             Floor plan
           {% endtrans %}
         </a>
       </li>
       <li class="apartment__anchor-item">
-        {# TODO: Create correct anchor link #}
-        <a href="#apartment_information" class="apartment__anchor-link">
+        <a href="#apartment_location" class="apartment__anchor-link">
           {% include "@asuntotuotanto/misc/icon.twig" with {icon: 'location', label: ''} %}
           {% trans %}
             Location
@@ -274,6 +273,34 @@
             </li>
           {% endif %}
         </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="apartment__area-overview-wrapper container" id="apartment_location">
+    <div class="apartment__area-overview">
+      <h2 class="apartment__area-overview-label">
+        {% trans %}
+          Area overview
+        {% endtrans %}
+      </h2>
+      <ul class="apartment__services-list">
+        {% for service in services %}
+          <li class="apartment__service-item">
+            {% include "@asuntotuotanto/misc/icon.twig" with {icon: 'location', label: ''} %}
+            <p>{{ service.name }} {{ service.distance }} m</p>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+    <div class="apartment__map-location">
+      <h2 class="apartment__map-location-label">
+        {% trans %}
+          Location
+        {% endtrans %}
+      </h2>
+      <div>
+        {# TODO: Add map. #}
       </div>
     </div>
   </div>
