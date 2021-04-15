@@ -51,6 +51,7 @@ dependencies:
     - field.field.node.project.field_roof_material
     - field.field.node.project.field_sanitation
     - field.field.node.project.field_services
+    - field.field.node.project.field_services_url
     - field.field.node.project.field_shared_apartment_images
     - field.field.node.project.field_shareholder_meeting_date
     - field.field.node.project.field_site_area
@@ -306,6 +307,18 @@ content:
     settings: {  }
     third_party_settings: {  }
     type: asu_service_formatter
+    region: content
+  field_services_url:
+    weight: 166
+    label: above
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+    type: link
     region: content
   field_shared_apartment_images:
     weight: 161

@@ -331,6 +331,19 @@
   }
 }
 
+.apartment__area-overvink-link {
+  @include font-size($fontsize-body-l, 26px);
+  @include font-weight($bold);
+  color: var(--color-black-90);
+  display: inline-block;
+  margin-top: $spacing-m;
+  text-decoration: none;
+
+  @media screen and (min-width: $breakpoint-l) {
+    margin-top: $spacing-l;
+  }
+}
+
 .apartment__map-location {
   background-color: var(--color-silver-medium-light);
   margin: 0 -#{$spacing-s};

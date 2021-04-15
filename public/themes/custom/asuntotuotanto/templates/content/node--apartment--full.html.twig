@@ -284,14 +284,19 @@
           Area overview
         {% endtrans %}
       </h2>
-      <ul class="apartment__services-list">
-        {% for service in services %}
-          <li class="apartment__service-item">
-            {% include "@asuntotuotanto/misc/icon.twig" with {icon: 'location', label: ''} %}
-            <p>{{ service.name }} {{ service.distance }} m</p>
-          </li>
-        {% endfor %}
-      </ul>
+      {% if services|length > 0 %}
+        <ul class="apartment__services-list">
+          {% for service in services %}
+            <li class="apartment__service-item">
+              {% include "@asuntotuotanto/misc/icon.twig" with {icon: 'location', label: ''} %}
+              <p>{{ service.name }} {{ service.distance }} m</p>
+            </li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+      {% if services_url %}
+        <a class="apartment__area-overvink-link" href="{{ services_url.uri }}">{{ services_url.title }}</a>
+      {% endif %}
     </div>
     <div class="apartment__map-location">
       <h2 class="apartment__map-location-label">

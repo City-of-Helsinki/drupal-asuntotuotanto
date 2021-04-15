@@ -51,6 +51,7 @@ dependencies:
     - field.field.node.project.field_roof_material
     - field.field.node.project.field_sanitation
     - field.field.node.project.field_services
+    - field.field.node.project.field_services_url
     - field.field.node.project.field_shared_apartment_images
     - field.field.node.project.field_shareholder_meeting_date
     - field.field.node.project.field_site_area
@@ -142,6 +143,7 @@ third_party_settings:
         - field_building_type
         - field_project_accessibility
         - field_services
+        - field_services_url
       parent_name: group_project_tabs
       weight: 20
       format_type: tab
@@ -353,7 +355,7 @@ content:
     type: string_textfield
     region: content
   field_constructor:
-    weight: 28
+    weight: 27
     settings:
       size: 60
       placeholder: ''
@@ -459,7 +461,7 @@ content:
     type: string_textfield
     region: content
   field_housing_manager:
-    weight: 29
+    weight: 28
     settings:
       size: 60
       placeholder: ''
@@ -467,7 +469,7 @@ content:
     type: string_textfield
     region: content
   field_images:
-    weight: 27
+    weight: 26
     settings:
       progress_indicator: throbber
       preview_image_style: thumbnail
@@ -482,7 +484,7 @@ content:
     type: asu_csv_file_widget
     region: content
   field_main_image:
-    weight: 26
+    weight: 25
     settings:
       progress_indicator: throbber
       preview_image_style: thumbnail
@@ -557,7 +559,7 @@ content:
     type: string_textarea
     region: content
   field_project_manager:
-    weight: 27
+    weight: 26
     settings:
       size: 60
       placeholder: ''
@@ -605,6 +607,14 @@ content:
     settings: {  }
     third_party_settings: {  }
     type: asu_service_widget
+    region: content
+  field_services_url:
+    weight: 81
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: {  }
+    type: link_default
     region: content
   field_shared_apartment_images:
     weight: 28

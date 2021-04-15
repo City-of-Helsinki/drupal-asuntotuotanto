@@ -440,6 +440,7 @@ content:
     settings: {  }
     third_party_settings: {  }
 hidden:
+  asu_application_form_url: true
   asu_computed_apartment_images: true
   asu_project_building_type: true
   asu_project_holding_type: true

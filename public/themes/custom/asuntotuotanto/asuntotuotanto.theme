@@ -179,6 +179,7 @@ function asuntotuotanto_preprocess_node(&$variables) {
         $energy_class = Term::load($parent_node->get('field_energy_class')->target_id)->name->value;
         $accessibility = $parent_node->get('field_project_accessibility')->value;
         $services = $parent_node->get('field_services')->getValue();
+        $services_url = $parent_node->get('field_services_url')->getValue()[0];
         $services_stack = [];
 
         foreach ($services as $key => $service) {
@@ -203,6 +204,7 @@ function asuntotuotanto_preprocess_node(&$variables) {
         $variables['building_type'] = $building_type ?? NULL;
         $variables['energy_class'] = $energy_class ?? NULL;
         $variables['services'] = $services_stack ?? NULL;
+        $variables['services_url'] = $services_url ?? NULL;
       }
       break;
   }
