@@ -342,4 +342,28 @@
       </div>
     </div>
   </div>
+
+  {% if is_application_period_active %}
+    <div class="apartment__cta">
+      <div class="apartment__cta-image">
+        {{ cta_image }}
+      </div>
+      <div class="apartment__cta-content-wrapper">
+        <div class="apartment__cta-content">
+          <h2>
+            {% trans %}
+              Could this be your home?
+            {% endtrans %}
+          </h2>
+          {% include '@asuntotuotanto/button/button.html.twig' with {
+            type: 'secondary',
+            disabled: false,
+            label: 'Create an application'|t,
+            href: application_url
+            }
+          %}
+        </div>
+      </div>
+    </div>
+  {% endif %}
 </article>

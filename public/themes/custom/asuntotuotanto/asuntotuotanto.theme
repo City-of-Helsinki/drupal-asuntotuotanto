@@ -144,6 +144,9 @@ function asuntotuotanto_preprocess_node(&$variables) {
 
   switch ($bundle) {
     case 'apartment':
+      $cta_image_file_target_id = $node->get('field_images')->getValue()[0]['target_id'];
+      $variables['cta_image'] = load_responsive_image_style($cta_image_file_target_id, 'image__3_2');
+
       $parent_node_results = \Drupal::entityTypeManager()
         ->getListBuilder('node')
         ->getStorage()
@@ -240,4 +243,38 @@ function format_date_to_unix_timestamp($string) {
 
 function format_timestamp_to_custom_format($timestamp, $format = 'short') {
   return \Drupal::service('date.formatter')->format($timestamp, $format);
+}
+
+function load_responsive_image_style($image_file_target_id, $responsive_image_style_id) {
+  if (!$image_file_target_id && !$responsive_image_style_id) return NULL;
+
+  $file = File::load($image_file_target_id);
+
+  if ($file) {
+    $file_uri = $file->getFileUri();
+    $image = \Drupal::service('image.factory')->get($file_uri);
+
+    if ($image->isValid()) {
+      $image_height = $image->getHeight();
+      $image_width = $image->getWidth();
+    } else {
+      $image_height = NULL;
+      $image_width = NULL;
+    }
+
+    $image_build = [
+      '#theme' => 'responsive_image',
+      '#width' => $image_width,
+      '#height' => $image_height,
+      '#responsive_image_style_id' => $responsive_image_style_id,
+      '#uri' => $file_uri,
+    ];
+
+    $renderer = \Drupal::service('renderer');
+    $renderer->addCacheableDependency($image_build, $file);
+
+    return $image_build;
+  }
+
+  return NULL;
 }

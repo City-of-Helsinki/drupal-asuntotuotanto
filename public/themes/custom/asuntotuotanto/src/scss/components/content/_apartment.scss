@@ -258,10 +258,6 @@
   }
 }
 
-.apartment__attachments {
-
-}
-
 .apartment__attachments-label {
   @include font-size($font-size-heading-3, 29px);
   @include font-weight($bold);
@@ -469,4 +465,107 @@
   @include font-weight($bold);
   color: var(--color-black-90);
   margin: 0;
+}
+
+.apartment__cta {
+  margin-top: $spacing-layout-2-xl;
+
+  @media screen and (min-width: $breakpoint-l) {
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: $spacing-layout-x;
+    max-width: $container-width-xl;
+    padding: 0 $spacing-s;
+    position: relative;
+    width: 100%;
+  }
+}
+
+.apartment__cta-image {
+  margin: 0 auto;
+  max-width: $container-width-m;
+
+  @media screen and (min-width: $breakpoint-s) and (max-width: $breakpoint-m - 1px) {
+    padding: 0 $spacing-s;
+  }
+
+  @media screen and (min-width: $breakpoint-m) {
+    padding: 0 $spacing-s;
+    max-width: $container-width-l;
+  }
+
+  @media screen and (min-width: $breakpoint-l) {
+    margin: 0;
+    order: 2;
+    padding: 0;
+    margin-left: auto;
+    max-width: 75%;
+  }
+}
+
+.apartment__cta-content-wrapper {
+  margin: -#{$spacing-4-xl} auto 0;
+  padding: 0 $spacing-s;
+  position: relative;
+  width: 100%;
+
+  @media screen and (min-width: $breakpoint-s) and (max-width: $breakpoint-l - 1px) {
+    max-width: $container-width-s;
+  }
+
+  @media screen and (min-width: $breakpoint-l) {
+    margin: 0;
+    max-width: 460px;
+    order: 1;
+    padding: 0;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+}
+
+.apartment__cta-content {
+  background-color: var(--color-engel);
+  padding: $spacing-l $spacing-m;
+  width: 100%;
+
+  @media screen and (min-width: $breakpoint-m) {
+    padding: $spacing-l $spacing-2-xl;
+  }
+
+  @media screen and (min-width: $breakpoint-l) {
+    align-items: baseline;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 400px;
+    padding: $spacing-l $spacing-4-xl $spacing-3-xl $spacing-2-xl;
+  }
+
+  > h2 {
+    @include font-size($font-size-heading-3, 29px);
+    @include font-weight($bold);
+    color: var(--color-black-90);
+    margin-bottom: $spacing-l;
+    margin-top: 0;
+
+    @media screen and (min-width: $breakpoint-m) {
+      @include font-size($font-size-heading-2, 43px);
+      padding-right: $spacing-s
+    }
+  }
+
+  .hds-button.hds-button--secondary {
+    border-color: var(--color-black-90);
+    color: var(--color-black-90);
+
+    @media screen and (max-width: $breakpoint-l - 1px) {
+      width: 100%;
+    }
+
+    &:hover,
+    &:focus {
+      background-color: transparent;
+    }
+  }
 }
