@@ -43,6 +43,7 @@ dependencies:
     - field.field.node.project.field_pre_marketing_end_time
     - field.field.node.project.field_premarketing_start_time
     - field.field.node.project.field_project_accessibility
+    - field.field.node.project.field_project_attachments
     - field.field.node.project.field_project_description
     - field.field.node.project.field_project_manager
     - field.field.node.project.field_publication_end_time
@@ -68,6 +69,7 @@ dependencies:
     - asu_content
     - asu_tasklist
     - datetime
+    - file
     - image
     - link
     - user
@@ -260,6 +262,14 @@ content:
       link_to_entity: false
     third_party_settings: {  }
     type: string
+    region: content
+  field_project_attachments:
+    weight: 167
+    label: above
+    settings:
+      use_description_as_link_text: true
+    third_party_settings: {  }
+    type: file_default
     region: content
   field_project_description:
     weight: 153

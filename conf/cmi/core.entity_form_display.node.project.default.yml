@@ -43,6 +43,7 @@ dependencies:
     - field.field.node.project.field_pre_marketing_end_time
     - field.field.node.project.field_premarketing_start_time
     - field.field.node.project.field_project_accessibility
+    - field.field.node.project.field_project_attachments
     - field.field.node.project.field_project_description
     - field.field.node.project.field_project_manager
     - field.field.node.project.field_publication_end_time
@@ -71,6 +72,7 @@ dependencies:
     - asu_tasklist
     - datetime
     - field_group
+    - file
     - image
     - inline_entity_form
     - link
@@ -84,6 +86,7 @@ third_party_settings:
         - group_properties
         - group_schedules
         - group_pictures_and_videos
+        - field_project_attachments
         - group_persons_and_operators
         - group_apartments
       parent_name: ''
@@ -224,7 +227,7 @@ third_party_settings:
         - field_estate_agent_email
         - field_estate_agent_phone
       parent_name: group_project_tabs
-      weight: 23
+      weight: 24
       format_type: tab
       region: content
       format_settings:
@@ -239,7 +242,7 @@ third_party_settings:
         - field_apartments
         - field_import_apartments
       parent_name: group_project_tabs
-      weight: 24
+      weight: 25
       format_type: tab
       region: content
       format_settings:
@@ -355,7 +358,7 @@ content:
     type: string_textfield
     region: content
   field_constructor:
-    weight: 27
+    weight: 28
     settings:
       size: 60
       placeholder: ''
@@ -461,7 +464,7 @@ content:
     type: string_textfield
     region: content
   field_housing_manager:
-    weight: 28
+    weight: 29
     settings:
       size: 60
       placeholder: ''
@@ -549,6 +552,13 @@ content:
       placeholder: ''
     third_party_settings: {  }
     type: string_textfield
+    region: content
+  field_project_attachments:
+    weight: 23
+    settings:
+      progress_indicator: throbber
+    third_party_settings: {  }
+    type: file_generic
     region: content
   field_project_description:
     weight: 76

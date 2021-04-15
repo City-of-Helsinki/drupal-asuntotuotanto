@@ -121,7 +121,7 @@
 
   {% if images|render %}
     <div class="apartment__images container showcase-gallery" id="showcase_gallery">
-    {{ images }}
+      {{ images }}
     </div>
   {% endif %}
 
@@ -129,7 +129,7 @@
     <ul class="apartment__anchor-list">
       <li class="apartment__anchor-item">
         <a href="#showcase_gallery" class="apartment__anchor-link">
-          {% include "@asuntotuotanto/misc/icon.twig" with {icon: 'photo-plus', label: ''} %}
+          {% include "@hdbt/misc/icon.twig" with {icon: 'photo-plus', label: ''} %}
           {% trans %}
             Images
           {% endtrans %}
@@ -137,15 +137,14 @@
       </li>
       <li class="apartment__anchor-item">
         <a href="#apartment_information" class="apartment__anchor-link">
-          {% include "@asuntotuotanto/misc/icon.twig" with {icon: 'info-circle', label: ''} %}
+          {% include "@hdbt/misc/icon.twig" with {icon: 'info-circle', label: ''} %}
           {% trans %}
             Information
           {% endtrans %}
         </a>
       </li>
       <li class="apartment__anchor-item">
-        {# TODO: Create correct anchor link #}
-        <a href="#apartment_information" class="apartment__anchor-link">
+        <a href="#apartment_attachments" class="apartment__anchor-link">
           {% include "@asuntotuotanto/misc/icon.twig" with {icon: 'floor-plan', label: ''} %}
           {% trans %}
             Floor plan
@@ -154,7 +153,7 @@
       </li>
       <li class="apartment__anchor-item">
         <a href="#apartment_location" class="apartment__anchor-link">
-          {% include "@asuntotuotanto/misc/icon.twig" with {icon: 'location', label: ''} %}
+          {% include "@hdbt/misc/icon.twig" with {icon: 'location', label: ''} %}
           {% trans %}
             Location
           {% endtrans %}
@@ -274,6 +273,40 @@
           {% endif %}
         </ul>
       </div>
+      {% if attachments|length > 0 %}
+        <div class="apartment__attachments">
+          <h2 class="apartment__attachments-label" id="apartment_attachments">
+            {% trans %}
+              Attachments
+            {% endtrans %}
+          </h2>
+            <ul class="apartment__attachments-list">
+              {% for attachment in attachments %}
+                {% set description = attachment.description %}
+                {% set name = attachment.name %}
+                {% set size = attachment.size %}
+                {% set uri = attachment.uri %}
+
+                <li class="apartment__attachment-item">
+                  <a href="{{ uri }}" download="{{ name }}" class="apartment__attachment-link">
+                    {% include "@hdbt/misc/icon.twig" with {icon: 'document', label: ''} %}
+                    <div class="apartment__attachment-content">
+                      <p class="apartment__attachment-description">{{ description|t }}</p>
+                      <p class="apartment__attachment-name">
+                        <span class="visually-hidden">({{ 'File name'|t }})</span>
+                        {{ name }}
+                      </p>
+                      <p class="apartment__attachment-size">
+                        <span class="visually-hidden">({{ 'File size'|t }})</span>
+                        {{ size }}
+                      </p>
+                    </div>
+                  </a>
+                </li>
+              {% endfor %}
+            </ul>
+        </div>
+      {% endif %}
     </div>
   </div>
 
@@ -288,7 +321,7 @@
         <ul class="apartment__services-list">
           {% for service in services %}
             <li class="apartment__service-item">
-              {% include "@asuntotuotanto/misc/icon.twig" with {icon: 'location', label: ''} %}
+              {% include "@hdbt/misc/icon.twig" with {icon: 'location', label: ''} %}
               <p>{{ service.name }} {{ service.distance }} m</p>
             </li>
           {% endfor %}

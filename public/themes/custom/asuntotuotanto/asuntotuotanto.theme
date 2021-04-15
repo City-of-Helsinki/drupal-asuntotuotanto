@@ -5,6 +5,7 @@
  * Functions to support theming in the City of Helsinki - Asuntotuotanto theme.
  */
 
+use Drupal\file\Entity\File;
 use Drupal\node\Entity\Node;
 use Drupal\user\Entity\User;
 use \Drupal\taxonomy\Entity\Term;
@@ -181,6 +182,8 @@ function asuntotuotanto_preprocess_node(&$variables) {
         $services = $parent_node->get('field_services')->getValue();
         $services_url = $parent_node->get('field_services_url')->getValue()[0];
         $services_stack = [];
+        $project_attachments = $parent_node->get('field_project_attachments')->getValue();
+        $attachments_stack = [];
 
         foreach ($services as $key => $service) {
           $term_id = $service['term_id'];
@@ -191,6 +194,22 @@ function asuntotuotanto_preprocess_node(&$variables) {
 
             $services_stack[] = ['name' => $service_name, 'distance' => $service_distance];
           }
+        }
+
+        foreach ($project_attachments as $key => $attachment) {
+          $target_id = $attachment['target_id'];
+          $file = File::load($target_id);
+          $description = $attachment['description'];
+          $file_name = $file->getFilename();
+          $file_size = format_size($file->getSize());
+          $file_uri = file_create_url($file->getFileUri());
+
+          $attachments_stack[$key] = [
+            'description' => $description,
+            'name' => $file_name,
+            'size' => $file_size,
+            'uri' => $file_uri,
+          ];
         }
 
         $variables['application_start_time'] = format_timestamp_to_custom_format($application_start_time_timestamp);
@@ -205,6 +224,7 @@ function asuntotuotanto_preprocess_node(&$variables) {
         $variables['energy_class'] = $energy_class ?? NULL;
         $variables['services'] = $services_stack ?? NULL;
         $variables['services_url'] = $services_url ?? NULL;
+        $variables['attachments'] = $attachments_stack ?? NULL;
       }
       break;
   }

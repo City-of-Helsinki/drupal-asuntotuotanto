@@ -1,0 +1,27 @@
+uuid: c2cc3091-79f2-4671-b954-7bcbd1b3fc21
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_project_attachments
+    - node.type.project
+  module:
+    - file
+id: node.project.field_project_attachments
+field_name: field_project_attachments
+entity_type: node
+bundle: project
+label: Attachments
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  file_directory: '[date:custom:Y]-[date:custom:m]'
+  file_extensions: 'txt pdf doc docx xls xlsx ppt pptx'
+  max_filesize: ''
+  description_field: true
+  handler: 'default:file'
+  handler_settings: {  }
+field_type: file
