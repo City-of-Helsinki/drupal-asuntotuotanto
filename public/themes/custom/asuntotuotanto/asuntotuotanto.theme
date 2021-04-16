@@ -187,6 +187,7 @@ function asuntotuotanto_preprocess_node(&$variables) {
         $services_stack = [];
         $project_attachments = $parent_node->get('field_project_attachments')->getValue();
         $attachments_stack = [];
+        $estimated_completion_date = new DateTime($parent_node->get('field_estimated_completion_date')->value);
 
         foreach ($services as $key => $service) {
           $term_id = $service['term_id'];
@@ -228,6 +229,7 @@ function asuntotuotanto_preprocess_node(&$variables) {
         $variables['services'] = $services_stack ?? NULL;
         $variables['services_url'] = $services_url ?? NULL;
         $variables['attachments'] = $attachments_stack ?? NULL;
+        $variables['estimated_completion_date'] = $estimated_completion_date->format('m/Y') ?? NULL;
       }
       break;
   }

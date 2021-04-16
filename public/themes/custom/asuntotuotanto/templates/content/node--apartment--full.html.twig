@@ -89,8 +89,76 @@
 {% set floor = content.field_floor.0 %}
 {% set sales_price = content.field_sales_price.0 %}
 {% set debt_free_sales_price = content.field_debt_free_sales_price.0 %}
+{% set apartment_number = content.field_apartment_number.0 %}
 
 <article{{ attributes.addClass(classes) }}>
+  <div class="apartment__sticky-navigation" aria-hidden="true">
+    <div class="apartment__sticky-navigation-container container">
+      <div class="apartment__sticky-content">
+        <div class="apartment__sticky-content-section">
+          <p class="apartment__apartment-number">{{ apartment_number }}</p>
+          <p class="apartment__apartment-details">
+            {% if apartment_structure|render %}
+              <span class="apartment__apartment-structure">{{ apartment_structure }}</span>
+            {% endif %}
+            <span aria-hidden="true"></span>
+            {% if living_area_size_m2|render %}
+              <span class="apartment__living-area-size">{{ living_area_size_m2 }} m<sup>2</sup></span>
+            {% endif %}
+          </p>
+        </div>
+        <div class="apartment__sticky-content-section">
+          <p class="apartment__estimated-completion-date">
+            Completion {{ estimated_completion_date }}
+          </p>
+          {% if is_application_period_active %}
+            <p class="apartment__application-end-time">
+              {% trans %}
+                Application period is open till {{ application_end_time }}
+              {% endtrans %}
+            </p>
+          {% endif %}
+        </div>
+      </div>
+      <nav class="apartment__anchor-navigation apartment__anchor-navigation--sticky-navigation">
+        <ul class="apartment__anchor-list">
+          <li class="apartment__anchor-item">
+            <a href="#showcase_gallery" class="apartment__anchor-link">
+              {% include "@hdbt/misc/icon.twig" with {icon: 'photo-plus', label: ''} %}
+              {% trans %}
+                Images
+              {% endtrans %}
+            </a>
+          </li>
+          <li class="apartment__anchor-item">
+            <a href="#apartment_information" class="apartment__anchor-link">
+              {% include "@hdbt/misc/icon.twig" with {icon: 'info-circle', label: ''} %}
+              {% trans %}
+                Information
+              {% endtrans %}
+            </a>
+          </li>
+          <li class="apartment__anchor-item">
+            <a href="#apartment_attachments" class="apartment__anchor-link">
+              {% include "@asuntotuotanto/misc/icon.twig" with {icon: 'floor-plan', label: ''} %}
+              {% trans %}
+                Floor plan
+              {% endtrans %}
+            </a>
+          </li>
+          <li class="apartment__anchor-item">
+            <a href="#apartment_location" class="apartment__anchor-link">
+              {% include "@hdbt/misc/icon.twig" with {icon: 'location', label: ''} %}
+              {% trans %}
+                Location
+              {% endtrans %}
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
   <div class="apartment__header container">
     <div class="apartment__header-section apartment__header-section--heading">
       <h1 class="apartment__label">{{ label }}</h1>
@@ -128,7 +196,7 @@
       {% endif %}
     </div>
 
-  <nav class="apartment__anchor-navigation container">
+  <nav class="apartment__anchor-navigation apartment__anchor-navigation--desktop container">
     <ul class="apartment__anchor-list">
       <li class="apartment__anchor-item">
         <a href="#showcase_gallery" class="apartment__anchor-link">

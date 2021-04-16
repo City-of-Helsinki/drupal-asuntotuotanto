@@ -1,0 +1,95 @@
+.apartment__sticky-navigation {
+  background-color: var(--color-white);
+  border-bottom: 1px solid var(--color-black-20);
+  border-top: 1px solid var(--color-black-20);
+  left: 0;
+  padding-top: $spacing-2-xs;
+  position: fixed;
+  right: 0;
+  top: 70px;
+  z-index: 100;
+
+  @media screen and (min-width: $breakpoint-l) {
+    padding: 0;
+  }
+}
+
+.apartment__sticky-navigation-container {
+  @media screen and (min-width: $breakpoint-l) {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
+
+.apartment__sticky-content-section {
+  align-items: center;
+  display: flex;
+
+  &:first-of-type {
+    gap: $spacing-2-xs;
+  }
+
+  &:not(:first-of-type) {
+    display: none;
+
+    @media screen and (min-width: $breakpoint-l) {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    @media screen and (min-width: $breakpoint-xl) {
+      align-items: center;
+      display: flex;
+      flex-direction: row;
+      gap: $spacing-m;
+    }
+  }
+}
+
+.apartment__apartment-number {
+  @include font-size($fontsize-body-s, 26px);
+  @include font-weight($bold);
+  color: var(--color-black-90);
+  margin: 0;
+
+  @media screen and (min-width: $breakpoint-l) {
+    @include font-size($fontsize-body-m, 26px);
+  }
+}
+
+.apartment__apartment-details {
+  @include font-size($fontsize-body-s, 26px);
+  @include font-weight($regular);
+  align-items: center;
+  color: var(--color-black-90);
+  display: inline-flex;
+  margin: 0;
+
+  @media screen and (min-width: $breakpoint-l) {
+    @include font-size($fontsize-body-m, 24px);
+  }
+
+  span[aria-hidden="true"] {
+    background-color: $color-gray-4;
+    display: inline-block;
+    height: 1px;
+    margin: 0 $spacing-3-xs;
+    width: 5px;
+  }
+}
+
+.apartment__estimated-completion-date {
+  @include font-size($fontsize-body-m, 24px);
+  @include font-weight($regular);
+  color: var(--color-black-90);
+  margin: 0;
+}
+
+.apartment__application-end-time {
+  @include font-size($fontsize-body-m, 24px);
+  @include font-weight($regular);
+  color: var(--color-black-90);
+  margin: 0;
+}
