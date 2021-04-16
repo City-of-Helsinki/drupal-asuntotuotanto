@@ -119,11 +119,14 @@
     {% endif %}
   </div>
 
-  {% if images|render %}
     <div class="apartment__images container showcase-gallery" id="showcase_gallery">
-      {{ images }}
+      {% if not images|render %}
+        <div class="apartment__images--missing"></div>
+      {% endif %}
+      {% if images|render %}
+          {{ images }}
+      {% endif %}
     </div>
-  {% endif %}
 
   <nav class="apartment__anchor-navigation container">
     <ul class="apartment__anchor-list">
@@ -327,6 +330,12 @@
           {% endfor %}
         </ul>
       {% endif %}
+      {% if project_description|render %}
+        <div class="apartment__project-description">
+          {% include "@hdbt/misc/icon.twig" with {icon: 'location', label: ''} %}
+          <p>{{ project_description }}</p>
+        </div>
+      {% endif %}
       {% if services_url %}
         <a class="apartment__area-overvink-link" href="{{ services_url.uri }}">{{ services_url.title }}</a>
       {% endif %}
@@ -346,7 +355,12 @@
   {% if is_application_period_active %}
     <div class="apartment__cta">
       <div class="apartment__cta-image">
-        {{ cta_image }}
+        {% if not cta_image|render %}
+          <div class="apartment__cta-image--missing"></div>
+        {% endif %}
+        {% if cta_image|render %}
+          {{ cta_image }}
+        {% endif %}
       </div>
       <div class="apartment__cta-content-wrapper">
         <div class="apartment__cta-content">

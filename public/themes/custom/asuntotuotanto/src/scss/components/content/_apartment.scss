@@ -55,6 +55,16 @@
 
 .apartment__images {
   padding-top: $spacing-m;
+
+  &--missing {
+    aspect-ratio: 3 / 2;
+    background-color: var(--color-silver-medium-light);
+    width: 100%;
+
+    @media screen and (min-width: $breakpoint-m) {
+      aspect-ratio: 2.3 / 1;
+    }
+  }
 }
 
 .apartment__anchor-navigation {
@@ -188,16 +198,6 @@
   @media screen and (min-width: $breakpoint-m) {
     @include font-size($font-size-heading-2, 43px);
     margin-bottom: $spacing-m;
-  }
-}
-
-.apartment__project-description {
-  @include font-size($fontsize-body-m, 24px);
-  color: var(--color-black-90);
-  margin: 0;
-
-  @media screen and (min-width: $breakpoint-m) {
-    @include font-size($fontsize-body-l, 27px);
   }
 }
 
@@ -424,6 +424,32 @@
   }
 }
 
+.apartment__project-description {
+  display: inline-flex;
+  margin-top: $spacing-xs;
+
+  > svg {
+    margin-right: $spacing-s;
+
+    @media screen and (min-width: $breakpoint-l) {
+      height: 32px;
+      margin-right: $spacing-m;
+      width: 32px;
+    }
+  }
+
+  p {
+    @include font-size($fontsize-body-m, 24px);
+    color: var(--color-black-90);
+    margin: 0;
+    max-width: 300px;
+
+    @media screen and (min-width: $breakpoint-m) {
+      @include font-size($fontsize-body-l, 27px);
+    }
+  }
+}
+
 .apartment__area-overvink-link {
   @include font-size($fontsize-body-l, 26px);
   @include font-weight($bold);
@@ -500,6 +526,12 @@
     padding: 0;
     margin-left: auto;
     max-width: 75%;
+  }
+
+  &--missing {
+    aspect-ratio: 3 / 2;
+    background-color: var(--color-silver-medium-light);
+    width: 100%;
   }
 }
 
