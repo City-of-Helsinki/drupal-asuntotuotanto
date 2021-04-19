@@ -84,9 +84,9 @@ third_party_settings:
       children:
         - group_basic
         - group_properties
+        - group_neighbourhood
         - group_schedules
         - group_pictures_and_videos
-        - field_project_attachments
         - group_persons_and_operators
         - group_apartments
       parent_name: ''
@@ -141,12 +141,9 @@ third_party_settings:
         - field_zoning_status
         - field_coordinate_lat
         - field_coordinate_lon
-        - field_project_description
         - field_site_owner
         - field_building_type
         - field_project_accessibility
-        - field_services
-        - field_services_url
       parent_name: group_project_tabs
       weight: 20
       format_type: tab
@@ -200,6 +197,7 @@ third_party_settings:
       label: Aikataulut
     group_pictures_and_videos:
       children:
+        - field_project_attachments
         - field_attachments_url
         - field_main_image
         - field_images
@@ -252,6 +250,22 @@ third_party_settings:
         formatter: closed
         required_fields: true
       label: Huoneistot
+    group_neighbourhood:
+      children:
+        - field_services
+        - field_project_description
+        - field_services_url
+      parent_name: group_project_tabs
+      weight: 20
+      format_type: tab
+      region: content
+      format_settings:
+        id: ''
+        classes: ''
+        description: ''
+        formatter: closed
+        required_fields: true
+      label: Asuinalue
 id: node.project.default
 targetEntityType: node
 bundle: project
@@ -554,14 +568,14 @@ content:
     type: string_textfield
     region: content
   field_project_attachments:
-    weight: 23
+    weight: 30
     settings:
       progress_indicator: throbber
     third_party_settings: {  }
     type: file_generic
     region: content
   field_project_description:
-    weight: 76
+    weight: 81
     settings:
       rows: 5
       placeholder: ''
@@ -619,7 +633,7 @@ content:
     type: asu_service_widget
     region: content
   field_services_url:
-    weight: 81
+    weight: 82
     settings:
       placeholder_url: ''
       placeholder_title: ''
