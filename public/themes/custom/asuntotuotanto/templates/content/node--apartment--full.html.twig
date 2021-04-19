@@ -140,14 +140,16 @@
               {% endtrans %}
             </a>
           </li>
-          <li class="apartment__anchor-item">
-            <a href="#apartment_attachments" class="apartment__anchor-link">
-              {% include "@asuntotuotanto/misc/icon.twig" with {icon: 'floor-plan', label: ''} %}
-              {% trans %}
-                Floor plan
-              {% endtrans %}
-            </a>
-          </li>
+          {% if attachments|length > 0 %}
+            <li class="apartment__anchor-item">
+              <a href="#apartment_attachments" class="apartment__anchor-link">
+                {% include "@asuntotuotanto/misc/icon.twig" with {icon: 'floor-plan', label: ''} %}
+                {% trans %}
+                  Floor plan
+                {% endtrans %}
+              </a>
+            </li>
+          {% endif %}
           <li class="apartment__anchor-item">
             <a href="#apartment_location" class="apartment__anchor-link">
               {% include "@hdbt/misc/icon.twig" with {icon: 'location', label: ''} %}
@@ -216,14 +218,16 @@
           {% endtrans %}
         </a>
       </li>
-      <li class="apartment__anchor-item">
-        <a href="#apartment_attachments" class="apartment__anchor-link">
-          {% include "@asuntotuotanto/misc/icon.twig" with {icon: 'floor-plan', label: ''} %}
-          {% trans %}
-            Floor plan
-          {% endtrans %}
-        </a>
-      </li>
+      {% if attachments|length > 0 %}
+        <li class="apartment__anchor-item">
+          <a href="#apartment_attachments" class="apartment__anchor-link">
+            {% include "@asuntotuotanto/misc/icon.twig" with {icon: 'floor-plan', label: ''} %}
+            {% trans %}
+              Floor plan
+            {% endtrans %}
+          </a>
+        </li>
+      {% endif %}
       <li class="apartment__anchor-item">
         <a href="#apartment_location" class="apartment__anchor-link">
           {% include "@hdbt/misc/icon.twig" with {icon: 'location', label: ''} %}

@@ -94,7 +94,7 @@
         const currentPageAnchorSection = [];
 
         pageAnchorSections.map((anchor) => {
-          if (anchor.offsetTop < offsetTop)
+          if (anchor && anchor.offsetTop < offsetTop)
             currentPageAnchorSection[0] = anchor;
 
           return [];
