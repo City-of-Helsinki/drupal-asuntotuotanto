@@ -1,4 +1,10 @@
 .apartment {
+  padding-bottom: $spacing-layout-x;
+
+  @media screen and (min-width: $breakpoint-l) {
+    padding-bottom: $spacing-layout-2-xl;
+  }
+
   // Make button full width for mobile breakpoints.
   .hds-button {
     @media screen and (max-width: $breakpoint-m - 1px) {
@@ -154,8 +160,8 @@
   @include font-weight($bold);
   color: var(--color-black-90);
   margin-bottom: $spacing-2-xs;
-  margin-top:-$spacing-m;
-  padding-top: $spacing-m;
+  margin-top:-$spacing-m - 74px;
+  padding-top: $spacing-m + 74px;
 
   @media screen and (min-width: $breakpoint-m) {
     @include font-size($font-size-heading-2, 43px);

@@ -1,9 +1,11 @@
 .apartment__area-overview-wrapper {
-  margin-top: $spacing-m;
-  padding-top: $spacing-m;
+  margin-top: -$spacing-m - 26px;
+  padding-top: $spacing-m + 74px;
 
   @media screen and (min-width: $breakpoint-l) {
     display: flex;
+    margin-top: -2px;
+    padding-top: $spacing-m + 74px;
   }
 }
 

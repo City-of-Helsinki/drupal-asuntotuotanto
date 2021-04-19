@@ -70,8 +70,66 @@
         }
       };
 
+      let previousActiveAnchorId;
+
+      const stickyNavigationAnchorItems = stickyNavigationElement.getElementsByTagName(
+        "a"
+      );
+      const pageAnchorSections = [...stickyNavigationAnchorItems].map(
+        (anchor) => {
+          const anchorHref = anchor.getAttribute("href");
+
+          if (anchorHref) {
+            return document.getElementById(anchorHref.substring(1));
+          }
+
+          return [];
+        }
+      );
+
+      const handleAnchorLinkActiveState = () => {
+        const stickyNavigationElementHeight =
+          stickyNavigationElement.offsetHeight;
+        const offsetTop = window.scrollY + stickyNavigationElementHeight - 24;
+        const currentPageAnchorSection = [];
+
+        pageAnchorSections.map((anchor) => {
+          if (anchor.offsetTop < offsetTop)
+            currentPageAnchorSection[0] = anchor;
+
+          return [];
+        });
+
+        const currentPageAnchorSectionId =
+          currentPageAnchorSection && currentPageAnchorSection.length
+            ? currentPageAnchorSection[0].id
+            : "";
+
+        if (previousActiveAnchorId !== currentPageAnchorSectionId) {
+          previousActiveAnchorId = currentPageAnchorSectionId;
+
+          [...stickyNavigationAnchorItems].forEach((anchor) =>
+            anchor.classList.remove("is-active")
+          );
+
+          const currentStickyNavigationAnchorItem = [
+            ...stickyNavigationAnchorItems,
+          ].find(
+            (anchor) =>
+              anchor.getAttribute("href").substring(1) ===
+              currentPageAnchorSectionId
+          );
+
+          if (currentStickyNavigationAnchorItem)
+            currentStickyNavigationAnchorItem.classList.add("is-active");
+        }
+      };
+
       window.addEventListener("resize", () => handleWindowWidthUpdate());
-      window.addEventListener("scroll", () => toggleStickyNavigation());
+      window.addEventListener("scroll", () => {
+        toggleStickyNavigation();
+        handleAnchorLinkActiveState();
+      });
     },
   };
 })(jQuery, Drupal);
