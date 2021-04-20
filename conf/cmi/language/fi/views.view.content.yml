@@ -8,8 +8,8 @@ display:
           submit_button: Suodatin
           reset_button_label: Palauta
           exposed_sorts_label: Lajittele
-          sort_asc_label: Asc
-          sort_desc_label: Desc
+          sort_asc_label: Nousevasti
+          sort_desc_label: Laskevasti
       pager:
         options:
           tags:
@@ -24,7 +24,10 @@ display:
           label: Sisältötyyppi
           separator: ', '
         name:
-          label: Tekijä
+          label: Kirjoittaja
+        langcode:
+          label: Kieli
+          separator: ', '
         status:
           label: Tila
           settings:
@@ -65,4 +68,5 @@ display:
         title: Sisältö
       tab_options:
         title: Sisältö
+        description: 'Find and manage content'
     display_title: Sivu

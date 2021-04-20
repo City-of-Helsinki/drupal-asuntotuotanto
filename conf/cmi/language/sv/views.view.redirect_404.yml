@@ -24,7 +24,7 @@ display:
         count:
           label: Antal
         timestamp:
-          label: 'Last accessed'
+          label: 'Senaste åtkomst'
         langcode:
           label: Språk
         redirect_404_operations:

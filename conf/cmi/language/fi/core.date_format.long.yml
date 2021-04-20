@@ -1,2 +1,2 @@
 label: 'Päivämäärä pitkässä muodossa'
-pattern: 'l, F j, Y - H:i'
+pattern: 'j.n.Y - H:i'

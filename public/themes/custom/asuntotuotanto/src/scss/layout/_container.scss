@@ -8,11 +8,8 @@
   margin-right: auto;
   padding-left: $spacing-s;
   padding-right: $spacing-s;
+  padding-top: 0;
   transition: padding 150ms linear;
-
-  @include breakpoint($breakpoint-xs) {
-    max-width: $container-width-xs;
-  }
 
   @include breakpoint($breakpoint-s) {
     max-width: $container-width-s;

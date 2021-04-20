@@ -346,8 +346,12 @@
         background-image: url('../../icons/hds/ui/home.svg');
       }
 
-      &.edit-group-schedules a::before {
+      &.edit-group-neighbourhood a::before {
         background-image: url('../../icons/hds/ui/location.svg');
+      }
+
+      &.edit-group-schedules a::before {
+        background-image: url('../../icons/hds/ui/calendar-clock.svg');
       }
 
       &.edit-group-pictures-and-videos a::before {

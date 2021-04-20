@@ -5,8 +5,10 @@
  * Functions to support theming in the City of Helsinki - Asuntotuotanto theme.
  */
 
+use Drupal\file\Entity\File;
 use Drupal\node\Entity\Node;
 use Drupal\user\Entity\User;
+use \Drupal\taxonomy\Entity\Term;
 
 /**
  * Helper function to get the icons path.
@@ -131,4 +133,150 @@ function asuntotuotanto_theme_suggestions_block_alter(&$suggestions, $variables)
   if (isset($element['#configuration']['custom_suggestion'])) {
     $suggestions[] = $element['#configuration']['custom_suggestion'];
   }
+}
+
+/**
+ * Implements hook_preprocess_node().
+ */
+function asuntotuotanto_preprocess_node(&$variables) {
+  $node = $variables['node'];
+  $bundle = $node->getType();
+
+  switch ($bundle) {
+    case 'apartment':
+      $cta_image_file_target_id = $node->get('field_images')->getValue()[0]['target_id'];
+      $variables['cta_image'] = load_responsive_image_style($cta_image_file_target_id, 'image__3_2');
+
+      $parent_node_results = \Drupal::entityTypeManager()
+        ->getListBuilder('node')
+        ->getStorage()
+        ->loadByProperties([
+          'type' => 'project',
+          'status' => 1,
+          'field_apartments' => $node->id(),
+        ]
+      );
+
+      if ($parent_node_results) {
+        $parent_node_nid = key($parent_node_results);
+        $parent_node = Node::load($parent_node_nid);
+        $is_application_period_active = FALSE;
+
+        $application_start_time_value = $parent_node->get('field_application_start_time')->value;
+        $application_start_time_timestamp = format_date_to_unix_timestamp($application_start_time_value);
+        $application_end_time_value = $parent_node->get('field_application_end_time')->value;
+        $application_end_time_timestamp = format_date_to_unix_timestamp($application_end_time_value);
+        $current_timestamp = time();
+
+        if ($current_timestamp >= $application_start_time_timestamp && $current_timestamp <= $application_end_time_timestamp) {
+          $is_application_period_active = TRUE;
+        }
+
+        $street_address = $parent_node->get('field_street_address')->value;
+        $postal_code = $parent_node->get('field_postal_code')->value;
+        $city = $parent_node->get('field_city')->value;
+        $district = Term::load($parent_node->get('field_district')->target_id)->name->value;
+        $ownership_type = Term::load($parent_node->get('field_ownership_type')->target_id)->name->value;
+
+        $project_description = $parent_node->get('field_project_description')->value;
+        $building_type = Term::load($parent_node->get('field_building_type')->target_id)->name->value;
+        $energy_class = Term::load($parent_node->get('field_energy_class')->target_id)->name->value;
+        $accessibility = $parent_node->get('field_project_accessibility')->value;
+        $services = $parent_node->get('field_services')->getValue();
+        $services_url = $parent_node->get('field_services_url')->getValue()[0];
+        $services_stack = [];
+        $project_attachments = $parent_node->get('field_project_attachments')->getValue();
+        $attachments_stack = [];
+        $estimated_completion_date = new DateTime($parent_node->get('field_estimated_completion_date')->value);
+
+        foreach ($services as $key => $service) {
+          $term_id = $service['term_id'];
+
+          if ($term_id !== '0') {
+            $service_name = Term::load($term_id)->name->value;
+            $service_distance = $service['distance'];
+
+            $services_stack[] = ['name' => $service_name, 'distance' => $service_distance];
+          }
+        }
+
+        foreach ($project_attachments as $key => $attachment) {
+          $target_id = $attachment['target_id'];
+          $file = File::load($target_id);
+          $description = $attachment['description'];
+          $file_name = $file->getFilename();
+          $file_size = format_size($file->getSize());
+          $file_uri = file_create_url($file->getFileUri());
+
+          $attachments_stack[$key] = [
+            'description' => $description,
+            'name' => $file_name,
+            'size' => $file_size,
+            'uri' => $file_uri,
+          ];
+        }
+
+        $variables['application_start_time'] = format_timestamp_to_custom_format($application_start_time_timestamp);
+        $variables['application_end_time'] = format_timestamp_to_custom_format($application_end_time_timestamp);
+        $variables['is_application_period_active'] = $is_application_period_active;
+        $variables['district'] = $district ?? NULL;
+        $variables['address'] = "$street_address, $postal_code $city" ?? NULL;
+        $variables['ownership_type'] = $ownership_type ?? NULL;
+        $variables['accessibility'] = $accessibility ?? NULL;
+        $variables['project_description'] = $project_description ?? NULL;
+        $variables['building_type'] = $building_type ?? NULL;
+        $variables['energy_class'] = $energy_class ?? NULL;
+        $variables['services'] = $services_stack ?? NULL;
+        $variables['services_url'] = $services_url ?? NULL;
+        $variables['attachments'] = $attachments_stack ?? NULL;
+        $variables['estimated_completion_date'] = $estimated_completion_date->format('m/Y') ?? NULL;
+      }
+      break;
+  }
+}
+
+function format_date_to_unix_timestamp($string) {
+  $value = $string; // e.g. '2021-01-01T10:00:00'
+  $date = new DateTime($value);
+  $timestamp = $date->format('U');
+
+  return $timestamp;
+}
+
+function format_timestamp_to_custom_format($timestamp, $format = 'short') {
+  return \Drupal::service('date.formatter')->format($timestamp, $format);
+}
+
+function load_responsive_image_style($image_file_target_id, $responsive_image_style_id) {
+  if (!$image_file_target_id && !$responsive_image_style_id) return NULL;
+
+  $file = File::load($image_file_target_id);
+
+  if ($file) {
+    $file_uri = $file->getFileUri();
+    $image = \Drupal::service('image.factory')->get($file_uri);
+
+    if ($image->isValid()) {
+      $image_height = $image->getHeight();
+      $image_width = $image->getWidth();
+    } else {
+      $image_height = NULL;
+      $image_width = NULL;
+    }
+
+    $image_build = [
+      '#theme' => 'responsive_image',
+      '#width' => $image_width,
+      '#height' => $image_height,
+      '#responsive_image_style_id' => $responsive_image_style_id,
+      '#uri' => $file_uri,
+    ];
+
+    $renderer = \Drupal::service('renderer');
+    $renderer->addCacheableDependency($image_build, $file);
+
+    return $image_build;
+  }
+
+  return NULL;
 }

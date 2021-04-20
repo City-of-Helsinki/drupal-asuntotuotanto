@@ -42,6 +42,8 @@ dependencies:
     - field.field.node.project.field_postal_code
     - field.field.node.project.field_pre_marketing_end_time
     - field.field.node.project.field_premarketing_start_time
+    - field.field.node.project.field_project_accessibility
+    - field.field.node.project.field_project_attachments
     - field.field.node.project.field_project_description
     - field.field.node.project.field_project_manager
     - field.field.node.project.field_publication_end_time
@@ -50,6 +52,7 @@ dependencies:
     - field.field.node.project.field_roof_material
     - field.field.node.project.field_sanitation
     - field.field.node.project.field_services
+    - field.field.node.project.field_services_url
     - field.field.node.project.field_shared_apartment_images
     - field.field.node.project.field_shareholder_meeting_date
     - field.field.node.project.field_site_area
@@ -66,6 +69,7 @@ dependencies:
     - asu_content
     - asu_tasklist
     - datetime
+    - file
     - image
     - link
     - user
@@ -251,6 +255,22 @@ content:
     third_party_settings: {  }
     type: string
     region: content
+  field_project_accessibility:
+    weight: 165
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_project_attachments:
+    weight: 167
+    label: above
+    settings:
+      use_description_as_link_text: true
+    third_party_settings: {  }
+    type: file_default
+    region: content
   field_project_description:
     weight: 153
     label: above
@@ -297,6 +317,18 @@ content:
     settings: {  }
     third_party_settings: {  }
     type: asu_service_formatter
+    region: content
+  field_services_url:
+    weight: 166
+    label: above
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+    type: link
     region: content
   field_shared_apartment_images:
     weight: 161
