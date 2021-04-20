@@ -1,3 +1,2 @@
 label: 'Förvalt kort datum'
-pattern: j.n.Y
 pattern: 'j.n.Y \k\l\. H:i'
