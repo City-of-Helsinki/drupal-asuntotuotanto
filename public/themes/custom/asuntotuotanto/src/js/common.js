@@ -2,7 +2,7 @@
   Drupal.behaviors.asuAdminCommon = {
     attach: function attach() {
       // Code here.
-    }
+    },
   };
 
   Drupal.behaviors.languageSwitcher = {
@@ -63,8 +63,8 @@
             languageSwitcherToggleButton.attr("aria-expanded", "false");
             removeClickListener();
           }
-        }
+        },
       });
-    }
+    },
   };
 })(jQuery, Drupal, drupalSettings);

@@ -17,6 +17,13 @@ $font-size-heading-4: 20px;
 $font-size-heading-5: 18px;
 $font-size-heading-6: 16px;
 
+$lineheight-heading-xl: 3.25rem;
+$lineheight-heading-l: 2.25rem;
+$lineheight-heading-m: 1.5rem;
+$lineheight-heading-s: 1.25rem;
+$lineheight-heading-xs: 1.125rem;
+$lineheight-heading-xxs: 1rem;
+
 $font-size-ingress: 22px;
 $font-size-body: 18px;
 
@@ -25,18 +32,20 @@ $fontsize-body-m: 16px;
 $fontsize-body-l: 18px;
 $fontsize-body-xl: 20px;
 
-$lineheight-s: 1;
-$lineheight-m: 1.2;
-$lineheight-l: 1.5;
-$lineheight-xl: 1.75;
+$lineheight-s: 1rem;
+$lineheight-m: 1.2rem;
+$lineheight-l: 1.5rem;
+$lineheight-xl: 1.75rem;
 
 // Font families
 $open-sans: "Open Sans", sans-serif;
+$HelsinkiGrotesk: "HelsinkiGrotesk", sans-serif;
 
-$default-font-family: $open-sans;
-$heading-font-family: $open-sans;
+$default-font-family: $HelsinkiGrotesk;
+$heading-font-family: $HelsinkiGrotesk;
 
 // Font weights
 $regular: 400;
+$medium: 500;
 $semibold: 600;
 $bold: 700;

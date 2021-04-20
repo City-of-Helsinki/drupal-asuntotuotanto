@@ -1,14 +1,14 @@
-const merge = require('webpack-merge');
-const webpackConfig = require('./webpack.config');
-const SourceMapDevToolPlugin = require('webpack/lib/SourceMapDevToolPlugin');
+const merge = require("webpack-merge");
+const SourceMapDevToolPlugin = require("webpack/lib/SourceMapDevToolPlugin");
+const webpackConfig = require("./webpack.config");
 
 module.exports = merge(webpackConfig, {
-  mode: 'development',
-  devtool: 'eval-source-map',
+  mode: "development",
+  devtool: "eval-source-map",
   plugins: [
     new SourceMapDevToolPlugin({
-      filename: '[file].map',
+      filename: "[file].map",
       exclude: [/node_modules/, /images/, /spritemap/, /svg-sprites/],
-    })
-  ]
+    }),
+  ],
 });

@@ -90,6 +90,9 @@ third_party_settings:
         - field_additional_information
         - field_condition
         - field_images
+        - field_publish_on_etuovi
+        - field_publish_on_oikotie
+        - field_apartment_state_of_sale
       parent_name: group_apartment_tabs
       weight: 22
       format_type: tab
@@ -114,7 +117,7 @@ third_party_settings:
         - field_parking_fee_explanation
         - field_other_fees
       parent_name: group_apartment_tabs
-      weight: 24
+      weight: 25
       format_type: tab
       region: content
       format_settings:
@@ -152,7 +155,7 @@ content:
     type: string_textfield
     region: content
   field_apartment_state_of_sale:
-    weight: 38
+    weight: 27
     settings:
       match_operator: CONTAINS
       match_limit: 10
@@ -200,14 +203,14 @@ content:
     type: options_select
     region: content
   field_debt_free_sales_price:
-    weight: 27
+    weight: 44
     settings:
       placeholder: ''
     third_party_settings: {  }
     type: number
     region: content
   field_financing_fee:
-    weight: 29
+    weight: 46
     settings:
       placeholder: ''
     third_party_settings: {  }
@@ -279,21 +282,21 @@ content:
     type: number
     region: content
   field_loan_share:
-    weight: 28
+    weight: 45
     settings:
       placeholder: ''
     third_party_settings: {  }
     type: number
     region: content
   field_maintenance_fee:
-    weight: 30
+    weight: 47
     settings:
       placeholder: ''
     third_party_settings: {  }
     type: number
     region: content
   field_other_fees:
-    weight: 35
+    weight: 52
     settings:
       rows: 5
       placeholder: ''
@@ -301,14 +304,14 @@ content:
     type: string_textarea
     region: content
   field_parking_fee:
-    weight: 33
+    weight: 50
     settings:
       placeholder: ''
     third_party_settings: {  }
     type: number
     region: content
   field_parking_fee_explanation:
-    weight: 34
+    weight: 51
     settings:
       rows: 5
       placeholder: ''
@@ -316,14 +319,14 @@ content:
     type: string_textarea
     region: content
   field_publish_on_etuovi:
-    weight: 36
+    weight: 25
     settings:
       display_label: true
     third_party_settings: {  }
     type: boolean_checkbox
     region: content
   field_publish_on_oikotie:
-    weight: 37
+    weight: 26
     settings:
       display_label: true
     third_party_settings: {  }
@@ -337,7 +340,7 @@ content:
     type: number
     region: content
   field_sales_price:
-    weight: 26
+    weight: 43
     settings:
       placeholder: ''
     third_party_settings: {  }
@@ -388,14 +391,14 @@ content:
     type: string_textarea
     region: content
   field_water_fee:
-    weight: 31
+    weight: 48
     settings:
       placeholder: ''
     third_party_settings: {  }
     type: number
     region: content
   field_water_fee_explanation:
-    weight: 32
+    weight: 49
     settings:
       rows: 5
       placeholder: ''

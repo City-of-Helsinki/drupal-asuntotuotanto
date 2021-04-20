@@ -2,6 +2,9 @@ uuid: 353e0736-39a8-4abc-8c07-46779c5c7be8
 langcode: en
 status: true
 dependencies:
+  module:
+    - context
+    - ctools
   theme:
     - asuntotuotanto
 _core:
@@ -17,4 +20,19 @@ settings:
   label: 'Sivun otsikko'
   provider: core
   label_display: '0'
-visibility: {  }
+visibility:
+  view_inclusion:
+    id: view_inclusion
+    negate: null
+    view_inclusion: {  }
+  request_path_exclusion:
+    id: request_path_exclusion
+    pages: ''
+    negate: null
+  'entity_bundle:node':
+    id: 'entity_bundle:node'
+    bundles:
+      apartment: apartment
+    negate: true
+    context_mapping:
+      node: '@node.node_route_context:node'

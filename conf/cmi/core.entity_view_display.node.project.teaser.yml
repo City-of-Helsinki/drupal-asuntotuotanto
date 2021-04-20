@@ -43,6 +43,8 @@ dependencies:
     - field.field.node.project.field_postal_code
     - field.field.node.project.field_pre_marketing_end_time
     - field.field.node.project.field_premarketing_start_time
+    - field.field.node.project.field_project_accessibility
+    - field.field.node.project.field_project_attachments
     - field.field.node.project.field_project_description
     - field.field.node.project.field_project_manager
     - field.field.node.project.field_publication_end_time
@@ -51,6 +53,7 @@ dependencies:
     - field.field.node.project.field_roof_material
     - field.field.node.project.field_sanitation
     - field.field.node.project.field_services
+    - field.field.node.project.field_services_url
     - field.field.node.project.field_shared_apartment_images
     - field.field.node.project.field_shareholder_meeting_date
     - field.field.node.project.field_site_area
@@ -115,6 +118,8 @@ hidden:
   field_postal_code: true
   field_pre_marketing_end_time: true
   field_premarketing_start_time: true
+  field_project_accessibility: true
+  field_project_attachments: true
   field_project_description: true
   field_project_manager: true
   field_publication_end_time: true
@@ -123,6 +128,7 @@ hidden:
   field_roof_material: true
   field_sanitation: true
   field_services: true
+  field_services_url: true
   field_shared_apartment_images: true
   field_shareholder_meeting_date: true
   field_site_area: true
