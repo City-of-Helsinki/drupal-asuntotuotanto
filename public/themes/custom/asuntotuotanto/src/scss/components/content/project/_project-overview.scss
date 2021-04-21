@@ -1,4 +1,4 @@
-.apartment__area-overview-wrapper {
+.project__area-overview-wrapper {
   margin-top: -$spacing-m - 26px;
   padding-top: $spacing-m + 74px;
 
@@ -9,7 +9,7 @@
   }
 }
 
-.apartment__area-overview {
+.project__area-overview {
   background-color: var(--color-alert-light);
   margin: 0 -#{$spacing-s};
   padding: $spacing-m $spacing-s;
@@ -32,7 +32,7 @@
   }
 }
 
-.apartment__area-overview-label {
+.project__area-overview-label {
   @include font-size($font-size-heading-4, $lineheight-heading-m);
   @include font-weight($bold);
   color: var(--color-black-90);
@@ -40,7 +40,7 @@
   margin-top: 0;
 }
 
-.apartment__services-list {
+.project__services-list {
   display: flex;
   flex-direction: column;
   list-style: none;
@@ -48,7 +48,7 @@
   padding: 0;
 }
 
-.apartment__service-item {
+.project__service-item {
   display: inline-flex;
   align-items: center;
 
@@ -77,7 +77,7 @@
   }
 }
 
-.apartment__project-description {
+.project__project-description {
   display: flex;
   margin-top: $spacing-xs;
 
@@ -103,7 +103,7 @@
   }
 }
 
-.apartment__area-overvink-link {
+.project__area-overvink-link {
   @include font-size($fontsize-body-l, 26px);
   @include font-weight($bold);
   color: var(--color-black-90);
@@ -116,7 +116,7 @@
   }
 }
 
-.apartment__map-location {
+.project__map-location {
   background-color: var(--color-silver-medium-light);
   margin: 0 -#{$spacing-s};
   padding: $spacing-m $spacing-s;
@@ -139,7 +139,7 @@
   }
 }
 
-.apartment__map-location-label {
+.project__map-location-label {
   @include font-size($font-size-heading-4, $lineheight-heading-m);
   @include font-weight($bold);
   color: var(--color-black-90);

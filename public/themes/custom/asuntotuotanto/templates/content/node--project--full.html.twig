@@ -1,0 +1,414 @@
+{#
+/**
+ * @file
+ * Theme override to display a node.
+ *
+ * Available variables:
+ * - node: The node entity with limited access to object properties and methods.
+ *   Only method names starting with "get", "has", or "is" and a few common
+ *   methods such as "id", "label", and "bundle" are available. For example:
+ *   - node.getCreatedTime() will return the node creation timestamp.
+ *   - node.hasField('field_example') returns TRUE if the node bundle includes
+ *     field_example. (This does not indicate the presence of a value in this
+ *     field.)
+ *   - node.isPublished() will return whether the node is published or not.
+ *   Calling other methods, such as node.delete(), will result in an exception.
+ *   See \Drupal\node\Entity\Node for a full list of public properties and
+ *   methods for the node object.
+ * - label: (optional) The title of the node.
+ * - content: All node items. Use {{ content }} to print them all,
+ *   or print a subset such as {{ content.field_example }}. Use
+ *   {{ content|without('field_example') }} to temporarily suppress the printing
+ *   of a given child element.
+ * - author_picture: The node author user entity, rendered using the "compact"
+ *   view mode.
+ * - metadata: Metadata for this node.
+ * - date: (optional) Themed creation date field.
+ * - author_name: (optional) Themed author name field.
+ * - url: Direct URL of the current node.
+ * - display_submitted: Whether submission information should be displayed.
+ * - attributes: HTML attributes for the containing element.
+ *   The attributes.class element may contain one or more of the following
+ *   classes:
+ *   - node: The current template type (also known as a "theming hook").
+ *   - node--type-[type]: The current node type. For example, if the node is an
+ *     "Article" it would result in "node--type-article". Note that the machine
+ *     name will often be in a short form of the human readable label.
+ *   - node--view-mode-[view_mode]: The View Mode of the node; for example, a
+ *     teaser would result in: "node--view-mode-teaser", and
+ *     full: "node--view-mode-full".
+ *   The following are controlled through the node publishing options.
+ *   - node--promoted: Appears on nodes promoted to the front page.
+ *   - node--sticky: Appears on nodes ordered above other non-sticky nodes in
+ *     teaser listings.
+ *   - node--unpublished: Appears on unpublished nodes visible only to site
+ *     admins.
+ * - title_attributes: Same as attributes, except applied to the main title
+ *   tag that appears in the template.
+ * - content_attributes: Same as attributes, except applied to the main
+ *   content tag that appears in the template.
+ * - author_attributes: Same as attributes, except applied to the author of
+ *   the node tag that appears in the template.
+ * - title_prefix: Additional output populated by modules, intended to be
+ *   displayed in front of the main title tag that appears in the template.
+ * - title_suffix: Additional output populated by modules, intended to be
+ *   displayed after the main title tag that appears in the template.
+ * - view_mode: View mode; for example, "teaser" or "full".
+ * - teaser: Flag for the teaser state. Will be true if view_mode is 'teaser'.
+ * - page: Flag for the full page state. Will be true if view_mode is 'full'.
+ * - readmore: Flag for more state. Will be true if the teaser content of the
+ *   node cannot hold the main body content.
+ * - logged_in: Flag for authenticated user status. Will be true when the
+ *   current user is a logged-in member.
+ * - is_admin: Flag for admin user status. Will be true when the current user
+ *   is an administrator.
+ *
+ * @see template_preprocess_node()
+ *
+ * @todo Remove the id attribute (or make it a class), because if that gets
+ *   rendered twice on a page this is invalid CSS for example: two lists
+ *   in different view modes.
+ */
+#}
+
+{{ attach_library('asuntotuotanto/sticky-navigation') }}
+
+{%
+  set classes = [
+  'node--type-' ~ node.bundle|clean_class,
+  node.isPromoted() ? 'node--promoted',
+  node.isSticky() ? 'node--sticky',
+  not node.isPublished() ? 'node--unpublished',
+  view_mode ? 'node--view-mode-' ~ view_mode|clean_class,
+  'project'
+]
+%}
+
+{% set images = content.field_shared_apartment_images %}
+{% set district = content.field_district.0 %}
+{% set street_address = content.field_street_address.0['#context']['value'] %}
+{% set postal_code = content.field_postal_code.0['#context']['value'] %}
+{% set city = content.field_city.0['#context']['value'] %}
+{% set address = "#{street_address}, #{postal_code} #{city}" %}
+{% set ownership_type = content.field_ownership_type %}
+{% set project_description = content.field_project_description %}
+{% set building_type = content.field_building_type.0 %}
+{% set energy_class = content.field_energy_class.0 %}
+{% set accessibility = content.field_project_accessibility.0 %}
+{% set site_owner = content.field_site_owner.0 %}
+{% set site_renter = content.field_site_renter.0['#context']['value'] %}
+{% set services_url = content.field_services_url.0 %}
+{% set housing_company = content.field_housing_company.0 %}
+
+<article{{ attributes.addClass(classes) }}>
+  <div class="apartment__sticky-navigation is-hidden" aria-hidden="true" id="sticky_navigation">
+    <div class="apartment__sticky-navigation-container container">
+      <div class="apartment__sticky-content">
+        <div class="apartment__sticky-content-section">
+          <p class="apartment__apartment-number">{{ housing_company }}</p>
+          {# <p class="apartment__apartment-details">
+            {% if apartment_structure|render %}
+              <span class="apartment__apartment-structure">{{ apartment_structure }}</span>
+            {% endif %}
+            <span aria-hidden="true"></span>
+            {% if living_area_size_m2|render %}
+              <span class="apartment__living-area-size">{{ living_area_size_m2 }} m<sup>2</sup></span>
+            {% endif %}
+          </p> #}
+        </div>
+        <div class="apartment__sticky-content-section">
+          <p class="apartment__estimated-completion-date">
+            Completion {{ estimated_completion_date }}
+          </p>
+          {% if is_application_period_active %}
+            <p class="apartment__application-end-time">
+              {% trans %}
+                Application period is open till {{ application_end_time }}
+              {% endtrans %}
+            </p>
+          {% endif %}
+        </div>
+      </div>
+      <nav class="apartment__anchor-navigation apartment__anchor-navigation--sticky-navigation">
+        <ul class="apartment__anchor-list">
+          <li class="apartment__anchor-item">
+            <a href="#showcase_gallery" class="apartment__anchor-link">
+              {% include "@hdbt/misc/icon.twig" with {icon: 'photo-plus', label: ''} %}
+              {% trans %}
+                Images
+              {% endtrans %}
+            </a>
+          </li>
+          <li class="apartment__anchor-item">
+            <a href="#apartment_information" class="apartment__anchor-link">
+              {% include "@hdbt/misc/icon.twig" with {icon: 'info-circle', label: ''} %}
+              {% trans %}
+                Information
+              {% endtrans %}
+            </a>
+          </li>
+          {% if attachments|length > 0 %}
+            <li class="apartment__anchor-item">
+              <a href="#apartment_attachments" class="apartment__anchor-link">
+                {% include "@asuntotuotanto/misc/icon.twig" with {icon: 'location', label: ''} %}
+                {% trans %}
+                  Location
+                {% endtrans %}
+              </a>
+            </li>
+          {% endif %}
+          <li class="apartment__anchor-item">
+            <a href="#apartment_location" class="apartment__anchor-link">
+              {% include "@hdbt/misc/icon.twig" with {icon: 'home', label: ''} %}
+              {% trans %}
+                Apartments
+              {% endtrans %}
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <div class="project__header container">
+    <h1 class="project__label">{{ label }}</h1>
+  </div>
+
+  <div class="project__images container showcase-gallery" id="showcase_gallery">
+    {% if not images|render %}
+      <div class="project__images--missing"></div>
+    {% endif %}
+    {% if images|render %}
+        {{ images }}
+    {% endif %}
+  </div>
+
+  <nav class="project__anchor-navigation project__anchor-navigation--desktop container">
+    <ul class="project__anchor-list">
+      <li class="project__anchor-item">
+        <a href="#showcase_gallery" class="project__anchor-link">
+          {% include "@hdbt/misc/icon.twig" with {icon: 'photo-plus', label: ''} %}
+          {% trans %}
+            Images
+          {% endtrans %}
+        </a>
+      </li>
+      <li class="project__anchor-item">
+        <a href="#project_information" class="project__anchor-link">
+          {% include "@hdbt/misc/icon.twig" with {icon: 'info-circle', label: ''} %}
+          {% trans %}
+            Information
+          {% endtrans %}
+        </a>
+      </li>
+      <li class="project__anchor-item">
+        <a href="#project_location" class="project__anchor-link">
+          {% include "@hdbt/misc/icon.twig" with {icon: 'location', label: ''} %}
+          {% trans %}
+            Location
+          {% endtrans %}
+        </a>
+      </li>
+      <li class="project__anchor-item">
+        <a href="#project_apartments" class="project__anchor-link">
+          {% include "@hdbt/misc/icon.twig" with {icon: 'home', label: ''} %}
+          {% trans %}
+            Apartments
+          {% endtrans %}
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <div class="project__content-wrapper container">
+    <aside class="project__sidebar">
+      <h3 class="project__apartment-count-information">
+        {% trans %}
+          {{ apartments_count }} apartments
+        {% endtrans %}
+      </h3>
+      <h3 class="project__application-information">
+        {% trans %}
+          The application period for the destination starts on {{ application_start_time }} and ends on {{ application_end_time }}.
+        {% endtrans %}
+      </h3>
+    </aside>
+    <div class="project__content">
+      <div class="project__type-and-address">
+        {% if ownership_type|render %}
+          <p class="project__ownership-type">
+            <span class="visually-hidden">({{ 'Ownership type'|t }})</span>
+            {{ ownership_type }}
+          </p>
+        {% endif %}
+        {% if district|render and address|render %}
+          <p class="project__address">{{ district }}, {{ address }}</p>
+        {% endif %}
+      </div>
+      {% if project_description|render %}
+        <div class="project__information">
+          <h2 class="project__information-label" id="project_information">
+            {% trans %}
+              Project description
+            {% endtrans %}
+          </h2>
+          <p class="project__project-description">{{ project_description }}</p>
+        </div>
+      {% endif %}
+      <div class="project__details">
+        <h2 class="project__details-label">
+          {% trans %}
+            Details
+          {% endtrans %}
+        </h2>
+        <ul class="project__details-list">
+          {% if district|render %}
+            <li class="project__details-item">
+              <p>
+                <span>{% trans %}District{% endtrans %}</span>
+                <span>{{ district }}</span>
+              </p>
+            </li>
+          {% endif %}
+          {% if building_type|render %}
+            <li class="project__details-item">
+              <p>
+                <span>{% trans %}Building type{% endtrans %}</span>
+                <span>{{ building_type }}</span>
+              </p>
+            </li>
+          {% endif %}
+          {% if apartment_structures|render %}
+            <li class="project__details-item">
+              <p>
+                <span>{% trans %}Apartment stuctures{% endtrans %}</span>
+                <span>{{ apartment_structures }}</span>
+              </p>
+            </li>
+          {% endif %}
+          {% if apartment_living_area_sizes_m2|render %}
+            <li class="project__details-item">
+              <p>
+                <span>{% trans %}Living area sizes{% endtrans %} (m<sup>2</sup>)</span>
+                <span>{{ apartment_living_area_sizes_m2 }}</span>
+              </p>
+            </li>
+          {% endif %}
+          {% if apartment_sales_prices|render %}
+            <li class="project__details-item">
+              <p>
+                <span>{% trans %}Sales price{% endtrans %}</span>
+                <span>{{ apartment_sales_prices }}</span>
+              </p>
+            </li>
+          {% endif %}
+          {% if apartment_debt_free_sales_prices|render %}
+            <li class="project__details-item">
+              <p>
+                <span>{% trans %}Debt free sales price{% endtrans %}</span>
+                <span>{{ apartment_debt_free_sales_prices }}</span>
+              </p>
+            </li>
+          {% endif %}
+          {% if energy_class|render %}
+            <li class="project__details-item">
+              <p>
+                <span>{% trans %}Energy class{% endtrans %}</span>
+                <span>{{ energy_class }}</span>
+              </p>
+            </li>
+          {% endif %}
+          {% if accessibility|render %}
+            <li class="project__details-item">
+              <p>
+                <span>{% trans %}Accessibility{% endtrans %}</span>
+                <span>{{ accessibility }}</span>
+              </p>
+            </li>
+          {% endif %}
+          {% if site_owner|render %}
+            <li class="project__details-item">
+              <p>
+                <span>{% trans %}Site owner{% endtrans %}</span>
+                <span>{{ site_owner }}{{ site_renter|render ? ", #{site_renter}" : '' }}</span>
+              </p>
+            </li>
+          {% endif %}
+        </ul>
+      </div>
+      {% if attachments|length > 0 %}
+        <div class="project__attachments">
+          <h2 class="project__attachments-label" id="project_attachments">
+            {% trans %}
+              Attachments
+            {% endtrans %}
+          </h2>
+            <ul class="project__attachments-list">
+              {% for attachment in attachments %}
+                {% set description = attachment.description %}
+                {% set name = attachment.name %}
+                {% set size = attachment.size %}
+                {% set uri = attachment.uri %}
+
+                <li class="project__attachment-item">
+                  <a href="{{ uri }}" download="{{ name }}" class="project__attachment-link">
+                    {% include "@hdbt/misc/icon.twig" with {icon: 'document', label: ''} %}
+                    <div class="project__attachment-content">
+                      <p class="project__attachment-description">{{ description|t }}</p>
+                      <p class="project__attachment-name">
+                        <span class="visually-hidden">({{ 'File name'|t }})</span>
+                        {{ name }}
+                      </p>
+                      <p class="project__attachment-size">
+                        <span class="visually-hidden">({{ 'File size'|t }})</span>
+                        {{ size }}
+                      </p>
+                    </div>
+                  </a>
+                </li>
+              {% endfor %}
+            </ul>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="project__area-overview-wrapper container" id="project_location">
+    <div class="project__area-overview">
+      <h2 class="project__area-overview-label">
+        {% trans %}
+          Area overview
+        {% endtrans %}
+      </h2>
+      {% if services|length > 0 %}
+        <ul class="project__services-list">
+          {% for service in services %}
+            <li class="project__service-item">
+              {% include "@hdbt/misc/icon.twig" with {icon: 'location', label: ''} %}
+              <p>{{ service.name }} {{ service.distance }} m</p>
+            </li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+      {% if project_description|render %}
+        <div class="project__project-description">
+          {% include "@hdbt/misc/icon.twig" with {icon: 'location', label: ''} %}
+          <p>{{ project_description }}</p>
+        </div>
+      {% endif %}
+      {% if services_url %}
+        <a class="project__area-overvink-link" href="{{ services_url['#url'] }}">{{ services_url['#title'] }}</a>
+      {% endif %}
+    </div>
+    <div class="project__map-location">
+      <h2 class="project__map-location-label">
+        {% trans %}
+          Location
+        {% endtrans %}
+      </h2>
+      <div>
+        {# TODO: Add map. #}
+      </div>
+    </div>
+  </div>
+</article>
