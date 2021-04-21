@@ -1,9 +1,0 @@
-uuid: 15fe185b-42ad-43a1-9c48-067064f7ce61
-langcode: en
-status: true
-dependencies: {  }
-id: customer
-label: Customer
-weight: -8
-is_admin: null
-permissions: {  }

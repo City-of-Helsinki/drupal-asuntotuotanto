@@ -4,7 +4,7 @@ status: true
 dependencies: {  }
 id: salesperson
 label: Salesperson
-weight: -7
+weight: -6
 is_admin: null
 permissions:
   - 'access files overview'
