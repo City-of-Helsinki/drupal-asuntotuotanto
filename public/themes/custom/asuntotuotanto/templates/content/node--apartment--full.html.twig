@@ -94,27 +94,27 @@
 {% set apartment_number = content.field_apartment_number.0 %}
 
 <article{{ attributes.addClass(classes) }}>
-  <div class="apartment__sticky-navigation is-hidden" aria-hidden="true" id="sticky_navigation">
-    <div class="apartment__sticky-navigation-container container">
-      <div class="apartment__sticky-content">
-        <div class="apartment__sticky-content-section">
-          <p class="apartment__apartment-number">{{ apartment_number }}</p>
-          <p class="apartment__apartment-details">
+  <div class="sticky-navigation is-hidden" aria-hidden="true" id="sticky_navigation">
+    <div class="sticky-navigation__container container">
+      <div class="sticky-navigation__content">
+        <div class="sticky-navigation__content-section">
+          <p class="sticky-navigation__content-item">{{ apartment_number }}</p>
+          <p class="sticky-navigation__content-item sticky-navigation__content-item--separator">
             {% if apartment_structure|render %}
-              <span class="apartment__apartment-structure">{{ apartment_structure }}</span>
+              <span>{{ apartment_structure }}</span>
             {% endif %}
             <span aria-hidden="true"></span>
             {% if living_area_size_m2|render %}
-              <span class="apartment__living-area-size">{{ living_area_size_m2 }} m<sup>2</sup></span>
+              <span>{{ living_area_size_m2 }} m<sup>2</sup></span>
             {% endif %}
           </p>
         </div>
-        <div class="apartment__sticky-content-section">
-          <p class="apartment__estimated-completion-date">
+        <div class="sticky-navigation__content-section">
+          <p class="sticky-navigation__content-item">
             Completion {{ estimated_completion_date }}
           </p>
           {% if is_application_period_active %}
-            <p class="apartment__application-end-time">
+            <p class="sticky-navigation__content-item">
               {% trans %}
                 Application period is open till {{ application_end_time }}
               {% endtrans %}
@@ -122,18 +122,18 @@
           {% endif %}
         </div>
       </div>
-      <nav class="apartment__anchor-navigation apartment__anchor-navigation--sticky-navigation">
-        <ul class="apartment__anchor-list">
-          <li class="apartment__anchor-item">
-            <a href="#showcase_gallery" class="apartment__anchor-link">
+      <nav class="sticky-navigation__anchor-navigation">
+        <ul class="sticky-navigation__anchor-list">
+          <li class="sticky-navigation__anchor-item">
+            <a href="#showcase_gallery" class="sticky-navigation__anchor-link">
               {% include "@hdbt/misc/icon.twig" with {icon: 'photo-plus', label: ''} %}
               {% trans %}
                 Images
               {% endtrans %}
             </a>
           </li>
-          <li class="apartment__anchor-item">
-            <a href="#apartment_information" class="apartment__anchor-link">
+          <li class="sticky-navigation__anchor-item">
+            <a href="#apartment_information" class="sticky-navigation__anchor-link">
               {% include "@hdbt/misc/icon.twig" with {icon: 'info-circle', label: ''} %}
               {% trans %}
                 Information
@@ -141,8 +141,8 @@
             </a>
           </li>
           {% if attachments|length > 0 %}
-            <li class="apartment__anchor-item">
-              <a href="#apartment_attachments" class="apartment__anchor-link">
+            <li class="sticky-navigation__anchor-item">
+              <a href="#apartment_attachments" class="sticky-navigation__anchor-link">
                 {% include "@asuntotuotanto/misc/icon.twig" with {icon: 'floor-plan', label: ''} %}
                 {% trans %}
                   Floor plan
@@ -150,8 +150,8 @@
               </a>
             </li>
           {% endif %}
-          <li class="apartment__anchor-item">
-            <a href="#apartment_location" class="apartment__anchor-link">
+          <li class="sticky-navigation__anchor-item">
+            <a href="#apartment_location" class="sticky-navigation__anchor-link">
               {% include "@hdbt/misc/icon.twig" with {icon: 'location', label: ''} %}
               {% trans %}
                 Location

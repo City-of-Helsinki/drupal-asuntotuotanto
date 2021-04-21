@@ -5,12 +5,16 @@
         "sticky_navigation"
       );
       const headerElement = document.getElementsByTagName("header")[0];
-      const apartmentHeaderElement = document.getElementsByClassName(
-        "apartment__header"
-      )[0];
-      const apartmentAnchorNavigationElement = document.getElementsByClassName(
-        "apartment__anchor-navigation--desktop"
-      )[0];
+      const contentHeaderElement =
+        document.getElementsByClassName("apartment__header")[0] ||
+        document.getElementsByClassName("project__header")[0];
+      const contentAnchorNavigationElement =
+        document.getElementsByClassName(
+          "apartment__anchor-navigation--desktop"
+        )[0] ||
+        document.getElementsByClassName(
+          "project__anchor-navigation--desktop"
+        )[0];
 
       let currentWindowWidth = window.innerWidth;
 
@@ -21,22 +25,21 @@
       const toggleStickyNavigation = () => {
         const headerElementOffsetTop =
           headerElement.offsetTop + headerElement.offsetHeight;
-        const apartmentHeaderElementHeight =
-          apartmentHeaderElement.offsetHeight;
-        const apartmentHeaderElementOffsetTop =
-          apartmentHeaderElement.offsetTop + apartmentHeaderElementHeight;
+        const contentHeaderElementHeight = contentHeaderElement.offsetHeight;
+        const contentHeaderElementOffsetTop =
+          contentHeaderElement.offsetTop + contentHeaderElementHeight;
 
-        const apartmentAnchorNavigationElementHeight =
-          apartmentAnchorNavigationElement.offsetHeight;
-        const apartmentAnchorNavigationElementOffsetTop =
-          apartmentAnchorNavigationElement.offsetTop +
-          apartmentAnchorNavigationElementHeight;
+        const contentAnchorNavigationElementHeight =
+          contentAnchorNavigationElement.offsetHeight;
+        const contentAnchorNavigationElementOffsetTop =
+          contentAnchorNavigationElement.offsetTop +
+          contentAnchorNavigationElementHeight;
 
         // Mobile & Tablet functionality.
         if (currentWindowWidth < 992) {
           if (
             window.scrollY >
-            apartmentHeaderElementOffsetTop - apartmentHeaderElementHeight / 2
+            contentHeaderElementOffsetTop - contentHeaderElementHeight / 2
           ) {
             if (stickyNavigationElement.classList.contains("is-hidden")) {
               stickyNavigationElement.classList.remove("is-hidden");
@@ -54,14 +57,14 @@
 
         // Desktop functionality.
         if (currentWindowWidth > 992) {
-          if (window.scrollY > apartmentAnchorNavigationElementOffsetTop) {
+          if (window.scrollY > contentAnchorNavigationElementOffsetTop) {
             if (stickyNavigationElement.classList.contains("is-hidden")) {
               stickyNavigationElement.classList.remove("is-hidden");
               stickyNavigationElement.setAttribute("aria-hidden", false);
             }
           }
 
-          if (window.scrollY < apartmentAnchorNavigationElementOffsetTop) {
+          if (window.scrollY < contentAnchorNavigationElementOffsetTop) {
             if (!stickyNavigationElement.classList.contains("is-hidden")) {
               stickyNavigationElement.classList.add("is-hidden");
               stickyNavigationElement.setAttribute("aria-hidden", true);
