@@ -18,8 +18,7 @@ use Drupal\rest\Plugin\ResourceBase;
  *   }
  * )
  */
-final class Apartments extends ResourceBase
-{
+final class Content extends ResourceBase {
 
   /**
    * Responds to GET requests.
@@ -30,8 +29,7 @@ final class Apartments extends ResourceBase
    * @return Drupal\rest\ModifiedResourceResponse
    *   The HTTP response object.
    */
-  public function get(string $id): ModifiedResourceResponse
-  {
+  public function get(string $id): ModifiedResourceResponse {
     if (!$node = Node::load($id)) {
       return new ModifiedResourceResponse([], 404);
     }
