@@ -348,6 +348,14 @@
               </p>
             </li>
           {% endif %}
+          {% if site_owner|render %}
+            <li class="apartment__details-item">
+              <p>
+                <span>{% trans %}Site owner{% endtrans %}</span>
+                <span>{{ site_owner }}{{ site_renter|render ? ", #{site_renter}" : '' }}</span>
+              </p>
+            </li>
+          {% endif %}
         </ul>
       </div>
       {% if attachments|length > 0 %}

@@ -233,6 +233,7 @@ function asuntotuotanto_preprocess_node(&$variables) {
       $variables['estimated_completion_date'] = $estimated_completion_date->format('m/Y') ?? NULL;
       $variables['is_application_period_active'] = $is_application_period_active;
       break;
+
     case 'apartment':
       $cta_image_file_target_id = $node->get('field_images')->getValue()[0]['target_id'];
       $variables['cta_image'] = load_responsive_image_style($cta_image_file_target_id, 'image__3_2');
@@ -280,6 +281,9 @@ function asuntotuotanto_preprocess_node(&$variables) {
         $attachments_stack = [];
         $estimated_completion_date = new DateTime($parent_node->get('field_estimated_completion_date')->value);
 
+        $site_owner = Term::load($parent_node->get('field_site_owner')->target_id)->name->value;
+        $site_renter = $parent_node->get('field_site_renter')->value;
+
         foreach ($services as $key => $service) {
           $term_id = $service['term_id'];
 
@@ -325,6 +329,8 @@ function asuntotuotanto_preprocess_node(&$variables) {
         $variables['services_url'] = $services_url ?? NULL;
         $variables['attachments'] = $attachments_stack ?? NULL;
         $variables['estimated_completion_date'] = $estimated_completion_date->format('m/Y') ?? NULL;
+        $variables['site_owner'] = $site_owner ?? NULL;
+        $variables['site_renter'] = $site_renter ?? NULL;
       }
       break;
   }
