@@ -5,8 +5,8 @@ dependencies: {  }
 _core:
   default_config_hash: XhNzDGDspXeMyW4TAki8MB6z-vzBwmtP_efemgX6-HI
 id: content_producer
-label: 'Content producer'
-weight: 3
+label: Sisällöntuottaja
+weight: -8
 is_admin: null
 permissions:
   - 'access content overview'

@@ -203,17 +203,20 @@ function asuntotuotanto_preprocess_node(&$variables) {
         foreach ($project_attachments as $key => $attachment) {
           $target_id = $attachment['target_id'];
           $file = File::load($target_id);
-          $description = $attachment['description'];
-          $file_name = $file->getFilename();
-          $file_size = format_size($file->getSize());
-          $file_uri = file_create_url($file->getFileUri());
 
-          $attachments_stack[$key] = [
-            'description' => $description,
-            'name' => $file_name,
-            'size' => $file_size,
-            'uri' => $file_uri,
-          ];
+          if ($file) {
+            $description = $attachment['description'];
+            $file_name = $file->getFilename();
+            $file_size = format_size($file->getSize());
+            $file_uri = file_create_url($file->getFileUri());
+
+            $attachments_stack[$key] = [
+              'description' => $description,
+              'name' => $file_name,
+              'size' => $file_size,
+              'uri' => $file_uri,
+            ];
+          }
         }
 
         $variables['application_start_time'] = format_timestamp_to_custom_format($application_start_time_timestamp);

@@ -4,7 +4,7 @@ status: true
 dependencies: {  }
 id: supervisor
 label: Supervisor
-weight: -6
+weight: -7
 is_admin: null
 permissions:
   - 'access files overview'
