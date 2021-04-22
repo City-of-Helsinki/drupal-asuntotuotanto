@@ -143,13 +143,15 @@ $borderDefault: 2px;
   }
 
   input {
-    @extend .visually-hidden;
-    width: 40px;
-    height: 24px;
     clip: auto;
+    cursor: pointer;
+    height: 24px;
     margin-left: 0;
     opacity: 0;
-    cursor: pointer;
+    overflow: hidden;
+    position: absolute !important;
+    width: 40px;
+    word-wrap: normal;
     z-index: 1;
 
     &:hover,
