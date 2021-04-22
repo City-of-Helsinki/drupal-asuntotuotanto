@@ -34,21 +34,12 @@ final class Filters extends ResourceBase {
    */
   public function get(Request $request) {
     $currentLanguage = \Drupal::languageManager()->getCurrentLanguage();
-
-    // Taxonomy_id => elastic_index_id.
-    $taxonomies_as_filters = [
-      'building_types' => 'project_building_type',
-      'districts' => 'project_district',
-      'new_development_status' => 'project_new_development_status',
-    ];
-
-    $taxomy_machinenames_as_filters = [
-      'states_of_sale' => 'project_state_of_sale',
-    ];
+    $config = \Drupal::config('asu_rest.filters');
+    $filters = $config->get('filters');
 
     $vocabularies = Vocabulary::loadMultiple();
     $responseData = [];
-    foreach ($taxonomies_as_filters as $taxonomy_name => $elastic_index_name) {
+    foreach ($filters['taxonomy'] as $taxonomy_name => $elastic_index_name) {
       $terms = \Drupal::entityTypeManager()
         ->getStorage('taxonomy_term')
         ->loadTree($taxonomy_name, 0, NULL, TRUE);
@@ -73,7 +64,7 @@ final class Filters extends ResourceBase {
       $responseData[$elastic_index_name] = $index_data;
     }
 
-    foreach ($taxomy_machinenames_as_filters as $taxonomy_name => $elastic_index_name) {
+    foreach ($filters['taxonomy_machinename'] as $taxonomy_name => $elastic_index_name) {
       $terms = \Drupal::entityTypeManager()
         ->getStorage('taxonomy_term')
         ->loadTree($taxonomy_name, 0, NULL, TRUE);
@@ -118,11 +109,11 @@ final class Filters extends ResourceBase {
       'suffix' => 'm2',
     ];
 
-    $responseData['sales_price'] = [
+    $responseData['debt_free_sales_price'] = [
       'items' => [
-        $this->t('Price at least'),
+        $this->t('Price at most'),
       ],
-      'label' => $this->t('Price'),
+      'label' => $this->t('Price at most'),
       'suffix' => '€',
     ];
 
