@@ -1,0 +1,27 @@
+uuid: 58dcab7d-d5b7-4a2a-b1f9-2aec01cd56f4
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_apartment_attachments
+    - node.type.apartment
+  module:
+    - file
+id: node.apartment.field_apartment_attachments
+field_name: field_apartment_attachments
+entity_type: node
+bundle: apartment
+label: Attachments
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  file_directory: '[date:custom:Y]-[date:custom:m]'
+  file_extensions: 'txt pdf doc docx xls xlsx ppt pptx'
+  max_filesize: ''
+  description_field: true
+  handler: 'default:file'
+  handler_settings: {  }
+field_type: file
