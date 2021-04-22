@@ -43,6 +43,7 @@ dependencies:
     - field.field.node.project.field_pre_marketing_end_time
     - field.field.node.project.field_premarketing_start_time
     - field.field.node.project.field_project_accessibility
+    - field.field.node.project.field_project_area_description
     - field.field.node.project.field_project_attachments
     - field.field.node.project.field_project_description
     - field.field.node.project.field_project_manager
@@ -74,6 +75,7 @@ dependencies:
     - file
     - link
     - slick
+    - text
     - user
 id: node.project.default
 targetEntityType: node
@@ -283,6 +285,13 @@ content:
     third_party_settings: {  }
     type: string
     region: content
+  field_project_area_description:
+    weight: 169
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    type: basic_string
+    region: content
   field_project_attachments:
     weight: 167
     label: above
@@ -292,11 +301,11 @@ content:
     type: file_default
     region: content
   field_project_description:
-    weight: 153
+    weight: 168
     label: hidden
     settings: {  }
     third_party_settings: {  }
-    type: basic_string
+    type: text_default
     region: content
   field_publication_start_time:
     weight: 150

@@ -1,16 +1,16 @@
-uuid: e6b700b3-a315-4a8d-9ca2-2d4be49d0bae
+uuid: 1bd459a8-05ec-405d-a6de-6f7cc715f7ab
 langcode: en
 status: true
 dependencies:
   module:
     - node
-    - text
-id: node.field_project_description
-field_name: field_project_description
+id: node.field_project_area_description
+field_name: field_project_area_description
 entity_type: node
-type: text_long
-settings: {  }
-module: text
+type: string_long
+settings:
+  case_sensitive: false
+module: core
 locked: false
 cardinality: 1
 translatable: true

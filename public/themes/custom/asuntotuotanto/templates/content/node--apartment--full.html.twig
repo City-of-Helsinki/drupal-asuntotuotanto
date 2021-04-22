@@ -266,7 +266,7 @@
               Apartment information
             {% endtrans %}
           </h2>
-          <p class="apartment__project-description">{{ project_description }}</p>
+          <div class="apartment__project-description">{{ project_description|raw }}</div>
         </div>
       {% endif %}
       <div class="apartment__details">
@@ -404,10 +404,10 @@
           {% endfor %}
         </ul>
       {% endif %}
-      {% if project_description|render %}
-        <div class="apartment__project-description">
+      {% if project_area_description|render %}
+        <div class="apartment__project-area-description">
           {% include "@hdbt/misc/icon.twig" with {icon: 'location', label: ''} %}
-          <p>{{ project_description }}</p>
+          <p>{{ project_area_description }}</p>
         </div>
       {% endif %}
       {% if services_url %}

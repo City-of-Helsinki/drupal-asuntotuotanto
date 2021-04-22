@@ -99,6 +99,7 @@
 {% set site_renter = content.field_site_renter.0['#context']['value'] %}
 {% set services_url = content.field_services_url.0 %}
 {% set housing_company = content.field_housing_company.0 %}
+{% set project_area_description = content.field_project_area_description.0 %}
 
 <article{{ attributes.addClass(classes) }}>
   <div class="sticky-navigation is-hidden" aria-hidden="true" id="sticky_navigation">
@@ -241,7 +242,7 @@
               Project description
             {% endtrans %}
           </h2>
-          <p class="project__project-description">{{ project_description }}</p>
+          <div class="project__project-description">{{ project_description }}</div>
         </div>
       {% endif %}
       <div class="project__details">
@@ -379,10 +380,10 @@
           {% endfor %}
         </ul>
       {% endif %}
-      {% if project_description|render %}
-        <div class="project__project-description">
+      {% if project_area_description|render %}
+        <div class="project__project-area-description">
           {% include "@hdbt/misc/icon.twig" with {icon: 'location', label: ''} %}
-          <p>{{ project_description }}</p>
+          <p>{{ project_area_description }}</p>
         </div>
       {% endif %}
       {% if services_url %}

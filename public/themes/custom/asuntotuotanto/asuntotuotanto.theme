@@ -269,6 +269,7 @@ function asuntotuotanto_preprocess_node(&$variables) {
         $ownership_type = Term::load($parent_node->get('field_ownership_type')->target_id)->name->value;
 
         $project_description = $parent_node->get('field_project_description')->value;
+        $project_area_description = $parent_node->get('field_project_area_description')->value;
         $building_type = Term::load($parent_node->get('field_building_type')->target_id)->name->value;
         $energy_class = Term::load($parent_node->get('field_energy_class')->target_id)->name->value;
         $accessibility = $parent_node->get('field_project_accessibility')->value;
@@ -317,6 +318,7 @@ function asuntotuotanto_preprocess_node(&$variables) {
         $variables['ownership_type'] = $ownership_type ?? NULL;
         $variables['accessibility'] = $accessibility ?? NULL;
         $variables['project_description'] = $project_description ?? NULL;
+        $variables['project_area_description'] = $project_area_description ?? NULL;
         $variables['building_type'] = $building_type ?? NULL;
         $variables['energy_class'] = $energy_class ?? NULL;
         $variables['services'] = $services_stack ?? NULL;
