@@ -1,0 +1,124 @@
+.project__apartments {
+  &--mobile {
+    background-color: var(--color-black-5);
+    padding-bottom: $spacing-s;
+    padding-top: $spacing-s;
+  }
+}
+
+.project__apartments-list {
+  list-style: none;
+  margin-bottom: 0;
+  margin-top: 0;
+}
+
+.project__apartments-item-button {
+  align-items: center;
+  background-color: var(--color-white);
+  border-bottom: 0;
+  border-left: 0;
+  border-radius: 0;
+  border-right: 0;
+  border-top: 1px solid var(--color-black-20);
+  display: flex;
+  padding: $spacing-s;
+  width: 100%;
+  gap: $spacing-xs;
+
+  span {
+    @include font-size($font-size-heading-5, 27px);
+    color: var(--color-black-90);
+    pointer-events: none;
+
+    &:first-of-type {
+      @include font-size($font-size-heading-3, 29px);
+      @include font-weight($bold);
+    }
+  }
+
+  svg {
+    margin-left: auto;
+    flex-shrink: 0;
+  }
+
+  &:hover {
+    cursor: pointer;
+  }
+
+  &:focus {
+    outline: 1px auto;
+  }
+
+  &[aria-expanded="true"] {
+    svg {
+      transform: rotate(180deg);
+    }
+  }
+}
+
+.project__apartments-item-content {
+  background-color: var(--color-white);
+  display: flex;
+  flex-direction: column;
+  padding: 0 $spacing-s $spacing-s $spacing-s;
+  gap: $spacing-xs;
+}
+
+.project__apartments-item-details-list {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-2-xs;
+  list-style: none;
+  margin: 0 0 $spacing-xs 0;
+  padding: 0;
+}
+
+.project__apartments-item-details-item {
+  p {
+    @include font-size($fontsize-body-m, $lineheight-l);
+    color: var(--color-black-90);
+    margin: 0;
+
+    > span {
+      display: inline-block;
+      width: 200px;
+    }
+
+    span:nth-child(2) {
+      align-items: center;
+      display: inline-flex;
+    }
+  }
+}
+
+.project__apartment-application-status {
+  border-radius: 100%;
+  border-style: solid;
+  border-width: 2px;
+  display: inline-block;
+  height: 16px;
+  width: 16px;
+
+  .project__apartments-item-details-item span > & {
+    margin-right: $spacing-2-xs;
+  }
+
+  &--none {
+    border-color: var(--color-copper-dark);
+  }
+
+  &--low {
+    border-color: var(--color-copper-dark);
+    background-color: var(--color-copper-dark);
+  }
+
+  &--medium {
+    border-color: var(--color-alert);
+    background-color: var(--color-alert);
+  }
+
+  &--high {
+    border-color: var(--color-brick);
+    background-color: var(--color-brick);
+  }
+}

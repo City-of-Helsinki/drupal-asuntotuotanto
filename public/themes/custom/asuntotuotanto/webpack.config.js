@@ -14,6 +14,7 @@ module.exports = {
     styles: ["./src/scss/styles.scss"],
     bundle: ["./src/js/common.js"],
     stickyNavigation: ["./src/js/sticky-navigation.js"],
+    apartmentsListItemToggle: ["./src/js/apartments-list-item-toggle.js"],
   },
   output: {
     devtoolLineToLine: true,
