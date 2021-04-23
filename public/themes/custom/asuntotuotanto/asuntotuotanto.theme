@@ -356,6 +356,20 @@ function asuntotuotanto_preprocess_node(&$variables) {
   }
 }
 
+/**
+ * Implements hook_preprocess_HOOK().
+ *
+ */
+function asuntotuotanto_preprocess_views_view(&$variables) {
+  $view = $variables['view'];
+
+  switch ($view->id()) {
+    case 'project_apartments_listing':
+      $variables['apartments_count'] = $view->total_rows;
+      break;
+  }
+}
+
 function format_date_to_unix_timestamp($string) {
   $value = $string; // e.g. '2021-01-01T10:00:00'
   $date = new DateTime($value);

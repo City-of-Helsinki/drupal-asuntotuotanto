@@ -1,9 +1,30 @@
-.project__apartments {
-  &--mobile {
-    background-color: var(--color-black-5);
-    padding-bottom: $spacing-s;
-    padding-top: $spacing-s;
+.project__apartments-container {
+  margin-bottom: $spacing-xl;
+  padding-top: $spacing-xl;
+}
+
+.project-apartments-listing__header {
+  margin-bottom: $spacing-m;
+
+  > h2 {
+    @include font-size($font-size-heading-3, 29px);
+    @include font-weight($bold);
+    color: var(--color-black-90);
+    margin: 0 0 $spacing-3-xs 0;
   }
+
+  > h3 {
+    @include font-size($fontsize-body-m, $lineheight-l);
+    @include font-weight($regular);
+    color: var(--color-black-90);
+    margin: 0;
+  }
+}
+
+.project-apartments-listing__content {
+  background-color: var(--color-black-5);
+  padding-bottom: $spacing-s;
+  padding-top: $spacing-s;
 }
 
 .project__apartments-list {
