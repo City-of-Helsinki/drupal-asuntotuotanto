@@ -11,14 +11,11 @@
 .apartment__anchor-list {
   align-items: center;
   display: flex;
+  gap: $spacing-5-xl;
+  justify-content: center;
   list-style: none;
   margin: 0;
   padding: 0;
-  justify-content: center;
-}
-
-.apartment__anchor-item {
-  margin-left: $spacing-5-xl;
 }
 
 .apartment__anchor-link {
