@@ -39,7 +39,7 @@ display:
         type: views_query
         options:
           disable_sql_rewrite: false
-          distinct: false
+          distinct: true
           replica: false
           query_comment: ''
           query_tags: {  }
@@ -54,26 +54,9 @@ display:
           sort_asc_label: Asc
           sort_desc_label: Desc
       pager:
-        type: full
+        type: none
         options:
-          items_per_page: 20
           offset: 0
-          id: 0
-          total_pages: null
-          tags:
-            previous: '‹ Previous'
-            next: 'Next ›'
-            first: '« First'
-            last: 'Last »'
-          expose:
-            items_per_page: false
-            items_per_page_label: 'Items per page'
-            items_per_page_options: '5, 10, 25, 50'
-            items_per_page_options_all: false
-            items_per_page_options_all_label: '- All -'
-            offset: false
-            offset_label: Offset
-          quantity: 3
       style:
         type: table
         options:
@@ -88,25 +71,20 @@ display:
           columns:
             field_apartment_number: field_apartment_number
             field_apartment_structure: field_apartment_structure
-            field_debt_free_sales_price: field_debt_free_sales_price
             field_floor: field_floor
             field_living_area: field_living_area
+            field_debt_free_sales_price: field_debt_free_sales_price
+            nid: nid
+            field_application_url: field_application_url
           info:
             field_apartment_number:
-              sortable: true
+              sortable: false
               default_sort_order: desc
               align: ''
               separator: ''
               empty_column: false
               responsive: ''
             field_apartment_structure:
-              sortable: false
-              default_sort_order: asc
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
-            field_debt_free_sales_price:
               sortable: false
               default_sort_order: asc
               align: ''
@@ -123,6 +101,25 @@ display:
             field_living_area:
               sortable: false
               default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            field_debt_free_sales_price:
+              sortable: false
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            nid:
+              sortable: false
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            field_application_url:
               align: ''
               separator: ''
               empty_column: false
@@ -751,14 +748,13 @@ display:
           entity_field: nid
           plugin_id: node_nid
       display_extenders: {  }
-      use_ajax: true
+      use_ajax: false
     cache_metadata:
       max-age: -1
       contexts:
         - 'languages:language_content'
         - 'languages:language_interface'
         - url
-        - url.query_args
         - 'user.node_grants:view'
         - user.permissions
       tags:
@@ -784,7 +780,6 @@ display:
         - 'languages:language_content'
         - 'languages:language_interface'
         - url
-        - url.query_args
         - 'user.node_grants:view'
         - user.permissions
       tags:
