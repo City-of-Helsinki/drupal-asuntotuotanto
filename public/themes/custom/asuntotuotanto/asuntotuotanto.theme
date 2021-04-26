@@ -8,7 +8,7 @@
 use Drupal\file\Entity\File;
 use Drupal\node\Entity\Node;
 use Drupal\user\Entity\User;
-use \Drupal\taxonomy\Entity\Term;
+use Drupal\taxonomy\Entity\Term;
 
 /**
  * Helper function to get the icons path.
@@ -179,7 +179,10 @@ function asuntotuotanto_preprocess_node(&$variables) {
           $service_name = Term::load($term_id)->name->value;
           $service_distance = $service['distance'];
 
-          $services_stack[] = ['name' => $service_name, 'distance' => $service_distance];
+          $services_stack[] = [
+            'name' => $service_name,
+            'distance' => $service_distance,
+          ];
         }
       }
 
@@ -226,7 +229,7 @@ function asuntotuotanto_preprocess_node(&$variables) {
       $variables['apartments_count'] = count($apartments);
       $variables['apartment_sales_prices'] = $apartment_sales_prices_minmax;
       $variables['apartment_debt_free_sales_prices'] = $apartment_debt_free_sales_prices_minmax;
-      $variables['apartment_structures'] = join(", ", array_unique($apartment_structures));
+      $variables['apartment_structures'] = implode(", ", array_unique($apartment_structures));
       $variables['apartment_living_area_sizes_m2'] = $apartment_living_area_sizes_minmax;
       $variables['attachments'] = $attachments_stack ?? NULL;
       $variables['services'] = $services_stack ?? NULL;
@@ -292,7 +295,10 @@ function asuntotuotanto_preprocess_node(&$variables) {
             $service_name = Term::load($term_id)->name->value;
             $service_distance = $service['distance'];
 
-            $services_stack[] = ['name' => $service_name, 'distance' => $service_distance];
+            $services_stack[] = [
+              'name' => $service_name,
+              'distance' => $service_distance,
+            ];
           }
         }
 
@@ -358,7 +364,6 @@ function asuntotuotanto_preprocess_node(&$variables) {
 
 /**
  * Implements hook_preprocess_HOOK().
- *
  */
 function asuntotuotanto_preprocess_views_view(&$variables) {
   $view = $variables['view'];
@@ -372,7 +377,6 @@ function asuntotuotanto_preprocess_views_view(&$variables) {
 
 /**
  * Implements hook_preprocess_HOOK().
- *
  */
 function asuntotuotanto_preprocess_views_view_table(&$variables) {
   $view = $variables['view'];
@@ -390,24 +394,37 @@ function asuntotuotanto_preprocess_views_view_table(&$variables) {
   }
 }
 
+/**
+ * Custom function format_date_to_unix_timestamp().
+ */
 function format_date_to_unix_timestamp($string) {
-  $value = $string; // e.g. '2021-01-01T10:00:00'
+  $value = $string;
   $date = new DateTime($value);
   $timestamp = $date->format('U');
 
   return $timestamp;
 }
 
+/**
+ * Custom function format_timestamp_to_custom_format().
+ */
 function format_timestamp_to_custom_format($timestamp, $format = 'short') {
   return \Drupal::service('date.formatter')->format($timestamp, $format);
 }
 
+/**
+ * Custom load_responsive_image_style().
+ */
 function load_responsive_image_style($image_file_target_id, $responsive_image_style_id) {
-  if (!$image_file_target_id && !$responsive_image_style_id) return NULL;
+  if (!$image_file_target_id && !$responsive_image_style_id) {
+    return NULL;
+  }
 
   $file = File::load($image_file_target_id);
 
-  if (!$file) return NULL;
+  if (!$file) {
+    return NULL;
+  }
 
   $file_uri = $file->getFileUri();
   $image = \Drupal::service('image.factory')->get($file_uri);
@@ -415,7 +432,8 @@ function load_responsive_image_style($image_file_target_id, $responsive_image_st
   if ($image->isValid()) {
     $image_height = $image->getHeight();
     $image_width = $image->getWidth();
-  } else {
+  }
+  else {
     $image_height = NULL;
     $image_width = NULL;
   }
@@ -434,6 +452,9 @@ function load_responsive_image_style($image_file_target_id, $responsive_image_st
   return $image_build;
 }
 
+/**
+ * Custom get_apartment_application_status().
+ */
 function get_apartment_application_status($nid) {
   $application_status_mapping = [
     "NONE" => t('No applicants'),
@@ -442,11 +463,11 @@ function get_apartment_application_status($nid) {
     "HIGH" => t('A lot of applicants'),
   ];
 
-  // TODO: Update this value with dynamic status from API.
+  // @todo Update this value with dynamic status from API.
   $application_status = 'NONE';
 
   return [
     "status" => strtolower($application_status),
-    "label" => $application_status_mapping[$application_status]
+    "label" => $application_status_mapping[$application_status],
   ];
 }
