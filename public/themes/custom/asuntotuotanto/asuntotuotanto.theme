@@ -370,6 +370,26 @@ function asuntotuotanto_preprocess_views_view(&$variables) {
   }
 }
 
+/**
+ * Implements hook_preprocess_HOOK().
+ *
+ */
+function asuntotuotanto_preprocess_views_view_table(&$variables) {
+  $view = $variables['view'];
+
+  switch ($view->id()) {
+    case 'project_apartments_listing':
+      $rows = $variables['rows'];
+
+      foreach ($rows as $key => $row) {
+        $nid = (int) trim(strip_tags($row['columns']['nid']['content'][0]['field_output']['#markup']));
+        $variables['rows'][$key]['application_status'] = get_apartment_application_status($nid);
+      }
+
+      break;
+  }
+}
+
 function format_date_to_unix_timestamp($string) {
   $value = $string; // e.g. '2021-01-01T10:00:00'
   $date = new DateTime($value);
@@ -412,4 +432,21 @@ function load_responsive_image_style($image_file_target_id, $responsive_image_st
   $renderer->addCacheableDependency($image_build, $file);
 
   return $image_build;
+}
+
+function get_apartment_application_status($nid) {
+  $application_status_mapping = [
+    "NONE" => t('No applicants'),
+    "LOW" => t('Few applicants'),
+    "MEDIUM" => t('A little applicants'),
+    "HIGH" => t('A lot of applicants'),
+  ];
+
+  // TODO: Update this value with dynamic status from API.
+  $application_status = 'NONE';
+
+  return [
+    "status" => strtolower($application_status),
+    "label" => $application_status_mapping[$application_status]
+  ];
 }

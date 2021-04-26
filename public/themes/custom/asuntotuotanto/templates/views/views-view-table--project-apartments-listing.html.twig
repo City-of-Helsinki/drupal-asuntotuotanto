@@ -53,6 +53,8 @@
       {% set living_area_size = row.columns.field_living_area.content.0.field_output['#markup']|striptags|trim %}
       {% set nid = row.columns.nid.content.0.field_output['#markup']|striptags|trim %}
 
+      {% set application_status = row.application_status %}
+
       <li class="project__apartments-item">
         <button
           aria-expanded="false"
@@ -60,7 +62,7 @@
           aria-label="Open apartment {{ apartment_number }} information"
         >
           <span>{{ apartment_number }}</span>
-          <span aria-hidden="true" class="project__apartment-application-status project__apartment-application-status--low"></span>
+          <span aria-hidden="true" class="project__apartment-application-status project__apartment-application-status--{{ application_status.status|trim }}"></span>
           <span>{{ apartment_structure }}</span>
           {% include "@hdbt/misc/icon.twig" with {icon: 'angle-down', label: ''} %}
         </button>
@@ -110,8 +112,8 @@
                   {% endtrans %}
                 </span>
                 <span>
-                  <span aria-hidden="true" class="project__apartment-application-status project__apartment-application-status--low"></span>
-                  Vähän hakijoita
+                  <span aria-hidden="true" class="project__apartment-application-status project__apartment-application-status--{{ application_status.status|trim }}"></span>
+                  {{ application_status.label }}
                 </span>
               </p>
             </li>
@@ -210,6 +212,8 @@
         {% set living_area_size = row.columns.field_living_area.content.0.field_output['#markup']|striptags|trim %}
         {% set nid = row.columns.nid.content.0.field_output['#markup']|striptags|trim %}
 
+        {% set application_status = row.application_status %}
+
         <tr{{ row.attributes }}>
           <td>
             <span>{{ apartment_number }}</span>
@@ -226,8 +230,8 @@
           </td>
           <td>
             <span>
-              <span aria-hidden="true" class="project__apartment-application-status project__apartment-application-status--low"></span>
-              Vähän hakijoita
+              <span aria-hidden="true" class="project__apartment-application-status project__apartment-application-status--{{ application_status.status|trim }}"></span>
+              {{ application_status.label }}
             </span>
           </td>
           <td>
