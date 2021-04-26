@@ -238,6 +238,10 @@
       gap: $spacing-l;
       width: 100%;
 
+      &:focus-within {
+        box-shadow: inset 0 1px 0 0 var(--color-black-90), inset 0 -1px 0 0 var(--color-black-90);
+      }
+
       td {
         @include font-size($fontsize-body-l, 27px);
         @include font-weight($regular);
