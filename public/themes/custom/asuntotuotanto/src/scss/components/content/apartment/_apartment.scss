@@ -24,8 +24,17 @@
 
 .apartment__header-section {
   &--actions {
-    @media screen and (min-width: $breakpoint-m) {
-      flex-shrink: 0;
+    &.is-application-period-active {
+      @media screen and (min-width: $breakpoint-m) {
+        flex-shrink: 0;
+      }
+    }
+
+    &:not(.is-application-period-active) {
+      @media screen and (min-width: $breakpoint-m) {
+        max-width: 285px;
+        width: 100%;
+      }
     }
   }
 }
