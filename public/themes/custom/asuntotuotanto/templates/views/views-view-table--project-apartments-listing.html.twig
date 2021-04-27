@@ -54,6 +54,7 @@
       {% set nid = row.columns.nid.content.0.field_output['#markup']|striptags|trim %}
 
       {% set application_status = row.application_status %}
+      {% set is_application_period_active = row.is_application_period_active %}
 
       <li class="project__apartments-item">
         <button
@@ -125,13 +126,15 @@
             href: url('entity.node.canonical', { 'node': nid }),
             }
           %}
-          {% include '@asuntotuotanto/button/button.html.twig' with {
-            type: 'primary',
-            disabled: false,
-            label: 'Create an application'|t,
-            href: application_url,
-            }
-          %}
+          {% if is_application_period_active %}
+            {% include '@asuntotuotanto/button/button.html.twig' with {
+              type: 'primary',
+              disabled: false,
+              label: 'Create an application'|t,
+              href: application_url,
+              }
+            %}
+          {% endif %}
         </div>
       </li>
     {% endfor %}
@@ -213,6 +216,7 @@
         {% set nid = row.columns.nid.content.0.field_output['#markup']|striptags|trim %}
 
         {% set application_status = row.application_status %}
+        {% set is_application_period_active = row.is_application_period_active %}
 
         <tr{{ row.attributes }}>
           <td>
@@ -243,14 +247,16 @@
               href: url('entity.node.canonical', { 'node': nid }),
               }
             %}
-            {% include '@asuntotuotanto/button/button.html.twig' with {
-              type: 'secondary',
-              disabled: false,
-              size: 'small',
-              label: 'Create an application'|t,
-              href: application_url,
-              }
-            %}
+            {% if is_application_period_active %}
+              {% include '@asuntotuotanto/button/button.html.twig' with {
+                type: 'secondary',
+                disabled: false,
+                size: 'small',
+                label: 'Create an application'|t,
+                href: application_url,
+                }
+              %}
+            {% endif %}
           </td>
         </tr>
       {% endfor %}
