@@ -439,8 +439,11 @@ field_settings:
   project_new_development_status:
     label: 'New development status'
     datasource_id: 'entity:node'
-    property_path: 'search_api_reverse_entity_references_node__field_apartments:field_new_development_status:entity:name'
+    property_path: asu_new_development_status
     type: string
+    dependencies:
+      config:
+        - computed_field_plugin
   project_new_housing:
     label: 'New housing'
     datasource_id: 'entity:node'
