@@ -75,7 +75,7 @@ class NewDevelopmentStatus extends FieldItemList {
             $value = strtoupper(
               str_replace(' ', '_', $name)
             );
-            $value = str_replace('-','_',$value);
+            $value = str_replace('-', '_', $value);
           }
         }
       }
