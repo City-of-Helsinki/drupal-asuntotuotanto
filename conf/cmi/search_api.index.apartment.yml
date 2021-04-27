@@ -6,8 +6,9 @@ dependencies:
     - field.storage.node.field_additional_information
     - field.storage.node.field_floor_max
     - field.storage.node.field_apartment_number
+    - field.storage.node.field_apartment_state_of_sale
+    - field.storage.taxonomy_term.field_machine_readable_name
     - field.storage.node.field_apartment_structure
-    - field.storage.node.field_application_url
     - field.storage.node.field_has_balcony
     - field.storage.node.field_balcony_description
     - field.storage.node.field_bathroom_appliances
@@ -38,6 +39,7 @@ dependencies:
     - search_api.server.asuntotuotanto
   module:
     - asu_elastic
+    - taxonomy
     - node
     - computed_field_plugin
     - search_api
@@ -75,6 +77,17 @@ field_settings:
     dependencies:
       config:
         - field.storage.node.field_apartment_number
+  apartment_state_of_sale:
+    label: 'Apartment state of sale'
+    datasource_id: 'entity:node'
+    property_path: 'field_apartment_state_of_sale:entity:field_machine_readable_name'
+    type: string
+    dependencies:
+      config:
+        - field.storage.node.field_apartment_state_of_sale
+        - field.storage.taxonomy_term.field_machine_readable_name
+      module:
+        - taxonomy
   apartment_structure:
     label: 'Apartment structure'
     datasource_id: 'entity:node'
@@ -442,7 +455,7 @@ field_settings:
     property_path: asu_new_development_status
     type: string
     dependencies:
-      config:
+      module:
         - computed_field_plugin
   project_new_housing:
     label: 'New housing'
