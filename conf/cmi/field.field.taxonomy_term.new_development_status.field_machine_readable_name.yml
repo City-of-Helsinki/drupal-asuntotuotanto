@@ -1,0 +1,19 @@
+uuid: af55bfec-0733-4764-97af-2f607bb3836c
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.taxonomy_term.field_machine_readable_name
+    - taxonomy.vocabulary.new_development_status
+id: taxonomy_term.new_development_status.field_machine_readable_name
+field_name: field_machine_readable_name
+entity_type: taxonomy_term
+bundle: new_development_status
+label: 'Machine readable name'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string
