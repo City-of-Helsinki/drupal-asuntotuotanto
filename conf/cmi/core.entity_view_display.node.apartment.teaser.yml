@@ -5,6 +5,7 @@ dependencies:
   config:
     - core.entity_view_mode.node.teaser
     - field.field.node.apartment.field_additional_information
+    - field.field.node.apartment.field_apartment_attachments
     - field.field.node.apartment.field_apartment_number
     - field.field.node.apartment.field_apartment_state_of_sale
     - field.field.node.apartment.field_apartment_structure
@@ -54,6 +55,7 @@ content:
     third_party_settings: {  }
     region: content
 hidden:
+  asu_application_form_url: true
   asu_computed_apartment_images: true
   asu_project_building_type: true
   asu_project_holding_type: true
@@ -62,6 +64,7 @@ hidden:
   field_acc_salesperson: true
   field_additional_information: true
   field_apartment_address: true
+  field_apartment_attachments: true
   field_apartment_holding_type: true
   field_apartment_images: true
   field_apartment_number: true

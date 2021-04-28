@@ -1,75 +1,21 @@
-.apartment {
-  padding-bottom: $spacing-layout-x;
-
-  @media screen and (min-width: $breakpoint-l) {
-    padding-bottom: $spacing-layout-2-xl;
-  }
-
-  // Make button full width for mobile breakpoints.
-  .hds-button {
-    @media screen and (max-width: $breakpoint-m - 1px) {
-      width: 100%;
-    }
-  }
-}
-
-.apartment__header {
-  @media screen and (min-width: $breakpoint-m) {
-    align-items: center;
-    display: flex;
-    gap: $spacing-s;
-    justify-content: space-between;
-  }
-}
-
-.apartment__header-section {
-  &--actions {
-    &.is-application-period-active {
-      @media screen and (min-width: $breakpoint-m) {
-        flex-shrink: 0;
-      }
-    }
-
-    &:not(.is-application-period-active) {
-      @media screen and (min-width: $breakpoint-m) {
-        max-width: 285px;
-        width: 100%;
-      }
-    }
-  }
-}
-
-.apartment__label {
+.project__label {
   @include font-size($font-size-heading-2, $lineheight-heading-l);
   @include font-weight($bold);
   color: var(--color-black-90);
-  margin-bottom: $spacing-2-xs;
+  margin-bottom: 0;
+  text-align: center;
 
   @media screen and (min-width: $breakpoint-l) {
     @include font-size($font-size-heading-1, $lineheight-heading-xl);
-    margin-bottom: $spacing-s;
   }
 }
 
-.apartment__lead {
-  @include font-size($font-size-heading-4, $lineheight-heading-s);
-  @include font-weight($regular);
-  align-items: center;
-  color: var(--color-black-90);
-  display: inline-flex;
-  margin-bottom: $spacing-m;
-
-  span[aria-hidden="true"] {
-    background-color: $color-gray-4;
-    display: inline-block;
-    height: 1px;
-    width: 35px;
-    margin: 0 $spacing-xs;
-  }
-}
-
-.apartment__images {
+.project__images {
   padding-top: $spacing-m;
+
+  @media screen and (min-width: $breakpoint-l) {
+    padding-top: $spacing-l;
+  }
 
   &--missing {
     aspect-ratio: 3 / 2;
@@ -82,7 +28,7 @@
   }
 }
 
-.apartment__content-wrapper {
+.project__content-wrapper {
   display: flex;
   flex-direction: column;
   gap: $spacing-m;
@@ -100,21 +46,33 @@
   }
 }
 
-.apartment__sidebar {
+.project__sidebar {
   @media screen and (min-width: $breakpoint-l) {
     max-width: 285px;
     width: 100%;
   }
 }
 
-.apartment__content {
+.project__content {
   @media screen and (min-width: $breakpoint-l) {
     max-width: 800px;
     width: 100%;
   }
 }
 
-.apartment__application-information {
+.project__apartment-count-information {
+  @include font-size($font-size-heading-3, 29px);
+  @include font-weight($bold);
+  color: var(--color-black-90);
+  margin-bottom: $spacing-2-xs;
+  margin-top: 0;
+
+  @media screen and (min-width: $breakpoint-m) {
+    margin-bottom: $spacing-5-xl;
+  }
+}
+
+.project__application-information {
   @include font-size($font-size-heading-6, 24px);
   @include font-weight($medium);
   margin: 0;
@@ -126,7 +84,7 @@
   }
 }
 
-.apartment__type-and-address {
+.project__type-and-address {
   align-items: center;
   display: flex;
   gap: $spacing-xs;
@@ -137,7 +95,7 @@
   }
 }
 
-.apartment__ownership-type {
+.project__ownership-type {
   @include font-size($fontsize-body-s, 26px);
   background-color: var(--color-engel);
   color: var(--color-black-90);
@@ -146,7 +104,7 @@
   padding: $spacing-3-xs $spacing-2-xs;
 }
 
-.apartment__address {
+.project__address {
   @include font-size($fontsize-body-m, 24px);
   color: var(--color-black-90);
   margin: 0;
@@ -156,7 +114,7 @@
   }
 }
 
-.apartment__information {
+.project__information {
   margin-bottom: $spacing-m;
 
   @media screen and (min-width: $breakpoint-m) {
@@ -164,7 +122,7 @@
   }
 }
 
-.apartment__information-label {
+.project__information-label {
   @include font-size($font-size-heading-3, 29px);
   @include font-weight($bold);
   color: var(--color-black-90);
@@ -178,7 +136,7 @@
   }
 }
 
-.apartment__details {
+.project__details {
   margin-bottom: $spacing-m;
 
   @media screen and (min-width: $breakpoint-m) {
@@ -186,7 +144,7 @@
   }
 }
 
-.apartment__details-label {
+.project__details-label {
   @include font-size($font-size-heading-3, 29px);
   @include font-weight($bold);
   color: var(--color-black-90);
@@ -199,13 +157,13 @@
   }
 }
 
-.apartment__details-list {
+.project__details-list {
   list-style: none;
   padding: 0;
   margin: 0;
 }
 
-.apartment__details-item {
+.project__details-item {
   & + & {
     margin-top: $spacing-3-xs;
   }
@@ -234,5 +192,3 @@
     }
   }
 }
-
-

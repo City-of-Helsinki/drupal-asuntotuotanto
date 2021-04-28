@@ -43,6 +43,7 @@ dependencies:
     - field.field.node.project.field_pre_marketing_end_time
     - field.field.node.project.field_premarketing_start_time
     - field.field.node.project.field_project_accessibility
+    - field.field.node.project.field_project_area_description
     - field.field.node.project.field_project_attachments
     - field.field.node.project.field_project_description
     - field.field.node.project.field_project_manager
@@ -64,14 +65,17 @@ dependencies:
     - field.field.node.project.field_virtual_presentation_url
     - field.field.node.project.field_zoning_info
     - field.field.node.project.field_zoning_status
+    - image.style.23_10_m
     - node.type.project
+    - responsive_image.styles.showcase_gallery
   module:
     - asu_content
     - asu_tasklist
     - datetime
     - file
-    - image
     - link
+    - slick
+    - text
     - user
 id: node.project.default
 targetEntityType: node
@@ -95,6 +99,24 @@ content:
     third_party_settings: {  }
     type: entity_reference_label
     region: content
+  field_application_end_time:
+    weight: 150
+    label: above
+    settings:
+      timezone_override: ''
+      format_type: short
+    third_party_settings: {  }
+    type: datetime_default
+    region: content
+  field_application_start_time:
+    weight: 150
+    label: above
+    settings:
+      timezone_override: ''
+      format_type: short
+    third_party_settings: {  }
+    type: datetime_default
+    region: content
   field_attachments_url:
     weight: 129
     label: above
@@ -109,15 +131,15 @@ content:
     region: content
   field_building_type:
     weight: 160
-    label: above
+    label: hidden
     settings:
-      link: true
+      link: false
     third_party_settings: {  }
     type: entity_reference_label
     region: content
   field_city:
     weight: 135
-    label: above
+    label: hidden
     settings:
       link_to_entity: false
     third_party_settings: {  }
@@ -165,15 +187,15 @@ content:
     weight: 159
     label: above
     settings:
-      link: true
+      link: false
     third_party_settings: {  }
     type: entity_reference_label
     region: content
   field_energy_class:
     weight: 156
-    label: above
+    label: hidden
     settings:
-      link: true
+      link: false
     third_party_settings: {  }
     type: entity_reference_label
     region: content
@@ -241,15 +263,15 @@ content:
     region: content
   field_ownership_type:
     weight: 159
-    label: above
+    label: hidden
     settings:
-      link: true
+      link: false
     third_party_settings: {  }
     type: entity_reference_label
     region: content
   field_postal_code:
     weight: 104
-    label: above
+    label: hidden
     settings:
       link_to_entity: false
     third_party_settings: {  }
@@ -257,11 +279,18 @@ content:
     region: content
   field_project_accessibility:
     weight: 165
-    label: above
+    label: hidden
     settings:
       link_to_entity: false
     third_party_settings: {  }
     type: string
+    region: content
+  field_project_area_description:
+    weight: 169
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    type: basic_string
     region: content
   field_project_attachments:
     weight: 167
@@ -272,11 +301,11 @@ content:
     type: file_default
     region: content
   field_project_description:
-    weight: 153
-    label: above
+    weight: 168
+    label: hidden
     settings: {  }
     third_party_settings: {  }
-    type: basic_string
+    type: text_default
     region: content
   field_publication_start_time:
     weight: 150
@@ -332,12 +361,58 @@ content:
     region: content
   field_shared_apartment_images:
     weight: 161
-    label: above
+    label: hidden
     settings:
-      image_style: ''
-      image_link: ''
+      style: ''
+      optionset: default
+      optionset_thumbnail: ''
+      skin: ''
+      skin_thumbnail: ''
+      image_style: 23_10_m
+      responsive_image_style: showcase_gallery
+      thumbnail_effect: ''
+      thumbnail_position: ''
+      media_switch: ''
+      thumbnail_style: ''
+      ratio: ''
+      grid: null
+      grid_medium: null
+      grid_small: null
+      visible_items: null
+      layout: ''
+      thumbnail_caption: ''
+      cache: 0
+      current_view_mode: default
+      background: false
+      caption:
+        title: '0'
+        alt: '0'
+      preserve_keys: false
+      override: false
+      overridables:
+        arrows: '0'
+        autoplay: '0'
+        dots: '0'
+        draggable: '0'
+        infinite: '0'
+        mouseWheel: '0'
+        randomize: '0'
+        variableWidth: '0'
+      skin_arrows: ''
+      skin_dots: ''
+      fx: ''
+      icon: ''
+      view_mode: ''
+      box_caption: ''
+      box_caption_custom: ''
+      box_media_style: ''
+      box_style: ''
+      _uri: ''
+      breakpoints: {  }
+      sizes: ''
+      grid_header: ''
     third_party_settings: {  }
-    type: image
+    type: slick_image
     region: content
   field_site_area:
     weight: 146
@@ -354,7 +429,7 @@ content:
     weight: 158
     label: above
     settings:
-      link: true
+      link: false
     third_party_settings: {  }
     type: entity_reference_label
     region: content
@@ -376,7 +451,7 @@ content:
     region: content
   field_street_address:
     weight: 116
-    label: above
+    label: hidden
     settings:
       link_to_entity: false
     third_party_settings: {  }
@@ -417,8 +492,6 @@ content:
 hidden:
   field_acc_financeofficer: true
   field_acc_salesperson: true
-  field_application_end_time: true
-  field_application_start_time: true
   field_completion_date: true
   field_constructor: true
   field_estate_agent: true
@@ -436,7 +509,6 @@ hidden:
   field_premarketing_start_time: true
   field_project_manager: true
   field_publication_end_time: true
-  field_shared_apartment_images: true
   field_shareholder_meeting_date: true
   field_virtual_presentation_url: true
   langcode: true

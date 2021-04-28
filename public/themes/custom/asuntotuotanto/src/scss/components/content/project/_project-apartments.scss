@@ -1,0 +1,308 @@
+.project__apartments {
+  &--mobile {
+    @media screen and (min-width: $breakpoint-xl) {
+      display: none;
+      visibility: hidden;
+    }
+  }
+
+  &--desktop {
+    @media screen and (max-width: $breakpoint-xl - 1px) {
+      display: none;
+      visibility: hidden;
+    }
+  }
+}
+
+.project__apartments-container {
+  margin-bottom: $spacing-xl;
+  padding-top: $spacing-xl;
+
+  @media screen and (min-width: $breakpoint-xl) {
+    margin-bottom: $spacing-layout-x;
+    padding-top: $spacing-layout-x;
+  }
+}
+
+.project-apartments-listing__header {
+  margin-bottom: $spacing-m;
+
+  @media screen and (min-width: $breakpoint-xl) {
+    margin-bottom: $spacing-l;
+  }
+
+  > h2 {
+    @include font-size($font-size-heading-3, 29px);
+    @include font-weight($bold);
+    color: var(--color-black-90);
+    margin: 0 0 $spacing-3-xs 0;
+
+    @media screen and (min-width: $breakpoint-xl) {
+      @include font-size($font-size-heading-2, 43px);
+    }
+  }
+
+  > h3 {
+    @include font-size($fontsize-body-m, $lineheight-l);
+    @include font-weight($regular);
+    color: var(--color-black-90);
+    margin: 0;
+  }
+}
+
+.project-apartments-listing__content {
+  background-color: var(--color-black-5);
+  padding-bottom: $spacing-s;
+  padding-top: $spacing-s;
+
+  @media screen and (min-width: $breakpoint-xl) {
+    margin-left: auto;
+    margin-right: auto;
+    max-width: calc(#{$container-width-xl} + 48px + 48px);
+    padding-bottom: $spacing-2-xl;
+    padding-top: $spacing-2-xl;
+  }
+}
+
+.project__apartments-list {
+  list-style: none;
+  margin-bottom: 0;
+  margin-top: 0;
+}
+
+.project__apartments-item-button {
+  align-items: center;
+  background-color: var(--color-white);
+  border-bottom: 0;
+  border-left: 0;
+  border-radius: 0;
+  border-right: 0;
+  border-top: 1px solid var(--color-black-20);
+  display: flex;
+  padding: $spacing-s;
+  width: 100%;
+  gap: $spacing-xs;
+
+  span {
+    @include font-size($font-size-heading-5, 27px);
+    color: var(--color-black-90);
+    pointer-events: none;
+
+    &:first-of-type {
+      @include font-size($font-size-heading-3, 29px);
+      @include font-weight($bold);
+    }
+  }
+
+  svg {
+    flex-shrink: 0;
+    margin-left: auto;
+    pointer-events: none;
+  }
+
+  &:hover {
+    cursor: pointer;
+  }
+
+  &:focus {
+    outline: 1px auto;
+  }
+
+  &[aria-expanded="true"] {
+    svg {
+      transform: rotate(180deg);
+    }
+  }
+}
+
+.project__apartments-item-content {
+  background-color: var(--color-white);
+  display: flex;
+  flex-direction: column;
+  padding: 0 $spacing-s $spacing-s $spacing-s;
+  gap: $spacing-xs;
+}
+
+.project__apartments-item-details-list {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-2-xs;
+  list-style: none;
+  margin: 0 0 $spacing-xs 0;
+  padding: 0;
+}
+
+.project__apartments-item-details-item {
+  p {
+    @include font-size($fontsize-body-m, $lineheight-l);
+    color: var(--color-black-90);
+    margin: 0;
+
+    > span {
+      display: inline-block;
+      width: 200px;
+    }
+
+    span:nth-child(2) {
+      align-items: center;
+      display: inline-flex;
+    }
+  }
+}
+
+.project__apartment-application-status {
+  border-radius: 100%;
+  border-style: solid;
+  border-width: 2px;
+  display: inline-block;
+  height: 16px;
+  width: 16px;
+
+  .project__apartments-item-details-item span > &,
+  .project__apartments-table td span > & {
+    margin-right: $spacing-2-xs;
+  }
+
+  &--none {
+    border-color: var(--color-copper-dark);
+  }
+
+  &--low {
+    border-color: var(--color-copper-dark);
+    background-color: var(--color-copper-dark);
+  }
+
+  &--medium {
+    border-color: var(--color-alert);
+    background-color: var(--color-alert);
+  }
+
+  &--high {
+    border-color: var(--color-brick);
+    background-color: var(--color-brick);
+  }
+}
+
+.project__apartments-table {
+  background-color: var(--color-white);
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+
+  thead {
+    padding-left: $spacing-l;
+    padding-right: $spacing-l;
+
+    tr {
+      display: inline-flex;
+      width: 100%;
+      gap: $spacing-l;
+
+      th {
+        @include font-size($fontsize-body-m, $lineheight-l);
+        @include font-weight($regular);
+        text-align: left;
+        padding-bottom: $spacing-s;
+        padding-top: $spacing-s;
+
+        &:first-of-type {
+          min-width: 140px;
+        }
+
+        &:nth-child(2) {
+          min-width: 40px;
+        }
+
+        &:nth-child(3) {
+          min-width: 110px;
+        }
+
+        &:nth-child(4) {
+          min-width: 150px;
+        }
+
+        &:nth-child(5) {
+          min-width: 150px;
+        }
+      }
+    }
+  }
+
+  tbody {
+    padding-left: $spacing-l;
+    padding-right: $spacing-l;
+
+    tr {
+      border-top: 1px solid var(--color-black-20);
+      display: inline-flex;
+      align-items: center;
+      gap: $spacing-l;
+      width: 100%;
+
+      &:focus-within {
+        box-shadow: inset 0 1px 0 0 var(--color-black-90), inset 0 -1px 0 0 var(--color-black-90);
+      }
+
+      td {
+        @include font-size($fontsize-body-l, 27px);
+        @include font-weight($regular);
+        text-align: left;
+        padding-bottom: $spacing-m;
+        padding-top: $spacing-m;
+
+        &:first-of-type {
+          align-items: center;
+          display: inline-flex;
+          gap: $spacing-s;
+          justify-content: flex-start;
+          min-width: 140px;
+
+          span:first-of-type {
+            @include font-size($fontsize-body-xl, $lineheight-l);
+            @include font-weight($bold);
+            min-width: 40px;
+          }
+        }
+
+        &:nth-child(2) {
+          min-width: 40px;
+        }
+
+        &:nth-child(3) {
+          min-width: 110px;
+        }
+
+        &:nth-child(4) {
+          min-width: 150px;
+        }
+
+        &:nth-child(5) {
+          min-width: 150px;
+
+          span {
+            @include font-size($fontsize-body-m, 26px);
+            display: inline-flex;
+            align-items: center;
+          }
+        }
+
+        &:last-of-type {
+          align-items: center;
+          display: inline-flex;
+          gap: $spacing-2-xs;
+          justify-content: flex-end;
+          flex-grow: 1;
+        }
+
+        .hds-button {
+          @include font-size($fontsize-body-m, $lineheight-l);
+          @include font-weight($medium);
+
+          &.hds-button--supplementary {
+            padding: $spacing-2-xs $spacing-xs;
+          }
+        }
+      }
+    }
+  }
+}

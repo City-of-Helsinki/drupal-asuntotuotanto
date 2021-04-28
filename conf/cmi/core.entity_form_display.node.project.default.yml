@@ -43,6 +43,7 @@ dependencies:
     - field.field.node.project.field_pre_marketing_end_time
     - field.field.node.project.field_premarketing_start_time
     - field.field.node.project.field_project_accessibility
+    - field.field.node.project.field_project_area_description
     - field.field.node.project.field_project_attachments
     - field.field.node.project.field_project_description
     - field.field.node.project.field_project_manager
@@ -78,6 +79,7 @@ dependencies:
     - link
     - path
     - scheduler
+    - text
 third_party_settings:
   field_group:
     group_project_tabs:
@@ -115,6 +117,7 @@ third_party_settings:
         - field_new_development_status
         - field_state_of_sale
         - field_holding_type
+        - field_project_description
       parent_name: group_project_tabs
       weight: 19
       format_type: tab
@@ -253,7 +256,7 @@ third_party_settings:
     group_neighbourhood:
       children:
         - field_services
-        - field_project_description
+        - field_project_area_description
         - field_services_url
       parent_name: group_project_tabs
       weight: 20
@@ -567,6 +570,14 @@ content:
     third_party_settings: {  }
     type: string_textfield
     region: content
+  field_project_area_description:
+    weight: 84
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textarea
+    region: content
   field_project_attachments:
     weight: 30
     settings:
@@ -575,12 +586,12 @@ content:
     type: file_generic
     region: content
   field_project_description:
-    weight: 81
+    weight: 83
     settings:
       rows: 5
       placeholder: ''
     third_party_settings: {  }
-    type: string_textarea
+    type: text_textarea
     region: content
   field_project_manager:
     weight: 26

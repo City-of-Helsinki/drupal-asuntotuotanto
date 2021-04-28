@@ -60,7 +60,6 @@
       flex-wrap: nowrap;
       align-items: center;
 
-      .block-page-title-block,
       .local-actions {
         margin: 0;
       }
@@ -75,11 +74,23 @@
       align-self: center;
       display: flex;
       overflow: hidden;
-      margin: 0;
+      margin: 16px 0;
+
+      @include mq($breakpointSmall) {
+        margin: 0;
+      }
 
       .page-title {
         align-self: center;
         margin: 0;
+      }
+    }
+
+    .tabs-wrapper {
+      margin: 16px -.5rem;
+
+      @include mq($breakpointSmall) {
+        margin: 0 -.5rem;
       }
     }
 
@@ -98,6 +109,10 @@
   margin-bottom: 0;
   background-color: transparent;
   overflow: initial;
+}
+
+.region-header {
+  width: 100%;
 }
 
 .page-wrapper {
@@ -123,8 +138,8 @@
   }
 
   @include mq($breakpointMedium) {
-    padding-left: m#{i}n(5vw, 64px);
-    padding-right: m#{i}n(5vw, 64px);
+    padding-left: 0;
+    padding-right: 0;
   }
 
   @include mq($breakpointMedium 1023px) {

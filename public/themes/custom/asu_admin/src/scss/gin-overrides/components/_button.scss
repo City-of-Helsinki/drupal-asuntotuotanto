@@ -1,9 +1,6 @@
 .button,
 .dropbutton__item:first-of-type > *,
 .dropbutton__toggle {
-  color: var(--colorGinPrimary);
-  // color: var(--colorGinPrimaryActive);
-  background-color: transparent;
   box-shadow: none;
 
   &:hover {

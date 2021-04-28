@@ -1,4 +1,4 @@
-.apartment__attachments-label {
+.project__attachments-label {
   @include font-size($font-size-heading-3, 29px);
   @include font-weight($bold);
   color: var(--color-black-90);
@@ -12,7 +12,7 @@
   }
 }
 
-.apartment__attachments-list {
+.project__attachments-list {
   display: flex;
   flex-direction: column;
   gap: $spacing-s;
@@ -26,13 +26,13 @@
   }
 }
 
-.apartment__attachment-item {
+.project__attachment-item {
   @media screen and (min-width: $breakpoint-m) {
     width: calc(50% - #{$spacing-s});
   }
 }
 
-.apartment__attachment-link {
+.project__attachment-link {
   border: 1px solid var(--color-black-20);
   display: inline-flex;
   height: 100%;
@@ -45,13 +45,13 @@
   }
 }
 
-.apartment__attachment-content {
+.project__attachment-content {
   margin-left: $spacing-s;
   overflow: hidden;
   width: 100%;
 }
 
-.apartment__attachment-description {
+.project__attachment-description {
   @include font-size($fontsize-body-s, 26px);
   @include font-weight($medium);
   margin-bottom: $spacing-3-xs;
@@ -75,7 +75,7 @@
   }
 }
 
-.apartment__attachment-name {
+.project__attachment-name {
   @include font-size($fontsize-body-m);
   @include font-weight($bold);
   overflow: hidden;
@@ -85,7 +85,7 @@
   white-space: nowrap;
 }
 
-.apartment__attachment-size {
+.project__attachment-size {
   @include font-size($fontsize-body-s, 26px);
   color: var(--color-black-90);
   margin: 0;

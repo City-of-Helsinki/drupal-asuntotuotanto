@@ -1,4 +1,4 @@
-.apartment__anchor-navigation {
+.project__anchor-navigation {
   @media screen and (max-width: $breakpoint-l - 1px) {
     visibility: hidden;
     display: none;
@@ -8,7 +8,7 @@
   margin-top: -5px;
 }
 
-.apartment__anchor-list {
+.project__anchor-list {
   align-items: center;
   display: flex;
   gap: $spacing-5-xl;
@@ -18,14 +18,13 @@
   padding: 0;
 }
 
-.apartment__anchor-link {
-  align-items: center;
-  display: inline-flex;
-  text-decoration: none;
-
+.project__anchor-link {
   @include font-size($fontsize-body-xl, 30px);
   @include font-weight($bold);
+  align-items: center;
+  display: inline-flex;
   padding: $spacing-m;
+  text-decoration: none;
 
   > svg {
     margin-right: $spacing-xs;

@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - field.field.node.apartment.field_additional_information
+    - field.field.node.apartment.field_apartment_attachments
     - field.field.node.apartment.field_apartment_number
     - field.field.node.apartment.field_apartment_state_of_sale
     - field.field.node.apartment.field_apartment_structure
@@ -44,6 +45,7 @@ dependencies:
     - responsive_image.styles.showcase_gallery
   module:
     - datetime
+    - file
     - link
     - slick
     - user
@@ -58,6 +60,14 @@ content:
     settings: {  }
     third_party_settings: {  }
     type: basic_string
+    region: content
+  field_apartment_attachments:
+    weight: 57
+    label: hidden
+    settings:
+      use_description_as_link_text: true
+    third_party_settings: {  }
+    type: file_default
     region: content
   field_apartment_number:
     weight: 2

@@ -33,6 +33,7 @@ visibility:
     id: 'entity_bundle:node'
     bundles:
       apartment: apartment
+      project: project
     negate: true
     context_mapping:
       node: '@node.node_route_context:node'
