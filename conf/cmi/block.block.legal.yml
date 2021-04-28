@@ -1,0 +1,40 @@
+uuid: 70fb4ae8-fa80-49aa-aebe-321a9e2f6d2a
+langcode: fi
+status: true
+dependencies:
+  config:
+    - system.menu.legal
+  module:
+    - context
+    - menu_block
+  theme:
+    - asuntotuotanto
+id: legal
+theme: asuntotuotanto
+region: footer_bottom
+weight: 0
+provider: null
+plugin: 'menu_block:legal'
+settings:
+  id: 'menu_block:legal'
+  label: Legal
+  provider: menu_block
+  label_display: '0'
+  follow: false
+  follow_parent: child
+  level: 1
+  depth: 1
+  expand_all_items: false
+  parent: 'legal:'
+  suggestion: legal
+  label_type: block
+  label_link: false
+visibility:
+  view_inclusion:
+    id: view_inclusion
+    negate: null
+    view_inclusion: {  }
+  request_path_exclusion:
+    id: request_path_exclusion
+    pages: ''
+    negate: null
