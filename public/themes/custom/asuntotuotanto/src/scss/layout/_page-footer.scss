@@ -1,10 +1,11 @@
-.page-footer {
-}
-
 .page-footer__item {
   &.page-footer__item--top {
     padding-bottom: $spacing-m;
     border-bottom: 1px solid var(--color-black-20);
+
+    @media screen and (min-width: $breakpoint-l) {
+      padding-bottom: $spacing-l;
+    }
   }
 
   &.page-footer__item--middle {
@@ -16,6 +17,12 @@
   &.page-footer__item--bottom {
     padding-bottom: $spacing-m;
     padding-top: $spacing-m;
+
+    @media screen and (min-width: $breakpoint-l) {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
   }
 }
 
@@ -29,9 +36,12 @@
   align-items: center;
   color: var(--color-black-90);
   display: flex;
-  margin: 0;
   justify-content: center;
-  margin-bottom: $spacing-2-xs;
+  margin: 0 0 $spacing-2-xs 0;
+
+  @media screen and (min-width: $breakpoint-l) {
+    margin: 0;
+  }
 
   span {
     &:first-of-type {

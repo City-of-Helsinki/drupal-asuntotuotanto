@@ -16,6 +16,13 @@
     gap: $spacing-2-xs;
     justify-content: center;
     margin-bottom: $spacing-m;
+
+    @media screen and (min-width: $breakpoint-l) {
+      gap: $spacing-s;
+      flex-direction: row;
+      margin-bottom: $spacing-m;
+      justify-content: flex-start;
+    }
   }
 }
 
