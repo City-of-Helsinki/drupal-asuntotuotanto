@@ -1,11 +1,45 @@
-//
-// @file
-//
-// This file includes everything related to the page footer styling.
-//
 .page-footer {
-  background-color: $color-black;
-  color: $color-white;
-  margin-top: $spacing-s;
-  width: 100%;
+}
+
+.page-footer__item {
+  &.page-footer__item--top {
+    padding-bottom: $spacing-m;
+    border-bottom: 1px solid var(--color-black-20);
+  }
+
+  &.page-footer__item--middle {
+    padding-bottom: $spacing-m;
+    padding-top: $spacing-m;
+    border-bottom: 1px solid var(--color-black-20);
+  }
+
+  &.page-footer__item--bottom {
+    padding-bottom: $spacing-m;
+    padding-top: $spacing-m;
+  }
+}
+
+.page-footer__content {
+  background-color: var(--color-black-5);
+}
+
+.page-footer__copyright {
+  @include font-size($fontsize-body-s, 26px);
+  @include font-weight($regular);
+  align-items: center;
+  color: var(--color-black-90);
+  display: flex;
+  margin: 0;
+  justify-content: center;
+  margin-bottom: $spacing-2-xs;
+
+  span {
+    &:first-of-type {
+      &:after {
+        content: "•";
+        padding-left: $spacing-4-xs;
+        padding-right: $spacing-3-xs;
+      }
+    }
+  }
 }

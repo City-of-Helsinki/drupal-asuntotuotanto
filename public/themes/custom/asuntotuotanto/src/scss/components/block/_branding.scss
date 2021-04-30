@@ -1,15 +1,28 @@
 .branding {
-  align-items: center;
-  display: inline-flex;
+  &.branding--header {
+    align-items: center;
+    display: inline-flex;
+    gap: $spacing-m;
 
-  @include breakpoint($container-width-l) {
-    margin-right: $spacing-l;
+    @include breakpoint($container-width-l) {
+      margin-right: $spacing-l;
+    }
+  }
+
+  &.branding--footer {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-2-xs;
+    justify-content: center;
+    margin-bottom: $spacing-m;
   }
 }
 
 .branding__logo {
   display: inline-flex;
-  width: 100px;
+  width: 87px;
+  margin: 0;
 
   svg {
     width: 100%;
@@ -17,9 +30,7 @@
 }
 
 .branding__slogan {
-  @include font-size(18px);
+  @include font-size($fontsize-body-m, $lineheight-l);
   @include font-weight($bold);
   display: inline-block;
-  line-height: 1;
-  margin-left: $spacing-m;
 }

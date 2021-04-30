@@ -3,12 +3,14 @@
     position: static;
   }
 
-  &.navigation--main--desktop {
+  &.navigation--main-header {
     z-index: 100;
 
-    @include breakpoint(max-width $container-width-l) {
-      display: none;
-      visibility: hidden;
+    &.is-desktop {
+      @include breakpoint(max-width $container-width-l) {
+        display: none;
+        visibility: hidden;
+      }
     }
   }
 }
@@ -19,15 +21,38 @@
   margin: 0;
   padding: 0;
 
-  &.menu--main {
+  .navigation--main-header & {
     @include breakpoint($container-width-l) {
       height: 100%;
     }
   }
+
+  .navigation--main-footer & {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: $spacing-xs;
+  }
+
+  .navigation--footer-secondary & {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: $spacing-xs;
+  }
+
+  .navigation--legal & {
+    align-items: center;
+    display: flex;
+    gap: $spacing-xs;
+    justify-content: center;
+  }
 }
 
 .menu__item {
-  .menu--main & {
+  .navigation--main-header & {
     @include breakpoint($container-width-l) {
       align-items: center;
       display: inline-flex;
@@ -55,15 +80,64 @@
       }
     }
   }
-}
 
-.menu__link {
-  display: inline-block;
+  > a {
+    display: inline-block;
 
-  .menu--main & {
-    @include breakpoint($container-width-l) {
-      @include font-size(16px);
+    .navigation--main-header & {
+      @include breakpoint($container-width-l) {
+        @include font-size(16px);
+        text-decoration: none;
+      }
+    }
+
+    .navigation--main-footer & {
+      @include font-size($fontsize-body-m, $lineheight-l);
+      @include font-weight($medium);
+      color: var(--color-black-90);
       text-decoration: none;
+    }
+
+    .navigation--footer-secondary & {
+      @include font-size($fontsize-body-m, $lineheight-l);
+      @include font-weight($medium);
+      color: var(--color-black-90);
+      text-decoration: none;
+    }
+
+    .navigation--legal & {
+      @include font-size($fontsize-body-s, 26px);
+      @include font-weight($regular);
+      color: var(--color-black-90);
+    }
+  }
+
+  > button {
+    .navigation--footer-secondary & {
+      @include font-size($fontsize-body-m, $lineheight-l);
+      @include font-weight($medium);
+      align-items: center;
+      background-color: transparent;
+      border: 0;
+      color: var(--color-black-90);
+      display: inline-flex;
+      gap: $spacing-2-xs;
+      margin: 0;
+      padding: 0;
+      text-decoration: none;
+
+      &:hover {
+        cursor: pointer;
+      }
+
+      &:after {
+        background-image: url('../icons/arrow-up.svg');
+        background-size: 100%;
+        content: "";
+        display: inline-block;
+        height: 24px;
+        width: 24px;
+      }
     }
   }
 }
