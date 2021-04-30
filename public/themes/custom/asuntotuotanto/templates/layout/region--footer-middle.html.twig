@@ -13,5 +13,25 @@
  */
 #}
 {% if content %}
+  <ul class="page-footer__social-media-links">
+    <li class="page-footer__social-media-links-item">
+      {# TODO: Add correct social media link. #}
+      <a href="https://facebook.com" class="page-footer__social-media-link">
+        <span class="visually-hidden">
+          {% trans %}Find us on{% endtrans %} Facebook
+        </span>
+        {% include "@hdbt/misc/icon.twig" with {icon: 'facebook', label: 'Facebook'} %}
+      </a>
+    </li>
+    <li class="page-footer__social-media-links-item">
+      {# TODO: Add correct social media link. #}
+      <a href="https://instagram.com" class="page-footer__social-media-link">
+        <span class="visually-hidden">
+          {% trans %}Find us on{% endtrans %} Instagram
+        </span>
+        {% include "@hdbt/misc/icon.twig" with {icon: 'instagram', label: 'Instagram'} %}
+      </a>
+    </li>
+  </ul>
   {{ content }}
 {% endif %}

@@ -12,6 +12,12 @@
     padding-bottom: $spacing-m;
     padding-top: $spacing-m;
     border-bottom: 1px solid var(--color-black-20);
+
+    @media screen and (min-width: $breakpoint-l) {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
   }
 
   &.page-footer__item--bottom {
@@ -52,4 +58,31 @@
       }
     }
   }
+}
+
+.page-footer__social-media-links {
+  align-items: center;
+  display: flex;
+  gap: $spacing-xs;
+  justify-content: center;
+  list-style: none;
+  margin: 0 0 $spacing-xs 0;
+  padding: 0;
+
+  @media screen and (min-width: $breakpoint-l) {
+    justify-content: flex-start;
+    margin-bottom: 0;
+  }
+}
+
+.page-footer__social-media-links-item {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.page-footer__social-media-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
