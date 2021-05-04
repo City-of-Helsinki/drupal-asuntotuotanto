@@ -1,0 +1,40 @@
+uuid: d8426271-6253-418e-8b21-d26a3bbdb478
+langcode: fi
+status: true
+dependencies:
+  config:
+    - system.menu.footer-secondary
+  module:
+    - context
+    - menu_block
+  theme:
+    - asuntotuotanto
+id: footersecondary
+theme: asuntotuotanto
+region: footer_middle
+weight: 0
+provider: null
+plugin: 'menu_block:footer-secondary'
+settings:
+  id: 'menu_block:footer-secondary'
+  label: 'Footer secondary'
+  provider: menu_block
+  label_display: '0'
+  follow: false
+  follow_parent: child
+  level: 1
+  depth: 1
+  expand_all_items: false
+  parent: 'footer-secondary:'
+  suggestion: footer__secondary
+  label_type: block
+  label_link: false
+visibility:
+  view_inclusion:
+    id: view_inclusion
+    negate: null
+    view_inclusion: {  }
+  request_path_exclusion:
+    id: request_path_exclusion
+    pages: ''
+    negate: null

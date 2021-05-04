@@ -7,7 +7,7 @@ dependencies:
     - node.type.apartment
     - taxonomy.vocabulary.apartment_state_of_sale
   content:
-    - 'taxonomy_term:apartment_state_of_sale:8a2e3be0-faf3-4e62-9c90-dc5876311d99'
+    - 'taxonomy_term:apartment_state_of_sale:951df400-27ec-47b0-b626-aeb53c69ae1a'
 id: node.apartment.field_apartment_state_of_sale
 field_name: field_apartment_state_of_sale
 entity_type: node
@@ -18,7 +18,7 @@ required: false
 translatable: false
 default_value:
   -
-    target_uuid: 8a2e3be0-faf3-4e62-9c90-dc5876311d99
+    target_uuid: 951df400-27ec-47b0-b626-aeb53c69ae1a
 default_value_callback: ''
 settings:
   handler: 'default:taxonomy_term'

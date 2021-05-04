@@ -1,0 +1,40 @@
+uuid: 49cbd92a-c0fa-4488-acf2-f6cd8e1c9e96
+langcode: fi
+status: true
+dependencies:
+  config:
+    - system.menu.main
+  module:
+    - context
+    - menu_block
+  theme:
+    - asuntotuotanto
+id: paavalikko
+theme: asuntotuotanto
+region: footer_top
+weight: 0
+provider: null
+plugin: 'menu_block:main'
+settings:
+  id: 'menu_block:main'
+  label: Päävalikko
+  provider: menu_block
+  label_display: '0'
+  follow: false
+  follow_parent: child
+  level: 1
+  depth: 1
+  expand_all_items: false
+  parent: 'main:'
+  suggestion: main__footer
+  label_type: block
+  label_link: false
+visibility:
+  view_inclusion:
+    id: view_inclusion
+    negate: null
+    view_inclusion: {  }
+  request_path_exclusion:
+    id: request_path_exclusion
+    pages: ''
+    negate: null

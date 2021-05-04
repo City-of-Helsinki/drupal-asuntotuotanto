@@ -1,0 +1,32 @@
+uuid: 3fa607ae-6f6e-4d15-ad96-9c0035bc089d
+langcode: en
+status: true
+dependencies:
+  module:
+    - context
+    - system
+  theme:
+    - asuntotuotanto
+id: branding__footer
+theme: asuntotuotanto
+region: footer_top
+weight: 0
+provider: null
+plugin: system_branding_block
+settings:
+  id: system_branding_block
+  label: Branding
+  provider: system
+  label_display: '0'
+  use_site_logo: false
+  use_site_name: false
+  use_site_slogan: true
+visibility:
+  view_inclusion:
+    id: view_inclusion
+    negate: null
+    view_inclusion: {  }
+  request_path_exclusion:
+    id: request_path_exclusion
+    pages: ''
+    negate: null

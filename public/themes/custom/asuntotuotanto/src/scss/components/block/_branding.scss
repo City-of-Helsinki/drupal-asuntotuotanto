@@ -1,15 +1,32 @@
 .branding {
-  align-items: center;
-  display: inline-flex;
+  &.branding--header {
+    align-items: center;
+    display: inline-flex;
 
-  @include breakpoint($container-width-l) {
-    margin-right: $spacing-l;
+    @include breakpoint($container-width-l) {
+      margin-right: $spacing-l;
+    }
+  }
+
+  &.branding--footer {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-bottom: $spacing-m;
+
+    @media screen and (min-width: $breakpoint-l) {
+      flex-direction: row;
+      margin-bottom: $spacing-m;
+      justify-content: flex-start;
+    }
   }
 }
 
 .branding__logo {
   display: inline-flex;
-  width: 100px;
+  width: 87px;
+  margin: 0;
 
   svg {
     width: 100%;
@@ -17,9 +34,19 @@
 }
 
 .branding__slogan {
-  @include font-size(18px);
+  @include font-size($fontsize-body-m, $lineheight-l);
   @include font-weight($bold);
   display: inline-block;
-  line-height: 1;
-  margin-left: $spacing-m;
+
+  .branding--header & {
+    margin-left: $spacing-m;
+  }
+
+  .branding--footer & {
+    margin-left: $spacing-2-xs;
+
+    @media screen and (min-width: $breakpoint-l) {
+      margin-left: $spacing-s;
+    }
+  }
 }

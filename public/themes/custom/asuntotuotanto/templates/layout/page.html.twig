@@ -75,16 +75,21 @@
 
     </main>
 
-    {% if page.footer %}
-      <footer role="contentinfo">
-        {% if page.footer_top %}
-          {{ page.footer_top }}
-        {% endif %}
-        {{ page.footer }}
-        {% if page.footer_bottom %}
-          {{ page.footer_bottom }}
-        {% endif %}
-      </footer>
-    {% endif %}
+    <footer class="page-footer" role="contentinfo">
+      {% include '@hdbt/misc/koro.twig' with {koro: 'basic', color: 'var(--color-black-5)'} %}
+      <div class="page-footer__content">
+        <div class="page-footer__container container">
+          <div class="page-footer__item page-footer__item--top">
+            {{ page.footer_top }}
+          </div>
+          <div class="page-footer__item page-footer__item--middle">
+            {{ page.footer_middle }}
+          </div>
+          <div class="page-footer__item page-footer__item--bottom">
+            {{ page.footer_bottom }}
+          </div>
+        </div>
+      </div>
+    </footer>
   </div>
 </div>
