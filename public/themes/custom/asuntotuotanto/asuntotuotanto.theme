@@ -9,6 +9,7 @@ use Drupal\file\Entity\File;
 use Drupal\node\Entity\Node;
 use Drupal\user\Entity\User;
 use Drupal\taxonomy\Entity\Term;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Helper function to get the icons path.
@@ -442,6 +443,68 @@ function asuntotuotanto_preprocess_views_view_table(&$variables) {
       }
 
       break;
+  }
+}
+
+/**
+ * Implements hook_theme_suggestions_alter().
+ *
+ * {@inheritdoc}
+ */
+function asuntotuotanto_theme_suggestions_alter(array &$suggestions, array $variables, $hook) {
+  if ($hook == 'form' & !empty($variables['element']['#id'])) {
+    $suggestions[] = 'form__' . str_replace('-', '_', $variables['element']['#id']);
+  }
+}
+
+/**
+ * Implements hook_theme_suggestions_input_alter().
+ *
+ * {@inheritdoc}
+ */
+function asuntotuotanto_theme_suggestions_input_alter(&$suggestions, array $variables) {
+  $element = $variables['element'];
+
+  if (isset($element['#attributes']['data-twig-suggestion'])) {
+    $suggestions[] = 'input__' . $element['#type'] . '__' . $element['#attributes']['data-twig-suggestion'];
+  }
+}
+
+/**
+ * Implements hook_form_alter().
+ *
+ * {@inheritdoc}
+ */
+function asuntotuotanto_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  switch ($form['#id']) {
+    case 'user-login-form':
+      $form['actions']['submit']['#attributes']['data-twig-suggestion'] = 'form_login_button';
+      break;
+
+    case 'user-register-form':
+      $form['actions']['submit']['#attributes']['data-twig-suggestion'] = 'form_register_button';
+      break;
+
+    case 'user-pass':
+      $form['actions']['submit']['#attributes']['data-twig-suggestion'] = 'form_password_button';
+      break;
+  }
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function asuntotuotanto_preprocess_form_element(&$variables) {
+  if (isset($variables['type']) && is_array($variables['label'])) {
+    switch ($variables['type']) {
+      case 'email':
+        $element_label_class = 'hds-text-input__label';
+        break;
+    }
+
+    if (isset($element_label_class)) {
+      $variables['label']['#element_type'] = $element_label_class;
+    }
   }
 }
 

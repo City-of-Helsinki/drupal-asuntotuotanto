@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a592ae0cde3c17fa402e53862be01d81",
+    "content-hash": "e32bedfe2584dfbb2251d099a96d09ad",
     "packages": [
         {
             "name": "City-of-Helsinki/php-hauki-client",
@@ -3716,69 +3716,6 @@
             "support": {
                 "source": "https://git.drupalcode.org/project/gin",
                 "issues": "https://www.drupal.org/project/issues/gin"
-            },
-            "funding": [
-                {
-                    "type": "github",
-                    "url": "https://github.com/sponsors/saschaeggi"
-                },
-                {
-                    "type": "other",
-                    "url": "https://paypal.me/saschaeggi"
-                }
-            ]
-        },
-        {
-            "name": "drupal/gin_login",
-            "version": "1.0.0-rc7",
-            "source": {
-                "type": "git",
-                "url": "https://git.drupalcode.org/project/gin_login.git",
-                "reference": "8.x-1.0-rc7"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/gin_login-8.x-1.0-rc7.zip",
-                "reference": "8.x-1.0-rc7",
-                "shasum": "8ed1d3ba09fbc4377d040bd9ea4d8c9cb7fb8006"
-            },
-            "require": {
-                "drupal/core": "^8 || ^9"
-            },
-            "type": "drupal-module",
-            "extra": {
-                "drupal": {
-                    "version": "8.x-1.0-rc7",
-                    "datestamp": "1606328781",
-                    "security-coverage": {
-                        "status": "not-covered",
-                        "message": "RC releases are not covered by Drupal security advisories."
-                    }
-                }
-            },
-            "notification-url": "https://packages.drupal.org/8/downloads",
-            "license": [
-                "GPL-2.0+"
-            ],
-            "authors": [
-                {
-                    "name": "Sascha Eggenberger (saschaeggi)",
-                    "homepage": "https://www.drupal.org/u/saschaeggi",
-                    "role": "Maintainer"
-                },
-                {
-                    "name": "saschaeggi",
-                    "homepage": "https://www.drupal.org/user/1999056"
-                }
-            ],
-            "description": "Custom Drupal Login for Gin theme",
-            "homepage": "https://www.drupal.org/project/gin_login",
-            "keywords": [
-                "Drupal"
-            ],
-            "support": {
-                "source": "http://cgit.drupalcode.org/gin_login",
-                "issues": "https://www.drupal.org/project/issues/gin_login"
             },
             "funding": [
                 {
@@ -8312,12 +8249,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ruflin/Elastica.git",
-                "reference": "8ecc5cdadd5bf0b69c1eb20e56246a940b43bdb7"
+                "reference": "dd88070019dd85b9a79533417560fb9451cff28f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ruflin/Elastica/zipball/8ecc5cdadd5bf0b69c1eb20e56246a940b43bdb7",
-                "reference": "8ecc5cdadd5bf0b69c1eb20e56246a940b43bdb7",
+                "url": "https://api.github.com/repos/ruflin/Elastica/zipball/dd88070019dd85b9a79533417560fb9451cff28f",
+                "reference": "dd88070019dd85b9a79533417560fb9451cff28f",
                 "shasum": ""
             },
             "require": {
@@ -8367,7 +8304,7 @@
                 "client",
                 "search"
             ],
-            "time": "2021-03-24T14:35:48+00:00"
+            "time": "2021-04-26T08:59:22+00:00"
         },
         {
             "name": "stack/builder",
@@ -15980,7 +15917,6 @@
         "drupal/context": 10,
         "drupal/elasticsearch_connector": 15,
         "drupal/gin": 15,
-        "drupal/gin_login": 5,
         "drupal/gin_toolbar": 10,
         "drupal/inline_entity_form": 5,
         "drupal/menu_block": 20,

@@ -43,7 +43,6 @@ module:
   file: 0
   filter: 0
   focal_point: 0
-  gin_login: 0
   gin_toolbar: 0
   hal: 0
   hdbt_admin_editorial: 0

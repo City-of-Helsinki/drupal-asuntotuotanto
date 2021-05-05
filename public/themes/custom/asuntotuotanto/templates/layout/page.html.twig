@@ -45,35 +45,36 @@
 #}
 <div class="page-container">
   <div class="sticky-footer">
+    <div>
+      {# {% if page.top %}
+        {{ page.top }}
+      {% endif %} #}
 
-    {# {% if page.top %}
-      {{ page.top }}
-    {% endif %} #}
+      <header role="banner" class="page-header">
+        {{ page.header }}
+      </header>
 
-    <header role="banner" class="page-header">
-      {{ page.header }}
-    </header>
+      <main class="page-main" id="main" role="main">
+        <a id="main-content" tabindex="-1"></a>{# link is in html.html.twig #}
 
-    <main class="page-main" id="main" role="main">
-      <a id="main-content" tabindex="-1"></a>{# link is in html.html.twig #}
+        <div class="page-content">
+          {{ page.content }}
+        </div>
 
-      <div class="page-content">
-        {{ page.content }}
-      </div>
+        {% if page.sidebar_first %}
+          <aside class="layout-sidebar-first" role="complementary">
+            {{ page.sidebar_first }}
+          </aside>
+        {% endif %}
 
-      {% if page.sidebar_first %}
-        <aside class="layout-sidebar-first" role="complementary">
-          {{ page.sidebar_first }}
-        </aside>
-      {% endif %}
+        {% if page.sidebar_second %}
+          <aside class="layout-sidebar-second" role="complementary">
+            {{ page.sidebar_second }}
+          </aside>
+        {% endif %}
 
-      {% if page.sidebar_second %}
-        <aside class="layout-sidebar-second" role="complementary">
-          {{ page.sidebar_second }}
-        </aside>
-      {% endif %}
-
-    </main>
+      </main>
+    </div>
 
     <footer class="page-footer" role="contentinfo">
       {% include '@hdbt/misc/koro.twig' with {koro: 'basic', color: 'var(--color-black-5)'} %}

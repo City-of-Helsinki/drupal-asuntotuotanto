@@ -1,3 +1,13 @@
+.sticky-footer {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+
+  > div {
+    flex-grow: 1;
+  }
+}
+
 .page-footer__item {
   &.page-footer__item--top {
     padding-bottom: $spacing-m;
