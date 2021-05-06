@@ -358,13 +358,7 @@ final class Content extends ResourceBase {
     $application_end_time_timestamp = format_date_to_unix_timestamp($application_end_time_value);
 
     $estimated_completion_date = new DateTime($node->get('field_estimated_completion_date')->value);
-
     $is_application_period_active = FALSE;
-
-    $application_start_time_value = $node->get('field_application_start_time')->value;
-    $application_start_time_timestamp = format_date_to_unix_timestamp($application_start_time_value);
-    $application_end_time_value = $node->get('field_application_end_time')->value;
-    $application_end_time_timestamp = format_date_to_unix_timestamp($application_end_time_value);
     $current_timestamp = time();
 
     if ($current_timestamp >= $application_start_time_timestamp && $current_timestamp <= $application_end_time_timestamp) {
