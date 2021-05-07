@@ -1,20 +1,27 @@
-const path = require("path");
+const isDev = (process.env.NODE_ENV !== "production");
 
-const isDev = process.env.NODE_ENV !== "production";
+const path = require("path");
+const glob = require("glob");
+const globImporter = require("node-sass-glob-importer");
 
 const CleanWebpackPlugin = require("clean-webpack-plugin");
+const FriendlyErrorsWebpackPlugin = require("friendly-errors-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const SVGSpritemapPlugin = require("svg-spritemap-webpack-plugin");
-const FriendlyErrorsWebpackPlugin = require("friendly-errors-webpack-plugin");
-const globImporter = require("node-sass-glob-importer");
 const FixStyleOnlyEntriesPlugin = require("webpack-fix-style-only-entries");
 
 module.exports = {
   entry: {
     styles: ["./src/scss/styles.scss"],
-    bundle: ["./src/js/common.js"],
-    stickyNavigation: ["./src/js/sticky-navigation.js"],
-    apartmentsListItemToggle: ["./src/js/apartments-list-item-toggle.js"],
+    bundle: glob.sync("./src/js/**/*.js",{
+      ignore: [
+        // './src/js/some-example-component.js',
+      ]
+    }),
+    // "some-example-component": [
+    //   "./src/js/some-example-component.js",
+    //   "./src/scss/some-example-component.scss"
+    // ],
   },
   output: {
     devtoolLineToLine: true,
@@ -33,32 +40,19 @@ module.exports = {
             loader: "file-loader",
             options: {
               name: "[path][name].[ext]",
-              outputPath: "./",
-            },
-          },
-        ],
-      },
-      {
-        test: /\.(woff(2)?|ttf|eot)(\?v=\d+\.\d+\.\d+)?$/,
-        use: [
-          {
-            loader: "file-loader",
-            options: {
-              name: "[name].[ext]",
-              outputPath: "fonts/",
-            },
-          },
-        ],
+              outputPath: "./"
+            }
+          }
+        ]
       },
       {
         test: /\.(png|jpe?g|gif)$/,
-        use: [
-          {
-            loader: "file-loader",
-            options: {
-              name: "media/[name].[ext]?[hash]",
-            },
+        use: [{
+          loader: "file-loader",
+          options: {
+            name: "media/[name].[ext]?[hash]",
           },
+        },
         ],
       },
       {
@@ -94,7 +88,7 @@ module.exports = {
             loader: MiniCssExtractPlugin.loader,
             options: {
               name: "[name].[ext]?[hash]",
-            },
+            }
           },
           {
             loader: "css-loader",
@@ -106,8 +100,8 @@ module.exports = {
           {
             loader: "postcss-loader",
             options: {
-              postcssOptions: {
-                config: path.join(__dirname, "postcss.config.js"),
+              "postcssOptions": {
+                "config": path.join(__dirname, "postcss.config.js"),
               },
               sourceMap: isDev,
             },
@@ -117,7 +111,7 @@ module.exports = {
             options: {
               sourceMap: isDev,
               sassOptions: {
-                importer: globImporter(),
+                importer: globImporter()
               },
             },
           },
@@ -126,7 +120,9 @@ module.exports = {
     ],
   },
   resolve: {
-    modules: [path.join(__dirname, "node_modules")],
+    modules: [
+      path.join(__dirname, "node_modules")
+    ],
     extensions: [".js", ".json"],
   },
   plugins: [
@@ -135,12 +131,14 @@ module.exports = {
     new CleanWebpackPlugin(["dist"], {
       root: path.resolve(__dirname),
     }),
-    new SVGSpritemapPlugin([path.resolve(__dirname, "src/icons/**/*.svg")], {
+    new SVGSpritemapPlugin([
+      path.resolve(__dirname, "src/icons/**/*.svg"),
+    ], {
       output: {
         filename: "./icons/sprite.svg",
         svg: {
-          sizes: false,
-        },
+          sizes: false
+        }
       },
       sprite: {
         prefix: false,
@@ -149,8 +147,8 @@ module.exports = {
           title: false,
           symbol: true,
           use: true,
-          view: "-view",
-        },
+          view: "-view"
+        }
       },
     }),
     new MiniCssExtractPlugin({
@@ -160,4 +158,12 @@ module.exports = {
   watchOptions: {
     aggregateTimeout: 300,
   },
+  // Tell us only about the errors.
+  stats: 'errors-only',
+  // Suppress performance errors.
+  performance: {
+    hints: false,
+    maxEntrypointSize: 512000,
+    maxAssetSize: 512000
+  }
 };

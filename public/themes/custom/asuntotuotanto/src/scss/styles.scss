@@ -1,18 +1,13 @@
 //
 // @file
-//
 // This file includes all imports
 //
 
 @import "~breakpoint-sass";
 
-@import "library/variables/*";
-@import "library/mixins/*";
-@import "base/**/*.*";
+@import "library/variables/*.*";
+@import "library/mixins/*.*";
 @import "layout/*";
-@import "components/**/*.*";
 @import "state/*";
-
-#toolbar-administration {
-  background-color: red !important;
-}
+@import "base/**/*.*";
+@import "components/**/*.*";
