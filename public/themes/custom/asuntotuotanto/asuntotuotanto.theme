@@ -32,3 +32,14 @@ function asuntotuotanto_preprocess(&$variables) {
   $variables['asuntotuotanto_icons_path'] = asuntotuotanto_get_icons_path();
   $variables['#attached']['drupalSettings']['asuntotuotanto_icons_path'] = $variables['asuntotuotanto_icons_path'];
 }
+
+/**
+ * Implements hook_theme_suggestions_alter().
+ *
+ * {@inheritdoc}
+ */
+function asuntotuotanto_theme_suggestions_alter(array &$suggestions, array $variables, $hook) {
+  if ($hook == 'form' & !empty($variables['element']['#id'])) {
+    $suggestions[] = 'form__' . str_replace('-', '_', $variables['element']['#id']);
+  }
+}
