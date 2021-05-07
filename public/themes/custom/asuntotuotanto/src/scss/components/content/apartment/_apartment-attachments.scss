@@ -1,0 +1,92 @@
+.apartment__attachments-label {
+  @include font-size($fontsize-heading-m, 29px);
+  font-weight: $font-weight-bold;
+  color: var(--color-black-90);
+  margin-bottom: $spacing-2-xs;
+  margin-top: #{-$spacing-m} - 74px;
+  padding-top: #{$spacing-m} + 74px;
+
+  @media screen and (min-width: $breakpoint-m) {
+    @include font-size($fontsize-heading-l, 43px);
+    margin-bottom: $spacing-m;
+  }
+}
+
+.apartment__attachments-list {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-s;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  @media screen and (min-width: $breakpoint-m) {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+}
+
+.apartment__attachment-item {
+  @media screen and (min-width: $breakpoint-m) {
+    width: calc(50% - #{$spacing-s});
+  }
+}
+
+.apartment__attachment-link {
+  border: 1px solid var(--color-black-20);
+  display: inline-flex;
+  height: 100%;
+  padding: $spacing-s;
+  text-decoration: none;
+  width: 100%;
+
+  > svg {
+    flex-shrink: 0;
+  }
+}
+
+.apartment__attachment-content {
+  margin-left: $spacing-s;
+  overflow: hidden;
+  width: 100%;
+}
+
+.apartment__attachment-description {
+  @include font-size($fontsize-body-s, 26px);
+  font-weight: $font-weight-medium;
+  margin-bottom: $spacing-3-xs;
+  margin-top: 0;
+  color: var(--color-black-90);
+  position: relative;
+  display: inline-block;
+
+  &:hover,
+  &:focus {
+    text-decoration: none;
+  }
+
+  &:after {
+    border-bottom: 1px solid var(--color-black-90);
+    bottom: $spacing-4-xs;
+    content: "";
+    left: 0;
+    position: absolute;
+    right: 0;
+  }
+}
+
+.apartment__attachment-name {
+  @include font-size($fontsize-body-m);
+  font-weight: $font-weight-bold;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--color-black-90);
+  margin: 0;
+  white-space: nowrap;
+}
+
+.apartment__attachment-size {
+  @include font-size($fontsize-body-s, 26px);
+  color: var(--color-black-90);
+  margin: 0;
+}

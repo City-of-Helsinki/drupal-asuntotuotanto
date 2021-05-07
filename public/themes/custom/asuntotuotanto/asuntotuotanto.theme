@@ -1,5 +1,9 @@
 <?php
 
+use Drupal\file\Entity\File;
+use Drupal\node\Entity\Node;
+use Drupal\taxonomy\Entity\Term;
+
 /**
  * @file
  * Functions to support theming in the HDBT Subtheme.
@@ -42,4 +46,392 @@ function asuntotuotanto_theme_suggestions_alter(array &$suggestions, array $vari
   if ($hook == 'form' & !empty($variables['element']['#id'])) {
     $suggestions[] = 'form__' . str_replace('-', '_', $variables['element']['#id']);
   }
+}
+
+/**
+ * Implements hook_preprocess_node().
+ */
+function asuntotuotanto_preprocess_node(&$variables) {
+  $node = $variables['node'];
+  $bundle = $node->getType();
+
+  switch ($bundle) {
+    case 'project':
+      $apartments = $node->get('field_apartments')->getValue();
+
+      $apartment_structures = [];
+      $apartment_living_area_sizes = [];
+      $apartment_sales_prices = [];
+      $apartment_debt_free_sales_prices = [];
+
+      foreach ($apartments as $key => $apartment) {
+        $apartment_target_id = $apartment['target_id'];
+        $apartment_node = Node::load($apartment_target_id);
+        $apartment_sales_price = $apartment_node->get('field_sales_price')->value;
+        $apartment_debt_free_sales_price = $apartment_node->get('field_debt_free_sales_price')->value;
+        $apartment_living_area_size = $apartment_node->get('field_living_area')->value;
+        $apartment_structure = $apartment_node->get('field_apartment_structure')->value;
+
+        array_push($apartment_sales_prices, $apartment_sales_price);
+        array_push($apartment_debt_free_sales_prices, $apartment_debt_free_sales_price);
+        array_push($apartment_living_area_sizes, $apartment_living_area_size);
+        array_push($apartment_structures, $apartment_structure);
+      }
+
+      sort($apartment_structures);
+
+      $apartment_debt_free_sales_prices_minmax = [
+        "min" => number_format(min($apartment_debt_free_sales_prices), 2, ',', '.'),
+        "max" => number_format(max($apartment_debt_free_sales_prices), 2, ',', '.'),
+      ];
+
+      $apartment_sales_prices_minmax = [
+        "min" => number_format(min($apartment_sales_prices), 2, ',', '.'),
+        "max" => number_format(max($apartment_sales_prices), 2, ',', '.'),
+      ];
+
+      $apartment_living_area_sizes_minmax = [
+        "min" => number_format(min($apartment_living_area_sizes), 1, ',', NULL),
+        "max" => number_format(max($apartment_living_area_sizes), 1, ',', NULL),
+      ];
+
+      $apartment_debt_free_sales_prices_string = $apartment_debt_free_sales_prices_minmax['min'] . " € - " . $apartment_debt_free_sales_prices_minmax['max'] . " €";
+      $apartment_sales_prices_string = $apartment_sales_prices_minmax['min'] . " € - " . $apartment_sales_prices_minmax['max'] . " €";
+      $apartment_living_area_sizes_string = $apartment_living_area_sizes_minmax['min'] . " - " . $apartment_living_area_sizes_minmax['max'];
+
+      $services = $node->get('field_services')->getValue();
+      $services_stack = [];
+
+      foreach ($services as $key => $service) {
+        $term_id = $service['term_id'];
+
+        if ($term_id !== '0') {
+          $service_name = Term::load($term_id)->name->value;
+          $service_distance = $service['distance'];
+
+          $services_stack[] = [
+            'name' => $service_name,
+            'distance' => $service_distance,
+          ];
+        }
+      }
+
+      $project_attachments = $node->get('field_project_attachments')->getValue();
+      $attachments_stack = [];
+
+      foreach ($project_attachments as $key => $attachment) {
+        $target_id = $attachment['target_id'];
+        $file = File::load($target_id);
+        $description = $attachment['description'];
+        $file_name = $file->getFilename();
+        $file_size = format_size($file->getSize());
+        $file_uri = file_create_url($file->getFileUri());
+
+        $attachments_stack[$key] = [
+          'description' => $description,
+          'name' => $file_name,
+          'size' => $file_size,
+          'uri' => $file_uri,
+        ];
+      }
+
+      $application_start_time_value = $node->get('field_application_start_time')->value;
+      $application_start_time_timestamp = format_date_to_unix_timestamp($application_start_time_value);
+      $application_end_time_value = $node->get('field_application_end_time')->value;
+      $application_end_time_timestamp = format_date_to_unix_timestamp($application_end_time_value);
+
+      $estimated_completion_date = new DateTime($node->get('field_estimated_completion_date')->value);
+
+      $is_application_period_active = FALSE;
+
+      $application_start_time_value = $node->get('field_application_start_time')->value;
+      $application_start_time_timestamp = format_date_to_unix_timestamp($application_start_time_value);
+      $application_end_time_value = $node->get('field_application_end_time')->value;
+      $application_end_time_timestamp = format_date_to_unix_timestamp($application_end_time_value);
+      $current_timestamp = time();
+
+      if ($current_timestamp >= $application_start_time_timestamp && $current_timestamp <= $application_end_time_timestamp) {
+        $is_application_period_active = TRUE;
+      }
+
+      $variables['application_start_time'] = format_timestamp_to_custom_format($application_start_time_timestamp);
+      $variables['application_end_time'] = format_timestamp_to_custom_format($application_end_time_timestamp);
+      $variables['apartments_count'] = count($apartments);
+      $variables['apartment_sales_prices'] = $apartment_sales_prices_string;
+      $variables['apartment_debt_free_sales_prices'] = $apartment_debt_free_sales_prices_string;
+      $variables['apartment_structures'] = implode(", ", array_unique($apartment_structures));
+      $variables['apartment_living_area_sizes_m2'] = $apartment_living_area_sizes_string;
+      $variables['attachments'] = $attachments_stack ?? NULL;
+      $variables['services'] = $services_stack ?? NULL;
+      $variables['estimated_completion_date'] = $estimated_completion_date->format('m/Y') ?? NULL;
+      $variables['is_application_period_active'] = $is_application_period_active;
+      break;
+
+    case 'apartment':
+      $cta_image_file_target_id = $node->get('field_images')->getValue()[0]['target_id'];
+      $variables['cta_image'] = load_responsive_image_style($cta_image_file_target_id, 'image__3_2');
+
+      $parent_node_results = \Drupal::entityTypeManager()
+        ->getListBuilder('node')
+        ->getStorage()
+        ->loadByProperties([
+          'type' => 'project',
+          'status' => 1,
+          'field_apartments' => $node->id(),
+        ]
+      );
+
+      if ($parent_node_results) {
+        $parent_node_nid = key($parent_node_results);
+        $parent_node = Node::load($parent_node_nid);
+        $is_application_period_active = FALSE;
+        $is_application_period_in_the_past = FALSE;
+
+        $application_start_time_value = $parent_node->get('field_application_start_time')->value;
+        $application_start_time_timestamp = format_date_to_unix_timestamp($application_start_time_value);
+        $application_end_time_value = $parent_node->get('field_application_end_time')->value;
+        $application_end_time_timestamp = format_date_to_unix_timestamp($application_end_time_value);
+        $current_timestamp = time();
+
+        if ($current_timestamp > $application_start_time_timestamp && $current_timestamp < $application_end_time_timestamp) {
+          $is_application_period_active = TRUE;
+        }
+
+        if ($current_timestamp > $application_end_time_timestamp) {
+          $is_application_period_in_the_past = TRUE;
+        }
+
+        $street_address = $parent_node->get('field_street_address')->value;
+        $postal_code = $parent_node->get('field_postal_code')->value;
+        $city = $parent_node->get('field_city')->value;
+        $district = Term::load($parent_node->get('field_district')->target_id)->name->value;
+        $ownership_type = Term::load($parent_node->get('field_ownership_type')->target_id)->name->value;
+
+        $project_description = $parent_node->get('field_project_description')->value;
+        $project_area_description = $parent_node->get('field_project_area_description')->value;
+        $building_type = Term::load($parent_node->get('field_building_type')->target_id)->name->value;
+        $energy_class = Term::load($parent_node->get('field_energy_class')->target_id)->name->value;
+        $accessibility = $parent_node->get('field_project_accessibility')->value;
+        $services = $parent_node->get('field_services')->getValue();
+        $services_url = $parent_node->get('field_services_url')->getValue()[0];
+        $services_stack = [];
+        $project_attachments = $parent_node->get('field_project_attachments')->getValue();
+        $apartment_attachments = $node->get('field_apartment_attachments')->getValue();
+        $attachments_stack = [];
+        $estimated_completion_date = new DateTime($parent_node->get('field_estimated_completion_date')->value);
+
+        $site_owner = Term::load($parent_node->get('field_site_owner')->target_id)->name->value;
+        $site_renter = $parent_node->get('field_site_renter')->value;
+
+        foreach ($services as $key => $service) {
+          $term_id = $service['term_id'];
+
+          if ($term_id !== '0') {
+            $service_name = Term::load($term_id)->name->value;
+            $service_distance = $service['distance'];
+
+            $services_stack[] = [
+              'name' => $service_name,
+              'distance' => $service_distance,
+            ];
+          }
+        }
+
+        foreach ($apartment_attachments as $key => $attachment) {
+          $target_id = $attachment['target_id'];
+          $file = File::load($target_id);
+
+          if ($file) {
+            $description = $attachment['description'];
+            $file_name = $file->getFilename();
+            $file_size = format_size($file->getSize());
+            $file_uri = file_create_url($file->getFileUri());
+
+            array_push($attachments_stack, [
+              'description' => $description,
+              'name' => $file_name,
+              'size' => $file_size,
+              'uri' => $file_uri,
+            ]);
+          }
+        }
+
+        foreach ($project_attachments as $key => $attachment) {
+          $target_id = $attachment['target_id'];
+          $file = File::load($target_id);
+
+          if ($file) {
+            $description = $attachment['description'];
+            $file_name = $file->getFilename();
+            $file_size = format_size($file->getSize());
+            $file_uri = file_create_url($file->getFileUri());
+
+            array_push($attachments_stack, [
+              'description' => $description,
+              'name' => $file_name,
+              'size' => $file_size,
+              'uri' => $file_uri,
+            ]);
+          }
+        }
+
+        $variables['application_start_time'] = format_timestamp_to_custom_format($application_start_time_timestamp);
+        $variables['application_end_time'] = format_timestamp_to_custom_format($application_end_time_timestamp);
+        $variables['is_application_period_active'] = $is_application_period_active;
+        $variables['is_application_period_in_the_past'] = $is_application_period_in_the_past;
+        $variables['district'] = $district ?? NULL;
+        $variables['address'] = "$street_address, $postal_code $city" ?? NULL;
+        $variables['ownership_type'] = $ownership_type ?? NULL;
+        $variables['accessibility'] = $accessibility ?? NULL;
+        $variables['project_description'] = $project_description ?? NULL;
+        $variables['project_area_description'] = $project_area_description ?? NULL;
+        $variables['building_type'] = $building_type ?? NULL;
+        $variables['energy_class'] = $energy_class ?? NULL;
+        $variables['services'] = $services_stack ?? NULL;
+        $variables['services_url'] = $services_url ?? NULL;
+        $variables['attachments'] = $attachments_stack ?? NULL;
+        $variables['estimated_completion_date'] = $estimated_completion_date->format('m/Y') ?? NULL;
+        $variables['site_owner'] = $site_owner ?? NULL;
+        $variables['site_renter'] = $site_renter ?? NULL;
+      }
+      break;
+  }
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function asuntotuotanto_preprocess_views_view(&$variables) {
+  $view = $variables['view'];
+
+  switch ($view->id()) {
+    case 'project_apartments_listing':
+      $variables['apartments_count'] = $view->total_rows;
+      break;
+  }
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function asuntotuotanto_preprocess_views_view_table(&$variables) {
+  $view = $variables['view'];
+
+  switch ($view->id()) {
+    case 'project_apartments_listing':
+      $rows = $variables['rows'];
+
+      foreach ($rows as $key => $row) {
+        $nid = (int) trim(strip_tags($row['columns']['nid']['content'][0]['field_output']['#markup']));
+        $variables['rows'][$key]['application_status'] = get_apartment_application_status($nid);
+
+        $parent_node_results = \Drupal::entityTypeManager()
+          ->getListBuilder('node')
+          ->getStorage()
+          ->loadByProperties([
+            'type' => 'project',
+            'status' => 1,
+            'field_apartments' => $nid,
+          ]
+        );
+
+        if ($parent_node_results) {
+          $parent_node_nid = key($parent_node_results);
+          $parent_node = Node::load($parent_node_nid);
+          $is_application_period_active = FALSE;
+
+          $application_start_time_value = $parent_node->get('field_application_start_time')->value;
+          $application_start_time_timestamp = format_date_to_unix_timestamp($application_start_time_value);
+          $application_end_time_value = $parent_node->get('field_application_end_time')->value;
+          $application_end_time_timestamp = format_date_to_unix_timestamp($application_end_time_value);
+          $current_timestamp = time();
+
+          if ($current_timestamp >= $application_start_time_timestamp && $current_timestamp <= $application_end_time_timestamp) {
+            $is_application_period_active = TRUE;
+          }
+
+          $variables['rows'][$key]['is_application_period_active'] = $is_application_period_active;
+        }
+      }
+
+      break;
+  }
+}
+
+/**
+ * Custom function format_date_to_unix_timestamp().
+ */
+function format_date_to_unix_timestamp($string) {
+  $value = $string;
+  $date = new DateTime($value);
+  $timestamp = $date->format('U');
+
+  return $timestamp;
+}
+
+/**
+ * Custom function format_timestamp_to_custom_format().
+ */
+function format_timestamp_to_custom_format($timestamp, $format = 'short') {
+  return \Drupal::service('date.formatter')->format($timestamp, $format);
+}
+
+/**
+ * Custom load_responsive_image_style().
+ */
+function load_responsive_image_style($image_file_target_id, $responsive_image_style_id) {
+  if (!$image_file_target_id && !$responsive_image_style_id) {
+    return NULL;
+  }
+
+  $file = File::load($image_file_target_id);
+
+  if (!$file) {
+    return NULL;
+  }
+
+  $file_uri = $file->getFileUri();
+  $image = \Drupal::service('image.factory')->get($file_uri);
+
+  if ($image->isValid()) {
+    $image_height = $image->getHeight();
+    $image_width = $image->getWidth();
+  }
+  else {
+    $image_height = NULL;
+    $image_width = NULL;
+  }
+
+  $image_build = [
+    '#theme' => 'responsive_image',
+    '#width' => $image_width,
+    '#height' => $image_height,
+    '#responsive_image_style_id' => $responsive_image_style_id,
+    '#uri' => $file_uri,
+  ];
+
+  $renderer = \Drupal::service('renderer');
+  $renderer->addCacheableDependency($image_build, $file);
+
+  return $image_build;
+}
+
+/**
+ * Custom get_apartment_application_status().
+ */
+function get_apartment_application_status($nid) {
+  $application_status_mapping = [
+    "NONE" => t('No applicants'),
+    "LOW" => t('Few applicants'),
+    "MEDIUM" => t('A little applicants'),
+    "HIGH" => t('A lot of applicants'),
+  ];
+
+  // @todo Update this value with dynamic status from API.
+  $application_status = 'NONE';
+
+  return [
+    "status" => strtolower($application_status),
+    "label" => $application_status_mapping[$application_status],
+  ];
 }

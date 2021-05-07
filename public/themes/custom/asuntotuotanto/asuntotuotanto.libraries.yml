@@ -1,3 +1,11 @@
+apartments-list-item-toggle:
+  js:
+    dist/js/apartmentsListItemToggle.min.js: {}
+
+sticky-navigation:
+  js:
+    dist/js/stickyNavigation.min.js: {}
+
 global-styling:
   version: 1.x
   css:
