@@ -7,7 +7,7 @@
     z-index: 100;
 
     &.is-desktop {
-      @include breakpoint(max-width $container-width-l) {
+      @media screen and (max-width: $breakpoint-l - 1px) {
         display: none;
         visibility: hidden;
       }
@@ -22,7 +22,7 @@
   padding: 0;
 
   .navigation--main-header & {
-    @include breakpoint($container-width-l) {
+    @media screen and (min-width: $breakpoint-l) {
       height: 100%;
     }
   }
@@ -65,14 +65,14 @@
 
 .menu__item {
   .navigation--main-header & {
-    @include breakpoint($container-width-l) {
+    @media screen and (min-width: $breakpoint-l) {
       align-items: center;
       display: inline-flex;
       height: 100%;
     }
 
     &:not(:first-of-type) {
-      @include breakpoint($container-width-l) {
+      @media screen and (min-width: $breakpoint-l) {
         margin-left: $spacing-l;
       }
     }
@@ -81,7 +81,7 @@
       position: relative;
 
       &:after {
-        background-color: $color-black;
+        background-color: var(--color-black);
         bottom: -#{$spacing-s};
         content: "";
         height: 3px;
@@ -127,29 +127,29 @@
     display: inline-block;
 
     .navigation--main-header & {
-      @include breakpoint($container-width-l) {
-        @include font-size(16px);
+      @media screen and (min-width: $breakpoint-l) {
+        @include font-size($fontsize-body-m);
         text-decoration: none;
       }
     }
 
     .navigation--main-footer & {
       @include font-size($fontsize-body-m, $lineheight-l);
-      @include font-weight($medium);
+      font-weight: $font-weight-medium;
       color: var(--color-black-90);
       text-decoration: none;
     }
 
     .navigation--footer-secondary & {
       @include font-size($fontsize-body-m, $lineheight-l);
-      @include font-weight($medium);
+      font-weight: $font-weight-medium;
       color: var(--color-black-90);
       text-decoration: none;
     }
 
     .navigation--legal & {
       @include font-size($fontsize-body-s, 26px);
-      @include font-weight($regular);
+      font-weight: $font-weight-regular;
       color: var(--color-black-90);
     }
   }
@@ -157,7 +157,7 @@
   > button {
     .navigation--footer-secondary & {
       @include font-size($fontsize-body-m, $lineheight-l);
-      @include font-weight($medium);
+      font-weight: $font-weight-medium;
       align-items: center;
       background-color: transparent;
       border: 0;

@@ -71,13 +71,13 @@
 
 .sticky-navigation__content-item {
   @include font-size($fontsize-body-m, 24px);
-  @include font-weight($regular);
+  font-weight: $font-weight-regular;
   color: var(--color-black-90);
   margin: 0;
 
   .sticky-navigation__content-section:first-of-type & {
     &:first-of-type {
-      @include font-weight($bold);
+      font-weight: $font-weight-bold;
     }
   }
 
@@ -86,7 +86,7 @@
     display: inline-flex;
 
     span[aria-hidden="true"] {
-      background-color: $color-gray-4;
+      background-color: var(--color-black-40);
       display: inline-block;
       height: 1px;
       margin: 0 $spacing-3-xs;

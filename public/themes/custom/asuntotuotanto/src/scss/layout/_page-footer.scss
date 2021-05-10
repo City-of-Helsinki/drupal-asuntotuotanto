@@ -1,3 +1,11 @@
+.page-footer {
+  margin-top: $spacing-2-xl;
+
+  @include breakpoint($breakpoint-l) {
+    margin-top: $spacing-4-xl;
+  }
+}
+
 .page-footer__item {
   &.page-footer__item--top {
     padding-bottom: $spacing-m;
@@ -38,7 +46,7 @@
 
 .page-footer__copyright {
   @include font-size($fontsize-body-s, 26px);
-  @include font-weight($regular);
+  font-weight: $font-weight-regular;
   align-items: center;
   color: var(--color-black-90);
   display: flex;

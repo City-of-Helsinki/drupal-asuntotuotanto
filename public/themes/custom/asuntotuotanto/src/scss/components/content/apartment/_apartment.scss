@@ -1,5 +1,5 @@
 .apartment {
-  padding-bottom: $spacing-layout-x;
+  padding-bottom: $spacing-layout-xl;
 
   @media screen and (min-width: $breakpoint-l) {
     padding-bottom: $spacing-layout-2-xl;
@@ -35,32 +35,38 @@
         max-width: 285px;
         width: 100%;
       }
+
+      p {
+        margin: 0
+      }
     }
   }
 }
 
 .apartment__label {
-  @include font-size($font-size-heading-2, $lineheight-heading-l);
-  @include font-weight($bold);
+  @include font-size($fontsize-heading-l, $lineheight-l);
+  font-weight: $font-weight-bold;
   color: var(--color-black-90);
   margin-bottom: $spacing-2-xs;
+  margin-top: 0;
 
   @media screen and (min-width: $breakpoint-l) {
-    @include font-size($font-size-heading-1, $lineheight-heading-xl);
+    @include font-size($fontsize-heading-xl, $fontsize-heading-xl);
     margin-bottom: $spacing-s;
   }
 }
 
 .apartment__lead {
-  @include font-size($font-size-heading-4, $lineheight-heading-s);
-  @include font-weight($regular);
+  @include font-size($fontsize-heading-s, $fontsize-heading-s);
+  font-weight: $font-weight-regular;
   align-items: center;
   color: var(--color-black-90);
   display: inline-flex;
   margin-bottom: $spacing-m;
+  margin-top: 0;
 
   span[aria-hidden="true"] {
-    background-color: $color-gray-4;
+    background-color: var(--color-black-40);
     display: inline-block;
     height: 1px;
     width: 35px;
@@ -85,25 +91,27 @@
 .apartment__content-wrapper {
   display: flex;
   flex-direction: column;
-  gap: $spacing-m;
   margin-top: $spacing-m;
 
   @media screen and (min-width: $breakpoint-l) {
     flex-direction: row;
-    gap: $spacing-4-xl;
     justify-content: space-between;
     margin-top: $spacing-4-xl;
-  }
-
-  @media screen and (min-width: $breakpoint-xl) {
-    gap: $spacing-layout-2-xl;
   }
 }
 
 .apartment__sidebar {
+  margin-bottom: $spacing-m;
+
   @media screen and (min-width: $breakpoint-l) {
+    margin-bottom: 0;
+    margin-right: $spacing-4-xl;
     max-width: 285px;
     width: 100%;
+  }
+
+  @media screen and (min-width: $breakpoint-xl) {
+    margin-right: $spacing-layout-2-xl;
   }
 }
 
@@ -115,14 +123,14 @@
 }
 
 .apartment__application-information {
-  @include font-size($font-size-heading-6, 24px);
-  @include font-weight($medium);
+  @include font-size($fontsize-heading-xxs, 24px);
+  font-weight: $font-weight-medium;
   margin: 0;
   color: var(--color-black-90);
 
   @media screen and (min-width: $breakpoint-m) {
-    @include font-size($font-size-heading-4, 26px);
-    @include font-weight($bold);
+    @include font-size($fontsize-heading-s, 26px);
+    font-weight: $font-weight-bold;
   }
 }
 
@@ -165,15 +173,15 @@
 }
 
 .apartment__information-label {
-  @include font-size($font-size-heading-3, 29px);
-  @include font-weight($bold);
+  @include font-size($fontsize-heading-m, 29px);
+  font-weight: $font-weight-bold;
   color: var(--color-black-90);
   margin-bottom: $spacing-2-xs;
-  margin-top:-$spacing-m - 74px;
-  padding-top: $spacing-m + 74px;
+  margin-top: #{-$spacing-m} - 74px;
+  padding-top: calc(#{$spacing-m} + 74px);
 
   @media screen and (min-width: $breakpoint-m) {
-    @include font-size($font-size-heading-2, 43px);
+    @include font-size($fontsize-heading-l, 43px);
     margin-bottom: $spacing-m;
   }
 }
@@ -187,14 +195,14 @@
 }
 
 .apartment__details-label {
-  @include font-size($font-size-heading-3, 29px);
-  @include font-weight($bold);
+  @include font-size($fontsize-heading-m, 29px);
+  font-weight: $font-weight-bold;
   color: var(--color-black-90);
   margin-bottom: $spacing-2-xs;
   margin-top: 0;
 
   @media screen and (min-width: $breakpoint-m) {
-    @include font-size($font-size-heading-2, 43px);
+    @include font-size($fontsize-heading-l, 43px);
     margin-bottom: $spacing-m;
   }
 }
@@ -220,7 +228,7 @@
 
     span {
       &:first-of-type {
-        @include font-weight($bold);
+        font-weight: $font-weight-bold;
 
         @media screen and (min-width: $breakpoint-m) {
           display: inline-block;
