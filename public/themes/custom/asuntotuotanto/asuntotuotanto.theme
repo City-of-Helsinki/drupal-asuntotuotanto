@@ -1,13 +1,13 @@
 <?php
 
-use Drupal\file\Entity\File;
-use Drupal\node\Entity\Node;
-use Drupal\taxonomy\Entity\Term;
-
 /**
  * @file
  * Functions to support theming in the HDBT Subtheme.
  */
+
+use Drupal\file\Entity\File;
+use Drupal\node\Entity\Node;
+use Drupal\taxonomy\Entity\Term;
 
 /**
  * Helper function to get the icons path.
