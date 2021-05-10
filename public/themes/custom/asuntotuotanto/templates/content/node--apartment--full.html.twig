@@ -95,7 +95,7 @@
 
 <article{{ attributes.addClass(classes) }}>
   <div class="sticky-navigation is-hidden" aria-hidden="true" id="sticky_navigation">
-    <div class="sticky-navigation__container container">
+    <div class="sticky-navigation__container wrapper wrapper--mw-1200">
       <div class="sticky-navigation__content">
         <div class="sticky-navigation__content-section">
           <p class="sticky-navigation__content-item">{{ apartment_number }}</p>
@@ -163,7 +163,7 @@
     </div>
   </div>
 
-  <div class="apartment__header container">
+  <div class="apartment__header wrapper wrapper--mw-1200">
     <div class="apartment__header-section apartment__header-section--heading">
       <h1 class="apartment__label">{{ label }}</h1>
       {% if apartment_structure|render or living_area_size_m2|render %}
@@ -203,7 +203,7 @@
     </div>
   </div>
 
-    <div class="apartment__images container showcase-gallery" id="showcase_gallery">
+    <div class="apartment__images wrapper wrapper--mw-1200 showcase-gallery" id="showcase_gallery">
       {% if not images|render %}
         <div class="apartment__images--missing"></div>
       {% endif %}
@@ -212,7 +212,7 @@
       {% endif %}
     </div>
 
-  <nav class="apartment__anchor-navigation apartment__anchor-navigation--desktop container">
+  <nav class="apartment__anchor-navigation apartment__anchor-navigation--desktop wrapper wrapper--mw-1200">
     <ul class="apartment__anchor-list">
       <li class="apartment__anchor-item">
         <a href="#showcase_gallery" class="apartment__anchor-link">
@@ -251,7 +251,7 @@
     </ul>
   </nav>
 
-  <div class="apartment__content-wrapper container">
+  <div class="apartment__content-wrapper wrapper wrapper--mw-1200">
     <aside class="apartment__sidebar">
       <h3 class="apartment__application-information">
         {% trans %}
@@ -407,7 +407,7 @@
     </div>
   </div>
 
-  <div class="apartment__area-overview-wrapper container" id="apartment_location">
+  <div class="apartment__area-overview-wrapper wrapper wrapper--mw-1200" id="apartment_location">
     <div class="apartment__area-overview">
       <h2 class="apartment__area-overview-label">
         {% trans %}

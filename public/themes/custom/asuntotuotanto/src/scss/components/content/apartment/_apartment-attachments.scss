@@ -13,22 +13,14 @@
 }
 
 .apartment__attachments-list {
-  display: flex;
-  flex-direction: column;
+  display: grid;
   gap: $spacing-s;
   list-style: none;
   margin: 0;
   padding: 0;
 
   @media screen and (min-width: $breakpoint-m) {
-    flex-direction: row;
-    flex-wrap: wrap;
-  }
-}
-
-.apartment__attachment-item {
-  @media screen and (min-width: $breakpoint-m) {
-    width: calc(50% - #{$spacing-s});
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 

@@ -35,6 +35,10 @@
         max-width: 285px;
         width: 100%;
       }
+
+      p {
+        margin: 0
+      }
     }
   }
 }
@@ -44,6 +48,7 @@
   font-weight: $font-weight-bold;
   color: var(--color-black-90);
   margin-bottom: $spacing-2-xs;
+  margin-top: 0;
 
   @media screen and (min-width: $breakpoint-l) {
     @include font-size($fontsize-heading-xl, $fontsize-heading-xl);
@@ -58,6 +63,7 @@
   color: var(--color-black-90);
   display: inline-flex;
   margin-bottom: $spacing-m;
+  margin-top: 0;
 
   span[aria-hidden="true"] {
     background-color: var(--color-black-40);
@@ -85,25 +91,27 @@
 .apartment__content-wrapper {
   display: flex;
   flex-direction: column;
-  gap: $spacing-m;
   margin-top: $spacing-m;
 
   @media screen and (min-width: $breakpoint-l) {
     flex-direction: row;
-    gap: $spacing-4-xl;
     justify-content: space-between;
     margin-top: $spacing-4-xl;
-  }
-
-  @media screen and (min-width: $breakpoint-xl) {
-    gap: $spacing-layout-2-xl;
   }
 }
 
 .apartment__sidebar {
+  margin-bottom: $spacing-m;
+
   @media screen and (min-width: $breakpoint-l) {
+    margin-bottom: 0;
+    margin-right: $spacing-4-xl;
     max-width: 285px;
     width: 100%;
+  }
+
+  @media screen and (min-width: $breakpoint-xl) {
+    margin-right: $spacing-layout-2-xl;
   }
 }
 

@@ -15,7 +15,8 @@ module.exports = {
     styles: ["./src/scss/styles.scss"],
     bundle: glob.sync("./src/js/**/*.js", {
       ignore: [
-        // './src/js/some-example-component.js',
+        "./src/js/sticky-navigation.js",
+        "./src/js/apartments-list-item-toggle.j",
       ],
     }),
     stickyNavigation: ["./src/js/sticky-navigation.js"],

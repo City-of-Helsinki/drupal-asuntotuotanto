@@ -1,6 +1,10 @@
 .showcase-gallery {
   .slick {
     position: relative;
+
+    img {
+      width: 100%;
+    }
   }
 
   .slick-arrow {
@@ -36,7 +40,7 @@
 
     &:hover,
     &:focus {
-      background-color: rgba(var(--color-white), .4);
+      background-color: rgba($color-white, .4);
     }
   }
 

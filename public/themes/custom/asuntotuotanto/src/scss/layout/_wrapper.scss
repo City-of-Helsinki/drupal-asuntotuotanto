@@ -1,0 +1,10 @@
+//
+// @file
+//
+// This file includes styles for a wrapper.
+//
+.wrapper {
+  &--mw-1200 {
+    max-width: $container-width-xl;
+  }
+}
