@@ -130,9 +130,15 @@ final class Content extends ResourceBase {
   }
 
   private function getApartmentFields($node){
-
+    $data = [];
     $cta_image_file_target_id = $node->get('field_images')->getValue()[0]['target_id'];
-    $variables['cta_image'] = $this->load_responsive_image_style($cta_image_file_target_id, 'image__3_2');
+
+    $image = $this->load_responsive_image_style($cta_image_file_target_id, 'image__3_2');
+
+    $data['cta_image_url'] = str_replace( 'http://', 'http://Asu:asunnot_2020@', file_create_url($image['#uri']));
+
+    // @ todo: get alt text
+    #$data['cta_image']['alt'] = 'Alt text here';
 
     $parent_node_results = \Drupal::entityTypeManager()
       ->getListBuilder('node')
@@ -241,14 +247,16 @@ final class Content extends ResourceBase {
     }
 
     $nodeData = $node->toArray();
-    $data = [];
+
     foreach ($nodeData as $field => $value) {
       $data[$field] = $node->{$field}->value;
     }
 
     $data['id'] = $node->id();
+    // @ todo: Times.
     $data['application_start_time'] = $this->format_timestamp_to_custom_format($application_start_time_timestamp);
     $data['application_end_time'] = $this->format_timestamp_to_custom_format($application_end_time_timestamp);
+
     $data['is_application_period_active'] = $is_application_period_active;
     $data['is_application_period_in_the_past'] = $is_application_period_in_the_past;
     $data['district'] = $district ?? NULL;
@@ -259,14 +267,20 @@ final class Content extends ResourceBase {
     $data['project_area_description'] = $project_area_description ?? NULL;
     $data['building_type'] = $building_type ?? NULL;
     $data['energy_class'] = $energy_class ?? NULL;
+
+    // @todo: Services
     $data['services'] = $services_stack ?? NULL;
+
     $data['services_url'] = $services_url ?? NULL;
+
+    // @todo: Attachements.
     $data['attachments'] = $attachments_stack ?? NULL;
+
+    // @ todo: Times.
     $data['estimated_completion_date'] = $estimated_completion_date->format('m/Y') ?? NULL;
+
     $data['site_owner'] = $site_owner ?? NULL;
     $data['site_renter'] = $site_renter ?? NULL;
-
-    $data['id'] = $node->id();
 
     return $data;
   }
@@ -353,11 +367,11 @@ final class Content extends ResourceBase {
     }
 
     $application_start_time_value = $node->get('field_application_start_time')->value;
-    $application_start_time_timestamp = format_date_to_unix_timestamp($application_start_time_value);
+    $application_start_time_timestamp = $this->format_date_to_unix_timestamp($application_start_time_value);
     $application_end_time_value = $node->get('field_application_end_time')->value;
-    $application_end_time_timestamp = format_date_to_unix_timestamp($application_end_time_value);
+    $application_end_time_timestamp = $this->format_date_to_unix_timestamp($application_end_time_value);
 
-    $estimated_completion_date = new DateTime($node->get('field_estimated_completion_date')->value);
+    $estimated_completion_date = new \DateTime($node->get('field_estimated_completion_date')->value);
     $is_application_period_active = FALSE;
     $current_timestamp = time();
 
@@ -365,19 +379,30 @@ final class Content extends ResourceBase {
       $is_application_period_active = TRUE;
     }
 
-    $data['application_start_time'] = format_timestamp_to_custom_format($application_start_time_timestamp);
-    $data['application_end_time'] = format_timestamp_to_custom_format($application_end_time_timestamp);
+    $nodeData = $node->toArray();
+
+    foreach ($nodeData as $field => $value) {
+      $data[$field] = $node->{$field}->value;
+    }
+
+    if(isset($data['field_tasks'])){
+      unset($data['field_tasks']);
+    }
+
+    $data['id'] = $node->id();
+    $data['application_start_time'] = $this->format_timestamp_to_custom_format($application_start_time_timestamp);
+    $data['application_end_time'] = $this->format_timestamp_to_custom_format($application_end_time_timestamp);
     $data['apartments_count'] = count($apartments);
     $data['apartment_sales_prices'] = $apartment_sales_prices_string;
     $data['apartment_debt_free_sales_prices'] = $apartment_debt_free_sales_prices_string;
     $data['apartment_structures'] = implode(", ", array_unique($apartment_structures));
     $data['apartment_living_area_sizes_m2'] = $apartment_living_area_sizes_string;
+    # @todo: Attachments.
     $data['attachments'] = $attachments_stack ?? NULL;
+    # @todo: Services.
     $data['services'] = $services_stack ?? NULL;
     $data['estimated_completion_date'] = $estimated_completion_date->format('m/Y') ?? NULL;
     $data['is_application_period_active'] = $is_application_period_active;
-
-    $data['id'] = $node->id();
 
     return $data;
   }
