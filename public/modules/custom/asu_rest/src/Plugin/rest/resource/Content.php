@@ -300,25 +300,41 @@ final class Content extends ResourceBase {
   private function getProjectFields($node) {
     $data = [];
 
-    $apartments = $node->get('field_apartments')->getValue();
+    $apartmentsData = $node->get('field_apartments')->getValue();
 
+    $apartments = [];
     $apartment_structures = [];
     $apartment_living_area_sizes = [];
     $apartment_sales_prices = [];
     $apartment_debt_free_sales_prices = [];
 
-    foreach ($apartments as $key => $apartment) {
+    foreach ($apartmentsData as $key => $apartment) {
       $apartment_target_id = $apartment['target_id'];
       $apartment_node = Node::load($apartment_target_id);
       $apartment_sales_price = $apartment_node->get('field_sales_price')->value;
       $apartment_debt_free_sales_price = $apartment_node->get('field_debt_free_sales_price')->value;
       $apartment_living_area_size = $apartment_node->get('field_living_area')->value;
       $apartment_structure = $apartment_node->get('field_apartment_structure')->value;
+      $application_url = $apartment_node->get('field_application_url')->getValue()[0]['uri'];
+      $number = $apartment_node->get('field_apartment_number')->value;
+      $floor = $apartment_node->get('field_floor')->value;
 
       array_push($apartment_sales_prices, $apartment_sales_price);
       array_push($apartment_debt_free_sales_prices, $apartment_debt_free_sales_price);
       array_push($apartment_living_area_sizes, $apartment_living_area_size);
       array_push($apartment_structures, $apartment_structure);
+
+      $apartments[] = [
+        'id' => $apartment_target_id,
+        'number' => $number,
+        'floor' => $floor,
+        'application_url' => $application_url,
+        'sales_price' => $apartment_sales_price,
+        'debt_free_sales_price' => $apartment_debt_free_sales_price,
+        'living_area_size' => $apartment_living_area_size,
+        'application_url' => $application_url,
+        'structure' => $apartment_structure,
+      ];
     }
 
     sort($apartment_structures);
@@ -409,6 +425,7 @@ final class Content extends ResourceBase {
 
     $data['id'] = $node->id();
     $data['images'] = $images;
+    $data['apartments'] = $apartments;
 
     $data['application_start_time'] = $this->format_timestamp_to_custom_format($application_start_time_timestamp);
     $data['application_end_time'] = $this->format_timestamp_to_custom_format($application_end_time_timestamp);
@@ -419,6 +436,7 @@ final class Content extends ResourceBase {
     $data['apartment_living_area_sizes_m2'] = $apartment_living_area_sizes_string;
     # @todo: Attachments.
     $data['attachments'] = $attachments_stack ?? NULL;
+    $apartments = $apartments;
     # @todo: Services.
     $data['services'] = $services_stack ?? NULL;
     $data['estimated_completion_date'] = $estimated_completion_date->format('m/Y') ?? NULL;
