@@ -290,7 +290,7 @@ final class Content extends ResourceBase {
 
     $data['services_url'] = $services_url ?? NULL;
 
-    // @todo: Attachements.
+    // @todo Attachements.
     $data['attachments'] = $attachments_stack ?? NULL;
 
     $data['estimated_completion_date'] = $estimated_completion_date->format('m/Y') ?? NULL;
@@ -441,10 +441,10 @@ final class Content extends ResourceBase {
     $data['apartment_debt_free_sales_prices'] = $apartment_debt_free_sales_prices_string;
     $data['apartment_structures'] = implode(", ", array_unique($apartment_structures));
     $data['apartment_living_area_sizes_m2'] = $apartment_living_area_sizes_string;
-    // @todo: Attachments.
+    // @todo Attachments.
     $data['attachments'] = $attachments_stack ?? NULL;
     $apartments = $apartments;
-    // @todo: Services.
+    // @todo Services.
     $data['services'] = $services_stack ?? NULL;
     $data['estimated_completion_date'] = $estimated_completion_date->format('m/Y') ?? NULL;
     $data['is_application_period_active'] = $is_application_period_active;
