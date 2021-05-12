@@ -246,6 +246,19 @@ final class Content extends ResourceBase {
 
     }
 
+    $images = [];
+
+    foreach($node->field_images->getValue() as $key => $value) {
+      $image = $this->load_responsive_image_style($value['target_id'], 'image__3_2');
+      // @ todo: remove replace
+      $images[] = str_replace( 'http://', 'http://Asu:asunnot_2020@', file_create_url($image['#uri']));
+    }
+    foreach($parent_node->field_shared_apartment_images->getValue() as $key => $value) {
+      $image = $this->load_responsive_image_style($value['target_id'], 'image__3_2');
+      // @ todo: remove replace
+      $images[] = str_replace( 'http://', 'http://Asu:asunnot_2020@', file_create_url($image['#uri']));
+    }
+
     $nodeData = $node->toArray();
 
     foreach ($nodeData as $field => $value) {
@@ -253,7 +266,8 @@ final class Content extends ResourceBase {
     }
 
     $data['id'] = $node->id();
-    // @ todo: Times.
+    $data['images'] = $images;
+
     $data['application_start_time'] = $this->format_timestamp_to_custom_format($application_start_time_timestamp);
     $data['application_end_time'] = $this->format_timestamp_to_custom_format($application_end_time_timestamp);
 
@@ -268,7 +282,6 @@ final class Content extends ResourceBase {
     $data['building_type'] = $building_type ?? NULL;
     $data['energy_class'] = $energy_class ?? NULL;
 
-    // @todo: Services
     $data['services'] = $services_stack ?? NULL;
 
     $data['services_url'] = $services_url ?? NULL;
@@ -276,7 +289,6 @@ final class Content extends ResourceBase {
     // @todo: Attachements.
     $data['attachments'] = $attachments_stack ?? NULL;
 
-    // @ todo: Times.
     $data['estimated_completion_date'] = $estimated_completion_date->format('m/Y') ?? NULL;
 
     $data['site_owner'] = $site_owner ?? NULL;
@@ -381,6 +393,12 @@ final class Content extends ResourceBase {
 
     $nodeData = $node->toArray();
 
+    $images = [];
+    foreach($node->field_images->getValue() as $key => $value) {
+      $image = $this->load_responsive_image_style($value['target_id'], 'image__3_2');
+      $images[] = str_replace( 'http://', 'http://Asu:asunnot_2020@', file_create_url($image['#uri']));
+    }
+
     foreach ($nodeData as $field => $value) {
       $data[$field] = $node->{$field}->value;
     }
@@ -390,6 +408,8 @@ final class Content extends ResourceBase {
     }
 
     $data['id'] = $node->id();
+    $data['images'] = $images;
+
     $data['application_start_time'] = $this->format_timestamp_to_custom_format($application_start_time_timestamp);
     $data['application_end_time'] = $this->format_timestamp_to_custom_format($application_end_time_timestamp);
     $data['apartments_count'] = count($apartments);
