@@ -19,8 +19,8 @@
   padding-top: $spacing-xl;
 
   @media screen and (min-width: $breakpoint-xl) {
-    margin-bottom: $spacing-layout-x;
-    padding-top: $spacing-layout-x;
+    margin-bottom: $spacing-layout-xl;
+    padding-top: $spacing-layout-xl;
   }
 }
 
@@ -32,19 +32,19 @@
   }
 
   > h2 {
-    @include font-size($font-size-heading-3, 29px);
-    @include font-weight($bold);
+    @include font-size($fontsize-heading-m, 29px);
+    font-weight: $font-weight-bold;
     color: var(--color-black-90);
     margin: 0 0 $spacing-3-xs 0;
 
     @media screen and (min-width: $breakpoint-xl) {
-      @include font-size($font-size-heading-2, 43px);
+      @include font-size($fontsize-heading-l, 43px);
     }
   }
 
   > h3 {
     @include font-size($fontsize-body-m, $lineheight-l);
-    @include font-weight($regular);
+    font-weight: $font-weight-regular;
     color: var(--color-black-90);
     margin: 0;
   }
@@ -52,22 +52,26 @@
 
 .project-apartments-listing__content {
   background-color: var(--color-black-5);
-  padding-bottom: $spacing-s;
-  padding-top: $spacing-s;
+  margin-left: -#{$spacing-l};
+  margin-right: -#{$spacing-l};
+  padding: $spacing-l;
 
   @media screen and (min-width: $breakpoint-xl) {
+    padding-bottom: $spacing-2-xl;
+    padding-top: $spacing-2-xl;
+  }
+
+  @media screen and (min-width: 1330px) {
     margin-left: auto;
     margin-right: auto;
     max-width: calc(#{$container-width-xl} + 48px + 48px);
-    padding-bottom: $spacing-2-xl;
-    padding-top: $spacing-2-xl;
   }
 }
 
 .project__apartments-list {
   list-style: none;
-  margin-bottom: 0;
-  margin-top: 0;
+  padding: 0;
+  margin: 0;
 }
 
 .project__apartments-item-button {
@@ -84,13 +88,13 @@
   gap: $spacing-xs;
 
   span {
-    @include font-size($font-size-heading-5, 27px);
+    @include font-size($fontsize-heading-xs, 27px);
     color: var(--color-black-90);
     pointer-events: none;
 
     &:first-of-type {
-      @include font-size($font-size-heading-3, 29px);
-      @include font-weight($bold);
+      @include font-size($fontsize-heading-m, 29px);
+      font-weight: $font-weight-bold;
     }
   }
 
@@ -136,6 +140,7 @@
   p {
     @include font-size($fontsize-body-m, $lineheight-l);
     color: var(--color-black-90);
+    display: inline-flex;
     margin: 0;
 
     > span {
@@ -200,7 +205,7 @@
 
       th {
         @include font-size($fontsize-body-m, $lineheight-l);
-        @include font-weight($regular);
+        font-weight: $font-weight-regular;
         text-align: left;
         padding-bottom: $spacing-s;
         padding-top: $spacing-s;
@@ -245,7 +250,7 @@
 
       td {
         @include font-size($fontsize-body-l, 27px);
-        @include font-weight($regular);
+        font-weight: $font-weight-regular;
         text-align: left;
         padding-bottom: $spacing-m;
         padding-top: $spacing-m;
@@ -259,7 +264,7 @@
 
           span:first-of-type {
             @include font-size($fontsize-body-xl, $lineheight-l);
-            @include font-weight($bold);
+            font-weight: $font-weight-bold;
             min-width: 40px;
           }
         }
@@ -296,7 +301,7 @@
 
         .hds-button {
           @include font-size($fontsize-body-m, $lineheight-l);
-          @include font-weight($medium);
+          font-weight: $font-weight-medium;
 
           &.hds-button--supplementary {
             padding: $spacing-2-xs $spacing-xs;

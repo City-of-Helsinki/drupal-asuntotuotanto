@@ -3,7 +3,7 @@
     align-items: center;
     display: inline-flex;
 
-    @include breakpoint($container-width-l) {
+    @media screen and (min-width: $container-width-l) {
       margin-right: $spacing-l;
     }
   }
@@ -35,7 +35,7 @@
 
 .branding__slogan {
   @include font-size($fontsize-body-m, $lineheight-l);
-  @include font-weight($bold);
+  font-weight: $font-weight-bold;
   display: inline-block;
 
   .branding--header & {

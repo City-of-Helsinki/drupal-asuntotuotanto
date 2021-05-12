@@ -1,6 +1,10 @@
 .showcase-gallery {
   .slick {
     position: relative;
+
+    img {
+      width: 100%;
+    }
   }
 
   .slick-arrow {

@@ -1,6 +1,6 @@
 uuid: 7779b8e5-fd38-4775-9d29-651c774fd810
 langcode: en
-status: true
+status: false
 dependencies:
   module:
     - context
@@ -9,7 +9,7 @@ dependencies:
     - asuntotuotanto
 id: branding
 theme: asuntotuotanto
-region: header
+region: header_top
 weight: 0
 provider: null
 plugin: system_branding_block

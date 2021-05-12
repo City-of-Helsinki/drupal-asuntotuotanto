@@ -10,8 +10,9 @@
 
 .apartment__anchor-list {
   align-items: center;
-  display: flex;
+  display: grid;
   gap: $spacing-5-xl;
+  grid-auto-flow: column;
   justify-content: center;
   list-style: none;
   margin: 0;
@@ -24,7 +25,7 @@
   text-decoration: none;
 
   @include font-size($fontsize-body-xl, 30px);
-  @include font-weight($bold);
+  font-weight: $font-weight-bold;
   padding: $spacing-m;
 
   > svg {

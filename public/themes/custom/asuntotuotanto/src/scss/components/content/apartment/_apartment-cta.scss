@@ -4,7 +4,7 @@
   @media screen and (min-width: $breakpoint-l) {
     margin-left: auto;
     margin-right: auto;
-    margin-top: $spacing-layout-x;
+    margin-top: $spacing-layout-xl;
     max-width: $container-width-xl;
     padding: 0 $spacing-s;
     position: relative;
@@ -36,6 +36,10 @@
   &--missing {
     aspect-ratio: 3 / 2;
     background-color: var(--color-silver-medium-light);
+    width: 100%;
+  }
+
+  img {
     width: 100%;
   }
 }
@@ -80,14 +84,14 @@
   }
 
   > h2 {
-    @include font-size($font-size-heading-3, 29px);
-    @include font-weight($bold);
+    @include font-size($fontsize-heading-m, 29px);
+    font-weight: $font-weight-bold;
     color: var(--color-black-90);
     margin-bottom: $spacing-l;
     margin-top: 0;
 
     @media screen and (min-width: $breakpoint-m) {
-      @include font-size($font-size-heading-2, 43px);
+      @include font-size($fontsize-heading-l, 43px);
       padding-right: $spacing-s
     }
   }

@@ -1,10 +1,10 @@
 {
-  "name": "asuntotuotanto",
+  "name": "hdbt_subtheme",
   "version": "1.0.0",
-  "description": "Webpack configuration for Asuntotuotanto Drupal 9 theme",
+  "description": "Webpack configuration for HDBT Subtheme",
   "author": "Druid",
   "license": "MIT",
-  "repository": "github:City-of-Helsinki/drupal-asuntotuotanto",
+  "repository": "github:City-of-Helsinki/drupal-hel-platform",
   "scripts": {
     "dev": "webpack --progress --mode development --config  webpack.config.dev.js --watch",
     "build": "webpack -p --progress --mode production --config webpack.config.build.js",

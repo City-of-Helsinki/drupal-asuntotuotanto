@@ -13,7 +13,7 @@
 .pager__item {
   a {
     @include font-size($fontsize-body-s, 26px);
-    @include font-weight($bold);
+    font-weight: $font-weight-bold;
     color: var(--color-black-90);
     text-decoration: none;
     height: 40px;

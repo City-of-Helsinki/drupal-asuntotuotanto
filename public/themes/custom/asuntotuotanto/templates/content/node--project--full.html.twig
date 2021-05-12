@@ -103,7 +103,7 @@
 
 <article{{ attributes.addClass(classes) }}>
   <div class="sticky-navigation is-hidden" aria-hidden="true" id="sticky_navigation">
-    <div class="sticky-navigation__container container">
+    <div class="sticky-navigation__container wrapper wrapper--mw-1200">
       <div class="sticky-navigation__content">
         <div class="sticky-navigation__content-section">
           <p class="sticky-navigation__content-item">{{ housing_company }}</p>
@@ -160,11 +160,11 @@
     </div>
   </div>
 
-  <div class="project__header container">
+  <div class="project__header wrapper wrapper--mw-1200">
     <h1 class="project__label">{{ label }}</h1>
   </div>
 
-  <div class="project__images container showcase-gallery" id="showcase_gallery">
+  <div class="project__images wrapper wrapper--mw-1200 showcase-gallery" id="showcase_gallery">
     {% if not images|render %}
       <div class="project__images--missing"></div>
     {% endif %}
@@ -173,7 +173,7 @@
     {% endif %}
   </div>
 
-  <nav class="project__anchor-navigation project__anchor-navigation--desktop container">
+  <nav class="project__anchor-navigation project__anchor-navigation--desktop wrapper wrapper--mw-1200">
     <ul class="project__anchor-list">
       <li class="project__anchor-item">
         <a href="#showcase_gallery" class="project__anchor-link">
@@ -210,7 +210,7 @@
     </ul>
   </nav>
 
-  <div class="project__content-wrapper container">
+  <div class="project__content-wrapper wrapper wrapper--mw-1200">
     <aside class="project__sidebar">
       <h3 class="project__apartment-count-information">
         {% trans %}
@@ -363,7 +363,7 @@
     </div>
   </div>
 
-  <div class="project__area-overview-wrapper container" id="project_location">
+  <div class="project__area-overview-wrapper wrapper wrapper--mw-1200" id="project_location">
     <div class="project__area-overview">
       <h2 class="project__area-overview-label">
         {% trans %}
