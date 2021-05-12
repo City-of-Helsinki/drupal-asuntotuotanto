@@ -7,7 +7,6 @@ use Drupal\node\Entity\Node;
 use Drupal\rest\ModifiedResourceResponse;
 use Drupal\rest\Plugin\ResourceBase;
 use Drupal\taxonomy\Entity\Term;
-use Drupal\user\Entity\User;
 
 /**
  * Provides a resource to subscribe to mailing list.
@@ -26,6 +25,8 @@ final class Content extends ResourceBase {
   /**
    * Responds to GET requests.
    *
+   * @param string $type
+   *   Content type.
    * @param string $id
    *   Data required by the endpoint.
    *
@@ -37,24 +38,24 @@ final class Content extends ResourceBase {
       return new ModifiedResourceResponse([], 404);
     }
 
-    if($node->bundle() != $type){
+    if ($node->bundle() != $type) {
       return new ModifiedResourceResponse([], 404);
     }
 
-    if($node->bundle() == 'apartment'){
+    if ($node->bundle() == 'apartment') {
       $data = $this->getApartmentFields($node);
-    } else {
+    }
+    else {
       $data = $this->getProjectFields($node);
     }
 
     return new ModifiedResourceResponse($data);
   }
 
-
   /**
-   * Custom function format_date_to_unix_timestamp().
+   * Custom function formatDateToUnixTimestamp().
    */
-  private function format_date_to_unix_timestamp($string) {
+  private function formatDateToUnixTimestamp($string) {
     $value = $string;
     $date = new \DateTime($value);
     $timestamp = $date->format('U');
@@ -63,16 +64,16 @@ final class Content extends ResourceBase {
   }
 
   /**
-   * Custom function format_timestamp_to_custom_format().
+   * Custom function formatTimestampToCustomFormat().
    */
-  private function format_timestamp_to_custom_format($timestamp, $format = 'short') {
+  private function formatTimestampToCustomFormat($timestamp, $format = 'short') {
     return \Drupal::service('date.formatter')->format($timestamp, $format);
   }
 
   /**
-   * Custom load_responsive_image_style().
+   * Custom loadResponsiveImageStyle().
    */
-  private function load_responsive_image_style($image_file_target_id, $responsive_image_style_id) {
+  private function loadResponsiveImageStyle($image_file_target_id, $responsive_image_style_id) {
     if (!$image_file_target_id && !$responsive_image_style_id) {
       return NULL;
     }
@@ -110,9 +111,9 @@ final class Content extends ResourceBase {
   }
 
   /**
-   * Custom get_apartment_application_status().
+   * Custom getApartmentApplicationStatus().
    */
-  private function get_apartment_application_status($nid) {
+  private function getApartmentApplicationStatus($nid) {
     $application_status_mapping = [
       "NONE" => t('No applicants'),
       "LOW" => t('Few applicants'),
@@ -129,25 +130,27 @@ final class Content extends ResourceBase {
     ];
   }
 
-  private function getApartmentFields($node){
+  /**
+   * Get apartment fields.
+   */
+  private function getApartmentFields($node) {
     $data = [];
     $cta_image_file_target_id = $node->get('field_images')->getValue()[0]['target_id'];
 
-    $image = $this->load_responsive_image_style($cta_image_file_target_id, 'image__3_2');
+    $image = $this->loadResponsiveImageStyle($cta_image_file_target_id, 'image__3_2');
 
-    $data['cta_image_url'] = str_replace( 'http://', 'http://Asu:asunnot_2020@', file_create_url($image['#uri']));
+    $data['cta_image_url'] = str_replace('http://', 'http://Asu:asunnot_2020@', file_create_url($image['#uri']));
 
     // @ todo: get alt text
-    #$data['cta_image']['alt'] = 'Alt text here';
-
+    // $data['cta_image']['alt'] = 'Alt text here';
     $parent_node_results = \Drupal::entityTypeManager()
       ->getListBuilder('node')
       ->getStorage()
       ->loadByProperties([
-          'type' => 'project',
-          'status' => 1,
-          'field_apartments' => $node->id(),
-        ]
+        'type' => 'project',
+        'status' => 1,
+        'field_apartments' => $node->id(),
+      ]
       );
 
     if ($parent_node_results) {
@@ -157,9 +160,9 @@ final class Content extends ResourceBase {
       $is_application_period_in_the_past = FALSE;
 
       $application_start_time_value = $parent_node->get('field_application_start_time')->value;
-      $application_start_time_timestamp = $this->format_date_to_unix_timestamp($application_start_time_value);
+      $application_start_time_timestamp = $this->formatDateToUnixTimestamp($application_start_time_value);
       $application_end_time_value = $parent_node->get('field_application_end_time')->value;
-      $application_end_time_timestamp = $this->format_date_to_unix_timestamp($application_end_time_value);
+      $application_end_time_timestamp = $this->formatDateToUnixTimestamp($application_end_time_value);
       $current_timestamp = time();
 
       if ($current_timestamp > $application_start_time_timestamp && $current_timestamp < $application_end_time_timestamp) {
@@ -185,14 +188,15 @@ final class Content extends ResourceBase {
       $services_url = $parent_node->get('field_services_url')->getValue()[0];
       $services_stack = [];
       $project_attachments = $parent_node->get('field_project_attachments')->getValue();
-      $apartment_attachments = []; # $node->get('field_apartment_attachments')->getValue();
+      // $node->get('field_apartment_attachments')->getValue();
+      $apartment_attachments = [];
       $attachments_stack = [];
       $estimated_completion_date = new \DateTime($parent_node->get('field_estimated_completion_date')->value);
 
       $site_owner = Term::load($parent_node->get('field_site_owner')->target_id)->name->value;
       $site_renter = $parent_node->get('field_site_renter')->value;
 
-      foreach ($services as $key => $service) {
+      foreach ($services as $service) {
         $term_id = $service['term_id'];
 
         if ($term_id !== '0') {
@@ -206,7 +210,7 @@ final class Content extends ResourceBase {
         }
       }
 
-      foreach ($apartment_attachments as $key => $attachment) {
+      foreach ($apartment_attachments as $attachment) {
         $target_id = $attachment['target_id'];
         $file = File::load($target_id);
 
@@ -225,7 +229,7 @@ final class Content extends ResourceBase {
         }
       }
 
-      foreach ($project_attachments as $key => $attachment) {
+      foreach ($project_attachments as $attachment) {
         $target_id = $attachment['target_id'];
         $file = File::load($target_id);
 
@@ -248,15 +252,15 @@ final class Content extends ResourceBase {
 
     $images = [];
 
-    foreach($node->field_images->getValue() as $key => $value) {
-      $image = $this->load_responsive_image_style($value['target_id'], 'image__3_2');
+    foreach ($node->field_images->getValue() as $value) {
+      $image = $this->loadResponsiveImageStyle($value['target_id'], 'image__3_2');
       // @ todo: remove replace
-      $images[] = str_replace( 'http://', 'http://Asu:asunnot_2020@', file_create_url($image['#uri']));
+      $images[] = str_replace('http://', 'http://Asu:asunnot_2020@', file_create_url($image['#uri']));
     }
-    foreach($parent_node->field_shared_apartment_images->getValue() as $key => $value) {
-      $image = $this->load_responsive_image_style($value['target_id'], 'image__3_2');
+    foreach ($parent_node->field_shared_apartment_images->getValue() as $value) {
+      $image = $this->loadResponsiveImageStyle($value['target_id'], 'image__3_2');
       // @ todo: remove replace
-      $images[] = str_replace( 'http://', 'http://Asu:asunnot_2020@', file_create_url($image['#uri']));
+      $images[] = str_replace('http://', 'http://Asu:asunnot_2020@', file_create_url($image['#uri']));
     }
 
     $nodeData = $node->toArray();
@@ -268,8 +272,8 @@ final class Content extends ResourceBase {
     $data['id'] = $node->id();
     $data['images'] = $images;
 
-    $data['application_start_time'] = $this->format_timestamp_to_custom_format($application_start_time_timestamp);
-    $data['application_end_time'] = $this->format_timestamp_to_custom_format($application_end_time_timestamp);
+    $data['application_start_time'] = $this->formatTimestampToCustomFormat($application_start_time_timestamp);
+    $data['application_end_time'] = $this->formatTimestampToCustomFormat($application_end_time_timestamp);
 
     $data['is_application_period_active'] = $is_application_period_active;
     $data['is_application_period_in_the_past'] = $is_application_period_in_the_past;
@@ -297,6 +301,9 @@ final class Content extends ResourceBase {
     return $data;
   }
 
+  /**
+   * Get project fields.
+   */
   private function getProjectFields($node) {
     $data = [];
 
@@ -308,7 +315,7 @@ final class Content extends ResourceBase {
     $apartment_sales_prices = [];
     $apartment_debt_free_sales_prices = [];
 
-    foreach ($apartmentsData as $key => $apartment) {
+    foreach ($apartmentsData as $apartment) {
       $apartment_target_id = $apartment['target_id'];
       $apartment_node = Node::load($apartment_target_id);
       $apartment_sales_price = $apartment_node->get('field_sales_price')->value;
@@ -361,7 +368,7 @@ final class Content extends ResourceBase {
     $services = $node->get('field_services')->getValue();
     $services_stack = [];
 
-    foreach ($services as $key => $service) {
+    foreach ($services as $service) {
       $term_id = $service['term_id'];
 
       if ($term_id !== '0') {
@@ -395,9 +402,9 @@ final class Content extends ResourceBase {
     }
 
     $application_start_time_value = $node->get('field_application_start_time')->value;
-    $application_start_time_timestamp = $this->format_date_to_unix_timestamp($application_start_time_value);
+    $application_start_time_timestamp = $this->formatDateToUnixTimestamp($application_start_time_value);
     $application_end_time_value = $node->get('field_application_end_time')->value;
-    $application_end_time_timestamp = $this->format_date_to_unix_timestamp($application_end_time_value);
+    $application_end_time_timestamp = $this->formatDateToUnixTimestamp($application_end_time_value);
 
     $estimated_completion_date = new \DateTime($node->get('field_estimated_completion_date')->value);
     $is_application_period_active = FALSE;
@@ -410,16 +417,16 @@ final class Content extends ResourceBase {
     $nodeData = $node->toArray();
 
     $images = [];
-    foreach($node->field_images->getValue() as $key => $value) {
-      $image = $this->load_responsive_image_style($value['target_id'], 'image__3_2');
-      $images[] = str_replace( 'http://', 'http://Asu:asunnot_2020@', file_create_url($image['#uri']));
+    foreach ($node->field_images->getValue() as $key => $value) {
+      $image = $this->loadResponsiveImageStyle($value['target_id'], 'image__3_2');
+      $images[] = str_replace('http://', 'http://Asu:asunnot_2020@', file_create_url($image['#uri']));
     }
 
     foreach ($nodeData as $field => $value) {
       $data[$field] = $node->{$field}->value;
     }
 
-    if(isset($data['field_tasks'])){
+    if (isset($data['field_tasks'])) {
       unset($data['field_tasks']);
     }
 
@@ -427,17 +434,17 @@ final class Content extends ResourceBase {
     $data['images'] = $images;
     $data['apartments'] = $apartments;
 
-    $data['application_start_time'] = $this->format_timestamp_to_custom_format($application_start_time_timestamp);
-    $data['application_end_time'] = $this->format_timestamp_to_custom_format($application_end_time_timestamp);
+    $data['application_start_time'] = $this->formatTimestampToCustomFormat($application_start_time_timestamp);
+    $data['application_end_time'] = $this->formatTimestampToCustomFormat($application_end_time_timestamp);
     $data['apartments_count'] = count($apartments);
     $data['apartment_sales_prices'] = $apartment_sales_prices_string;
     $data['apartment_debt_free_sales_prices'] = $apartment_debt_free_sales_prices_string;
     $data['apartment_structures'] = implode(", ", array_unique($apartment_structures));
     $data['apartment_living_area_sizes_m2'] = $apartment_living_area_sizes_string;
-    # @todo: Attachments.
+    // @todo: Attachments.
     $data['attachments'] = $attachments_stack ?? NULL;
     $apartments = $apartments;
-    # @todo: Services.
+    // @todo: Services.
     $data['services'] = $services_stack ?? NULL;
     $data['estimated_completion_date'] = $estimated_completion_date->format('m/Y') ?? NULL;
     $data['is_application_period_active'] = $is_application_period_active;
