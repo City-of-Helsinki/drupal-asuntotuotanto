@@ -96,3 +96,28 @@ if ($env = getenv('APP_ENV')) {
   }
 }
 
+if ($env = getenv('APP_ENV')) {
+  if ($env === 'dev') {
+    // Local development environment.
+    $settings['asuntotuotanto_public_url'] = 'https://asuntotuotanto-public.docker.sh';
+    $settings['backend_url'] = null;
+    $config['elasticsearch_connector.cluster.asuntotuotanto']['url'] = 'http://elastic:9200';
+  }
+  else if ($env === 'development') {
+    // Azure development environment.
+    $settings['asuntotuotanto_public_url'] = null;
+    $settings['backend_url'] = null;
+    $settings['elastic_url'] = null;
+  }
+  else if ($env === 'prod'){
+    // Azure prod environment.
+    $settings['asuntotuotanto_public_url'] = null;
+    $settings['backend_url'] = null;
+    $settings['elastic_url'] = null;
+  } else {
+    // Old development environment.
+    $settings['asuntotuotanto_public_url'] = 'http://dev.asuntotuotanto-public.druidfi.wod.by';
+    $settings['backend_url'] = null;
+    $config['elasticsearch_connector.cluster.asuntotuotanto']['url'] = 'http://dev.asuntomyynti-elastic.druidfi.wod.by';
+  }
+}
