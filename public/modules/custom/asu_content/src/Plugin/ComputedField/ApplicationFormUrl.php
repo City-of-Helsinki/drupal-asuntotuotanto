@@ -4,6 +4,7 @@ namespace Drupal\asu_content\Plugin\ComputedField;
 
 use Drupal\computed_field_plugin\Traits\ComputedSingleItemTrait;
 use Drupal\Core\Field\FieldItemList;
+use Drupal\Core\Site\Settings;
 use Drupal\Core\TypedData\DataDefinitionInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\node\Entity\Node;
@@ -67,13 +68,17 @@ class ApplicationFormUrl extends FieldItemList {
         $reference['referring_entity'] instanceof Node &&
         $this->getEntity()->hasField('field_apartment_number')
       ) {
+        $value = '';
         $referencing_node = $reference['referring_entity'];
-        $config = \Drupal::config('asu_content.asu_application');
-        $baseurl = $config->get('asu_application_form_baseurl');
+        $application_baseurl = Settings::get('asuntotuotanto_public_url');
 
-        if (isset($config->get('apartment_types')[$referencing_node->field_holding_type->target_id])) {
-          $apartment_type = $config->get('apartment_types')[$referencing_node->field_holding_type->target_id];
-          $value = $baseurl . '/application/add/' . $apartment_type . '/' . $referencing_node->id();
+        if (!empty($referencing_node->get('field_ownership_type')->first())) {
+          $apartment_type = $referencing_node->get('field_ownership_type')
+            ->first()
+            ->get('entity')
+            ->getTarget()
+            ->getValue()->getName();
+          $value = $application_baseurl . '/application/add/' . lcfirst($apartment_type) . '/' . $referencing_node->id();
         }
       }
     }

@@ -2,6 +2,7 @@
 
 namespace Drupal\asu_rest\Plugin\rest\resource;
 
+use Drupal\Core\Site\Settings;
 use Drupal\file\Entity\File;
 use Drupal\node\Entity\Node;
 use Drupal\rest\ModifiedResourceResponse;
@@ -48,7 +49,6 @@ final class Content extends ResourceBase {
     else {
       $data = $this->getProjectFields($node);
     }
-
     return new ModifiedResourceResponse($data);
   }
 
@@ -111,26 +111,6 @@ final class Content extends ResourceBase {
   }
 
   /**
-   * Custom getApartmentApplicationStatus().
-   */
-  private function getApartmentApplicationStatus($nid) {
-    $application_status_mapping = [
-      "NONE" => t('No applicants'),
-      "LOW" => t('Few applicants'),
-      "MEDIUM" => t('A little applicants'),
-      "HIGH" => t('A lot of applicants'),
-    ];
-
-    // @todo Update this value with dynamic status from API.
-    $application_status = 'NONE';
-
-    return [
-      "status" => strtolower($application_status),
-      "label" => $application_status_mapping[$application_status],
-    ];
-  }
-
-  /**
    * Get apartment fields.
    */
   private function getApartmentFields($node) {
@@ -188,8 +168,7 @@ final class Content extends ResourceBase {
       $services_url = $parent_node->get('field_services_url')->getValue()[0];
       $services_stack = [];
       $project_attachments = $parent_node->get('field_project_attachments')->getValue();
-      // $node->get('field_apartment_attachments')->getValue();
-      $apartment_attachments = [];
+      $apartment_attachments = $node->get('field_apartment_attachments')->getValue();
       $attachments_stack = [];
       $estimated_completion_date = new \DateTime($parent_node->get('field_estimated_completion_date')->value);
 
@@ -269,6 +248,8 @@ final class Content extends ResourceBase {
       $data[$field] = $node->{$field}->value;
     }
 
+    $this->unsetFields($data);
+
     $data['id'] = $node->id();
     $data['images'] = $images;
 
@@ -290,13 +271,13 @@ final class Content extends ResourceBase {
 
     $data['services_url'] = $services_url ?? NULL;
 
-    // @todo Attachements.
     $data['attachments'] = $attachments_stack ?? NULL;
 
     $data['estimated_completion_date'] = $estimated_completion_date->format('m/Y') ?? NULL;
 
     $data['site_owner'] = $site_owner ?? NULL;
     $data['site_renter'] = $site_renter ?? NULL;
+    $data['services_url'] = $services_url ?? NULL;
 
     return $data;
   }
@@ -322,7 +303,8 @@ final class Content extends ResourceBase {
       $apartment_debt_free_sales_price = $apartment_node->get('field_debt_free_sales_price')->value;
       $apartment_living_area_size = $apartment_node->get('field_living_area')->value;
       $apartment_structure = $apartment_node->get('field_apartment_structure')->value;
-      $application_url = $apartment_node->get('field_application_url')->getValue()[0]['uri'];
+      $ownership_type = Term::load($node->get('field_ownership_type')->target_id)->name->value;
+      $application_url = $this->generateApplicationUrl(Settings::get('asuntotuotanto_public_url'), $ownership_type, $node->id() );
       $number = $apartment_node->get('field_apartment_number')->value;
       $floor = $apartment_node->get('field_floor')->value;
 
@@ -385,7 +367,17 @@ final class Content extends ResourceBase {
     $project_attachments = $node->get('field_project_attachments')->getValue();
     $attachments_stack = [];
 
-    foreach ($project_attachments as $key => $attachment) {
+    $apartment_attachments = [];
+    if(!empty($apartment_node->get('field_apartment_attachments')->getValue())){
+        $apartment_attachments = $apartment_node->get('field_apartment_attachments')->getValue();
+    }
+
+    $all_attachments = array_merge($project_attachments,
+      $apartment_attachments
+    );
+
+
+    foreach ($all_attachments as $key => $attachment) {
       $target_id = $attachment['target_id'];
       $file = File::load($target_id);
       $description = $attachment['description'];
@@ -426,9 +418,7 @@ final class Content extends ResourceBase {
       $data[$field] = $node->{$field}->value;
     }
 
-    if (isset($data['field_tasks'])) {
-      unset($data['field_tasks']);
-    }
+    $this->unsetFields($data);
 
     $data['id'] = $node->id();
     $data['images'] = $images;
@@ -441,15 +431,62 @@ final class Content extends ResourceBase {
     $data['apartment_debt_free_sales_prices'] = $apartment_debt_free_sales_prices_string;
     $data['apartment_structures'] = implode(", ", array_unique($apartment_structures));
     $data['apartment_living_area_sizes_m2'] = $apartment_living_area_sizes_string;
-    // @todo Attachments.
     $data['attachments'] = $attachments_stack ?? NULL;
-    $apartments = $apartments;
-    // @todo Services.
     $data['services'] = $services_stack ?? NULL;
     $data['estimated_completion_date'] = $estimated_completion_date->format('m/Y') ?? NULL;
     $data['is_application_period_active'] = $is_application_period_active;
 
     return $data;
+  }
+
+  /**
+   * Unset fields not needed.
+   *
+   * @param array $data
+   *   Node fields.
+   */
+  private function unsetFields(array &$data){
+    $fields = [
+      'field_tasks',
+      'field_project_attachments',
+      'field_attachments_url',
+      'revision_log',
+      'promote',
+      'sticky',
+      'default_langcode',
+      'metatag',
+      'path',
+      'publish_on',
+      'unpublish_on',
+      'field_apartments',
+      'asu_project_holding_type',
+      'asu_computed_apartment_images',
+      'asu_application_form_url',
+      'multiple_values_field',
+      'asu_new_development_status',
+      'menu_link'
+    ];
+    foreach($fields as $field){
+      if(array_key_exists($field, $data)){
+        unset($data[$field]);
+      }
+    }
+  }
+
+  /**
+   * Generate application url for apartment.
+   *
+   * @param $baseUrl
+   *   Base url
+   * @param $apartmentType
+   *   Project ownership type, haso or hitas
+   * @param $nodeId
+   *   Project id.
+   * @return string
+   *   Application url.
+   */
+  private function generateApplicationUrl($baseUrl, $apartmentType, $nodeId): string {
+    return $baseUrl. '/application/add/' . lcfirst($apartmentType) . '/' . $nodeId;
   }
 
 }
