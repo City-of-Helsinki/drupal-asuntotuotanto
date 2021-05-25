@@ -111,26 +111,6 @@ final class Content extends ResourceBase {
   }
 
   /**
-   * Custom getApartmentApplicationStatus().
-   */
-  private function getApartmentApplicationStatus($nid) {
-    $application_status_mapping = [
-      "NONE" => t('No applicants'),
-      "LOW" => t('Few applicants'),
-      "MEDIUM" => t('A little applicants'),
-      "HIGH" => t('A lot of applicants'),
-    ];
-
-    // @todo Update this value with dynamic status from API.
-    $application_status = 'NONE';
-
-    return [
-      "status" => strtolower($application_status),
-      "label" => $application_status_mapping[$application_status],
-    ];
-  }
-
-  /**
    * Get apartment fields.
    */
   private function getApartmentFields($node) {
@@ -141,8 +121,6 @@ final class Content extends ResourceBase {
 
     $data['cta_image_url'] = str_replace('http://', 'http://Asu:asunnot_2020@', file_create_url($image['#uri']));
 
-    // @ todo: get alt text
-    // $data['cta_image']['alt'] = 'Alt text here';
     $parent_node_results = \Drupal::entityTypeManager()
       ->getListBuilder('node')
       ->getStorage()
@@ -188,7 +166,6 @@ final class Content extends ResourceBase {
       $services_url = $parent_node->get('field_services_url')->getValue()[0];
       $services_stack = [];
       $project_attachments = $parent_node->get('field_project_attachments')->getValue();
-      // $node->get('field_apartment_attachments')->getValue();
       $apartment_attachments = [];
       $attachments_stack = [];
       $estimated_completion_date = new \DateTime($parent_node->get('field_estimated_completion_date')->value);
@@ -290,7 +267,6 @@ final class Content extends ResourceBase {
 
     $data['services_url'] = $services_url ?? NULL;
 
-    // @todo Attachements.
     $data['attachments'] = $attachments_stack ?? NULL;
 
     $data['estimated_completion_date'] = $estimated_completion_date->format('m/Y') ?? NULL;
@@ -441,10 +417,8 @@ final class Content extends ResourceBase {
     $data['apartment_debt_free_sales_prices'] = $apartment_debt_free_sales_prices_string;
     $data['apartment_structures'] = implode(", ", array_unique($apartment_structures));
     $data['apartment_living_area_sizes_m2'] = $apartment_living_area_sizes_string;
-    // @todo Attachments.
     $data['attachments'] = $attachments_stack ?? NULL;
     $apartments = $apartments;
-    // @todo Services.
     $data['services'] = $services_stack ?? NULL;
     $data['estimated_completion_date'] = $estimated_completion_date->format('m/Y') ?? NULL;
     $data['is_application_period_active'] = $is_application_period_active;
