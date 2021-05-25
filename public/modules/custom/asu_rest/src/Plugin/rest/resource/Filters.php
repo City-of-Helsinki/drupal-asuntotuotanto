@@ -39,6 +39,7 @@ final class Filters extends ResourceBase {
 
     $vocabularies = Vocabulary::loadMultiple();
     $responseData = [];
+
     foreach ($filters['taxonomy'] as $taxonomy_name => $elastic_index_name) {
       $terms = \Drupal::entityTypeManager()
         ->getStorage('taxonomy_term')
@@ -49,9 +50,25 @@ final class Filters extends ResourceBase {
       }
 
       $items = [];
-      foreach ($terms as $term) {
-        $items[] = $term->hasTranslation($currentLanguage->getId()) ?
-          $term->getTranslation($currentLanguage->getId())->getName() : $term->getName();
+
+      if($taxonomy_name == 'districts'){
+
+        $database = \Drupal::database();
+        $query = $database->query('Select tid FROM {taxonomy_index}');
+        $record = $query->fetchAllKeyed(0,0);
+
+        foreach ($terms as $term) {
+          if(in_array($term->id(), $record)){
+            $items[] = $term->hasTranslation($currentLanguage->getId()) ?
+              $term->getTranslation($currentLanguage->getId())->getName() : $term->getName();
+          }
+        }
+
+      } else {
+        foreach ($terms as $term) {
+          $items[] = $term->hasTranslation($currentLanguage->getId()) ?
+            $term->getTranslation($currentLanguage->getId())->getName() : $term->getName();
+        }
       }
 
       $vocabulary_name = $vocabularies[$terms[0]->bundle()]->get('name');
