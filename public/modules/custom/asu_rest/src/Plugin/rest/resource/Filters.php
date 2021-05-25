@@ -51,20 +51,21 @@ final class Filters extends ResourceBase {
 
       $items = [];
 
-      if($taxonomy_name == 'districts'){
+      if ($taxonomy_name == 'districts') {
 
         $database = \Drupal::database();
         $query = $database->query('Select tid FROM {taxonomy_index}');
-        $record = $query->fetchAllKeyed(0,0);
+        $record = $query->fetchAllKeyed(0, 0);
 
         foreach ($terms as $term) {
-          if(in_array($term->id(), $record)){
+          if (in_array($term->id(), $record)) {
             $items[] = $term->hasTranslation($currentLanguage->getId()) ?
               $term->getTranslation($currentLanguage->getId())->getName() : $term->getName();
           }
         }
 
-      } else {
+      }
+      else {
         foreach ($terms as $term) {
           $items[] = $term->hasTranslation($currentLanguage->getId()) ?
             $term->getTranslation($currentLanguage->getId())->getName() : $term->getName();
