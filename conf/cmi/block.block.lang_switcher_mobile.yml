@@ -1,26 +1,23 @@
-uuid: 1e2b95a5-2b85-48e1-bc5f-dea4d37ce2fe
+uuid: 3b6de023-8cd7-4b49-a10f-031f057a61a4
 langcode: en
 status: true
 dependencies:
   module:
     - context
-    - system
+    - language
   theme:
     - asuntotuotanto
-id: branding
+id: lang_switcher_mobile
 theme: asuntotuotanto
-region: header_top
+region: header_bottom
 weight: 0
 provider: null
-plugin: system_branding_block
+plugin: 'language_block:language_content'
 settings:
-  id: system_branding_block
-  label: Branding
-  provider: system
+  id: 'language_block:language_content'
+  label: 'Language switcher (mobile)'
+  provider: language
   label_display: '0'
-  use_site_logo: false
-  use_site_name: false
-  use_site_slogan: true
 visibility:
   view_inclusion:
     id: view_inclusion

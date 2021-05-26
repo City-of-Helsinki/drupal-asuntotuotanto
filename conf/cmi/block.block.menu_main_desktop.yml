@@ -1,0 +1,40 @@
+uuid: e4124267-cb53-4aa6-8a77-a95034e1b804
+langcode: en
+status: true
+dependencies:
+  config:
+    - system.menu.main
+  module:
+    - context
+    - menu_block
+  theme:
+    - asuntotuotanto
+id: menu_main_desktop
+theme: asuntotuotanto
+region: header_top
+weight: 0
+provider: null
+plugin: 'menu_block:main'
+settings:
+  id: 'menu_block:main'
+  label: 'Päävalikko (desktop)'
+  provider: menu_block
+  label_display: '0'
+  follow: false
+  follow_parent: child
+  level: 1
+  depth: 2
+  expand_all_items: true
+  parent: 'main:'
+  suggestion: main__desktop
+  label_type: block
+  label_link: false
+visibility:
+  view_inclusion:
+    id: view_inclusion
+    negate: null
+    view_inclusion: {  }
+  request_path_exclusion:
+    id: request_path_exclusion
+    pages: ''
+    negate: null

@@ -11,6 +11,7 @@ module:
   asu_rest: 0
   asu_tasklist: 0
   asu_translation: 0
+  asu_user_tools_menu: 0
   auto_entitylabel: 0
   blazy: 0
   block: 0
