@@ -111,26 +111,6 @@ final class Content extends ResourceBase {
   }
 
   /**
-   * Custom getApartmentApplicationStatus().
-   */
-  private function getApartmentApplicationStatus($nid) {
-    $application_status_mapping = [
-      "NONE" => t('No applicants'),
-      "LOW" => t('Few applicants'),
-      "MEDIUM" => t('A little applicants'),
-      "HIGH" => t('A lot of applicants'),
-    ];
-
-    // @todo Update this value with dynamic status from API.
-    $application_status = 'NONE';
-
-    return [
-      "status" => strtolower($application_status),
-      "label" => $application_status_mapping[$application_status],
-    ];
-  }
-
-  /**
    * Get apartment fields.
    */
   private function getApartmentFields($node) {
@@ -141,8 +121,6 @@ final class Content extends ResourceBase {
 
     $data['cta_image_url'] = str_replace('http://', 'http://Asu:asunnot_2020@', file_create_url($image['#uri']));
 
-    // @ todo: get alt text
-    // $data['cta_image']['alt'] = 'Alt text here';
     $parent_node_results = \Drupal::entityTypeManager()
       ->getListBuilder('node')
       ->getStorage()
