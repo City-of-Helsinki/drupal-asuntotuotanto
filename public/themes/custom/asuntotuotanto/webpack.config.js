@@ -17,14 +17,12 @@ module.exports = {
       ignore: [
         "./src/js/sticky-navigation.js",
         "./src/js/apartments-list-item-toggle.j",
+        "./src/js/user-tools.js",
       ],
     }),
     stickyNavigation: ["./src/js/sticky-navigation.js"],
     apartmentsListItemToggle: ["./src/js/apartments-list-item-toggle.js"],
-    // "some-example-component": [
-    //   "./src/js/some-example-component.js",
-    //   "./src/scss/some-example-component.scss"
-    // ],
+    userToolsNavigation: ["./src/js/user-tools.js"],
   },
   output: {
     devtoolLineToLine: true,

@@ -1,3 +1,9 @@
+user-tools:
+  js:
+    dist/js/userToolsNavigation.min.js: {}
+  dependencies:
+    - core/jquery
+
 apartments-list-item-toggle:
   js:
     dist/js/apartmentsListItemToggle.min.js: {}

@@ -1,1 +1,4 @@
 @import "~hds-design-tokens/lib/spacing/all.scss";
+@import "~hds-design-tokens/lib/breakpoint/container-width.scss";
+
+$content-area-wrapper-width-max: calc(#{$container-width-xl} + #{$spacing-4-xl});

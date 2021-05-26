@@ -35,13 +35,17 @@
 {% set classes = [
   'navigation',
   'navigation--main',
-  'is-desktop',
+  'navigation--user-tools',
+  'is-mobile',
   ]
 %}
 
-{% set heading_id = attributes.id ~ '-menu'|clean_id %}
-<nav role="navigation" aria-labelledby="{{ heading_id }}"{{ attributes.addClass(classes)|without('role', 'aria-labelledby') }} aria-hidden="true">
-  {% block content %}
-    {{ content }}
-  {% endblock %}
-</nav>
+{% if logged_in %}
+  {% set heading_id = attributes.id ~ '-menu'|clean_id %}
+  <nav role="navigation" aria-labelledby="{{ heading_id }}"{{ attributes.addClass(classes)|without('role', 'aria-labelledby') }} aria-hidden="true">
+    {# Menu. #}
+    {% block content %}
+      {{ content }}
+    {% endblock %}
+  </nav>
+{% endif %}
