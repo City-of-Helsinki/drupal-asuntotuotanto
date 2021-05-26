@@ -286,7 +286,7 @@ final class Content extends ResourceBase {
     $data = [];
 
     $apartmentsData = $node->get('field_apartments')->getValue();
-    $services_url = $node->get('field_services_url')->getValue()[0];
+    $services_url = [$node->get('field_services_url')->getValue()[0]];
 
     $apartments = [];
     $apartment_structures = [];
