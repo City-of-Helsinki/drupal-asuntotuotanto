@@ -286,6 +286,7 @@ final class Content extends ResourceBase {
     $data = [];
 
     $apartmentsData = $node->get('field_apartments')->getValue();
+    $services_url = $node->get('field_services_url')->getValue()[0];
 
     $apartments = [];
     $apartment_structures = [];
@@ -422,6 +423,7 @@ final class Content extends ResourceBase {
     $data['attachments'] = $attachments_stack ?? NULL;
     $apartments = $apartments;
     $data['services'] = $services_stack ?? NULL;
+    $data['services_url'] = $services_url ?? NULL;
     $data['estimated_completion_date'] = $estimated_completion_date->format('m/Y') ?? NULL;
     $data['is_application_period_active'] = $is_application_period_active;
 
