@@ -188,8 +188,7 @@ final class Content extends ResourceBase {
       $services_url = $parent_node->get('field_services_url')->getValue()[0];
       $services_stack = [];
       $project_attachments = $parent_node->get('field_project_attachments')->getValue();
-      // $node->get('field_apartment_attachments')->getValue();
-      $apartment_attachments = [];
+      $apartment_attachments = $node->get('field_apartment_attachments')->getValue();
       $attachments_stack = [];
       $estimated_completion_date = new \DateTime($parent_node->get('field_estimated_completion_date')->value);
 
@@ -210,7 +209,7 @@ final class Content extends ResourceBase {
         }
       }
 
-      foreach ($apartment_attachments as $attachment) {
+      foreach (array_merge($apartment_attachments, $project_attachments) as $attachment) {
         $target_id = $attachment['target_id'];
         $file = File::load($target_id);
 
@@ -228,26 +227,6 @@ final class Content extends ResourceBase {
           ]);
         }
       }
-
-      foreach ($project_attachments as $attachment) {
-        $target_id = $attachment['target_id'];
-        $file = File::load($target_id);
-
-        if ($file) {
-          $description = $attachment['description'];
-          $file_name = $file->getFilename();
-          $file_size = format_size($file->getSize());
-          $file_uri = file_create_url($file->getFileUri());
-
-          array_push($attachments_stack, [
-            'description' => $description,
-            'name' => $file_name,
-            'size' => $file_size,
-            'uri' => $file_uri,
-          ]);
-        }
-      }
-
     }
 
     $images = [];
@@ -290,7 +269,6 @@ final class Content extends ResourceBase {
 
     $data['services_url'] = $services_url ?? NULL;
 
-    // @todo Attachements.
     $data['attachments'] = $attachments_stack ?? NULL;
 
     $data['estimated_completion_date'] = $estimated_completion_date->format('m/Y') ?? NULL;
@@ -441,10 +419,8 @@ final class Content extends ResourceBase {
     $data['apartment_debt_free_sales_prices'] = $apartment_debt_free_sales_prices_string;
     $data['apartment_structures'] = implode(", ", array_unique($apartment_structures));
     $data['apartment_living_area_sizes_m2'] = $apartment_living_area_sizes_string;
-    // @todo Attachments.
     $data['attachments'] = $attachments_stack ?? NULL;
     $apartments = $apartments;
-    // @todo Services.
     $data['services'] = $services_stack ?? NULL;
     $data['estimated_completion_date'] = $estimated_completion_date->format('m/Y') ?? NULL;
     $data['is_application_period_active'] = $is_application_period_active;
