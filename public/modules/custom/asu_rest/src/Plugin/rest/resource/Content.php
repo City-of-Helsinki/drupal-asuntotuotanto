@@ -185,7 +185,7 @@ final class Content extends ResourceBase {
       $energy_class = Term::load($parent_node->get('field_energy_class')->target_id)->name->value;
       $accessibility = $parent_node->get('field_project_accessibility')->value;
       $services = $parent_node->get('field_services')->getValue();
-      $services_url = $parent_node->get('field_services_url')->getValue()[0];
+      $services_url = [$parent_node->get('field_services_url')->getValue()[0]];
       $services_stack = [];
       $project_attachments = $parent_node->get('field_project_attachments')->getValue();
       $apartment_attachments = $node->get('field_apartment_attachments')->getValue();
