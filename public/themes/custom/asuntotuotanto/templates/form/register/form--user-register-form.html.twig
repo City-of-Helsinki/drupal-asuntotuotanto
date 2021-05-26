@@ -1,0 +1,28 @@
+{#
+/**
+ * @file
+ * Theme override for a 'form' element.
+ *
+ * Available variables
+ * - attributes: A list of HTML attributes for the wrapper element.
+ * - children: The child elements of the form.
+ *
+ * @see template_preprocess_form()
+ */
+#}
+
+{% set classes = [
+    'user-form',
+    'user-form--register'
+  ]
+%}
+
+<div class="container">
+  <form{{ attributes|without('class') }} {{ create_attribute({'class': classes}) }}>
+    {{ children }}
+  </form>
+  <div class="user-form__actions">
+    <a href="{{ path('user.login') }}">{% trans %}Log in{% endtrans %}</a>
+    <a href="{{ path('user.pass') }}">{% trans %}Forgot password{% endtrans %}</a>
+  </div>
+</div>
