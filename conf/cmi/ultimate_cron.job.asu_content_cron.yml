@@ -1,0 +1,17 @@
+uuid: 1182daa6-76ae-4df4-a12a-594fc4ae317e
+langcode: fi
+status: true
+dependencies:
+  module:
+    - asu_content
+title: 'Default cron handler'
+id: asu_content_cron
+weight: 0
+module: asu_content
+callback: asu_content_cron
+scheduler:
+  id: simple
+launcher:
+  id: serial
+logger:
+  id: database
