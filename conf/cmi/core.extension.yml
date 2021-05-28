@@ -19,6 +19,7 @@ module:
   ckeditor: 0
   computed_field_plugin: 0
   config: 0
+  config_replace: 0
   config_terms: 0
   config_translation: 0
   config_update: 0
