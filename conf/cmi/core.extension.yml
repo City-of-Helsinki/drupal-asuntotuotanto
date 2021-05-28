@@ -19,6 +19,7 @@ module:
   ckeditor: 0
   computed_field_plugin: 0
   config: 0
+  config_terms: 0
   config_translation: 0
   config_update: 0
   context: 0
@@ -111,6 +112,7 @@ module:
   token_filter: 0
   toolbar: 0
   twig_tweak: 0
+  ultimate_cron: 0
   update: 0
   user: 0
   views_infinite_scroll: 0
