@@ -83,7 +83,7 @@ bundle: project
 mode: default
 content:
   field_apartment_count:
-    weight: 140
+    weight: 12
     label: above
     settings:
       thousand_separator: ''
@@ -92,7 +92,7 @@ content:
     type: number_integer
     region: content
   field_apartments:
-    weight: 132
+    weight: 6
     label: above
     settings:
       link: true
@@ -100,7 +100,7 @@ content:
     type: entity_reference_label
     region: content
   field_application_end_time:
-    weight: 150
+    weight: 21
     label: above
     settings:
       timezone_override: ''
@@ -109,7 +109,7 @@ content:
     type: datetime_default
     region: content
   field_application_start_time:
-    weight: 150
+    weight: 20
     label: above
     settings:
       timezone_override: ''
@@ -118,7 +118,7 @@ content:
     type: datetime_default
     region: content
   field_attachments_url:
-    weight: 129
+    weight: 5
     label: above
     settings:
       trim_length: 80
@@ -130,7 +130,7 @@ content:
     type: link
     region: content
   field_building_type:
-    weight: 160
+    weight: 31
     label: hidden
     settings:
       link: false
@@ -138,7 +138,7 @@ content:
     type: entity_reference_label
     region: content
   field_city:
-    weight: 135
+    weight: 8
     label: hidden
     settings:
       link_to_entity: false
@@ -146,7 +146,7 @@ content:
     type: string
     region: content
   field_construction_materials:
-    weight: 154
+    weight: 24
     label: above
     settings:
       link: true
@@ -154,7 +154,7 @@ content:
     type: entity_reference_label
     region: content
   field_construction_year:
-    weight: 138
+    weight: 10
     label: above
     settings:
       link_to_entity: false
@@ -162,7 +162,7 @@ content:
     type: string
     region: content
   field_coordinate_lat:
-    weight: 151
+    weight: 22
     label: above
     settings:
       thousand_separator: ''
@@ -173,7 +173,7 @@ content:
     type: number_decimal
     region: content
   field_coordinate_lon:
-    weight: 152
+    weight: 23
     label: above
     settings:
       thousand_separator: ''
@@ -184,7 +184,7 @@ content:
     type: number_decimal
     region: content
   field_district:
-    weight: 159
+    weight: 30
     label: above
     settings:
       link: false
@@ -192,7 +192,7 @@ content:
     type: entity_reference_label
     region: content
   field_energy_class:
-    weight: 156
+    weight: 26
     label: hidden
     settings:
       link: false
@@ -200,7 +200,7 @@ content:
     type: entity_reference_label
     region: content
   field_has_elevator:
-    weight: 141
+    weight: 13
     label: above
     settings:
       format: default
@@ -210,7 +210,7 @@ content:
     type: boolean
     region: content
   field_has_sauna:
-    weight: 142
+    weight: 14
     label: above
     settings:
       format: default
@@ -220,7 +220,7 @@ content:
     type: boolean
     region: content
   field_heating_options:
-    weight: 155
+    weight: 25
     label: above
     settings:
       link: true
@@ -228,7 +228,7 @@ content:
     type: entity_reference_label
     region: content
   field_holding_type:
-    weight: 161
+    weight: 33
     label: above
     settings:
       link: true
@@ -236,7 +236,7 @@ content:
     type: entity_reference_label
     region: content
   field_housing_company:
-    weight: 133
+    weight: 7
     label: above
     settings:
       link_to_entity: false
@@ -244,7 +244,7 @@ content:
     type: string
     region: content
   field_new_development_status:
-    weight: 157
+    weight: 27
     label: above
     settings:
       link: true
@@ -252,7 +252,7 @@ content:
     type: entity_reference_label
     region: content
   field_new_housing:
-    weight: 139
+    weight: 11
     label: above
     settings:
       format: default
@@ -262,7 +262,7 @@ content:
     type: boolean
     region: content
   field_ownership_type:
-    weight: 159
+    weight: 29
     label: hidden
     settings:
       link: false
@@ -270,7 +270,7 @@ content:
     type: entity_reference_label
     region: content
   field_postal_code:
-    weight: 104
+    weight: 1
     label: hidden
     settings:
       link_to_entity: false
@@ -278,7 +278,7 @@ content:
     type: string
     region: content
   field_project_accessibility:
-    weight: 165
+    weight: 36
     label: hidden
     settings:
       link_to_entity: false
@@ -286,14 +286,14 @@ content:
     type: string
     region: content
   field_project_area_description:
-    weight: 169
+    weight: 40
     label: hidden
     settings: {  }
     third_party_settings: {  }
     type: basic_string
     region: content
   field_project_attachments:
-    weight: 167
+    weight: 38
     label: above
     settings:
       use_description_as_link_text: true
@@ -301,14 +301,14 @@ content:
     type: file_default
     region: content
   field_project_description:
-    weight: 168
+    weight: 39
     label: hidden
     settings: {  }
     third_party_settings: {  }
     type: text_default
     region: content
   field_publication_start_time:
-    weight: 150
+    weight: 19
     label: above
     settings:
       format_type: medium
@@ -317,7 +317,7 @@ content:
     type: datetime_default
     region: content
   field_realty_id:
-    weight: 137
+    weight: 9
     label: above
     settings:
       link_to_entity: false
@@ -325,7 +325,7 @@ content:
     type: string
     region: content
   field_roof_material:
-    weight: 115
+    weight: 2
     label: above
     settings:
       link_to_entity: false
@@ -333,7 +333,7 @@ content:
     type: string
     region: content
   field_sanitation:
-    weight: 122
+    weight: 4
     label: above
     settings:
       link_to_entity: false
@@ -341,14 +341,14 @@ content:
     type: string
     region: content
   field_services:
-    weight: 163
+    weight: 35
     label: above
     settings: {  }
     third_party_settings: {  }
     type: asu_service_formatter
     region: content
   field_services_url:
-    weight: 166
+    weight: 37
     label: above
     settings:
       trim_length: 80
@@ -360,7 +360,7 @@ content:
     type: link
     region: content
   field_shared_apartment_images:
-    weight: 161
+    weight: 32
     label: hidden
     settings:
       style: ''
@@ -411,11 +411,12 @@ content:
       breakpoints: {  }
       sizes: ''
       grid_header: ''
+      use_theme_field: false
     third_party_settings: {  }
     type: slick_image
     region: content
   field_site_area:
-    weight: 146
+    weight: 16
     label: above
     settings:
       thousand_separator: ''
@@ -426,7 +427,7 @@ content:
     type: number_decimal
     region: content
   field_site_owner:
-    weight: 158
+    weight: 28
     label: above
     settings:
       link: false
@@ -434,7 +435,7 @@ content:
     type: entity_reference_label
     region: content
   field_site_renter:
-    weight: 145
+    weight: 15
     label: above
     settings:
       link_to_entity: false
@@ -442,7 +443,7 @@ content:
     type: string
     region: content
   field_state_of_sale:
-    weight: 164
+    weight: 41
     label: above
     settings:
       link: true
@@ -450,7 +451,7 @@ content:
     type: entity_reference_label
     region: content
   field_street_address:
-    weight: 116
+    weight: 3
     label: hidden
     settings:
       link_to_entity: false
@@ -458,14 +459,14 @@ content:
     type: string
     region: content
   field_tasks:
-    weight: 162
+    weight: 34
     label: above
     settings: {  }
     third_party_settings: {  }
     type: tasklist_formatter
     region: content
   field_zoning_info:
-    weight: 147
+    weight: 17
     label: above
     settings:
       trim_length: 80
@@ -477,7 +478,7 @@ content:
     type: link
     region: content
   field_zoning_status:
-    weight: 148
+    weight: 18
     label: above
     settings:
       link_to_entity: false
@@ -485,7 +486,7 @@ content:
     type: string
     region: content
   links:
-    weight: 100
+    weight: 0
     region: content
     settings: {  }
     third_party_settings: {  }

@@ -1,0 +1,11 @@
+uuid: fc90ef01-bb1c-4ba6-9ff3-fa182850e653
+langcode: en
+status: true
+dependencies: {  }
+id: pre_marketing
+vid: state_of_sale
+label: 'Pre marketing'
+parents:
+  - '0'
+description: ''
+weight: 1

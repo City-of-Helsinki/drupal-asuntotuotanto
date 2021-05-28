@@ -1,0 +1,11 @@
+uuid: 30873635-5dc6-461d-92e1-d69b8fff48d7
+langcode: en
+status: true
+dependencies: {  }
+id: reserved
+vid: apartment_state_of_sale
+label: Reserved
+parents:
+  - '0'
+description: ''
+weight: 0
