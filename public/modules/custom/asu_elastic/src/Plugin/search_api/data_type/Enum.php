@@ -15,11 +15,11 @@ use Drupal\search_api\DataType\DataTypePluginBase;
  * )
  */
 class Enum extends DataTypePluginBase {
+
   /**
    * {@inheritdoc}
    */
   public function getValue($value) {
-
 
     if ($value) {
       $string = strtoupper(
@@ -27,7 +27,8 @@ class Enum extends DataTypePluginBase {
       );
       $string = str_replace('-', '_', $string);
       return $string;
-    } else {
+    }
+    else {
       return '';
     }
   }
