@@ -5,7 +5,7 @@ namespace Drupal\asu_elastic\Plugin\search_api\data_type;
 use Drupal\search_api\DataType\DataTypePluginBase;
 
 /**
- * Enum.
+ * Turn taxonomy into enum.
  *
  * @SearchApiDataType(
  *   id = "asu_enum",
