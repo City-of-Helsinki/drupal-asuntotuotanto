@@ -1,8 +1,16 @@
 .page-footer {
   margin-top: $spacing-2-xl;
 
-  @include breakpoint($breakpoint-l) {
+  @media screen and (min-width: $breakpoint-xs) {
     margin-top: $spacing-4-xl;
+  }
+}
+
+.page-footer__container {
+  padding: 0 $spacing-s;
+
+  @media screen and (min-width: $breakpoint-xs) {
+    padding: 0 $spacing-l;
   }
 }
 

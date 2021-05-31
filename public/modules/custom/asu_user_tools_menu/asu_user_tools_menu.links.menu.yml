@@ -1,0 +1,19 @@
+asu_user_tools_menu.user_name:
+  title: 'User'
+  menu_name: user-tools-menu
+  url: "route:<nolink>"
+  weight: 1
+
+asu_user_tools_menu.user_information:
+  title: 'User information'
+  menu_name: user-tools-menu
+  route_name: asu_user_tools_menu.user_information_page
+  weight: 1
+  parent: asu_user_tools_menu.user_name
+
+asu_user_tools_menu.logout:
+  weight: 2
+  menu_name: user-tools-menu
+  title: 'Log out'
+  route_name: user.logout
+  parent: asu_user_tools_menu.user_name

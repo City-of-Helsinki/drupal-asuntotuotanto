@@ -11,18 +11,19 @@
   ]
 %}
 
-<div{{ create_attribute({'class': page_classes} ) }}>
-  {% if page.header_top or page.header_bottom %}
-    <header role="banner">
-      {% if page.header_top %}
-        {{ page.header_top }}
-      {% endif %}
+{% if page.header_top or page.header_bottom %}
+  <header role="banner" class="page-header">
+    {% if page.header_top %}
+      {{ page.header_top }}
+    {% endif %}
 
-      {% if page.header_bottom %}
-        {{ page.header_bottom }}
-      {% endif %}
-    </header>
-  {% endif %}
+    {% if page.header_bottom %}
+      {{ page.header_bottom }}
+    {% endif %}
+  </header>
+{% endif %}
+
+<div{{ create_attribute({'class': page_classes} ) }}>
 
   {% if page.messages %}
     {{ page.messages }}
@@ -68,7 +69,7 @@
 <footer class="page-footer" role="contentinfo">
   {% include '@hdbt/misc/koro.twig' with {koro: 'basic', color: 'var(--color-black-5)'} %}
   <div class="page-footer__content">
-    <div class="page-footer__container container">
+    <div class="page-footer__container wrapper wrapper--mw-1200">
       <div class="page-footer__item page-footer__item--top">
         {{ page.footer_top }}
       </div>

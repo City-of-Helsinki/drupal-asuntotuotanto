@@ -2,10 +2,6 @@
   &.branding--header {
     align-items: center;
     display: inline-flex;
-
-    @media screen and (min-width: $container-width-l) {
-      margin-right: $spacing-l;
-    }
   }
 
   &.branding--footer {
@@ -39,7 +35,12 @@
   display: inline-block;
 
   .branding--header & {
-    margin-left: $spacing-m;
+    @media screen and (max-width: 340px) {
+      visibility: hidden;
+      display: none;
+    }
+
+    margin-left: $spacing-s;
   }
 
   .branding--footer & {
