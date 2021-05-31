@@ -1,0 +1,27 @@
+.login-link {
+  @include font-size($fontsize-body-m, $lineheight-l);
+  font-weight: $font-weight-regular;
+  text-decoration: none;
+  align-items: center;
+  display: inline-flex;
+
+  &:before {
+    background-image: url('../icons/signin.svg');
+    background-size: 100%;
+    content: "";
+    display: inline-block;
+    height: 24px;
+    width: 24px;
+    margin-right: $spacing-3-xs;
+  }
+
+  .page-header__top & {
+    margin-left: auto;
+    margin-right: $spacing-l;
+
+    @media screen and (max-width: $breakpoint-l - 1px) {
+      display: none;
+      visibility: hidden;
+    }
+  }
+}
