@@ -3,6 +3,7 @@
 namespace Drupal\asu_rest\Plugin\rest\resource;
 
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\rest\Plugin\ResourceBase;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -53,17 +54,24 @@ final class Filters extends ResourceBase {
 
       if ($taxonomy_name == 'districts') {
 
-        $database = \Drupal::database();
-        $query = $database->query('Select tid FROM {taxonomy_index}');
-        $record = $query->fetchAllKeyed(0, 0);
+        $projects = \Drupal::entityTypeManager()
+          ->getStorage('node')
+          ->loadByProperties(['type' => 'project']);
 
-        foreach ($terms as $term) {
-          if (in_array($term->id(), $record)) {
-            $items[] = $term->hasTranslation($currentLanguage->getId()) ?
-              $term->getTranslation($currentLanguage->getId())->getName() : $term->getName();
+        $items = [];
+        // Get all unique districts separately for both ownership types.
+        foreach ($projects as $project){
+          if(!$ownership = $project->field_ownership_type->first()->entity->getName()){
+            continue;
+          }
+          $district = $project->field_district->first()->entity;
+
+          $name = $district->hasTranslation($currentLanguage->getId()) ?
+            $district->getTranslation($currentLanguage->getId())->getName() : $district->getName();
+          if(!array_search($name, $items[$ownership])){
+            $items[$ownership][] = $name;
           }
         }
-
       }
       else {
         foreach ($terms as $term) {
