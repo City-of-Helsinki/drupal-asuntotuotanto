@@ -1,0 +1,11 @@
+uuid: 1fd73216-340e-441f-9b20-e12beedb37a5
+langcode: en
+status: true
+dependencies: {  }
+id: reserved_haso
+vid: apartment_state_of_sale
+label: 'Reserved (HASO)'
+parents:
+  - '0'
+description: ''
+weight: 0

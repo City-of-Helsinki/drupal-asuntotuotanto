@@ -1,0 +1,11 @@
+uuid: 75ed1ed5-0b5d-4c1b-b851-408e13958e93
+langcode: en
+status: true
+dependencies: {  }
+id: for_sale
+vid: state_of_sale
+label: 'For sale'
+parents:
+  - '0'
+description: ''
+weight: 0

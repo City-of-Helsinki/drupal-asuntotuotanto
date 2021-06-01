@@ -7,7 +7,6 @@ dependencies:
     - field.storage.node.field_floor_max
     - field.storage.node.field_apartment_number
     - field.storage.node.field_apartment_state_of_sale
-    - field.storage.taxonomy_term.field_machine_readable_name
     - field.storage.node.field_apartment_structure
     - field.storage.node.field_has_balcony
     - field.storage.node.field_balcony_description
@@ -39,7 +38,6 @@ dependencies:
     - search_api.server.asuntotuotanto
   module:
     - asu_elastic
-    - taxonomy
     - node
     - computed_field_plugin
     - search_api
@@ -80,14 +78,11 @@ field_settings:
   apartment_state_of_sale:
     label: 'Apartment state of sale'
     datasource_id: 'entity:node'
-    property_path: 'field_apartment_state_of_sale:entity:field_machine_readable_name'
-    type: string
+    property_path: field_apartment_state_of_sale
+    type: asu_enum
     dependencies:
       config:
         - field.storage.node.field_apartment_state_of_sale
-        - field.storage.taxonomy_term.field_machine_readable_name
-      module:
-        - taxonomy
   apartment_structure:
     label: 'Apartment structure'
     datasource_id: 'entity:node'
@@ -528,13 +523,10 @@ field_settings:
     property_path: 'search_api_reverse_entity_references_node__field_apartments:field_site_renter'
     type: string
   project_state_of_sale:
-    label: 'State of sale'
+    label: 'Project state of sale'
     datasource_id: 'entity:node'
-    property_path: asu_state_of_sale
-    type: string
-    dependencies:
-      module:
-        - computed_field_plugin
+    property_path: 'search_api_reverse_entity_references_node__field_apartments:field_state_of_sale'
+    type: asu_enum
   project_street_address:
     label: 'Street address'
     datasource_id: 'entity:node'

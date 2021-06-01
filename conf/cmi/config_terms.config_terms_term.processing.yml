@@ -1,0 +1,11 @@
+uuid: 0e1248cf-e3a6-4407-a7fe-2c8eb3ae8803
+langcode: en
+status: true
+dependencies: {  }
+id: processing
+vid: state_of_sale
+label: Processing
+parents:
+  - '0'
+description: ''
+weight: 2

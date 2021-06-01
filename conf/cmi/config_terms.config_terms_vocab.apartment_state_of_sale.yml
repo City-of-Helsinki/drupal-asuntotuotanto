@@ -1,0 +1,9 @@
+uuid: 271f10f0-3bf2-49ab-a933-40136b57baf4
+langcode: en
+status: true
+dependencies: {  }
+label: 'Apartment state of sale'
+id: apartment_state_of_sale
+description: 'State of sale for apartment'
+weight: 0
+hierarchy: 0

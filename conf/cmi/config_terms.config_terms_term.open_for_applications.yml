@@ -1,0 +1,11 @@
+uuid: 535053c9-4201-48c2-91b6-3074bc9075b2
+langcode: en
+status: true
+dependencies: {  }
+id: open_for_applications
+vid: apartment_state_of_sale
+label: 'Open for applications'
+parents:
+  - '0'
+description: ''
+weight: 0

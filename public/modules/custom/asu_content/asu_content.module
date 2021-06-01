@@ -10,6 +10,7 @@ const FORMS_TO_HIDE_TITLE_FROM = [
   'node_apartment_form',
 ];
 
+use Drupal\asu_content\ProjectUpdater;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\node\Entity\Node;
@@ -109,4 +110,34 @@ function asu_content_entity_update($entity) {
       }
     }
   }
+}
+
+/**
+ * Implements hook_cron().
+ */
+function asu_content_cron() {
+  $properties = [
+    'type' => 'project',
+    'status' => 1,
+  ];
+
+  // Get the nodes.
+  $nodes = \Drupal::entityTypeManager()
+    ->getStorage('node')
+    ->loadByProperties($properties);
+
+  $logger = Drupal::logger('asu_cron');
+  $projectUpdater = new ProjectUpdater($logger);
+  $updated = [];
+  foreach ($nodes as $node) {
+    try {
+      $updated[] = $projectUpdater->updateApartmentStateByApplicationTime($node);
+    }
+    catch (\Exception $e) {
+      // The time is most likely not set.
+      // @Todo: logging.
+    }
+  }
+  // @Todo: logging.
+  // Log updated ids
 }

@@ -78,7 +78,7 @@ content:
     type: string
     region: content
   field_apartment_state_of_sale:
-    weight: 56
+    weight: 58
     label: above
     settings:
       link: true
@@ -452,6 +452,7 @@ content:
 hidden:
   asu_application_form_url: true
   asu_computed_apartment_images: true
+  asu_new_development_status: true
   asu_project_building_type: true
   asu_project_holding_type: true
   asu_state_of_sale: true

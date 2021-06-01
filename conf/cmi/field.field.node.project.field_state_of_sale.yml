@@ -1,29 +1,24 @@
-uuid: d99fbeed-a3e2-4ab1-a69d-86475f7c52cf
-langcode: fi
+uuid: 62b869b7-0af3-4c8d-9969-a3bba159fafe
+langcode: en
 status: true
 dependencies:
   config:
     - field.storage.node.field_state_of_sale
     - node.type.project
-    - taxonomy.vocabulary.states_of_sale
 id: node.project.field_state_of_sale
 field_name: field_state_of_sale
 entity_type: node
 bundle: project
-label: 'Myynnin tila'
+label: 'State of sale'
 description: ''
 required: false
 translatable: true
 default_value: {  }
 default_value_callback: ''
 settings:
-  handler: 'default:taxonomy_term'
+  handler: 'default:config_terms_term'
   handler_settings:
-    target_bundles:
-      states_of_sale: states_of_sale
-    sort:
-      field: name
-      direction: asc
+    target_bundles: null
     auto_create: false
-    auto_create_bundle: ''
+    target_vocab: state_of_sale
 field_type: entity_reference

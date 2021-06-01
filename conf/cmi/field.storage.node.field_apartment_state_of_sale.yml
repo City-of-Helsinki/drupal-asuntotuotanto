@@ -1,16 +1,16 @@
-uuid: b17bbf34-4d7a-41ce-9ecb-842d0e1d1f36
+uuid: 7df2f148-a560-40d8-878e-38f4975e1852
 langcode: en
 status: true
 dependencies:
   module:
+    - config_terms
     - node
-    - taxonomy
 id: node.field_apartment_state_of_sale
 field_name: field_apartment_state_of_sale
 entity_type: node
 type: entity_reference
 settings:
-  target_type: taxonomy_term
+  target_type: config_terms_term
 module: core
 locked: false
 cardinality: 1

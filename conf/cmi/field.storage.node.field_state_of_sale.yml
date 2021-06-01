@@ -1,16 +1,16 @@
-uuid: 6a6dfe8c-9615-49ee-86ee-5e48c491bc46
+uuid: 6fd336b9-7c32-47cc-91bc-000d67140a84
 langcode: en
 status: true
 dependencies:
   module:
+    - config_terms
     - node
-    - taxonomy
 id: node.field_state_of_sale
 field_name: field_state_of_sale
 entity_type: node
 type: entity_reference
 settings:
-  target_type: taxonomy_term
+  target_type: config_terms_term
 module: core
 locked: false
 cardinality: 1
