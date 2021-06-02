@@ -61,9 +61,13 @@ final class Filters extends ResourceBase {
         $items = [];
         // Get all unique districts separately for both ownership types.
         foreach ($projects as $project){
+          if(!$project->field_ownership_type->first()){
+            continue;
+          }
           if(!$ownership = $project->field_ownership_type->first()->entity->getName()){
             continue;
           }
+          $ownership = $ownership == 'Haso' ? 'Haso' : 'Hitas';
           $district = $project->field_district->first()->entity;
 
           $name = $district->hasTranslation($currentLanguage->getId()) ?
