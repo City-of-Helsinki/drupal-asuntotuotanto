@@ -3,7 +3,6 @@
 namespace Drupal\asu_rest\Plugin\rest\resource;
 
 use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\rest\Plugin\ResourceBase;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -60,11 +59,11 @@ final class Filters extends ResourceBase {
 
         $items = [];
         // Get all unique districts separately for both ownership types.
-        foreach ($projects as $project){
-          if(!$project->field_ownership_type->first()){
+        foreach ($projects as $project) {
+          if (!$project->field_ownership_type->first()) {
             continue;
           }
-          if(!$ownership = $project->field_ownership_type->first()->entity->getName()){
+          if (!$ownership = $project->field_ownership_type->first()->entity->getName()) {
             continue;
           }
           $ownership = $ownership == 'Haso' ? 'Haso' : 'Hitas';
@@ -72,26 +71,46 @@ final class Filters extends ResourceBase {
 
           $name = $district->hasTranslation($currentLanguage->getId()) ?
             $district->getTranslation($currentLanguage->getId())->getName() : $district->getName();
-          if(!array_search($name, $items[$ownership])){
-            $items[$ownership][] = $name;
+          if (!array_search($name, $items[$ownership])) {
+            $items[strtolower('project_district_' . $ownership)][] = $name;
           }
         }
+
+        $vocabulary_name = $vocabularies[$terms[0]->bundle()]->get('name');
+        $index_hitas = [
+          'label' => $vocabulary_name,
+          'items' => $items['project_district_hitas'],
+          'suffix' => NULL,
+        ];
+        $responseData[strtolower('project_district_hitas')] = $index_hitas;
+
+        $vocabulary_name = $vocabularies[$terms[0]->bundle()]->get('name');
+        $index_haso = [
+          'label' => $vocabulary_name,
+          'items' => $items['project_district_haso'],
+          'suffix' => NULL,
+        ];
+
+        $responseData[strtolower('project_district_haso')] = $index_haso;
+
       }
       else {
         foreach ($terms as $term) {
           $items[] = $term->hasTranslation($currentLanguage->getId()) ?
             $term->getTranslation($currentLanguage->getId())->getName() : $term->getName();
         }
+
+        $vocabulary_name = $vocabularies[$terms[0]->bundle()]->get('name');
+        $index_data = [
+          'label' => $vocabulary_name,
+          'items' => $items,
+          'suffix' => NULL,
+        ];
+
+        $responseData[$elastic_index_name] = $index_data;
+
       }
 
-      $vocabulary_name = $vocabularies[$terms[0]->bundle()]->get('name');
-      $index_data = [
-        'label' => $vocabulary_name,
-        'items' => $items,
-        'suffix' => NULL,
-      ];
-
-      $responseData[$elastic_index_name] = $index_data;
     }
 
     foreach ($filters['taxonomy_machinename'] as $taxonomy_name => $elastic_index_name) {
