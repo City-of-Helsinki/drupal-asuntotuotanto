@@ -8,19 +8,21 @@ dependencies:
     - paragraphs.paragraphs_type.accordion
     - paragraphs.paragraphs_type.columns
     - paragraphs.paragraphs_type.content_cards
+    - paragraphs.paragraphs_type.from_library
     - paragraphs.paragraphs_type.gallery
     - paragraphs.paragraphs_type.image
     - paragraphs.paragraphs_type.list_of_links
+    - paragraphs.paragraphs_type.remote_video
     - paragraphs.paragraphs_type.text
   module:
     - entity_reference_revisions
 _core:
-  default_config_hash: OAszLBpmZFYzCk6m40IBOPGFaX9s5i1DcOQXojCVnZU
+  default_config_hash: u-rTd_LhWLJ3EVf5WozRuAMj6FYjj77mfiUO0_3zZ_8
 id: node.page.field_content
 field_name: field_content
 entity_type: node
 bundle: page
-label: Content
+label: 'Upper content region'
 description: ''
 required: false
 translatable: true
@@ -38,6 +40,8 @@ settings:
       gallery: gallery
       list_of_links: list_of_links
       content_cards: content_cards
+      from_library: from_library
+      remote_video: remote_video
     target_bundles_drag_drop:
       accordion:
         enabled: true
@@ -54,6 +58,9 @@ settings:
       content_cards:
         enabled: true
         weight: -21
+      from_library:
+        enabled: true
+        weight: 21
       gallery:
         enabled: true
         weight: -23
@@ -75,6 +82,9 @@ settings:
       list_of_links_item:
         weight: -17
         enabled: false
+      remote_video:
+        enabled: true
+        weight: 27
       text:
         enabled: true
         weight: -27

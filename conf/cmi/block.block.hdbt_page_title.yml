@@ -7,11 +7,11 @@ dependencies:
   theme:
     - hdbt
 _core:
-  default_config_hash: VFw6IHfxDKGCJ2sS5K2oJgmI0jUy3UxkCYwT97IW5C4
+  default_config_hash: cWAyHuLWbIx_Tsd04YPaUUGBOdvtYeKIjFXBXJhmi2w
 id: hdbt_page_title
 theme: hdbt
-region: content
-weight: -3
+region: before_content
+weight: -6
 provider: null
 plugin: page_title_block
 settings:
@@ -24,6 +24,7 @@ visibility:
     id: 'entity_bundle:node'
     bundles:
       unit: unit
+      service: service
     negate: true
     context_mapping:
       node: '@node.node_route_context:node'
