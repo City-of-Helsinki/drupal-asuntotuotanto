@@ -4,4 +4,4 @@ asu_content.content_script:
     _controller: '\Drupal\asu_content\Controller\ApartmentContentCreateController::content'
     _title: 'Huoneisto sisältö skripti'
   requirements:
-    _permission: 'access content'
+    _permission: 'administer blocks'
