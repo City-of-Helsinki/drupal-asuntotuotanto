@@ -74,7 +74,7 @@ function asuntotuotanto_preprocess_menu(&$variables) {
 
       if ($menu_block_configuration_suggestion === 'main__desktop') {
         $items = $variables['items'];
-        $current_path =  Url::fromRoute('<current>')->toString();
+        $current_path = Url::fromRoute('<current>')->toString();
 
         foreach ($items as $key => $item) {
           $is_active = FALSE;
@@ -109,7 +109,7 @@ function asuntotuotanto_preprocess_menu(&$variables) {
 
       foreach ($items as $key => $item) {
         $url = $item['url']->toString();
-        $current_path =  Url::fromRoute('<current>')->toString();
+        $current_path = Url::fromRoute('<current>')->toString();
         $is_active = $current_path === $url;
         $variables['items']['asu_user_tools_menu.user_name']['below'][$key]['is_link_active'] = $is_active;
       }
