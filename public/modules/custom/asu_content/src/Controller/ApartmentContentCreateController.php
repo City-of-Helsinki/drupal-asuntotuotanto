@@ -13,23 +13,22 @@ class ApartmentContentCreateController extends ControllerBase {
   /**
    * Update project and apartment fields values.
    *
-   * @param int $id
    * @return void
    */
-  public function content($id = null) {
+  public function content() {
     $projects = $this->get_content('project');
     $apartments = $this->get_content('apartment');
     $page_title = "Updated all project & apartment nodes.";
 
-    if (count($projects) > 0 && ($projects[$id] ?? null)) {
-      $page_title = "Updated project (id: $id) node and its apartments nodes.";
-      $this->update_project_content([$projects[$id]]);
-      $apartments = $this->get_apartment_nodes_by_project_id($id);
-      $this->update_apartment_content($apartments);
-    } else {
+    // if (count($projects) > 0 && ($projects[$id] ?? null)) {
+    //   $page_title = "Updated project (id: $id) node and its apartments nodes.";
+    //   $this->update_project_content([$projects[$id]]);
+    //   $apartments = $this->get_apartment_nodes_by_project_id($id);
+    //   $this->update_apartment_content($apartments);
+    // } else {
       $this->update_project_content($projects);
       $this->update_apartment_content($apartments);
-    }
+    // }
 
     $build = [
       '#markup' => "<h1 class='wrapper wrapper--mw-1200'>$page_title</h1>",

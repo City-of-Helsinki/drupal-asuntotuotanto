@@ -1,5 +1,5 @@
 asu_content.content_script:
-  path: '/apartment-content-script/{id}'
+  path: '/apartment-content-script'
   defaults:
     _controller: '\Drupal\asu_content\Controller\ApartmentContentCreateController::content'
     _title: 'Huoneisto sisältö skripti'
