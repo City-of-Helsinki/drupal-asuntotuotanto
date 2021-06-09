@@ -78,12 +78,11 @@ function asu_content_entity_presave(EntityInterface $entity) {
 
       $entity->setTitle($title);
 
-      // When sold, unpulish apartment.
+      // When sold, unpublish apartment.
       // Unpublishing removes apartment from elasticsearch.
       if ($entity->isPublished()) {
-        $tids = taxonomy_term_load_multiple_by_name('sold', 'apartment_state_of_sale');
         // Get the id of sold state.
-        if (!empty($tids) && $entity->field_apartment_state_of_sale->target_id == reset($tids)->id()) {
+        if ($entity->field_apartment_state_of_sale->target_id == 'sold') {
           $entity->setUnpublished();
           \Drupal::messenger()->addMessage(t("Apartment @title was sold and is now unpublished.", ['@title' => $entity->title->value]));
         }
