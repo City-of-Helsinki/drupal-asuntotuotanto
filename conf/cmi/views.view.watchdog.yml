@@ -6,7 +6,7 @@ dependencies:
     - dblog
     - user
 _core:
-  default_config_hash: QFezQ4TbnTzUO15iTk6-flc68pzr437FjP3nJ_qXM9M
+  default_config_hash: JZuLFVODnZAMZo8arypUn3Ha4mBmiXDiugiAjpD4aIs
 id: watchdog
 label: Watchdog
 module: views
@@ -86,6 +86,8 @@ display:
             link: link
           info:
             nothing:
+              sortable: false
+              default_sort_order: asc
               align: ''
               separator: ''
               empty_column: false
@@ -387,7 +389,7 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
-          date_format: short
+          date_format: long
           custom_date_format: ''
           timezone: ''
           plugin_id: date

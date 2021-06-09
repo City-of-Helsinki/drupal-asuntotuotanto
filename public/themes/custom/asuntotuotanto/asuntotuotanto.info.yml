@@ -9,6 +9,7 @@ screenshot: hdbt_subtheme.png
 # Regions
 regions:
   header_top: Header - Top
+  header_branding: Header - Branding
   header_bottom: Header - Bottom
   messages: Messages
   tools: Tools

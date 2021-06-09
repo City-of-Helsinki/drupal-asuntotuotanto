@@ -1,9 +1,14 @@
 uuid: eb7c4f71-ada0-4494-9349-2a8eef1b6687
 langcode: en
 status: true
-dependencies: {  }
+dependencies:
+  module:
+    - paragraphs_library
+third_party_settings:
+  paragraphs_library:
+    allow_library_conversion: true
 _core:
-  default_config_hash: yo4uFFMZafb500s47mFUjuTc_RIaT_s4bOsE1sfNmm0
+  default_config_hash: mj0UGriEycIq3yk8tOz5QwjNr-QhtuKTixoBS2KImPU
 id: gallery
 label: Gallery
 icon_uuid: null

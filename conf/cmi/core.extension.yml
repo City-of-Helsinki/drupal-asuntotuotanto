@@ -40,6 +40,7 @@ module:
   elasticsearch_connector: 0
   entity: 0
   entity_reference_revisions: 0
+  entity_usage: 0
   features: 0
   field: 0
   field_group: 0
@@ -77,6 +78,7 @@ module:
   media_library: 0
   menu_block: 0
   menu_block_current_language: 0
+  menu_link_attributes: 0
   menu_link_content: 0
   menu_ui: 0
   metatag: 0
@@ -88,6 +90,7 @@ module:
   options: 0
   page_cache: 0
   paragraphs_asymmetric_translation_widgets: 0
+  paragraphs_library: 0
   paragraphs_type_permissions: 0
   path: 0
   path_alias: 0
