@@ -18,13 +18,21 @@ class ApartmentContentCreateController extends ControllerBase {
    */
   public function content($id = null) {
     $projects = $this->get_content('project');
-    $this->update_project_content($projects);
-
     $apartments = $this->get_content('apartment');
-    $this->update_apartment_content($apartments);
+    $page_title = "Updated all project & apartment nodes.";
+
+    if (count($projects) > 0 && ($projects[$id] ?? null)) {
+      $page_title = "Updated project (id: $id) node and its apartments nodes.";
+      $this->update_project_content([$projects[$id]]);
+      $apartments = $this->get_apartment_nodes_by_project_id($id);
+      $this->update_apartment_content($apartments);
+    } else {
+      $this->update_project_content($projects);
+      $this->update_apartment_content($apartments);
+    }
 
     $build = [
-      '#markup' => "<h1>Updated yur stuff - $id</h1>",
+      '#markup' => "<h1 class='wrapper wrapper--mw-1200'>$page_title</h1>",
     ];
 
     return $build;
@@ -114,12 +122,41 @@ class ApartmentContentCreateController extends ControllerBase {
    * Get all nodes from content type.
    *
    * @param string $content_type
-   * @return void
+   * @return array
    */
   private function get_content($content_type) {
     return \Drupal::entityTypeManager()
     ->getStorage('node')
     ->loadByProperties(['type' => $content_type]);
+  }
+
+  /**
+   * Get all apartment nodes referenced by project id.
+   *
+   * @param string $id
+   * @return array
+   */
+  private function get_apartment_nodes_by_project_id($id) {
+    $apartments = $this->get_content('apartment');
+    $apartments_stack = [];
+
+    foreach ($apartments as $key => $apartment) {
+      $parent_node_results = \Drupal::entityTypeManager()
+      ->getListBuilder('node')
+      ->getStorage()
+      ->loadByProperties([
+          'type' => 'project',
+          'status' => 1,
+          'field_apartments' => $apartment->id(),
+        ]
+      );
+
+      if (key($parent_node_results) === (int) $id) {
+        $apartments_stack[$key] = $key;
+      }
+    }
+
+    return array_intersect_key($apartments, array_flip($apartments_stack));
   }
 
   /**
