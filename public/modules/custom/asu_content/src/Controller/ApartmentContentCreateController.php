@@ -2,7 +2,6 @@
 
 namespace Drupal\asu_content\Controller;
 
-use Drupal;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Controller\ControllerBase;
 
@@ -10,25 +9,17 @@ use Drupal\Core\Controller\ControllerBase;
  * An asu_content controller.
  */
 class ApartmentContentCreateController extends ControllerBase {
+
   /**
    * Update project and apartment fields values.
-   *
-   * @return void
    */
   public function content() {
-    $projects = $this->get_content('project');
-    $apartments = $this->get_content('apartment');
+    $projects = $this->getContent('project');
+    $apartments = $this->getContent('apartment');
     $page_title = "Updated all project & apartment nodes.";
 
-    // if (count($projects) > 0 && ($projects[$id] ?? null)) {
-    //   $page_title = "Updated project (id: $id) node and its apartments nodes.";
-    //   $this->update_project_content([$projects[$id]]);
-    //   $apartments = $this->get_apartment_nodes_by_project_id($id);
-    //   $this->update_apartment_content($apartments);
-    // } else {
-      $this->update_project_content($projects);
-      $this->update_apartment_content($apartments);
-    // }
+    $this->updateProjectContent($projects);
+    $this->updateApartmentContent($apartments);
 
     $build = [
       '#markup' => "<h1 class='wrapper wrapper--mw-1200'>$page_title</h1>",
@@ -41,8 +32,10 @@ class ApartmentContentCreateController extends ControllerBase {
    * Generate image files from image URLs.
    *
    * @return array
+   *
+   *   Will return an array of images in File format.
    */
-  private function get_generated_images() {
+  private function getGeneratedImages() {
     $host = \Drupal::request()->getSchemeAndHttpHost();
 
     $external_images = [
@@ -55,7 +48,7 @@ class ApartmentContentCreateController extends ControllerBase {
       'https://images.pexels.com/photos/439227/pexels-photo-439227.jpeg',
     ];
 
-    $this->save_external_images($external_images);
+    $this->saveExternalImages($external_images);
 
     $internal_images_paths = [];
 
@@ -66,7 +59,7 @@ class ApartmentContentCreateController extends ControllerBase {
     $internal_images_data = [];
 
     foreach ($internal_images_paths as $image) {
-      $image = $this->get_file_data($image);
+      $image = $this->getFileData($image);
       $internal_images_data[] = $image;
     }
 
@@ -77,12 +70,12 @@ class ApartmentContentCreateController extends ControllerBase {
    * Fill out project node fields and save it.
    *
    * @param array $projects
-   * @return void
+   *
+   *   Array of nodes.
    */
-  private function update_project_content($projects) {
-    $images = $this->get_generated_images();
+  private function updateProjectContent(array $projects) {
+    $images = $this->getGeneratedImages();
 
-    /** Node $project */
     foreach ($projects as $project) {
       shuffle($images);
       $project->field_shared_apartment_images = array_slice($images, 0, 3);
@@ -97,12 +90,12 @@ class ApartmentContentCreateController extends ControllerBase {
    * Fill out apartment node fields and save it.
    *
    * @param array $apartments
-   * @return void
+   *
+   *   Array of nodes.
    */
-  private function update_apartment_content($apartments) {
-    $images = $this->get_generated_images();
+  private function updateApartmentContent(array $apartments) {
+    $images = $this->getGeneratedImages();
 
-    /** Node $apartment */
     foreach ($apartments as $apartment) {
       $apartment->field_apartment_state_of_sale = 'open_for_applications';
       shuffle($images);
@@ -121,29 +114,39 @@ class ApartmentContentCreateController extends ControllerBase {
    * Get all nodes from content type.
    *
    * @param string $content_type
+   *
+   *   Name of the content type.
+   *
    * @return array
+   *
+   *   Will return an array of nodes for that content type.
    */
-  private function get_content($content_type) {
+  private function getContent($content_type) {
     return \Drupal::entityTypeManager()
-    ->getStorage('node')
-    ->loadByProperties(['type' => $content_type]);
+      ->getStorage('node')
+      ->loadByProperties(['type' => $content_type]);
   }
 
   /**
    * Get all apartment nodes referenced by project id.
    *
    * @param string $id
+   *
+   *   Project id.
+   *
    * @return array
+   *
+   *   Will return an array of apartment nodes by project id.
    */
-  private function get_apartment_nodes_by_project_id($id) {
-    $apartments = $this->get_content('apartment');
+  private function getApartmentNodesByProjectId($id) {
+    $apartments = $this->getContent('apartment');
     $apartments_stack = [];
 
     foreach ($apartments as $key => $apartment) {
       $parent_node_results = \Drupal::entityTypeManager()
-      ->getListBuilder('node')
-      ->getStorage()
-      ->loadByProperties([
+        ->getListBuilder('node')
+        ->getStorage()
+        ->loadByProperties([
           'type' => 'project',
           'status' => 1,
           'field_apartments' => $apartment->id(),
@@ -162,9 +165,10 @@ class ApartmentContentCreateController extends ControllerBase {
    * Save image URLs as Drupal files.
    *
    * @param array $images
-   * @return void
+   *
+   *   Array of external image URLs.
    */
-  private function save_external_images($images) {
+  private function saveExternalImages(array $images) {
     if (empty($images)) {
       return;
     }
@@ -179,11 +183,16 @@ class ApartmentContentCreateController extends ControllerBase {
    * Return file data from file absolute url.
    *
    * @param string $file_url
+   *
+   *   Absolute file URL.
+   *
    * @return array
+   *
+   *   Will return an array of image data.
    */
-  private function get_file_data($file_url) {
-    $file_name = Drupal::service('file_system')->basename($file_url);
-    $target_file = Drupal::entityTypeManager()->getStorage('file')->loadByProperties(['filename' => $file_name]);
+  private function getFileData(string $file_url) {
+    $file_name = \Drupal::service('file_system')->basename($file_url);
+    $target_file = \Drupal::entityTypeManager()->getStorage('file')->loadByProperties(['filename' => $file_name]);
     $file_data = reset($target_file);
 
     if (!$file_data) {
