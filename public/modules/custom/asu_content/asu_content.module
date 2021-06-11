@@ -137,7 +137,7 @@ function asu_content_node_insert(Node $node) {
       $apartment->save();
 
       $node->get('field_apartments');
-      $node->field_apartments->setValue([$node]);
+      $node->field_apartments->setValue([$apartment]);
       $node->save();
     }
   }
