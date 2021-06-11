@@ -74,7 +74,7 @@ function asuntotuotanto_preprocess_menu(&$variables) {
 
       if ($menu_block_configuration_suggestion === 'main__desktop') {
         $items = $variables['items'];
-        $current_path =  Url::fromRoute('<current>')->toString();
+        $current_path = Url::fromRoute('<current>')->toString();
 
         foreach ($items as $key => $item) {
           $is_active = FALSE;
@@ -109,7 +109,7 @@ function asuntotuotanto_preprocess_menu(&$variables) {
 
       foreach ($items as $key => $item) {
         $url = $item['url']->toString();
-        $current_path =  Url::fromRoute('<current>')->toString();
+        $current_path = Url::fromRoute('<current>')->toString();
         $is_active = $current_path === $url;
         $variables['items']['asu_user_tools_menu.user_name']['below'][$key]['is_link_active'] = $is_active;
       }
@@ -136,10 +136,10 @@ function asuntotuotanto_preprocess_node(&$variables) {
       foreach ($apartments as $key => $apartment) {
         $apartment_target_id = $apartment['target_id'];
         $apartment_node = Node::load($apartment_target_id);
-        $apartment_sales_price = $apartment_node->get('field_sales_price')->value;
-        $apartment_debt_free_sales_price = $apartment_node->get('field_debt_free_sales_price')->value;
-        $apartment_living_area_size = $apartment_node->get('field_living_area')->value;
-        $apartment_structure = $apartment_node->get('field_apartment_structure')->value;
+        $apartment_sales_price = $apartment_node->hasField('field_sales_price') ? $apartment_node->get('field_sales_price')->value : 0;
+        $apartment_debt_free_sales_price = $apartment_node->hasField('field_debt_free_sales_price') ? $apartment_node->get('field_debt_free_sales_price')->value : 0;
+        $apartment_living_area_size = $apartment_node->hasField('field_living_area') ? $apartment_node->get('field_living_area')->value : 0;
+        $apartment_structure = $apartment_node->hasField('field_apartment_structure') ? $apartment_node->get('field_apartment_structure')->value : 0;
 
         array_push($apartment_sales_prices, $apartment_sales_price);
         array_push($apartment_debt_free_sales_prices, $apartment_debt_free_sales_price);
@@ -147,26 +147,36 @@ function asuntotuotanto_preprocess_node(&$variables) {
         array_push($apartment_structures, $apartment_structure);
       }
 
-      sort($apartment_structures);
+      $apartment_debt_free_sales_prices_string = '';
+      $apartment_sales_prices_string = '';
 
-      $apartment_debt_free_sales_prices_minmax = [
-        "min" => number_format(min($apartment_debt_free_sales_prices), 2, ',', '.'),
-        "max" => number_format(max($apartment_debt_free_sales_prices), 2, ',', '.'),
-      ];
+      if (isset($apartment_structures)) {
+        sort($apartment_structures);
+      }
 
-      $apartment_sales_prices_minmax = [
-        "min" => number_format(min($apartment_sales_prices), 2, ',', '.'),
-        "max" => number_format(max($apartment_sales_prices), 2, ',', '.'),
-      ];
+      if (!empty($apartment_debt_free_sales_prices)) {
+        $apartment_debt_free_sales_prices_minmax = [
+          "min" => number_format(min($apartment_debt_free_sales_prices), 2, ',', '.'),
+          "max" => number_format(max($apartment_debt_free_sales_prices), 2, ',', '.'),
+        ];
+        $apartment_debt_free_sales_prices_string = $apartment_debt_free_sales_prices_minmax['min'] . " € - " . $apartment_debt_free_sales_prices_minmax['max'] . " €";
+      }
 
-      $apartment_living_area_sizes_minmax = [
-        "min" => number_format(min($apartment_living_area_sizes), 1, ',', NULL),
-        "max" => number_format(max($apartment_living_area_sizes), 1, ',', NULL),
-      ];
+      if (!empty($apartment_sales_prices)) {
+        $apartment_sales_prices_minmax = [
+          "min" => number_format(min($apartment_sales_prices), 2, ',', '.'),
+          "max" => number_format(max($apartment_sales_prices), 2, ',', '.'),
+        ];
+        $apartment_sales_prices_string = $apartment_sales_prices_minmax['min'] . " € - " . $apartment_sales_prices_minmax['max'] . " €";
+      }
 
-      $apartment_debt_free_sales_prices_string = $apartment_debt_free_sales_prices_minmax['min'] . " € - " . $apartment_debt_free_sales_prices_minmax['max'] . " €";
-      $apartment_sales_prices_string = $apartment_sales_prices_minmax['min'] . " € - " . $apartment_sales_prices_minmax['max'] . " €";
-      $apartment_living_area_sizes_string = $apartment_living_area_sizes_minmax['min'] . " - " . $apartment_living_area_sizes_minmax['max'];
+      if (!empty($apartment_living_area_sizes)) {
+        $apartment_living_area_sizes_minmax = [
+          "min" => number_format(min($apartment_living_area_sizes), 1, ',', NULL),
+          "max" => number_format(max($apartment_living_area_sizes), 1, ',', NULL),
+        ];
+        $apartment_living_area_sizes_string = $apartment_living_area_sizes_minmax['min'] . " - " . $apartment_living_area_sizes_minmax['max'];
+      }
 
       $services = $node->get('field_services')->getValue();
       $services_stack = [];
@@ -229,7 +239,7 @@ function asuntotuotanto_preprocess_node(&$variables) {
       $variables['apartment_sales_prices'] = $apartment_sales_prices_string;
       $variables['apartment_debt_free_sales_prices'] = $apartment_debt_free_sales_prices_string;
       $variables['apartment_structures'] = implode(", ", array_unique($apartment_structures));
-      $variables['apartment_living_area_sizes_m2'] = $apartment_living_area_sizes_string;
+      $variables['apartment_living_area_sizes_m2'] = $apartment_living_area_sizes_string ?? '';
       $variables['attachments'] = $attachments_stack ?? NULL;
       $variables['services'] = $services_stack ?? NULL;
       $variables['estimated_completion_date'] = $estimated_completion_date->format('m/Y') ?? NULL;

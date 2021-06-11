@@ -13,7 +13,9 @@ label: 'Total number of floors in the building'
 description: ''
 required: false
 translatable: false
-default_value: {  }
+default_value:
+  -
+    value: 1
 default_value_callback: ''
 settings:
   min: null
