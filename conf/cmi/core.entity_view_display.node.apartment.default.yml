@@ -16,6 +16,7 @@ dependencies:
     - field.field.node.apartment.field_financing_fee
     - field.field.node.apartment.field_floor
     - field.field.node.apartment.field_floor_max
+    - field.field.node.apartment.field_floorplan
     - field.field.node.apartment.field_has_apartment_sauna
     - field.field.node.apartment.field_has_balcony
     - field.field.node.apartment.field_has_terrace
@@ -46,6 +47,7 @@ dependencies:
   module:
     - datetime
     - file
+    - image
     - link
     - slick
     - user
@@ -167,6 +169,15 @@ content:
       thousand_separator: ''
       prefix_suffix: true
     third_party_settings: {  }
+  field_floorplan:
+    weight: 59
+    label: above
+    settings:
+      image_style: ''
+      image_link: ''
+    third_party_settings: {  }
+    type: image
+    region: content
   field_has_apartment_sauna:
     weight: 16
     label: inline
