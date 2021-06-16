@@ -22,7 +22,7 @@ class IdToUrl extends DataTypePluginBase {
    */
   public function getValue($value) {
     if ($node = Node::load((int) $value)) {
-      $host = \Drupal::request()->getHost();
+      $host = \Drupal::request()->getSchemeAndHttpHost();
       return $host . $node->toUrl()->toString();
     }
     return NULL;
