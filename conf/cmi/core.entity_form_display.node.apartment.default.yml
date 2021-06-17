@@ -16,6 +16,7 @@ dependencies:
     - field.field.node.apartment.field_financing_fee
     - field.field.node.apartment.field_floor
     - field.field.node.apartment.field_floor_max
+    - field.field.node.apartment.field_floorplan
     - field.field.node.apartment.field_has_apartment_sauna
     - field.field.node.apartment.field_has_balcony
     - field.field.node.apartment.field_has_terrace
@@ -92,6 +93,7 @@ third_party_settings:
         - field_services_description
         - field_additional_information
         - field_condition
+        - field_floorplan
         - field_images
         - field_publish_on_etuovi
         - field_publish_on_oikotie
@@ -235,6 +237,14 @@ content:
     third_party_settings: {  }
     type: number
     region: content
+  field_floorplan:
+    weight: 25
+    settings:
+      progress_indicator: throbber
+      preview_image_style: thumbnail
+    third_party_settings: {  }
+    type: image_image
+    region: content
   field_has_apartment_sauna:
     weight: 16
     settings:
@@ -264,7 +274,7 @@ content:
     type: boolean_checkbox
     region: content
   field_images:
-    weight: 25
+    weight: 26
     settings:
       progress_indicator: throbber
       preview_image_style: thumbnail
@@ -324,14 +334,14 @@ content:
     type: string_textarea
     region: content
   field_publish_on_etuovi:
-    weight: 26
+    weight: 27
     settings:
       display_label: true
     third_party_settings: {  }
     type: boolean_checkbox
     region: content
   field_publish_on_oikotie:
-    weight: 27
+    weight: 28
     settings:
       display_label: true
     third_party_settings: {  }

@@ -14,6 +14,7 @@ dependencies:
     - field.storage.node.field_debt_free_sales_price
     - field.storage.node.field_financing_fee
     - field.storage.node.field_floor
+    - field.storage.node.field_floorplan
     - field.storage.node.field_condition
     - field.storage.node.field_kitchen_appliances
     - field.storage.node.field_living_area
@@ -163,6 +164,14 @@ field_settings:
     dependencies:
       config:
         - field.storage.node.field_floor_max
+  floor_plan_image:
+    label: Floorplan
+    datasource_id: 'entity:node'
+    property_path: field_floorplan
+    type: asu_file_url
+    dependencies:
+      config:
+        - field.storage.node.field_floorplan
   has_apartment_sauna:
     label: Sauna
     datasource_id: 'entity:node'

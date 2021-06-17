@@ -39,7 +39,7 @@ class FileIdToUrl extends DataTypePluginBase {
    */
   private function getFileUrl($value) {
     if ($file = File::load((int) $value)) {
-      $host = \Drupal::request()->getHost();
+      $host = \Drupal::request()->getSchemeAndHttpHost();
       return $host . $file->createFileUrl();
     }
     return $value;
