@@ -72,9 +72,9 @@ class BulkEditForm extends FormBase {
     $options = [];
     foreach ($apartments as $apartment) {
       $title = '';
-      $title .= $apartment->title->value.' - ';
-      $title .= $apartment->field_apartment_structure->value.' - ';
-      $title .= 'krs: '. $apartment->field_floor->value ;
+      $title .= $apartment->title->value . ' - ';
+      $title .= $apartment->field_apartment_structure->value . ' - ';
+      $title .= 'krs: ' . $apartment->field_floor->value;
       $options[$apartment->id()] = $title;
     }
     $form['apartments'] = [
