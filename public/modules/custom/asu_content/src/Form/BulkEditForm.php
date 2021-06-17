@@ -39,7 +39,6 @@ class BulkEditForm extends FormBase {
       $form['project'] = [
         '#type' => 'select',
         '#options' => $options,
-        '#default_value',
       ];
       $form['submit'] = [
         '#type' => 'submit',
