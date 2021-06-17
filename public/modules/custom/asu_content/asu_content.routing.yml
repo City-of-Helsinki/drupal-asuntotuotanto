@@ -5,3 +5,17 @@ asu_content.content_script:
     _title: 'Huoneisto sisältö skripti'
   requirements:
     _permission: 'administer blocks'
+
+asu_content.bulk_edit_empty:
+  path: '/apartment/bulk-edit'
+  defaults:
+    _form: '\Drupal\asu_content\Form\BulkEditForm'
+  requirements:
+    _permission: 'administer content'
+
+asu_content.bulk_edit:
+  path: '/apartment/bulk-edit/{id}'
+  defaults:
+    _form: '\Drupal\asu_content\Form\BulkEditForm'
+  requirements:
+    _permission: 'administer content'
