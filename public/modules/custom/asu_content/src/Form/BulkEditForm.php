@@ -31,7 +31,7 @@ class BulkEditForm extends FormBase {
           'type' => 'project',
           'status' => 1,
         ]);
-      $options = [0 => $this->t('Select')];
+      $options = [$this->t('Select')];
       foreach ($projects as $project) {
         $options[$project->id()] = $project->title->value;
       }
@@ -55,11 +55,13 @@ class BulkEditForm extends FormBase {
     $form['floorplan'] = [
       '#type' => 'managed_file',
       '#title' => t('Floorplan'),
+      '#upload_location' => 'public://',
       '#multiple' => FALSE,
     ];
     $form['images'] = [
       '#title' => t('Images'),
       '#type' => 'managed_file',
+      '#upload_location' => 'public://',
       '#required' => FALSE,
       '#multiple' => TRUE,
       '#upload_validators' => [
@@ -110,18 +112,18 @@ class BulkEditForm extends FormBase {
       if ($key == $value) {
         /** @var \Drupal\node\Entity\Node $apartment */
         $apartment = Node::load($value);
-
-        if (!empty($value['field_floorplan']) && isset($value['field_floorplan'][0])) {
-          $apartment->set('field_floorplan', ['target_id' => $value['field_floorplan'][0]]);
+        if (!empty($values['floorplan']) && isset($values['floorplan'][0])) {
+          $apartment->set('field_floorplan', ['target_id' => $values['floorplan'][0]]);
         }
 
-        if (!empty($value['field_images'])) {
+        if (!empty($values['images'])) {
           $images = [];
-          foreach ($value['field_images'] as $imageId) {
+          foreach ($values['images'] as $imageId) {
             $images[] = ['target_id' => $imageId];
           }
-          $apartment->set('field_images', $images);
+          $apartment->set('field_images', array_merge($apartment->get('field_images')->getValue(), $images));
         }
+
         $apartment->save();
         $updated[] = $apartment->id();
       }
