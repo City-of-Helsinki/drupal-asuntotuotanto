@@ -96,3 +96,33 @@ if ($env = getenv('APP_ENV')) {
   }
 }
 
+if ($env = getenv('APP_ENV')) {
+  // Default settings for most environments.
+  $config['mailsystem.settings']['defaults']['sender'] = 'swiftmailer';
+  $config['mailsystem.settings']['defaults']['formatter'] = 'swiftmailer';
+  $config['swiftmailer.transport']['smtp_host'] = getenv('ASU_MAILSERVER_ADDRESS');
+  $config['swiftmailer.transport']['smtp_port'] = getenv('ASU_MAILSERVER_PORT') ?? '25';
+  $config['swiftmailer.transport']['transport'] = getenv('ASU_MAILSERVER_TRANSPORT') ?? 'smtp';
+  $config['swiftmailer.transport']['smtp_encryption'] = '0';
+
+  $config['elasticsearch_connector.cluster.asuntotuotanto']['url'] = getenv('ASU_ELASTICSEARCH_URL');
+
+  $settings['backend_url'] = getenv('ASU_DJANGO_BACKEND_URL');
+  $settings['elastic_url'] = getenv('ASU_ELASTICSEARCH_URL');
+  $settings['asuntotuotanto_public_url'] = getenv('ASU_ASUNTOTUOTANTO_PUBLIC_URL');
+
+  if ($env === 'dev') {
+    // Local development environment.
+    $config['mailsystem.settings']['defaults']['sender'] = 'swiftmailer';
+    $config['mailsystem.settings']['defaults']['formatter'] = 'swiftmailer';
+    $config['swiftmailer.transport']['transport'] = 'smtp';
+    $config['swiftmailer.transport']['smtp_host'] = 'mailhog';
+    $config['swiftmailer.transport']['smtp_port'] = '1025';
+    $config['swiftmailer.transport']['smtp_encryption'] = '0';
+
+    $config['elasticsearch_connector.cluster.asuntotuotanto']['url'] = 'http://elastic:9200';
+
+    $settings['elastic_url'] = 'http://elastic:9200';
+    $settings['asuntotuotanto_public_url'] = 'https://asuntotuotanto-public.docker.so';
+  }
+}
