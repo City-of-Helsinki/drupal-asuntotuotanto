@@ -15,5 +15,5 @@ options:
   rewrite:
     rewrite_index: 1
     index:
-      prefix: asuntotuotanto-apartments
+      prefix: asuntotuotanto
       suffix: ''
