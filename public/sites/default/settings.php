@@ -139,7 +139,7 @@ if ($env = getenv('APP_ENV')) {
     $config['raven.settings']['environment'] = 'development';
   }
 
-  // Staging environment.
+  // Testing environment.
   if ($env === 'testing') {
     $config['raven.settings']['environment'] = 'testing';
   }
