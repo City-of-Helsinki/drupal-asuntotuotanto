@@ -106,13 +106,13 @@ if ($env = getenv('APP_ENV')) {
   $config['swiftmailer.transport']['smtp_encryption'] = '0';
 
 
-  $config['elasticsearch_connector.cluster.asuntotuotanto']['url'] = getenv('ASU_ELASTICSEARCH_URL');
+  $config['elasticsearch_connector.cluster.asuntotuotanto']['url'] = getenv('ASU_ELASTICSEARCH_ADDRESS');
   $config['elasticsearch_connector.cluster.asuntotuotanto']['options']['use_authentication'] = 1;
   $config['elasticsearch_connector.cluster.asuntotuotanto']['options']['username'] = getenv('ASU_ELASTICSEARCH_USERNAME');
   $config['elasticsearch_connector.cluster.asuntotuotanto']['options']['password'] = getenv('ASU_ELASTICSEARCH_PASSWORD');
 
   $settings['backend_url'] = getenv('ASU_DJANGO_BACKEND_URL');
-  $settings['elastic_url'] = getenv('ASU_ELASTICSEARCH_URL');
+  $settings['elastic_url'] = getenv('ASU_ELASTICSEARCH_ADDRESS');
   $settings['asuntotuotanto_public_url'] = getenv('ASU_ASUNTOTUOTANTO_PUBLIC_URL');
 
   if ($env === 'dev') {
