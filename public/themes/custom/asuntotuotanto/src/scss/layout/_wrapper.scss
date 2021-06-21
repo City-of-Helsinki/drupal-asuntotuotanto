@@ -4,7 +4,15 @@
 // This file includes styles for a wrapper.
 //
 .wrapper {
+  &--mw-1000 {
+    max-width: 1000px;
+  }
+
   &--mw-1200 {
+    max-width: 1200px;
+  }
+
+  &--mw-1264 {
     max-width: $content-area-wrapper-width-max;
   }
 }

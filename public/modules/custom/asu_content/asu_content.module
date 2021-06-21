@@ -5,11 +5,6 @@
  * Contains asu_content.module.
  */
 
-const FORMS_TO_HIDE_TITLE_FROM = [
-  'node_apartment_edit_form',
-  'node_apartment_form',
-];
-
 use Drupal\asu_content\ProjectUpdater;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
@@ -46,7 +41,12 @@ function asu_content_form_alter(&$form, $form_state) {
  * {@inheritDoc}
  */
 function asu_content_hide_node_title(&$form, $form_state) {
-  if (!in_array($form['#form_id'], FORMS_TO_HIDE_TITLE_FROM)) {
+  $forms_to_hide_title_from = [
+    'node_apartment_edit_form',
+    'node_apartment_form',
+  ];
+
+  if (!in_array($form['#form_id'], $forms_to_hide_title_from)) {
     return;
   }
 
@@ -84,7 +84,11 @@ function asu_content_entity_presave(EntityInterface $entity) {
         // Get the id of sold state.
         if ($entity->field_apartment_state_of_sale->target_id == 'sold') {
           $entity->setUnpublished();
-          \Drupal::messenger()->addMessage(t("Apartment @title was sold and is now unpublished.", ['@title' => $entity->title->value]));
+          \Drupal::messenger()->addMessage(
+            t("Apartment @title was sold and is now unpublished.",
+              ['@title' => $entity->title->value]
+            )
+          );
         }
       }
     }
@@ -112,6 +116,31 @@ function asu_content_entity_update($entity) {
 }
 
 /**
+ * Implements hook_node_insert().
+ */
+function asu_content_node_insert(Node $node) {
+  if (
+    method_exists($node, 'getType') &&
+    $node->getType() == 'project' &&
+    $node->hasField('field_apartments')
+  ) {
+    if ($node->field_apartments->isEmpty()) {
+      $apartment = Node::create([
+        'type' => 'apartment',
+        'title' => '',
+        'field_apartment_number' => 'A0',
+        'status' => 0,
+      ]);
+      $apartment->save();
+
+      $node->get('field_apartments');
+      $node->field_apartments->setValue([$apartment]);
+      $node->save();
+    }
+  }
+}
+
+/**
  * Implements hook_cron().
  */
 function asu_content_cron() {
@@ -134,9 +163,9 @@ function asu_content_cron() {
     }
     catch (\Exception $e) {
       // The time is most likely not set.
-      // @Todo: logging.
+      // @todo Logging.
     }
   }
-  // @Todo: logging.
+  // @todo Logging.
   // Log updated ids
 }

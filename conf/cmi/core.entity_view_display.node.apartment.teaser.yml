@@ -17,6 +17,7 @@ dependencies:
     - field.field.node.apartment.field_financing_fee
     - field.field.node.apartment.field_floor
     - field.field.node.apartment.field_floor_max
+    - field.field.node.apartment.field_floorplan
     - field.field.node.apartment.field_has_apartment_sauna
     - field.field.node.apartment.field_has_balcony
     - field.field.node.apartment.field_has_terrace
@@ -91,6 +92,7 @@ hidden:
   field_financing_fee: true
   field_floor: true
   field_floor_max: true
+  field_floorplan: true
   field_has_apartment_sauna: true
   field_has_balcony: true
   field_has_terrace: true

@@ -14,7 +14,7 @@
 #}
 
 {% if content %}
-  <div{{ create_attribute({'class': ['page-header__top', 'wrapper', 'wrapper--mw-1200']}) }}>
+  <div{{ create_attribute({'class': ['page-header__top', 'wrapper', 'wrapper--mw-1264']}) }}>
     {{ content }}
     {% if not logged_in %}
       {{ link('Log in'|t, 'route:user.login', {'class': 'login-link'}) }}
