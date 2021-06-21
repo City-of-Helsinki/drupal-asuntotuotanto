@@ -64,7 +64,7 @@ class ApartmentImages extends FieldItemList {
     $current_entity = $this->getEntity();
     $reverse_references = $this->reverseEntities->getReverseReferences($current_entity);
 
-    $host = \Drupal::request()->getHost();
+    $host = \Drupal::request()->getSchemeAndHttpHost();
     $images = [];
 
     foreach ($reverse_references as $reference) {

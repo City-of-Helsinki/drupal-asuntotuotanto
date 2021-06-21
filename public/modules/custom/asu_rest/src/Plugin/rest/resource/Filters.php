@@ -146,7 +146,7 @@ final class Filters extends ResourceBase {
     $responseData['room_count'] = [
       'label' => $this->t('Room count'),
       'items' => $this->getRoomCount(),
-      'suffix' => $this->t('r'),
+      'suffix' => $this->t('rooms'),
     ];
 
     $responseData['living_area'] = [

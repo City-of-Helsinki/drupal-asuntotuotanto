@@ -60,7 +60,6 @@ class ProjectHoldingType extends FieldItemList {
     $current_entity = $this->getEntity();
     $reverse_references = $this->reverseEntities->getReverseReferences($current_entity);
     $value = FALSE;
-
     foreach ($reverse_references as $reference) {
       if (
         !empty($reference) &&
@@ -69,7 +68,6 @@ class ProjectHoldingType extends FieldItemList {
         $reverse_entity = $reference['referring_entity'];
         $id = $reverse_entity->field_holding_type->target_id;
         if ($id && $term = Term::load($id)) {
-          // If machine name has not been set, create one from the term name.
           if (!$term->field_machine_readable_name ||
               !$value = $term->field_machine_readable_name->value) {
             $name = trim($term->getName());

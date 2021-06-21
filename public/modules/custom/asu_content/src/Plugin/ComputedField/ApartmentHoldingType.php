@@ -7,7 +7,6 @@ use Drupal\Core\Field\FieldItemList;
 use Drupal\Core\TypedData\DataDefinitionInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\node\Entity\Node;
-use Drupal\taxonomy\Entity\Term;
 
 /**
  * Computer field ApartmentHoldingType.
@@ -68,10 +67,16 @@ class ApartmentHoldingType extends FieldItemList {
         $reference['referring_entity'] instanceof Node
       ) {
         $referencing_node = $reference['referring_entity'];
-        $id = $referencing_node->field_holding_type->target_id;
-        if ($id && $term = Term::load($id)) {
-          $value = $term->getName();
+        if (!isset($referencing_node->field_holding_type[0])) {
+          return [
+            '#markup' => '',
+          ];
         }
+
+        $value = strtoupper(
+          $referencing_node->field_holding_type->referencedEntities()[0]->getName()
+        );
+
       }
     }
 
