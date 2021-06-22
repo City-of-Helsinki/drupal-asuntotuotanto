@@ -114,7 +114,6 @@ if ($env = getenv('APP_ENV')) {
   $settings['backend_url'] = getenv('ASU_DJANGO_BACKEND_URL');
   $settings['elastic_url'] = getenv('ASU_ELASTICSEARCH_ADDRESS');
   $settings['asuntotuotanto_public_url'] = getenv('ASU_ASUNTOTUOTANTO_PUBLIC_URL');
-
   if ($env === 'dev') {
     // Local development environment.
     $config['mailsystem.settings']['defaults']['sender'] = 'swiftmailer';
@@ -129,4 +128,24 @@ if ($env = getenv('APP_ENV')) {
     $settings['elastic_url'] = 'http://elastic:9200';
     $settings['asuntotuotanto_public_url'] = 'https://asuntotuotanto-public.docker.so';
   }
+
+  // Development environment.
+  if ($env === 'development') {
+  }
+
+  // Testing environment.
+  if ($env === 'testing') {
+    $config['elasticsearch_connector.cluster.asuntotuotanto']['cluster_id'] = 'elasticsearch-test';
+  }
+
+  // Staging environment.
+  if ($env === 'stg') {
+    $config['elasticsearch_connector.cluster.asuntotuotanto']['cluster_id'] = 'elasticsearch-stg';
+  }
+
+  // Production environment.
+  if ($env === 'prod') {
+    $config['elasticsearch_connector.cluster.asuntotuotanto']['cluster_id'] = 'elasticsearch-prod';
+  }
+
 }
