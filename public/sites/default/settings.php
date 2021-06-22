@@ -112,7 +112,7 @@ if ($env = getenv('APP_ENV')) {
   $config['elasticsearch_connector.cluster.asuntotuotanto']['url'] = getenv('ASU_ELASTICSEARCH_ADDRESS');
 
   $config['elasticsearch_connector.cluster.asuntotuotanto']['status'] = '1';
-  $config['elasticsearch_connector.cluster.asuntotuotanto']['cluster_id'] = 'elasticsearch-test';
+  $config['elasticsearch_connector.cluster.asuntotuotanto']['cluster_id'] = 'asuntotuotanto';
 
   $config['elasticsearch_connector.cluster.asuntotuotanto']['options']['use_authentication'] = 1;
   $config['elasticsearch_connector.cluster.asuntotuotanto']['options']['authentication_type'] = 'Basic';
