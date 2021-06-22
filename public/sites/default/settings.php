@@ -149,16 +149,13 @@ if ($env = getenv('APP_ENV')) {
 
   // Testing environment.
   if ($env === 'testing') {
-    $config['elasticsearch_connector.cluster.asuntotuotanto']['cluster_id'] = 'elasticsearch-test';
   }
 
   // Staging environment.
   if ($env === 'stg') {
-    $config['elasticsearch_connector.cluster.asuntotuotanto']['cluster_id'] = 'elasticsearch-stg';
   }
 
   // Production environment.
   if ($env === 'prod') {
-    $config['elasticsearch_connector.cluster.asuntotuotanto']['cluster_id'] = 'elasticsearch-prod';
   }
 }
