@@ -105,8 +105,6 @@ if ($env = getenv('APP_ENV')) {
   $config['swiftmailer.transport']['transport'] = getenv('ASU_MAILSERVER_TRANSPORT') ?? 'smtp';
   $config['swiftmailer.transport']['smtp_encryption'] = '0';
 
-
-
   $config['elasticsearch_connector.cluster.asuntotuotanto']['url'] = getenv('ASU_ELASTICSEARCH_ADDRESS');
   $config['elasticsearch_connector.cluster.asuntotuotanto']['options']['use_authentication'] = 1;
   $config['elasticsearch_connector.cluster.asuntotuotanto']['options']['username'] = getenv('ASU_ELASTICSEARCH_USERNAME');
@@ -132,7 +130,7 @@ if ($env = getenv('APP_ENV')) {
 
   $config['search_api.server.asuntotuotanto']['backend_config']['cluster_settings']['cluster'] = 'elasticsearch-test';
   $config['search_api.server.asuntotuotanto']['backend_config']['scheme'] = 'https';
-  $config['search_api.server.asuntotuotanto']['backend_config']['host'] = getenv('ASU_ELASTICSEARCH_URL') ? str_replace('https', '', getenv('ASU_ELASTICSEARCH_URL')) : '';
+  $config['search_api.server.asuntotuotanto']['backend_config']['host'] = getenv('ASU_ELASTICSEARCH_URL') ? str_replace('https://', '', getenv('ASU_ELASTICSEARCH_URL')) : '';
   $config['search_api.server.asuntotuotanto']['backend_config']['port'] = '443';
 
   if ($env === 'dev') {
