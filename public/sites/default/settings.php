@@ -105,7 +105,6 @@ if ($env = getenv('APP_ENV')) {
   $config['swiftmailer.transport']['transport'] = getenv('ASU_MAILSERVER_TRANSPORT') ?? 'smtp';
   $config['swiftmailer.transport']['smtp_encryption'] = '0';
 
-
   $config['elasticsearch_connector.cluster.asuntotuotanto']['url'] = getenv('ASU_ELASTICSEARCH_ADDRESS');
   $config['elasticsearch_connector.cluster.asuntotuotanto']['options']['use_authentication'] = 1;
   $config['elasticsearch_connector.cluster.asuntotuotanto']['options']['username'] = getenv('ASU_ELASTICSEARCH_USERNAME');
@@ -114,6 +113,26 @@ if ($env = getenv('APP_ENV')) {
   $settings['backend_url'] = getenv('ASU_DJANGO_BACKEND_URL');
   $settings['elastic_url'] = getenv('ASU_ELASTICSEARCH_ADDRESS');
   $settings['asuntotuotanto_public_url'] = getenv('ASU_ASUNTOTUOTANTO_PUBLIC_URL');
+
+  $config['elasticsearch_connector.cluster.asuntotuotanto']['status'] = '1';
+  $config['elasticsearch_connector.cluster.asuntotuotanto']['cluster_id'] = 'elasticsearch-test';
+  $config['elasticsearch_connector.cluster.asuntotuotanto']['url'] = getenv('ASU_ELASTICSEARCH_URL');
+
+  $config['elasticsearch_connector.cluster.asuntotuotanto']['options']['use_authentication'] = 1;
+  $config['elasticsearch_connector.cluster.asuntotuotanto']['options']['authentication_type'] = 'Basic';
+  $config['elasticsearch_connector.cluster.asuntotuotanto']['options']['username'] = getenv('ASU_ELASTICSEARCH_USERNAME');
+  $config['elasticsearch_connector.cluster.asuntotuotanto']['options']['password'] = getenv('ASU_ELASTICSEARCH_PASSWORD');
+  $config['elasticsearch_connector.cluster.asuntotuotanto']['options']['rewrite']['rewrite_index'] = 1;
+  $config['elasticsearch_connector.cluster.asuntotuotanto']['options']['rewrite']['index']['prefix'] = 'asuntotuotanto';
+
+  $config['elasticsearch_connector.index.apartments']['index_id'] = 'asuntotuotanto_apartment';
+  $config['elasticsearch_connector.index.apartments']['server'] = 'asuntotuotanto';
+
+  $config['search_api.server.asuntotuotanto']['backend_config']['cluster_settings']['cluster'] = 'elasticsearch-test';
+  $config['search_api.server.asuntotuotanto']['backend_config']['scheme'] = 'https';
+  $config['search_api.server.asuntotuotanto']['backend_config']['host'] = getenv('ASU_ELASTICSEARCH_URL') ? str_replace('https://', '', getenv('ASU_ELASTICSEARCH_URL')) : '';
+  $config['search_api.server.asuntotuotanto']['backend_config']['port'] = '443';
+
   if ($env === 'dev') {
     // Local development environment.
     $config['mailsystem.settings']['defaults']['sender'] = 'swiftmailer';
@@ -147,5 +166,4 @@ if ($env = getenv('APP_ENV')) {
   if ($env === 'prod') {
     $config['elasticsearch_connector.cluster.asuntotuotanto']['cluster_id'] = 'elasticsearch-prod';
   }
-
 }
