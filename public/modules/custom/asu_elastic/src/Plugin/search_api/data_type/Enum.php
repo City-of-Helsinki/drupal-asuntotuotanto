@@ -20,8 +20,11 @@ class Enum extends DataTypePluginBase {
    * {@inheritdoc}
    */
   public function getValue($value) {
-
+    $exceptions = ['apartment_for_sale' => 'for_sale'];
     if ($value) {
+      foreach($exceptions as $key => $exception){
+        $value = $key == $value ? $exceptions[$value] : $value;
+      }
       $string = strtoupper(
         str_replace(' ', '_', $value)
       );
