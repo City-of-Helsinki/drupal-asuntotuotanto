@@ -77,14 +77,35 @@ class ApplicationFormUrl extends FieldItemList {
         }
 
         $baseurl = Settings::get('asuntotuotanto_public_url');
-        $apartment_type = strtolower($referencing_node->field_ownership_type->referencedEntities()[0]->getName());
-        $value = $baseurl . '/application/add/' . $apartment_type . '/' . $referencing_node->id();
+        if ($this->isBeforeApplicationTimeEnd($referencing_node->field_application_end_time->value)) {
+          $apartment_type = strtolower($referencing_node->field_ownership_type->referencedEntities()[0]->getName());
+          $value = $baseurl . '/application/add/' . $apartment_type . '/' . $referencing_node->id();
+        }
+        else {
+          $value = $baseurl . '/contact/apply_for_free_apartment?title=' . $referencing_node->getTitle() . ' ' . $current_entity->field_apartment_number->value;
+        }
       }
     }
 
     return [
       '#markup' => $value,
     ];
+  }
+
+  /**
+   * Check application status.
+   *
+   * @param string $endTime
+   *   End time.
+   *
+   * @return bool
+   *   Application status.
+   */
+  private function isBeforeApplicationTimeEnd(string $endTime) {
+    $end = strtotime($endTime);
+    $date = new \DateTime();
+    $now = $date->getTimestamp();
+    return $now < $end;
   }
 
 }
