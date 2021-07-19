@@ -92,6 +92,15 @@ class ApplicationFormUrl extends FieldItemList {
     ];
   }
 
+  /**
+   * Check application status.
+   *
+   * @param string $endTime
+   *   End time.
+   *
+   * @return bool
+   *   Application status.
+   */
   private function isBeforeApplicationTimeEnd(string $endTime) {
     $end = strtotime($endTime);
     $date = new \DateTime();
