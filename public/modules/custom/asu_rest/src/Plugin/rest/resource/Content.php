@@ -209,15 +209,18 @@ final class Content extends ResourceBase {
 
     $images = [];
 
+    if(!$node->field_floorplan->isEmpty()){
+      $image = $this->loadResponsiveImageStyle($node->field_floorplan->entity->id(), 'image__3_2');
+      $images[] = file_create_url($image['#uri']);
+    }
+
     foreach ($node->field_images->getValue() as $value) {
       $image = $this->loadResponsiveImageStyle($value['target_id'], 'image__3_2');
-      // @ todo: remove replace
-      $images[] = str_replace('http://', 'http://Asu:asunnot_2020@', file_create_url($image['#uri']));
+      $images[] = file_create_url($image['#uri']);
     }
     foreach ($parent_node->field_shared_apartment_images->getValue() as $value) {
       $image = $this->loadResponsiveImageStyle($value['target_id'], 'image__3_2');
-      // @ todo: remove replace
-      $images[] = str_replace('http://', 'http://Asu:asunnot_2020@', file_create_url($image['#uri']));
+      $images[] = file_create_url($image['#uri']);
     }
 
     $nodeData = $node->toArray();
@@ -374,12 +377,6 @@ final class Content extends ResourceBase {
     $nodeData = $node->toArray();
 
     $images = [];
-
-    if(!$node->field_floorplan->isEmpty()){
-      $file = $node->field_floorplan->getValue();
-      $image = $this->loadResponsiveImageStyle($file['target_id'], 'image__3_2');
-      $images[] = file_create_url($image['#uri']);
-    }
 
     foreach ($node->field_images->getValue() as $key => $value) {
       $image = $this->loadResponsiveImageStyle($value['target_id'], 'image__3_2');
