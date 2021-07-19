@@ -82,7 +82,7 @@ class ApartmentImages extends FieldItemList {
         $images = array_merge($images, $current_entity->field_images->getValue());
       }
 
-      if(!$current_entity->field_floorplan->isEmpty()){
+      if (!$current_entity->field_floorplan->isEmpty()) {
         $images = array_merge($current_entity->field_floorplan->getValue(), $images);
       }
 

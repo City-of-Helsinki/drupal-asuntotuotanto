@@ -209,7 +209,7 @@ final class Content extends ResourceBase {
 
     $images = [];
 
-    if(!$node->field_floorplan->isEmpty()){
+    if (!$node->field_floorplan->isEmpty()) {
       $image = $this->loadResponsiveImageStyle($node->field_floorplan->entity->id(), 'image__3_2');
       $images[] = file_create_url($image['#uri']);
     }
