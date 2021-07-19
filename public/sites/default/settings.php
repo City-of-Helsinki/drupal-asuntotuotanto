@@ -113,7 +113,6 @@ if ($env = getenv('APP_ENV')) {
 
   $config['elasticsearch_connector.cluster.asuntotuotanto']['status'] = '1';
   $config['elasticsearch_connector.cluster.asuntotuotanto']['cluster_id'] = 'asuntotuotanto';
-
   $config['elasticsearch_connector.cluster.asuntotuotanto']['options']['use_authentication'] = 1;
   $config['elasticsearch_connector.cluster.asuntotuotanto']['options']['authentication_type'] = 'Basic';
   $config['elasticsearch_connector.cluster.asuntotuotanto']['options']['username'] = getenv('ASU_ELASTICSEARCH_USERNAME');
@@ -138,6 +137,7 @@ if ($env = getenv('APP_ENV')) {
     $config['swiftmailer.transport']['smtp_encryption'] = '0';
 
     $config['elasticsearch_connector.cluster.asuntotuotanto']['url'] = 'http://elastic:9200';
+    $config['elasticsearch_connector.cluster.asuntotuotanto']['options']['use_authentication'] = 0;
 
     $settings['elastic_url'] = 'http://elastic:9200';
     $settings['asuntotuotanto_public_url'] = 'https://asuntotuotanto-public.docker.so';
