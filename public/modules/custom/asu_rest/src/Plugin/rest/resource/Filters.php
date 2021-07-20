@@ -40,6 +40,8 @@ final class Filters extends ResourceBase {
     $vocabularies = Vocabulary::loadMultiple();
     $responseData = [];
 
+    $items = [];
+
     foreach ($filters['taxonomy'] as $taxonomy_name => $elastic_index_name) {
       $terms = \Drupal::entityTypeManager()
         ->getStorage('taxonomy_term')
@@ -49,15 +51,12 @@ final class Filters extends ResourceBase {
         continue;
       }
 
-      $items = [];
-
       if ($taxonomy_name == 'districts') {
 
         $projects = \Drupal::entityTypeManager()
           ->getStorage('node')
           ->loadByProperties(['type' => 'project']);
 
-        $items = [];
         // Get all unique districts separately for both ownership types.
         foreach ($projects as $project) {
           if (!$project->field_ownership_type->first()) {
@@ -71,7 +70,8 @@ final class Filters extends ResourceBase {
 
           $name = $district->hasTranslation($currentLanguage->getId()) ?
             $district->getTranslation($currentLanguage->getId())->getName() : $district->getName();
-          if (!array_search($name, $items[$ownership])) {
+
+          if (!$items['project_district_' . $ownership] || !array_search($name, $items['project_district_' . $ownership])) {
             $items[strtolower('project_district_' . $ownership)][] = $name;
           }
         }
