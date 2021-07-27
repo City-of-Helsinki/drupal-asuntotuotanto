@@ -1,0 +1,19 @@
+uuid: edc831e5-18b6-4027-892a-253389762203
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_housing_company
+    - node.type.project
+id: node.project.field_housing_company
+field_name: field_housing_company
+entity_type: node
+bundle: project
+label: 'Housing company'
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

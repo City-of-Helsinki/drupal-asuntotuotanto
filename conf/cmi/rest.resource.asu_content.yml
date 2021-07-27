@@ -1,0 +1,18 @@
+uuid: 2d8bf01c-32f2-4418-b3cf-b7884100465f
+langcode: fi
+status: true
+dependencies:
+  module:
+    - asu_rest
+    - serialization
+    - user
+id: asu_content
+plugin_id: asu_content
+granularity: resource
+configuration:
+  methods:
+    - GET
+  formats:
+    - json
+  authentication:
+    - cookie

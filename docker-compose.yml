@@ -1,0 +1,76 @@
+version: '3.7'
+
+services:
+
+  app:
+    hostname: "${DRUPAL_HOSTNAME}"
+    container_name: "${COMPOSE_PROJECT_NAME}-app"
+    image: "${DRUPAL_IMAGE}"
+    volumes:
+      - .:/app:delegated
+      - ssh:/tmp/druid_ssh-agent:ro
+    environment:
+
+      APP_ENV: "${APP_ENV:-dev}"
+      DRUPAL_ROUTES: "https://varnish-${DRUPAL_HOSTNAME}"
+      DRUSH_OPTIONS_URI: "https://${DRUPAL_HOSTNAME}"
+      #XDEBUG_ENABLE: "true"
+      #XDEBUG_CONFIG: "remote_port=9001 remote_host=host.docker.internal remote_connect_back=0"
+      DTT_BASE_URL: "http://app:8080"
+      SIMPLETEST_BASE_URL: "http://app:8080"
+      SIMPLETEST_DB: "mysql://drupal:drupal@db:3306/drupal"
+    networks:
+      - internal
+      - stonehenge-network
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-app.entrypoints=https"
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-app.rule=Host(`${DRUPAL_HOSTNAME}`)"
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-app.tls=true"
+      - "traefik.http.services.${COMPOSE_PROJECT_NAME}-app.loadbalancer.server.port=8080"
+      - "traefik.docker.network=stonehenge-network"
+
+  db:
+    container_name: "${COMPOSE_PROJECT_NAME}-db"
+    image: druidfi/db:mysql5.7-drupal
+    volumes:
+      - db_data:/var/lib/mysql
+    ports:
+      - 3306
+    networks:
+      - internal
+
+  elastic:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.9.1
+    container_name: "${COMPOSE_PROJECT_NAME}-elastic"
+    environment:
+      - node.name="${COMPOSE_PROJECT_NAME}-elastic"
+      - cluster.name=es-docker-cluster
+      - cluster.initial_master_nodes="${COMPOSE_PROJECT_NAME}-elastic"
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - data01:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
+    networks:
+      - internal
+      - stonehenge-network
+
+networks:
+  internal:
+    external: false
+  stonehenge-network:
+    external: true
+
+volumes:
+  data01:
+    driver: local
+  db_data:
+  ssh:
+    name: stonehenge-ssh
+    external: true

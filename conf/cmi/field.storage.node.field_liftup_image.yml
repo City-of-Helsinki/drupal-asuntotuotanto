@@ -1,0 +1,22 @@
+uuid: f3331ffb-2c2c-4b4f-8a3f-1301195fd843
+langcode: en
+status: true
+dependencies:
+  module:
+    - media
+    - node
+_core:
+  default_config_hash: E6t2Fdgcq5FXSXLsuHoaoc6EFb_tGaUsLRQ9PH5yOQU
+id: node.field_liftup_image
+field_name: field_liftup_image
+entity_type: node
+type: entity_reference
+settings:
+  target_type: media
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

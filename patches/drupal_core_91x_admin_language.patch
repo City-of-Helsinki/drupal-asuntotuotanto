@@ -1,0 +1,184 @@
+diff --git a/core/modules/contextual/contextual.routing.yml b/core/modules/contextual/contextual.routing.yml
+index 8ab2f2887b..0c9ad34af6 100644
+--- a/core/modules/contextual/contextual.routing.yml
++++ b/core/modules/contextual/contextual.routing.yml
+@@ -4,3 +4,5 @@ contextual.render:
+     _controller: '\Drupal\contextual\ContextualController::render'
+   requirements:
+     _permission: 'access contextual links'
++  options:
++    _admin_route: TRUE
+diff --git a/core/modules/contextual/src/Element/ContextualLinks.php b/core/modules/contextual/src/Element/ContextualLinks.php
+index e5b58fb35b..639f4ec3e5 100644
+--- a/core/modules/contextual/src/Element/ContextualLinks.php
++++ b/core/modules/contextual/src/Element/ContextualLinks.php
+@@ -20,8 +20,12 @@ public function getInfo() {
+     $class = get_class($this);
+     return [
+       '#pre_render' => [
++        ['\Drupal\language\ConfigurableLanguageManager', 'switchToUserAdminLanguage'],
+         [$class, 'preRenderLinks'],
+       ],
++      '#post_render' => [
++        ['\Drupal\language\ConfigurableLanguageManager', 'restoreLanguage']
++      ],
+       '#theme' => 'links__contextual',
+       '#links' => [],
+       '#attributes' => ['class' => ['contextual-links']],
+diff --git a/core/modules/language/src/ConfigurableLanguageManager.php b/core/modules/language/src/ConfigurableLanguageManager.php
+index 143adf604b..d7e8866ed6 100644
+--- a/core/modules/language/src/ConfigurableLanguageManager.php
++++ b/core/modules/language/src/ConfigurableLanguageManager.php
+@@ -8,6 +8,7 @@
+ use Drupal\Core\Language\Language;
+ use Drupal\Core\Language\LanguageDefault;
+ use Drupal\Core\Language\LanguageManager;
++use Drupal\Core\Security\TrustedCallbackInterface;
+ use Drupal\Core\StringTranslation\TranslatableMarkup;
+ use Drupal\Core\Url;
+ use Drupal\language\Config\LanguageConfigFactoryOverrideInterface;
+@@ -17,7 +18,7 @@
+ /**
+  * Overrides default LanguageManager to provide configured languages.
+  */
+-class ConfigurableLanguageManager extends LanguageManager implements ConfigurableLanguageManagerInterface {
++class ConfigurableLanguageManager extends LanguageManager implements ConfigurableLanguageManagerInterface, TrustedCallbackInterface {
+ 
+   /**
+    * The configuration storage service.
+@@ -103,6 +104,13 @@ public static function rebuildServices() {
+     \Drupal::service('kernel')->invalidateContainer();
+   }
+ 
++  /**
++   * {@inheritdoc}
++   */
++  public static function trustedCallbacks() {
++    return ['switchToUserAdminLanguage', 'restoreLanguage'];
++  }
++
+   /**
+    * Constructs a new ConfigurableLanguageManager object.
+    *
+@@ -235,6 +243,69 @@ public function getCurrentLanguage($type = LanguageInterface::TYPE_INTERFACE) {
+     return $this->negotiatedLanguages[$type];
+   }
+ 
++  /**
++   * Sets current language.
++   *
++   * @param string $type
++   *  Type interface.
++   * @param \Drupal\Core\Language\LanguageInterface $language
++   *  Language interface.
++   */
++  public function setCurrentLanguage($type = LanguageInterface::TYPE_INTERFACE, LanguageInterface $language) {
++    $this->negotiatedLanguages[$type] = $language;
++  }
++
++  /**
++   * Sets admin language.
++   *
++   * @param array $element
++   *  A renderable array.
++   *
++   * @return array
++   *  A renderable array.
++   */
++  public static function switchToUserAdminLanguage($element) {
++    $user = \Drupal::currentUser();
++    $userAdminLangcode = $user->getPreferredAdminLangcode();
++
++    if ($userAdminLangcode && $user->hasPermission('access administration pages')) {
++      $languageManager = \Drupal::languageManager();
++      $translationManager= \Drupal::translation();
++
++      $element['#original_langcode'] = $languageManager->getCurrentLanguage(LanguageInterface::TYPE_INTERFACE)->getId();
++
++      $languageManager->setCurrentLanguage(LanguageInterface::TYPE_INTERFACE, $languageManager->getLanguage($userAdminLangcode));
++      $translationManager->setDefaultLangcode($userAdminLangcode);
++    }
++
++    return $element;
++  }
++
++  /**
++   * Restore original language.
++   *
++   * @param \Drupal\Core\Render\Markup content
++   *   Rendered markup.
++   * @param array $element
++   *   A renderable array.
++   *
++   * @return \Drupal\Core\Render\Markup
++   *   Rendered markup.
++   */
++  public static function restoreLanguage($content, $element) {
++    if (isset($element['#original_langcode'])) {
++      $langcode = $element['#original_langcode'];
++
++      $languageManager = \Drupal::languageManager();
++      $translationManager= \Drupal::translation();
++
++      $languageManager->setCurrentLanguage(LanguageInterface::TYPE_INTERFACE, $languageManager->getLanguage($langcode));
++      $translationManager->setDefaultLangcode($langcode);
++    }
++
++    return $content;
++  }
++
+   /**
+    * {@inheritdoc}
+    */
+diff --git a/core/modules/toolbar/src/Element/Toolbar.php b/core/modules/toolbar/src/Element/Toolbar.php
+index d92330b356..44170de7e7 100644
+--- a/core/modules/toolbar/src/Element/Toolbar.php
++++ b/core/modules/toolbar/src/Element/Toolbar.php
+@@ -20,8 +20,12 @@ public function getInfo() {
+     $class = get_class($this);
+     return [
+       '#pre_render' => [
++        ['\Drupal\language\ConfigurableLanguageManager', 'switchToUserAdminLanguage'],
+         [$class, 'preRenderToolbar'],
+       ],
++      '#post_render' => [
++        ['\Drupal\language\ConfigurableLanguageManager', 'restoreLanguage']
++      ],
+       '#theme' => 'toolbar',
+       '#attached' => [
+         'library' => [
+@@ -49,6 +53,7 @@ public function getInfo() {
+     ];
+   }
+ 
++
+   /**
+    * Builds the Toolbar as a structured array ready for drupal_render().
+    *
+diff --git a/core/modules/toolbar/toolbar.routing.yml b/core/modules/toolbar/toolbar.routing.yml
+index 10e6cc3295..80d6d19ff2 100644
+--- a/core/modules/toolbar/toolbar.routing.yml
++++ b/core/modules/toolbar/toolbar.routing.yml
+@@ -4,3 +4,5 @@ toolbar.subtrees:
+     _controller: '\Drupal\toolbar\Controller\ToolbarController::subtreesAjax'
+   requirements:
+     _custom_access: '\Drupal\toolbar\Controller\ToolbarController::checkSubTreeAccess'
++  options:
++    _admin_route: TRUE
+diff --git a/core/modules/user/src/ToolbarLinkBuilder.php b/core/modules/user/src/ToolbarLinkBuilder.php
+index b278db6dba..33336b4c0b 100644
+--- a/core/modules/user/src/ToolbarLinkBuilder.php
++++ b/core/modules/user/src/ToolbarLinkBuilder.php
+@@ -59,6 +59,12 @@ public function renderToolbarLinks() {
+       ],
+     ];
+     $build = [
++      '#pre_render' => [
++        ['\Drupal\language\ConfigurableLanguageManager', 'switchToUserAdminLanguage'],
++      ],
++      '#post_render' => [
++        ['\Drupal\language\ConfigurableLanguageManager', 'restoreLanguage']
++      ],
+       '#theme' => 'links__toolbar_user',
+       '#links' => $links,
+       '#attributes' => [

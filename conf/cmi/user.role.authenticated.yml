@@ -1,0 +1,16 @@
+uuid: dd4b6d7b-c24c-464c-8bac-598e6046c3bc
+langcode: en
+status: true
+dependencies: {  }
+_core:
+  default_config_hash: 83Nuup-6oYkkdAsvg3nrR2pBOgtTXEV1JrzpCCLkYLM
+id: authenticated
+label: 'Authenticated user'
+weight: 1
+is_admin: false
+permissions:
+  - 'access content'
+  - 'display eu cookie compliance popup'
+  - 'use text format full_html'
+  - 'view media'
+  - 'view remote entities'

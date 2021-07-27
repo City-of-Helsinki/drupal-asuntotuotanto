@@ -1,0 +1,19 @@
+uuid: a8da3c29-f075-42b6-af4f-6fca4cf98107
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.taxonomy_term.field_machine_readable_name
+    - taxonomy.vocabulary.apartment_state_of_sale
+id: taxonomy_term.apartment_state_of_sale.field_machine_readable_name
+field_name: field_machine_readable_name
+entity_type: taxonomy_term
+bundle: apartment_state_of_sale
+label: 'Machine readable name'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

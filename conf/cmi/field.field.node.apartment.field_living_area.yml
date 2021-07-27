@@ -1,0 +1,25 @@
+uuid: d1e3985a-d717-44cc-8ce1-0abe426737a5
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_living_area
+    - node.type.apartment
+id: node.apartment.field_living_area
+field_name: field_living_area
+entity_type: node
+bundle: apartment
+label: 'Living area'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: !!float 0
+default_value_callback: ''
+settings:
+  min: null
+  max: null
+  prefix: ''
+  suffix: m<sup>2</sup>
+field_type: decimal

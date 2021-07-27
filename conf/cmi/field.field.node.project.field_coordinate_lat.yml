@@ -1,0 +1,23 @@
+uuid: 6478c2c3-1b3b-4893-a948-3193f7ae81eb
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_coordinate_lat
+    - node.type.project
+id: node.project.field_coordinate_lat
+field_name: field_coordinate_lat
+entity_type: node
+bundle: project
+label: 'Coordinate latitude'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: !!float 0
+  max: !!float 90
+  prefix: ''
+  suffix: ''
+field_type: decimal

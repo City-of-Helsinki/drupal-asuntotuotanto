@@ -1,0 +1,8 @@
+uuid: e07f20e4-c6a5-4815-9222-9f025317ab33
+langcode: en
+status: true
+dependencies: {  }
+name: 'Holding type'
+vid: holding_type
+description: ''
+weight: 0

@@ -1,0 +1,807 @@
+uuid: f608e444-0063-4eaf-92d2-98d921722730
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.project.field_acc_financeofficer
+    - field.field.node.project.field_acc_salesperson
+    - field.field.node.project.field_apartment_count
+    - field.field.node.project.field_apartments
+    - field.field.node.project.field_application_end_time
+    - field.field.node.project.field_application_start_time
+    - field.field.node.project.field_attachments_url
+    - field.field.node.project.field_building_type
+    - field.field.node.project.field_city
+    - field.field.node.project.field_completion_date
+    - field.field.node.project.field_construction_materials
+    - field.field.node.project.field_construction_year
+    - field.field.node.project.field_constructor
+    - field.field.node.project.field_coordinate_lat
+    - field.field.node.project.field_coordinate_lon
+    - field.field.node.project.field_district
+    - field.field.node.project.field_energy_class
+    - field.field.node.project.field_estate_agent
+    - field.field.node.project.field_estate_agent_email
+    - field.field.node.project.field_estate_agent_phone
+    - field.field.node.project.field_estimated_completion
+    - field.field.node.project.field_estimated_completion_date
+    - field.field.node.project.field_has_elevator
+    - field.field.node.project.field_has_sauna
+    - field.field.node.project.field_heating_options
+    - field.field.node.project.field_holding_type
+    - field.field.node.project.field_housing_company
+    - field.field.node.project.field_housing_manager
+    - field.field.node.project.field_images
+    - field.field.node.project.field_import_apartments
+    - field.field.node.project.field_main_image
+    - field.field.node.project.field_material_choice_dl
+    - field.field.node.project.field_new_development_status
+    - field.field.node.project.field_new_housing
+    - field.field.node.project.field_ownership_type
+    - field.field.node.project.field_possession_transfer_date
+    - field.field.node.project.field_postal_code
+    - field.field.node.project.field_pre_marketing_end_time
+    - field.field.node.project.field_premarketing_start_time
+    - field.field.node.project.field_project_accessibility
+    - field.field.node.project.field_project_area_description
+    - field.field.node.project.field_project_attachments
+    - field.field.node.project.field_project_description
+    - field.field.node.project.field_project_manager
+    - field.field.node.project.field_publication_end_time
+    - field.field.node.project.field_publication_start_time
+    - field.field.node.project.field_realty_id
+    - field.field.node.project.field_roof_material
+    - field.field.node.project.field_sanitation
+    - field.field.node.project.field_services
+    - field.field.node.project.field_services_url
+    - field.field.node.project.field_shared_apartment_images
+    - field.field.node.project.field_shareholder_meeting_date
+    - field.field.node.project.field_site_area
+    - field.field.node.project.field_site_owner
+    - field.field.node.project.field_site_renter
+    - field.field.node.project.field_state_of_sale
+    - field.field.node.project.field_street_address
+    - field.field.node.project.field_tasks
+    - field.field.node.project.field_virtual_presentation_url
+    - field.field.node.project.field_zoning_info
+    - field.field.node.project.field_zoning_status
+    - image.style.thumbnail
+    - node.type.project
+  module:
+    - asu_content
+    - asu_csv_import
+    - asu_tasklist
+    - datetime
+    - field_group
+    - file
+    - image
+    - inline_entity_form
+    - link
+    - path
+    - scheduler
+    - text
+third_party_settings:
+  field_group:
+    group_project_tabs:
+      children:
+        - group_basic
+        - group_properties
+        - group_neighbourhood
+        - group_schedules
+        - group_pictures_and_videos
+        - group_persons_and_operators
+        - group_apartments
+      parent_name: ''
+      weight: 10
+      format_type: tabs
+      region: content
+      format_settings:
+        direction: horizontal
+        id: ''
+        classes: ''
+      label: 'Project tabs'
+    group_basic:
+      children:
+        - langcode
+        - title
+        - field_housing_company
+        - field_ownership_type
+        - field_state_of_sale
+        - field_street_address
+        - field_postal_code
+        - field_city
+        - field_district
+        - field_realty_id
+        - field_construction_year
+        - field_new_housing
+        - field_apartment_count
+        - field_new_development_status
+        - field_holding_type
+        - field_project_description
+      parent_name: group_project_tabs
+      weight: 19
+      format_type: tab
+      region: content
+      format_settings:
+        description: ''
+        formatter: closed
+        required_fields: true
+        id: ''
+        classes: ''
+      label: Perustiedot
+    group_properties:
+      children:
+        - field_has_elevator
+        - field_has_sauna
+        - field_construction_materials
+        - field_roof_material
+        - field_heating_options
+        - field_energy_class
+        - field_site_area
+        - field_site_renter
+        - field_sanitation
+        - field_zoning_info
+        - field_zoning_status
+        - field_coordinate_lat
+        - field_coordinate_lon
+        - field_site_owner
+        - field_building_type
+        - field_project_accessibility
+      parent_name: group_project_tabs
+      weight: 20
+      format_type: tab
+      region: content
+      format_settings:
+        id: ''
+        classes: ''
+        description: ''
+        formatter: closed
+        required_fields: true
+      label: Ominaisuudet
+    group_tasklist:
+      children:
+        - field_tasks
+      parent_name: ''
+      weight: 0
+      format_type: details_sidebar
+      region: content
+      format_settings:
+        id: ''
+        classes: ''
+        description: ''
+        open: true
+        required_fields: true
+        weight: 0
+      label: Tehtävälista
+    group_schedules:
+      children:
+        - field_publication_start_time
+        - field_publication_end_time
+        - field_premarketing_start_time
+        - field_pre_marketing_end_time
+        - field_application_start_time
+        - field_application_end_time
+        - field_material_choice_dl
+        - field_shareholder_meeting_date
+        - field_estimated_completion
+        - field_estimated_completion_date
+        - field_completion_date
+        - field_possession_transfer_date
+      parent_name: group_project_tabs
+      weight: 21
+      format_type: tab
+      region: content
+      format_settings:
+        id: ''
+        classes: ''
+        description: ''
+        formatter: closed
+        required_fields: true
+      label: Aikataulut
+    group_pictures_and_videos:
+      children:
+        - field_attachments_url
+        - field_main_image
+        - field_images
+        - field_shared_apartment_images
+        - field_virtual_presentation_url
+        - field_project_attachments
+      parent_name: group_project_tabs
+      weight: 22
+      format_type: tab
+      region: content
+      format_settings:
+        id: ''
+        classes: ''
+        description: ''
+        formatter: closed
+        required_fields: true
+      label: Liitteet
+    group_persons_and_operators:
+      children:
+        - field_acc_salesperson
+        - field_acc_financeofficer
+        - field_project_manager
+        - field_constructor
+        - field_housing_manager
+        - field_estate_agent
+        - field_estate_agent_email
+        - field_estate_agent_phone
+      parent_name: group_project_tabs
+      weight: 24
+      format_type: tab
+      region: content
+      format_settings:
+        id: ''
+        classes: ''
+        description: ''
+        formatter: closed
+        required_fields: true
+      label: Toimijat
+    group_apartments:
+      children:
+        - field_apartments
+        - field_import_apartments
+      parent_name: group_project_tabs
+      weight: 25
+      format_type: tab
+      region: content
+      format_settings:
+        id: ''
+        classes: ''
+        description: ''
+        formatter: closed
+        required_fields: true
+      label: Huoneistot
+    group_neighbourhood:
+      children:
+        - field_services
+        - field_services_url
+        - field_project_area_description
+      parent_name: group_project_tabs
+      weight: 20
+      format_type: tab
+      region: content
+      format_settings:
+        id: ''
+        classes: ''
+        description: ''
+        formatter: closed
+        required_fields: true
+      label: Asuinalue
+id: node.project.default
+targetEntityType: node
+bundle: project
+mode: default
+content:
+  created:
+    type: datetime_timestamp
+    weight: 4
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_acc_financeofficer:
+    weight: 25
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_acc_salesperson:
+    weight: 24
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_apartment_count:
+    weight: 13
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+    type: number
+    region: content
+  field_apartments:
+    weight: 48
+    settings:
+      form_mode: default
+      override_labels: true
+      label_singular: huoneisto
+      label_plural: huoneistoja
+      allow_new: true
+      allow_existing: true
+      match_operator: CONTAINS
+      revision: false
+      collapsible: false
+      collapsed: false
+      allow_duplicate: false
+    third_party_settings: {  }
+    type: inline_entity_form_complex
+    region: content
+  field_application_end_time:
+    weight: 16
+    settings: {  }
+    third_party_settings: {  }
+    type: datetime_default
+    region: content
+  field_application_start_time:
+    weight: 15
+    settings: {  }
+    third_party_settings: {  }
+    type: datetime_default
+    region: content
+  field_attachments_url:
+    weight: 24
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: {  }
+    type: link_default
+    region: content
+  field_building_type:
+    weight: 78
+    settings: {  }
+    third_party_settings: {  }
+    type: options_select
+    region: content
+  field_city:
+    weight: 8
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_completion_date:
+    weight: 22
+    settings: {  }
+    third_party_settings: {  }
+    type: datetime_default
+    region: content
+  field_construction_materials:
+    weight: 65
+    settings: {  }
+    third_party_settings: {  }
+    type: options_buttons
+    region: content
+  field_construction_year:
+    weight: 11
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_constructor:
+    weight: 28
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_coordinate_lat:
+    weight: 74
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+    type: number
+    region: content
+  field_coordinate_lon:
+    weight: 75
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+    type: number
+    region: content
+  field_district:
+    weight: 9
+    settings: {  }
+    third_party_settings: {  }
+    type: options_select
+    region: content
+  field_energy_class:
+    weight: 68
+    settings: {  }
+    third_party_settings: {  }
+    type: options_buttons
+    region: content
+  field_estate_agent:
+    weight: 30
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_estate_agent_email:
+    weight: 31
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: email_default
+    region: content
+  field_estate_agent_phone:
+    weight: 32
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_estimated_completion:
+    weight: 20
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_estimated_completion_date:
+    weight: 21
+    settings: {  }
+    third_party_settings: {  }
+    type: datetime_default
+    region: content
+  field_has_elevator:
+    weight: 63
+    settings:
+      display_label: true
+    third_party_settings: {  }
+    type: boolean_checkbox
+    region: content
+  field_has_sauna:
+    weight: 64
+    settings:
+      display_label: true
+    third_party_settings: {  }
+    type: boolean_checkbox
+    region: content
+  field_heating_options:
+    weight: 67
+    settings: {  }
+    third_party_settings: {  }
+    type: options_buttons
+    region: content
+  field_holding_type:
+    weight: 15
+    settings: {  }
+    third_party_settings: {  }
+    type: options_buttons
+    region: content
+  field_housing_company:
+    weight: 3
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_housing_manager:
+    weight: 29
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_images:
+    weight: 26
+    settings:
+      progress_indicator: throbber
+      preview_image_style: thumbnail
+    third_party_settings: {  }
+    type: image_image
+    region: content
+  field_import_apartments:
+    weight: 81
+    settings:
+      progress_indicator: throbber
+    third_party_settings: {  }
+    type: asu_csv_file_widget
+    region: content
+  field_main_image:
+    weight: 25
+    settings:
+      progress_indicator: throbber
+      preview_image_style: thumbnail
+    third_party_settings: {  }
+    type: image_image
+    region: content
+  field_material_choice_dl:
+    weight: 17
+    settings: {  }
+    third_party_settings: {  }
+    type: datetime_default
+    region: content
+  field_new_development_status:
+    weight: 14
+    settings: {  }
+    third_party_settings: {  }
+    type: options_buttons
+    region: content
+  field_new_housing:
+    type: boolean_checkbox
+    weight: 12
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  field_ownership_type:
+    weight: 4
+    settings: {  }
+    third_party_settings: {  }
+    type: options_buttons
+    region: content
+  field_possession_transfer_date:
+    weight: 23
+    settings: {  }
+    third_party_settings: {  }
+    type: datetime_default
+    region: content
+  field_postal_code:
+    type: string_textfield
+    weight: 7
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_pre_marketing_end_time:
+    weight: 14
+    settings: {  }
+    third_party_settings: {  }
+    type: datetime_default
+    region: content
+  field_premarketing_start_time:
+    weight: 13
+    settings: {  }
+    third_party_settings: {  }
+    type: datetime_default
+    region: content
+  field_project_accessibility:
+    weight: 79
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_project_area_description:
+    weight: 84
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textarea
+    region: content
+  field_project_attachments:
+    weight: 30
+    settings:
+      progress_indicator: throbber
+    third_party_settings: {  }
+    type: file_generic
+    region: content
+  field_project_description:
+    weight: 16
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+    type: text_textarea
+    region: content
+  field_project_manager:
+    weight: 26
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_publication_end_time:
+    weight: 12
+    settings: {  }
+    third_party_settings: {  }
+    type: datetime_default
+    region: content
+  field_publication_start_time:
+    weight: 11
+    settings: {  }
+    third_party_settings: {  }
+    type: datetime_default
+    region: content
+  field_realty_id:
+    weight: 10
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_roof_material:
+    weight: 66
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_sanitation:
+    weight: 71
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_services:
+    weight: 80
+    settings: {  }
+    third_party_settings: {  }
+    type: asu_service_widget
+    region: content
+  field_services_url:
+    weight: 82
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: {  }
+    type: link_default
+    region: content
+  field_shared_apartment_images:
+    weight: 28
+    settings:
+      progress_indicator: throbber
+      preview_image_style: thumbnail
+    third_party_settings: {  }
+    type: image_image
+    region: content
+  field_shareholder_meeting_date:
+    weight: 18
+    settings: {  }
+    third_party_settings: {  }
+    type: datetime_default
+    region: content
+  field_site_area:
+    weight: 69
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+    type: number
+    region: content
+  field_site_owner:
+    weight: 77
+    settings: {  }
+    third_party_settings: {  }
+    type: options_select
+    region: content
+  field_site_renter:
+    weight: 70
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_state_of_sale:
+    weight: 5
+    settings: {  }
+    third_party_settings: {  }
+    type: options_select
+    region: content
+  field_street_address:
+    weight: 6
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_tasks:
+    weight: 47
+    settings: {  }
+    third_party_settings: {  }
+    type: tasklist_widget
+    region: content
+  field_virtual_presentation_url:
+    weight: 29
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: {  }
+    type: link_default
+    region: content
+  field_zoning_info:
+    weight: 72
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: {  }
+    type: link_default
+    region: content
+  field_zoning_status:
+    weight: 73
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  langcode:
+    type: language_select
+    weight: 1
+    region: content
+    settings:
+      include_locked: true
+    third_party_settings: {  }
+  path:
+    type: path
+    weight: 7
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  promote:
+    type: boolean_checkbox
+    settings:
+      display_label: true
+    weight: 5
+    region: content
+    third_party_settings: {  }
+  publish_on:
+    type: datetime_timestamp_no_default
+    weight: 30
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  status:
+    type: boolean_checkbox
+    settings:
+      display_label: true
+    weight: 9
+    region: content
+    third_party_settings: {  }
+  sticky:
+    type: boolean_checkbox
+    settings:
+      display_label: true
+    weight: 6
+    region: content
+    third_party_settings: {  }
+  title:
+    type: string_textfield
+    weight: 2
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  translation:
+    weight: 3
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  uid:
+    type: entity_reference_autocomplete
+    weight: 2
+    settings:
+      match_operator: CONTAINS
+      size: 60
+      placeholder: ''
+      match_limit: 10
+    region: content
+    third_party_settings: {  }
+  unpublish_on:
+    type: datetime_timestamp_no_default
+    weight: 30
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  url_redirects:
+    weight: 8
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden: {  }

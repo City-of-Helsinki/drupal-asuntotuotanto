@@ -1,0 +1,17 @@
+uuid: 51aafd9c-d719-472f-b9bb-9276dde9200f
+langcode: en
+status: true
+dependencies:
+  module:
+    - asu_rest
+    - serialization
+    - user
+id: filter_rest_resource
+plugin_id: filter_rest_resource
+granularity: method
+configuration:
+  GET:
+    supported_formats:
+      - json
+    supported_auth:
+      - cookie

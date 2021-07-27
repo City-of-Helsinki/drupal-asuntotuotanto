@@ -1,0 +1,27 @@
+uuid: 578cee96-2e22-41bf-b732-37ee1c37716a
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_import_apartments
+    - node.type.project
+  module:
+    - asu_csv_import
+id: node.project.field_import_apartments
+field_name: field_import_apartments
+entity_type: node
+bundle: project
+label: 'Import apartments'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  file_directory: '[date:custom:Y]-[date:custom:m]'
+  file_extensions: csv
+  max_filesize: '10 MB'
+  description_field: 0
+  handler: 'default:file'
+  handler_settings: {  }
+field_type: asu_csv_import

@@ -1,0 +1,33 @@
+uuid: 1f16461e-760b-4321-92d4-b2be7693b8b9
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_condition
+    - node.type.apartment
+    - taxonomy.vocabulary.general_condition
+  content:
+    - 'taxonomy_term:general_condition:65485b3a-4d06-4d1a-8fdd-2522f378ec37'
+id: node.apartment.field_condition
+field_name: field_condition
+entity_type: node
+bundle: apartment
+label: Condition
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    target_uuid: 65485b3a-4d06-4d1a-8fdd-2522f378ec37
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      general_condition: general_condition
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

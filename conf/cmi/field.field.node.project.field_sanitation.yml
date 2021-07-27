@@ -1,0 +1,19 @@
+uuid: 5ad0d9ed-92e9-4744-8007-9c148eecc4ec
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_sanitation
+    - node.type.project
+id: node.project.field_sanitation
+field_name: field_sanitation
+entity_type: node
+bundle: project
+label: Sanitation
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

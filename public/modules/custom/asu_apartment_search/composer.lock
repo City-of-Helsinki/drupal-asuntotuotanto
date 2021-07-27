@@ -1,0 +1,32 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "53e950b9f4b20b4e882a9b4ab6f83bdd",
+    "packages": [
+        {
+            "name": "city-of-helsinki/asuntomyynti-react",
+            "version": "0.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/City-of-Helsinki/asuntomyynti-react",
+                "reference": "e08157c2f74dfd1a6b38ba8f5f6d9d9d5e194918"
+            },
+            "type": "custom-react",
+            "extra": {
+                "installer-name": "att-react"
+            }
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "dev",
+    "stability-flags": [],
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": [],
+    "platform-dev": [],
+    "plugin-api-version": "1.1.0"
+}

@@ -1,0 +1,26 @@
+user-tools:
+  js:
+    dist/js/userToolsNavigation.min.js: {}
+  dependencies:
+    - core/jquery
+
+apartments-list-item-toggle:
+  js:
+    dist/js/apartmentsListItemToggle.min.js: {}
+
+sticky-navigation:
+  js:
+    dist/js/stickyNavigation.min.js: {}
+
+global-styling:
+  version: 1.x
+  css:
+    theme:
+      dist/css/styles.min.css: {}
+
+global-scripting:
+  version: 1.x
+  js:
+    dist/js/bundle.min.js: {}
+  dependencies:
+    - core/drupal

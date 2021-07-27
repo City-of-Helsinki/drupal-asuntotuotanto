@@ -1,0 +1,25 @@
+.asu-content-bulk-edit {
+  padding-top: 6rem;
+}
+
+.asu-content-bulk-edit__header {
+  margin-bottom: $spacing-l;
+}
+
+.asu-content-bulk-edit__heading {
+  @include font-size($fontsize-heading-l, 43px);
+  font-weight: $font-weight-bold;
+  color: var(--color-black-90);
+  margin: 0 0 $spacing-s;
+
+  + p {
+    @include font-size($fontsize-body-l, 27px);
+    margin: 0;
+  }
+}
+
+.asu-content-bulk-edit__form {
+  .form-item {
+    margin-bottom: $spacing-l;
+  }
+}

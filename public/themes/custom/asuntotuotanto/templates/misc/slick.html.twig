@@ -1,0 +1,12 @@
+{% extends 'modules/contrib/slick/templates/slick.html.twig' %}
+
+{% block slick_arrow %}
+  <nav{{ arrow_attributes.addClass(arrow_classes) }}>
+    <button type="button" data-role="none" class="slick-prev" aria-label="{{ settings.prevArrow|t }}" tabindex="0">
+      {% include "@hdbt/misc/icon.twig" with {icon: 'angle-left'} %}
+    </button>
+    <button type="button" data-role="none" class="slick-next" aria-label="{{ settings.nextArrow|t }}" tabindex="0">
+      {% include "@hdbt/misc/icon.twig" with {icon: 'angle-right'} %}
+    </button>
+  </nav>
+{% endblock %}

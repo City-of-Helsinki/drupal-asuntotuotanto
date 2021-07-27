@@ -1,0 +1,181 @@
+{
+    "name": "city-of-helsinki/asuntotuotanto",
+    "description": "Drupal 9 Asuntotuotanto created by helfi drupal platform",
+    "type": "project",
+    "license": "MIT",
+    "homepage": "https://druid.fi",
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "require": {
+        "brainmaestro/composer-git-hooks": "^2.8",
+        "composer/installers": "^1.9",
+        "cweagans/composer-patches": "^1.6.7",
+        "dinbror/blazy": "^1.8",
+        "druidfi/omen": "^0.2.0",
+        "drupal/admin_toolbar": "^2.4.0",
+        "drupal/api_tools": "^1.0",
+        "drupal/auto_entitylabel": "^3.0@beta",
+        "drupal/blazy": "^2.1",
+        "drupal/coffee": "^1.2",
+        "drupal/computed_field_plugin": "^1.3",
+        "drupal/config_terms": "^1.4",
+        "drupal/context": "^4.0@beta",
+        "drupal/core-composer-scaffold": "^9.1",
+        "drupal/core-recommended": "^9.1",
+        "drupal/elasticsearch_connector": "^7.0@alpha",
+        "drupal/entity": "^1.2",
+        "drupal/entity_usage": "^2.0@beta",
+        "drupal/field_group": "^3.1",
+        "drupal/gin": "^3.0@alpha",
+        "drupal/gin_login": "^1.0@RC",
+        "drupal/gin_toolbar": "^1.0@beta",
+        "drupal/hdbt": "^1.2",
+        "drupal/hdbt_admin": "^1.0",
+        "drupal/helfi_ahjo": "^1.0",
+        "drupal/helfi_hauki": "^1.0",
+        "drupal/helfi_platform_config": "^1.0",
+        "drupal/helfi_tpr": "^1.0",
+        "drupal/helfi_tunnistamo": "^1.0",
+        "drupal/inline_entity_form": "^1.0@RC",
+        "drupal/key": "^1.14",
+        "drupal/menu_block": "1.x-dev#17bc5a2094dec85a921fdac6aff0030bfe004744",
+        "drupal/menu_block_current_language": "^1.4",
+        "drupal/menu_link_attributes": "^1.2",
+        "drupal/paragraphs": "^1.12",
+        "drupal/paragraphs_asymmetric_translation_widgets": "^1.0@beta",
+        "drupal/pathauto": "^1.8",
+        "drupal/rabbit_hole": "^1.0@beta",
+        "drupal/redirect": "^1.6",
+        "drupal/restui": "^1.19",
+        "drupal/route_condition": "^2.0",
+        "drupal/search_api": "^1.19",
+        "drupal/slick": "^2.2",
+        "drupal/twig_tweak": "2.8",
+        "drupal/ultimate_cron": "^2.0@alpha",
+        "drupal/views_infinite_scroll": "^1.8",
+        "drupal/yearonly": "^9.0",
+        "drush/drush": "^10.4",
+        "kenwheeler/slick": "^1.8",
+        "zaporylie/composer-drupal-optimizations": "^1.2"
+    },
+    "require-dev": {
+        "dealerdirect/phpcodesniffer-composer-installer": "^0.7.0",
+        "drupal/coder": "^8.3",
+        "drupal/core-dev": "^9.1",
+        "drupal/devel": "^4.1",
+        "drupal/drupal-extension": "^4.1",
+        "phpspec/prophecy-phpunit": "^2",
+        "phpunit/phpunit": "~9.4.0",
+        "weitzman/drupal-test-traits": "^1.5"
+    },
+    "conflict": {
+        "drupal/drupal": "*"
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "sort-packages": true
+    },
+    "extra": {
+        "composer-exit-on-patch-failure": true,
+        "drupal-scaffold": {
+            "allowed-packages": [
+                "drupal/core"
+            ],
+            "locations": {
+                "web-root": "./public"
+            },
+            "file-mapping": {
+                "[project-root]/.editorconfig": false
+            }
+        },
+        "enable-patching": true,
+        "installer-paths": {
+            "public/core": [
+                "type:drupal-core"
+            ],
+            "public/libraries/{$name}": [
+                "type:drupal-library"
+            ],
+            "public/modules/contrib/{$name}": [
+                "type:drupal-module"
+            ],
+            "public/modules/custom/{$name}": [
+                "type:drupal-custom-module"
+            ],
+            "public/profiles/{$name}": [
+                "type:drupal-profile"
+            ],
+            "public/themes/contrib/{$name}": [
+                "type:drupal-theme"
+            ],
+            "public/themes/custom/{$name}": [
+                "type:drupal-custom-theme"
+            ],
+            "drush/{$name}": [
+                "type:drupal-drush"
+            ]
+        },
+        "patches": {
+            "drupal/core": {
+                "https://www.drupal.org/project/drupal/issues/2868193#comment-12258614": "https://www.drupal.org/files/issues/2868193-10.patch",
+                "https://www.drupal.org/project/drupal/issues/3054641#comment-13385850": "https://www.drupal.org/files/issues/2019-12-10/3054641-14.patch",
+                "https://www.drupal.org/project/drupal/issues/2925297#comment-13274046": "https://www.drupal.org/files/issues/2019-09-26/core-typed_config_handle_missing_config-2925297-18.patch",
+                "https://www.drupal.org/project/drupal/issues/2466553": "https://www.drupal.org/files/issues/2020-05-14/2466553-75-d91x.patch"
+            },
+            "drupal/elasticsearch_connector": {
+                "Custom patch based on https://www.drupal.org/files/issues/2020-03-03/8.x-7.x-2977537-13-array-vs-scalar_0.patch": "patches/elasticsearch_connector_indexfactory_v3.patch"
+            },
+            "drupal/field_group": {
+                "Custom patch to add classes for each horizontal tab": "patches/field_group_horizontal_tabs_classes.patch"
+            },
+            "drupal/config_terms": {
+                "Custom patch to fix the bug with reading configurations": "patches/config_terms_fix_config_bug.patch"
+            }
+        }
+    },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://repository.drupal.hel.ninja"
+        },
+        {
+            "type": "composer",
+            "url": "https://packages.drupal.org/8"
+        },
+        {
+            "type": "package",
+            "package": {
+                "name": "kenwheeler/slick",
+                "version": "1.8.1",
+                "type": "drupal-library",
+                "source": {
+                    "url": "https://github.com/kenwheeler/slick",
+                    "type": "git",
+                    "reference": "origin/master"
+                }
+            }
+        },
+        {
+            "type": "package",
+            "package": {
+                "name": "dinbror/blazy",
+                "version": "1.8.2",
+                "type": "drupal-library",
+                "source": {
+                    "url": "https://github.com/dinbror/blazy",
+                    "type": "git",
+                    "reference": "origin/master"
+                }
+            }
+        }
+    ],
+    "scripts": {
+        "copy-commit-message-script": "make copy-commit-message-script",
+        "post-install-cmd": [
+            "@copy-commit-message-script"
+        ],
+        "post-update-cmd": [
+            "@copy-commit-message-script"
+        ]
+    }
+}

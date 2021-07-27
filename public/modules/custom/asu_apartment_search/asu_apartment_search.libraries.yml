@@ -1,0 +1,14 @@
+# Define asuntomyynti-react application library.
+apartment-search:
+  remote: https://github.com/City-of-Helsinki/asuntomyynti-react
+  version: VERSION
+  license:
+    name: MIT
+    url: https://github.com/City-of-Helsinki/asuntomyynti-react/blob/develop/README.md
+  js:
+    assets/react/runtime-main.js: { }
+    assets/react/vendors.js: { }
+    assets/react/main.js: { }
+  css:
+    theme:
+      assets/react/main.css: { }

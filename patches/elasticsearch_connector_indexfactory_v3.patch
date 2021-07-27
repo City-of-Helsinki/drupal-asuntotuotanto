@@ -1,0 +1,233 @@
+diff --git a/src/ElasticSearch/Parameters/Factory/IndexFactory.php b/src/ElasticSearch/Parameters/Factory/IndexFactory.php
+index 20cffea..1eb83c7 100644
+--- a/src/ElasticSearch/Parameters/Factory/IndexFactory.php
++++ b/src/ElasticSearch/Parameters/Factory/IndexFactory.php
+@@ -2,10 +2,14 @@
+ 
+ namespace Drupal\elasticsearch_connector\ElasticSearch\Parameters\Factory;
+ 
++use Drupal\Core\Field\FieldDefinitionInterface;
++use Drupal\file\Entity\File;
+ use Drupal\search_api\IndexInterface;
+ use Drupal\elasticsearch_connector\Event\PrepareIndexEvent;
+ use Drupal\elasticsearch_connector\Event\PrepareIndexMappingEvent;
+ use Drupal\elasticsearch_connector\Event\BuildIndexParamsEvent;
++use Drupal\search_api\Processor\EntityProcessorProperty;
++use Drupal\search_api\Utility\Utility;
+ use Drupal\search_api_autocomplete\Suggester\SuggesterInterface;
+ use Drupal\elasticsearch_connector\Entity\Cluster;
+ 
+@@ -48,26 +52,26 @@ class IndexFactory {
+    *
+    * @return array
+    */
+-   public static function create(IndexInterface $index) {
+-     $indexName = static::getIndexName($index);
+-     $indexConfig =  [
+-       'index' => $indexName,
+-       'body' => [
+-         'settings' => [
+-           'number_of_shards' => $index->getOption('number_of_shards', 5),
+-           'number_of_replicas' => $index->getOption('number_of_replicas', 1),
+-         ],
+-       ],
+-     ];
+-
+-     // Allow other modules to alter index config before we create it.
+-     $dispatcher = \Drupal::service('event_dispatcher');
+-     $prepareIndexEvent = new PrepareIndexEvent($indexConfig, $indexName);
+-     $event = $dispatcher->dispatch(PrepareIndexEvent::PREPARE_INDEX, $prepareIndexEvent);
+-     $indexConfig = $event->getIndexConfig();
+-
+-     return $indexConfig;
+-   }
++  public static function create(IndexInterface $index) {
++    $indexName = static::getIndexName($index);
++    $indexConfig =  [
++      'index' => $indexName,
++      'body' => [
++        'settings' => [
++          'number_of_shards' => $index->getOption('number_of_shards', 5),
++          'number_of_replicas' => $index->getOption('number_of_replicas', 1),
++        ],
++      ],
++    ];
++
++    // Allow other modules to alter index config before we create it.
++    $dispatcher = \Drupal::service('event_dispatcher');
++    $prepareIndexEvent = new PrepareIndexEvent($indexConfig, $indexName);
++    $event = $dispatcher->dispatch(PrepareIndexEvent::PREPARE_INDEX, $prepareIndexEvent);
++    $indexConfig = $event->getIndexConfig();
++
++    return $indexConfig;
++  }
+ 
+   /**
+    * Build parameters to bulk delete indexes.
+@@ -112,28 +116,17 @@ class IndexFactory {
+       ];
+       /** @var \Drupal\search_api\Item\FieldInterface $field */
+       foreach ($item as $name => $field) {
+-        $field_type = $field->getType();
+         if (!empty($field->getValues())) {
+-          $values = array();
+-          foreach ($field->getValues() as $value) {
+-            switch ($field_type) {
+-              case 'string':
+-                $values[] = (string) $value;
+-                break;
+-
+-              case 'text':
+-                $values[] = $value->toText();
+-                break;
+-
+-              case 'boolean':
+-                $values[] = (boolean) $value;
+-                break;
+-
+-              default:
+-                $values[] = $value;
++          $value = [];
++          foreach ($field->getValues() as $val) {
++            if (self::isFieldList($index, $field)) {
++              $value[] = self::getFieldValue($field, $val);
++            }
++            else {
++              $value = self::getFieldValue($field, $val);
+             }
+           }
+-          $data[$field->getFieldIdentifier()] = $values;
++          $data[$field->getFieldIdentifier()] = $value;
+         }
+       }
+       $params['body'][] = ['index' => ['_id' => $id]];
+@@ -191,7 +184,7 @@ class IndexFactory {
+         // Collect autocompletion fields in an array keyed by field id.
+         $all_autocompletion_fields += array_flip($autocompletion_fields);
+       }
+-     }
++    }
+ 
+     // Map index fields.
+     foreach ($index->getFields() as $field_id => $field_data) {
+@@ -228,7 +221,6 @@ class IndexFactory {
+    *   uniqueness, the database name, and index machine name.
+    */
+   public static function getIndexName(IndexInterface $index) {
+-
+     // Get index machine name.
+     $index_machine_name = is_string($index) ? $index : $index->id();
+ 
+@@ -260,4 +252,112 @@ class IndexFactory {
+     ));
+   }
+ 
++  /**
++   * Helper function. Returns the elasticsearch value for a given field.
++   *
++   * @param string $field
++   * @param mixed $value
++   *
++   * @return string
++   */
++  protected static function getFieldValue($field, $raw) {
++    $field_type = $field->getType();
++    switch ($field_type) {
++      case 'string':
++        $value = (string) $raw;
++        break;
++
++      case 'text':
++        $value = $raw->toText();
++        break;
++
++      case 'boolean':
++        $value = (boolean) $raw;
++        break;
++      case 'object':
++        $target = self::objectOfType($field);
++        $value = '';
++        if($target == 'taxonomy_term'){
++          $term = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->load($raw);
++          $value = $term ? $term->getName() : '';
++        }
++        if($target == 'file'){
++          $value = '';
++          if ($file = File::load($raw)){
++            $value = $file->createFileUrl(FALSE);
++          }
++        }
++        if($target == 'datetime' || $target == 'date'){
++          $format = 'c';
++          try{
++            $dt = new \DateTime($raw);
++            $value = $dt->format($format);
++          } catch(\Exception $e) {
++            $value = '';
++          }
++        }
++        break;
++      case 'integer':
++        $value = (integer) $raw;
++        break;
++
++      case 'decimal':
++        $value = (float) $raw;
++        break;
++      case 'any':
++        $value = $field->getValues();
++        break;
++      default:
++        $value = $raw;
++    }
++    return $value;
++  }
++
++  /**
++   * Helper function. Returns true if the field is a list of values.
++   *
++   * @param \Drupal\search_api\IndexInterface $index
++   * @param \Drupal\search_api\Item\Field $field
++   *
++   * @return bool
++   */
++  protected static function isFieldList($index, $field) {
++    $is_list = FALSE;
++
++    // Ensure we get the field definition for the root/parent field item (ie tags).
++    $property_definitions =  $index->getPropertyDefinitions($field->getDatasourceId());
++    $root_property = Utility::splitPropertyPath($field->getPropertyPath(), FALSE)[0];
++    $field_definition = $property_definitions[$root_property];
++
++    // Using $field_definition->isList() doesn't seem to be accurate, so we
++    // check the fieldStorage cardinality !=1.
++    if ($field_definition instanceof FieldDefinitionInterface) {
++      $storage = $field_definition->getFieldStorageDefinition();
++      if (1 != $storage->getCardinality()) {
++        return TRUE;
++      }
++    }
++    if($field->getDataDefinition()->getFieldDefinition()->getFieldStorageDefinition()->getCardinality() === -1){
++      return TRUE;
++    }
++    return $is_list;
++  }
++
++  /**
++   * Helper function. Returns the type of the object.
++   *
++   * @param \Drupal\search_api\Item\Field $field
++   *
++   * @return string
++   */
++  protected static function objectOfType($field) {
++    $field_settings = $field->getDataDefinition()->getFieldDefinition()->getSettings();
++    if (isset($field_settings['target_type'])) {
++      return $field_settings['target_type'];
++    }
++    if (isset($field_settings['datetime_type'])) {
++      return $field_settings['datetime_type'];
++    }
++  }
++
+ }

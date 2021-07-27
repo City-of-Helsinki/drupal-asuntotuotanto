@@ -1,0 +1,19 @@
+uuid: e1f2520b-ace0-4c64-9173-0146b18d22ea
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_kitchen_appliances
+    - node.type.apartment
+id: node.apartment.field_kitchen_appliances
+field_name: field_kitchen_appliances
+entity_type: node
+bundle: apartment
+label: 'Kitchen appliances'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string_long

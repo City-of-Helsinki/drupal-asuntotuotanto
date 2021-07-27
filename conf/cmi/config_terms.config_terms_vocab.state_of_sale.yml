@@ -1,0 +1,9 @@
+uuid: 3e64428c-3d79-4546-b19e-3b74c44f0bfc
+langcode: en
+status: true
+dependencies: {  }
+label: 'State of sale'
+id: state_of_sale
+description: 'State of sale for project'
+weight: 0
+hierarchy: 0

@@ -1,0 +1,11 @@
+uuid: b03742cf-bb23-4a11-b225-ae59474abcb7
+langcode: en
+status: true
+dependencies: {  }
+id: ready
+vid: state_of_sale
+label: Ready
+parents:
+  - '0'
+description: ''
+weight: 3

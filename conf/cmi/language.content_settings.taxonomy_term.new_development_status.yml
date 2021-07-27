@@ -1,0 +1,16 @@
+uuid: 8b92cae8-8852-4945-ad2f-3cb3868d81af
+langcode: fi
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.new_development_status
+  module:
+    - content_translation
+third_party_settings:
+  content_translation:
+    enabled: true
+id: taxonomy_term.new_development_status
+target_entity_type_id: taxonomy_term
+target_bundle: new_development_status
+default_langcode: site_default
+language_alterable: false

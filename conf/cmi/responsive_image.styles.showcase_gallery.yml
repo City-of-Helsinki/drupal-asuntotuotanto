@@ -1,0 +1,85 @@
+uuid: f058f043-e568-42b8-a927-88e9fda7cfed
+langcode: fi
+status: true
+dependencies:
+  config:
+    - image.style.23_10_l
+    - image.style.23_10_l_2x
+    - image.style.23_10_m
+    - image.style.23_10_m_2x
+    - image.style.23_10_xl
+    - image.style.23_10_xl_2x
+    - image.style.3_2_m
+    - image.style.3_2_s
+    - image.style.3_2_s_2x
+    - image.style.3_2_xs
+    - image.style.3_2_xs_2x
+    - image.style.3_2_xxs
+    - image.style.3_2_xxs_2x
+  theme:
+    - asuntotuotanto
+id: showcase_gallery
+label: 'Showcase Gallery'
+image_style_mappings:
+  -
+    breakpoint_id: asuntotuotanto.xl
+    multiplier: 1x
+    image_mapping_type: image_style
+    image_mapping: 23_10_xl
+  -
+    breakpoint_id: asuntotuotanto.xl
+    multiplier: 2x
+    image_mapping_type: image_style
+    image_mapping: 23_10_xl_2x
+  -
+    breakpoint_id: asuntotuotanto.l
+    multiplier: 1x
+    image_mapping_type: image_style
+    image_mapping: 23_10_l
+  -
+    breakpoint_id: asuntotuotanto.l
+    multiplier: 2x
+    image_mapping_type: image_style
+    image_mapping: 23_10_l_2x
+  -
+    breakpoint_id: asuntotuotanto.m
+    multiplier: 1x
+    image_mapping_type: image_style
+    image_mapping: 23_10_m
+  -
+    breakpoint_id: asuntotuotanto.m
+    multiplier: 2x
+    image_mapping_type: image_style
+    image_mapping: 23_10_m_2x
+  -
+    breakpoint_id: asuntotuotanto.s
+    multiplier: 1x
+    image_mapping_type: image_style
+    image_mapping: 3_2_s
+  -
+    breakpoint_id: asuntotuotanto.s
+    multiplier: 2x
+    image_mapping_type: image_style
+    image_mapping: 3_2_s_2x
+  -
+    breakpoint_id: asuntotuotanto.xs
+    multiplier: 1x
+    image_mapping_type: image_style
+    image_mapping: 3_2_xs
+  -
+    breakpoint_id: asuntotuotanto.xs
+    multiplier: 2x
+    image_mapping_type: image_style
+    image_mapping: 3_2_xs_2x
+  -
+    breakpoint_id: asuntotuotanto.xxs
+    multiplier: 1x
+    image_mapping_type: image_style
+    image_mapping: 3_2_xxs
+  -
+    breakpoint_id: asuntotuotanto.xxs
+    multiplier: 2x
+    image_mapping_type: image_style
+    image_mapping: 3_2_xxs_2x
+breakpoint_group: asuntotuotanto
+fallback_image_style: 3_2_m

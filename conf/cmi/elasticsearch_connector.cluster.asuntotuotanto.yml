@@ -1,0 +1,19 @@
+uuid: 8f890132-47dc-419b-8f07-bbaadafac75b
+langcode: en
+status: '1'
+dependencies: {  }
+cluster_id: asuntotuotanto
+name: Asuntotuotanto
+url: 'http://elastic:9200'
+options:
+  multiple_nodes_connection: false
+  use_authentication: 0
+  authentication_type: Basic
+  username: ''
+  password: ''
+  timeout: '3'
+  rewrite:
+    rewrite_index: 1
+    index:
+      prefix: asuntotuotanto
+      suffix: ''

@@ -1,0 +1,8 @@
+name: 'ASU - Content'
+type: module
+description: 'ASU - Content provides functionalities for creating, providing and altering content.'
+core: 8.x
+core_version_requirement: ^8 || ^9
+package: 'ASU'
+dependencies:
+  - computed_field_plugin

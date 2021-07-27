@@ -1,49 +1,42 @@
-# gitignore template for Drupal 8 projects
-#
-# earlier versions of Drupal are tracked in `community/PHP/`
+# Ignore project files that should not be in version control
+cghooks.lock
+drush/contrib/
+files
+files_private
+node_modules
+public/robots.txt
+public/core
+public/modules/contrib
+public/themes/contrib
+public/profiles/config_installer
+public/profiles/contrib
+public/libraries
+public/sites/default/files
+public/sites/simpletest
+tools/init-tools-status
+vendor
+web/
 
-# Ignore configuration files that may contain sensitive information
-/sites/*/*settings*.php
-/sites/*/*services*.yml
+drush/sites/.checksums
+.phpunit.result.cache
 
-# Ignore paths that may contain user-generated content
-/sites/*/files
-/sites/*/public
-/sites/*/private
-/sites/*/files-public
-/sites/*/files-private
+*.sql
 
-# Ignore paths that may contain temporary files
-/sites/*/translations
-/sites/*/tmp
-/sites/*/cache
+# Ingore files that are only for the current local environment
+public/sites/default/local.settings.php
+public/sites/default/local.services.yml
 
-# Ignore testing related files
-/sites/simpletest
+# Ignore the folder created by PhpStorm
+.idea/*
 
-# Ignore drupal core (if not versioning drupal sources)
-/core
-/modules/README.txt
-/profiles/README.txt
-/sites/README.txt
-/sites/example.sites.php
-/sites/example.settings.local.php
-/sites/development.services.yml
-/themes/README.txt
-/vendor
-/.csslintrc
-/.editorconfig
-/.eslintignore
-/.eslintrc.json
-/.gitattributes
-/.htaccess
-/autoload.php
-/composer.json
-/composer.lock
-/example.gitignore
-/index.php
-/LICENSE.txt
-/README.txt
-/robots.txt
-/update.php
-/web.config
+# Ignore themes with own git repositories
+public/themes/custom/hdbt*
+# Ignore modules with own repositories
+public/modules/custom/helfi_*
+
+# Ignore OSX generated files
+.DS_Store
+._*
+
+!*.gitkeep
+!*.keepme

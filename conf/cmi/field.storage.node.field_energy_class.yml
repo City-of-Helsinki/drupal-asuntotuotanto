@@ -1,0 +1,20 @@
+uuid: 5ddd1432-64c3-4cea-a906-a19ff14abf86
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+    - taxonomy
+id: node.field_energy_class
+field_name: field_energy_class
+entity_type: node
+type: entity_reference
+settings:
+  target_type: taxonomy_term
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

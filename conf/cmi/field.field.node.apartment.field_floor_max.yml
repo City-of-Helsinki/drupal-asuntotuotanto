@@ -1,0 +1,25 @@
+uuid: cd70eb68-4133-462a-9860-7f28a977d372
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_floor_max
+    - node.type.apartment
+id: node.apartment.field_floor_max
+field_name: field_floor_max
+entity_type: node
+bundle: apartment
+label: 'Total number of floors in the building'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 1
+default_value_callback: ''
+settings:
+  min: null
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: integer

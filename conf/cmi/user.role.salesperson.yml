@@ -1,0 +1,24 @@
+uuid: b9c741aa-1567-4959-9282-5f15bf449d38
+langcode: en
+status: true
+dependencies: {  }
+id: salesperson
+label: Salesperson
+weight: -6
+is_admin: null
+permissions:
+  - 'access files overview'
+  - 'access toolbar'
+  - 'change own username'
+  - 'create apartment content'
+  - 'create file media'
+  - 'create image media'
+  - 'create project content'
+  - 'delete own file media'
+  - 'delete own image media'
+  - 'edit own apartment content'
+  - 'edit own file media'
+  - 'edit own image media'
+  - 'edit own project content'
+  - 'update media'
+  - 'view own unpublished media'

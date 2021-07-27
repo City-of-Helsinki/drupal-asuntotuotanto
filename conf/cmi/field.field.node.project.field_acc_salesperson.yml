@@ -1,0 +1,19 @@
+uuid: 2faa08da-b2b3-43cd-a094-b5c151df86b8
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_acc_salesperson
+    - node.type.project
+id: node.project.field_acc_salesperson
+field_name: field_acc_salesperson
+entity_type: node
+bundle: project
+label: 'Accountable sales person'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

@@ -1,0 +1,6 @@
+status: 1
+pattern: '[node:field_housing_company:value] / [node:field_street_address]'
+escape: false
+dependencies:
+  config:
+    - node.type.project

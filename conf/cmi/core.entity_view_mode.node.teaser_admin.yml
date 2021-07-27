@@ -1,0 +1,10 @@
+uuid: e633dfa0-0883-4b95-aa3f-09c17bed1e72
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: node.teaser_admin
+label: 'Teaser - Admin'
+targetEntityType: node
+cache: true

@@ -1,0 +1,25 @@
+uuid: 4d10902b-befc-44ff-8a00-4bb824128a61
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_parking_fee
+    - node.type.apartment
+id: node.apartment.field_parking_fee
+field_name: field_parking_fee
+entity_type: node
+bundle: apartment
+label: 'Parking fee'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: !!float 0
+default_value_callback: ''
+settings:
+  min: null
+  max: null
+  prefix: ''
+  suffix: '€ / kk'
+field_type: decimal

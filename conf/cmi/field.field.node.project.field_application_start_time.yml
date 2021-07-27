@@ -1,0 +1,21 @@
+uuid: 391dfbd4-2d80-4e97-96c7-b77e3126b0a9
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_application_start_time
+    - node.type.project
+  module:
+    - datetime
+id: node.project.field_application_start_time
+field_name: field_application_start_time
+entity_type: node
+bundle: project
+label: 'Application start time'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: datetime

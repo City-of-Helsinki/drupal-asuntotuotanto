@@ -1,0 +1,20 @@
+uuid: 9e24a914-bbab-4427-9c1a-cdce259c2da4
+langcode: en
+status: true
+dependencies:
+  module:
+    - asu_tasklist
+    - node
+id: node.field_tasks
+field_name: field_tasks
+entity_type: node
+type: asu_tasklist
+settings:
+  selected_taxonomy_id: 79782167-ce98-4b26-931d-48b368b28218
+module: asu_tasklist
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

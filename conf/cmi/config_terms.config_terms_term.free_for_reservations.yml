@@ -1,0 +1,11 @@
+uuid: 4cadee03-876e-46bf-8d16-34b8ce560241
+langcode: en
+status: true
+dependencies: {  }
+id: free_for_reservations
+vid: apartment_state_of_sale
+label: 'Free for reservations'
+parents:
+  - '0'
+description: ''
+weight: 0

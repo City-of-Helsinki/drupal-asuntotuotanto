@@ -1,0 +1,497 @@
+uuid: 7b45da6d-4a4f-4a9f-962a-bfe53e295f4b
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.apartment.field_additional_information
+    - field.field.node.apartment.field_apartment_attachments
+    - field.field.node.apartment.field_apartment_number
+    - field.field.node.apartment.field_apartment_state_of_sale
+    - field.field.node.apartment.field_apartment_structure
+    - field.field.node.apartment.field_application_url
+    - field.field.node.apartment.field_balcony_description
+    - field.field.node.apartment.field_bathroom_appliances
+    - field.field.node.apartment.field_condition
+    - field.field.node.apartment.field_debt_free_sales_price
+    - field.field.node.apartment.field_financing_fee
+    - field.field.node.apartment.field_floor
+    - field.field.node.apartment.field_floor_max
+    - field.field.node.apartment.field_floorplan
+    - field.field.node.apartment.field_has_apartment_sauna
+    - field.field.node.apartment.field_has_balcony
+    - field.field.node.apartment.field_has_terrace
+    - field.field.node.apartment.field_has_yard
+    - field.field.node.apartment.field_images
+    - field.field.node.apartment.field_kitchen_appliances
+    - field.field.node.apartment.field_living_area
+    - field.field.node.apartment.field_loan_share
+    - field.field.node.apartment.field_maintenance_fee
+    - field.field.node.apartment.field_other_fees
+    - field.field.node.apartment.field_parking_fee
+    - field.field.node.apartment.field_parking_fee_explanation
+    - field.field.node.apartment.field_publish_on_etuovi
+    - field.field.node.apartment.field_publish_on_oikotie
+    - field.field.node.apartment.field_room_count
+    - field.field.node.apartment.field_sales_price
+    - field.field.node.apartment.field_services_description
+    - field.field.node.apartment.field_showing_time
+    - field.field.node.apartment.field_stock_end_number
+    - field.field.node.apartment.field_stock_start_number
+    - field.field.node.apartment.field_storage_description
+    - field.field.node.apartment.field_view_description
+    - field.field.node.apartment.field_water_fee
+    - field.field.node.apartment.field_water_fee_explanation
+    - image.style.thumbnail
+    - node.type.apartment
+  module:
+    - datetime
+    - field_group
+    - file
+    - image
+    - link
+    - path
+    - scheduler
+third_party_settings:
+  field_group:
+    group_apartment_tabs:
+      children:
+        - group_ap_basic
+        - group_price_information
+      parent_name: ''
+      weight: 9
+      format_type: tabs
+      region: content
+      format_settings:
+        id: ''
+        classes: ''
+        direction: horizontal
+      label: 'Huoneiston valikko'
+    group_ap_basic:
+      children:
+        - langcode
+        - title
+        - field_apartment_number
+        - field_apartment_state_of_sale
+        - field_living_area
+        - field_floor
+        - field_floor_max
+        - field_apartment_structure
+        - field_room_count
+        - field_application_url
+        - field_stock_start_number
+        - field_stock_end_number
+        - field_showing_time
+        - field_has_yard
+        - field_has_terrace
+        - field_has_balcony
+        - field_has_apartment_sauna
+        - field_kitchen_appliances
+        - field_balcony_description
+        - field_bathroom_appliances
+        - field_storage_description
+        - field_view_description
+        - field_services_description
+        - field_additional_information
+        - field_condition
+        - field_floorplan
+        - field_images
+        - field_publish_on_etuovi
+        - field_publish_on_oikotie
+      parent_name: group_apartment_tabs
+      weight: 22
+      format_type: tab
+      region: content
+      format_settings:
+        id: ''
+        classes: ''
+        description: ''
+        formatter: open
+        required_fields: true
+      label: Perustiedot
+    group_price_information:
+      children:
+        - field_sales_price
+        - field_debt_free_sales_price
+        - field_loan_share
+        - field_financing_fee
+        - field_maintenance_fee
+        - field_water_fee
+        - field_water_fee_explanation
+        - field_parking_fee
+        - field_parking_fee_explanation
+        - field_other_fees
+      parent_name: group_apartment_tabs
+      weight: 25
+      format_type: tab
+      region: content
+      format_settings:
+        id: ''
+        classes: ''
+        description: ''
+        formatter: closed
+        required_fields: true
+      label: Hintatiedot
+id: node.apartment.default
+targetEntityType: node
+bundle: apartment
+mode: default
+content:
+  created:
+    type: datetime_timestamp
+    weight: 2
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_additional_information:
+    weight: 23
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textarea
+    region: content
+  field_apartment_attachments:
+    weight: 53
+    settings:
+      progress_indicator: throbber
+    third_party_settings: {  }
+    type: file_generic
+    region: content
+  field_apartment_number:
+    weight: 2
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_apartment_state_of_sale:
+    weight: 3
+    settings: {  }
+    third_party_settings: {  }
+    type: options_select
+    region: content
+  field_apartment_structure:
+    weight: 7
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_application_url:
+    weight: 9
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: {  }
+    type: link_default
+    region: content
+  field_balcony_description:
+    weight: 18
+    settings:
+      placeholder: ''
+      rows: 5
+    third_party_settings: {  }
+    type: string_textarea
+    region: content
+  field_bathroom_appliances:
+    weight: 19
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textarea
+    region: content
+  field_condition:
+    weight: 24
+    settings: {  }
+    third_party_settings: {  }
+    type: options_select
+    region: content
+  field_debt_free_sales_price:
+    weight: 44
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+    type: number
+    region: content
+  field_financing_fee:
+    weight: 46
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+    type: number
+    region: content
+  field_floor:
+    weight: 5
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+    type: number
+    region: content
+  field_floor_max:
+    weight: 6
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+    type: number
+    region: content
+  field_floorplan:
+    weight: 25
+    settings:
+      progress_indicator: throbber
+      preview_image_style: thumbnail
+    third_party_settings: {  }
+    type: image_image
+    region: content
+  field_has_apartment_sauna:
+    weight: 16
+    settings:
+      display_label: true
+    third_party_settings: {  }
+    type: boolean_checkbox
+    region: content
+  field_has_balcony:
+    weight: 15
+    settings:
+      display_label: true
+    third_party_settings: {  }
+    type: boolean_checkbox
+    region: content
+  field_has_terrace:
+    weight: 14
+    settings:
+      display_label: true
+    third_party_settings: {  }
+    type: boolean_checkbox
+    region: content
+  field_has_yard:
+    weight: 13
+    settings:
+      display_label: true
+    third_party_settings: {  }
+    type: boolean_checkbox
+    region: content
+  field_images:
+    weight: 26
+    settings:
+      progress_indicator: throbber
+      preview_image_style: thumbnail
+    third_party_settings: {  }
+    type: image_image
+    region: content
+  field_kitchen_appliances:
+    weight: 17
+    settings:
+      placeholder: ''
+      rows: 5
+    third_party_settings: {  }
+    type: string_textarea
+    region: content
+  field_living_area:
+    weight: 4
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+    type: number
+    region: content
+  field_loan_share:
+    weight: 45
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+    type: number
+    region: content
+  field_maintenance_fee:
+    weight: 47
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+    type: number
+    region: content
+  field_other_fees:
+    weight: 52
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textarea
+    region: content
+  field_parking_fee:
+    weight: 50
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+    type: number
+    region: content
+  field_parking_fee_explanation:
+    weight: 51
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textarea
+    region: content
+  field_publish_on_etuovi:
+    weight: 27
+    settings:
+      display_label: true
+    third_party_settings: {  }
+    type: boolean_checkbox
+    region: content
+  field_publish_on_oikotie:
+    weight: 28
+    settings:
+      display_label: true
+    third_party_settings: {  }
+    type: boolean_checkbox
+    region: content
+  field_room_count:
+    weight: 8
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+    type: number
+    region: content
+  field_sales_price:
+    weight: 43
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+    type: number
+    region: content
+  field_services_description:
+    weight: 22
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textarea
+    region: content
+  field_showing_time:
+    weight: 12
+    settings: {  }
+    third_party_settings: {  }
+    type: datetime_default
+    region: content
+  field_stock_end_number:
+    weight: 11
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+    type: number
+    region: content
+  field_stock_start_number:
+    weight: 10
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+    type: number
+    region: content
+  field_storage_description:
+    weight: 20
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textarea
+    region: content
+  field_view_description:
+    weight: 21
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textarea
+    region: content
+  field_water_fee:
+    weight: 48
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+    type: number
+    region: content
+  field_water_fee_explanation:
+    weight: 49
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textarea
+    region: content
+  langcode:
+    type: language_select
+    weight: 0
+    region: content
+    settings:
+      include_locked: true
+    third_party_settings: {  }
+  path:
+    type: path
+    weight: 6
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  promote:
+    type: boolean_checkbox
+    settings:
+      display_label: true
+    weight: 4
+    region: content
+    third_party_settings: {  }
+  publish_on:
+    type: datetime_timestamp_no_default
+    weight: 30
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  status:
+    type: boolean_checkbox
+    settings:
+      display_label: true
+    weight: 8
+    region: content
+    third_party_settings: {  }
+  sticky:
+    type: boolean_checkbox
+    settings:
+      display_label: true
+    weight: 5
+    region: content
+    third_party_settings: {  }
+  title:
+    type: string_textfield
+    weight: 1
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  translation:
+    weight: 3
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  uid:
+    type: entity_reference_autocomplete
+    weight: 1
+    settings:
+      match_operator: CONTAINS
+      size: 60
+      placeholder: ''
+      match_limit: 10
+    region: content
+    third_party_settings: {  }
+  unpublish_on:
+    type: datetime_timestamp_no_default
+    weight: 30
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  url_redirects:
+    weight: 7
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden: {  }

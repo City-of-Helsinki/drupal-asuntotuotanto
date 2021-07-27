@@ -1,0 +1,21 @@
+third_party_settings:
+  field_group:
+    group_basic:
+      label: Perustiedot
+    group_properties:
+      label: Ominaisuudet
+    group_tasklist:
+      label: Tehtävälista
+    group_schedules:
+      label: Aikataulut
+    group_pictures_and_videos:
+      label: Liitteet
+    group_persons_and_operators:
+      label: Toimijat
+    group_apartments:
+      label: Huoneistot
+content:
+  field_apartments:
+    settings:
+      label_singular: huoneisto
+      label_plural: huoneistoja

@@ -1,0 +1,21 @@
+uuid: 64a4aa21-a316-4113-b68c-c9ef42ecf708
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: node.field_housing_manager
+field_name: field_housing_manager
+entity_type: node
+type: string
+settings:
+  max_length: 255
+  is_ascii: false
+  case_sensitive: false
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

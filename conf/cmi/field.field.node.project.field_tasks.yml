@@ -1,0 +1,21 @@
+uuid: 8456e636-ddf0-42b7-8383-dc4e8e6b273b
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_tasks
+    - node.type.project
+  module:
+    - asu_tasklist
+id: node.project.field_tasks
+field_name: field_tasks
+entity_type: node
+bundle: project
+label: Tasks
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: asu_tasklist

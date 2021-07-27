@@ -1,0 +1,32 @@
+uuid: 73d3ac42-4288-43c6-8f5c-685a3a4e5828
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.taxonomy_term.apartment_state_of_sale.field_machine_readable_name
+    - taxonomy.vocabulary.apartment_state_of_sale
+  module:
+    - text
+id: taxonomy_term.apartment_state_of_sale.default
+targetEntityType: taxonomy_term
+bundle: apartment_state_of_sale
+mode: default
+content:
+  description:
+    label: hidden
+    type: text_default
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_machine_readable_name:
+    weight: 1
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+hidden:
+  langcode: true
+  search_api_excerpt: true

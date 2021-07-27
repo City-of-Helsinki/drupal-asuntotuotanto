@@ -1,0 +1,20 @@
+uuid: a1d4c5a8-7573-4e97-bd77-9c5dd7d2ec13
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+    - taxonomy
+id: node.field_heating_options
+field_name: field_heating_options
+entity_type: node
+type: entity_reference
+settings:
+  target_type: taxonomy_term
+module: core
+locked: false
+cardinality: -1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

@@ -1,0 +1,16 @@
+uuid: 2c1b813b-dc14-4ddc-89fe-3998520a8a6e
+langcode: en
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.apartment_state_of_sale
+  module:
+    - content_translation
+third_party_settings:
+  content_translation:
+    enabled: true
+id: taxonomy_term.apartment_state_of_sale
+target_entity_type_id: taxonomy_term
+target_bundle: apartment_state_of_sale
+default_langcode: site_default
+language_alterable: false

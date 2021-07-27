@@ -1,0 +1,25 @@
+uuid: 1627f998-0cc7-4f69-bc81-588a22aa45d4
+langcode: en
+status: true
+dependencies:
+  module:
+    - elasticsearch_connector
+id: asuntotuotanto
+name: Asuntotuotanto
+description: ''
+backend: elasticsearch
+backend_config:
+  server_description: ''
+  cluster_settings:
+    cluster: asuntotuotanto
+  fuzziness: auto
+  scheme: http
+  host: localhost
+  port: '9200'
+  path: ''
+  excerpt: false
+  retrieve_data: false
+  highlight_data: false
+  http_method: AUTO
+  autocorrect_spell: true
+  autocorrect_suggest_words: true

@@ -1,0 +1,4 @@
+asu_user_tools_menu.user_information_page:
+  path: '/user/'
+  requirements:
+    _role: 'authenticated'

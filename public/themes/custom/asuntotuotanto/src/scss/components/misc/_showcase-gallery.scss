@@ -1,0 +1,54 @@
+.showcase-gallery {
+  .slick {
+    position: relative;
+
+    img {
+      width: 100%;
+    }
+  }
+
+  .slick-arrow {
+    align-items: center;
+    background-color: transparent;
+    border: 0;
+    cursor: pointer;
+    display: flex !important;
+    font-size: 0;
+    height: 100%;
+    justify-content: center;
+    outline: 0;
+    padding: 0;
+    position: absolute;
+    top: 0;
+    transition: background-color .2s ease-in-out;
+    width: 52px;
+    z-index: 10;
+
+    @media screen and (min-width: $breakpoint-l) {
+      width: 64px;
+    }
+
+    svg {
+      height: 36px;
+      width: 36px;
+
+      @media screen and (min-width: $breakpoint-l) {
+        height: 48px;
+        width: 48px;
+      }
+    }
+
+    &:hover,
+    &:focus {
+      background-color: rgba($color-white, .4);
+    }
+  }
+
+  .slick-prev {
+    left: 0;
+  }
+
+  .slick-next {
+    right: 0;
+  }
+}

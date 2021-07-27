@@ -1,0 +1,20 @@
+uuid: 99570f53-f5a8-4e1f-b5d8-7b191abc15d8
+langcode: en
+status: true
+dependencies:
+  module:
+    - datetime
+    - node
+id: node.field_possession_transfer_date
+field_name: field_possession_transfer_date
+entity_type: node
+type: datetime
+settings:
+  datetime_type: date
+module: datetime
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

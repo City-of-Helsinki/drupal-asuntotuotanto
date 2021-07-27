@@ -1,0 +1,29 @@
+uuid: b14bf47d-678a-453c-9266-673413e4efd7
+langcode: en
+status: true
+dependencies:
+  module:
+    - ctools
+    - hdbt_content
+  theme:
+    - asuntotuotanto
+id: heroblock
+theme: asuntotuotanto
+region: before_content
+weight: -5
+provider: null
+plugin: hero_block
+settings:
+  id: hero_block
+  label: 'Hero block'
+  provider: hdbt_content
+  label_display: '0'
+visibility:
+  'entity_bundle:node':
+    id: 'entity_bundle:node'
+    bundles:
+      landing_page: landing_page
+      page: page
+    negate: false
+    context_mapping:
+      node: '@node.node_route_context:node'

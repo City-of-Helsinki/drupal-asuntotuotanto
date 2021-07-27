@@ -1,0 +1,29 @@
+uuid: c2d645a4-2b48-438c-ae9e-29f908f3c9ed
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_district
+    - node.type.project
+    - taxonomy.vocabulary.districts
+id: node.project.field_district
+field_name: field_district
+entity_type: node
+bundle: project
+label: District
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      districts: districts
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

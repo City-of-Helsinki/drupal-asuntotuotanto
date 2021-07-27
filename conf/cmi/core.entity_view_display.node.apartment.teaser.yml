@@ -1,0 +1,134 @@
+uuid: 71c3cff9-9d43-420a-a091-d58b91f3af5f
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.apartment.field_additional_information
+    - field.field.node.apartment.field_apartment_attachments
+    - field.field.node.apartment.field_apartment_number
+    - field.field.node.apartment.field_apartment_state_of_sale
+    - field.field.node.apartment.field_apartment_structure
+    - field.field.node.apartment.field_application_url
+    - field.field.node.apartment.field_balcony_description
+    - field.field.node.apartment.field_bathroom_appliances
+    - field.field.node.apartment.field_condition
+    - field.field.node.apartment.field_debt_free_sales_price
+    - field.field.node.apartment.field_financing_fee
+    - field.field.node.apartment.field_floor
+    - field.field.node.apartment.field_floor_max
+    - field.field.node.apartment.field_floorplan
+    - field.field.node.apartment.field_has_apartment_sauna
+    - field.field.node.apartment.field_has_balcony
+    - field.field.node.apartment.field_has_terrace
+    - field.field.node.apartment.field_has_yard
+    - field.field.node.apartment.field_images
+    - field.field.node.apartment.field_kitchen_appliances
+    - field.field.node.apartment.field_living_area
+    - field.field.node.apartment.field_loan_share
+    - field.field.node.apartment.field_maintenance_fee
+    - field.field.node.apartment.field_other_fees
+    - field.field.node.apartment.field_parking_fee
+    - field.field.node.apartment.field_parking_fee_explanation
+    - field.field.node.apartment.field_publish_on_etuovi
+    - field.field.node.apartment.field_publish_on_oikotie
+    - field.field.node.apartment.field_room_count
+    - field.field.node.apartment.field_sales_price
+    - field.field.node.apartment.field_services_description
+    - field.field.node.apartment.field_showing_time
+    - field.field.node.apartment.field_stock_end_number
+    - field.field.node.apartment.field_stock_start_number
+    - field.field.node.apartment.field_storage_description
+    - field.field.node.apartment.field_view_description
+    - field.field.node.apartment.field_water_fee
+    - field.field.node.apartment.field_water_fee_explanation
+    - node.type.apartment
+  module:
+    - user
+id: node.apartment.teaser
+targetEntityType: node
+bundle: apartment
+mode: teaser
+content:
+  links:
+    weight: 100
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+hidden:
+  asu_application_form_url: true
+  asu_computed_apartment_images: true
+  asu_new_development_status: true
+  asu_project_building_type: true
+  asu_project_holding_type: true
+  asu_state_of_sale: true
+  field_acc_financeofficer: true
+  field_acc_salesperson: true
+  field_additional_information: true
+  field_apartment_address: true
+  field_apartment_attachments: true
+  field_apartment_holding_type: true
+  field_apartment_images: true
+  field_apartment_number: true
+  field_apartment_state_of_sale: true
+  field_apartment_structure: true
+  field_application_end_time: true
+  field_application_start_time: true
+  field_application_url: true
+  field_attachments: true
+  field_balcony_description: true
+  field_bathroom_appliances: true
+  field_completion_date: true
+  field_condition: true
+  field_constructor: true
+  field_coordinate_lat: true
+  field_coordinate_lon: true
+  field_debt_free_sales_price: true
+  field_estate_agent: true
+  field_estate_agent_email: true
+  field_estate_agent_phone: true
+  field_estimated_completion: true
+  field_estimated_completion_date: true
+  field_financing_fee: true
+  field_floor: true
+  field_floor_max: true
+  field_floorplan: true
+  field_has_apartment_sauna: true
+  field_has_balcony: true
+  field_has_terrace: true
+  field_has_yard: true
+  field_housing_company_fee: true
+  field_housing_manager: true
+  field_images: true
+  field_kitchen_appliances: true
+  field_living_area: true
+  field_loan_share: true
+  field_main_image: true
+  field_maintenance_fee: true
+  field_material_choice_dl: true
+  field_other_fees: true
+  field_parking_fee: true
+  field_parking_fee_explanation: true
+  field_possession_transfer_date: true
+  field_premarketing_start_time: true
+  field_price_m2: true
+  field_project_manager: true
+  field_publication_end_time: true
+  field_publish_on_etuovi: true
+  field_publish_on_oikotie: true
+  field_room_count: true
+  field_sales_price: true
+  field_services_description: true
+  field_shareholder_meeting_date: true
+  field_showing_time: true
+  field_stock_end_number: true
+  field_stock_start_number: true
+  field_storage_description: true
+  field_view_description: true
+  field_virtual_presentation_url: true
+  field_water_fee: true
+  field_water_fee_explanation: true
+  langcode: true
+  multiple_values_field: true
+  search_api_excerpt: true
+  street_address: true

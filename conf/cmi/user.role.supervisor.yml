@@ -1,0 +1,28 @@
+uuid: 01c0904d-5351-45e7-b660-afb47fb0ce9a
+langcode: en
+status: true
+dependencies: {  }
+id: supervisor
+label: Supervisor
+weight: -7
+is_admin: null
+permissions:
+  - 'access files overview'
+  - 'access toolbar'
+  - 'change own username'
+  - 'create apartment content'
+  - 'create file media'
+  - 'create image media'
+  - 'create project content'
+  - 'delete own file media'
+  - 'delete own image media'
+  - 'edit any apartment content'
+  - 'edit any project content'
+  - 'edit own apartment content'
+  - 'edit own file media'
+  - 'edit own image media'
+  - 'edit own project content'
+  - 'update any media'
+  - 'update media'
+  - 'view all revisions'
+  - 'view own unpublished media'

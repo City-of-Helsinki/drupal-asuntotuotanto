@@ -1,0 +1,19 @@
+uuid: 6f1ef673-007d-4797-8ee9-6566bcef7141
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_storage_description
+    - node.type.apartment
+id: node.apartment.field_storage_description
+field_name: field_storage_description
+entity_type: node
+bundle: apartment
+label: 'Storage description'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string_long

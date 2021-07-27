@@ -1,0 +1,171 @@
+<?php
+
+/**
+ * @file
+ * Contains asu_content.module.
+ */
+
+use Drupal\asu_content\ProjectUpdater;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\node\Entity\Node;
+
+/**
+ * Implements hook_help().
+ */
+function asu_content_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the asu_content module.
+    case 'help.page.asu_content':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('ASU - Content provides functionalities for creating, providing and altering content.') . '</p>';
+      return $output;
+
+    default:
+  }
+}
+
+/**
+ * Implements hook_form_BASE_FORM_ID_alter().
+ *
+ * {@inheritdoc}
+ */
+function asu_content_form_alter(&$form, $form_state) {
+  asu_content_hide_node_title($form, $form_state);
+}
+
+/**
+ * Hide node title from specified node forms.
+ *
+ * {@inheritDoc}
+ */
+function asu_content_hide_node_title(&$form, $form_state) {
+  $forms_to_hide_title_from = [
+    'node_apartment_edit_form',
+    'node_apartment_form',
+  ];
+
+  if (!in_array($form['#form_id'], $forms_to_hide_title_from)) {
+    return;
+  }
+
+  if (isset($form['title'])) {
+    $form['title']['#access'] = FALSE;
+  }
+}
+
+/**
+ * Implements hook_entity_presave().
+ */
+function asu_content_entity_presave(EntityInterface $entity) {
+  if (
+    $entity instanceof EntityInterface &&
+    method_exists($entity, 'getType')
+  ) {
+    if ($entity->getType() == 'apartment') {
+      $title = t('Apartment');
+
+      if ($entity->field_apartment_address->first()->getValue()['#markup']) {
+        $markup = $entity->field_apartment_address->first()->getValue();
+        $title = reset($markup);
+      }
+      elseif (empty($entity->getTitle())) {
+        $title = !empty($entity->field_apartment_number->value)
+          ? $entity->field_apartment_number->value
+          : $title;
+      }
+
+      $entity->setTitle($title);
+
+      // When sold, unpublish apartment.
+      // Unpublishing removes apartment from elasticsearch.
+      if ($entity->isPublished()) {
+        // Get the id of sold state.
+        if ($entity->field_apartment_state_of_sale->target_id == 'sold') {
+          $entity->setUnpublished();
+          \Drupal::messenger()->addMessage(
+            t("Apartment @title was sold and is now unpublished.",
+              ['@title' => $entity->title->value]
+            )
+          );
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_entity_update().
+ */
+function asu_content_entity_update($entity) {
+  if (
+    $entity instanceof EntityInterface &&
+    method_exists($entity, 'getType') &&
+    $entity->getType() == 'project' &&
+    $entity->hasField('field_apartments')
+  ) {
+    $apartments = $entity->field_apartments->getValue();
+    foreach ($apartments as $apartment) {
+      $node = Node::load($apartment['target_id']);
+      if ($node->bundle() == 'apartment') {
+        $node->save();
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_node_insert().
+ */
+function asu_content_node_insert(Node $node) {
+  if (
+    method_exists($node, 'getType') &&
+    $node->getType() == 'project' &&
+    $node->hasField('field_apartments')
+  ) {
+    if ($node->field_apartments->isEmpty()) {
+      $apartment = Node::create([
+        'type' => 'apartment',
+        'title' => '',
+        'field_apartment_number' => 'A0',
+        'status' => 0,
+      ]);
+      $apartment->save();
+
+      $node->get('field_apartments');
+      $node->field_apartments->setValue([$apartment]);
+      $node->save();
+    }
+  }
+}
+
+/**
+ * Implements hook_cron().
+ */
+function asu_content_cron() {
+  $properties = [
+    'type' => 'project',
+    'status' => 1,
+  ];
+
+  // Get the nodes.
+  $nodes = \Drupal::entityTypeManager()
+    ->getStorage('node')
+    ->loadByProperties($properties);
+
+  $logger = Drupal::logger('asu_cron');
+  $projectUpdater = new ProjectUpdater($logger);
+  $updated = [];
+  foreach ($nodes as $node) {
+    try {
+      $updated[] = $projectUpdater->updateApartmentStateByApplicationTime($node);
+    }
+    catch (\Exception $e) {
+      // The time is most likely not set.
+      // @todo Logging.
+    }
+  }
+  // @todo Logging.
+  // Log updated ids
+}
