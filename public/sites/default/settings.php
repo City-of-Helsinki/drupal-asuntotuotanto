@@ -111,23 +111,6 @@ if ($env = getenv('APP_ENV')) {
 
   $config['elasticsearch_connector.cluster.asuntotuotanto']['url'] = getenv('ASU_ELASTICSEARCH_ADDRESS');
 
-  $config['elasticsearch_connector.cluster.asuntotuotanto']['status'] = '1';
-  $config['elasticsearch_connector.cluster.asuntotuotanto']['cluster_id'] = 'asuntotuotanto';
-
-  $config['elasticsearch_connector.cluster.asuntotuotanto']['options']['use_authentication'] = 1;
-  $config['elasticsearch_connector.cluster.asuntotuotanto']['options']['authentication_type'] = 'Basic';
-  $config['elasticsearch_connector.cluster.asuntotuotanto']['options']['username'] = getenv('ASU_ELASTICSEARCH_USERNAME');
-  $config['elasticsearch_connector.cluster.asuntotuotanto']['options']['password'] = getenv('ASU_ELASTICSEARCH_PASSWORD');
-  $config['elasticsearch_connector.cluster.asuntotuotanto']['options']['rewrite']['rewrite_index'] = 1;
-  $config['elasticsearch_connector.cluster.asuntotuotanto']['options']['rewrite']['index']['prefix'] = 'asuntotuotanto';
-
-  $config['elasticsearch_connector.index.apartments']['index_id'] = 'asuntotuotanto_apartment';
-  $config['elasticsearch_connector.index.apartments']['server'] = 'asuntotuotanto';
-
-  $config['search_api.server.asuntotuotanto']['backend_config']['scheme'] = 'https';
-  $config['search_api.server.asuntotuotanto']['backend_config']['host'] = getenv('ASU_ELASTICSEARCH_ADDRESS') ? str_replace(['https://', ':443'], '', getenv('ASU_ELASTICSEARCH_ADDRESS')) : '';
-  $config['search_api.server.asuntotuotanto']['backend_config']['port'] = '443';
-
   if ($env === 'dev') {
     // Local development environment.
     $config['mailsystem.settings']['defaults']['sender'] = 'swiftmailer';
@@ -145,10 +128,44 @@ if ($env = getenv('APP_ENV')) {
 
   // Development environment.
   if ($env === 'development') {
+    $config['elasticsearch_connector.cluster.asuntotuotanto']['options']['use_authentication'] = 1;
+    $config['elasticsearch_connector.cluster.asuntotuotanto']['options']['authentication_type'] = 'Basic';
+    $config['elasticsearch_connector.cluster.asuntotuotanto']['options']['username'] = getenv('ASU_ELASTICSEARCH_USERNAME');
+    $config['elasticsearch_connector.cluster.asuntotuotanto']['options']['password'] = getenv('ASU_ELASTICSEARCH_PASSWORD');
+    $config['elasticsearch_connector.cluster.asuntotuotanto']['options']['rewrite']['rewrite_index'] = 1;
+    $config['elasticsearch_connector.cluster.asuntotuotanto']['options']['rewrite']['index']['prefix'] = 'asuntotuotanto';
+
+
+    $config['elasticsearch_connector.index.apartments']['index_id'] = 'asuntotuotanto_apartment';
+    $config['elasticsearch_connector.index.apartments']['server'] = 'asuntotuotanto';
+    $config['elasticsearch_connector.cluster.asuntotuotanto']['status'] = '1';
+    $config['elasticsearch_connector.cluster.asuntotuotanto']['cluster_id'] = 'asuntotuotanto';
+
+    $config['search_api.server.asuntotuotanto']['backend_config']['scheme'] = 'https';
+    $config['search_api.server.asuntotuotanto']['backend_config']['host'] = getenv('ASU_ELASTICSEARCH_ADDRESS') ? str_replace(['https://', ':443'], '', getenv('ASU_ELASTICSEARCH_ADDRESS')) : '';
+    $config['search_api.server.asuntotuotanto']['backend_config']['port'] = '443';
+
   }
 
   // Testing environment.
   if ($env === 'testing') {
+    $config['elasticsearch_connector.cluster.asuntotuotanto']['options']['use_authentication'] = 1;
+    $config['elasticsearch_connector.cluster.asuntotuotanto']['options']['authentication_type'] = 'Basic';
+    $config['elasticsearch_connector.cluster.asuntotuotanto']['options']['username'] = getenv('ASU_ELASTICSEARCH_USERNAME');
+    $config['elasticsearch_connector.cluster.asuntotuotanto']['options']['password'] = getenv('ASU_ELASTICSEARCH_PASSWORD');
+    $config['elasticsearch_connector.cluster.asuntotuotanto']['options']['rewrite']['rewrite_index'] = 1;
+    $config['elasticsearch_connector.cluster.asuntotuotanto']['options']['rewrite']['index']['prefix'] = 'asuntotuotanto';
+
+
+    $config['elasticsearch_connector.index.apartments']['index_id'] = 'asuntotuotanto_apartment';
+    $config['elasticsearch_connector.index.apartments']['server'] = 'asuntotuotanto';
+    $config['elasticsearch_connector.cluster.asuntotuotanto']['status'] = '1';
+    $config['elasticsearch_connector.cluster.asuntotuotanto']['cluster_id'] = 'asuntotuotanto';
+
+    $config['search_api.server.asuntotuotanto']['backend_config']['scheme'] = 'https';
+    $config['search_api.server.asuntotuotanto']['backend_config']['host'] = getenv('ASU_ELASTICSEARCH_ADDRESS') ? str_replace(['https://', ':443'], '', getenv('ASU_ELASTICSEARCH_ADDRESS')) : '';
+    $config['search_api.server.asuntotuotanto']['backend_config']['port'] = '443';
+
   }
 
   // Staging environment.
