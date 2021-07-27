@@ -71,7 +71,8 @@ class NewDevelopmentStatus extends FieldItemList {
         if ($id && $term = Term::load($id)) {
           if (!$term->field_machine_readable_name ||
             !$value = $term->field_machine_readable_name->value) {
-            $name = trim($term->getName());
+            $taxonomy_term_trans = \Drupal::service('entity.repository')->getTranslationFromContext($term, 'en');
+            $name = trim($taxonomy_term_trans->getName());
             $value = strtoupper(
               str_replace(' ', '_', $name)
             );
