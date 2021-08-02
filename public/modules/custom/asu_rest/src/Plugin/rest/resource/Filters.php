@@ -58,7 +58,7 @@ final class Filters extends ResourceBase {
 
         $items = [
           'Hitas' => [],
-          'Haso' => []
+          'Haso' => [],
         ];
 
         // Get all unique districts separately for both ownership types.
