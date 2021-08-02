@@ -52,12 +52,15 @@ final class Filters extends ResourceBase {
       $items = [];
 
       if ($taxonomy_name == 'districts') {
-
         $projects = \Drupal::entityTypeManager()
           ->getStorage('node')
           ->loadByProperties(['type' => 'project']);
 
-        $items = [];
+        $items = [
+          'Hitas' => [],
+          'Haso' => []
+        ];
+
         // Get all unique districts separately for both ownership types.
         foreach ($projects as $project) {
           if (!$project->field_ownership_type->first()) {
