@@ -36,7 +36,6 @@ final class Filters extends ResourceBase {
     $currentLanguage = \Drupal::languageManager()->getCurrentLanguage();
     $config = \Drupal::config('asu_rest.filters');
     $filters = $config->get('filters');
-
     $vocabularies = Vocabulary::loadMultiple();
     $responseData = [];
 

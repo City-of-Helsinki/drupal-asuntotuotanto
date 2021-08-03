@@ -4,4 +4,4 @@ filters:
     districts: "project_district"
     new_development_status: "project_new_development_status"
   taxonomy_machinename:
-    states_of_sale: "project_state_of_sale"
+    state_of_sale: "project_state_of_sale"
