@@ -81,7 +81,7 @@ final class Filters extends ResourceBase {
         $vocabulary_name = $vocabularies[$terms[0]->bundle()]->get('name');
         $index_hitas = [
           'label' => $vocabulary_name,
-          'items' => $items['project_district_hitas'],
+          'items' => isset($items['project_district_hitas']) ? $items['project_district_hitas'] : [],
           'suffix' => NULL,
         ];
         $responseData[strtolower('project_district_hitas')] = $index_hitas;
@@ -89,7 +89,7 @@ final class Filters extends ResourceBase {
         $vocabulary_name = $vocabularies[$terms[0]->bundle()]->get('name');
         $index_haso = [
           'label' => $vocabulary_name,
-          'items' => $items['project_district_haso'],
+          'items' => isset($items['project_district_haso']) ? $items['project_district_haso'] : [],
           'suffix' => NULL,
         ];
 
