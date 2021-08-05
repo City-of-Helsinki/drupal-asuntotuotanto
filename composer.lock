@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "dd40ce1f6bebda0985f0500b877aac65",
+    "content-hash": "c6b60180f6aba76434cff98592c05d91",
     "packages": [
         {
             "name": "City-of-Helsinki/php-hauki-client",
@@ -4156,6 +4156,35 @@
                 "issues": "https://github.com/City-of-Helsinki/drupal-module-helfi-api-base/issues"
             },
             "time": "2021-06-04T09:07:10+00:00"
+        },
+        {
+            "name": "drupal/helfi_azure_fs",
+            "version": "1.0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/City-of-Helsinki/drupal-module-helfi-azure-fs.git",
+                "reference": "bd4cfb1244ae76544ca4a418cdc6a23da4762a94"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/City-of-Helsinki/drupal-module-helfi-azure-fs/zipball/bd4cfb1244ae76544ca4a418cdc6a23da4762a94",
+                "reference": "bd4cfb1244ae76544ca4a418cdc6a23da4762a94",
+                "shasum": ""
+            },
+            "require-dev": {
+                "dealerdirect/phpcodesniffer-composer-installer": "^0.7.0",
+                "drupal/coder": "^8.3"
+            },
+            "type": "drupal-module",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "description": "Helfi - Azure FS",
+            "support": {
+                "source": "https://github.com/City-of-Helsinki/drupal-module-helfi-azure-fs/tree/1.0.3",
+                "issues": "https://github.com/City-of-Helsinki/drupal-module-helfi-azure-fs/issues"
+            },
+            "time": "2021-05-21T07:49:50+00:00"
         },
         {
             "name": "drupal/helfi_hauki",
