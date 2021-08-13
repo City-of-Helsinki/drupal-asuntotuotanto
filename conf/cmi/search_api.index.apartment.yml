@@ -95,11 +95,11 @@ field_settings:
   apartment_url:
     label: 'Apartment URL'
     datasource_id: 'entity:node'
-    property_path: nid
-    type: asu_url
+    property_path: field_apartment_url
+    type: string
     dependencies:
       module:
-        - node
+        - computed_field_plugin
   application_url:
     label: 'Application URL'
     datasource_id: 'entity:node'
@@ -544,8 +544,11 @@ field_settings:
   project_url:
     label: 'Project url'
     datasource_id: 'entity:node'
-    property_path: 'search_api_reverse_entity_references_node__field_apartments:nid'
-    type: asu_url
+    property_path: field_project_url
+    type: string
+    dependencies:
+      module:
+        - computed_field_plugin
   project_uuid:
     label: 'Project UUID'
     datasource_id: 'entity:node'

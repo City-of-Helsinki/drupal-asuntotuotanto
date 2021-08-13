@@ -124,6 +124,7 @@ if ($env = getenv('APP_ENV')) {
 
     $settings['ASU_ELASTICSEARCH_ADDRESS'] = 'http://elastic:9200';
     $settings['ASU_ASUNTOTUOTANTO_PUBLIC_URL'] = 'https://asuntotuotanto-public.docker.so';
+
   }
 
   // Development environment.
