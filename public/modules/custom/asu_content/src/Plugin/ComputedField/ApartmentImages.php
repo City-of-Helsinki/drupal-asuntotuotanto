@@ -73,20 +73,24 @@ class ApartmentImages extends FieldItemList {
         $reference['referring_entity'] instanceof Node
       ) {
         $referencing_node = $reference['referring_entity'];
-
+        // Add shared images from project.
         if (!$referencing_node->field_shared_apartment_images->isEmpty()) {
           $images = array_merge($images, $referencing_node->field_shared_apartment_images->getValue());
         }
       }
+      // Add images from apartment.
       if (!$current_entity->field_images->isEmpty()) {
         $images = array_merge($images, $current_entity->field_images->getValue());
       }
-
+      // Floorplan should be the first item in images array.
       if (!$current_entity->field_floorplan->isEmpty()) {
         $images = array_merge($current_entity->field_floorplan->getValue(), $images);
       }
 
       foreach ($images as $delta => $image) {
+        if (!isset($image['target_id'])) {
+          continue;
+        }
         if ($file = File::load($image['target_id'])) {
           $this->list[$delta] = $this->createItem($delta, $host . $file->createFileUrl());
         }

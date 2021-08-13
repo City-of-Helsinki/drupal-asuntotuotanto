@@ -5,8 +5,6 @@ namespace Drupal\asu_content\Plugin\ComputedField;
 use Drupal\computed_field_plugin\Traits\ComputedSingleItemTrait;
 use Drupal\Core\Field\FieldItemList;
 use Drupal\Core\Site\Settings;
-use Drupal\Core\TypedData\DataDefinitionInterface;
-use Drupal\Core\TypedData\TypedDataInterface;
 
 /**
  * Computer field for apartment and project urls.
@@ -46,4 +44,5 @@ class ApartmentUrl extends FieldItemList {
       '#markup' => $value,
     ];
   }
+
 }
