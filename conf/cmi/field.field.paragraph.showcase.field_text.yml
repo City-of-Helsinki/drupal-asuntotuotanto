@@ -1,0 +1,21 @@
+uuid: 1e22fc1f-7c4e-408f-b966-a2e5b1ad6482
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_text
+    - paragraphs.paragraphs_type.showcase
+  module:
+    - text
+id: paragraph.showcase.field_text
+field_name: field_text
+entity_type: paragraph
+bundle: showcase
+label: Text
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long

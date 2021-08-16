@@ -1,0 +1,103 @@
+uuid: dc9dfad8-2488-4609-b124-97305a4a462e
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_showcases
+    - paragraphs.paragraphs_type.showcase
+    - paragraphs.paragraphs_type.showcase_block
+  module:
+    - entity_reference_revisions
+id: paragraph.showcase_block.field_showcases
+field_name: field_showcases
+entity_type: paragraph
+bundle: showcase_block
+label: Showcases
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    negate: 0
+    target_bundles:
+      showcase: showcase
+    target_bundles_drag_drop:
+      accordion:
+        weight: 26
+        enabled: false
+      accordion_item:
+        weight: 27
+        enabled: false
+      banner:
+        weight: 28
+        enabled: false
+      columns:
+        weight: 29
+        enabled: false
+      content_cards:
+        weight: 30
+        enabled: false
+      cta_block:
+        weight: 31
+        enabled: false
+      from_library:
+        weight: 32
+        enabled: false
+      gallery:
+        weight: 33
+        enabled: false
+      gallery_slide:
+        weight: 34
+        enabled: false
+      hero:
+        weight: 35
+        enabled: false
+      image:
+        weight: 36
+        enabled: false
+      latest_news:
+        weight: 37
+        enabled: false
+      liftup_with_image:
+        weight: 38
+        enabled: false
+      liftup_with_image_and_links:
+        weight: 39
+        enabled: false
+      list_of_links:
+        weight: 40
+        enabled: false
+      list_of_links_item:
+        weight: 41
+        enabled: false
+      news_info_card:
+        weight: 42
+        enabled: false
+      remote_video:
+        weight: 43
+        enabled: false
+      showcase:
+        enabled: true
+        weight: 44
+      showcase_block:
+        weight: 45
+        enabled: false
+      stacked_text_blocks_with_image:
+        weight: 46
+        enabled: false
+      step:
+        weight: 47
+        enabled: false
+      steps_list:
+        weight: 48
+        enabled: false
+      text:
+        weight: 49
+        enabled: false
+      text_block_with_link:
+        weight: 50
+        enabled: false
+field_type: entity_reference_revisions
