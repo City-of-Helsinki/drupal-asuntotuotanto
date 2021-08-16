@@ -1,0 +1,21 @@
+uuid: ac5298d0-b630-4517-91e7-ccbecee292f7
+langcode: en
+status: true
+dependencies:
+  module:
+    - asu_application
+id: asu_application.field_personal_id
+field_name: field_personal_id
+entity_type: asu_application
+type: string
+settings:
+  max_length: 5
+  is_ascii: false
+  case_sensitive: false
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false
