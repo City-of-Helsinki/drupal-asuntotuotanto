@@ -1,0 +1,18 @@
+uuid: 6759eadd-9994-45b8-b6cf-d7087866d94c
+langcode: en
+status: true
+dependencies:
+  module:
+    - asu_rest
+    - serialization
+    - user
+id: asu_initialize
+plugin_id: asu_initialize
+granularity: resource
+configuration:
+  methods:
+    - GET
+  formats:
+    - json
+  authentication:
+    - cookie

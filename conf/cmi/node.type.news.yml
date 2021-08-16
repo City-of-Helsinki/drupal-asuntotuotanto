@@ -1,0 +1,31 @@
+uuid: 389cb1ec-b6d8-4935-b506-887bdf396d06
+langcode: en
+status: true
+dependencies:
+  module:
+    - menu_ui
+    - scheduler
+third_party_settings:
+  menu_ui:
+    available_menus: {  }
+    parent: ''
+  scheduler:
+    expand_fieldset: when_required
+    fields_display_mode: vertical_tab
+    publish_enable: true
+    publish_past_date: error
+    publish_past_date_created: false
+    publish_required: false
+    publish_revision: false
+    publish_touch: true
+    show_message_after_update: true
+    unpublish_enable: true
+    unpublish_required: false
+    unpublish_revision: false
+name: News
+type: news
+description: 'Content type for news content with rich editing capabilities.'
+help: ''
+new_revision: true
+preview_mode: 1
+display_submitted: false

@@ -55,15 +55,6 @@ filters:
     weight: -47
     settings:
       replace_empty: '1'
-  media_embed:
-    id: media_embed
-    provider: media
-    status: false
-    weight: -39
-    settings:
-      default_view_mode: default
-      allowed_media_types: {  }
-      allowed_view_modes: {  }
   editor_file_reference:
     id: editor_file_reference
     provider: editor
@@ -94,3 +85,12 @@ filters:
     status: false
     weight: -40
     settings: {  }
+  media_embed:
+    id: media_embed
+    provider: media
+    status: false
+    weight: -39
+    settings:
+      default_view_mode: default
+      allowed_media_types: {  }
+      allowed_view_modes: {  }

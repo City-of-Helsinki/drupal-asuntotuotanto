@@ -1,0 +1,17 @@
+uuid: fa8540a8-cb00-47c9-8d40-db4c7be7f485
+langcode: en
+status: false
+dependencies:
+  module:
+    - asu_rest
+    - serialization
+    - user
+id: asu_elastic_proxy
+plugin_id: asu_elastic_proxy
+granularity: method
+configuration:
+  POST:
+    supported_formats:
+      - json
+    supported_auth:
+      - cookie

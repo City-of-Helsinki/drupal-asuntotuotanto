@@ -1,0 +1,18 @@
+uuid: f8cad623-60b6-440c-b021-31db6f0f3c6d
+langcode: en
+status: true
+dependencies:
+  module:
+    - asu_rest
+    - serialization
+    - user
+id: asu_applications
+plugin_id: asu_applications
+granularity: resource
+configuration:
+  methods:
+    - GET
+  formats:
+    - json
+  authentication:
+    - cookie

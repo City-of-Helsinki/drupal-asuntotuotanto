@@ -1,0 +1,11 @@
+theme: current
+defaults:
+  sender: test_mail_collector
+  formatter: php_mail
+_core:
+  default_config_hash: IhwTepsVwtbtbcT5GzQKhCXDCRvbk3MNkWqPiuiZ10s
+modules:
+  swiftmailer:
+    none:
+      formatter: test_mail_collector
+      sender: test_mail_collector

@@ -1,0 +1,10 @@
+uuid: 4d825a04-c294-4b7b-a471-5157e03842f0
+langcode: en
+status: true
+dependencies: {  }
+id: news_info_card
+label: 'News Info Card'
+icon_uuid: null
+icon_default: null
+description: 'Info card with image, title, description and an optional link.'
+behavior_plugins: {  }

@@ -1,0 +1,17 @@
+uuid: 37d0cc70-0822-4bc9-aa29-fc33a54f45f7
+langcode: fi
+status: true
+dependencies:
+  module:
+    - focal_point
+name: stacked_text_blocks_with_image_l_2x
+label: 'Stacked text blocks with image L (2x)'
+effects:
+  52b6d13c-183d-4fe4-af25-1a5c6883c860:
+    uuid: 52b6d13c-183d-4fe4-af25-1a5c6883c860
+    id: focal_point_scale_and_crop
+    weight: 1
+    data:
+      width: 2880
+      height: 3212
+      crop_type: focal_point
