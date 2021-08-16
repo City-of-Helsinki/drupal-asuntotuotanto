@@ -1,16 +1,16 @@
-uuid: 1d1d8df9-d8c9-413f-a397-bdca022fe56f
+uuid: 715d6644-a57d-4fa0-9f08-822159e1f1fb
 langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.user.field_backend_password
+    - field.storage.user.field_backend_profile
   module:
     - user
-id: user.user.field_backend_password
-field_name: field_backend_password
+id: user.user.field_backend_profile
+field_name: field_backend_profile
 entity_type: user
 bundle: user
-label: 'Backend password'
+label: 'Backend profile'
 description: ''
 required: true
 translatable: false
