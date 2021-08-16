@@ -1,18 +1,17 @@
-uuid: a704798d-1818-4d64-97ee-dbc21415404e
+uuid: bd94ec81-0395-4fee-b1db-4189955ee5b4
 langcode: en
 status: true
 dependencies:
   config:
     - system.menu.user-tools-menu
   module:
-    - context
     - menu_block
   theme:
     - asuntotuotanto
 id: usertools_desktop
 theme: asuntotuotanto
 region: header_top
-weight: 0
+weight: -5
 provider: null
 plugin: 'menu_block:user-tools-menu'
 settings:
@@ -29,12 +28,4 @@ settings:
   suggestion: user_tools_menu__desktop
   label_type: block
   label_link: false
-visibility:
-  view_inclusion:
-    id: view_inclusion
-    negate: null
-    view_inclusion: {  }
-  request_path_exclusion:
-    id: request_path_exclusion
-    pages: ''
-    negate: null
+visibility: {  }
