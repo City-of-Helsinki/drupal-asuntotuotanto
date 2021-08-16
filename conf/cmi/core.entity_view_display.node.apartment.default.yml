@@ -470,8 +470,10 @@ hidden:
   field_apartment_address: true
   field_apartment_holding_type: true
   field_apartment_images: true
+  field_apartment_url: true
   field_housing_company_fee: true
   field_price_m2: true
+  field_project_url: true
   langcode: true
   multiple_values_field: true
   search_api_excerpt: true

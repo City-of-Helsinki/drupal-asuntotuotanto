@@ -4,20 +4,17 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "53e950b9f4b20b4e882a9b4ab6f83bdd",
+    "content-hash": "5fdb8bb7cfbe94cacb46307f33eb3e4b",
     "packages": [
         {
             "name": "city-of-helsinki/asuntomyynti-react",
-            "version": "0.0.2",
+            "version": "0.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/City-of-Helsinki/asuntomyynti-react",
-                "reference": "e08157c2f74dfd1a6b38ba8f5f6d9d9d5e194918"
+                "reference": "aed03f3b116babba88a922c07277dfb975108452"
             },
-            "type": "custom-react",
-            "extra": {
-                "installer-name": "att-react"
-            }
+            "type": "library"
         }
     ],
     "packages-dev": [],
@@ -28,5 +25,5 @@
     "prefer-lowest": false,
     "platform": [],
     "platform-dev": [],
-    "plugin-api-version": "1.1.0"
+    "plugin-api-version": "2.0.0"
 }

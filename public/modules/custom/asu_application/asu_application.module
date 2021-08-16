@@ -1,0 +1,56 @@
+<?php
+
+/**
+ * @file
+ */
+
+use Drupal\asu_api\Api\ElasticSearchApi\Request\ProjectApartmentsRequest;
+
+/**
+ * Implements hook_theme().
+ */
+function asu_application_theme() {
+  return [
+    'asu_application' => [
+      'render element' => 'elements',
+      'template' => 'asu-application',
+    ],
+  ];
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK().
+ */
+function asu_application_theme_suggestions_asu_application(array $variables) {
+  $suggestions = [];
+  $sanitized_view_mode = strtr($variables['elements']['#view_mode'], '.', '_');
+
+  $suggestions[] = 'asu_application__' . $sanitized_view_mode;
+
+  return $suggestions;
+}
+
+/**
+ *
+ */
+function template_preprocess_asu_application(array &$variables) {
+  $application = $variables['elements']['#asu_application'];
+  $variables['view_mode'] = $variables['elements']['#view_mode'];
+  $id = $application->id->value;
+
+  $projectId = $application->getProjectId();
+  /** @var \Drupal\asu_api\Api\ElasticSearchApi\ElasticSearchApi $elastic */
+  $elastic = \Drupal::service('asu_api.elasticapi');
+
+  try {
+    $request = new ProjectApartmentsRequest($projectId);
+    $apartmentResponse = $elastic->getApartmentService()->getProjectApartments($request);
+    $application_teaser_values = $apartmentResponse->getApplicationTeaserValues();
+    $application_teaser_values['#teaser_values']['application_url'] = $application->isLocked() ? "/application/$id" : "/application/$id/edit";
+  }
+  catch (\Exception $e) {
+    $application_teaser_values = [];
+  }
+
+  $variables['content'] = $application_teaser_values;
+}

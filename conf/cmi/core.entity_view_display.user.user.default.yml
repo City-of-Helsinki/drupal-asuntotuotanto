@@ -2,6 +2,9 @@ uuid: 73c56461-2923-4916-a6cc-8b3e13804917
 langcode: en
 status: true
 dependencies:
+  config:
+    - field.field.user.user.field_backend_password
+    - field.field.user.user.field_backend_profile_id
   module:
     - user
 id: user.user.default
@@ -10,6 +13,8 @@ bundle: user
 mode: default
 content: {  }
 hidden:
+  field_backend_password: true
+  field_backend_profile_id: true
   langcode: true
   member_for: true
   search_api_excerpt: true

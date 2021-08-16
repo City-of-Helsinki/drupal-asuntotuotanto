@@ -1,0 +1,9 @@
+asu_mailer.admin.email_settings:
+  path: '/admin/emailsettings'
+  defaults:
+    _title: 'Email settings'
+    _form: '\Drupal\asu_mailer\Form\EmailContentSettingsform'
+  requirements:
+    _permission: 'access administration pages'
+  options:
+    _admin_route: TRUE

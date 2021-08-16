@@ -1,0 +1,35 @@
+uuid: 5b9084da-edb4-4f34-a345-d268eea3dc99
+langcode: fi
+status: true
+dependencies:
+  config:
+    - field.field.user.user.field_backend_password
+    - field.field.user.user.field_backend_profile_id
+  module:
+    - path
+    - user
+id: user.user.default
+targetEntityType: user
+bundle: user
+mode: default
+content:
+  account:
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  language:
+    weight: 1
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  path:
+    type: path
+    weight: 2
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  field_backend_password: true
+  field_backend_profile_id: true
+  langcode: true
