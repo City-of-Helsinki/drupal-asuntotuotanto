@@ -1,0 +1,269 @@
+uuid: 280d70b9-c338-4f3c-8f17-64bbb24e059b
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.project.project.field_accessibility
+    - field.field.project.project.field_apartment_living_areas
+    - field.field.project.project.field_apartment_sales_prices
+    - field.field.project.project.field_apartment_structures
+    - field.field.project.project.field_apartments
+    - field.field.project.project.field_apartments_count
+    - field.field.project.project.field_application_end_time
+    - field.field.project.project.field_application_start_time
+    - field.field.project.project.field_attachments
+    - field.field.project.project.field_building_type
+    - field.field.project.project.field_city
+    - field.field.project.project.field_debt_free_sales_prices
+    - field.field.project.project.field_district
+    - field.field.project.project.field_energy_class
+    - field.field.project.project.field_estimated_completion_date
+    - field.field.project.project.field_housing_company
+    - field.field.project.project.field_images
+    - field.field.project.project.field_is_application_period
+    - field.field.project.project.field_ownership_type
+    - field.field.project.project.field_postal_code
+    - field.field.project.project.field_project_area_description
+    - field.field.project.project.field_project_description
+    - field.field.project.project.field_services
+    - field.field.project.project.field_services_url
+    - field.field.project.project.field_site_owner
+    - field.field.project.project.field_site_renter
+    - field.field.project.project.field_street_address
+  module:
+    - external_entities
+    - imagecache_external
+id: project.project.default
+targetEntityType: project
+bundle: project
+mode: default
+content:
+  field_accessibility:
+    weight: 11
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_apartment_living_areas:
+    weight: 8
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_apartment_sales_prices:
+    weight: 24
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_apartment_structures:
+    weight: 6
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_apartments:
+    weight: 30
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_apartments_count:
+    weight: 3
+    label: hidden
+    settings:
+      thousand_separator: ''
+      prefix_suffix: true
+    third_party_settings: {  }
+    type: number_integer
+    region: content
+  field_application_end_time:
+    weight: 2
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_application_start_time:
+    weight: 1
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_attachments:
+    weight: 31
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_building_type:
+    weight: 20
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_city:
+    weight: 15
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_debt_free_sales_prices:
+    weight: 7
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_district:
+    weight: 13
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_energy_class:
+    weight: 21
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_estimated_completion_date:
+    weight: 9
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_housing_company:
+    weight: 25
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_images:
+    weight: 26
+    label: hidden
+    settings:
+      imagecache_external_responsive_style: showcase_gallery
+      imagecache_external_link: ''
+    third_party_settings: {  }
+    type: imagecache_external_responsive_image
+    region: content
+  field_is_application_period:
+    weight: 10
+    label: hidden
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    type: boolean
+    region: content
+  field_ownership_type:
+    weight: 19
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_postal_code:
+    weight: 14
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_project_area_description:
+    weight: 17
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_project_description:
+    weight: 16
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_services:
+    weight: 32
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_services_url:
+    weight: 33
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_site_owner:
+    weight: 22
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_site_renter:
+    weight: 23
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_street_address:
+    weight: 12
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  title:
+    type: string
+    label: hidden
+    region: content
+    weight: 0
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+hidden: {  }

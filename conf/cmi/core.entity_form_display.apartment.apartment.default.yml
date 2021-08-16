@@ -1,0 +1,259 @@
+uuid: 9bf95d1c-914d-4d40-a3d8-1fbfe711df09
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.apartment.apartment.field_accessibility
+    - field.field.apartment.apartment.field_address
+    - field.field.apartment.apartment.field_apartment_number
+    - field.field.apartment.apartment.field_apartment_structure
+    - field.field.apartment.apartment.field_application_end_time
+    - field.field.apartment.apartment.field_application_period_active
+    - field.field.apartment.apartment.field_application_period_ended
+    - field.field.apartment.apartment.field_application_start_time
+    - field.field.apartment.apartment.field_application_url
+    - field.field.apartment.apartment.field_attachments
+    - field.field.apartment.apartment.field_building_type
+    - field.field.apartment.apartment.field_cta_image
+    - field.field.apartment.apartment.field_debt_free_sales_price
+    - field.field.apartment.apartment.field_district
+    - field.field.apartment.apartment.field_energy_class
+    - field.field.apartment.apartment.field_estimated_completion_date
+    - field.field.apartment.apartment.field_floor
+    - field.field.apartment.apartment.field_images
+    - field.field.apartment.apartment.field_living_area
+    - field.field.apartment.apartment.field_ownership_type
+    - field.field.apartment.apartment.field_project_area_description
+    - field.field.apartment.apartment.field_project_description
+    - field.field.apartment.apartment.field_sales_price
+    - field.field.apartment.apartment.field_services
+    - field.field.apartment.apartment.field_services_url
+    - field.field.apartment.apartment.field_site_owner
+    - field.field.apartment.apartment.field_site_renter
+  module:
+    - external_entities
+    - link
+id: apartment.apartment.default
+targetEntityType: apartment
+bundle: apartment
+mode: default
+content:
+  field_accessibility:
+    weight: 5
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_address:
+    weight: 3
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_apartment_number:
+    weight: 18
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_apartment_structure:
+    weight: 13
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_application_end_time:
+    weight: 21
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_application_period_active:
+    weight: 0
+    settings:
+      display_label: true
+    third_party_settings: {  }
+    type: boolean_checkbox
+    region: content
+  field_application_period_ended:
+    weight: 1
+    settings:
+      display_label: true
+    third_party_settings: {  }
+    type: boolean_checkbox
+    region: content
+  field_application_start_time:
+    weight: 12
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_application_url:
+    weight: 15
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_attachments:
+    weight: 25
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_building_type:
+    weight: 8
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_cta_image:
+    weight: -1
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: {  }
+    type: link_default
+    region: content
+  field_debt_free_sales_price:
+    weight: 17
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+    type: number
+    region: content
+  field_district:
+    weight: 2
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_energy_class:
+    weight: 9
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_estimated_completion_date:
+    weight: 20
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_floor:
+    weight: -4
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+    type: number
+    region: content
+  field_images:
+    weight: 22
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: {  }
+    type: link_default
+    region: content
+  field_living_area:
+    weight: 14
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+    type: number
+    region: content
+  field_ownership_type:
+    weight: 4
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_project_area_description:
+    weight: 7
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_project_description:
+    weight: 6
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_sales_price:
+    weight: 16
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+    type: number
+    region: content
+  field_services:
+    weight: 23
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_services_url:
+    weight: 24
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_site_owner:
+    weight: -2
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_site_renter:
+    weight: 11
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  title:
+    type: string_textfield
+    weight: -5
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+hidden: {  }

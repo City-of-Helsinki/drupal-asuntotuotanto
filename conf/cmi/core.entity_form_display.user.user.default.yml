@@ -1,12 +1,12 @@
-uuid: 5b9084da-edb4-4f34-a345-d268eea3dc99
-langcode: fi
+uuid: 09d78468-214d-49df-b93d-6b10ca822d92
+langcode: en
 status: true
 dependencies:
   config:
     - field.field.user.user.field_backend_password
-    - field.field.user.user.field_backend_profile_id
+    - field.field.user.user.field_backend_profile
+    - field.field.user.user.field_email_is_valid
   module:
-    - path
     - user
 id: user.user.default
 targetEntityType: user
@@ -18,18 +18,34 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
+  field_backend_password:
+    weight: 11
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_backend_profile:
+    weight: 10
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
   language:
-    weight: 1
+    weight: 8
     region: content
     settings: {  }
     third_party_settings: {  }
-  path:
-    type: path
-    weight: 2
+  translation:
+    weight: 9
     region: content
     settings: {  }
     third_party_settings: {  }
 hidden:
-  field_backend_password: true
-  field_backend_profile_id: true
+  field_email_is_valid: true
   langcode: true
+  path: true
+  timezone: true

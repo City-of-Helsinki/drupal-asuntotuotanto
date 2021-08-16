@@ -1,0 +1,43 @@
+uuid: 5c060bb7-fb26-4674-bef2-bdbaad51dee9
+langcode: fi
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.stacked_text_blocks_with_image.field_image
+    - field.field.paragraph.stacked_text_blocks_with_image.field_stacked_text_blocks
+    - field.field.paragraph.stacked_text_blocks_with_image.field_title
+    - paragraphs.paragraphs_type.stacked_text_blocks_with_image
+  module:
+    - entity_reference_revisions
+id: paragraph.stacked_text_blocks_with_image.default
+targetEntityType: paragraph
+bundle: stacked_text_blocks_with_image
+mode: default
+content:
+  field_image:
+    weight: 2
+    label: hidden
+    settings:
+      view_mode: stacked_text_blocks_with_image
+      link: false
+    third_party_settings: {  }
+    type: entity_reference_entity_view
+    region: content
+  field_stacked_text_blocks:
+    type: entity_reference_revisions_entity_view
+    weight: 1
+    label: hidden
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    region: content
+  field_title:
+    weight: 0
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+hidden: {  }

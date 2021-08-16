@@ -1,13 +1,13 @@
-uuid: 40e29bc8-f72b-4a2a-b242-9a3309eed6fb
-langcode: fi
+uuid: c0393be7-30af-42f0-a00e-08da88a98117
+langcode: en
 status: true
 dependencies:
   config:
     - core.entity_form_mode.user.register
     - field.field.user.user.field_backend_password
-    - field.field.user.user.field_backend_profile_id
+    - field.field.user.user.field_backend_profile
+    - field.field.user.user.field_email_is_valid
   module:
-    - path
     - user
 id: user.user.register
 targetEntityType: user
@@ -19,18 +19,16 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
-  language:
-    weight: 1
-    region: content
-    settings: {  }
-    third_party_settings: {  }
-  path:
-    type: path
-    weight: 2
+  translation:
+    weight: 12
     region: content
     settings: {  }
     third_party_settings: {  }
 hidden:
   field_backend_password: true
-  field_backend_profile_id: true
+  field_backend_profile: true
+  field_email_is_valid: true
   langcode: true
+  language: true
+  path: true
+  timezone: true

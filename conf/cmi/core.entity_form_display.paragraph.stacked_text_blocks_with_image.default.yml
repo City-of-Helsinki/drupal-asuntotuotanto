@@ -1,0 +1,54 @@
+uuid: 266a7d19-6dd3-4a15-ad71-7f8a7ee16165
+langcode: fi
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.stacked_text_blocks_with_image.field_image
+    - field.field.paragraph.stacked_text_blocks_with_image.field_stacked_text_blocks
+    - field.field.paragraph.stacked_text_blocks_with_image.field_title
+    - paragraphs.paragraphs_type.stacked_text_blocks_with_image
+  module:
+    - media_library
+    - paragraphs
+id: paragraph.stacked_text_blocks_with_image.default
+targetEntityType: paragraph
+bundle: stacked_text_blocks_with_image
+mode: default
+content:
+  field_image:
+    weight: 2
+    settings:
+      media_types: {  }
+    third_party_settings: {  }
+    type: media_library_widget
+    region: content
+  field_stacked_text_blocks:
+    type: paragraphs
+    weight: 1
+    settings:
+      title: Paragraph
+      title_plural: Paragraphs
+      edit_mode: closed_expand_nested
+      closed_mode: summary
+      autocollapse: none
+      closed_mode_threshold: 0
+      add_mode: dropdown
+      form_display_mode: default
+      default_paragraph_type: text_block_with_link
+      features:
+        add_above: '0'
+        collapse_edit_all: '0'
+        duplicate: '0'
+    third_party_settings: {  }
+    region: content
+  field_title:
+    weight: 0
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+hidden:
+  created: true
+  status: true

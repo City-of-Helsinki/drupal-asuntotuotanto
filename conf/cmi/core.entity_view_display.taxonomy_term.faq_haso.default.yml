@@ -1,0 +1,31 @@
+uuid: 8cd9d406-a596-4159-abd7-98c652712d41
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.taxonomy_term.faq_haso.field_faq_category
+    - taxonomy.vocabulary.faq_haso
+  module:
+    - text
+id: taxonomy_term.faq_haso.default
+targetEntityType: taxonomy_term
+bundle: faq_haso
+mode: default
+content:
+  description:
+    label: hidden
+    type: text_default
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_faq_category:
+    weight: 1
+    label: hidden
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+hidden:
+  langcode: true

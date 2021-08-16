@@ -1,0 +1,10 @@
+uuid: 0b8fabc0-d9c2-4ff2-123d-2743087c4e0c
+langcode: en
+status: true
+dependencies:
+  module:
+    - asu_application
+id: asu_application.draft_teaser
+label: 'Draft Teaser'
+targetEntityType: asu_application
+cache: true
