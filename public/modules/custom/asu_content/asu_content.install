@@ -11,6 +11,7 @@ use Drupal\taxonomy\Entity\Term;
  * Add taxonomy terms to News category vocabularity automatically.
  */
 function asu_content_update_9001() {
+  /*
   $vocabularity = 'news_category';
 
   $term_common = Term::create([
@@ -34,4 +35,5 @@ function asu_content_update_9001() {
   $term_common->save();
   $term_haso->save();
   $term_hitas->save();
+  */
 }
