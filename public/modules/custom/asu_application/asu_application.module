@@ -39,13 +39,24 @@ function template_preprocess_asu_application(array &$variables) {
   $id = $application->id->value;
 
   $projectId = $application->getProjectId();
-  /** @var \Drupal\asu_api\Api\ElasticSearchApi\ElasticSearchApi $elastic */
-  $elastic = \Drupal::service('asu_api.elasticapi');
 
   try {
-    $request = new ProjectApartmentsRequest($projectId);
-    $apartmentResponse = $elastic->getApartmentService()->getProjectApartments($request);
-    $application_teaser_values = $apartmentResponse->getApplicationTeaserValues();
+    $projects = \Drupal::entityTypeManager()
+      ->getStorage('node')
+      ->loadByProperties(['type' => 'project', 'id' => $projectId]);
+    $project = $projects[0];
+
+    $application_teaser_values = [
+      '#teaser_values' => [
+        'project_name' => $project->field_housing_company,
+        'project_address' => $project->field_address,
+        'project_ownership_type' => $project->field_ownership_type,
+        'project_estimated_completion' => $project->field_estimated_completion,
+        'application_end_time' => $project->field_application_end_time,
+        'project_main_image_url' => $project->field_main_image_url,
+        'project_district' => $project->field_district,
+      ]
+    ];
     $application_teaser_values['#teaser_values']['application_url'] = $application->isLocked() ? "/application/$id" : "/application/$id/edit";
   }
   catch (\Exception $e) {

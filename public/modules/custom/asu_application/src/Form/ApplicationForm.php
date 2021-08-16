@@ -37,8 +37,6 @@ class ApplicationForm extends ContentEntityForm {
       $project_data = $this->getApartments($project_id);
     }
     catch (\Exception $e) {
-      die($e->getMessage());
-      // @todo Message & redirect, cannot fetch apartments.
     }
 
     // If user already has an application for this project.
@@ -195,36 +193,32 @@ class ApplicationForm extends ContentEntityForm {
    *   Array of project information & apartments.
    */
   private function getApartments($projectId): ?array {
-    /** @var \Drupal\asu_api\Api\ElasticSearchApi\ElasticSearchApi $elastic */
-    $elastic = \Drupal::service('asu_api.elasticapi');
-
-    $request = new ProjectApartmentsRequest($projectId);
-    $apartmentResponse = $elastic->getApartmentService()
-      ->getProjectApartments($request);
-    $projectName = $apartmentResponse->getProjectName();
-    $projectUuid = $apartmentResponse->getProjectUuid();
+    $projects = \Drupal::entityTypeManager()
+      ->getStorage('node')
+      ->loadByProperties(['type' => 'project', 'id' => $projectId]);
+    $project = $projects[0];
+    $projectName = $project->field_street_address;
+    $projectUuid = $project->uuid();
 
     $apartments = [];
-    foreach ($apartmentResponse->getApartments() as $apartment) {
-      $data = $apartment['_source'];
+    foreach ($project->field_apartments as $apartment) {
+      $living_area_size_m2 = number_format($apartment->field_living_area->value, 1, ',', '');
+      $debt_free_sales_price = number_format($apartment->field_debt_free_sales_price->value / 100, 0, ',', ' ');
+      $sales_price = number_format($apartment->field_sales_price->value / 100, 0, ',', ' ');
 
-      $living_area_size_m2 = number_format($data['living_area'], 1, ',', '');
-      $debt_free_sales_price = number_format($data['debt_free_sales_price'] / 100, 0, ',', ' ');
-      $sales_price = number_format($data['sales_price'] / 100, 0, ',', ' ');
+      $select_text = "{$apartment->apartment_number->value} | {$apartment->field_apartment_structure->value} | {$apartment->field_floor->value} / {$apartment->field_floor_max->value} | {$living_area_size_m2} m2 | {$sales_price} € | {$debt_free_sales_price} €";
 
-      $select_text = "{$data['apartment_number']} | {$data['apartment_structure']} | {$data['floor']} / {$data['floor_max']} | {$living_area_size_m2} m2 | {$sales_price} € | {$debt_free_sales_price} €";
-
-      $apartments[$data['nid']] = $select_text;
-      $apartmentsUuid[$data['nid']] = $data['uuid'];
+      $apartments[$apartment->id()] = $select_text;
+      $apartmentsUuid[$apartment->id()] = $apartment->uuid();
     }
     ksort($apartments, SORT_NUMERIC);
 
     return [
       'project_name' => $projectName,
       'project_uuid' => $projectUuid,
-      'ownership_type' => $apartmentResponse->getOwnershipType(),
-      'application_start_date' => $apartmentResponse->getStartTime(),
-      'application_end_date' => $apartmentResponse->getEndTime(),
+      'ownership_type' => $project->field_ownership_type->value,
+      'application_start_date' => $project->field_application_start_time->value,
+      'application_end_date' => $project->field_application_end_time->value,
       'apartments' => $apartments,
       'apartment_uuids' => $apartmentsUuid,
     ];
