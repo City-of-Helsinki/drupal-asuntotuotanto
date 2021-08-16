@@ -29,8 +29,6 @@ module:
   ckeditor: 0
   computed_field_plugin: 0
   config: 0
-  config_filter: 0
-  config_ignore: 0
   config_replace: 0
   config_terms: 0
   config_translation: 0
@@ -56,7 +54,6 @@ module:
   entity: 0
   entity_reference_revisions: 0
   entity_usage: 0
-  external_entities: 0
   features: 0
   field: 0
   field_group: 0
@@ -119,8 +116,6 @@ module:
   path: 0
   path_alias: 0
   rabbit_hole: 0
-  personal_id: 0
-  raven: 0
   redirect: 0
   redirect_404: 0
   registration_role: 0
