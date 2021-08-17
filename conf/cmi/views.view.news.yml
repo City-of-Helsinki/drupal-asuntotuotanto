@@ -191,10 +191,10 @@ display:
           error_message: true
           plugin_id: taxonomy_index_tid
       sorts:
-        publish_on:
-          id: publish_on
+        created:
+          id: created
           table: node_field_data
-          field: publish_on
+          field: created
           relationship: none
           group_type: group
           admin_label: ''
@@ -204,7 +204,7 @@ display:
             label: ''
           granularity: second
           entity_type: node
-          entity_field: publish_on
+          entity_field: created
           plugin_id: date
       header: {  }
       footer: {  }
@@ -323,7 +323,7 @@ display:
           admin_label: ''
           operator: or
           value:
-            4: 4
+            117: 117
           group: 1
           exposed: false
           expose:
@@ -497,7 +497,7 @@ display:
           admin_label: ''
           operator: or
           value:
-            5: 5
+            118: 118
           group: 1
           exposed: false
           expose:
@@ -672,7 +672,7 @@ display:
           admin_label: ''
           operator: or
           value:
-            6: 6
+            119: 119
           group: 1
           exposed: false
           expose:
@@ -846,7 +846,7 @@ display:
           admin_label: ''
           operator: or
           value:
-            4: 4
+            117: 117
           group: 1
           exposed: false
           expose:
@@ -1027,7 +1027,7 @@ display:
           admin_label: ''
           operator: or
           value:
-            5: 5
+            118: 118
           group: 1
           exposed: false
           expose:
@@ -1207,7 +1207,7 @@ display:
           admin_label: ''
           operator: or
           value:
-            6: 6
+            119: 119
           group: 1
           exposed: false
           expose:
