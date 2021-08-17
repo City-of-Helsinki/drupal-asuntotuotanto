@@ -1,0 +1,204 @@
+.project__label {
+  @include font-size($fontsize-heading-l, $lineheight-l);
+  font-weight: $font-weight-bold;
+  color: var(--color-black-90);
+  margin-bottom: 0;
+  text-align: center;
+
+  @media screen and (min-width: $breakpoint-l) {
+    @include font-size($fontsize-heading-xl, $fontsize-heading-xl);
+  }
+}
+
+.project__images {
+  padding-top: $spacing-m;
+
+  @media screen and (min-width: $breakpoint-l) {
+    padding-top: $spacing-l;
+  }
+
+  &--missing {
+    aspect-ratio: 3 / 2;
+    background-color: var(--color-silver-medium-light);
+    width: 100%;
+
+    @media screen and (min-width: $breakpoint-m) {
+      aspect-ratio: 2.3 / 1;
+    }
+  }
+}
+
+.project__content-wrapper {
+  display: flex;
+  flex-direction: column;
+  margin-top: $spacing-m;
+
+  @media screen and (min-width: $breakpoint-l) {
+    flex-direction: row;
+    justify-content: space-between;
+    margin-top: $spacing-4-xl;
+  }
+}
+
+.project__sidebar {
+  margin-bottom: $spacing-m;
+
+  @media screen and (min-width: $breakpoint-l) {
+    margin-bottom: 0;
+    margin-right: $spacing-4-xl;
+    max-width: 285px;
+    width: 100%;
+  }
+
+  @media screen and (min-width: $breakpoint-xl) {
+    margin-right: $spacing-layout-2-xl;
+  }
+}
+
+.project__content {
+  @media screen and (min-width: $breakpoint-l) {
+    max-width: 800px;
+    width: 100%;
+  }
+}
+
+.project__apartment-count-information {
+  @include font-size($fontsize-heading-m, 29px);
+  font-weight: $font-weight-bold;
+  color: var(--color-black-90);
+  margin-bottom: $spacing-2-xs;
+  margin-top: 0;
+
+  @media screen and (min-width: $breakpoint-l) {
+    margin-bottom: $spacing-5-xl;
+  }
+}
+
+.project__application-information {
+  @include font-size($fontsize-heading-xxs, 24px);
+  font-weight: $font-weight-medium;
+  margin: 0;
+  color: var(--color-black-90);
+
+  @media screen and (min-width: $breakpoint-l) {
+    @include font-size($fontsize-heading-s, 26px);
+    font-weight: $font-weight-bold;
+  }
+}
+
+.project__type-and-address {
+  align-items: center;
+  display: flex;
+  gap: $spacing-xs;
+  margin-bottom: $spacing-m;
+
+  @media screen and (min-width: $breakpoint-m) {
+    margin-bottom: $spacing-4-xl;
+  }
+}
+
+.project__ownership-type {
+  @include font-size($fontsize-body-s, 26px);
+  background-color: var(--color-engel);
+  color: var(--color-black-90);
+  flex-shrink: 0;
+  margin: 0;
+  padding: $spacing-3-xs $spacing-2-xs;
+}
+
+.project__address {
+  @include font-size($fontsize-body-m, 24px);
+  color: var(--color-black-90);
+  margin: 0;
+
+  @media screen and (min-width: $breakpoint-m) {
+    @include font-size($fontsize-body-l, 24px);
+  }
+}
+
+.project__information {
+  margin-bottom: $spacing-m;
+
+  @media screen and (min-width: $breakpoint-m) {
+    margin-bottom: $spacing-4-xl;
+  }
+}
+
+.project__information-label {
+  @include font-size($fontsize-heading-m, 29px);
+  font-weight: $font-weight-bold;
+  color: var(--color-black-90);
+  margin-bottom: $spacing-2-xs;
+  margin-top: calc(#{-$spacing-m} - 74px);
+  padding-top: calc(#{$spacing-m} + 74px);
+
+  @media screen and (min-width: $breakpoint-m) {
+    @include font-size($fontsize-heading-l, 43px);
+    margin-bottom: $spacing-m;
+  }
+}
+
+.project__project-description {
+  @include font-size($fontsize-body-m, $lineheight-l);
+
+  @media screen and (min-width: $breakpoint-m) {
+    @include font-size($fontsize-body-l, 27px);
+  }
+}
+
+.project__details {
+  margin-bottom: $spacing-m;
+
+  @media screen and (min-width: $breakpoint-m) {
+    margin-bottom: $spacing-4-xl;
+  }
+}
+
+.project__details-label {
+  @include font-size($fontsize-heading-m, 29px);
+  font-weight: $font-weight-bold;
+  color: var(--color-black-90);
+  margin-bottom: $spacing-2-xs;
+  margin-top: 0;
+
+  @media screen and (min-width: $breakpoint-m) {
+    @include font-size($fontsize-heading-l, 43px);
+    margin-bottom: $spacing-m;
+  }
+}
+
+.project__details-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.project__details-item {
+  & + & {
+    margin-top: $spacing-3-xs;
+  }
+
+  p {
+    @include font-size($fontsize-body-m, 28px);
+    margin: 0;
+
+    @media screen and (min-width: $breakpoint-m) {
+      @include font-size($fontsize-body-l, 28px);
+    }
+
+    span {
+      &:first-of-type {
+        font-weight: $font-weight-bold;
+
+        @media screen and (min-width: $breakpoint-m) {
+          display: inline-block;
+          width: 225px;
+        }
+
+        &:after {
+          content: ":";
+        }
+      }
+    }
+  }
+}

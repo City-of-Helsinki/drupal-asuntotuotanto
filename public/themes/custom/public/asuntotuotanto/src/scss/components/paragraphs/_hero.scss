@@ -1,0 +1,224 @@
+// Background image with text box design.
+.hero--background-image-with-text-box {
+  @media screen and (min-width: $breakpoint-l) {
+    display: flex;
+    flex-wrap: wrap;
+    min-height: 380px;
+    overflow: hidden;
+    padding-bottom: 85px;
+    position: relative;
+    min-height: 480px;
+  }
+
+  .hero__container {
+    background-color: var(--color-white);
+    padding-bottom: $spacing-xl;
+    padding-top: $spacing-l;
+    justify-content: center;
+    display: flex;
+
+    @media screen and (min-width: $breakpoint-l) {
+      background-color: transparent;
+      width: 100%;
+      z-index: 2;
+      position: relative;
+      align-items: center;
+      justify-content: flex-start;
+      padding-bottom: $spacing-8-xl;
+      padding-top: $spacing-8-xl;
+    }
+  }
+
+  .hero__text-content {
+    background-color: var(--color-white);
+    text-align: center;
+
+    @media screen and (min-width: $breakpoint-l) {
+      padding: $spacing-xl $spacing-2-xl;
+      text-align: initial;
+    }
+  }
+
+  .hero__title {
+    @include font-size($fontsize-heading-m, 29px);
+    color: var(--color-black-90);
+    font-weight: $font-weight-bold;
+    margin: 0 0 $spacing-m;
+
+    @media screen and (min-width: $breakpoint-l) {
+      @include font-size($fontsize-heading-l, 43px);
+      max-width: 285px;
+    }
+
+    & + .hero__cta {
+      margin: 0;
+      flex-flow: column;
+
+      .hero__button {
+        --background-color: transparent;
+        --background-color-hover: var(--color-black-20);
+        --background-color-focus: transparent;
+        --background-color-hover-focus: var(--color-black-20);
+        --background-color-disabled: transparent;
+        --border-color: var(--color-black-90);
+        --border-color-hover: var(--color-black-80);
+        --border-color-focus: var(--color-black-90);
+        --border-color-hover-focus: var(--color-black-80);
+        --border-color-disabled: var(--color-black-50);
+        --color: var(--color-black-90);
+        --color-hover: var(--color-black-80);
+        --color-focus: var(--color-black-90);
+        --color-hover-focus: var(--color-black-80);
+        --focus-outline-color: var(--color-black-90);
+
+        &:first-child {
+          margin-top: 0;
+        }
+
+        margin: $spacing-s 0 0;
+      }
+    }
+  }
+
+  .hero__image-container {
+    height: 200px;
+    line-height: 0;
+    overflow: hidden;
+    position: relative;
+
+    @media screen and (min-width: $breakpoint-xs) {
+      height: 300px;
+    }
+
+    @media screen and (min-width: $breakpoint-l) {
+      bottom: 0;
+      height: 100%;
+      left: 0;
+      line-height: 0;
+      position: absolute;
+      right: 0;
+      top: 0;
+      z-index: 1;
+    }
+
+    img {
+      height: 100%;
+      object-fit: cover;
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 100%;
+      z-index: 0;
+
+      @media screen and (min-width: $breakpoint-l) {
+        height: 100%;
+        object-fit: cover;
+        width: 100%;
+      }
+    }
+
+    .hds-koros {
+      bottom: -1px;
+      color: $color-white;
+      position: absolute;
+      z-index: 2;
+      transform: scaleY(1) scale(2);
+      display: block;
+    }
+  }
+
+  .hds-koros {
+    display: none;
+  }
+}
+
+.hero--split-text-with-wavy-koro {
+  overflow: hidden;
+
+  > .hero__container {
+    padding-top: $spacing-5-xl;
+    padding-bottom: $spacing-m;
+
+    @media screen and (min-width: $breakpoint-l) {
+      padding-bottom: $spacing-5-xl;
+      display: flex;
+      justify-content: space-between;
+      overflow: visible;
+    }
+
+    .hero__image-container {
+      @media screen and (max-width: $breakpoint-l - 1px) {
+        visibility: hidden;
+        display: none;
+      }
+    }
+  }
+
+  .hds-koros {
+    color: $color-white;
+    transform: scale(2);
+    display: block;
+  }
+
+  .hero__wrapper {
+    position: relative;
+    background-color: var(--color-white);
+
+    .hero__container {
+      padding-top: 0;
+    }
+
+    .hero__image-container {
+      @media screen and (min-width: $breakpoint-l) {
+        visibility: hidden;
+        display: none;
+      }
+    }
+  }
+
+  .hero__text-content {
+    margin-bottom: $spacing-xl;
+
+    @media screen and (min-width: $breakpoint-l) {
+      width: 386px;
+      margin-bottom: 0;
+      margin-right: $spacing-l;
+    }
+  }
+
+  .hero__title {
+    @include font-size($fontsize-heading-l, 43px);
+    font-weight: $font-weight-bold;
+    margin: 0;
+
+    @media screen and (min-width: $breakpoint-l) {
+      @include font-size($fontsize-heading-xl, 62px);
+      flex-shrink: 0;
+      width: 386px;
+    }
+  }
+
+  .hero__description {
+    p {
+      @include font-size($fontsize-body-l, 27px);
+      color: var(--color-black-90);
+
+      &:first-child {
+        margin-top: 0;
+      }
+    }
+  }
+
+  .hero__image-container {
+    @media screen and (min-width: $breakpoint-l) {
+      max-width: 692px;
+      margin-bottom: -250px;
+      z-index: 10;
+    }
+
+    img {
+      height: auto;
+      width: 100%;
+    }
+  }
+}

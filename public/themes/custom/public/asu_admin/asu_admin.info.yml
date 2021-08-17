@@ -1,0 +1,28 @@
+name: ASU Admin
+type: theme
+description: 'Admin theme for Asuntotuotanto'
+package: Other
+core_version_requirement: ^8 || ^9
+base theme: hdbt_admin
+
+regions:
+  header: 'Header'
+  pre_content: 'Pre-content'
+  breadcrumb: Breadcrumb
+  highlighted: Highlighted
+  help: Help
+  content: Content
+  page_top: 'Page top'
+  page_bottom: 'Page bottom'
+  sidebar_first: 'First sidebar'
+
+# Define Libraries
+libraries:
+  - asu_admin/global-styling
+
+# Libraries override
+libraries-override:
+  gin/gin:
+    css:
+      theme:
+        dist/css/gin.css: dist/css/gin-overrides.min.css

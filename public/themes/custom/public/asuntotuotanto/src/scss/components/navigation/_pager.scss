@@ -1,0 +1,47 @@
+.pager__items {
+  align-items: center;
+  background-color: var(--color-white);
+  display: flex;
+  gap: $spacing-xs;
+  justify-content: center;
+  list-style: none;
+  margin: $spacing-xl 0 0;
+  padding: $spacing-s;
+
+  @media screen and (min-width: $breakpoint-l) {
+    margin: $spacing-4-xl 0 0;
+  }
+}
+
+.pager__item {
+  > span,
+  a {
+    @include font-size($fontsize-body-s, 26px);
+    font-weight: $font-weight-bold;
+    color: var(--color-black-90);
+    text-decoration: none;
+    height: 40px;
+    width: 40px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  &.is-active {
+    > span,
+    a {
+      border: 2px solid var(--color-black);
+      pointer-events: none;
+    }
+  }
+
+  &.is-disabled {
+    cursor: not-allowed;
+    display: none;
+    visibility: hidden;
+
+    a {
+      pointer-events: none;
+    }
+  }
+}

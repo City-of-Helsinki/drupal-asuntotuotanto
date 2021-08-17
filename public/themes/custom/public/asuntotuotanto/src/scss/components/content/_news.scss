@@ -1,0 +1,102 @@
+.news__back-link {
+  @include font-size($fontsize-body-m, 26px);
+  align-items: center;
+  color: var(--color-black-90);
+  display: inline-flex;
+  font-weight: $font-weight-bold;
+  margin: $spacing-m 0 $spacing-xl;
+  text-decoration: none;
+
+  @media screen and (min-width: $breakpoint-l) {
+    margin: $spacing-2-xl 0;
+  }
+
+  &:before {
+    background-image: url('../icons/angle-left.svg');
+    background-position: right;
+    background-size: 24px;
+    content: "";
+    display: inline-block;
+    height: 24px;
+    width: 18px;
+  }
+}
+
+.news__publish-date {
+  @include font-size($fontsize-body-s, 26px);
+  font-weight: $font-weight-regular;
+  margin: 0 0 $spacing-2-xs;
+  color: var(--color-black-90);
+
+  @media screen and (min-width: $breakpoint-m) and (max-width: $breakpoint-l - 1px) {
+    @include font-size($fontsize-body-m, 26px);
+    margin: 0 0 $spacing-3-xs;
+  }
+
+  @media screen and (min-width: $breakpoint-l) {
+    @include font-size($fontsize-body-l, 27px);
+    margin: 0 0 $spacing-3-xs;
+  }
+}
+
+.news__label {
+  @include font-size($fontsize-heading-m, 30px);
+  font-weight: $font-weight-bold;
+  margin: 0 0 $spacing-l;
+  color: var(--color-black-90);
+
+  @media screen and (min-width: $breakpoint-m) and (max-width: $breakpoint-l - 1px) {
+    @include font-size($fontsize-heading-l, 46px);
+    padding-right: $spacing-xl;
+  }
+
+  @media screen and (min-width: $breakpoint-l) {
+    @include font-size($fontsize-heading-xl, 62px);
+    padding-right: $spacing-5-xl;
+  }
+}
+
+.news__image {
+  position: relative;
+  overflow: hidden;
+  margin: 0 -#{$spacing-l};
+
+  @media screen and (min-width: $breakpoint-m) {
+    margin: 0;
+  }
+
+  img {
+    width: 100%;
+  }
+
+  .hds-koros {
+    bottom: -1px;
+    color: var(--color-white);
+    position: absolute;
+    transform: scale(2);
+    z-index: 2;
+  }
+}
+
+.news__content {
+  .social-sharing-buttons {
+    margin-top: $spacing-4-xl;
+
+    @media screen and (min-width: $breakpoint-l) {
+      margin-top: 0;
+      flex-shrink: 0;
+      margin-left: $spacing-4-xl;
+      padding-right: $spacing-s;
+    }
+  }
+
+  @media screen and (min-width: $breakpoint-l) {
+    display: flex;
+  }
+}
+
+.news__paragraphs {
+  .paragraph-content *:first-child {
+    margin-top: 0;
+  }
+}
