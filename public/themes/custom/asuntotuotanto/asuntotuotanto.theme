@@ -310,7 +310,7 @@ function asuntotuotanto_preprocess_views_view(&$variables) {
 
     case 'applications':
       $current_user = User::load(\Drupal::currentUser()->id());
-      $variables['is_email_valid'] = $current_user->get('field_email_is_valid')->getValue()[0]['value'];
+      $variables['is_email_valid'] = $current_user->get('field_email_is_valid')->getValue()[0]['value'] ?? NULL;
       break;
   }
 }
