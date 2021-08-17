@@ -145,6 +145,15 @@
 
       window.addEventListener("resize", () => {
         currentWindowWidth = window.innerWidth;
+
+        if (currentWindowWidth > 992) {
+          languageSwitcherWrapper.attr("aria-hidden", "true");
+          languageSwitcherToggleButton.attr("aria-expanded", "false");
+          languageSwitcherToggleButton.attr("aria-hidden", "false");
+        } else {
+          languageSwitcherWrapper.attr("aria-hidden", "false");
+          languageSwitcherToggleButton.attr("aria-hidden", "true");
+        }
       });
 
       const outsideClickListener = function outsideClickListener(event) {

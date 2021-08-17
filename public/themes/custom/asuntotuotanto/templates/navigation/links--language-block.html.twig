@@ -39,7 +39,7 @@
         <span class="label" aria-label="{{ 'Current language is'|t }} {{ current_language|capitalize }}">{{ current_langcode|upper }}</span>
       {% endif %}
     </button>
-    <div id="lang-switcher-dropdown" class="lang-switcher__dropdown">
+    <div id="lang-switcher-dropdown" class="lang-switcher__dropdown" aria-hidden="true">
       <ul class="lang-switcher__links">
         {% for item in links %}
           {% set language_link = '' %}
@@ -52,7 +52,7 @@
           {% set classes = classes|merge([alternative_language ? 'is-alternative' : '']) %}
 
           {% if not untranslated and lang != current_langcode %}
-            {% set language_link = path('<current>', {}, {'language': item.link['#options']['language']}) %}
+            {% set language_link = path('<current>', {'lang': item.link['#options']['language'].id}, {'language': item.link['#options']['language']}) %}
             {% set element = 'a' %}
           {% elseif lang == current_langcode %}
             {% set element = 'span' %}

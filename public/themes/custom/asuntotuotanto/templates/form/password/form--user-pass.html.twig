@@ -17,12 +17,25 @@
   ]
 %}
 
-<div class="container">
-  <form{{ attributes|without('class') }} {{ create_attribute({'class': classes}) }}>
-    {{ children }}
-  </form>
-  <div class="user-form__actions">
-    <a href="{{ path('user.login') }}">{% trans %}Log in{% endtrans %}</a>
-    <a href="{{ path('user.register') }}">{% trans %}Register{% endtrans %}</a>
+<div {{ create_attribute({'class': classes}) }}>
+  <h1 class="visually-hidden">{{ 'Password reset page'|t }}</h1>
+  <div class="user-form__section">
+    <h2>{{ 'Are you a new user'|t }}?</h2>
+    {% include '@asuntotuotanto/button/button.html.twig' with {
+        type: 'primary',
+        disabled: false,
+        label: 'Create an account'|t,
+        href: path('user.register')
+      }
+    %}
+  </div>
+  <div class="user-form__section">
+    <h2>{{ 'Reset password'|t }}</h2>
+    <form{{ attributes|without('class') }}>
+      {{ children }}
+    </form>
+    <div class="user-form__actions">
+      <a href="{{ path('user.login') }}">{% trans %}Log in{% endtrans %}</a>
+    </div>
   </div>
 </div>

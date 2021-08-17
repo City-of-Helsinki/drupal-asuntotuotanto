@@ -177,12 +177,20 @@
   font-weight: $font-weight-bold;
   color: var(--color-black-90);
   margin-bottom: $spacing-2-xs;
-  margin-top: #{-$spacing-m} - 74px;
+  margin-top: calc(#{-$spacing-m} - 74px);
   padding-top: calc(#{$spacing-m} + 74px);
 
   @media screen and (min-width: $breakpoint-m) {
     @include font-size($fontsize-heading-l, 43px);
     margin-bottom: $spacing-m;
+  }
+}
+
+.apartment__project-description {
+  @include font-size($fontsize-body-m, $lineheight-l);
+
+  @media screen and (min-width: $breakpoint-m) {
+    @include font-size($fontsize-body-l, 27px);
   }
 }
 

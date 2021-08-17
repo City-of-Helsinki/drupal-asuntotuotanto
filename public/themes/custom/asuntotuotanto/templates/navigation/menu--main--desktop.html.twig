@@ -38,6 +38,7 @@
       <div class="sub-menu-container">
         <ul class="sub-menu is-level--{{ menu_level }} wrapper wrapper--mw-1264" aria-hidden="true">
     {% endif %}
+
     {% for item in items %}
       {% set item_classes = [
         menu_level == 0 ? 'menu__item' : 'sub-menu__item',
@@ -48,9 +49,10 @@
       ]%}
 
       {% set item_attributes = item.attributes ?: create_attribute() %}
+      {% set item_is_active = item.in_active_trail ?: item.is_active %}
 
       <li{{ item_attributes.addClass(item_classes) }}>
-        {{ link(item.title, item.url, {'class': item.in_active_trail ? 'is-active'}) }}
+        {{ link(item.title, item.url, {'class': item_is_active ? 'is-active'}) }}
         {% if item.below %}
           {{ menus.menu_links(item.below, attributes, menu_level + 1) }}
         {% endif %}
