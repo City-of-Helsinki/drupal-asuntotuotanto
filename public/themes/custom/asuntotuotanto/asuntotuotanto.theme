@@ -4,7 +4,7 @@
  * @file
  * Functions to support theming in the HDBT Subtheme.
  */
-
+use Drupal\asu_application\Applications;
 use Drupal\Core\Url;
 use Drupal\file\Entity\File;
 use Drupal\node\Entity\Node;
@@ -177,44 +177,48 @@ function asuntotuotanto_preprocess_views_view_table(&$variables) {
   $view = $variables['view'];
   $view_id = $view->id();
 
-  switch ($view_id) {
-    case 'project_apartments_listing':
-      $rows = $variables['rows'];
+  if($view_id === 'project_apartments_listing') {
+    $rows = $variables['rows'];
+    $status = Applications::create()->getApartmentApplicationStatuses();
 
-      foreach ($rows as $key => $row) {
-        $nid = (int) trim(strip_tags($row['columns']['nid']['content'][0]['field_output']['#markup']));
-        $variables['rows'][$key]['application_status'] = get_apartment_application_status($nid);
+    foreach ($rows as $key => $row) {
+      $apartmentId = (int) trim(strip_tags($row['columns']['nid']['content'][0]['field_output']['#markup']));
+      $applicationCount = $status[$apartmentId] ?? 0;
 
-        $parent_node_results = \Drupal::entityTypeManager()
-          ->getListBuilder('node')
-          ->getStorage()
-          ->loadByProperties([
+      $applicationCountEnum = Applications::resolveApplicationCountEnum($applicationCount);
+
+      if(isset($status[$apartmentId])) { dump($applicationCountEnum);die(); }
+      $variables['rows'][$key]['application_status'] = get_apartment_application_status($applicationCountEnum);
+
+      $parent_node_results = \Drupal::entityTypeManager()
+        ->getListBuilder('node')
+        ->getStorage()
+        ->loadByProperties([
             'type' => 'project',
             'status' => 1,
-            'field_apartments' => $nid,
+            'field_apartments' => $apartmentId,
           ]
         );
 
-        if ($parent_node_results) {
-          $parent_node_nid = key($parent_node_results);
-          $parent_node = Node::load($parent_node_nid);
-          $is_application_period_active = FALSE;
+      if (!$parent_node_results) {
+        continue;
+      }
+      $parent_node_nid = key($parent_node_results);
+      $parent_node = Node::load($parent_node_nid);
+      $is_application_period_active = FALSE;
 
-          $application_start_time_value = $parent_node->get('field_application_start_time')->value;
-          $application_start_time_timestamp = format_date_to_unix_timestamp($application_start_time_value);
-          $application_end_time_value = $parent_node->get('field_application_end_time')->value;
-          $application_end_time_timestamp = format_date_to_unix_timestamp($application_end_time_value);
-          $current_timestamp = time();
+      $application_start_time_value = $parent_node->get('field_application_start_time')->value;
+      $application_start_time_timestamp = format_date_to_unix_timestamp($application_start_time_value);
+      $application_end_time_value = $parent_node->get('field_application_end_time')->value;
+      $application_end_time_timestamp = format_date_to_unix_timestamp($application_end_time_value);
+      $current_timestamp = time();
 
-          if ($current_timestamp >= $application_start_time_timestamp && $current_timestamp <= $application_end_time_timestamp) {
-            $is_application_period_active = TRUE;
-          }
-
-          $variables['rows'][$key]['is_application_period_active'] = $is_application_period_active;
-        }
+      if ($current_timestamp >= $application_start_time_timestamp && $current_timestamp <= $application_end_time_timestamp) {
+        $is_application_period_active = TRUE;
       }
 
-      break;
+      $variables['rows'][$key]['is_application_period_active'] = $is_application_period_active;
+    }
   }
 }
 
