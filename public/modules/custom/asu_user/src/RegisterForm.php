@@ -80,6 +80,16 @@ class RegisterForm extends BaseForm {
   /**
    * {@inheritDoc}
    */
+  public function validateForm(array &$form, FormStateInterface $form_state) {
+    if (!filter_var($form_state->getUserInput()['mail'], FILTER_VALIDATE_EMAIL)) {
+      $form_state->setErrorByName('mail', $this->t('Invalid email format'));
+    }
+    return parent::validateForm($form, $form_state);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
   public function save(array $form, FormStateInterface $form_state) {
     $account = $this->entity;
 

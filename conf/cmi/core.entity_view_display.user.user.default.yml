@@ -87,5 +87,7 @@ content:
     weight: -5
     region: content
 hidden:
+  field_backend_profile_id: true
   field_email_is_valid: true
   langcode: true
+  search_api_excerpt: true
