@@ -61,7 +61,13 @@ final class Initialize extends ResourceBase {
       $response['user']['applications'] = $this->getUserApplications($user);
     }
 
-    return new ModifiedResourceResponse($response, 200);
+    $headers = getenv('APP_ENV') == 'test' ? [
+      'Access-Control-Allow-Origin' => '*',
+      'Access-Control-Allow-Methods' => '*',
+      'Access-Control-Allow-Headers' => '*',
+    ] : [];
+
+    return new ModifiedResourceResponse($response, 200, $headers);
   }
 
   /**
