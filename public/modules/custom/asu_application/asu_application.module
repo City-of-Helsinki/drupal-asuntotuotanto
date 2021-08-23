@@ -43,23 +43,29 @@ function template_preprocess_asu_application(array &$variables) {
   try {
     $projects = \Drupal::entityTypeManager()
       ->getStorage('node')
-      ->loadByProperties(['type' => 'project', 'id' => $projectId]);
-    $project = $projects[0];
+      ->loadByProperties(['type' => 'project', 'nid' => $projectId]);
+
+    if (empty($projects)) {
+      return [];
+    }
+
+    $project = $projects[$projectId];
 
     $application_teaser_values = [
       '#teaser_values' => [
-        'project_name' => $project->field_housing_company,
-        'project_address' => $project->field_address,
-        'project_ownership_type' => $project->field_ownership_type,
-        'project_estimated_completion' => $project->field_estimated_completion,
-        'application_end_time' => $project->field_application_end_time,
-        'project_main_image_url' => $project->field_main_image_url,
-        'project_district' => $project->field_district,
+        'project_name' => $project->field_housing_company->value,
+        'project_address' => $project->field_street_address->value,
+        'project_ownership_type' => $project->field_ownership_type->value,
+        'project_estimated_completion' => $project->field_estimated_completion->value,
+        'application_end_time' => $project->field_application_end_time->value,
+        'project_main_image_url' => $project->field_main_image->value,
+        'project_district' => $project->field_district->value,
       ]
     ];
     $application_teaser_values['#teaser_values']['application_url'] = $application->isLocked() ? "/application/$id" : "/application/$id/edit";
   }
   catch (\Exception $e) {
+    \Drupal::logger('asu_application')->critical('Could not access project apartments for project ' . $projectId);
     $application_teaser_values = [];
   }
 

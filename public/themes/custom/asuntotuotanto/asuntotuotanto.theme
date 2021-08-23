@@ -177,7 +177,7 @@ function asuntotuotanto_preprocess_views_view_table(&$variables) {
   $view = $variables['view'];
   $view_id = $view->id();
 
-  if($view_id === 'project_apartments_listing') {
+  if ($view_id === 'project_apartments_listing') {
     $rows = $variables['rows'];
     $status = Applications::create()->getApartmentApplicationStatuses();
 
@@ -187,7 +187,6 @@ function asuntotuotanto_preprocess_views_view_table(&$variables) {
 
       $applicationCountEnum = Applications::resolveApplicationCountEnum($applicationCount);
 
-      if(isset($status[$apartmentId])) { dump($applicationCountEnum);die(); }
       $variables['rows'][$key]['application_status'] = get_apartment_application_status($applicationCountEnum);
 
       $parent_node_results = \Drupal::entityTypeManager()
