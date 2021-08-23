@@ -1,0 +1,44 @@
+diff --git a/modules/hdbt_admin_editorial/hdbt_admin_editorial.module b/modules/hdbt_admin_editorial/hdbt_admin_editorial.module
+index 1265320..1a93603 100644
+--- a/modules/hdbt_admin_editorial/hdbt_admin_editorial.module
++++ b/modules/hdbt_admin_editorial/hdbt_admin_editorial.module
+@@ -66,13 +66,14 @@ function hdbt_admin_editorial_node_form_submit_callback($form, FormStateInterfac
+  * Implements hook_field_widget_WIDGET_TYPE_form_alter().
+  *
+  * Hero designs:
+- *   background-image     = "Background image"
+- *   diagonal             = "Diagonal"
+- *   with-image-bottom    = "Image on the bottom"
+- *   with-image-left      = "Image on the left"
+- *   with-image-right     = "Image on the right"
+- *   without-image-center = "Without image, align center"
+- *   without-image-left   = "Without image, align left"
++ *   background-image                   = "Background image"
++ *   background-image-with-text-box     = "Background image with text box"
++ *   diagonal                           = "Diagonal"
++ *   with-image-bottom                  = "Image on the bottom"
++ *   with-image-left                    = "Image on the left"
++ *   with-image-right                   = "Image on the right"
++ *   without-image-center               = "Without image, align center"
++ *   without-image-left                 = "Without image, align left"
+  */
+ function hdbt_admin_editorial_field_widget_paragraphs_form_alter(&$element, &$form_state, $context) {
+ 
+@@ -86,6 +87,8 @@ function hdbt_admin_editorial_field_widget_paragraphs_form_alter(&$element, &$fo
+     $element['subform']['field_hero_desc']['#states'] = [
+       'invisible' => [
+         [$design_select => ['value' => 'background-image']],
++        'or',
++        [$design_select => ['value' => 'background-image-with-text-box']],
+       ],
+     ];
+ 
+@@ -102,6 +105,8 @@ function hdbt_admin_editorial_field_widget_paragraphs_form_alter(&$element, &$fo
+     $link_states = [
+       'visible' => [
+         [$design_select => ['value' => 'background-image']],
++        'or',
++        [$design_select => ['value' => 'background-image-with-text-box']],
+       ],
+     ];
+     $element['subform']['field_hero_link']['#states'] = $link_states;

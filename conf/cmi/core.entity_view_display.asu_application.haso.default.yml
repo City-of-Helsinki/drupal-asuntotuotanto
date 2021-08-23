@@ -1,0 +1,51 @@
+uuid: 3d298e1a-8276-4c0d-9598-f7fca79ed6a6
+langcode: en
+status: true
+dependencies:
+  config:
+    - asu_application.application_type.haso
+    - field.field.asu_application.haso.field_aso_changer
+    - field.field.asu_application.haso.field_personal_id
+    - field.field.asu_application.haso.field_right_of_residence_number
+  module:
+    - user
+id: asu_application.haso.default
+targetEntityType: asu_application
+bundle: haso
+mode: default
+content:
+  field_aso_changer:
+    weight: 4
+    label: above
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    type: boolean
+    region: content
+  field_personal_id:
+    weight: 2
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_right_of_residence_number:
+    weight: 3
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  uid:
+    label: hidden
+    type: author
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  search_api_excerpt: true

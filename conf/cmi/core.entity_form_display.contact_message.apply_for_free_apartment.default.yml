@@ -1,0 +1,66 @@
+uuid: 1183a1a2-b926-461f-9708-9b8b2958aafc
+langcode: en
+status: true
+dependencies:
+  config:
+    - contact.form.apply_for_free_apartment
+    - field.field.contact_message.apply_for_free_apartment.field_apartment_information
+    - field.field.contact_message.apply_for_free_apartment.field_date_of_birth
+    - field.field.contact_message.apply_for_free_apartment.field_name
+    - field.field.contact_message.apply_for_free_apartment.field_phone_number
+  module:
+    - datetime
+id: contact_message.apply_for_free_apartment.default
+targetEntityType: contact_message
+bundle: apply_for_free_apartment
+mode: default
+content:
+  field_apartment_information:
+    weight: 2
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_date_of_birth:
+    weight: 4
+    settings: {  }
+    third_party_settings: {  }
+    type: datetime_default
+    region: content
+  field_name:
+    weight: 0
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_phone_number:
+    weight: 3
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  mail:
+    weight: 1
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  message:
+    type: string_textarea
+    weight: 5
+    settings:
+      rows: 12
+      placeholder: ''
+    region: content
+    third_party_settings: {  }
+hidden:
+  copy: true
+  langcode: true
+  name: true
+  preview: true
+  subject: true

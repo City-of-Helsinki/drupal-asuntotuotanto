@@ -1,0 +1,366 @@
+<?php
+
+/**
+ * @file
+ */
+
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\asu_api\Api\BackendApi\Request\UpdateUserRequest;
+use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\user\Entity\User;
+use Drupal\asu_api\Exception\RequestException;
+use Drupal\user\UserInterface;
+use Drupal\asu_api\Api\BackendApi\Request\UserRequest;
+use Drupal\asu_api\Api\BackendApi\Request\CreateUserRequest;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+
+/**
+ * Implements hook_user_login().
+ */
+function asu_user_user_login(UserInterface $account) {
+  if ($account->hasRole('customer')) {
+    asu_update_account_profile_field_value($account);
+    asu_validate_email($account);
+    asu_send_user_password_email($account);
+    asu_create_backend_user($account);
+    asu_authenticate_user($account);
+    asu_redirect_on_login_by_session($account);
+  }
+}
+
+/**
+ * Set email valid if user uses emailed login link.
+ */
+function asu_validate_email(UserInterface $account) {
+  $route_name = \Drupal::routeMatch()->getRouteName();
+  $routes = ['user.login.http', 'user.reset.login'];
+  // Set email_is_valid to true.
+  if (in_array($route_name, $routes)) {
+    if ($account->hasField('field_email_is_valid')) {
+      $account->field_email_is_valid = 1;
+      $account->save();
+    }
+  }
+}
+
+/**
+ * Send user an email if email is not validated.
+ */
+function asu_send_user_password_email(UserInterface $account) {
+  if ($account->field_email_is_valid->value == 0) {
+    _user_mail_notify('password_reset', $account);
+  }
+}
+
+/**
+ * @param \Drupal\user\Entity\UserInterface $account
+ */
+function asu_create_backend_user(UserInterface $account) {
+  /** @var Drupal\asu_api\Api\BackendApi\BackendApi $backendApi */
+  $backendApi = \Drupal::service('asu_api.backendapi');
+
+  $profileId = $account->field_backend_profile->value;
+
+  if (!$profileId) {
+    \Drupal::logger('asu_user')->critical('User should already have backend profile created.');
+    try {
+      /** @var \Drupal\asu_user\Store $store */
+      $store = \Drupal::service('asu_user.tempstore');
+      $createUser = new CreateUserRequest($account, $store->getExternalUserData());
+      $response = $backendApi->getUserService()->createUser($createUser);
+      $account->field_backend_profile = $response->getProfileId();
+      $account->field_backend_password = $response->getPassword();
+      $account->save();
+    }
+    catch (\Exception $e) {
+      \Drupal::logger('asu_user')->critical('Exception while creating backend user:' . $e->getMessage());
+    }
+  }
+}
+
+/**
+ * Get auth token from backend.
+ */
+function asu_authenticate_user(UserInterface $account) {
+  // @todo User cannot request token if logged in right after registering.
+  // User entity hasn't been updated yet most likely.
+  /** @var \Drupal\asu_api\Api\BackendApi\BackendApi $backendApi */
+  $backendApi = \Drupal::service('asu_api.backendapi');
+  try {
+    asu_get_user_fields($account);
+  }
+  catch (\Exception $e) {
+    \Drupal::logger('backend_api')->critical('Unable to authenticate: ' . $e->getMessage());
+    \Drupal::messenger()->addMessage('Unable to authenticate with backend.');
+  }
+}
+
+/**
+ * If user has asu_last_application_url set, redirect to application form.
+ */
+function asu_redirect_on_login_by_session() {
+  if ($response = asu_session_check_application_url()) {
+    $response->send();
+  }
+}
+
+/**
+ * Get the user data from django backend.
+ */
+function asu_get_external_user_field_data(UserInterface $account) {
+  /** @var \Drupal\asu_api\Api\BackendApi\BackendApi $backendApi */
+  $backendApi = \Drupal::service('asu_api.backendapi');
+  /** @var \Drupal\asu_user\Store $store */
+  $store = \Drupal::service('asu_user.tempstore');
+  try {
+    $token = $backendApi
+      ->getAuthenticationService()
+      ->handleAuthentication($account);
+
+    if ($token) {
+      // @todo Duplicate maybe.
+      asu_get_user_fields($account);
+      $request = new UserRequest($account);
+      $userInformationResponse = $backendApi
+        ->getUserService()
+        ->getUser($request, $account->field_backend_profile->value, $token);
+      $store->setMultipleByConfiguration($userInformationResponse->getUserInformation());
+    }
+  }
+  catch (RequestException $e) {
+    // Something else than 200.
+    // @todo Handle error & logging.
+  }
+  catch (\Exception $e) {
+    // Something unexpected.
+  }
+}
+
+/**
+ * Implements hook_entity_type_alter().
+ */
+function asu_user_entity_type_alter(array &$entity_types) {
+  $entity_types['user']->setFormClass('register', 'Drupal\asu_user\RegisterForm');
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function asu_user_form_alter(&$form, FormStateInterface &$form_state, $form_id) {
+  if ($form_id == 'user_form') {
+    $backendApi = \Drupal::service('asu_api.backendapi');
+    $user = User::load(\Drupal::currentUser()->id());
+    /** @var \Drupal\asu_user\Store $store */
+    $store = \Drupal::service('asu_user.tempstore');
+    $fieldMap = \Drupal::config('asu_user.external_user_fields')->get('external_data_map');
+
+    // If a field value is missing, fetch user information.
+    if (!$store->get(array_keys($fieldMap)[0])) {
+      asu_get_user_fields($user);
+    }
+    foreach ($fieldMap as $field => $field_data) {
+      $default_value = $field_data['type'] == 'date' ? (new \DateTime($store->get($field)))->format('Y-m-d') : $store->get($field);
+      $form['basic_information'][$field] = [
+        '#type' => $field_data['type'],
+        '#title' => $field_data['title'],
+        '#default_value' => $default_value,
+      ];
+    }
+    if ($user->hasRole('customer')) {
+      $form['actions']['submit']['#submit'][] = 'user_edit_submit';
+    }
+
+    if ($response = asu_session_check_application_url()) {
+      $response->send();
+      return;
+    }
+
+    $form['actions']['submit']['#submit'][] = '_asu_user_user_edit_form_submit';
+  }
+}
+
+/**
+ * Additional submit handler for user_form.
+ *
+ * @param $form
+ * @param $form_state
+ */
+function user_edit_submit($form, &$form_state) {
+  /** @var \Drupal\asu_api\Api\BackendApi\BackendApi $bakendApi */
+  $backendApi = \Drupal::service('asu_api.backendapi');
+  $user = User::load(\Drupal::currentUser()->id());
+
+  if (!$user->hasRole('customer')) {
+    return;
+  }
+
+  try {
+    $token = $backendApi
+      ->getAuthenticationService()
+      ->handleAuthentication($user);
+  }
+  catch (\Exception $e) {
+    \Drupal::logger('asu_user')->critical('authentication failed.');
+  }
+
+  if ($token) {
+    $updateRequest = new UpdateUserRequest($user, $form_state, \Drupal::config('asu_user.external_user_fields')->get('external_data_map'));
+    $updateUserResponse = $backendApi
+      ->getUserService()
+      ->updateUser($updateRequest, $user->field_backend_profile->value, $token);
+    /** @var \Drupal\asu_user\Store $store */
+    $store = \Drupal::service('asu_user.tempstore');
+    $store->setMultipleByConfiguration($updateUserResponse->getUserInformation());
+  }
+}
+
+/**
+ * Implements hook_entity_base_field_info().
+ *
+ * Create computed fields dynamically for user entity.
+ */
+function asu_user_entity_base_field_info(EntityTypeInterface $entity_type) {
+  if ($entity_type->id() === 'user') {
+    $fields = [];
+    if ($config = \Drupal::config('asu_user.external_user_fields')) {
+      if (!$config->get('external_data_map')) {
+        return $fields;
+      }
+      foreach ($config->get('external_data_map') as $fieldname => $field_data) {
+        $fields[$fieldname] = BaseFieldDefinition::create('asu_external_string')
+          ->setName($fieldname)
+          ->setTranslatable(FALSE)
+          ->setLabel(t($field_data['title']))
+          ->setComputed(TRUE)
+          ->setClass('\Drupal\asu_user\ExternalData')
+          ->setDisplayConfigurable('view', TRUE)
+          ->setDisplayOptions('view', [
+            'label' => 'visible',
+            'weight' => -5,
+          ]);
+      }
+    }
+    return $fields;
+  }
+}
+
+/**
+ * Implements hook_field_formatter_info_alter().
+ */
+function asu_user_field_formatter_info_alter(array &$info) {
+  // Used in custom computed field.
+  $info['string']['field_types'][] = 'asu_external_string';
+}
+
+/**
+ * Implements hook_field_widget_info_alter().
+ */
+function asu_user_field_widget_info_alter(array &$info) {
+  // Used in custom computed field.
+  $info['string_textfield']['field_types'][] = 'asu_external_string';
+}
+
+/**
+ *
+ */
+function asu_get_user_fields($account) {
+  $backendApi = \Drupal::service('asu_api.backendapi');
+  /** @var \Drupal\asu_user\Store $store */
+  $store = \Drupal::service('asu_user.tempstore');
+
+  $profileId = $account->field_backend_profile->value;
+  // Workaround for the first login right after registering.
+  // Cached user object wouldn't contain backend api information.
+  if (!$profileId) {
+    $profileId = asu_update_account_profile_field_value($account);
+  }
+
+  $token = $backendApi
+    ->getAuthenticationService()
+    ->handleAuthentication($account);
+
+  if ($token) {
+    $request = new UserRequest($account);
+    $userInformationResponse = $backendApi
+      ->getUserService()
+      ->getUser($request, $token);
+    $store->setMultipleByConfiguration($userInformationResponse->getUserInformation());
+  }
+}
+
+/**
+ * User redirect after form submit.
+ */
+function _asu_user_user_edit_form_submit($form, &$form_state) {
+  $session = \Drupal::request()->getSession();
+  if (!$session->get('asu_last_application_url')) {
+    $form_state->setRedirect('entity.user.canonical', ['user' => \Drupal::currentUser()->id()]);
+  }
+}
+
+/**
+ * Implements hook_form_alter().
+ *
+ * Prefill contact form with user information and query parameters.
+ */
+function asu_user_form_contact_message_apply_for_free_apartment_form_alter(&$form, &$form_state, $form_id) {
+  $fields = [
+    'field_apartment_information' => \Drupal::request()->get('title') ?? '',
+  ];
+
+  $user = \Drupal::currentUser();
+
+  if (\Drupal::hasService('asu_user.tempstore')) {
+    $store = \Drupal::service('asu_user.tempstore');
+    $fields += [
+      'field_date_of_birth' => $store->get('date_of_birth'),
+      'field_name' => "{$store->get('first_name')} {$store->get('last_name')}",
+      'field_phone_number' => $store->get('phone_number'),
+    ];
+  }
+  foreach ($fields as $formFieldName => $data) {
+    $form[$formFieldName]['widget'][0]['value']['#default_value'] = $data ?? '';
+  }
+}
+
+/**
+ * Workaround for first time login cache problem.
+ */
+function asu_update_account_profile_field_value(&$account) {
+  $profileId = $account->field_backend_profile->value;
+  if (!$profileId) {
+    $database = \Drupal::database();
+    $query = $database->query('SELECT field_backend_profile_value
+    FROM user__field_backend_profile
+    WHERE bundle = :bundle
+    AND entity_id = :userid',
+      [
+        ':bundle' => 'user',
+        ':userid' => $account->id(),
+      ]
+    );
+    $profileId = NULL;
+    if ($results = $query->fetchAll()) {
+      foreach ($results as $result) {
+        $profileId = $result->field_backend_profile_value;
+        $account->set('field_backend_profile', $profileId);
+        return $profileId;
+        break;
+      }
+    }
+  }
+  return $profileId;
+}
+
+/**
+ * Check if redirect is needed after login or register.
+ */
+function asu_session_check_application_url(): ?RedirectResponse {
+  $session = \Drupal::request()->getSession();
+  if ($url = $session->get('asu_last_application_url')) {
+    $session->remove('asu_last_application_url');
+    return new RedirectResponse(\Drupal::request()->getSchemeAndHttpHost() . $url, 301);
+  }
+  return NULL;
+}

@@ -1,0 +1,32 @@
+uuid: 5cf3b1b7-3d92-42ec-8373-044d398ebda7
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.taxonomy_term.faq_hitas.field_faq_category
+    - taxonomy.vocabulary.faq_hitas
+  module:
+    - text
+id: taxonomy_term.faq_hitas.default
+targetEntityType: taxonomy_term
+bundle: faq_hitas
+mode: default
+content:
+  description:
+    label: hidden
+    type: text_default
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_faq_category:
+    weight: 1
+    label: hidden
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+hidden:
+  langcode: true
+  search_api_excerpt: true

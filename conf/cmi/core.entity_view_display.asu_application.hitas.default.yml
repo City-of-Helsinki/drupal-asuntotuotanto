@@ -1,0 +1,42 @@
+uuid: fbcb00f4-7e88-46c7-a509-5dda99e174a8
+langcode: en
+status: true
+dependencies:
+  config:
+    - asu_application.application_type.hitas
+    - field.field.asu_application.hitas.field_hitas_owner
+    - field.field.asu_application.hitas.field_personal_id
+  module:
+    - user
+id: asu_application.hitas.default
+targetEntityType: asu_application
+bundle: hitas
+mode: default
+content:
+  field_hitas_owner:
+    weight: 3
+    label: above
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    type: boolean
+    region: content
+  field_personal_id:
+    weight: 2
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  uid:
+    label: hidden
+    type: author
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  search_api_excerpt: true

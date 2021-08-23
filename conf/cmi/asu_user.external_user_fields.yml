@@ -1,0 +1,29 @@
+external_data_map:
+  first_name:
+    title: 'First name'
+    type: textfield
+    external_field: first_name
+  last_name:
+    title: 'Last name'
+    type: textfield
+    external_field: last_name
+  phone_number:
+    title: 'Phone number'
+    type: textfield
+    external_field: phone_number
+  address:
+    title: Address
+    type: textfield
+    external_field: street_address
+  postal_code:
+    title: 'Postal code'
+    type: textfield
+    external_field: postal_code
+  city:
+    title: City
+    type: textfield
+    external_field: city
+  date_of_birth:
+    title: 'Date of birth'
+    type: date
+    external_field: date_of_birth

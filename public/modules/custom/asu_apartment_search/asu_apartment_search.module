@@ -1,0 +1,32 @@
+<?php
+
+/**
+ * @file
+ */
+
+/**
+ * Implements hook_theme().
+ */
+function asu_apartment_search_theme() {
+  return [
+    'asu_content' => [
+      'variables' => [
+        'cta_image' => NULL,
+        'application_start_time' => NULL,
+        'application_end_time' => NULL,
+        'is_application_period_active' => NULL,
+        'district' => NULL,
+        'address' => NULL,
+        'ownership_type' => NULL,
+        'accessibility' => NULL,
+        'project_description' => NULL,
+        'building_type' => NULL,
+        'energy_class' => NULL,
+        'services' => NULL,
+        'services_url' => NULL,
+        'attachments' => NULL,
+        'estimated_completion_date' => NULL,
+      ],
+    ],
+  ];
+}

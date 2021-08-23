@@ -1,0 +1,155 @@
+{#
+/**
+ * @file
+ * Theme override to present all user data.
+ *
+ * This template is used when viewing a registered user's page,
+ * e.g., example.com/user/123. 123 being the user's ID.
+ *
+ * Available variables:
+ * - content: A list of content items. Use 'content' to print all content, or
+ *   print a subset such as 'content.field_example'. Fields attached to a user
+ *   such as 'user_picture' are available as 'content.user_picture'.
+ * - attributes: HTML attributes for the container element.
+ * - user: A Drupal User entity.
+ *
+ * @see template_preprocess_user()
+ */
+#}
+{% set email = user.mail.value %}
+{% set first_name = content.first_name %}
+{% set last_name = content.last_name %}
+{% set phone_number = content.phone_number %}
+{% set address = content.address %}
+{% set postal_code = content.postal_code %}
+{% set city = content.city %}
+{% set date_of_birth = content.date_of_birth|date("Y-m-d") %}
+{% set is_email_valid = user.field_email_is_valid.value %}
+
+{% set classes = [
+  'user-profile',
+  'wrapper',
+  'wrapper--mw-1200'
+] %}
+
+<article{{ attributes.addClass(classes) }}>
+  <div class="user-profile__header">
+    <h1 class="user-profile__heading">{{ 'Personal information'|t }}</h1>
+    <p>
+      {% trans %}
+        On this page, you will see your own information and the applications you have made to the projects.
+      {% endtrans %}
+    </p>
+  </div>
+  {% if is_email_valid is same as('0') %}
+    {% include "@asuntotuotanto/user/status-message.html.twig" with {
+      label: 'Confirm email-address'|t,
+      description: 'We have sent a confirmation email to the email address you provided. If you did not receive the message, also check your email spam folder.'|t,
+      id: 'email_verification_message'
+    } %}
+  {% endif %}
+  <ul class="user-profile__tabs">
+    <li class="user-profile__tab">
+      {{ link(
+        'Personal information'|t,
+        'internal:' ~ path('entity.user.canonical', {'user': user.id}),
+        { 'class':['is-active']} )
+      }}
+    </li>
+    <li class="user-profile__tab">
+      {{ link(
+        'Applications'|t,
+        "internal:/user/#{user.id}/applications",
+        { 'class':['']} )
+      }}
+    </li>
+  </ul>
+  <section class="user-profile__section">
+    <h2>
+      {% trans %}
+        User information
+      {% endtrans %}
+    </h2>
+    <div class="user-profile__user-information">
+      {% include "@asuntotuotanto/user/disabled-input.html.twig" with {
+        id: 'email',
+        label: 'Email'|t,
+        value: email,
+      } %}
+      {% include "@asuntotuotanto/user/disabled-input.html.twig" with {
+        id: 'password',
+        label: 'Password'|t,
+        type: 'password',
+        value: 'password',
+      } %}
+    </div>
+    {% include '@asuntotuotanto/button/button.html.twig' with {
+        type: 'secondary',
+        disabled: false,
+        label: 'Edit'|t,
+        href: path('entity.user.canonical', {'user': user.id}) ~ '/edit',
+        icon_first: true,
+        icon_first_type: 'pen-line'
+      }
+    %}
+  </section>
+  <section class="user-profile__section">
+    <h2>
+      {% trans %}
+        Basic information
+      {% endtrans %}
+    </h2>
+    <p>
+      {% trans %}
+        The information below is required for housing applications. This information will be pre-filled in the applications you make.
+      {% endtrans %}
+    </p>
+    {% include '@asuntotuotanto/button/button.html.twig' with {
+        type: 'secondary',
+        disabled: false,
+        label: 'Edit'|t,
+        href: path('entity.user.canonical', {'user': user.id}) ~ '/edit',
+        icon_first: true,
+        icon_first_type: 'pen-line'
+      }
+    %}
+    <div class="user-profile__user-information">
+      {% include "@asuntotuotanto/user/disabled-input.html.twig" with {
+        id: 'first_name',
+        label: 'First name'|t,
+        value: first_name,
+      } %}
+      {% include "@asuntotuotanto/user/disabled-input.html.twig" with {
+        id: 'last_name',
+        label: 'Last name'|t,
+        value: last_name,
+      } %}
+      {% include "@asuntotuotanto/user/disabled-input.html.twig" with {
+        id: 'phone_number',
+        label: 'Phone number'|t,
+        value: phone_number,
+      } %}
+      {% include "@asuntotuotanto/user/disabled-input.html.twig" with {
+        id: 'address',
+        label: 'Address'|t,
+        value: address,
+      } %}
+      {% include "@asuntotuotanto/user/disabled-input.html.twig" with {
+        id: 'postal_code',
+        label: 'Postal code'|t,
+        value: postal_code,
+      } %}
+      {% include "@asuntotuotanto/user/disabled-input.html.twig" with {
+        id: 'city',
+        label: 'City'|t,
+        value: city,
+      } %}
+      {% include "@asuntotuotanto/user/disabled-input.html.twig" with {
+        id: 'date_of_birth',
+        label: 'Date of birth'|t,
+        type: 'date',
+        value: date_of_birth,
+      } %}
+    </div>
+  </section>
+</article>

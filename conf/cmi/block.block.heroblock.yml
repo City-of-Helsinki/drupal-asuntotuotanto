@@ -1,4 +1,4 @@
-uuid: b14bf47d-678a-453c-9266-673413e4efd7
+uuid: 71f03d3f-7543-467f-b688-2b989689b011
 langcode: en
 status: true
 dependencies:
@@ -7,6 +7,8 @@ dependencies:
     - hdbt_content
   theme:
     - asuntotuotanto
+_core:
+  default_config_hash: nH8M6u66xNnGzjplyiDZAKKeyzDR6NFyTMXNwDYzldk
 id: heroblock
 theme: asuntotuotanto
 region: before_content

@@ -1,0 +1,15 @@
+uuid: 11a27621-cf52-4387-b053-bf7bf32cd985
+langcode: fi
+status: true
+dependencies:
+  module:
+    - paragraphs_library
+third_party_settings:
+  paragraphs_library:
+    allow_library_conversion: true
+id: text_block_with_link
+label: 'Tekstilohko linkillä'
+icon_uuid: null
+icon_default: null
+description: 'Lohko otsikkolla, kuvaustekstillä sekä linkillä.'
+behavior_plugins: {  }

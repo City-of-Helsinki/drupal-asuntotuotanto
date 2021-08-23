@@ -3,7 +3,6 @@ langcode: en
 status: true
 dependencies:
   module:
-    - context
     - system
   theme:
     - asuntotuotanto
@@ -23,14 +22,6 @@ settings:
   primary: true
   secondary: false
 visibility:
-  view_inclusion:
-    id: view_inclusion
-    negate: null
-    view_inclusion: {  }
-  request_path_exclusion:
-    id: request_path_exclusion
-    pages: ''
-    negate: null
   request_path:
     id: request_path
     pages: '/user/*'

@@ -1,0 +1,19 @@
+uuid: 05905dcc-2c6a-454e-99b9-cc71ee69e99e
+langcode: en
+status: true
+dependencies:
+  config:
+    - contact.form.apply_for_free_apartment
+    - field.storage.contact_message.field_phone_number
+id: contact_message.apply_for_free_apartment.field_phone_number
+field_name: field_phone_number
+entity_type: contact_message
+bundle: apply_for_free_apartment
+label: 'Phone number'
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

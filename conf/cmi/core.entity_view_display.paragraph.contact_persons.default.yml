@@ -1,0 +1,25 @@
+uuid: c5eb8458-33d0-49ab-aec9-1090722a40ce
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.contact_persons.field_contact_persons
+    - paragraphs.paragraphs_type.contact_persons
+  module:
+    - entity_reference_revisions
+id: paragraph.contact_persons.default
+targetEntityType: paragraph
+bundle: contact_persons
+mode: default
+content:
+  field_contact_persons:
+    type: entity_reference_revisions_entity_view
+    weight: 0
+    label: hidden
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    region: content
+hidden:
+  search_api_excerpt: true

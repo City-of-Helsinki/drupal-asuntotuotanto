@@ -34,6 +34,12 @@ settings:
     -
       value: diagonal
       label: Diagonal
+    -
+      value: background-image-with-text-box
+      label: 'Background image with text box'
+    -
+      value: split-text-with-wavy-koro
+      label: 'Split text with wavy koro'
   allowed_values_function: ''
 module: options
 locked: false

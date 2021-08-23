@@ -1,11 +1,10 @@
-uuid: 47419325-66f8-4fa8-b3ba-0b3e15bd0149
-langcode: fi
+uuid: 6b3311c7-d106-45ee-9d9e-7aaac1252393
+langcode: en
 status: true
 dependencies:
   config:
     - system.menu.main
   module:
-    - context
     - menu_block
   theme:
     - asuntotuotanto
@@ -29,12 +28,4 @@ settings:
   suggestion: main__mobile
   label_type: block
   label_link: false
-visibility:
-  view_inclusion:
-    id: view_inclusion
-    negate: null
-    view_inclusion: {  }
-  request_path_exclusion:
-    id: request_path_exclusion
-    pages: ''
-    negate: null
+visibility: {  }

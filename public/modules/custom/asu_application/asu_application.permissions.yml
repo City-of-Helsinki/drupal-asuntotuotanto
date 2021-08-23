@@ -1,0 +1,11 @@
+create application:
+  title: 'Create application'
+  restrict access: true
+
+administer applications:
+  title: 'Administer applications'
+  restrict access: true
+
+#send application:
+  #title: 'Send application'
+  #restrict access: true

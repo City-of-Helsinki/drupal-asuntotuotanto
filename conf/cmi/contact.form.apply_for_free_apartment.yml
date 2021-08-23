@@ -1,0 +1,12 @@
+uuid: ffeffee6-4e93-4630-ad16-19ec06aac128
+langcode: en
+status: true
+dependencies: {  }
+id: apply_for_free_apartment
+label: 'Apply for free apartment'
+recipients:
+  - test@test.fi
+reply: ''
+weight: 0
+message: 'Thank you for your interest. We''ll contact you shortly.'
+redirect: ''

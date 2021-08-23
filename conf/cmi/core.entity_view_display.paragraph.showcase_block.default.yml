@@ -1,0 +1,48 @@
+uuid: 1365aea5-347f-4628-8288-770845bafd14
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.showcase_block.field_links
+    - field.field.paragraph.showcase_block.field_showcases
+    - field.field.paragraph.showcase_block.field_title
+    - paragraphs.paragraphs_type.showcase_block
+  module:
+    - entity_reference_revisions
+    - link
+id: paragraph.showcase_block.default
+targetEntityType: paragraph
+bundle: showcase_block
+mode: default
+content:
+  field_links:
+    weight: 2
+    label: hidden
+    settings:
+      trim_length: null
+      url_only: false
+      url_plain: false
+      rel: '0'
+      target: '0'
+    third_party_settings: {  }
+    type: link
+    region: content
+  field_showcases:
+    type: entity_reference_revisions_entity_view
+    weight: 1
+    label: hidden
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    region: content
+  field_title:
+    weight: 0
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+hidden:
+  search_api_excerpt: true

@@ -4,7 +4,6 @@ namespace Drupal\asu_content\Plugin\ComputedField;
 
 use Drupal\computed_field_plugin\Traits\ComputedSingleItemTrait;
 use Drupal\Core\Field\FieldItemList;
-use Drupal\Core\Site\Settings;
 use Drupal\Core\TypedData\DataDefinitionInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\node\Entity\Node;
@@ -76,7 +75,8 @@ class ApplicationFormUrl extends FieldItemList {
           ];
         }
 
-        $baseurl = Settings::get('ASU_ASUNTOTUOTANTO_PUBLIC_URL');
+        $baseurl = \Drupal::request()->getSchemeAndHttpHost();
+
         if ($this->isBeforeApplicationTimeEnd($referencing_node->field_application_end_time->value)) {
           $apartment_type = strtolower($referencing_node->field_ownership_type->referencedEntities()[0]->getName());
           $value = $baseurl . '/application/add/' . $apartment_type . '/' . $referencing_node->id();

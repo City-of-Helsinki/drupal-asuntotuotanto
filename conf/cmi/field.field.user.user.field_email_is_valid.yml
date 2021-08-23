@@ -1,0 +1,24 @@
+uuid: 36a91999-e097-4923-90c1-8d0f1f62d29d
+langcode: fi
+status: true
+dependencies:
+  config:
+    - field.storage.user.field_email_is_valid
+  module:
+    - user
+id: user.user.field_email_is_valid
+field_name: field_email_is_valid
+entity_type: user
+bundle: user
+label: 'Email is valid'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: Kyllä
+  off_label: Ei
+field_type: boolean

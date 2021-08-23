@@ -1,0 +1,56 @@
+uuid: 88d26cfb-1bd2-4ef8-8725-ad0862c708c3
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.stacked_contact_blocks.field_main_content_blocks
+    - field.field.paragraph.stacked_contact_blocks.field_stacked_text_blocks
+    - paragraphs.paragraphs_type.stacked_contact_blocks
+  module:
+    - paragraphs
+id: paragraph.stacked_contact_blocks.default
+targetEntityType: paragraph
+bundle: stacked_contact_blocks
+mode: default
+content:
+  field_main_content_blocks:
+    type: paragraphs
+    weight: 1
+    settings:
+      title: Paragraph
+      title_plural: Paragraphs
+      edit_mode: closed_expand_nested
+      closed_mode: summary
+      autocollapse: none
+      closed_mode_threshold: 0
+      add_mode: dropdown
+      form_display_mode: default
+      default_paragraph_type: text
+      features:
+        add_above: '0'
+        collapse_edit_all: collapse_edit_all
+        duplicate: duplicate
+    third_party_settings: {  }
+    region: content
+  field_stacked_text_blocks:
+    weight: 0
+    settings:
+      title: Paragraph
+      title_plural: Paragraphs
+      edit_mode: closed_expand_nested
+      closed_mode: summary
+      autocollapse: none
+      closed_mode_threshold: 0
+      add_mode: dropdown
+      form_display_mode: default
+      default_paragraph_type: text
+      features:
+        add_above: '0'
+        collapse_edit_all: collapse_edit_all
+        duplicate: duplicate
+    third_party_settings: {  }
+    type: paragraphs
+    region: content
+hidden:
+  created: true
+  status: true

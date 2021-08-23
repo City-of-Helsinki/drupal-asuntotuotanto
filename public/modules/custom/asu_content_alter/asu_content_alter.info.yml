@@ -1,0 +1,6 @@
+name: 'ASU - Content alter'
+type: module
+description: 'Performs alterations to content.'
+core: 8.x
+core_version_requirement: ^8 || ^9
+package: 'ASU'

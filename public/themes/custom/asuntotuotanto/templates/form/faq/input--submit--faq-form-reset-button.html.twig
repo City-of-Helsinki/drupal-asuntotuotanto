@@ -1,0 +1,30 @@
+{#
+/**
+ * @file
+ * Theme override for an 'input' #type form element.
+ *
+ * Available variables:
+ * - attributes: A list of HTML attributes for the input element.
+ * - children: Optional additional rendered elements.
+ *
+ * @see template_preprocess_input()
+ * @see claro_preprocess_input()
+ */
+#}
+{%
+ set button_classes = [
+  'faq-reset-button',
+  'hds-button'
+ ]
+%}
+
+{% apply spaceless %}
+  <button {{ attributes.addClass(button_classes) }}>
+    <span aria-hidden="true" class="hds-icon hds-icon--cross"></span>
+    <span class="faq-reset-button__label">
+      {% trans %}
+        Clear filters
+      {% endtrans %}
+    </span>
+  </button>
+{% endapply %}
