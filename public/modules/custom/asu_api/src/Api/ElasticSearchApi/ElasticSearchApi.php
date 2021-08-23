@@ -22,14 +22,14 @@ class ElasticSearchApi {
    *
    * @var string|mixed
    */
-  private string $username;
+  private ?string $username;
 
   /**
    * Api password.
    *
    * @var string|mixed
    */
-  private string $password;
+  private ?string $password;
 
   /**
    * Constructor.
