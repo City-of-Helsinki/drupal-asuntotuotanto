@@ -7,5 +7,5 @@ _core:
 modules:
   swiftmailer:
     none:
-      formatter: test_mail_collector
-      sender: test_mail_collector
+      formatter: swiftmailer
+      sender: swiftmailer
