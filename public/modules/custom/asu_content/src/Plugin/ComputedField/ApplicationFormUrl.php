@@ -76,7 +76,8 @@ class ApplicationFormUrl extends FieldItemList {
           ];
         }
 
-        $baseurl = Settings::get('ASU_ASUNTOTUOTANTO_PUBLIC_URL');
+        $baseurl = \Drupal::request()->getSchemeAndHttpHost();
+
         if ($this->isBeforeApplicationTimeEnd($referencing_node->field_application_end_time->value)) {
           $apartment_type = strtolower($referencing_node->field_ownership_type->referencedEntities()[0]->getName());
           $value = $baseurl . '/application/add/' . $apartment_type . '/' . $referencing_node->id();
