@@ -50,3 +50,4 @@ hidden:
   field_service_is_parent: true
   field_service_parent_service: true
   langcode: true
+  search_api_excerpt: true

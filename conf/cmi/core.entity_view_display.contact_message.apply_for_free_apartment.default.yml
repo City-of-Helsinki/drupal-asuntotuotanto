@@ -22,4 +22,5 @@ hidden:
   mail: true
   message: true
   name: true
+  search_api_excerpt: true
   subject: true

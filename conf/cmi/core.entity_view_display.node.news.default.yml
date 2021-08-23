@@ -46,3 +46,4 @@ hidden:
   field_news_category: true
   langcode: true
   links: true
+  search_api_excerpt: true
