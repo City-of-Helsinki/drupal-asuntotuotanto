@@ -5,8 +5,6 @@
  * Module.install.
  */
 
-use Drupal\taxonomy\Entity\Term;
-
 /**
  * Add taxonomy terms to News category vocabularity automatically.
  */
@@ -15,25 +13,25 @@ function asu_content_update_9001() {
   $vocabularity = 'news_category';
 
   $term_common = Term::create([
-    'name' => 'Common',
-    'vid' => $vocabularity,
-    'uuid' => 'a4cd9585-84aa-4a1b-ae53-6976cc08f4a4',
+  'name' => 'Common',
+  'vid' => $vocabularity,
+  'uuid' => 'a4cd9585-84aa-4a1b-ae53-6976cc08f4a4',
   ]);
 
   $term_haso = Term::create([
-    'name' => 'HASO',
-    'vid' => $vocabularity,
-    'uuid' => '72d1416b-cf66-4820-b4cd-060098c18d6f',
+  'name' => 'HASO',
+  'vid' => $vocabularity,
+  'uuid' => '72d1416b-cf66-4820-b4cd-060098c18d6f',
   ]);
 
   $term_hitas = Term::create([
-    'name' => 'HITAS',
-    'vid' => $vocabularity,
-    'uuid' => 'daab6bb3-6810-456f-9922-1e70878024eb',
+  'name' => 'HITAS',
+  'vid' => $vocabularity,
+  'uuid' => 'daab6bb3-6810-456f-9922-1e70878024eb',
   ]);
 
   $term_common->save();
   $term_haso->save();
   $term_hitas->save();
-  */
+   */
 }
