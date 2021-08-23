@@ -276,14 +276,22 @@ class ApplicationForm extends ContentEntityForm {
    *   Array of project information & apartments.
    */
   private function getApartments($projectId): ?array {
-    $project = \Drupal::entityTypeManager()
+    $projects = \Drupal::entityTypeManager()
       ->getStorage('node')
       ->loadByProperties([
         'nid' => $projectId,
       ]);
 
+    if (empty($projects)) {
+      return [];
+    }
+
+    $project = $projects[$projectId];
+
     $apartments = [];
-    foreach ($project->field_apartments as $apartment) {
+    foreach ($project->field_apartments as $apartmentReference) {
+      $apartment = $apartmentReference->entity;
+
       $living_area_size_m2 = number_format($apartment->field_living_area->value, 1, ',', '');
       $debt_free_sales_price = number_format($apartment->field_debt_free_sales_price->value / 100, 0, ',', ' ');
       $sales_price = number_format($apartment->field_sales_price->value / 100, 0, ',', ' ');
@@ -303,7 +311,7 @@ class ApplicationForm extends ContentEntityForm {
     return [
       'project_name' => $project->field_housing_company->value,
       'project_uuid' => $project->uuid(),
-      'ownership_type' => $project->field_ownership_type->value,
+      'ownership_type' => $project->field_ownership_type->first()->entity->getName(),
       'application_start_date' => $project->field_application_start_time->value,
       'application_end_date' => $project->field_application_end_time->value,
       'apartments' => $apartments,
