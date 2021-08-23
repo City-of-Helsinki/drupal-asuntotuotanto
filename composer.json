@@ -21,7 +21,7 @@
         "drupal/config_terms": "^1.4",
         "drupal/context": "^4.0@beta",
         "drupal/core-composer-scaffold": "^9.1",
-        "drupal/core-recommended": "^9.1",
+        "drupal/core-recommended": "9.1.12",
         "drupal/elasticsearch_connector": "^7.0@alpha",
         "drupal/entity": "^1.2",
         "drupal/entity_usage": "^2.0@beta",
