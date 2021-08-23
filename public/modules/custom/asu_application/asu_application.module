@@ -55,11 +55,11 @@ function template_preprocess_asu_application(array &$variables) {
       '#teaser_values' => [
         'project_name' => $project->field_housing_company->value,
         'project_address' => $project->field_street_address->value,
-        'project_ownership_type' => $project->field_ownership_type->value,
+        'project_ownership_type' => $project->field_ownership_type->first()->entity->getName(),
         'project_estimated_completion' => $project->field_estimated_completion->value,
         'application_end_time' => $project->field_application_end_time->value,
         'project_main_image_url' => $project->field_main_image->value,
-        'project_district' => $project->field_district->value,
+        'project_district' => $project->field_district->first()->entity->getName(),
       ]
     ];
     $application_teaser_values['#teaser_values']['application_url'] = $application->isLocked() ? "/application/$id" : "/application/$id/edit";
