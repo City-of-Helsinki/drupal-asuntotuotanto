@@ -12,6 +12,7 @@ function asu_content_alter_form_alter(&$form, $form_state, $form_id) {
     case 'node_news_form':
       $form['sticky']['widget']['value']['#title'] = t('Create main news item');
       break;
+
     case 'taxonomy_term_faq_hitas_form':
     case 'taxonomy_term_faq_haso_form':
     case 'taxonomy_term_faq_category_form':

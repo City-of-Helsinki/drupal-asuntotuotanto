@@ -4,14 +4,12 @@ namespace Drupal\asu_rest\Plugin\rest\resource;
 
 use Drupal\asu_application\Applications;
 use Drupal\asu_rest\UserDto;
-use Drupal\asu_api\Api\DrupalApi\Request\FilterRequest;
 use Drupal\Core\Access\CsrfRequestHeaderAccessCheck;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\rest\ModifiedResourceResponse;
 use Drupal\rest\Plugin\ResourceBase;
 use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\user\Entity\User;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -51,7 +49,7 @@ final class Initialize extends ResourceBase {
       'user_id' => 0,
       'email_address' => '',
       'username' => '',
-      'applications' => []
+      'applications' => [],
     ];
 
     /** @var \Drupal\user\Entity\User $user */
@@ -150,6 +148,9 @@ final class Initialize extends ResourceBase {
     // }
   }
 
+  /**
+   *
+   */
   protected function doGetFilters() {
     $currentLanguage = \Drupal::languageManager()->getCurrentLanguage();
     $config = \Drupal::config('asu_rest.filters');

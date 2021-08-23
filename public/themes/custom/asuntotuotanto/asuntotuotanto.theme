@@ -4,6 +4,7 @@
  * @file
  * Functions to support theming in the HDBT Subtheme.
  */
+
 use Drupal\asu_application\Applications;
 use Drupal\Core\Url;
 use Drupal\file\Entity\File;
@@ -193,10 +194,10 @@ function asuntotuotanto_preprocess_views_view_table(&$variables) {
         ->getListBuilder('node')
         ->getStorage()
         ->loadByProperties([
-            'type' => 'project',
-            'status' => 1,
-            'field_apartments' => $apartmentId,
-          ]
+          'type' => 'project',
+          'status' => 1,
+          'field_apartments' => $apartmentId,
+        ]
         );
 
       if (!$parent_node_results) {
@@ -689,14 +690,14 @@ function asuntotuotanto_preprocess_paragraph(array &$variables) {
  * Custom split_address_line().
  */
 function split_address_line($address_line) {
-  $match = array();
+  $match = [];
   $pattern = '#^((?:[^\d\n]*)*)(\d{1,5})\s?([\w[:punct:]\-/]*)$#';
   preg_match($pattern, $address_line, $match);
   $street = $match[1] ?? $address_line;
   $number = $match[2] ?? '';
   $numberAddition = $match[3] ?? '';
 
-  return array('street' => $street, 'number' => $number, 'number_addition' => $numberAddition);
+  return ['street' => $street, 'number' => $number, 'number_addition' => $numberAddition];
 }
 
 /**

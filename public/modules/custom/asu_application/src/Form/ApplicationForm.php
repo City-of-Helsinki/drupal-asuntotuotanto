@@ -458,15 +458,15 @@ class ApplicationForm extends ContentEntityForm {
       case "before":
         return $now < $startTime;
 
-        break;
+      break;
       case "during":
         return $now > $startTime && $now < $endTime;
 
-        break;
+      break;
       case "after":
         return $now > $endTime;
 
-        break;
+      break;
     }
   }
 

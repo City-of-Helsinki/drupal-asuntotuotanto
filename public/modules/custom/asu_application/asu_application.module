@@ -4,8 +4,6 @@
  * @file
  */
 
-use Drupal\asu_api\Api\ElasticSearchApi\Request\ProjectApartmentsRequest;
-
 /**
  * Implements hook_theme().
  */
@@ -60,7 +58,7 @@ function template_preprocess_asu_application(array &$variables) {
         'application_end_time' => $project->field_application_end_time->value,
         'project_main_image_url' => $project->field_main_image->value,
         'project_district' => $project->field_district->first()->entity->getName(),
-      ]
+      ],
     ];
     $application_teaser_values['#teaser_values']['application_url'] = $application->isLocked() ? "/application/$id" : "/application/$id/edit";
   }
