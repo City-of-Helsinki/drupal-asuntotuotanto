@@ -5,6 +5,9 @@ env:
   SIMPLETEST_BASE_URL: "http://127.0.0.1:8080"
   SYMFONY_DEPRECATIONS_HELPER: disabled
   DTT_BASE_URL: "http://127.0.0.1:8080"
+  ASU_ELASTICSEARCH_ADDRESS: "http://localhost:9200"
+  ASU_ELASTICSEARCH_USERNAME: "test"
+  ASU_ELASTICSEARCH_PASSWORD: "pass"
 jobs:
   tests:
     services:
