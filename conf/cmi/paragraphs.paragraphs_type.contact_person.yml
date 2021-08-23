@@ -1,0 +1,10 @@
+uuid: 1cb8ba3e-1380-43a9-95f2-4d0173453995
+langcode: en
+status: true
+dependencies: {  }
+id: contact_person
+label: 'Contact person'
+icon_uuid: null
+icon_default: null
+description: ''
+behavior_plugins: {  }

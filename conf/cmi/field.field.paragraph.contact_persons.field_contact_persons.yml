@@ -1,0 +1,115 @@
+uuid: 6cf531a1-63bd-4882-b465-12661561eb13
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_contact_persons
+    - paragraphs.paragraphs_type.contact_person
+    - paragraphs.paragraphs_type.contact_persons
+  module:
+    - entity_reference_revisions
+id: paragraph.contact_persons.field_contact_persons
+field_name: field_contact_persons
+entity_type: paragraph
+bundle: contact_persons
+label: 'Contact persons'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    negate: 0
+    target_bundles:
+      contact_person: contact_person
+    target_bundles_drag_drop:
+      accordion:
+        weight: 30
+        enabled: false
+      accordion_item:
+        weight: 31
+        enabled: false
+      banner:
+        weight: 32
+        enabled: false
+      columns:
+        weight: 33
+        enabled: false
+      contact_information_with_map:
+        weight: 34
+        enabled: false
+      contact_person:
+        enabled: true
+        weight: 35
+      contact_persons:
+        weight: 36
+        enabled: false
+      content_cards:
+        weight: 37
+        enabled: false
+      cta_block:
+        weight: 38
+        enabled: false
+      from_library:
+        weight: 39
+        enabled: false
+      gallery:
+        weight: 40
+        enabled: false
+      gallery_slide:
+        weight: 41
+        enabled: false
+      hero:
+        weight: 42
+        enabled: false
+      image:
+        weight: 43
+        enabled: false
+      latest_news:
+        weight: 44
+        enabled: false
+      liftup_with_image:
+        weight: 45
+        enabled: false
+      liftup_with_image_and_links:
+        weight: 46
+        enabled: false
+      list_of_links:
+        weight: 47
+        enabled: false
+      list_of_links_item:
+        weight: 48
+        enabled: false
+      news_info_card:
+        weight: 49
+        enabled: false
+      remote_video:
+        weight: 50
+        enabled: false
+      showcase:
+        weight: 51
+        enabled: false
+      showcase_block:
+        weight: 52
+        enabled: false
+      stacked_contact_blocks:
+        weight: 53
+        enabled: false
+      stacked_text_blocks_with_image:
+        weight: 54
+        enabled: false
+      step:
+        weight: 55
+        enabled: false
+      steps_list:
+        weight: 56
+        enabled: false
+      text:
+        weight: 57
+        enabled: false
+      text_block_with_link:
+        weight: 58
+        enabled: false
+field_type: entity_reference_revisions

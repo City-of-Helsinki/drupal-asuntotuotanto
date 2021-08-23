@@ -1,0 +1,32 @@
+.contact-persons {
+  list-style: none;
+  padding: 0;
+  margin: $spacing-m 0;
+  display: grid;
+  gap: $spacing-l;
+
+  @media screen and (min-width: $breakpoint-s) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: $spacing-xl;
+  }
+}
+
+.contact-person {
+  > h3 {
+    @include font-size($fontsize-heading-xs, 27px);
+    font-weight: $font-weight-bold;
+    display: inline-flex;
+    align-items: center;
+    margin: 0;
+
+    svg {
+      color: var(--color-bus);
+      margin-right: $spacing-xs;
+    }
+  }
+}
+
+.contact-person__detail-item {
+  @include font-size($fontsize-body-m, 24px);
+  margin: 0 0 0 36px;
+}

@@ -1,0 +1,48 @@
+uuid: c15989a1-1dba-40cc-9e8b-f7405b8d8e98
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.contact_person.field_email
+    - field.field.paragraph.contact_person.field_job_title
+    - field.field.paragraph.contact_person.field_name
+    - field.field.paragraph.contact_person.field_phone
+    - paragraphs.paragraphs_type.contact_person
+id: paragraph.contact_person.default
+targetEntityType: paragraph
+bundle: contact_person
+mode: default
+content:
+  field_email:
+    weight: 2
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_job_title:
+    weight: 1
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_name:
+    weight: 0
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_phone:
+    weight: 3
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+hidden: {  }

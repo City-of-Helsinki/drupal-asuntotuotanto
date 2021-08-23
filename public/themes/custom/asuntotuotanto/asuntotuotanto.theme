@@ -666,6 +666,38 @@ function asuntotuotanto_preprocess_paragraph(array &$variables) {
       $variables['showcases_count'] = count($paragraph->get('field_showcases')->getValue());
     }
   }
+
+  if ($paragraph_type == 'contact_information_with_map') {
+    $address_object = $paragraph->get('field_address')->getValue()[0];
+    $address_line1 = $address_object['address_line1'];
+    $address_split = split_address_line($address_line1);
+
+    $street_name = $address_split['street'];
+    $street_number_addition = $address_split['number_addition'];
+
+    if (!empty($street_number_addition)) {
+      $street_number_addition = $street_number_addition[0] === '-' ? $street_number_addition : "-$street_number_addition";
+    }
+
+    $street_number = $address_split['number'] . $street_number_addition ?? NULL;
+
+    $variables['street_name'] = $street_name ?? NULL;
+    $variables['street_number'] = $street_number ?? NULL;
+  }
+}
+
+/**
+ * Custom split_address_line().
+ */
+function split_address_line($address_line) {
+  $match = array();
+  $pattern = '#^((?:[^\d\n]*)*)(\d{1,5})\s?([\w[:punct:]\-/]*)$#';
+  preg_match($pattern, $address_line, $match);
+  $street = $match[1] ?? $address_line;
+  $number = $match[2] ?? '';
+  $numberAddition = $match[3] ?? '';
+
+  return array('street' => $street, 'number' => $number, 'number_addition' => $numberAddition);
 }
 
 /**

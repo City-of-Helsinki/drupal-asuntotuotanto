@@ -1,0 +1,109 @@
+uuid: 03ccc3b5-ae77-4efa-88d6-a996e66c3d39
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_stacked_text_blocks
+    - paragraphs.paragraphs_type.stacked_contact_blocks
+    - paragraphs.paragraphs_type.text
+  module:
+    - entity_reference_revisions
+id: paragraph.stacked_contact_blocks.field_stacked_text_blocks
+field_name: field_stacked_text_blocks
+entity_type: paragraph
+bundle: stacked_contact_blocks
+label: 'Stacked text blocks'
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    negate: 0
+    target_bundles:
+      text: text
+    target_bundles_drag_drop:
+      accordion:
+        weight: 28
+        enabled: false
+      accordion_item:
+        weight: 29
+        enabled: false
+      banner:
+        weight: 30
+        enabled: false
+      columns:
+        weight: 31
+        enabled: false
+      contact_information_with_map:
+        weight: 32
+        enabled: false
+      content_cards:
+        weight: 33
+        enabled: false
+      cta_block:
+        weight: 34
+        enabled: false
+      from_library:
+        weight: 35
+        enabled: false
+      gallery:
+        weight: 36
+        enabled: false
+      gallery_slide:
+        weight: 37
+        enabled: false
+      hero:
+        weight: 38
+        enabled: false
+      image:
+        weight: 39
+        enabled: false
+      latest_news:
+        weight: 40
+        enabled: false
+      liftup_with_image:
+        weight: 41
+        enabled: false
+      liftup_with_image_and_links:
+        weight: 42
+        enabled: false
+      list_of_links:
+        weight: 43
+        enabled: false
+      list_of_links_item:
+        weight: 44
+        enabled: false
+      news_info_card:
+        weight: 45
+        enabled: false
+      remote_video:
+        weight: 46
+        enabled: false
+      showcase:
+        weight: 47
+        enabled: false
+      showcase_block:
+        weight: 48
+        enabled: false
+      stacked_contact_blocks:
+        weight: 49
+        enabled: false
+      stacked_text_blocks_with_image:
+        weight: 50
+        enabled: false
+      step:
+        weight: 51
+        enabled: false
+      steps_list:
+        weight: 52
+        enabled: false
+      text:
+        enabled: true
+        weight: 53
+      text_block_with_link:
+        weight: 54
+        enabled: false
+field_type: entity_reference_revisions

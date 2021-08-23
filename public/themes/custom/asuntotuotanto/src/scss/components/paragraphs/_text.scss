@@ -3,4 +3,14 @@
     max-width: 694px;
     padding-left: 0;
   }
+
+  .text--stacked-text-blocks & {
+    padding-left: 0;
+  }
+}
+
+.text__container {
+  .text--stacked-text-blocks & {
+    padding: 0;
+  }
 }

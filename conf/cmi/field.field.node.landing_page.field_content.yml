@@ -7,6 +7,7 @@ dependencies:
     - node.type.landing_page
     - paragraphs.paragraphs_type.banner
     - paragraphs.paragraphs_type.columns
+    - paragraphs.paragraphs_type.contact_information_with_map
     - paragraphs.paragraphs_type.content_cards
     - paragraphs.paragraphs_type.from_library
     - paragraphs.paragraphs_type.latest_news
@@ -14,6 +15,7 @@ dependencies:
     - paragraphs.paragraphs_type.liftup_with_image_and_links
     - paragraphs.paragraphs_type.list_of_links
     - paragraphs.paragraphs_type.remote_video
+    - paragraphs.paragraphs_type.stacked_contact_blocks
     - paragraphs.paragraphs_type.stacked_text_blocks_with_image
   module:
     - entity_reference_revisions
@@ -43,7 +45,9 @@ settings:
       from_library: from_library
       remote_video: remote_video
       latest_news: latest_news
+      contact_information_with_map: contact_information_with_map
       liftup_with_image_and_links: liftup_with_image_and_links
+      stacked_contact_blocks: stacked_contact_blocks
     target_bundles_drag_drop:
       accordion:
         weight: -22
@@ -57,9 +61,15 @@ settings:
       columns:
         enabled: true
         weight: -27
+      contact_information_with_map:
+        enabled: true
+        weight: 31
       content_cards:
         enabled: true
         weight: -23
+      cta_block:
+        weight: 33
+        enabled: false
       from_library:
         enabled: true
         weight: 21
@@ -96,9 +106,24 @@ settings:
       remote_video:
         enabled: true
         weight: 27
+      showcase:
+        weight: 46
+        enabled: false
+      showcase_block:
+        weight: 47
+        enabled: false
+      stacked_contact_blocks:
+        enabled: true
+        weight: 49
       stacked_text_blocks_with_image:
         enabled: true
         weight: 20
+      step:
+        weight: 49
+        enabled: false
+      steps_list:
+        weight: 50
+        enabled: false
       text:
         weight: -15
         enabled: false

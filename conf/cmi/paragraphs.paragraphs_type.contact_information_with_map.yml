@@ -1,0 +1,10 @@
+uuid: 039f22d8-89d2-4321-a25b-a5c8cd27fcda
+langcode: en
+status: true
+dependencies: {  }
+id: contact_information_with_map
+label: 'Contact information with map'
+icon_uuid: null
+icon_default: null
+description: 'Let''s you add a block with contact information with a map.'
+behavior_plugins: {  }
