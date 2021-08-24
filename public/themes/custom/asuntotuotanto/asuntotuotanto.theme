@@ -203,6 +203,7 @@ function asuntotuotanto_preprocess_views_view_table(&$variables) {
       if (!$parent_node_results) {
         continue;
       }
+
       $parent_node_nid = key($parent_node_results);
       $parent_node = Node::load($parent_node_nid);
       $is_application_period_active = FALSE;
@@ -217,7 +218,14 @@ function asuntotuotanto_preprocess_views_view_table(&$variables) {
         $is_application_period_active = TRUE;
       }
 
+      $langcode = Drupal::languageManager()->getCurrentLanguage()->getId();
+
+      $project_id = $parent_node->id();
+      $ownership_type = strtolower($parent_node->get('field_ownership_type')->entity->getName());
+      $application_url = "/$langcode/application/add/$ownership_type/$project_id";
+
       $variables['rows'][$key]['is_application_period_active'] = $is_application_period_active;
+      $variables['rows'][$key]['application_url'] = $application_url;
     }
   }
 }
