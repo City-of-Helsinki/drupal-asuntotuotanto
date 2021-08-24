@@ -2,12 +2,13 @@
 
 namespace Drupal\asu_content\Plugin\ComputedField;
 
-use Drupal\Core\Field\FieldItemList;
-use Drupal\Core\TypedData\ComputedItemListTrait;
-use Drupal\Core\TypedData\DataDefinitionInterface;
-use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\file\Entity\File;
 use Drupal\node\Entity\Node;
+use Drupal\image\Entity\ImageStyle;
+use Drupal\Core\Field\FieldItemList;
+use Drupal\Core\TypedData\TypedDataInterface;
+use Drupal\Core\TypedData\ComputedItemListTrait;
+use Drupal\Core\TypedData\DataDefinitionInterface;
 
 /**
  * Combines shared images from project and apartment images.
@@ -64,7 +65,6 @@ class ApartmentImages extends FieldItemList {
     $current_entity = $this->getEntity();
     $reverse_references = $this->reverseEntities->getReverseReferences($current_entity);
 
-    $host = \Drupal::request()->getSchemeAndHttpHost();
     $images = [];
 
     foreach ($reverse_references as $reference) {
@@ -91,8 +91,11 @@ class ApartmentImages extends FieldItemList {
         if (!isset($image['target_id'])) {
           continue;
         }
+
         if ($file = File::load($image['target_id'])) {
-          $this->list[$delta] = $this->createItem($delta, $host . $file->createFileUrl());
+          $style = ImageStyle::load('3_2_m');
+          $image_url = $style->buildUrl($file->uri->value);
+          $this->list[$delta] = $this->createItem($delta, $image_url);
         }
       }
     }
