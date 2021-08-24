@@ -218,9 +218,11 @@ function asuntotuotanto_preprocess_views_view_table(&$variables) {
         $is_application_period_active = TRUE;
       }
 
+      $langcode = Drupal::languageManager()->getCurrentLanguage()->getId();
+
       $project_id = $parent_node->id();
       $ownership_type = strtolower($parent_node->get('field_ownership_type')->entity->getName());
-      $application_url = "/application/add/$ownership_type/$project_id";
+      $application_url = "/$langcode/application/add/$ownership_type/$project_id";
 
       $variables['rows'][$key]['is_application_period_active'] = $is_application_period_active;
       $variables['rows'][$key]['application_url'] = $application_url;
