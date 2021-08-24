@@ -15,6 +15,7 @@ dependencies:
     - paragraphs.paragraphs_type.liftup_with_image_and_links
     - paragraphs.paragraphs_type.list_of_links
     - paragraphs.paragraphs_type.remote_video
+    - paragraphs.paragraphs_type.showcase_block
     - paragraphs.paragraphs_type.stacked_contact_blocks
     - paragraphs.paragraphs_type.stacked_text_blocks_with_image
   module:
@@ -47,6 +48,7 @@ settings:
       latest_news: latest_news
       contact_information_with_map: contact_information_with_map
       liftup_with_image_and_links: liftup_with_image_and_links
+      showcase_block: showcase_block
       stacked_contact_blocks: stacked_contact_blocks
     target_bundles_drag_drop:
       accordion:
@@ -64,6 +66,12 @@ settings:
       contact_information_with_map:
         enabled: true
         weight: 31
+      contact_person:
+        weight: 35
+        enabled: false
+      contact_persons:
+        weight: 36
+        enabled: false
       content_cards:
         enabled: true
         weight: -23
@@ -110,8 +118,8 @@ settings:
         weight: 46
         enabled: false
       showcase_block:
+        enabled: true
         weight: 47
-        enabled: false
       stacked_contact_blocks:
         enabled: true
         weight: 49
