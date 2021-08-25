@@ -53,7 +53,7 @@ final class Mailinglist extends ResourceBase {
       throw new UnprocessableEntityHttpException('Given project id is not valid.');
     }
 
-    $headers = getenv('APP_ENV') == 'test' ? [
+    $headers = getenv('APP_ENV') == 'testing' ? [
       'Access-Control-Allow-Origin' => '*',
       'Access-Control-Allow-Methods' => '*',
       'Access-Control-Allow-Headers' => '*',

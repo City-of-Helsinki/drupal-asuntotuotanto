@@ -60,7 +60,7 @@ class ElasticProxy extends ResourceBase {
       return new ModifiedResourceResponse(['message' => 'Proxy query for apartments failed.'], 500);
     }
 
-    $headers = getenv('APP_ENV') == 'test' ? [
+    $headers = getenv('APP_ENV') == 'testing' ? [
       'Access-Control-Allow-Origin' => '*',
       'Access-Control-Allow-Methods' => '*',
       'Access-Control-Allow-Headers' => '*',

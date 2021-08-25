@@ -61,7 +61,7 @@ final class Initialize extends ResourceBase {
       $response['user']['followed_projects'][] = 15;
     }
 
-    $headers = getenv('APP_ENV') == 'test' ? [
+    $headers = getenv('APP_ENV') == 'testing' ? [
       'Access-Control-Allow-Origin' => '*',
       'Access-Control-Allow-Methods' => '*',
       'Access-Control-Allow-Headers' => '*',
