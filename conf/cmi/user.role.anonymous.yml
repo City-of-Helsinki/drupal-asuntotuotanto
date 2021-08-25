@@ -17,6 +17,7 @@ permissions:
   - 'restful get asu_filters'
   - 'restful get asu_initialize'
   - 'restful post asu_elastic_proxy'
+  - 'restful post mailinglist'
   - 'view media'
   - 'view paragraph content accordion'
   - 'view paragraph content accordion_item'
