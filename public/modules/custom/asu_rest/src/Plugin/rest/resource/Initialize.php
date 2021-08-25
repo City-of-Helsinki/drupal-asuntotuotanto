@@ -117,7 +117,7 @@ final class Initialize extends ResourceBase {
     // @todo Followed projects.
     $uid = \Drupal::currentUser()->id();
     $config = \Drupal::config('asu_rest.static_content')->get('static_content');
-    $config['followed_projects_page_url'] = "user/$uid/followed_projects";
+    $config['followed_projects_page_url'] = "/user/$uid/followed_projects";
     return $config;
   }
 
