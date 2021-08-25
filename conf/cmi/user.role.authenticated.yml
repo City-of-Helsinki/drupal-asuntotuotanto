@@ -17,6 +17,7 @@ permissions:
   - 'restful get asu_filters'
   - 'restful get asu_initialize'
   - 'restful post asu_elastic_proxy'
+  - 'restful post mailinglist'
   - 'use text format full_html'
   - 'view media'
   - 'view remote entities'

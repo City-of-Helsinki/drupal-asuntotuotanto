@@ -15,8 +15,8 @@ use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
  *   id = "mailinglist",
  *   label = @Translation("Mailinglist"),
  *   uri_paths = {
- *     "canonical" = "/mailinglist",
- *     "https://www.drupal.org/link-relations/create" = "/mailinglist"
+ *     "canonical" = "/project/mailinglist",
+ *     "create" = "/project/mailinglist"
  *   }
  * )
  */
@@ -32,12 +32,12 @@ final class Mailinglist extends ResourceBase {
    *   The HTTP response object.
    */
   public function post(array $data = []): ModifiedResourceResponse {
+    $email = \Drupal::currentUser()->id();
+
     /** @var \Symfony\Component\HttpFoundation\ParameterBag $parameters */
     $parameters = new ParameterBag($data);
     $required = [
-      'user_email',
       'project_id',
-      // 'subscribe_mailinglist',
     ];
 
     foreach ($required as $field) {
@@ -47,28 +47,25 @@ final class Mailinglist extends ResourceBase {
       throw new BadRequestHttpException(sprintf('Missing required field: %s.', $field));
     }
 
-    $email = $parameters->get('user_email');
-    $project_id = $parameters->get('project_id');
-    $subscribe = $parameters->get('subscribe_mailinglist');
-
-    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-      throw new UnprocessableEntityHttpException('Given email address is not valid.');
-    }
+    $project_id = 1;
 
     if (!filter_var($project_id, FILTER_VALIDATE_INT)) {
       throw new UnprocessableEntityHttpException('Given project id is not valid.');
     }
 
-    if (!filter_var($subscribe, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE)) {
-      $subscribe = FALSE;
-    }
+    $headers = getenv('APP_ENV') == 'test' ? [
+      'Access-Control-Allow-Origin' => '*',
+      'Access-Control-Allow-Methods' => '*',
+      'Access-Control-Allow-Headers' => '*',
+    ] : [];
+
+    $response = ['following' => TRUE];
 
     // @todo Create logic, this task is not yet defined properly.
     // Check that project exists and premarketing end time < now.
     // Add user id & project id in database.
     // Create view which shows mailinglist subscriptions by project.
-    return new ModifiedResourceResponse('OK', 200);
-
+    return new ModifiedResourceResponse($response, 200, $headers);
   }
 
 }
