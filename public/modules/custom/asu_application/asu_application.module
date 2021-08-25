@@ -70,8 +70,34 @@ function template_preprocess_asu_application(array &$variables) {
   $variables['content'] = $application_teaser_values;
 }
 
-function asu_application_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
-  if ($form_id == 'contact_message_apply_for_free_apartment_form') {
+/**
+ * Implements hook_form_alter().
+ *
+ * Prefill contact form with user information and query parameters.
+ */
+function asu_user_form_contact_message_apply_for_free_apartment_form_alter(&$form, &$form_state, $form_id) {
+  $projectInformation = \Drupal::request()->get('title') ?? NULL;
+
+  // Prefill apartment information field with data.
+  if ($projectInformation) {
+    $fields = [
+      'field_apartment_information' => $projectInformation
+    ];
+    // Set apartment information field readonly.
     $form['field_apartment_information']['widget'][0]['value']['#attributes']['readonly'] = 'readonly';
+  }
+
+  // Prefill rest of the field if user data is available.
+  $user = \Drupal::currentUser();
+  if (\Drupal::hasService('asu_user.tempstore')) {
+    $store = \Drupal::service('asu_user.tempstore');
+    $fields += [
+      'field_date_of_birth' => $store->get('date_of_birth'),
+      'field_name' => "{$store->get('first_name')} {$store->get('last_name')}",
+      'field_phone_number' => $store->get('phone_number'),
+    ];
+  }
+  foreach ($fields as $formFieldName => $data) {
+    $form[$formFieldName]['widget'][0]['value']['#default_value'] = $data ?? '';
   }
 }
