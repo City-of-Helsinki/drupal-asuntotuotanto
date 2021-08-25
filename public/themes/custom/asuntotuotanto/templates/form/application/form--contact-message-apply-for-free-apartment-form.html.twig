@@ -19,6 +19,12 @@
 
 <div {{ create_attribute({'class': classes}) }}>
   <form{{ attributes|without('class') }}>
-    {{ children }}
+    <section class="user-form__section">
+      <h1>{{ element['#contact_form_title'] }}</h1>
+      <p>{{ element['#contact_form_text'] }}</p>
+    </section>
+    <section class="user-form__section">
+      {{ children }}
+    </section>
   </form>
 </div>

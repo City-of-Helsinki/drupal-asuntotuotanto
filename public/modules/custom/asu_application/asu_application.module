@@ -76,22 +76,15 @@ function template_preprocess_asu_application(array &$variables) {
  * Prefill contact form with user information and query parameters.
  */
 function asu_user_form_contact_message_apply_for_free_apartment_form_alter(&$form, &$form_state, $form_id) {
-  $projectInformation = \Drupal::request()->get('title') ?? NULL;
+  $project_information = \Drupal::request()->get('title') ?? NULL;
 
-  $form['contactform_title'] = [
-    '#markup' => "<h1>$projectInformation</h1>",
-    '#weight' => -100,
-  ];
-
-  $form['contactform_text'] = [
-    '#markup' => t('You can apply for free aparment with this contact form.'),
-        '#weight' => -99,
-  ];
+  $form['#contact_form_title'] = $project_information;
+  $form['#contact_form_text'] = t('You can apply for free aparment with this contact form.');
 
   // Prefill apartment information field with data.
-  if ($projectInformation) {
+  if ($project_information) {
     $fields = [
-      'field_apartment_information' => $projectInformation
+      'field_apartment_information' => $project_information
     ];
     // Set apartment information field readonly.
     $form['field_apartment_information']['widget'][0]['value']['#attributes']['readonly'] = 'readonly';
