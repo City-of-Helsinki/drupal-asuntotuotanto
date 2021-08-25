@@ -57,6 +57,8 @@ final class Initialize extends ResourceBase {
       $user = User::load(\Drupal::currentUser()->id());
       $response['user'] = $this->getUser($user);
       $response['user']['applications'] = $this->getUserApplications($user);
+      // @todo Followed projects.
+      $response['user']['followed_projects'][] = 15;
     }
 
     $headers = getenv('APP_ENV') == 'test' ? [
@@ -112,8 +114,11 @@ final class Initialize extends ResourceBase {
    * Get the static content.
    */
   private function getStaticContent(): array {
-    $config = \Drupal::config('asu_rest.static_content');
-    return $config->get('static_content');
+    // @todo Followed projects.
+    $uid = \Drupal::currentUser()->id();
+    $config = \Drupal::config('asu_rest.static_content')->get('static_content');
+    $config['followed_projects_page_url'] = "user/$uid/followed_projects";
+    return $config;
   }
 
   /**
