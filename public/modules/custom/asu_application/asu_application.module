@@ -78,6 +78,16 @@ function template_preprocess_asu_application(array &$variables) {
 function asu_user_form_contact_message_apply_for_free_apartment_form_alter(&$form, &$form_state, $form_id) {
   $projectInformation = \Drupal::request()->get('title') ?? NULL;
 
+  $form['contactform_title'] = [
+    '#markup' => "<h1>$projectInformation</h1>",
+    '#weight' => -100,
+  ];
+
+  $form['contactform_text'] = [
+    '#markup' => t('You can apply for free aparment with this contact form.'),
+        '#weight' => -99,
+  ];
+
   // Prefill apartment information field with data.
   if ($projectInformation) {
     $fields = [
