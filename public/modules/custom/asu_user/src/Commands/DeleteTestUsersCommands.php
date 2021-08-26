@@ -13,7 +13,7 @@ use Drupal\asu_user\DeleteTestUsers;
 class DeleteTestUsersCommands extends DrushCommands {
 
   /**
-   * Drush command that displays the given text.
+   * Drush command that deletes all users starting with "test_".
    *
    * @command asu_user:deleteTestUsers
    * @aliases asu:delete-test-users asu:dtu
