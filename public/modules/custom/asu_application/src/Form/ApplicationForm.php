@@ -409,7 +409,7 @@ class ApplicationForm extends ContentEntityForm {
    *
    * @throws \Exception
    */
-  private function getPersonalIdDivider(string $dateString) {
+  private function getPersonalIdDivider(?string $dateString) {
     $dividers = ['18' => '+', '19' => '-', '20' => 'A'];
     $year = (new \DateTime($dateString))->format('Y');
     return $dividers[substr($year, 0, 2)];
@@ -424,7 +424,7 @@ class ApplicationForm extends ContentEntityForm {
    *
    * @throws \Exception
    */
-  private function dateToPersonalId(string $dateString) {
+  private function dateToPersonalId(?string $dateString) {
     $date = new \DateTime($dateString);
     $day = $date->format('d');
     $month = $date->format('m');

@@ -197,7 +197,7 @@ function asuntotuotanto_preprocess_views_view_table(&$variables) {
       $apartmentId = (int) trim(strip_tags($row['columns']['nid']['content'][0]['field_output']['#markup']));
       $applicationCount = $status[$apartmentId] ?? 0;
 
-      $applicationCountEnum = Applications::resolveApplicationCountEnum($applicationCount);
+      $applicationCountEnum = Applications::resolveApplicationCountEnum((int) $applicationCount);
 
       $variables['rows'][$key]['application_status'] = get_apartment_application_status($applicationCountEnum);
 
