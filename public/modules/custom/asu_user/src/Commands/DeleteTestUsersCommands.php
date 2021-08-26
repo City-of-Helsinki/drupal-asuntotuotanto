@@ -16,7 +16,7 @@ class DeleteTestUsersCommands extends DrushCommands {
    * Drush command that displays the given text.
    *
    * @command asu_user:deleteTestUsers
-   * @aliases delete-test-users dtu
+   * @aliases asu:delete-test-users asu:dtu
    * @usage asu_user:deleteTestUsers
    */
   public function deleteTestUsers () {
