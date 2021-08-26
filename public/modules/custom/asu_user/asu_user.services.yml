@@ -1,3 +1,6 @@
 services:
   asu_user.tempstore:
     class: Drupal\asu_user\Store
+  asu_user.delete_test_users:
+    class: Drupal\asu_user\DeleteTestUsers
+    arguments: ['@entity_type.manager']
