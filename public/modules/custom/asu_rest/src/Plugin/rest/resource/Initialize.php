@@ -8,7 +8,6 @@ use Drupal\Core\Access\CsrfRequestHeaderAccessCheck;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\rest\ModifiedResourceResponse;
 use Drupal\rest\Plugin\ResourceBase;
-use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\user\Entity\User;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -25,11 +24,10 @@ use Symfony\Component\HttpFoundation\Request;
  * )
  */
 final class Initialize extends ResourceBase {
-
   use StringTranslationTrait;
 
   /**
-   * Responds to GET requests.
+   * Return all data required by React to function properly.
    *
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The request.
@@ -37,14 +35,13 @@ final class Initialize extends ResourceBase {
    * @return \Symfony\Component\HttpFoundation\Response
    *   The HTTP response object.
    */
-  public function get(Request $request) {
+  public function get() {
     $response = [];
 
     $response['filters'] = $this->getFilters();
     $response['static_content'] = $this->getStaticContent();
     $response['apartment_application_status'] = $this->getApartmentApplicationStatus();
     $response['token'] = \Drupal::service('csrf_token')->get(CsrfRequestHeaderAccessCheck::TOKEN_KEY);
-
     $response['user'] = [
       'user_id' => 0,
       'email_address' => '',
@@ -125,143 +122,51 @@ final class Initialize extends ResourceBase {
    * Get the filters.
    */
   private function getFilters(): array {
-    $languageCode = \Drupal::languageManager()
-      ->getCurrentLanguage()
-      ->getId();
-
-    // $cacheKey = $languageCode . '_asu_filters';
-    // if(!$cached = \Drupal::cache()->get($languageCode .'_asu_filters')) {.
     try {
       $content = $this->doGetFilters();
-
-      // District items is associative array for some reason.
-      if (isset($content['project_district_hitas']['items'])) {
-        $content['project_district_hitas']['items'] = array_values($content['project_district_hitas']['items']);
-      }
-
-      // District items is associative array for some reason.
-      if (isset($content['project_district_haso']['items'])) {
-        $content['project_district_haso']['items'] = array_values($content['project_district_haso']['items']);
-      }
-      // \Drupal::cache()->set($cacheKey, $content);
       return $content;
     }
     catch (\Exception $e) {
-      \Drupal::logger('asu_filters')->critical('Unable to fetch filter for react component: ' . $e->getMessage());
+      \Drupal::logger('asu_filters')->critical('Unable to create filter for react component: ' . $e->getMessage());
       return [];
     }
-    // }
   }
 
   /**
-   *
+   * Get all values used in React filter bar.
    */
   protected function doGetFilters() {
-    $currentLanguage = \Drupal::languageManager()->getCurrentLanguage();
-    $config = \Drupal::config('asu_rest.filters');
-    $filters = $config->get('filters');
-    $vocabularies = Vocabulary::loadMultiple();
     $responseData = [];
 
-    foreach ($filters['taxonomy'] as $taxonomy_name => $elastic_index_name) {
-      $terms = \Drupal::entityTypeManager()
-        ->getStorage('taxonomy_term')
-        ->loadTree($taxonomy_name, 0, NULL, TRUE);
+    $districts = $this->getDistrictsByProjectOwnershipType();
+    $responseData['project_district_hitas'] = [
+      'label' => 'Districts',
+      'items' => $districts['hitas'],
+      'suffix' => NULL,
+    ];
+    $responseData['project_district_haso'] = [
+      'label' => 'Districts',
+      'items' => $districts['haso'],
+      'suffix' => NULL,
+    ];
 
-      if (!$terms) {
-        continue;
-      }
+    $responseData['project_building_type'] = [
+      'label' => $this->t('building_types'),
+      'items' => $this->getBuildingTypes(),
+      'suffix' => NULL,
+    ];
 
-      $items = [];
+    $responseData['project_new_development_status'] = [
+      'label' => $this->t('New development status'),
+      'items' => $this->getNewDevelopmentStatus(),
+      'suffix' => NULL,
+    ];
 
-      if ($taxonomy_name == 'districts') {
-        $projects = \Drupal::entityTypeManager()
-          ->getStorage('node')
-          ->loadByProperties(['type' => 'project']);
-
-        $items = [
-          'Hitas' => [],
-          'Haso' => [],
-        ];
-
-        // Get all unique districts separately for both ownership types.
-        foreach ($projects as $project) {
-          if (!$project->field_ownership_type->first()) {
-            continue;
-          }
-          if (!$ownership = $project->field_ownership_type->first()->entity->getName()) {
-            continue;
-          }
-          $ownership = $ownership == 'Haso' ? 'Haso' : 'Hitas';
-          $district = $project->field_district->first()->entity;
-
-          $name = $district->hasTranslation($currentLanguage->getId()) ?
-            $district->getTranslation($currentLanguage->getId())->getName() : $district->getName();
-          if (!array_search($name, $items[$ownership])) {
-            $items[strtolower('project_district_' . $ownership)][] = $name;
-          }
-        }
-
-        $vocabulary_name = $vocabularies[$terms[0]->bundle()]->get('name');
-        $index_hitas = [
-          'label' => $vocabulary_name,
-          'items' => isset($items['project_district_hitas']) ? array_unique($items['project_district_hitas']) : [],
-          'suffix' => NULL,
-        ];
-        $responseData[strtolower('project_district_hitas')] = $index_hitas;
-
-        $vocabulary_name = $vocabularies[$terms[0]->bundle()]->get('name');
-        $index_haso = [
-          'label' => $vocabulary_name,
-          'items' => isset($items['project_district_haso']) ? array_unique($items['project_district_haso']) : [],
-          'suffix' => NULL,
-        ];
-
-        $responseData[strtolower('project_district_haso')] = $index_haso;
-
-      }
-      else {
-        foreach ($terms as $term) {
-          $items[] = $term->hasTranslation($currentLanguage->getId()) ?
-            $term->getTranslation($currentLanguage->getId())->getName() : $term->getName();
-        }
-
-        $vocabulary_name = $vocabularies[$terms[0]->bundle()]->get('name');
-        $index_data = [
-          'label' => $vocabulary_name,
-          'items' => $items,
-          'suffix' => NULL,
-        ];
-
-        $responseData[$elastic_index_name] = $index_data;
-
-      }
-
-    }
-
-    foreach ($filters['taxonomy_machinename'] as $taxonomy_name => $elastic_index_name) {
-      /** @var \Drupal\config_terms\TermStorageInterface $term_storage */
-      $term_storage = \Drupal::entityTypeManager()
-        ->getStorage('config_terms_term');
-      $terms = $term_storage->loadTree($taxonomy_name);
-
-      if (!$terms) {
-        continue;
-      }
-
-      $items = [];
-      foreach ($terms as $term) {
-        $items[] = $term->id();
-      }
-
-      $index_data = [
-        'label' => $this->t('State of sale'),
-        'items' => $items,
-        'suffix' => NULL,
-      ];
-
-      $responseData[$elastic_index_name] = $index_data;
-    }
+    $responseData['project_state_of_sale'] = [
+      'label' => $this->t('State of sale'),
+      'items' => $this->getProjectStatesOfSale(),
+      'suffix' => NULL,
+    ];
 
     $responseData['properties'] = [
       'label' => $this->t('Additional selections'),
@@ -296,6 +201,44 @@ final class Initialize extends ResourceBase {
   }
 
   /**
+   * @return array|array[]
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   */
+  protected function getDistrictsByProjectOwnershipType() {
+    $items = [
+      'hitas' => [],
+      'haso' => [],
+    ];
+
+    $projects = \Drupal::entityTypeManager()
+      ->getStorage('node')
+      ->loadByProperties(['type' => 'project']);
+
+    // Get all unique districts separately for both ownership types.
+    foreach ($projects as $project) {
+      if (!$project->field_ownership_type->first()) {
+        continue;
+      }
+      if (!$ownership = $project->field_ownership_type->first()->entity->getName()) {
+        continue;
+      }
+
+      // Take half_hitas into account.
+      $ownership_type = $ownership = $ownership == 'Haso' ? 'haso' : 'hitas';
+
+      $district = $project->field_district->first()->entity;
+
+      $name = $district->getName();
+
+      if (!array_search($name, $items[strtolower($ownership_type)])) {
+        $items[strtolower($ownership_type)][] = $name;
+      }
+    }
+    return $items;
+  }
+
+  /**
    * Get list of properties.
    *
    * @return array
@@ -309,6 +252,48 @@ final class Initialize extends ResourceBase {
       'has_terrace',
       'has_balcony',
       'has_yard',
+    ];
+  }
+
+  /**
+   * Return building types for react filters.
+   *
+   * @return array
+   */
+  protected function getBuildingTypes() {
+    return [
+      $this->t('Block of flats'),
+      $this->t('Row house'),
+      $this->t('House'),
+    ];
+  }
+
+  /**
+   * Return new development status types for react filters.
+   *
+   * @return array
+   */
+  protected function getNewDevelopmentStatus() {
+    return [
+      $this->t('Under planning'),
+      $this->t('Under construction'),
+      $this->t('Pre marketing'),
+      $this->t('Ready to move'),
+    ];
+  }
+
+  /**
+   * Return project state of sales for react filtes.
+   *
+   * @return array
+   */
+  protected function getProjectStatesOfSale() {
+    return [
+      $this->t('For sale'),
+      $this->t('Upcoming'),
+      $this->t('Pre marketing'),
+      $this->t('Processing'),
+      $this->t('Ready'),
     ];
   }
 
