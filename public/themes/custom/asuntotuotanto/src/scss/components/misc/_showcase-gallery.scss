@@ -5,6 +5,16 @@
     width: 100%;
   }
 
+  .slick-cloned {
+    @media screen and (min-width: $breakpoint-m) and (max-width: $breakpoint-l - 1px) {
+      max-height: 395px;
+    }
+
+    @media screen and (min-width: $breakpoint-l) {
+      max-height: 550px;
+    }
+  }
+
   .slick-arrow {
     align-items: center;
     background-color: transparent;
