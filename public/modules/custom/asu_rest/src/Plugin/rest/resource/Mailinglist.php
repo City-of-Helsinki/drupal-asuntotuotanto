@@ -59,7 +59,7 @@ final class Mailinglist extends ResourceBase {
       'Access-Control-Allow-Headers' => '*',
     ] : [];
 
-    $response = ['following' => TRUE];
+    $response = ['follow' => TRUE];
 
     // @todo Create logic, this task is not yet defined properly.
     // Check that project exists and premarketing end time < now.
