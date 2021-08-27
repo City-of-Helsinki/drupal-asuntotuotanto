@@ -436,9 +436,7 @@ class ApplicationForm extends ContentEntityForm {
    *
    */
   private function getUserApplicationsUrl(): string {
-    return \Drupal::request()->getSchemeAndHttpHost() .
-      '/user/' . \Drupal::currentUser()->id() .
-      '/applications';
+    return \Drupal::request()->getSchemeAndHttpHost() . '/user/applications';
   }
 
   /**

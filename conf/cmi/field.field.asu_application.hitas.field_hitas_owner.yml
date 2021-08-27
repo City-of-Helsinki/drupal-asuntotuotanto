@@ -10,6 +10,7 @@ field_name: field_hitas_owner
 entity_type: asu_application
 bundle: hitas
 label: 'I currently own a HITAS apartment'
+description: ''
 required: false
 translatable: false
 default_value:

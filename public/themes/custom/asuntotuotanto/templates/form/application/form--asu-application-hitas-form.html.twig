@@ -21,7 +21,7 @@
 <form{{ attributes|without('class') }} {{ create_attribute({'class': classes}) }}>
   {{ link(
     'Go back to applications'|t,
-    "internal:/user/#{current_user_id}/applications",
+    "internal:/user/applications",
     { 'class':['application-form__back-link']} )
   }}
   <div class="application-form__header">
@@ -36,7 +36,7 @@
       Submit an application during the application period. You can search for up to 5 apartments. Apartments should be marked in the order in which you wish to be selected. If you are ranked 1st in the draw, you will only be offered the apartment that is on your highest list.
       {% endtrans %}
     </p>
-    <a href="https://google.fi">
+    <a href="#">
       {% trans %}
         Read more about the application guide
       {% endtrans %}
