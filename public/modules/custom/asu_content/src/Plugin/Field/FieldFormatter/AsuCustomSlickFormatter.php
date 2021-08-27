@@ -2,6 +2,7 @@
 
 namespace Drupal\asu_content\Plugin\Field\FieldFormatter;
 
+use Drupal\node\Entity\Node;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\slick\Plugin\Field\FieldFormatter\SlickImageFormatter;
 
@@ -24,10 +25,35 @@ class AsuCustomSlickFormatter extends SlickImageFormatter {
   public function viewElements(FieldItemListInterface $items, $langcode) {
     $node = $items->getParent()->getEntity();
 
-    if ($node->hasField('field_floorplan')) {
-      $merged = array_merge($node->field_floorplan->getValue(), $items->getValue());
+    $parent_node_results = \Drupal::entityTypeManager()
+      ->getListBuilder('node')
+      ->getStorage()
+      ->loadByProperties([
+        'type' => 'project',
+        'status' => 1,
+        'field_apartments' => $node->id(),
+      ]
+    );
 
-      foreach ($merged as $index => $item) {
+    $stack = [];
+
+    if ($node->hasField('field_floorplan')) {
+      $stack = array_merge($stack, $node->field_floorplan->getValue());
+    }
+
+    $stack = array_merge($stack, $items->getValue());
+
+    if ($parent_node_results) {
+      $parent_node_nid = key($parent_node_results);
+      $parent_node = Node::load($parent_node_nid);
+
+      $stack = array_merge($stack, $parent_node->field_shared_apartment_images->getValue());
+    }
+
+    if ($stack) {
+      foreach ($stack as $index => $item) {
+        $item['_attributes'] = $item['_attributes'] ?? [];
+        $item['_loaded'] = $item['_loaded'] ?? TRUE;
         $items->set($index, $item);
       }
     }
