@@ -45,11 +45,11 @@ dependencies:
     - node.type.apartment
     - responsive_image.styles.showcase_gallery
   module:
+    - asu_content
     - datetime
     - file
     - image
     - link
-    - slick
     - user
 id: node.apartment.default
 targetEntityType: node
@@ -278,8 +278,9 @@ content:
       breakpoints: {  }
       sizes: ''
       grid_header: ''
+      use_theme_field: false
     third_party_settings: {  }
-    type: slick_image
+    type: asu_custom_slick_formatter
     region: content
   field_kitchen_appliances:
     weight: 9
