@@ -133,6 +133,25 @@
         toggleStickyNavigation();
         handleAnchorLinkActiveState();
       });
+
+      const $root = $("html, body");
+
+      // eslint-disable-next-line func-names
+      $('a[href^="#"]').click(function () {
+        const href = $.attr(this, "href");
+
+        $root.animate(
+          {
+            scrollTop: $(href).offset().top,
+          },
+          500,
+          () => {
+            window.location.hash = href;
+          }
+        );
+
+        return false;
+      });
     },
   };
 })(jQuery, Drupal);

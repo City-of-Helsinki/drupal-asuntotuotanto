@@ -512,8 +512,8 @@ function asuntotuotanto_preprocess_node(&$variables) {
       break;
 
     case 'apartment':
-      $cta_image_file_target_id = $node->get('field_images')->getValue()[0]['target_id'];
-      $variables['cta_image'] = load_responsive_image_style($cta_image_file_target_id, 'image__3_2');
+      $cta_image_file_target_id = $node->get('field_images')->getValue()[0]['target_id'] ?? NULL;
+      $variables['cta_image'] = load_responsive_image_style($cta_image_file_target_id, 'image__3_2') ?? NULL;
 
       $parent_node_results = \Drupal::entityTypeManager()
         ->getListBuilder('node')
