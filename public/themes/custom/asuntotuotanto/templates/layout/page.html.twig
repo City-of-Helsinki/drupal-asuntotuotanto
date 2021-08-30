@@ -74,9 +74,51 @@
         {{ page.footer_top }}
       </div>
       <div class="page-footer__item page-footer__item--middle">
+        <ul class="page-footer__social-media-links">
+          <li class="page-footer__social-media-links-item">
+            <a href="https://www.youtube.com/channel/UClKjG1kXR9D5EYB50lhqX7Q/videos" class="page-footer__social-media-link">
+              <span class="visually-hidden">
+                {% trans %}Find us on{% endtrans %} YouTube
+              </span>
+              {% include "@hdbt/misc/icon.twig" with {icon: 'youtube', label: 'YouTube'} %}
+            </a>
+          </li>
+          <li class="page-footer__social-media-links-item">
+            <a href="https://www.facebook.com/helsinginkaupunki" class="page-footer__social-media-link">
+              <span class="visually-hidden">
+                {% trans %}Find us on{% endtrans %} Facebook
+              </span>
+              {% include "@hdbt/misc/icon.twig" with {icon: 'facebook', label: 'Facebook'} %}
+            </a>
+          </li>
+          <li class="page-footer__social-media-links-item">
+            <a href="https://twitter.com/helsinki" class="page-footer__social-media-link">
+              <span class="visually-hidden">
+                {% trans %}Find us on{% endtrans %} Twitter
+              </span>
+              {% include "@hdbt/misc/icon.twig" with {icon: 'twitter', label: 'Twitter'} %}
+            </a>
+          </li>
+          <li class="page-footer__social-media-links-item">
+            <a href="https://www.linkedin.com/company/city-of-helsinki" class="page-footer__social-media-link">
+              <span class="visually-hidden">
+                {% trans %}Find us on{% endtrans %} LinkedIn
+              </span>
+              {% include "@hdbt/misc/icon.twig" with {icon: 'linkedin', label: 'LinkedIn'} %}
+            </a>
+          </li>
+        </ul>
         {{ page.footer_middle }}
       </div>
       <div class="page-footer__item page-footer__item--bottom">
+        <p class="page-footer__copyright">
+          <span>
+            &#169; Copyright {{ "now"|date("Y") }}
+          </span>
+          <span>
+            {{ 'All Rights Reserved'|t }}
+          </span>
+        </p>
         {{ page.footer_bottom }}
       </div>
     </div>

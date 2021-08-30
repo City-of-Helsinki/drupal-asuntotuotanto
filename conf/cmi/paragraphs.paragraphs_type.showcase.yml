@@ -1,0 +1,10 @@
+uuid: 960a4d09-b19d-4ad5-b1aa-f15d8437716b
+langcode: en
+status: true
+dependencies: {  }
+id: showcase
+label: Showcase
+icon_uuid: null
+icon_default: null
+description: ''
+behavior_plugins: {  }

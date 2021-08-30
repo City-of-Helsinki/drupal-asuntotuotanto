@@ -1,0 +1,9 @@
+asu_user.user_edit:
+  path: '/user/{user}/edit'
+  defaults:
+    _entity_form: 'user.default'
+  requirements:
+    _entity_access: user.update
+    user: \d+
+  options:
+    _admin_route: FALSE

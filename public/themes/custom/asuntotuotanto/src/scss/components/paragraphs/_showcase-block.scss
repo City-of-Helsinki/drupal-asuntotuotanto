@@ -1,0 +1,203 @@
+.showcase-block {
+  margin-top: $spacing-2-xl;
+  overflow: hidden;
+  position: relative;
+  margin-left: -$spacing-l;
+  margin-right: -$spacing-l;
+
+  @media screen and (min-width: $breakpoint-l) {
+    margin-top: $spacing-4-xl;
+  }
+
+  .hds-koros {
+    color: var(--color-black-5);
+    transform: scale(2);
+    display: block;
+    padding-top: 18px;
+  }
+}
+
+.showcase-block__title {
+  @include font-size($fontsize-heading-m, 29px);
+  margin: 0 0 $spacing-2-xl;
+  font-weight: $font-weight-bold;
+  text-align: center;
+
+  @media screen and (min-width: $breakpoint-l) {
+    @include font-size($fontsize-heading-l, 43px);
+    margin: 0 0 $spacing-4-xl;
+  }
+}
+
+.showcase-block__content {
+  background-color: var(--color-black-5);
+  padding: $spacing-l $spacing-l $spacing-4-xl;
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+
+  @media screen and (min-width: $breakpoint-l) {
+    padding: $spacing-l $spacing-l $spacing-5-xl;
+  }
+}
+
+.showcase-block__showcases {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+
+  @media screen and (min-width: $breakpoint-m) {
+    display: flex;
+  }
+
+  &.showcases-count--2 {
+    @media screen and (min-width: $breakpoint-m) {
+      justify-content: space-between;
+    }
+  }
+
+  &.showcases-count--3 {
+    @media screen and (min-width: $breakpoint-m) and (max-width: $breakpoint-l - 1px) {
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    @media screen and (min-width: $breakpoint-l) {
+      justify-content: space-between;
+    }
+  }
+
+  &.showcases-count--4 {
+    @media screen and (min-width: $breakpoint-m) and (max-width: $breakpoint-l - 1px) {
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+
+    @media screen and (min-width: $breakpoint-l) {
+      justify-content: space-between;
+    }
+  }
+}
+
+.showcase {
+  width: 100%;
+  align-items: center;
+  flex-flow: column;
+  display: flex;
+  text-align: center;
+
+  .showcases-count--2 & {
+    &:last-child {
+      margin-top: $spacing-l;
+
+      @media screen and (min-width: $breakpoint-m) {
+        margin-top: 0;
+      }
+    }
+
+    @media screen and (min-width: $breakpoint-m) {
+      max-width: calc(50% - #{$spacing-l});
+      width: 100%;
+    }
+  }
+
+  .showcases-count--3 & {
+    margin-bottom: $spacing-l;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    &:nth-child(1) {
+      @media screen and (min-width: $breakpoint-m) and (max-width: $breakpoint-l - 1px) {
+        padding-right: $spacing-s;
+      }
+    }
+
+    &:nth-child(2) {
+      @media screen and (min-width: $breakpoint-m) and (max-width: $breakpoint-l - 1px) {
+        padding-left: $spacing-s;
+      }
+    }
+
+    @media screen and (min-width: $breakpoint-m) and (max-width: $breakpoint-l - 1px) {
+      max-width: calc(50% - #{$spacing-l});
+      width: 100%;
+    }
+
+    @media screen and (min-width: $breakpoint-l) {
+      max-width: calc(33% - #{$spacing-l});
+      width: 100%;
+      margin-bottom: 0;
+    }
+  }
+
+  .showcases-count--4 & {
+    margin-top: $spacing-l;
+
+    &:first-child {
+      margin-top: 0;
+    }
+
+    &:nth-child(2) {
+      @media screen and (min-width: $breakpoint-m) {
+        margin-top: 0;
+      }
+    }
+
+    @media screen and (min-width: $breakpoint-m) and (max-width: $breakpoint-l - 1px) {
+      max-width: calc(50% - #{$spacing-s});
+      width: 100%;
+    }
+
+    @media screen and (min-width: $breakpoint-l) {
+      max-width: calc(25% - #{$spacing-l});
+      width: 100%;
+      margin-top: 0;
+    }
+  }
+}
+
+.showcase__image {
+  margin: 0 0 $spacing-s;
+  width: 64px;
+
+  img {
+    width: 100%;
+    height: auto;
+  }
+}
+
+.showcase__description {
+  max-width: 334px; // According to design.
+
+  p {
+    @include font-size($fontsize-body-m, 24px);
+    font-weight: $font-weight-regular;
+
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+}
+
+.showcase-block__links {
+  margin-top: $spacing-2-xl;
+  flex-flow: column;
+  display: flex;
+  text-align: center;
+  align-items: center;
+
+  @media screen and (min-width: $breakpoint-l) {
+    margin-top: $spacing-4-xl;
+  }
+
+  a {
+    @include font-size($fontsize-body-m, 26px);
+    font-weight: $font-weight-bold;
+
+    &:not(:first-child) {
+      margin-top: $spacing-2-xs;
+    }
+  }
+}

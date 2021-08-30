@@ -1,0 +1,85 @@
+uuid: 45145748-dd42-4c20-a84a-d547c05d9430
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_stacked_text_blocks
+    - paragraphs.paragraphs_type.stacked_text_blocks_with_image
+    - paragraphs.paragraphs_type.text_block_with_link
+  module:
+    - entity_reference_revisions
+id: paragraph.stacked_text_blocks_with_image.field_stacked_text_blocks
+field_name: field_stacked_text_blocks
+entity_type: paragraph
+bundle: stacked_text_blocks_with_image
+label: 'Stacked text blocks'
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    negate: 0
+    target_bundles:
+      text_block_with_link: text_block_with_link
+    target_bundles_drag_drop:
+      accordion:
+        weight: 21
+        enabled: false
+      accordion_item:
+        weight: 22
+        enabled: false
+      banner:
+        weight: 23
+        enabled: false
+      columns:
+        weight: 24
+        enabled: false
+      content_cards:
+        weight: 25
+        enabled: false
+      from_library:
+        weight: 26
+        enabled: false
+      gallery:
+        weight: 27
+        enabled: false
+      gallery_slide:
+        weight: 28
+        enabled: false
+      hero:
+        weight: 29
+        enabled: false
+      image:
+        weight: 30
+        enabled: false
+      latest_news:
+        weight: 31
+        enabled: false
+      liftup_with_image:
+        weight: 32
+        enabled: false
+      list_of_links:
+        weight: 33
+        enabled: false
+      list_of_links_item:
+        weight: 34
+        enabled: false
+      news_info_card:
+        weight: 35
+        enabled: false
+      remote_video:
+        weight: 36
+        enabled: false
+      stacked_text_blocks_with_image:
+        weight: 20
+        enabled: false
+      text:
+        weight: 37
+        enabled: false
+      text_block_with_link:
+        enabled: true
+        weight: 38
+field_type: entity_reference_revisions

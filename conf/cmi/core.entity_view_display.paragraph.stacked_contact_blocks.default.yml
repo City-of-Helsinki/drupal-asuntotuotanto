@@ -1,0 +1,35 @@
+uuid: 3f3fd4ce-2d9e-4b3a-b10e-d192ce176333
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.stacked_contact_blocks.field_main_content_blocks
+    - field.field.paragraph.stacked_contact_blocks.field_stacked_text_blocks
+    - paragraphs.paragraphs_type.stacked_contact_blocks
+  module:
+    - entity_reference_revisions
+id: paragraph.stacked_contact_blocks.default
+targetEntityType: paragraph
+bundle: stacked_contact_blocks
+mode: default
+content:
+  field_main_content_blocks:
+    type: entity_reference_revisions_entity_view
+    weight: 1
+    label: hidden
+    settings:
+      view_mode: stacked_text_blocks
+      link: ''
+    third_party_settings: {  }
+    region: content
+  field_stacked_text_blocks:
+    weight: 0
+    label: hidden
+    settings:
+      view_mode: stacked_text_blocks
+      link: ''
+    third_party_settings: {  }
+    type: entity_reference_revisions_entity_view
+    region: content
+hidden:
+  search_api_excerpt: true

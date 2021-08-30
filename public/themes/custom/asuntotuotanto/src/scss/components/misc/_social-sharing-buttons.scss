@@ -1,0 +1,39 @@
+.social-sharing-buttons {
+  h2 {
+    @include font-size($fontsize-heading-xs, 22px);
+    color: var(--color-black-90);
+    font-weight: $font-weight-bold;
+    margin: 0 0 $spacing-s;
+
+    @media screen and (min-width: $breakpoint-l) {
+      @include font-size($fontsize-heading-s, $lineheight-l);
+    }
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  li {
+    &:not(:first-of-type) {
+      margin-top: $spacing-2-xs;
+    }
+  }
+
+  a {
+    @include font-size($fontsize-body-m, $lineheight-l);
+    align-items: center;
+    color: var(--color-black-90);
+    display: inline-flex;
+    font-weight: $font-weight-regular;
+    text-decoration: none;
+
+    > svg {
+      height: 30px;
+      margin-right: $spacing-2-xs;
+      width: 30px;
+    }
+  }
+}

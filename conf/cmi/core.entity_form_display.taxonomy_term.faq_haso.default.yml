@@ -1,0 +1,62 @@
+uuid: 0f32614f-dad1-455f-bcad-6a1e3670af0f
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.taxonomy_term.faq_haso.field_faq_category
+    - taxonomy.vocabulary.faq_haso
+  module:
+    - select2
+    - text
+id: taxonomy_term.faq_haso.default
+targetEntityType: taxonomy_term
+bundle: faq_haso
+mode: default
+content:
+  description:
+    type: text_textarea
+    weight: 1
+    region: content
+    settings:
+      placeholder: ''
+      rows: 5
+    third_party_settings: {  }
+  field_faq_category:
+    weight: 2
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      autocomplete: false
+      width: 100%
+    third_party_settings: {  }
+    type: select2_entity_reference
+    region: content
+  langcode:
+    type: language_select
+    weight: 3
+    region: content
+    settings:
+      include_locked: true
+    third_party_settings: {  }
+  name:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  status:
+    type: boolean_checkbox
+    settings:
+      display_label: true
+    weight: 4
+    region: content
+    third_party_settings: {  }
+  translation:
+    weight: 5
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  path: true

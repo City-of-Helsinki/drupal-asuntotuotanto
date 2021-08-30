@@ -1,0 +1,6 @@
+name: 'ASU - backend api'
+type: module
+description: 'Handles sending requests to backend'
+core: 8.x
+core_version_requirement: ^8 || ^9
+package: 'ASU'

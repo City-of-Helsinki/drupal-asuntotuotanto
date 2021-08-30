@@ -1,0 +1,34 @@
+uuid: 3d857b3e-3cc1-4225-9dc5-245cc322c974
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser_prominent
+    - field.field.node.news.field_content
+    - field.field.node.news.field_image
+    - field.field.node.news.field_metatags
+    - field.field.node.news.field_news_category
+    - node.type.news
+  module:
+    - user
+id: node.news.teaser_prominent
+targetEntityType: node
+bundle: news
+mode: teaser_prominent
+content:
+  field_image:
+    type: entity_reference_entity_view
+    weight: 0
+    label: hidden
+    settings:
+      view_mode: image
+      link: false
+    third_party_settings: {  }
+    region: content
+hidden:
+  field_content: true
+  field_metatags: true
+  field_news_category: true
+  langcode: true
+  links: true
+  search_api_excerpt: true

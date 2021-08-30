@@ -544,7 +544,10 @@ display:
           group_type: group
           admin_label: ''
           operator: in
-          value: {  }
+          value:
+            fi: fi
+            sv: sv
+            en: en
           group: 1
           exposed: true
           expose:

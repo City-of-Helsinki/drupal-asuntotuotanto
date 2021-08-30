@@ -1,0 +1,36 @@
+uuid: ff34721b-abb0-4985-945b-6eeaadf12a18
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.steps_list.field_steps
+    - paragraphs.paragraphs_type.steps_list
+  module:
+    - paragraphs
+id: paragraph.steps_list.default
+targetEntityType: paragraph
+bundle: steps_list
+mode: default
+content:
+  field_steps:
+    type: paragraphs
+    weight: 0
+    settings:
+      title: Paragraph
+      title_plural: Paragraphs
+      edit_mode: closed_expand_nested
+      closed_mode: summary
+      autocollapse: none
+      closed_mode_threshold: 0
+      add_mode: dropdown
+      form_display_mode: default
+      default_paragraph_type: step
+      features:
+        add_above: '0'
+        collapse_edit_all: collapse_edit_all
+        duplicate: duplicate
+    third_party_settings: {  }
+    region: content
+hidden:
+  created: true
+  status: true

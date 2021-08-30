@@ -1,0 +1,21 @@
+uuid: 6453784b-05f7-467f-8d32-3186fea1b840
+langcode: fi
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_text
+    - paragraphs.paragraphs_type.text_block_with_link
+  module:
+    - text
+id: paragraph.text_block_with_link.field_text
+field_name: field_text
+entity_type: paragraph
+bundle: text_block_with_link
+label: Teksti
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long

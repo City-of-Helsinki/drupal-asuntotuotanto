@@ -1,0 +1,21 @@
+uuid: d913f965-fc29-40ef-811b-de72d4a9325c
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_step_desc_point
+    - paragraphs.paragraphs_type.step
+  module:
+    - text
+id: paragraph.step.field_step_desc_point
+field_name: field_step_desc_point
+entity_type: paragraph
+bundle: step
+label: 'Step description point'
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long

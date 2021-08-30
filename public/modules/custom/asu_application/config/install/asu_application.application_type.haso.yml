@@ -1,0 +1,5 @@
+langcode: fi
+status: true
+dependencies: {  }
+id: haso
+label: Haso

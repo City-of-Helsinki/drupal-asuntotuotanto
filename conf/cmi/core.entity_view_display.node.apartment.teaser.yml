@@ -72,6 +72,7 @@ hidden:
   field_apartment_number: true
   field_apartment_state_of_sale: true
   field_apartment_structure: true
+  field_apartment_url: true
   field_application_end_time: true
   field_application_start_time: true
   field_application_url: true
@@ -113,6 +114,7 @@ hidden:
   field_premarketing_start_time: true
   field_price_m2: true
   field_project_manager: true
+  field_project_url: true
   field_publication_end_time: true
   field_publish_on_etuovi: true
   field_publish_on_oikotie: true

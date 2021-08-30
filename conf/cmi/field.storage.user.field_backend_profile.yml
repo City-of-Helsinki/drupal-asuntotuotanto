@@ -1,0 +1,21 @@
+uuid: 6246f6d1-dd24-495d-b0a7-76d7550346fd
+langcode: en
+status: true
+dependencies:
+  module:
+    - user
+id: user.field_backend_profile
+field_name: field_backend_profile
+entity_type: user
+type: string
+settings:
+  max_length: 255
+  is_ascii: false
+  case_sensitive: false
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

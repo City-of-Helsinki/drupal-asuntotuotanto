@@ -92,14 +92,6 @@ field_settings:
     dependencies:
       config:
         - field.storage.node.field_apartment_structure
-  apartment_url:
-    label: 'Apartment URL'
-    datasource_id: 'entity:node'
-    property_path: nid
-    type: asu_url
-    dependencies:
-      module:
-        - node
   application_url:
     label: 'Application URL'
     datasource_id: 'entity:node'

@@ -17,6 +17,7 @@ function asu_user_tools_menu_preprocess_menu(&$variables) {
   switch ($menu_name) {
     case 'user-tools-menu':
       $current_user = User::load(\Drupal::currentUser()->id());
+      $variables['items']['asu_user_tools_menu.user_name']['title'] = $current_user->get('first_name')->value;
       $variables['items']['asu_user_tools_menu.user_name']['is_user_tools'] = TRUE;
       $variables['items']['asu_user_tools_menu.user_name']['below']['asu_user_tools_menu.user_information']['url'] = Url::fromRoute('entity.user.canonical', ['user' => \Drupal::currentUser()->id()]);
 

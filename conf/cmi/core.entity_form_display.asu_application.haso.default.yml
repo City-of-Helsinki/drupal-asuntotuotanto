@@ -1,0 +1,41 @@
+uuid: 938630de-8c5f-4412-b821-bb35227791ef
+langcode: en
+status: true
+dependencies:
+  config:
+    - asu_application.application_type.haso
+    - field.field.asu_application.haso.field_aso_changer
+    - field.field.asu_application.haso.field_personal_id
+    - field.field.asu_application.haso.field_right_of_residence_number
+  module:
+    - asu_application
+id: asu_application.haso.default
+targetEntityType: asu_application
+bundle: haso
+mode: default
+content:
+  field_aso_changer:
+    weight: 28
+    settings:
+      display_label: true
+    third_party_settings: {  }
+    type: boolean_checkbox
+    region: content
+  field_personal_id:
+    weight: 26
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_right_of_residence_number:
+    weight: 27
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+hidden:
+  uid: true

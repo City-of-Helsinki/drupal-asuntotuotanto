@@ -1,0 +1,6 @@
+asu_mailer.email_settings:
+  title: 'Email settings'
+  description: 'Edit email settings'
+  route_name: asu_mailer.admin.email_settings
+  parent: system.admin_config
+  weight: -99

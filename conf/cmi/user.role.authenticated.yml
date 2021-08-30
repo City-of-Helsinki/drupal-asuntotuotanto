@@ -6,13 +6,17 @@ _core:
   default_config_hash: 83Nuup-6oYkkdAsvg3nrR2pBOgtTXEV1JrzpCCLkYLM
 id: authenticated
 label: 'Sisäänkirjautunut käyttäjä'
-weight: -9
+weight: 1
 is_admin: false
 permissions:
   - 'access content'
+  - 'administer rest resources'
+  - 'create application'
   - 'display eu cookie compliance popup'
-  - 'restful get asu_content'
-  - 'restful get filter_rest_resource'
+  - 'restful get asu_applications'
+  - 'restful get asu_filters'
+  - 'restful get asu_initialize'
+  - 'restful post asu_elastic_proxy'
   - 'restful post mailinglist'
   - 'use text format full_html'
   - 'view media'

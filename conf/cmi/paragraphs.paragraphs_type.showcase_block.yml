@@ -1,0 +1,10 @@
+uuid: 3a7148a9-d7b9-48f8-8efe-07a3320af221
+langcode: en
+status: true
+dependencies: {  }
+id: showcase_block
+label: 'Showcase block'
+icon_uuid: null
+icon_default: null
+description: 'Let''s you liftup up to 4 showcases with an icon and description.'
+behavior_plugins: {  }

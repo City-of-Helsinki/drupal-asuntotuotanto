@@ -1,0 +1,142 @@
+.steps-list {
+  margin-top: $spacing-2-xl;
+  padding-top: 0;
+  max-width: 846px; // According to design.
+  margin-right: auto;
+  margin-left: auto;
+  list-style: none;
+  counter-reset: steps-list-counter;
+  position: relative;
+
+  @media screen and (min-width: $breakpoint-l) {
+    margin-top: $spacing-4-xl;
+  }
+
+  &:before {
+    background-color: var(--color-black-90);
+    content: "";
+    height: 100%;
+    left: 24px;
+    position: absolute;
+    transform: translateX(-50%);
+    width: 2px;
+
+    @media screen and (min-width: $breakpoint-l) {
+      left: 30px;
+    }
+  }
+}
+
+.step {
+  counter-increment: steps-list-counter;
+  display: flex;
+  align-items: flex-start;
+
+  & + & {
+    margin-top: $spacing-l;
+
+    @media screen and (min-width: $breakpoint-l) {
+      margin-top: $spacing-4-xl;
+    }
+  }
+
+  .step__title {
+    &:before {
+      content: counter( steps-list-counter) '.';
+      margin-right: $spacing-2-xs;
+    }
+  }
+}
+
+.step__sidebar {
+  min-width: 48px;
+  margin-right: $spacing-xs;
+
+  @media screen and (min-width: $breakpoint-l) {
+    min-width: 60px;
+    margin-right: $spacing-xl;
+  }
+
+  span {
+    border: 2px solid var(--color-black-90);
+    width: 48px;
+    height: 48px;
+    border-radius: 100%;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--color-white);
+    position: relative;
+
+    @media screen and (min-width: $breakpoint-l) {
+      height: 60px;
+      width: 60px;
+    }
+
+    svg {
+      @media screen and (min-width: $breakpoint-l) {
+        height: 32px;
+        width: 32px;
+      }
+    }
+  }
+}
+
+.step__title {
+  @include font-size($fontsize-heading-m, 29px);
+  margin: $spacing-2-xs 0 $spacing-m;
+  font-weight: $font-weight-bold;
+  padding-right: $spacing-l;
+
+  @media screen and (min-width: $breakpoint-l) {
+    @include font-size($fontsize-heading-l, 43px);
+    margin: 0 0 $spacing-xl;
+  }
+}
+
+.step__content {
+  ol {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+    li {
+      position: relative;
+
+      &:not(:first-child) {
+        margin-top: $spacing-s;
+
+        @media screen and (min-width: $breakpoint-l) {
+          margin-top: $spacing-xl;
+        }
+      }
+
+      p {
+        @include font-size($fontsize-body-l, 27px);
+        margin: 0;
+
+        &:before {
+          content: "";
+          position: absolute;
+          border: 2px solid var(--color-black-90);
+          height: 24px;
+          width: 24px;
+          border-radius: 100%;
+          left: -$spacing-2-xl;
+          top: 0;
+          background-color: var(--color-white);
+
+          @media screen and (min-width: $breakpoint-l) {
+            height: 35px;
+            width: 35px;
+            left: -$spacing-7-xl;
+          }
+        }
+
+        .link {
+          font-weight: $font-weight-bold;
+        }
+      }
+    }
+  }
+}

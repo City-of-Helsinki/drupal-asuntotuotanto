@@ -1,0 +1,84 @@
+uuid: b572d913-1989-4aa8-8f84-b614a35fa083
+langcode: fi
+status: true
+dependencies:
+  config:
+    - image.style.1_1_l
+    - image.style.1_1_l_2x
+    - image.style.1_1_xl
+    - image.style.1_1_xl_2x
+    - image.style.3_2_m
+    - image.style.3_2_m_2x
+    - image.style.3_2_s
+    - image.style.3_2_s_2x
+    - image.style.3_2_xs
+    - image.style.3_2_xs_2x
+    - image.style.3_2_xxs
+    - image.style.3_2_xxs_2x
+  theme:
+    - hdbt
+id: news_teaser
+label: 'News teaser'
+image_style_mappings:
+  -
+    breakpoint_id: hdbt.xl
+    multiplier: 1x
+    image_mapping_type: image_style
+    image_mapping: 1_1_xl
+  -
+    breakpoint_id: hdbt.xl
+    multiplier: 2x
+    image_mapping_type: image_style
+    image_mapping: 1_1_xl_2x
+  -
+    breakpoint_id: hdbt.l
+    multiplier: 1x
+    image_mapping_type: image_style
+    image_mapping: 1_1_l
+  -
+    breakpoint_id: hdbt.l
+    multiplier: 2x
+    image_mapping_type: image_style
+    image_mapping: 1_1_l_2x
+  -
+    breakpoint_id: hdbt.m
+    multiplier: 1x
+    image_mapping_type: image_style
+    image_mapping: 3_2_m
+  -
+    breakpoint_id: hdbt.m
+    multiplier: 2x
+    image_mapping_type: image_style
+    image_mapping: 3_2_m_2x
+  -
+    breakpoint_id: hdbt.s
+    multiplier: 1x
+    image_mapping_type: image_style
+    image_mapping: 3_2_s
+  -
+    breakpoint_id: hdbt.s
+    multiplier: 2x
+    image_mapping_type: image_style
+    image_mapping: 3_2_s_2x
+  -
+    breakpoint_id: hdbt.xs
+    multiplier: 1x
+    image_mapping_type: image_style
+    image_mapping: 3_2_xs
+  -
+    breakpoint_id: hdbt.xs
+    multiplier: 2x
+    image_mapping_type: image_style
+    image_mapping: 3_2_xs_2x
+  -
+    breakpoint_id: hdbt.xxs
+    multiplier: 1x
+    image_mapping_type: image_style
+    image_mapping: 3_2_xxs
+  -
+    breakpoint_id: hdbt.xxs
+    multiplier: 2x
+    image_mapping_type: image_style
+    image_mapping: 3_2_xxs_2x
+breakpoint_group: hdbt
+fallback_image_style: 3_2_m

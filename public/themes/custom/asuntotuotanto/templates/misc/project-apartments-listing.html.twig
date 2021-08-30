@@ -1,0 +1,213 @@
+<div class="project-apartments-listing">
+  <div class="project-apartments-listing__header wrapper wrapper--mw-1264">
+    <h2>
+      {% trans %}
+        Project apartments
+      {% endtrans %}
+    </h2>
+    <h3>
+      {% trans %}
+        In total {{ apartments_count }} apartment
+      {% plural apartments_count %}
+        In total {{ apartments_count }} apartments
+      {% endtrans %}
+    </h3>
+  </div>
+  <div class="project-apartments-listing__content">
+    <div class="project__apartments project__apartments--mobile" aria-hidden="true">
+      <ul class="project__apartments-list wrapper wrapper--mw-1264">
+        {% for apartment in apartments %}
+          {% set apartment_number = apartment.number|striptags|trim %}
+          {% set apartment_structure = apartment.structure|striptags|trim	 %}
+          {% set application_url = apartment.application_url|striptags|trim %}
+          {% set debt_free_sales_price = apartment.debt_free_sales_price|striptags|trim %}
+          {% set floor = apartment.floor|striptags|trim %}
+          {% set living_area_size = apartment.living_area_size|striptags|trim %}
+          {% set nid = apartment.id|striptags|trim %}
+
+          {% set application_status = apartment.applications %}
+          {% set is_application_period_active = apartment.is_application_period_active %}
+
+          <li class="project__apartments-item">
+            <button
+              aria-expanded="false"
+              class="project__apartments-item-button"
+              aria-label="Open apartment {{ apartment_number }} information"
+            >
+              <span>{{ apartment_number }}</span>
+              <span aria-hidden="true" class="project__apartment-application-status project__apartment-application-status--{{ application_status.status|trim }}"></span>
+              <span>{{ apartment_structure }}</span>
+              {% include "@hdbt/misc/icon.twig" with {icon: 'angle-down', label: ''} %}
+            </button>
+            <div aria-hidden="true" class="project__apartments-item-content is-hidden">
+              <ul class="project__apartments-item-details-list">
+                <li class="project__apartments-item-details-item">
+                  <p>
+                    <span>
+                      {% trans %}
+                        Floor
+                      {% endtrans %}
+                    </span>
+                    <span>
+                      {{ floor }}
+                    </span>
+                  </p>
+                </li>
+                <li class="project__apartments-item-details-item">
+                  <p>
+                    <span>
+                      {% trans %}
+                        Living area size
+                      {% endtrans %}
+                    </span>
+                    <span>
+                      {{ living_area_size }} m<sup>2</sup>
+                    </span>
+                  </p>
+                </li>
+                <li class="project__apartments-item-details-item">
+                  <p>
+                    <span>
+                      {% trans %}
+                        Debt free sales price
+                      {% endtrans %}
+                    </span>
+                    <span>
+                      {{ debt_free_sales_price }} €
+                    </span>
+                  </p>
+                </li>
+                <li class="project__apartments-item-details-item">
+                  <p>
+                    <span>
+                      {% trans %}
+                        Application status
+                      {% endtrans %}
+                    </span>
+                    <span>
+                      <span aria-hidden="true" class="project__apartment-application-status project__apartment-application-status--{{ application_status.status|trim }}"></span>
+                      {{ application_status.label }}
+                    </span>
+                  </p>
+                </li>
+              </ul>
+              {% include '@asuntotuotanto/button/button.html.twig' with {
+                type: 'secondary',
+                disabled: false,
+                label: 'Learn more about the apartment'|t,
+                href: url('entity.node.canonical', { 'node': nid }),
+                }
+              %}
+              {% if is_application_period_active %}
+                {% include '@asuntotuotanto/button/button.html.twig' with {
+                  type: 'primary',
+                  disabled: false,
+                  label: 'Create an application'|t,
+                  href: application_url,
+                  }
+                %}
+              {% endif %}
+            </div>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <div class="project__apartments project__apartments--desktop wrapper wrapper--mw-1264" aria-hidden="true">
+      <table{{ attributes.addClass(classes, 'project__apartments-table') }}>
+        <thead>
+          <tr>
+            <th>
+              {% trans %}
+                Apartment
+              {% endtrans %}
+            </th>
+            <th>
+              {% trans %}
+                Floor
+              {% endtrans %}
+            </th>
+            <th>
+              {% trans %}
+                Living area size
+              {% endtrans %}
+            </th>
+            <th>
+              {% trans %}
+                Debt free sales price
+              {% endtrans %}
+            </th>
+            <th>
+              {% trans %}
+                Application status
+              {% endtrans %}
+            </th>
+            <th>
+              <span class="visually-hidden">
+                {% trans %}
+                  Actions
+                {% endtrans %}
+              </span>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for apartment in apartments %}
+            {% set apartment_number = apartment.number|striptags|trim %}
+            {% set apartment_structure = apartment.structure|striptags|trim	 %}
+            {% set application_url = apartment.application_url|striptags|trim %}
+            {% set debt_free_sales_price = apartment.debt_free_sales_price|striptags|trim %}
+            {% set floor = apartment.floor|striptags|trim %}
+            {% set living_area_size = apartment.living_area_size|striptags|trim %}
+            {% set nid = apartment.id|striptags|trim %}
+
+            {% set application_status = apartment.applications %}
+            {% set is_application_period_active = apartment.is_application_period_active %}
+
+            <tr{{ row.attributes }}>
+              <td>
+                <span>{{ apartment_number }}</span>
+                <span>{{ apartment_structure }}</span>
+              </td>
+              <td>
+                <span>{{ floor }}</span>
+              </td>
+              <td>
+                <span>{{ living_area_size }} m<sup>2</sup></span>
+              </td>
+              <td>
+                <span>{{ debt_free_sales_price }} €</span>
+              </td>
+              <td>
+                <span>
+                  <span aria-hidden="true" class="project__apartment-application-status project__apartment-application-status--{{ application_status.status|trim }}"></span>
+                  {{ application_status.label }}
+                </span>
+              </td>
+              <td>
+                {% include '@asuntotuotanto/button/button.html.twig' with {
+                  type: 'supplementary',
+                  disabled: false,
+                  size: 'small',
+                  label: 'Learn more'|t,
+                  href: url('entity.node.canonical', { 'node': nid }),
+                  }
+                %}
+                {% if is_application_period_active %}
+                  {% include '@asuntotuotanto/button/button.html.twig' with {
+                    type: 'secondary',
+                    disabled: false,
+                    size: 'small',
+                    label: 'Create an application'|t,
+                    href: application_url,
+                    }
+                  %}
+                {% endif %}
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

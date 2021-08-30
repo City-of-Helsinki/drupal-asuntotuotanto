@@ -1,0 +1,84 @@
+uuid: 7c914b1e-96aa-47b6-96f0-7a6e5a9c93c4
+langcode: fi
+status: true
+dependencies:
+  config:
+    - image.style.stacked_text_blocks_with_image_l
+    - image.style.stacked_text_blocks_with_image_l_2x
+    - image.style.stacked_text_blocks_with_image_m
+    - image.style.stacked_text_blocks_with_image_m_2x
+    - image.style.stacked_text_blocks_with_image_s
+    - image.style.stacked_text_blocks_with_image_s_2x
+    - image.style.stacked_text_blocks_with_image_xl
+    - image.style.stacked_text_blocks_with_image_xl_2x
+    - image.style.stacked_text_blocks_with_image_xs
+    - image.style.stacked_text_blocks_with_image_xs_2x
+    - image.style.stacked_text_blocks_with_image_xxs
+    - image.style.stacked_text_blocks_with_image_xxs_2x
+  theme:
+    - hdbt
+id: stacked_text_blocks_with_image
+label: 'Stacked text blocks with image'
+image_style_mappings:
+  -
+    breakpoint_id: hdbt.xl
+    multiplier: 1x
+    image_mapping_type: image_style
+    image_mapping: stacked_text_blocks_with_image_xl
+  -
+    breakpoint_id: hdbt.xl
+    multiplier: 2x
+    image_mapping_type: image_style
+    image_mapping: stacked_text_blocks_with_image_xl_2x
+  -
+    breakpoint_id: hdbt.l
+    multiplier: 1x
+    image_mapping_type: image_style
+    image_mapping: stacked_text_blocks_with_image_l
+  -
+    breakpoint_id: hdbt.l
+    multiplier: 2x
+    image_mapping_type: image_style
+    image_mapping: stacked_text_blocks_with_image_l_2x
+  -
+    breakpoint_id: hdbt.m
+    multiplier: 1x
+    image_mapping_type: image_style
+    image_mapping: stacked_text_blocks_with_image_m
+  -
+    breakpoint_id: hdbt.m
+    multiplier: 2x
+    image_mapping_type: image_style
+    image_mapping: stacked_text_blocks_with_image_m_2x
+  -
+    breakpoint_id: hdbt.s
+    multiplier: 1x
+    image_mapping_type: image_style
+    image_mapping: stacked_text_blocks_with_image_s
+  -
+    breakpoint_id: hdbt.s
+    multiplier: 2x
+    image_mapping_type: image_style
+    image_mapping: stacked_text_blocks_with_image_s_2x
+  -
+    breakpoint_id: hdbt.xs
+    multiplier: 1x
+    image_mapping_type: image_style
+    image_mapping: stacked_text_blocks_with_image_xs
+  -
+    breakpoint_id: hdbt.xs
+    multiplier: 2x
+    image_mapping_type: image_style
+    image_mapping: stacked_text_blocks_with_image_xs_2x
+  -
+    breakpoint_id: hdbt.xxs
+    multiplier: 1x
+    image_mapping_type: image_style
+    image_mapping: stacked_text_blocks_with_image_xxs
+  -
+    breakpoint_id: hdbt.xxs
+    multiplier: 2x
+    image_mapping_type: image_style
+    image_mapping: stacked_text_blocks_with_image_xxs_2x
+breakpoint_group: hdbt
+fallback_image_style: stacked_text_blocks_with_image_m

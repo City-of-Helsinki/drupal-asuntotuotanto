@@ -69,14 +69,22 @@ function csv_import_download_template(&$form, FormStateInterface $form_state) {
 function asu_csv_import_process($form, FormStateInterface &$form_state) {
   $form_object = $form_state->getFormObject();
   $fields = $form_object->getEntity()->getFields();
-  $langcode = $form_object->getEntity()->langcode->value;
-  $project_apartments_field = $fields['field_apartments'];
   $upload_file_handler = \Drupal::service('asu_csv_import.upload_file_handler');
-
   /** @var \Drupal\file\Entity\File $file */
   if (!$file = $upload_file_handler->getUploadedFile($fields)) {
     return;
   }
+
+  if (!$form_state->getValue('field_housing_company')[0]['value']) {
+    \Drupal::messenger()->addError(t('Cannot perform csv-import if project housing company -field value is not set.'));
+    $file->delete();
+    $form_state->unsetValue('field_import_apartments');
+    $form_object->getEntity()->save();
+    return;
+  }
+
+  $langcode = $form_object->getEntity()->langcode->value;
+  $project_apartments_field = $fields['field_apartments'];
 
   $nodes = $upload_file_handler->createNodes($file, $langcode);
 

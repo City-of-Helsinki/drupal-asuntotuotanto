@@ -1,0 +1,10 @@
+uuid: ccdf6773-b1c8-4080-81de-f0639098e001
+langcode: fi
+status: true
+dependencies:
+  module:
+    - media
+id: media.stacked_text_blocks_with_image
+label: 'Stacked text blocks with image'
+targetEntityType: media
+cache: true

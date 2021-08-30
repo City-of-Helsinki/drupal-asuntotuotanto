@@ -1,0 +1,10 @@
+uuid: c607051f-bb51-47dd-af19-428f863722e8
+langcode: en
+status: true
+dependencies: {  }
+id: latest_news
+label: 'Latest news'
+icon_uuid: null
+icon_default: null
+description: 'Block element with updateable title. Also lists the latest 4 news articles.'
+behavior_plugins: {  }

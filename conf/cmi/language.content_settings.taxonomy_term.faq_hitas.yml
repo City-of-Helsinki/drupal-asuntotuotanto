@@ -1,0 +1,16 @@
+uuid: 46f3cf0f-e5b4-47bd-a96b-d1f879381053
+langcode: en
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.faq_hitas
+  module:
+    - content_translation
+third_party_settings:
+  content_translation:
+    enabled: true
+id: taxonomy_term.faq_hitas
+target_entity_type_id: taxonomy_term
+target_bundle: faq_hitas
+default_langcode: site_default
+language_alterable: true

@@ -1,0 +1,71 @@
+<?php
+
+/**
+ * @file
+ */
+
+/**
+ * Implements hook_theme().
+ */
+function asu_application_theme() {
+  return [
+    'asu_application' => [
+      'render element' => 'elements',
+      'template' => 'asu-application',
+    ],
+  ];
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK().
+ */
+function asu_application_theme_suggestions_asu_application(array $variables) {
+  $suggestions = [];
+  $sanitized_view_mode = strtr($variables['elements']['#view_mode'], '.', '_');
+
+  $suggestions[] = 'asu_application__' . $sanitized_view_mode;
+
+  return $suggestions;
+}
+
+/**
+ *
+ */
+function template_preprocess_asu_application(array &$variables) {
+  $application = $variables['elements']['#asu_application'];
+  $variables['view_mode'] = $variables['elements']['#view_mode'];
+  $id = $application->id->value;
+
+  $projectId = $application->getProjectId();
+
+  try {
+    $projects = \Drupal::entityTypeManager()
+      ->getStorage('node')
+      ->loadByProperties(['type' => 'project', 'nid' => $projectId]);
+
+    if (empty($projects)) {
+      return [];
+    }
+
+    $project = $projects[$projectId];
+
+    $application_teaser_values = [
+      '#teaser_values' => [
+        'project_name' => $project->field_housing_company->value,
+        'project_address' => $project->field_street_address->value,
+        'project_ownership_type' => $project->field_ownership_type->first()->entity->getName(),
+        'project_estimated_completion' => $project->field_estimated_completion->value,
+        'application_end_time' => $project->field_application_end_time->value,
+        'project_main_image_url' => $project->field_main_image->value,
+        'project_district' => $project->field_district->first()->entity->getName(),
+      ],
+    ];
+    $application_teaser_values['#teaser_values']['application_url'] = $application->isLocked() ? "/application/$id" : "/application/$id/edit";
+  }
+  catch (\Exception $e) {
+    \Drupal::logger('asu_application')->critical('Could not access project apartments for project ' . $projectId);
+    $application_teaser_values = [];
+  }
+
+  $variables['content'] = $application_teaser_values;
+}

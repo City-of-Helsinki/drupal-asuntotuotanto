@@ -2,12 +2,13 @@
 
 namespace Drupal\asu_content\Plugin\ComputedField;
 
-use Drupal\Core\Field\FieldItemList;
-use Drupal\Core\TypedData\ComputedItemListTrait;
-use Drupal\Core\TypedData\DataDefinitionInterface;
-use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\file\Entity\File;
 use Drupal\node\Entity\Node;
+use Drupal\image\Entity\ImageStyle;
+use Drupal\Core\Field\FieldItemList;
+use Drupal\Core\TypedData\TypedDataInterface;
+use Drupal\Core\TypedData\ComputedItemListTrait;
+use Drupal\Core\TypedData\DataDefinitionInterface;
 
 /**
  * Combines shared images from project and apartment images.
@@ -64,7 +65,6 @@ class ApartmentImages extends FieldItemList {
     $current_entity = $this->getEntity();
     $reverse_references = $this->reverseEntities->getReverseReferences($current_entity);
 
-    $host = \Drupal::request()->getSchemeAndHttpHost();
     $images = [];
 
     foreach ($reverse_references as $reference) {
@@ -73,22 +73,29 @@ class ApartmentImages extends FieldItemList {
         $reference['referring_entity'] instanceof Node
       ) {
         $referencing_node = $reference['referring_entity'];
-
+        // Add shared images from project.
         if (!$referencing_node->field_shared_apartment_images->isEmpty()) {
           $images = array_merge($images, $referencing_node->field_shared_apartment_images->getValue());
         }
       }
+      // Add images from apartment.
       if (!$current_entity->field_images->isEmpty()) {
         $images = array_merge($images, $current_entity->field_images->getValue());
       }
-
+      // Floorplan should be the first item in images array.
       if (!$current_entity->field_floorplan->isEmpty()) {
         $images = array_merge($current_entity->field_floorplan->getValue(), $images);
       }
 
       foreach ($images as $delta => $image) {
+        if (!isset($image['target_id'])) {
+          continue;
+        }
+
         if ($file = File::load($image['target_id'])) {
-          $this->list[$delta] = $this->createItem($delta, $host . $file->createFileUrl());
+          $style = ImageStyle::load('3_2_m');
+          $image_url = $style->buildUrl($file->uri->value);
+          $this->list[$delta] = $this->createItem($delta, $image_url);
         }
       }
     }

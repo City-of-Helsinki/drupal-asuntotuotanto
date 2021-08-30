@@ -1,4 +1,4 @@
-uuid: 20881c68-86af-4949-b8ea-3a899f09997d
+uuid: 815ffaff-5590-4fdb-8d1e-0ea3b73217bb
 langcode: en
 status: true
 dependencies:
@@ -24,7 +24,7 @@ settings:
   translation_providers:
     views: views
     menu_link_content: menu_link_content
-    default: 0
+    default: '0'
   level: 1
   depth: 1
   expand_all_items: false

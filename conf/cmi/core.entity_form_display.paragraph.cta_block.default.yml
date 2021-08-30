@@ -1,0 +1,35 @@
+uuid: 36d4965a-179c-40a3-814b-7e7cfe19a816
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.cta_block.field_link
+    - field.field.paragraph.cta_block.field_title
+    - paragraphs.paragraphs_type.cta_block
+  module:
+    - hdbt_admin_editorial
+id: paragraph.cta_block.default
+targetEntityType: paragraph
+bundle: cta_block
+mode: default
+content:
+  field_link:
+    weight: 1
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+      link_target: ''
+    third_party_settings: {  }
+    type: link_target_field_widget
+    region: content
+  field_title:
+    weight: 0
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+hidden:
+  created: true
+  status: true

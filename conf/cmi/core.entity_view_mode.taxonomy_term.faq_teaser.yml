@@ -1,0 +1,10 @@
+uuid: bdbb0724-426e-4e73-95c7-610ec88e84b6
+langcode: fi
+status: true
+dependencies:
+  module:
+    - taxonomy
+id: taxonomy_term.faq_teaser
+label: 'FAQ Teaser'
+targetEntityType: taxonomy_term
+cache: true

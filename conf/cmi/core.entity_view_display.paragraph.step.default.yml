@@ -1,0 +1,41 @@
+uuid: 2c7cb6a3-70f0-4f44-aa92-543b9ffa6a36
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.step.field_icon
+    - field.field.paragraph.step.field_step_desc_point
+    - field.field.paragraph.step.field_title
+    - paragraphs.paragraphs_type.step
+  module:
+    - select2_icon
+    - text
+id: paragraph.step.default
+targetEntityType: paragraph
+bundle: step
+mode: default
+content:
+  field_icon:
+    weight: 2
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    type: select2_icon_formatter
+    region: content
+  field_step_desc_point:
+    weight: 1
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    type: text_default
+    region: content
+  field_title:
+    weight: 0
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+hidden:
+  search_api_excerpt: true

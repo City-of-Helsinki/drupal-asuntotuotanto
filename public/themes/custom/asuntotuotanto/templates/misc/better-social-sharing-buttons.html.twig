@@ -1,0 +1,36 @@
+<div class="social-sharing-buttons">
+  <h2>
+    {{ 'Share article'|t }}
+  </h2>
+  <ul>
+      <!-- Facebook share button -->
+      {% if items.services.facebook %}
+        <li>
+          <a href="https://www.facebook.com/sharer/sharer.php?u={{ items.page_url }}&title={{ items.title }}" target="_blank" title="{{ 'Share to'|t }} Facebook" aria-label="{{ 'Share to'|t }} Facebook" class="social-sharing-buttons__button" rel="noopener">
+            {% include "@hdbt/misc/icon.twig" with {icon: 'facebook', label: 'Facebook'} %}
+            Facebook
+          </a>
+        </li>
+      {% endif %}
+
+      <!-- Twitter share button -->
+      {% if items.services.twitter %}
+        <li>
+          <a href="http://twitter.com/intent/tweet?text={{ items.title }}+{{ items.page_url }}" target="_blank" title="{{ 'Share to'|t }} Twitter" aria-label="{{ 'Share to'|t }} Twitter" class="social-sharing-buttons__button" rel="noopener">
+            {% include "@hdbt/misc/icon.twig" with {icon: 'twitter', label: 'Twitter'} %}
+            Twitter
+          </a>
+        </li>
+      {% endif %}
+
+      <!-- Linkedin share button -->
+      {% if items.services.linkedin %}
+        <li>
+          <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ items.page_url }}" target="_blank" title="{{ 'Share to'|t }} Linkedin" aria-label="{{ 'Share to'|t }} Linkedin" class="social-sharing-buttons__button" rel="noopener">
+            {% include "@hdbt/misc/icon.twig" with {icon: 'linkedin', label: 'LinkedIn'} %}
+            LinkedIn
+          </a>
+        </li>
+      {% endif %}
+  </ul>
+</div>

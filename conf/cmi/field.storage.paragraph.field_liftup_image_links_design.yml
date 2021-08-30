@@ -1,0 +1,27 @@
+uuid: 885466c5-a84a-4a35-b029-22b498e60f1e
+langcode: en
+status: true
+dependencies:
+  module:
+    - options
+    - paragraphs
+id: paragraph.field_liftup_image_links_design
+field_name: field_liftup_image_links_design
+entity_type: paragraph
+type: list_string
+settings:
+  allowed_values:
+    -
+      value: image-on-right
+      label: 'Image on right'
+    -
+      value: image-on-left
+      label: 'Image on left'
+  allowed_values_function: ''
+module: options
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

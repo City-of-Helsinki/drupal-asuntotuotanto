@@ -12,14 +12,7 @@
  * @see template_preprocess_region()
  */
 #}
+
 {% if content %}
-  <p class="page-footer__copyright">
-    <span>
-      &#169; Copyright {{ "now"|date("Y") }}
-    </span>
-    <span>
-      {{ 'All Rights Reserved'|t }}
-    </span>
-  </p>
   {{ content }}
 {% endif %}

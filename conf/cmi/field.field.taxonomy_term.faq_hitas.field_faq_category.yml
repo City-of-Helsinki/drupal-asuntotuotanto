@@ -1,0 +1,29 @@
+uuid: 2e7eed8f-023f-4f89-8907-bc0c0023d4de
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.taxonomy_term.field_faq_category
+    - taxonomy.vocabulary.faq_category
+    - taxonomy.vocabulary.faq_hitas
+id: taxonomy_term.faq_hitas.field_faq_category
+field_name: field_faq_category
+entity_type: taxonomy_term
+bundle: faq_hitas
+label: 'FAQ Category'
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      faq_category: faq_category
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference
