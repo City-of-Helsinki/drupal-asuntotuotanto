@@ -28,7 +28,7 @@ class DeleteTestUsers {
     $users = \Drupal\user\Entity\User::loadMultiple($user_ids);
 
     foreach ($users as $user) {
-      if (str_starts_with($user->getAccountName(), 'test_')) {
+      if (str_starts_with($user->getAccountName(), 'test_') || str_starts_with($user->getEmail(), 'test_')) {
         $user->delete();
       }
     }
