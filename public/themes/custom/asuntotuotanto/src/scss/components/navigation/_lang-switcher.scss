@@ -5,6 +5,13 @@
       visibility: hidden;
     }
   }
+
+  &.lang-block--desktop {
+    @media screen and (max-width: $breakpoint-l - 1px) {
+      display: none;
+      visibility: hidden;
+    }
+  }
 }
 
 .page-header__top .language-switcher-language-url {
