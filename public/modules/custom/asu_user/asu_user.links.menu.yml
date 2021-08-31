@@ -1,0 +1,6 @@
+asu_user.delete-test-users:
+  title: 'Delete all test users'
+  description: 'Form where you are able to delete all test users with a button.'
+  parent: entity.user.collection
+  route_name: asu_user.delete_test_users
+  weight: 100

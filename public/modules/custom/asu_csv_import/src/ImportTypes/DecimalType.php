@@ -24,7 +24,7 @@ class DecimalType extends ImportType {
       $this->value = $decimal;
     }
     else {
-      throw new \Exception('DecimalType expects proper decimal value');
+      throw new \Exception('Value is not proper decimal.');
     }
   }
 
@@ -46,7 +46,7 @@ class DecimalType extends ImportType {
    * {@inheritdoc}
    */
   public function getImportValue() {
-    return (string) $this->value;
+    return floatval($this->value);
   }
 
   /**
@@ -58,18 +58,19 @@ class DecimalType extends ImportType {
    * @return bool
    *   Is allowed.
    */
-  private function isAllowedValue($decimal): bool {
-    if (empty($decimal)) {
+  private function isAllowedValue($input): bool {
+    if (empty($input)) {
       return TRUE;
     }
     else {
-      if (!empty($decimal) && !is_numeric($decimal)) {
+      $number = floatval(str_replace(',', '.', $input));
+      if (!empty($number) && !is_numeric($number)) {
         return FALSE;
       }
-      if (is_string($decimal) && is_numeric($decimal)) {
+      if (is_string($number) && is_numeric($number)) {
         return TRUE;
       }
-      elseif (is_float($decimal)) {
+      elseif (is_float($number)) {
         return TRUE;
       }
     }

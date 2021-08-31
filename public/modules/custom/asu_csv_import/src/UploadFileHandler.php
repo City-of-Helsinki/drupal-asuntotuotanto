@@ -15,7 +15,6 @@ use Drupal\node\Entity\Node;
  * Class to handle csv upload logic.
  */
 class UploadFileHandler {
-
   /**
    * The entity type manager.
    *
@@ -59,12 +58,15 @@ class UploadFileHandler {
     $errors = [];
     $field_definitions = $this->entityFieldManager->getFieldDefinitions('node', 'apartment');
 
+    // @todo Throw exception, delimiter not found.
+    $delimiter = $this->getFileDelimiter($file->getFileUri(), "r");
+
     if (($handle = fopen($file->getFileUri(), "r")) !== FALSE) {
       $i = 0;
       $header = [];
 
       // Each row represents old or new apartment node.
-      while (($row = fgetcsv($handle, 0, ';', '"', '\\')) !== FALSE) {
+      while (($row = fgetcsv($handle, 0, $delimiter, '"', '\\')) !== FALSE) {
         if ($i == 0) {
           $header = $row;
           $field_types = $this->getFieldTypes($row, $field_definitions);
@@ -82,7 +84,7 @@ class UploadFileHandler {
             $line = $i + 1;
             $column_number = $key + 1;
             $column_name = $header[$key];
-            $error = "Invalid value on line $line, on column ($column_number) $column_name";
+            $error = "Invalid value on line $line, on column ($column_number) $column_name: {$e->getMessage()}";
             $errors[] = $error;
             continue;
           }
@@ -107,17 +109,20 @@ class UploadFileHandler {
    * @return array
    *   Array of nodes to update or create.
    */
-  public function createNodes(File $file, $langcode) {
+  public function createNodes(File $file, $langcode, $status = 0) {
     $field_definitions = $this->entityFieldManager->getFieldDefinitions('node', 'apartment');
     $update_nodes = [];
     $create_nodes = [];
     $userid = \Drupal::currentUser()->id();
 
+    // @todo Throw exception, delimiter not found.
+    $delimiter = $this->getFileDelimiter($file->getFileUri());
+
     if (($handle = fopen($file->getFileUri(), "r")) !== FALSE) {
       $i = 0;
 
       // Each row represents old or new apartment node.
-      while (($row = fgetcsv($handle, 0, ';', '"', '\\')) !== FALSE) {
+      while (($row = fgetcsv($handle, 0, $delimiter, '"', '\\')) !== FALSE) {
         // Get header for fields machine names.
         if ($i == 0) {
           $header = $row;
@@ -132,6 +137,7 @@ class UploadFileHandler {
           'title' => '',
           'uid' => $userid,
           'langcode' => $langcode,
+          'status' => $status,
         ];
 
         // Create data array which is used to update or create node.
@@ -194,7 +200,6 @@ class UploadFileHandler {
     $csv = fopen('php://temp/maxmemory:' . (5 * 1024 * 1024), 'r+');
     foreach ($input as $csv_row) {
       fputcsv($csv, $csv_row, ';', '"', '\\');
-      ;
     }
     rewind($csv);
     $output = stream_get_contents($csv);
@@ -216,16 +221,21 @@ class UploadFileHandler {
   public function createCsvTemplateRows(Node $node, array $fields_in_order) {
     $rows = [];
 
+    if ($node->field_apartments->isEmpty()) {
+      return $rows;
+    }
+
     foreach ($node->field_apartments as $apartment) {
       $row = [];
       $apt = Node::load($apartment->getValue()['target_id']);
       foreach ($fields_in_order as $field) {
         $data = NULL;
-        if (!$apt) {
+        // Csv can have "empty" between fields.
+        if (!$apt || $field == 'empty') {
           continue;
         }
         try {
-          $value = $apt->{$field}->value ? $apt->{$field}->value : $apt->{$field}->getString();
+          $value = $apt->{$field}->value ? : $apt->{$field}->getString();
           $type = $apt->{$field}->getFieldDefinition()->getType();
           $data = $this->createValue($value, $type);
           if ($data) {
@@ -279,6 +289,11 @@ class UploadFileHandler {
   private function getFieldTypes(array $header, array $field_definitions) {
     $field_types = [];
     foreach ($header as $key => $title) {
+      // csv may have empty values.
+      if ($title == 'empty') {
+        $field_types[] = 'empty';
+        continue;
+      }
       if (isset($field_definitions[$title])) {
         $field_types[] = $field_definitions[$title]->getType();
       }
@@ -327,11 +342,48 @@ class UploadFileHandler {
         $value = new DateType($data);
         break;
 
+      case 'empty':
+        // In case of empty, just add single dash.
+        $value = new TextType('-');
+        break;
+
       default:
         $value = FALSE;
     }
 
     return $value;
   }
+
+  private function getFileDelimiter($filename, $checkLines = 2){
+    $possibleDelimiters = [
+      ',',
+      ';',
+      '|',
+      ':'
+    ];
+    $results = [
+      ',' => 0,
+      ';' => 0,
+      '|' => 0,
+      ':' => 0
+    ];
+    $i = 0;
+    $file = new \SplFileObject($filename);
+    while($file->valid() && $i <= $checkLines) {
+      $line = $file->fgets();
+      foreach ($possibleDelimiters as $delimiter){
+        $regExp = '/['.$delimiter.']/';
+        $fields = preg_split($regExp, $line);
+        if(count($fields) > 1){
+            $results[$delimiter]++;
+        }
+      }
+      $i++;
+    }
+
+    $results = array_keys($results, max($results));
+    return $results[0];
+  }
+
 
 }

@@ -633,7 +633,7 @@
         formActionsLink.appendChild(formActionsLinkText);
         formActionsLink.setAttribute(
           "href",
-          `${window.location.origin}/apartment/${id}`
+          `${window.location.origin}/node/${id}`
         );
 
         formActions.append(formActionsDeleteButton, formActionsLink);

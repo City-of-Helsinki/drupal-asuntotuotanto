@@ -77,9 +77,18 @@ class ApplicationFormUrl extends FieldItemList {
 
         $baseurl = \Drupal::request()->getSchemeAndHttpHost();
 
-        if ($this->isBeforeApplicationTimeEnd($referencing_node->field_application_end_time->value)) {
+        if (!$referencing_node->field_application_end_time) {
           $apartment_type = strtolower($referencing_node->field_ownership_type->referencedEntities()[0]->getName());
           $value = $baseurl . '/application/add/' . $apartment_type . '/' . $referencing_node->id();
+
+          return [
+            '#markup' => $value,
+          ];
+        }
+
+        if ($this->isBeforeApplicationTimeEnd($referencing_node->field_application_end_time->value)) {
+          $apartment_type = strtolower($referencing_node->field_ownership_type->referencedEntities()[0]->getName());
+          $value  = $baseurl . '/application/add/' . $apartment_type . '/' . $referencing_node->id();
         }
         else {
           $value = $baseurl . '/contact/apply_for_free_apartment?title=' . $referencing_node->getTitle() . ' ' . $current_entity->field_apartment_number->value;

@@ -31,7 +31,14 @@ function asu_csv_import_form_node_form_alter(&$form, FormStateInterface $form_st
         '#limit_validation_errors' => [],
         '#submit' => ['csv_import_download_template'],
       ];
-
+/*
+      $form["field_import_apartments"]["widget"][0]['download_haso_template'] = [
+        '#type' => 'submit',
+        '#value' => t('Download CSV template for haso apartments'),
+        '#limit_validation_errors' => [],
+        '#submit' => ['csv_import_download_template'],
+      ];
+*/
       $form['actions']['submit']['#submit'][] = 'asu_csv_import_process';
 
       break;
@@ -46,7 +53,8 @@ function csv_import_download_template(&$form, FormStateInterface $form_state) {
   $node = $form_state->getFormObject()->getEntity();
   $upload_file_handler = \Drupal::service('asu_csv_import.upload_file_handler');
 
-  $fields_order = Drupal::config('asu_csv_import.apartment_fields')->get('apartment_fields');
+  // @todo: Add second download button template at some point.
+  $fields_order = Drupal::config('asu_csv_import.haso_apartment_fields')->get('apartment_fields');
   $rows = $upload_file_handler->createCsvTemplateRows($node, $fields_order);
   try {
     $csv = $upload_file_handler->createCsvOutput(array_merge([$fields_order], $rows));
@@ -70,6 +78,7 @@ function asu_csv_import_process($form, FormStateInterface &$form_state) {
   $form_object = $form_state->getFormObject();
   $fields = $form_object->getEntity()->getFields();
   $upload_file_handler = \Drupal::service('asu_csv_import.upload_file_handler');
+
   /** @var \Drupal\file\Entity\File $file */
   if (!$file = $upload_file_handler->getUploadedFile($fields)) {
     return;
@@ -85,8 +94,9 @@ function asu_csv_import_process($form, FormStateInterface &$form_state) {
 
   $langcode = $form_object->getEntity()->langcode->value;
   $project_apartments_field = $fields['field_apartments'];
+  $project_status = $form_object->getEntity()->isPublished();
 
-  $nodes = $upload_file_handler->createNodes($file, $langcode);
+  $nodes = $upload_file_handler->createNodes($file, $langcode, $project_status);
 
   foreach ($nodes['create'] as $node) {
     $node->save();

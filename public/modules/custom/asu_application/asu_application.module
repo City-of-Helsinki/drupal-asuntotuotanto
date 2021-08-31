@@ -49,6 +49,12 @@ function template_preprocess_asu_application(array &$variables) {
 
     $project = $projects[$projectId];
 
+    $main_image_file = \Drupal\file\Entity\File::load($project->field_main_image->target_id) ?? NULL;
+
+    if ($main_image_file) {
+      $main_image_file_url = file_create_url($main_image_file->getFileUri());
+    }
+
     $application_teaser_values = [
       '#teaser_values' => [
         'project_name' => $project->field_housing_company->value,
@@ -56,7 +62,7 @@ function template_preprocess_asu_application(array &$variables) {
         'project_ownership_type' => $project->field_ownership_type->first()->entity->getName(),
         'project_estimated_completion' => $project->field_estimated_completion->value,
         'application_end_time' => $project->field_application_end_time->value,
-        'project_main_image_url' => $project->field_main_image->value,
+        'project_main_image_url' => $main_image_file_url ?? NULL,
         'project_district' => $project->field_district->first()->entity->getName(),
       ],
     ];

@@ -76,8 +76,15 @@
       <div class="page-footer__item page-footer__item--middle">
         <ul class="page-footer__social-media-links">
           <li class="page-footer__social-media-links-item">
-            {# TODO: Add correct social media link. #}
-            <a href="https://facebook.com" class="page-footer__social-media-link">
+            <a href="https://www.youtube.com/channel/UClKjG1kXR9D5EYB50lhqX7Q/videos" class="page-footer__social-media-link">
+              <span class="visually-hidden">
+                {% trans %}Find us on{% endtrans %} YouTube
+              </span>
+              {% include "@hdbt/misc/icon.twig" with {icon: 'youtube', label: 'YouTube'} %}
+            </a>
+          </li>
+          <li class="page-footer__social-media-links-item">
+            <a href="https://www.facebook.com/helsinginkaupunki" class="page-footer__social-media-link">
               <span class="visually-hidden">
                 {% trans %}Find us on{% endtrans %} Facebook
               </span>
@@ -85,12 +92,19 @@
             </a>
           </li>
           <li class="page-footer__social-media-links-item">
-            {# TODO: Add correct social media link. #}
-            <a href="https://instagram.com" class="page-footer__social-media-link">
+            <a href="https://twitter.com/helsinki" class="page-footer__social-media-link">
               <span class="visually-hidden">
-                {% trans %}Find us on{% endtrans %} Instagram
+                {% trans %}Find us on{% endtrans %} Twitter
               </span>
-              {% include "@hdbt/misc/icon.twig" with {icon: 'instagram', label: 'Instagram'} %}
+              {% include "@hdbt/misc/icon.twig" with {icon: 'twitter', label: 'Twitter'} %}
+            </a>
+          </li>
+          <li class="page-footer__social-media-links-item">
+            <a href="https://www.linkedin.com/company/city-of-helsinki" class="page-footer__social-media-link">
+              <span class="visually-hidden">
+                {% trans %}Find us on{% endtrans %} LinkedIn
+              </span>
+              {% include "@hdbt/misc/icon.twig" with {icon: 'linkedin', label: 'LinkedIn'} %}
             </a>
           </li>
         </ul>

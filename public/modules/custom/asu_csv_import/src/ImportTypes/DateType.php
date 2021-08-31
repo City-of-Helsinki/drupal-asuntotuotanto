@@ -20,7 +20,7 @@ class DateType extends ImportType {
       $this->value = $date;
     }
     else {
-      throw new \Exception('Date is not valid type');
+      throw new \Exception('Date is not valid value');
     }
   }
 

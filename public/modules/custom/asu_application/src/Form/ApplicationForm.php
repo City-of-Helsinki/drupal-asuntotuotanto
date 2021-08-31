@@ -293,8 +293,8 @@ class ApplicationForm extends ContentEntityForm {
       $apartment = $apartmentReference->entity;
 
       $living_area_size_m2 = number_format($apartment->field_living_area->value, 1, ',', '');
-      $debt_free_sales_price = number_format($apartment->field_debt_free_sales_price->value / 100, 0, ',', ' ');
-      $sales_price = number_format($apartment->field_sales_price->value / 100, 0, ',', ' ');
+      $debt_free_sales_price = number_format($apartment->field_debt_free_sales_price->value, 0, ',', ' ');
+      $sales_price = number_format($apartment->field_sales_price->value, 0, ',', ' ');
 
       $number = $apartment->field_apartment_number->value;
       $structure = $apartment->field_apartment_structure->value;
@@ -409,7 +409,7 @@ class ApplicationForm extends ContentEntityForm {
    *
    * @throws \Exception
    */
-  private function getPersonalIdDivider(string $dateString) {
+  private function getPersonalIdDivider(?string $dateString) {
     $dividers = ['18' => '+', '19' => '-', '20' => 'A'];
     $year = (new \DateTime($dateString))->format('Y');
     return $dividers[substr($year, 0, 2)];
@@ -424,7 +424,7 @@ class ApplicationForm extends ContentEntityForm {
    *
    * @throws \Exception
    */
-  private function dateToPersonalId(string $dateString) {
+  private function dateToPersonalId(?string $dateString) {
     $date = new \DateTime($dateString);
     $day = $date->format('d');
     $month = $date->format('m');
@@ -436,9 +436,7 @@ class ApplicationForm extends ContentEntityForm {
    *
    */
   private function getUserApplicationsUrl(): string {
-    return \Drupal::request()->getSchemeAndHttpHost() .
-      '/user/' . \Drupal::currentUser()->id() .
-      '/applications';
+    return \Drupal::request()->getSchemeAndHttpHost() . '/user/applications';
   }
 
   /**

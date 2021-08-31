@@ -2,3 +2,8 @@ asu_user_tools_menu.user_information_page:
   path: '/user/'
   requirements:
     _role: 'authenticated'
+
+asu_user_tools_menu.user_applications_page:
+  path: '/user/applications'
+  requirements:
+    _role: 'authenticated'

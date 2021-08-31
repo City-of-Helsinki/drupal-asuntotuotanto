@@ -4,82 +4,80 @@ status: true
 dependencies:
   config:
     - image.style.23_10_l
-    - image.style.23_10_l_2x
     - image.style.23_10_m
     - image.style.23_10_m_2x
     - image.style.23_10_xl
     - image.style.23_10_xl_2x
-    - image.style.3_2_m
+    - image.style.3_2_l_2x
     - image.style.3_2_s
     - image.style.3_2_s_2x
     - image.style.3_2_xs
-    - image.style.3_2_xs_2x
     - image.style.3_2_xxs
     - image.style.3_2_xxs_2x
   theme:
-    - asuntotuotanto
+    - hdbt
 id: showcase_gallery
 label: 'Showcase Gallery'
 image_style_mappings:
   -
-    breakpoint_id: asuntotuotanto.xl
+    breakpoint_id: hdbt.xl
     multiplier: 1x
     image_mapping_type: image_style
     image_mapping: 23_10_xl
   -
-    breakpoint_id: asuntotuotanto.xl
+    breakpoint_id: hdbt.xl
     multiplier: 2x
     image_mapping_type: image_style
     image_mapping: 23_10_xl_2x
   -
-    breakpoint_id: asuntotuotanto.l
+    breakpoint_id: hdbt.l
     multiplier: 1x
     image_mapping_type: image_style
     image_mapping: 23_10_l
   -
-    breakpoint_id: asuntotuotanto.l
+    breakpoint_id: hdbt.l
     multiplier: 2x
     image_mapping_type: image_style
-    image_mapping: 23_10_l_2x
+    image_mapping: 3_2_l_2x
   -
-    breakpoint_id: asuntotuotanto.m
+    breakpoint_id: hdbt.m
     multiplier: 1x
     image_mapping_type: image_style
     image_mapping: 23_10_m
   -
-    breakpoint_id: asuntotuotanto.m
+    breakpoint_id: hdbt.m
     multiplier: 2x
     image_mapping_type: image_style
     image_mapping: 23_10_m_2x
   -
-    breakpoint_id: asuntotuotanto.s
+    breakpoint_id: hdbt.s
     multiplier: 1x
     image_mapping_type: image_style
     image_mapping: 3_2_s
   -
-    breakpoint_id: asuntotuotanto.s
+    breakpoint_id: hdbt.s
     multiplier: 2x
     image_mapping_type: image_style
     image_mapping: 3_2_s_2x
   -
-    breakpoint_id: asuntotuotanto.xs
+    breakpoint_id: hdbt.xs
     multiplier: 1x
     image_mapping_type: image_style
     image_mapping: 3_2_xs
   -
-    breakpoint_id: asuntotuotanto.xs
+    breakpoint_id: hdbt.xs
     multiplier: 2x
     image_mapping_type: image_style
-    image_mapping: 3_2_xs_2x
+    image_mapping: 3_2_s_2x
   -
-    breakpoint_id: asuntotuotanto.xxs
+    breakpoint_id: hdbt.xxs
     multiplier: 1x
     image_mapping_type: image_style
     image_mapping: 3_2_xxs
   -
-    breakpoint_id: asuntotuotanto.xxs
+    breakpoint_id: hdbt.xxs
     multiplier: 2x
     image_mapping_type: image_style
     image_mapping: 3_2_xxs_2x
-breakpoint_group: asuntotuotanto
-fallback_image_style: 3_2_m
+breakpoint_group: hdbt
+fallback_image_style: 23_10_m
