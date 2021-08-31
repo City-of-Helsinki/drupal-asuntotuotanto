@@ -206,8 +206,7 @@ class Application extends EditorialContentEntityBase implements ContentEntityInt
       ]);
 
     $fields['has_children'] = BaseFieldDefinition::create('boolean')
-      ->setLabel(t('Underage children'))
-      ->setDescription(t('I have underage children who are moving in with me'))
+      ->setLabel(t('I have underage children who are moving in with me'))
       ->setDisplayOptions('form', [
         'type' => 'asu_applicant_widget',
         'weight' => 5,

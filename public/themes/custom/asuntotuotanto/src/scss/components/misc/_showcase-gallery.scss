@@ -5,7 +5,9 @@
     width: 100%;
   }
 
-  .slick-cloned {
+  .slick {
+    max-height: 330px;
+
     @media screen and (min-width: $breakpoint-m) and (max-width: $breakpoint-l - 1px) {
       max-height: 395px;
     }
