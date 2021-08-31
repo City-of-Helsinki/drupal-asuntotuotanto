@@ -94,8 +94,9 @@ function asu_csv_import_process($form, FormStateInterface &$form_state) {
 
   $langcode = $form_object->getEntity()->langcode->value;
   $project_apartments_field = $fields['field_apartments'];
+  $project_status = $form_object->getEntity()->isPublished();
 
-  $nodes = $upload_file_handler->createNodes($file, $langcode);
+  $nodes = $upload_file_handler->createNodes($file, $langcode, $project_status);
 
   foreach ($nodes['create'] as $node) {
     $node->save();
