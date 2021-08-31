@@ -4,6 +4,8 @@
  * @file
  */
 
+use Symfony\Component\HttpFoundation\RedirectResponse;
+
 /**
  * Implements hook_theme().
  */
@@ -87,6 +89,15 @@ function asu_user_form_contact_message_apply_for_free_apartment_form_alter(&$for
 
   if (!$apartment || $apartment->bundle() != 'apartment') {
     return;
+  }
+
+  // Anonymous user must login.
+  if (!\Drupal::currentUser()->isAuthenticated()) {
+    \Drupal::messenger()->addMessage(t('You must be logged in to fill an application'));
+    $application_url = "/contact/apply_for_free_apartment/{strtolower($apartment->bundle())}/$apartment_id";
+    $session = \Drupal::request()->getSession();
+    $session->set('asu_last_application_url', $application_url);
+    return(new RedirectResponse('/user/login', 301));
   }
 
   $parent = \Drupal::entityTypeManager()
