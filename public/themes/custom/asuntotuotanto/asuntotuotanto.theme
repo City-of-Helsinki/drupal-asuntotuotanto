@@ -512,9 +512,8 @@ function asuntotuotanto_preprocess_node(&$variables) {
       break;
 
     case 'apartment':
-      $cta_image_file_target_id = $node->get('field_images')->getValue()[0]['target_id'];
-
-      if ($cta_image_file_target_id !== NULL) {
+      if (count($node->get('field_images')->getValue()) > 0) {
+        $cta_image_file_target_id = $node->get('field_images')->getValue()[0]['target_id'];
         $variables['cta_image'] = load_responsive_image_style($cta_image_file_target_id, 'image__3_2');
       }
 
