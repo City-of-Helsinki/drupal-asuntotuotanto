@@ -554,13 +554,26 @@ function asuntotuotanto_preprocess_node(&$variables) {
         $street_address = $parent_node->get('field_street_address')->value;
         $postal_code = $parent_node->get('field_postal_code')->value;
         $city = $parent_node->get('field_city')->value;
-        $district = Term::load($parent_node->get('field_district')->target_id)->name->value ?? NULL;
-        $ownership_type = Term::load($parent_node->get('field_ownership_type')->target_id)->name->value ?? NULL;
+
+        if (count($parent_node->get('field_district')->getValue()) > 0) {
+          $district = Term::load($parent_node->get('field_district')->getValue()[0]['target_id'])->name->value ?? NULL;
+        }
+
+        if (count($parent_node->get('field_ownership_type')->getValue()) > 0) {
+          $ownership_type = Term::load($parent_node->get('field_ownership_type')->getValue()[0]['target_id'])->name->value ?? NULL;
+        }
 
         $project_description = $parent_node->get('field_project_description')->value;
         $project_area_description = $parent_node->get('field_project_area_description')->value;
-        $building_type = Term::load($parent_node->get('field_building_type')->target_id)->name->value ?? NULL;
-        $energy_class = Term::load($parent_node->get('field_energy_class')->target_id)->name->value ?? NULL;
+
+        if (count($parent_node->get('field_building_type')->getValue()) > 0) {
+          $building_type = Term::load($parent_node->get('field_building_type')->getValue()[0]['target_id'])->name->value ?? NULL;
+        }
+
+        if (count($parent_node->get('field_energy_class')->getValue()) > 0) {
+          $energy_class = Term::load($parent_node->get('field_energy_class')->getValue()[0]['target_id'])->name->value ?? NULL;
+        }
+
         $accessibility = $parent_node->get('field_project_accessibility')->value;
         $services = $parent_node->get('field_services')->getValue();
         $services_url = $parent_node->get('field_services_url')->getValue()[0] ?? NULL;
@@ -570,7 +583,10 @@ function asuntotuotanto_preprocess_node(&$variables) {
         $attachments_stack = [];
         $estimated_completion_date = new DateTime($parent_node->get('field_estimated_completion_date')->value);
 
-        $site_owner = Term::load($parent_node->get('field_site_owner')->target_id)->name->value ?? NULL;
+        if (count($parent_node->get('field_site_owner')->getValue()) > 0) {
+          $site_owner = Term::load($parent_node->get('field_site_owner')->getValue()[0]['target_id'])->name->value ?? NULL;
+        }
+
         $site_renter = $parent_node->get('field_site_renter')->value;
 
         if (count($services) > 0) {
