@@ -86,7 +86,7 @@ class ApplicationFormUrl extends FieldItemList {
           $value  = $baseurl . '/application/add/' . $apartment_type . '/' . $referencing_node->id();
         }
         else {
-          $value = $baseurl . '/contact/apply_for_free_apartment?title=' . $referencing_node->getTitle() . ' ' . $current_entity->field_apartment_number->value;
+          $value = $baseurl . '/contact/apply_for_free_apartment?apartment='.$current_entity->id();
         }
       }
     }

@@ -82,15 +82,30 @@ function template_preprocess_asu_application(array &$variables) {
  * Prefill contact form with user information and query parameters.
  */
 function asu_user_form_contact_message_apply_for_free_apartment_form_alter(&$form, &$form_state, $form_id) {
-  $project_information = \Drupal::request()->get('title') ?? NULL;
+  $apartment_id = \Drupal::request()->get('apartment') ?? NULL;
+  $apartment = \Drupal\node\Entity\Node::load($apartment_id);
 
-  $form['#contact_form_title'] = $project_information;
-  $form['#contact_form_text'] = t('You can apply for free aparment with this contact form.');
+  if (!$apartment || $apartment->bundle() != 'apartment') {
+    return;
+  }
+
+  $parent = \Drupal::entityTypeManager()
+    ->getListBuilder('node')
+    ->getStorage()
+    ->loadByProperties([
+        'type' => 'project',
+        'status' => 1,
+        'field_apartments' => $apartment_id,
+      ]
+    );
+
+  $form['#contact_form_title'] = $apartment->getTitle();
+  $form['#contact_form_text'] = t('Leave your contact information and we will personally contact you regarding this apartment.');
 
   // Prefill apartment information field with data.
-  if ($project_information) {
+  if ($parent) {
     $fields = [
-      'field_apartment_information' => $project_information
+      'field_apartment_information' => $apartment->getTitle()
     ];
     // Set apartment information field readonly.
     $form['field_apartment_information']['widget'][0]['value']['#attributes']['readonly'] = 'readonly';
