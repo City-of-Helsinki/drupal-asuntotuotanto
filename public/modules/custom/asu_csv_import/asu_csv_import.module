@@ -31,6 +31,7 @@ function asu_csv_import_form_node_form_alter(&$form, FormStateInterface $form_st
         '#value' => t('Download Hitas CSV template '),
         '#limit_validation_errors' => [],
         '#submit' => ['csv_import_download_template'],
+        '#button_type' => 'primary',
       ];
 
       $form["field_import_apartments"]["widget"][0]['download_haso_template'] = [
@@ -39,8 +40,8 @@ function asu_csv_import_form_node_form_alter(&$form, FormStateInterface $form_st
         '#value' => t('Download HASO CSV template'),
         '#limit_validation_errors' => [],
         '#submit' => ['csv_import_download_template'],
+        '#button_type' => 'primary',
       ];
-
       $form['actions']['submit']['#submit'][] = 'asu_csv_import_process';
 
       break;
