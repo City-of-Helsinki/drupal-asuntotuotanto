@@ -55,7 +55,7 @@
       {% set button_aria_controls = 'lang-switcher-dropdown-desktop' %}
     {% endif %}
 
-    <div {{ create_attribute({'class': 'lang-switcher'}) }}>
+    <div {{ create_attribute({'class': 'lang-switcher'}) }} role="navigation">
       <button id="{{ button_id }}" class="lang-switcher__button" aria-hidden="true" aria-controls="{{ button_aria_controls }}" aria-expanded="false" aria-haspopup="true" aria-label="{{ 'Select language'|t }}, {{ 'Current language is'|t }} {{ current_language|capitalize }}">
         {% if current_language and current_langcode %}
           <span class="label" aria-hidden="true">{{ current_langcode|upper }}</span>
