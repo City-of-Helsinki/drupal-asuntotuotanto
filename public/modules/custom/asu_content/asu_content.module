@@ -9,6 +9,7 @@ use Drupal\asu_content\ProjectUpdater;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\node\Entity\Node;
+use Drupal\search_api\Entity\Index;
 
 /**
  * Implements hook_help().
@@ -113,6 +114,15 @@ function asu_content_entity_update($entity) {
       }
     }
   }
+  // Index instantly on testing environment.
+  if (
+    method_exists($entity, 'getType') &&
+    $entity->getType() == 'project' &&
+    getenv('APP_ENV') == 'testing'
+  ) {
+    $index = Index::load('apartment');
+    $index->indexItems();
+  }
 }
 
 /**
@@ -148,6 +158,15 @@ function asu_content_node_insert(Node $node) {
       $node->field_apartments->setValue([$apartment]);
       $node->save();
     }
+  }
+  // Index instantly on testing environment.
+  if (
+    method_exists($node, 'getType') &&
+    $node->getType() == 'project' &&
+    getenv('APP_ENV') == 'testing'
+  ) {
+    $index = Index::load('apartment');
+    $index->indexItems();
   }
 }
 
