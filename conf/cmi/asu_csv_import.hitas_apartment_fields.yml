@@ -9,6 +9,7 @@ apartment_fields:
   - field_sales_price
   - field_loan_share
   - field_debt_free_sales_price
+  - field_price_m2
   - field_maintenance_fee
   - field_financing_fee
   - field_housing_company_fee
