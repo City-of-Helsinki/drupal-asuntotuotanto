@@ -31,5 +31,4 @@ apartment_fields:
   - field_other_fees
   - field_services_description
   - field_additional_information
-  - langcode
   - nid
