@@ -1,0 +1,23 @@
+uuid: 72352b54-0672-4bd2-a128-4b5871e3835c
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_right_of_occupancy_payment
+    - node.type.apartment
+id: node.apartment.field_right_of_occupancy_payment
+field_name: field_right_of_occupancy_payment
+entity_type: node
+bundle: apartment
+label: Asumisoikeusmaksu
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: !!float 0
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: decimal

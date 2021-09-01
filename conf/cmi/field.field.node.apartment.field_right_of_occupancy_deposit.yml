@@ -1,0 +1,23 @@
+uuid: fea38f9b-d1ad-4bcc-8a0c-feb8009801de
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_right_of_occupancy_deposit
+    - node.type.apartment
+id: node.apartment.field_right_of_occupancy_deposit
+field_name: field_right_of_occupancy_deposit
+entity_type: node
+bundle: apartment
+label: Käyttövastikevakuus
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: !!float 0
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: decimal

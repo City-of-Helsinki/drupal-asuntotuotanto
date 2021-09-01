@@ -1,0 +1,23 @@
+uuid: d118f2b6-f40a-4a37-9a17-9c91f1ce6ac2
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_right_of_occupancy_fee
+    - node.type.apartment
+id: node.apartment.field_right_of_occupancy_fee
+field_name: field_right_of_occupancy_fee
+entity_type: node
+bundle: apartment
+label: Käyttövastike
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: !!float 0
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: decimal

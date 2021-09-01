@@ -31,6 +31,9 @@ dependencies:
     - field.field.node.apartment.field_parking_fee_explanation
     - field.field.node.apartment.field_publish_on_etuovi
     - field.field.node.apartment.field_publish_on_oikotie
+    - field.field.node.apartment.field_right_of_occupancy_deposit
+    - field.field.node.apartment.field_right_of_occupancy_fee
+    - field.field.node.apartment.field_right_of_occupancy_payment
     - field.field.node.apartment.field_room_count
     - field.field.node.apartment.field_sales_price
     - field.field.node.apartment.field_services_description
@@ -346,6 +349,27 @@ content:
       display_label: true
     third_party_settings: {  }
     type: boolean_checkbox
+    region: content
+  field_right_of_occupancy_deposit:
+    weight: 55
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+    type: number
+    region: content
+  field_right_of_occupancy_fee:
+    weight: 54
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+    type: number
+    region: content
+  field_right_of_occupancy_payment:
+    weight: 56
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+    type: number
     region: content
   field_room_count:
     weight: 8
