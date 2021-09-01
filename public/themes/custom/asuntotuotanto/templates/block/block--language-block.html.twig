@@ -56,9 +56,9 @@
     {% endif %}
 
     <div {{ create_attribute({'class': 'lang-switcher'}) }}>
-      <button id="{{ button_id }}" class="lang-switcher__button" aria-hidden="true" aria-controls="{{ button_aria_controls }}" aria-expanded="false" aria-haspopup="true" aria-label="{{ 'Select language'|t }}">
+      <button id="{{ button_id }}" class="lang-switcher__button" aria-hidden="true" aria-controls="{{ button_aria_controls }}" aria-expanded="false" aria-haspopup="true" aria-label="{{ 'Select language'|t }}, {{ 'Current language is'|t }} {{ current_language|capitalize }}">
         {% if current_language and current_langcode %}
-          <span class="label" aria-label="{{ 'Current language is'|t }} {{ current_language|capitalize }}">{{ current_langcode|upper }}</span>
+          <span class="label" aria-hidden="true">{{ current_langcode|upper }}</span>
         {% endif %}
       </button>
       <div id="{{ button_aria_controls }}" class="lang-switcher__dropdown" aria-hidden="true">
