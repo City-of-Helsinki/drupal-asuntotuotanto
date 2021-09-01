@@ -17,9 +17,9 @@
   {% if view_mode == 'submitted_teaser' %}
     <article{{ attributes.addClass(classes) }}>
       <figure class="application__image">
-        {# <img src="http://Asu:asunnot_2020@{{ content['#teaser_values'].project_main_image_url }}" alt=""> #}
-        <img src="https://images.pexels.com/photos/6054896/pexels-photo-6054896.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260" alt="">
+        <img src="{{ content['#teaser_values'].project_main_image_url }}" alt="{{ 'Image of the project'|t }}">
       </figure>
+      {{ kint(content) }}
       <div class="application__wrapper">
         <div class="application__content">
           <h2 class="application__project-name">
@@ -87,8 +87,7 @@
   {% if view_mode == 'draft_teaser' %}
     <article{{ attributes.addClass(classes) }}>
       <figure class="application__image">
-        {# <img src="http://Asu:asunnot_2020@{{ content['#teaser_values'].project_main_image_url }}" alt=""> #}
-        <img src="https://images.pexels.com/photos/6054896/pexels-photo-6054896.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260" alt="">
+        <img src="{{ content['#teaser_values'].project_main_image_url }}" alt="{{ 'Image of the project'|t }}">
       </figure>
       <div class="application__wrapper">
         <div class="application__content">

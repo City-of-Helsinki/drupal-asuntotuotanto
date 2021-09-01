@@ -52,7 +52,7 @@ class BooleanType extends ImportType {
       }
     }
     else {
-      throw new \Exception('BooleanType expects proper boolean value');
+      throw new \Exception('Boolean values expected (0,1,kyllä,ei)');
     }
   }
 

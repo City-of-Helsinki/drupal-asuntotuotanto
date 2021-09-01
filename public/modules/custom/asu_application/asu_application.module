@@ -4,6 +4,8 @@
  * @file
  */
 
+use Symfony\Component\HttpFoundation\RedirectResponse;
+
 /**
  * Implements hook_theme().
  */
@@ -29,7 +31,7 @@ function asu_application_theme_suggestions_asu_application(array $variables) {
 }
 
 /**
- *
+ * Implements hook_preprocess_form().
  */
 function template_preprocess_asu_application(array &$variables) {
   $application = $variables['elements']['#asu_application'];
@@ -49,6 +51,12 @@ function template_preprocess_asu_application(array &$variables) {
 
     $project = $projects[$projectId];
 
+    $main_image_file = \Drupal\file\Entity\File::load($project->field_main_image->target_id) ?? NULL;
+
+    if ($main_image_file) {
+      $main_image_file_url = file_create_url($main_image_file->getFileUri());
+    }
+
     $application_teaser_values = [
       '#teaser_values' => [
         'project_name' => $project->field_housing_company->value,
@@ -56,7 +64,7 @@ function template_preprocess_asu_application(array &$variables) {
         'project_ownership_type' => $project->field_ownership_type->first()->entity->getName(),
         'project_estimated_completion' => $project->field_estimated_completion->value,
         'application_end_time' => $project->field_application_end_time->value,
-        'project_main_image_url' => $project->field_main_image->value,
+        'project_main_image_url' => $main_image_file_url ?? NULL,
         'project_district' => $project->field_district->first()->entity->getName(),
       ],
     ];
@@ -68,4 +76,64 @@ function template_preprocess_asu_application(array &$variables) {
   }
 
   $variables['content'] = $application_teaser_values;
+}
+
+/**
+ * Implements hook_form_alter().
+ *
+ * Prefill contact form with user information and query parameters.
+ */
+function asu_user_form_contact_message_apply_for_free_apartment_form_alter(&$form, &$form_state, $form_id) {
+  $apartment_id = \Drupal::request()->get('apartment') ?? NULL;
+  $apartment = \Drupal\node\Entity\Node::load($apartment_id);
+
+  if (!$apartment || $apartment->bundle() != 'apartment') {
+    return;
+  }
+
+  // // Anonymous user must login.
+  // if (!\Drupal::currentUser()->isAuthenticated()) {
+  //   \Drupal::messenger()->addMessage(t('You must be logged in to fill an application'));
+  //   $application_url = "/contact/apply_for_free_apartment?apartment=$apartment_id";
+  //   $session = \Drupal::request()->getSession();
+  //   $session->set('asu_last_application_url', $application_url);
+  //   (new RedirectResponse('/user/login', 301))->send();
+  //   return;
+  // }
+
+  $parent = \Drupal::entityTypeManager()
+    ->getListBuilder('node')
+    ->getStorage()
+    ->loadByProperties([
+        'type' => 'project',
+        'status' => 1,
+        'field_apartments' => $apartment_id,
+      ]
+    );
+
+  $form['#contact_form_title'] = $apartment->getTitle();
+  $form['#contact_form_text'] = t('Leave your contact information and we will personally contact you regarding this apartment.');
+
+  // Prefill apartment information field with data.
+  if ($parent) {
+    $fields = [
+      'field_apartment_information' => $apartment->getTitle()
+    ];
+    // Set apartment information field readonly.
+    $form['field_apartment_information']['widget'][0]['value']['#attributes']['readonly'] = 'readonly';
+  }
+
+  // Prefill rest of the field if user data is available.
+  $user = \Drupal::currentUser();
+  if (\Drupal::hasService('asu_user.tempstore')) {
+    $store = \Drupal::service('asu_user.tempstore');
+    $fields += [
+      'field_date_of_birth' => $store->get('date_of_birth'),
+      'field_name' => "{$store->get('first_name')} {$store->get('last_name')}",
+      'field_phone_number' => $store->get('phone_number'),
+    ];
+  }
+  foreach ($fields as $formFieldName => $data) {
+    $form[$formFieldName]['widget'][0]['value']['#default_value'] = $data ?? '';
+  }
 }
