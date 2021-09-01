@@ -124,7 +124,7 @@
         </div>
       </div>
       <nav class="sticky-navigation__anchor-navigation">
-        <ul class="sticky-navigation__anchor-list">
+        <ul class="sticky-navigation__anchor-list" role="navigation">
           <li class="sticky-navigation__anchor-item">
             <a href="#showcase_gallery" class="sticky-navigation__anchor-link">
               {% include "@hdbt/misc/icon.twig" with {icon: 'photo-plus', label: ''} %}
@@ -176,7 +176,7 @@
   </div>
 
   <nav class="project__anchor-navigation project__anchor-navigation--desktop wrapper wrapper--mw-1264">
-    <ul class="project__anchor-list">
+    <ul class="project__anchor-list" role="navigation">
       <li class="project__anchor-item">
         <a href="#showcase_gallery" class="project__anchor-link">
           {% include "@hdbt/misc/icon.twig" with {icon: 'photo-plus', label: ''} %}
@@ -214,16 +214,16 @@
 
   <div class="project__content-wrapper wrapper wrapper--mw-1264">
     <aside class="project__sidebar">
-      <h3 class="project__apartment-count-information">
+      <p class="project__apartment-count-information">
         {% trans %}
           {{ apartments_count }} apartments
         {% endtrans %}
-      </h3>
-      <h3 class="project__application-information">
+      </p>
+      <p class="project__application-information">
         {% trans %}
           The application period for the destination starts on {{ application_start_time }} and ends on {{ application_end_time }}.
         {% endtrans %}
-      </h3>
+      </p>
     </aside>
     <div class="project__content">
       <div class="project__type-and-address">

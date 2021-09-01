@@ -626,6 +626,11 @@
           "Delete"
         );
 
+        formActionsDeleteButton.setAttribute(
+          "aria-label",
+          `Delete, aparment ${apartmentNumberValue}`
+        );
+
         const formActionsLink = document.createElement("a");
         const formActionsLinkText = document.createTextNode(
           Drupal.t("Open apartment page")
@@ -634,6 +639,10 @@
         formActionsLink.setAttribute(
           "href",
           `${window.location.origin}/node/${id}`
+        );
+        formActionsLink.setAttribute(
+          "aria-label",
+          `Open apartment page, aparment ${apartmentNumberValue}`
         );
 
         formActions.append(formActionsDeleteButton, formActionsLink);
