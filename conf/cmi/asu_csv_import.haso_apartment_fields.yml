@@ -4,9 +4,9 @@ apartment_fields:
   - field_apartment_structure
   - field_living_area
   - empty
-  - käyttövastike right of occupancy fee
-  - käyttövastikevakuus right of occupancy deposit
-  - Asumisoikeusmaksu right of occupancy payment
+  - field_right_of_occupancy_fee
+  - field_right_of_occupancy_deposit
+  - field_right_of_occupancy_payment
   - field_floor_max
   - field_water_fee
   - field_water_fee_explanation
