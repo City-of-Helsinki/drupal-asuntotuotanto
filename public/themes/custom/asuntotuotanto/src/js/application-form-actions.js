@@ -358,6 +358,14 @@
           );
 
           originalSelectElementTarget.dispatchEvent(new Event("change"));
+
+          setTimeout(() => {
+            if (target.disabled) {
+              target.nextElementSibling.focus();
+            } else {
+              target.focus();
+            }
+          }, 10);
         }
       };
 
@@ -385,6 +393,14 @@
             );
 
             originalSelectElementTarget.dispatchEvent(new Event("change"));
+
+            setTimeout(() => {
+              if (target.disabled) {
+                target.previousElementSibling.focus();
+              } else {
+                target.focus();
+              }
+            }, 10);
           }
         }
       };
