@@ -74,14 +74,17 @@ class ApplicationFormUrl extends FieldItemList {
         // Application url cannot be indexed if ownership type or end time is missing
         if (
         !isset($referencing_node->field_ownership_type->referencedEntities()[0]) ||
-        !$referencing_node->field_application_end_time
+        !$referencing_node->field_application_end_time->value
         ) {
           return [
             '#markup' => '',
           ];
         }
 
-        if ($this->isBeforeApplicationTimeEnd($referencing_node->field_application_end_time->value)) {
+        if (
+          !$referencing_node->field_application_end_time->value ||
+          $this->isBeforeApplicationTimeEnd($referencing_node->field_application_end_time->value)
+        ) {
           $apartment_type = strtolower($referencing_node->field_ownership_type->referencedEntities()[0]->getName());
           $value  = $baseurl . '/application/add/' . $apartment_type . '/' . $referencing_node->id();
         }
