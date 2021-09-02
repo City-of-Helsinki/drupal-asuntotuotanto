@@ -41,7 +41,7 @@
           .filter((selectValue) => selectValue !== "0");
       };
 
-      const detectMutations = (mutations, observer) => {
+      const detectMutations = (mutations) => {
         mutations.forEach((mutation) => {
           if (mutation.type === "childList") {
             const listItem = document.getElementsByClassName(
@@ -716,6 +716,20 @@
               createApartmentListItem(listItemValues, select.value, false)
             );
           });
+
+          if (getApplicationFormApartmentListElementCount() === 1) {
+            const listItem = document.getElementsByClassName(
+              "application-form__apartments-item"
+            )[0];
+
+            const listItemActionButtons = listItem.querySelectorAll(
+              "[data-list-position-action-button]"
+            );
+
+            [...listItemActionButtons].map((button) => {
+              button.disabled = true;
+            });
+          }
 
           if (getApplicationFormApartmentListElementCount() < 5) {
             appendListItemToApartmentList();
