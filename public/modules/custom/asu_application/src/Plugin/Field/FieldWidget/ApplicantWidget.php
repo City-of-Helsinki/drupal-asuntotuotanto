@@ -30,7 +30,6 @@ class ApplicantWidget extends WidgetBase {
     $element['has_additional_applicant'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Add additional applicant'),
-      '#attributes' => ['id' => 'has-additional-applicant'],
       '#default_value' => !$items->isEmpty(),
     ];
 

@@ -421,16 +421,16 @@ function asuntotuotanto_preprocess_node(&$variables) {
 
       if (!empty($apartment_debt_free_sales_prices)) {
         $apartment_debt_free_sales_prices_minmax = [
-          "min" => number_format(min($apartment_debt_free_sales_prices), 2, ',', '.'),
-          "max" => number_format(max($apartment_debt_free_sales_prices), 2, ',', '.'),
+          "min" => number_format(min($apartment_debt_free_sales_prices), 2, ',', ' '),
+          "max" => number_format(max($apartment_debt_free_sales_prices), 2, ',', ' '),
         ];
         $apartment_debt_free_sales_prices_string = $apartment_debt_free_sales_prices_minmax['min'] . " € - " . $apartment_debt_free_sales_prices_minmax['max'] . " €";
       }
 
       if (!empty($apartment_sales_prices)) {
         $apartment_sales_prices_minmax = [
-          "min" => number_format(min($apartment_sales_prices), 2, ',', '.'),
-          "max" => number_format(max($apartment_sales_prices), 2, ',', '.'),
+          "min" => number_format(min($apartment_sales_prices), 2, ',', ' '),
+          "max" => number_format(max($apartment_sales_prices), 2, ',', ' '),
         ];
         $apartment_sales_prices_string = $apartment_sales_prices_minmax['min'] . " € - " . $apartment_sales_prices_minmax['max'] . " €";
       }

@@ -25,7 +25,7 @@
  * @see template_preprocess_block()
  */
 #}
-<div{{ attributes }}>
+<div{{ attributes }} aria-label="{{ 'Filters'|t }}" aria-live="polite">
   {% block content %}
     {{ content }}
   {% endblock %}
