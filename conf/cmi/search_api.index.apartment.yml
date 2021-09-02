@@ -581,7 +581,7 @@ field_settings:
     label: Käyttövastikevakuus
     datasource_id: 'entity:node'
     property_path: field_right_of_occupancy_deposit
-    type: decimal
+    type: cent
     dependencies:
       config:
         - field.storage.node.field_right_of_occupancy_deposit
@@ -589,7 +589,7 @@ field_settings:
     label: Käyttövastike
     datasource_id: 'entity:node'
     property_path: field_right_of_occupancy_fee
-    type: decimal
+    type: cent
     dependencies:
       config:
         - field.storage.node.field_right_of_occupancy_fee
@@ -597,7 +597,7 @@ field_settings:
     label: Asumisoikeusmaksu
     datasource_id: 'entity:node'
     property_path: field_right_of_occupancy_payment
-    type: decimal
+    type: cent
     dependencies:
       config:
         - field.storage.node.field_right_of_occupancy_payment
