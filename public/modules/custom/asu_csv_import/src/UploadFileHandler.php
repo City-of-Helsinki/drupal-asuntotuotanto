@@ -163,17 +163,29 @@ class UploadFileHandler {
         // Update existing or create new node.
         if (isset($node_fields['nid'])) {
           $node = Node::load($node_fields['nid']);
-          foreach ($node_fields as $key => $val) {
-            $value = $node->{$key}->value ? $node->{$key}->value : $node->{$key}->getString();
-            if ($key == 'field_showing_time') {
-              $d = new \DateTime($value);
-              $node->field_showing_time->setValue($d->format('Y-m-d\TH:i:s'));
-            }
-            if (!$value || $value === $val) {
-              continue;
-            }
-            $node->{$key} = $val;
 
+          if (!$node || $node->bundle() !== 'apartment') {
+            throw new \Exception('You are not allowed to set the \'nid\' field manually.');
+            return;
+          }
+
+          if ($node->field_apartment_number->value !== $node_fields['field_apartment_number']) {
+            throw new \Exception('Apartment number is not matching with the node. You are not allowed to change the apartment number manually. Contact the administrator.');
+            return;
+          }
+
+          foreach ($node_fields as $key => $val) {
+            if ($key != 'empty') {
+              $value = $node->{$key}->value ? $node->{$key}->value : $node->{$key}->getString();
+              if ($key == 'field_showing_time') {
+                $d = new \DateTime($value);
+                $node->field_showing_time->setValue($d->format('Y-m-d\TH:i:s'));
+              }
+              if (!$value || $value === $val) {
+                continue;
+              }
+              $node->{$key} = $val;
+            }
           }
           $update_nodes[] = $node;
         }
@@ -231,18 +243,22 @@ class UploadFileHandler {
       foreach ($fields_in_order as $field) {
         $data = NULL;
         // Csv can have "empty" between fields.
-        if (!$apt || $field == 'empty') {
+        if (!$apt) {
           continue;
         }
         try {
-          $value = $apt->{$field}->value ? : $apt->{$field}->getString();
-          $type = $apt->{$field}->getFieldDefinition()->getType();
-          $data = $this->createValue($value, $type);
-          if ($data) {
-            $row[] = $data->getExportValue();
-          }
-          else {
-            $row[] = '';
+          if($field != 'empty'){
+            $value = $apt->{$field}->value ? : $apt->{$field}->getString();
+            $type = $apt->{$field}->getFieldDefinition()->getType();
+            $data = $this->createValue($value, $type);
+            if ($data) {
+              $row[] = $data->getExportValue();
+            }
+            else {
+              $row[] = '';
+            }
+          } else {
+            $row[] = '-';
           }
         }
         catch (\Exception $e) {
@@ -348,7 +364,7 @@ class UploadFileHandler {
         break;
 
       default:
-        $value = FALSE;
+        $value = new TextType('');
     }
 
     return $value;
