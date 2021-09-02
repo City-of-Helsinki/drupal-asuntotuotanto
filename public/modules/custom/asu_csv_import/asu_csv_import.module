@@ -104,7 +104,11 @@ function asu_csv_import_process($form, FormStateInterface &$form_state) {
   $project_apartments_field = $fields['field_apartments'];
   $project_status = $form_object->getEntity()->isPublished();
 
-  $nodes = $upload_file_handler->createNodes($file, $langcode, $project_status);
+  try {
+    $nodes = $upload_file_handler->createNodes($file, $langcode, $project_status);
+  } catch (\Exception $e) {
+    \Drupal::messenger()->addError("Error while creating apartments: " . $e->getMessage());
+  }
 
   foreach ($nodes['create'] as $node) {
     $node->save();

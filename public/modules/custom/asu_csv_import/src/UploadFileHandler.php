@@ -163,8 +163,19 @@ class UploadFileHandler {
         // Update existing or create new node.
         if (isset($node_fields['nid'])) {
           $node = Node::load($node_fields['nid']);
+
+          if (!$node || $node->bundle() !== 'apartment') {
+            throw new \Exception('You are not allowed to set the \'nid\' field manually.');
+            return;
+          }
+
+          if ($node->field_apartment_number->value !== $node_fields['field_apartment_number']) {
+            throw new \Exception('Apartment number is not matching with the node. You are not allowed to change the apartment number manually. Contact the administrator.');
+            return;
+          }
+
           foreach ($node_fields as $key => $val) {
-            if($key != 'empty'){
+            if ($key != 'empty') {
               $value = $node->{$key}->value ? $node->{$key}->value : $node->{$key}->getString();
               if ($key == 'field_showing_time') {
                 $d = new \DateTime($value);
