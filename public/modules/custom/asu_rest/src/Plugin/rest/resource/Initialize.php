@@ -282,7 +282,6 @@ final class Initialize extends ResourceBase {
   protected function getProjectStatesOfSale() {
     return [
       'for_sale',
-      'upcoming',
       'pre_marketing',
       'processing',
       'ready',
