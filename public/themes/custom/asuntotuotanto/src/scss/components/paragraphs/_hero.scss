@@ -140,10 +140,10 @@
     padding-bottom: $spacing-m;
 
     @media screen and (min-width: $breakpoint-l) {
-      padding-bottom: $spacing-5-xl;
       display: flex;
       justify-content: space-between;
       overflow: visible;
+      padding-bottom: 0;
     }
 
     .hero__image-container {
@@ -156,17 +156,13 @@
 
   .hds-koros {
     color: $color-white;
-    transform: scale(2);
+    transform: scale(2) translateY(-1px);
     display: block;
   }
 
   .hero__wrapper {
     position: relative;
     background-color: var(--color-white);
-
-    .hero__container {
-      padding-top: 0;
-    }
 
     .hero__image-container {
       @media screen and (min-width: $breakpoint-l) {
