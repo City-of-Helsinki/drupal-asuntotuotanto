@@ -203,7 +203,10 @@ final class Initialize extends ResourceBase {
 
     $projects = \Drupal::entityTypeManager()
       ->getStorage('node')
-      ->loadByProperties(['type' => 'project']);
+      ->loadByProperties([
+        'type' => 'project',
+        'status' => 1,
+      ]);
 
     // Get all unique districts separately for both ownership types.
     foreach ($projects as $project) {
