@@ -5,7 +5,11 @@ namespace Drupal\asu_rest\Plugin\rest\resource;
 use Drupal\asu_application\Applications;
 use Drupal\asu_rest\UserDto;
 use Drupal\Core\Access\CsrfRequestHeaderAccessCheck;
+use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\file\Plugin\Field\FieldType\FileFieldItemList;
+use Drupal\image\Entity\ImageStyle;
+use Drupal\image\Plugin\Field\FieldType\ImageItem;
 use Drupal\rest\ModifiedResourceResponse;
 use Drupal\rest\Plugin\ResourceBase;
 use Drupal\user\Entity\User;
@@ -119,23 +123,9 @@ final class Initialize extends ResourceBase {
   }
 
   /**
-   * Get the filters.
-   */
-  private function getFilters(): array {
-    try {
-      $content = $this->doGetFilters();
-      return $content;
-    }
-    catch (\Exception $e) {
-      \Drupal::logger('asu_filters')->critical('Unable to create filter for react component: ' . $e->getMessage());
-      return [];
-    }
-  }
-
-  /**
    * Get all values used in React filter bar.
    */
-  protected function doGetFilters() {
+  protected function getFilters() {
     $responseData = [];
 
     $districts = $this->getDistrictsByProjectOwnershipType();
@@ -217,20 +207,19 @@ final class Initialize extends ResourceBase {
 
     // Get all unique districts separately for both ownership types.
     foreach ($projects as $project) {
-      if (!$project->field_ownership_type->first()) {
+      if ($project->field_ownership_type->isEmpty() ||
+          !$ownership = $project->field_ownership_type->first()->entity->getName()) {
         continue;
       }
-      if (!$ownership = $project->field_ownership_type->first()->entity->getName()) {
+      if ($project->field_district->isEmpty()) {
         continue;
       }
 
       // Take half_hitas into account.
-      $ownership_type = $ownership = $ownership == 'Haso' ? 'haso' : 'hitas';
+      $ownership_type = $ownership == 'Haso' ? 'haso' : 'hitas';
 
       $district = $project->field_district->first()->entity;
-
       $name = $district->getName();
-
       if (!array_search($name, $items[strtolower($ownership_type)])) {
         $items[strtolower($ownership_type)][] = $name;
       }
@@ -262,9 +251,9 @@ final class Initialize extends ResourceBase {
    */
   protected function getBuildingTypes() {
     return [
-      $this->t('Block of flats'),
-      $this->t('Row house'),
-      $this->t('House'),
+      'block_of_flats',
+      'row_house',
+      'house',
     ];
   }
 
@@ -275,10 +264,10 @@ final class Initialize extends ResourceBase {
    */
   protected function getNewDevelopmentStatus() {
     return [
-      $this->t('Under planning'),
-      $this->t('Under construction'),
-      $this->t('Pre marketing'),
-      $this->t('Ready to move'),
+      'under_planning',
+      'under_construction',
+      'pre_marketing',
+      'ready_to_move',
     ];
   }
 
@@ -289,11 +278,11 @@ final class Initialize extends ResourceBase {
    */
   protected function getProjectStatesOfSale() {
     return [
-      $this->t('For sale'),
-      $this->t('Upcoming'),
-      $this->t('Pre marketing'),
-      $this->t('Processing'),
-      $this->t('Ready'),
+      'for_sale',
+      'upcoming',
+      'pre_marketing',
+      'processing',
+      'ready',
     ];
   }
 
