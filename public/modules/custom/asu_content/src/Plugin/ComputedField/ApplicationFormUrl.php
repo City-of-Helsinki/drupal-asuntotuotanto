@@ -71,7 +71,7 @@ class ApplicationFormUrl extends FieldItemList {
         $referencing_node = $reference['referring_entity'];
         $baseurl = \Drupal::request()->getSchemeAndHttpHost();
 
-        // Application url cannot be indexed if ownership type or end time is missing
+        // Application url cannot be indexed if ownership type or end time is missing.
         if (
         !isset($referencing_node->field_ownership_type->referencedEntities()[0]) ||
         !$referencing_node->field_application_end_time->value
@@ -86,10 +86,10 @@ class ApplicationFormUrl extends FieldItemList {
           $this->isBeforeApplicationTimeEnd($referencing_node->field_application_end_time->value)
         ) {
           $apartment_type = strtolower($referencing_node->field_ownership_type->referencedEntities()[0]->getName());
-          $value  = $baseurl . '/application/add/' . $apartment_type . '/' . $referencing_node->id();
+          $value = $baseurl . '/application/add/' . $apartment_type . '/' . $referencing_node->id();
         }
         else {
-          $value = $baseurl . '/contact/apply_for_free_apartment?apartment='.$current_entity->id();
+          $value = $baseurl . '/contact/apply_for_free_apartment?apartment=' . $current_entity->id();
         }
       }
     }
@@ -99,6 +99,9 @@ class ApplicationFormUrl extends FieldItemList {
     ];
   }
 
+  /**
+   *
+   */
   protected function chingleComputeValue() {
     $current_entity = $this->getEntity();
     $reverse_references = $this->reverseEntities->getReverseReferences($current_entity);

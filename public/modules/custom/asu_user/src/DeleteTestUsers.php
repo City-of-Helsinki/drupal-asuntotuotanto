@@ -2,6 +2,7 @@
 
 namespace Drupal\asu_user;
 
+use Drupal\user\Entity\User;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 
 /**
@@ -23,9 +24,12 @@ class DeleteTestUsers {
     $this->entityTypeManager = $entityTypeManager;
   }
 
+  /**
+   *
+   */
   public function doDeleteTestUsers() {
     $user_ids = \Drupal::entityQuery('user')->execute();
-    $users = \Drupal\user\Entity\User::loadMultiple($user_ids);
+    $users = User::loadMultiple($user_ids);
 
     foreach ($users as $user) {
       if (str_starts_with($user->getAccountName(), 'test_') || str_starts_with($user->getEmail(), 'test_')) {

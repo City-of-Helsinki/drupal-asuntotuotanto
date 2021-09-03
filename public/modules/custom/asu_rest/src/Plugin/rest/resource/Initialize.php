@@ -9,7 +9,6 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\rest\ModifiedResourceResponse;
 use Drupal\rest\Plugin\ResourceBase;
 use Drupal\user\Entity\User;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Provides a resource to get user applications.

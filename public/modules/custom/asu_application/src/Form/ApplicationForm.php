@@ -2,7 +2,6 @@
 
 namespace Drupal\asu_application\Form;
 
-use Drupal\asu_api\Api\ElasticSearchApi\Request\ProjectApartmentsRequest;
 use Drupal\asu_application\Entity\Application;
 use Drupal\asu_application\Event\ApplicationEvent;
 use Drupal\Core\Ajax\AjaxResponse;

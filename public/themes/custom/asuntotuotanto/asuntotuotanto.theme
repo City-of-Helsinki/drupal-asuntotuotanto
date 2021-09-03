@@ -90,7 +90,8 @@ function asuntotuotanto_preprocess_menu(&$variables) {
 
           if ($url->isExternal()) {
             $url_string = $url->toString() . "?lang=$current_langcode";
-          } else {
+          }
+          else {
             $url_string = "/$current_langcode/" . $url->getInternalPath() . "?lang=$current_langcode";
           }
 
@@ -108,7 +109,8 @@ function asuntotuotanto_preprocess_menu(&$variables) {
 
               if ($below_url->isExternal()) {
                 $below_url_string = $below_url->toString() . "?lang=$current_langcode";
-              } else {
+              }
+              else {
                 $below_url_string = "/$current_langcode/" . $below_url->getInternalPath() . "?lang=$current_langcode";
               }
 
@@ -234,7 +236,7 @@ function asuntotuotanto_preprocess_views_view_table(&$variables) {
       $ownership_type_entity = $parent_node->get('field_ownership_type')->entity;
 
       $project_id = $parent_node->id();
-      $ownership_type = $ownership_type_entity ? strtolower($ownership_type_entity->getName()): '';
+      $ownership_type = $ownership_type_entity ? strtolower($ownership_type_entity->getName()) : '';
       $application_url = "/$langcode/application/add/$ownership_type/$project_id";
 
       $variables['rows'][$key]['is_application_period_active'] = $is_application_period_active;
