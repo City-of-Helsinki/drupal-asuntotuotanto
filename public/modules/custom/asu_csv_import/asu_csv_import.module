@@ -106,7 +106,8 @@ function asu_csv_import_process($form, FormStateInterface &$form_state) {
 
   try {
     $nodes = $upload_file_handler->createNodes($file, $langcode, $project_status);
-  } catch (\Exception $e) {
+  }
+  catch (\Exception $e) {
     \Drupal::messenger()->addError("Error while creating apartments: " . $e->getMessage());
   }
 

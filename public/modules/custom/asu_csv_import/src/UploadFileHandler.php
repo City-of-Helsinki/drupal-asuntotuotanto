@@ -247,7 +247,7 @@ class UploadFileHandler {
           continue;
         }
         try {
-          if($field != 'empty'){
+          if ($field != 'empty') {
             $value = $apt->{$field}->value ? : $apt->{$field}->getString();
             $type = $apt->{$field}->getFieldDefinition()->getType();
             $data = $this->createValue($value, $type);
@@ -257,7 +257,8 @@ class UploadFileHandler {
             else {
               $row[] = '';
             }
-          } else {
+          }
+          else {
             $row[] = '-';
           }
         }
@@ -305,7 +306,7 @@ class UploadFileHandler {
   private function getFieldTypes(array $header, array $field_definitions) {
     $field_types = [];
     foreach ($header as $key => $title) {
-      // csv may have empty values.
+      // Csv may have empty values.
       if ($title == 'empty') {
         $field_types[] = 'empty';
         continue;
@@ -370,28 +371,31 @@ class UploadFileHandler {
     return $value;
   }
 
-  private function getFileDelimiter($filename, $checkLines = 2){
+  /**
+   * Try to guess which delimiter is used in csv.
+   */
+  private function getFileDelimiter($filename, $checkLines = 2) {
     $possibleDelimiters = [
       ',',
       ';',
       '|',
-      ':'
+      ':',
     ];
     $results = [
       ',' => 0,
       ';' => 0,
       '|' => 0,
-      ':' => 0
+      ':' => 0,
     ];
     $i = 0;
     $file = new \SplFileObject($filename);
-    while($file->valid() && $i <= $checkLines) {
+    while ($file->valid() && $i <= $checkLines) {
       $line = $file->fgets();
-      foreach ($possibleDelimiters as $delimiter){
-        $regExp = '/['.$delimiter.']/';
+      foreach ($possibleDelimiters as $delimiter) {
+        $regExp = '/[' . $delimiter . ']/';
         $fields = preg_split($regExp, $line);
-        if(count($fields) > 1){
-            $results[$delimiter]++;
+        if (count($fields) > 1) {
+          $results[$delimiter]++;
         }
       }
       $i++;
@@ -400,6 +404,4 @@ class UploadFileHandler {
     $results = array_keys($results, max($results));
     return $results[0];
   }
-
-
 }

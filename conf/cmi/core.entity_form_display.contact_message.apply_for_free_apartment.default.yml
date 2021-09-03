@@ -5,6 +5,7 @@ dependencies:
   config:
     - contact.form.apply_for_free_apartment
     - field.field.contact_message.apply_for_free_apartment.field_apartment_information
+    - field.field.contact_message.apply_for_free_apartment.field_contact_person
     - field.field.contact_message.apply_for_free_apartment.field_date_of_birth
     - field.field.contact_message.apply_for_free_apartment.field_name
     - field.field.contact_message.apply_for_free_apartment.field_phone_number
@@ -22,6 +23,14 @@ content:
       placeholder: ''
     third_party_settings: {  }
     type: string_textfield
+    region: content
+  field_contact_person:
+    weight: 6
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: email_default
     region: content
   field_date_of_birth:
     weight: 4

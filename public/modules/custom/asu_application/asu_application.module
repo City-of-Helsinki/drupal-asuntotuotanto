@@ -4,7 +4,8 @@
  * @file
  */
 
-use Symfony\Component\HttpFoundation\RedirectResponse;
+use Drupal\node\Entity\Node;
+use Drupal\file\Entity\File;
 
 /**
  * Implements hook_theme().
@@ -51,7 +52,7 @@ function template_preprocess_asu_application(array &$variables) {
 
     $project = $projects[$projectId];
 
-    $main_image_file = \Drupal\file\Entity\File::load($project->field_main_image->target_id) ?? NULL;
+    $main_image_file = File::load($project->field_main_image->target_id) ?? NULL;
 
     if ($main_image_file) {
       $main_image_file_url = file_create_url($main_image_file->getFileUri());
@@ -85,7 +86,10 @@ function template_preprocess_asu_application(array &$variables) {
  */
 function asu_user_form_contact_message_apply_for_free_apartment_form_alter(&$form, &$form_state, $form_id) {
   $apartment_id = \Drupal::request()->get('apartment') ?? NULL;
-  $apartment = \Drupal\node\Entity\Node::load($apartment_id);
+  $apartment = Node::load($apartment_id);
+
+  $form['#contact_form_title'] = $apartment ? $apartment->getTitle() : t('Apply for an apartment');
+  $form['#contact_form_text'] = t('Leave your contact information and we will personally contact you regarding this apartment.');
 
   if (!$apartment || $apartment->bundle() != 'apartment') {
     return;
@@ -100,27 +104,31 @@ function asu_user_form_contact_message_apply_for_free_apartment_form_alter(&$for
   //   (new RedirectResponse('/user/login', 301))->send();
   //   return;
   // }
-
   $parent = \Drupal::entityTypeManager()
     ->getListBuilder('node')
     ->getStorage()
     ->loadByProperties([
-        'type' => 'project',
-        'status' => 1,
-        'field_apartments' => $apartment_id,
-      ]
+      'type' => 'project',
+      'status' => 1,
+      'field_apartments' => $apartment_id,
+    ]
     );
-
-  $form['#contact_form_title'] = $apartment->getTitle();
-  $form['#contact_form_text'] = t('Leave your contact information and we will personally contact you regarding this apartment.');
-
   // Prefill apartment information field with data.
-  if ($parent) {
+  $fields = [];
+
+  if (!empty($parent)) {
+    $parentNode = reset($parent);
     $fields = [
-      'field_apartment_information' => $apartment->getTitle()
+      'field_apartment_information' => $apartment->getTitle(),
+      'field_contact_person' => $parentNode->field_estate_agent_email->value,
     ];
+    foreach ($fields as $formFieldName => $data) {
+      $form[$formFieldName]['widget'][0]['value']['#default_value'] = $data ?? '';
+    }
     // Set apartment information field readonly.
     $form['field_apartment_information']['widget'][0]['value']['#attributes']['readonly'] = 'readonly';
+    $form['field_apartment_information']['widget'][0]['value']['#type'] = 'hidden';
+    $form['field_contact_person']['widget'][0]['value']['#type'] = 'hidden';
   }
 
   // Prefill rest of the field if user data is available.
@@ -132,8 +140,5 @@ function asu_user_form_contact_message_apply_for_free_apartment_form_alter(&$for
       'field_name' => "{$store->get('first_name')} {$store->get('last_name')}",
       'field_phone_number' => $store->get('phone_number'),
     ];
-  }
-  foreach ($fields as $formFieldName => $data) {
-    $form[$formFieldName]['widget'][0]['value']['#default_value'] = $data ?? '';
   }
 }

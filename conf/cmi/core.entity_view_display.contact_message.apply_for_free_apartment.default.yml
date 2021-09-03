@@ -5,6 +5,7 @@ dependencies:
   config:
     - contact.form.apply_for_free_apartment
     - field.field.contact_message.apply_for_free_apartment.field_apartment_information
+    - field.field.contact_message.apply_for_free_apartment.field_contact_person
     - field.field.contact_message.apply_for_free_apartment.field_date_of_birth
     - field.field.contact_message.apply_for_free_apartment.field_name
     - field.field.contact_message.apply_for_free_apartment.field_phone_number
@@ -12,7 +13,14 @@ id: contact_message.apply_for_free_apartment.default
 targetEntityType: contact_message
 bundle: apply_for_free_apartment
 mode: default
-content: {  }
+content:
+  field_contact_person:
+    weight: 0
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: basic_string
+    region: content
 hidden:
   field_apartment_information: true
   field_date_of_birth: true
