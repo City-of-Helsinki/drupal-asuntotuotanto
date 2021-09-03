@@ -87,6 +87,9 @@ function asu_user_form_contact_message_apply_for_free_apartment_form_alter(&$for
   $apartment_id = \Drupal::request()->get('apartment') ?? NULL;
   $apartment = \Drupal\node\Entity\Node::load($apartment_id);
 
+  $form['#contact_form_title'] = $apartment ? $apartment->getTitle() : t('Apply for an apartment');
+  $form['#contact_form_text'] = t('Leave your contact information and we will personally contact you regarding this apartment.');
+
   if (!$apartment || $apartment->bundle() != 'apartment') {
     return;
   }
@@ -111,9 +114,6 @@ function asu_user_form_contact_message_apply_for_free_apartment_form_alter(&$for
       ]
     );
 
-  $form['#contact_form_title'] = $apartment->getTitle();
-  $form['#contact_form_text'] = t('Leave your contact information and we will personally contact you regarding this apartment.');
-
   // Prefill apartment information field with data.
   if ($parent) {
     $fields = [
@@ -121,6 +121,7 @@ function asu_user_form_contact_message_apply_for_free_apartment_form_alter(&$for
     ];
     // Set apartment information field readonly.
     $form['field_apartment_information']['widget'][0]['value']['#attributes']['readonly'] = 'readonly';
+    $form['field_apartment_information']['widget'][0]['value']['#type'] = 'hidden';
   }
 
   // Prefill rest of the field if user data is available.
