@@ -102,6 +102,8 @@
 {% set services_url_title = services_url[0]['#title'] %}
 {% set housing_company = content.field_housing_company.0 %}
 {% set project_area_description = content.field_project_area_description.0 %}
+{% set coordinate_lat = content.field_coordinate_lat.0['#markup'] %}
+{% set coordinate_lon = content.field_coordinate_lon.0['#markup'] %}
 
 <article{{ attributes.addClass(classes) }}>
   <div class="sticky-navigation is-hidden" aria-hidden="true" id="sticky_navigation">
@@ -392,21 +394,34 @@
         <a class="project__area-overvink-link" href="{{ services_url_link }}">{{ services_url_title }}</a>
       {% endif %}
     </div>
-    <div class="project__map-location">
-      <h2 class="project__map-location-label">
-        {% trans %}
-          Location
-        {% endtrans %}
-      </h2>
-      <div>
-        {# TODO: Add map. #}
-      </div>
-    </div>
-  </div>
+    {% if city|render and street_name|render and street_number|render %}
+      <div class="project__map-location">
+        <h2 class="project__map-location-label">
+          {% trans %}
+            Location
+          {% endtrans %}
+        </h2>
+        <div>
 
-  {# <div class="project__apartments-container" id="project_apartments">
-    {% include "@asuntotuotanto/misc/project-apartments-listing.html.twig" with { apartments, apartments_count } %}
-  </div> #}
+          {% set embed_url_base = "https://palvelukartta.hel.fi/fi/embed" %}
+
+          {% if coordinate_lat|render and coordinate_lon|render %}
+            {% set embed_url_suffix = "/?lat=" ~ coordinate_lat ~ "&lon=" ~ coordinate_lon %}
+          {% else %}
+            {% set embed_url_parameters = city|lower ~ '/' ~ street_name ~ '/' ~ street_number %}
+            {% set embed_url_suffix = "/address/" ~ embed_url_parameters %}
+          {% endif %}
+
+          {% set embed_link = embed_url_base ~ embed_url_suffix ~ "&city=helsinki,espoo,vantaa,kauniainen,kirkkonummi" %}
+
+          <iframe
+            style="position: absolute; top: 0; left: 0; border: none; width: 100%; height: 100%;"
+            src="{{ embed_link }}"></iframe>
+
+        </div>
+      </div>
+    {% endif %}
+  </div>
 
   <div class="project__apartments-container" id="project_apartments">
     {{ drupal_view('project_apartments_listing', 'project_apartments_listing_block') }}
