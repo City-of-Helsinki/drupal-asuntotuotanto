@@ -31,6 +31,9 @@ dependencies:
     - field.field.node.apartment.field_parking_fee_explanation
     - field.field.node.apartment.field_publish_on_etuovi
     - field.field.node.apartment.field_publish_on_oikotie
+    - field.field.node.apartment.field_right_of_occupancy_deposit
+    - field.field.node.apartment.field_right_of_occupancy_fee
+    - field.field.node.apartment.field_right_of_occupancy_payment
     - field.field.node.apartment.field_room_count
     - field.field.node.apartment.field_sales_price
     - field.field.node.apartment.field_services_description
@@ -112,6 +115,9 @@ third_party_settings:
       children:
         - field_sales_price
         - field_debt_free_sales_price
+        - field_right_of_occupancy_fee
+        - field_right_of_occupancy_deposit
+        - field_right_of_occupancy_payment
         - field_loan_share
         - field_financing_fee
         - field_maintenance_fee
@@ -217,7 +223,7 @@ content:
     type: number
     region: content
   field_financing_fee:
-    weight: 46
+    weight: 49
     settings:
       placeholder: ''
     third_party_settings: {  }
@@ -297,21 +303,21 @@ content:
     type: number
     region: content
   field_loan_share:
-    weight: 45
+    weight: 48
     settings:
       placeholder: ''
     third_party_settings: {  }
     type: number
     region: content
   field_maintenance_fee:
-    weight: 47
+    weight: 50
     settings:
       placeholder: ''
     third_party_settings: {  }
     type: number
     region: content
   field_other_fees:
-    weight: 52
+    weight: 55
     settings:
       rows: 5
       placeholder: ''
@@ -319,14 +325,14 @@ content:
     type: string_textarea
     region: content
   field_parking_fee:
-    weight: 50
+    weight: 53
     settings:
       placeholder: ''
     third_party_settings: {  }
     type: number
     region: content
   field_parking_fee_explanation:
-    weight: 51
+    weight: 54
     settings:
       rows: 5
       placeholder: ''
@@ -346,6 +352,27 @@ content:
       display_label: true
     third_party_settings: {  }
     type: boolean_checkbox
+    region: content
+  field_right_of_occupancy_deposit:
+    weight: 46
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+    type: number
+    region: content
+  field_right_of_occupancy_fee:
+    weight: 45
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+    type: number
+    region: content
+  field_right_of_occupancy_payment:
+    weight: 47
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+    type: number
     region: content
   field_room_count:
     weight: 8
@@ -406,14 +433,14 @@ content:
     type: string_textarea
     region: content
   field_water_fee:
-    weight: 48
+    weight: 51
     settings:
       placeholder: ''
     third_party_settings: {  }
     type: number
     region: content
   field_water_fee_explanation:
-    weight: 49
+    weight: 52
     settings:
       rows: 5
       placeholder: ''

@@ -124,6 +124,7 @@
             disabled: false,
             label: 'Learn more about the apartment'|t,
             href: url('entity.node.canonical', { 'node': nid }),
+            aria_label: 'Learn more'|t ~ ', ' ~ 'apartment'|t ~ ' ' ~ apartment_number
             }
           %}
           {% if is_application_period_active %}
@@ -132,6 +133,7 @@
               disabled: false,
               label: 'Create an application'|t,
               href: application_url,
+              aria_label: 'Create an application'|t ~ ', ' ~ 'apartment'|t ~ ' ' ~ apartment_number
               }
             %}
           {% endif %}
@@ -245,6 +247,7 @@
               size: 'small',
               label: 'Learn more'|t,
               href: url('entity.node.canonical', { 'node': nid }),
+              aria_label: 'Learn more'|t ~ ', ' ~ 'apartment'|t ~ ' ' ~ apartment_number
               }
             %}
             {% if is_application_period_active %}
@@ -254,6 +257,7 @@
                 size: 'small',
                 label: 'Create an application'|t,
                 href: application_url,
+                aria_label: 'Create an application'|t ~ ', ' ~ 'apartment'|t ~ ' ' ~ apartment_number
                 }
               %}
             {% endif %}

@@ -20,8 +20,9 @@ class DecimalType extends ImportType {
    * @throws \Exception
    */
   public function __construct($decimal) {
-    if ($this->isAllowedValue($decimal)) {
-      $this->value = $decimal;
+    $value = str_replace(',', '.', $decimal);
+    if ($this->isAllowedValue($value)) {
+      $this->value = $value;
     }
     else {
       throw new \Exception('Value is not proper decimal.');
@@ -63,14 +64,13 @@ class DecimalType extends ImportType {
       return TRUE;
     }
     else {
-      $number = floatval(str_replace(',', '.', $input));
-      if (!empty($number) && !is_numeric($number)) {
+      if (!empty($input) && !is_numeric($input)) {
         return FALSE;
       }
-      if (is_string($number) && is_numeric($number)) {
+      if (is_string($input) && is_numeric($input)) {
         return TRUE;
       }
-      elseif (is_float($number)) {
+      elseif (is_float($input)) {
         return TRUE;
       }
     }

@@ -31,6 +31,9 @@ dependencies:
     - field.field.node.apartment.field_parking_fee_explanation
     - field.field.node.apartment.field_publish_on_etuovi
     - field.field.node.apartment.field_publish_on_oikotie
+    - field.field.node.apartment.field_right_of_occupancy_deposit
+    - field.field.node.apartment.field_right_of_occupancy_fee
+    - field.field.node.apartment.field_right_of_occupancy_payment
     - field.field.node.apartment.field_room_count
     - field.field.node.apartment.field_sales_price
     - field.field.node.apartment.field_services_description
@@ -133,7 +136,7 @@ content:
     weight: 20
     label: hidden
     settings:
-      thousand_separator: .
+      thousand_separator: ' '
       decimal_separator: ','
       scale: 2
       prefix_suffix: true
@@ -363,6 +366,39 @@ content:
     third_party_settings: {  }
     type: boolean
     region: content
+  field_right_of_occupancy_deposit:
+    weight: 61
+    label: above
+    settings:
+      thousand_separator: ''
+      decimal_separator: .
+      scale: 2
+      prefix_suffix: true
+    third_party_settings: {  }
+    type: number_decimal
+    region: content
+  field_right_of_occupancy_fee:
+    weight: 60
+    label: above
+    settings:
+      thousand_separator: ''
+      decimal_separator: .
+      scale: 2
+      prefix_suffix: true
+    third_party_settings: {  }
+    type: number_decimal
+    region: content
+  field_right_of_occupancy_payment:
+    weight: 62
+    label: above
+    settings:
+      thousand_separator: ''
+      decimal_separator: .
+      scale: 2
+      prefix_suffix: true
+    third_party_settings: {  }
+    type: number_decimal
+    region: content
   field_room_count:
     weight: 7
     label: inline
@@ -376,7 +412,7 @@ content:
     weight: 19
     label: hidden
     settings:
-      thousand_separator: .
+      thousand_separator: ' '
       decimal_separator: ','
       scale: 2
       prefix_suffix: true

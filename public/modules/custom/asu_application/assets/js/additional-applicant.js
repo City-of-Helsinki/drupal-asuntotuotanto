@@ -2,7 +2,7 @@
   Drupal.behaviors.applicantFormToggle = {
     attach: function attach() {
       const applicantFormWrapperElement = document.getElementById('applicant-wrapper');
-      const checkboxToggleElement = document.getElementById('has-additional-applicant');
+      const checkboxToggleElement = document.getElementById('edit-applicant-0-has-additional-applicant');
 
       if (!checkboxToggleElement.checked) {
         applicantFormWrapperElement.style.display = 'none';

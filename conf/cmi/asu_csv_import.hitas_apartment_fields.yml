@@ -9,6 +9,7 @@ apartment_fields:
   - field_sales_price
   - field_loan_share
   - field_debt_free_sales_price
+  - field_price_m2
   - field_maintenance_fee
   - field_financing_fee
   - field_housing_company_fee
@@ -30,5 +31,4 @@ apartment_fields:
   - field_other_fees
   - field_services_description
   - field_additional_information
-  - langcode
   - nid

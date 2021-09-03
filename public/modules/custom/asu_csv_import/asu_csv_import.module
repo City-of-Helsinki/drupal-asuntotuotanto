@@ -25,20 +25,23 @@ function asu_csv_import_form_node_form_alter(&$form, FormStateInterface $form_st
     $type = $field->getFieldDefinition()->getType();
 
     if ($type == 'asu_csv_import') {
-      $form["field_import_apartments"]["widget"][0]['download_template'] = [
+      $form["field_import_apartments"]["widget"][0]['download_hitas_template'] = [
         '#type' => 'submit',
-        '#value' => t('Download CSV Template'),
+        '#name' => 'hitas',
+        '#value' => t('Download Hitas CSV template '),
         '#limit_validation_errors' => [],
         '#submit' => ['csv_import_download_template'],
+        '#button_type' => 'primary',
       ];
-/*
+
       $form["field_import_apartments"]["widget"][0]['download_haso_template'] = [
         '#type' => 'submit',
-        '#value' => t('Download CSV template for haso apartments'),
+        '#name' => 'haso',
+        '#value' => t('Download HASO CSV template'),
         '#limit_validation_errors' => [],
         '#submit' => ['csv_import_download_template'],
+        '#button_type' => 'primary',
       ];
-*/
       $form['actions']['submit']['#submit'][] = 'asu_csv_import_process';
 
       break;
@@ -50,11 +53,16 @@ function asu_csv_import_form_node_form_alter(&$form, FormStateInterface $form_st
  * Form submission callback function for download button.
  */
 function csv_import_download_template(&$form, FormStateInterface $form_state) {
+  $trigger = $form_state->getTriggeringElement()['#name'];
+  $configName = 'asu_csv_import.haso_apartment_fields';
+  if ($trigger == 'hitas') {
+    $configName = 'asu_csv_import.hitas_apartment_fields';
+  }
+
   $node = $form_state->getFormObject()->getEntity();
   $upload_file_handler = \Drupal::service('asu_csv_import.upload_file_handler');
 
-  // @todo: Add second download button template at some point.
-  $fields_order = Drupal::config('asu_csv_import.haso_apartment_fields')->get('apartment_fields');
+  $fields_order = Drupal::config($configName)->get('apartment_fields');
   $rows = $upload_file_handler->createCsvTemplateRows($node, $fields_order);
   try {
     $csv = $upload_file_handler->createCsvOutput(array_merge([$fields_order], $rows));
@@ -96,7 +104,11 @@ function asu_csv_import_process($form, FormStateInterface &$form_state) {
   $project_apartments_field = $fields['field_apartments'];
   $project_status = $form_object->getEntity()->isPublished();
 
-  $nodes = $upload_file_handler->createNodes($file, $langcode, $project_status);
+  try {
+    $nodes = $upload_file_handler->createNodes($file, $langcode, $project_status);
+  } catch (\Exception $e) {
+    \Drupal::messenger()->addError("Error while creating apartments: " . $e->getMessage());
+  }
 
   foreach ($nodes['create'] as $node) {
     $node->save();
