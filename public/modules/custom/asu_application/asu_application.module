@@ -113,15 +113,22 @@ function asu_user_form_contact_message_apply_for_free_apartment_form_alter(&$for
         'field_apartments' => $apartment_id,
       ]
     );
-
   // Prefill apartment information field with data.
-  if ($parent) {
+  $fields = [];
+
+  if (!empty($parent)) {
+    $parentNode = reset($parent);
     $fields = [
-      'field_apartment_information' => $apartment->getTitle()
+      'field_apartment_information' => $apartment->getTitle(),
+      'field_contact_person' => $parentNode->field_estate_agent_email->value
     ];
+    foreach ($fields as $formFieldName => $data) {
+      $form[$formFieldName]['widget'][0]['value']['#default_value'] = $data ?? '';
+    }
     // Set apartment information field readonly.
     $form['field_apartment_information']['widget'][0]['value']['#attributes']['readonly'] = 'readonly';
     $form['field_apartment_information']['widget'][0]['value']['#type'] = 'hidden';
+    $form['field_contact_person']['widget'][0]['value']['#type'] = 'hidden';
   }
 
   // Prefill rest of the field if user data is available.
@@ -133,8 +140,5 @@ function asu_user_form_contact_message_apply_for_free_apartment_form_alter(&$for
       'field_name' => "{$store->get('first_name')} {$store->get('last_name')}",
       'field_phone_number' => $store->get('phone_number'),
     ];
-  }
-  foreach ($fields as $formFieldName => $data) {
-    $form[$formFieldName]['widget'][0]['value']['#default_value'] = $data ?? '';
   }
 }
