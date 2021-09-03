@@ -434,16 +434,33 @@
         <a class="apartment__area-overvink-link" href="{{ services_url.uri }}">{{ services_url.title }}</a>
       {% endif %}
     </div>
-    <div class="apartment__map-location">
-      <h2 class="apartment__map-location-label">
-        {% trans %}
-          Location
-        {% endtrans %}
-      </h2>
-      <div>
-        {# TODO: Add map. #}
+    {% if city|render and street_name|render and street_number|render %}
+      <div class="apartment__map-location">
+        <h2 class="apartment__map-location-label">
+          {% trans %}
+            Location
+          {% endtrans %}
+        </h2>
+        <div>
+
+          {% set embed_url_base = "https://palvelukartta.hel.fi/fi/embed" %}
+
+          {% if coordinate_lat|render and coordinate_lon|render %}
+            {% set embed_url_suffix = "/?lat=" ~ coordinate_lat ~ "&lon=" ~ coordinate_lon %}
+          {% else %}
+            {% set embed_url_parameters = city|lower ~ '/' ~ street_name ~ '/' ~ street_number %}
+            {% set embed_url_suffix = "/address/" ~ embed_url_parameters %}
+          {% endif %}
+
+          {% set embed_link = embed_url_base ~ embed_url_suffix ~ "&city=helsinki,espoo,vantaa,kauniainen,kirkkonummi" %}
+
+          <iframe
+            style="position: absolute; top: 0; left: 0; border: none; width: 100%; height: 100%;"
+            src="{{ embed_link }}"></iframe>
+
+        </div>
       </div>
-    </div>
+    {% endif %}
   </div>
 
   {% if is_application_period_active %}

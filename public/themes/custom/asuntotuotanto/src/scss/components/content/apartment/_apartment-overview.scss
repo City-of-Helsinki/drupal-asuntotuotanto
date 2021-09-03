@@ -117,17 +117,15 @@
 }
 
 .apartment__map-location {
-  // TODO: Re-show when map is added.
-  display: none;
-  visibility: hidden;
-
   background-color: var(--color-silver-medium-light);
-  margin: 0 -#{$spacing-s};
-  padding: $spacing-m $spacing-s;
+  margin: 0 -#{$spacing-l};
+  padding: $spacing-m $spacing-l;
+  position: relative;
+  min-height: 400px;
 
   @media screen and (min-width: $breakpoint-s) and (max-width: $breakpoint-m - 1px) {
-    margin: 0 -#{$spacing-m};
-    padding: $spacing-xl $spacing-m;
+    margin: 0 -#{$spacing-l};
+    padding: $spacing-xl $spacing-l;
   }
 
   @media screen and (min-width: $breakpoint-m) and (max-width: $breakpoint-l - 1px) {
@@ -136,10 +134,10 @@
   }
 
   @media screen and (min-width: $breakpoint-l) {
-    margin: 0 -#{$spacing-xl} 0 0;
-    max-width: calc(50% + #{$spacing-xl});
     padding: $spacing-3-xl $spacing-xl;
     width: 100%;
+    margin: 0;
+    min-height: 200px;
   }
 }
 

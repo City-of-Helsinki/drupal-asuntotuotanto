@@ -16,14 +16,14 @@
   border-top: 1px solid var(--color-black-20);
   left: 0;
   opacity: 1;
-  padding-top: $spacing-2-xs;
+  padding: $spacing-2-xs $spacing-l 0;
   position: fixed;
   right: 0;
   top: 0;
   z-index: 100;
 
   @media screen and (min-width: $breakpoint-l) {
-    padding: 0;
+    padding: 0 $spacing-l;
   }
 
   .toolbar-vertical & {

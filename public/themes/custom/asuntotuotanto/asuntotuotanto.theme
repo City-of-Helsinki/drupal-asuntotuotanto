@@ -502,6 +502,22 @@ function asuntotuotanto_preprocess_node(&$variables) {
         $is_application_period_active = TRUE;
       }
 
+      if (!empty($node->field_street_address->value)) {
+        $street_address_splitted = split_address_line($node->field_street_address->value);
+
+        $street_name = $street_address_splitted['street'];
+        $street_number_addition = $street_address_splitted['number_addition'];
+
+        if (!empty($street_number_addition)) {
+          $street_number_addition = $street_number_addition[0] === '-' ? $street_number_addition : "-$street_number_addition";
+        }
+
+        $street_number = $street_address_splitted['number'] . $street_number_addition ?? NULL;
+
+        $variables['street_name'] = $street_name ?? NULL;
+        $variables['street_number'] = $street_number ?? NULL;
+      }
+
       $variables['application_start_time'] = format_timestamp_to_custom_format($application_start_time_timestamp);
       $variables['application_end_time'] = format_timestamp_to_custom_format($application_end_time_timestamp);
       $variables['apartments_count'] = count($apartments);
@@ -550,10 +566,6 @@ function asuntotuotanto_preprocess_node(&$variables) {
         if ($current_timestamp > $application_end_time_timestamp) {
           $is_application_period_in_the_past = TRUE;
         }
-
-        $street_address = $parent_node->get('field_street_address')->value;
-        $postal_code = $parent_node->get('field_postal_code')->value;
-        $city = $parent_node->get('field_city')->value;
 
         if (count($parent_node->get('field_district')->getValue()) > 0) {
           $district = Term::load($parent_node->get('field_district')->getValue()[0]['target_id'])->name->value ?? NULL;
@@ -647,6 +659,31 @@ function asuntotuotanto_preprocess_node(&$variables) {
           }
         }
 
+        $street_address = $parent_node->get('field_street_address')->value ?? NULL;
+        $postal_code = $parent_node->get('field_postal_code')->value ?? NULL;
+        $city = $parent_node->get('field_city')->value ?? NULL;
+        $coordinate_lat = $parent_node->get('field_coordinate_lat')->value ?? NULL;
+        $coordinate_lon = $parent_node->get('field_coordinate_lon')->value ?? NULL;
+
+        if (!empty($street_address)) {
+          $street_address_splitted = split_address_line($street_address);
+
+          $street_name = $street_address_splitted['street'];
+          $street_number_addition = $street_address_splitted['number_addition'];
+
+          if (!empty($street_number_addition)) {
+            $street_number_addition = $street_number_addition[0] === '-' ? $street_number_addition : "-$street_number_addition";
+          }
+
+          $street_number = $street_address_splitted['number'] . $street_number_addition ?? NULL;
+
+          $variables['street_name'] = $street_name ?? NULL;
+          $variables['street_number'] = $street_number ?? NULL;
+        }
+
+        $variables['coordinate_lat'] = $coordinate_lat;
+        $variables['coordinate_lon'] = $coordinate_lon;
+        $variables['city'] = $city;
         $variables['application_start_time'] = format_timestamp_to_custom_format($application_start_time_timestamp);
         $variables['application_end_time'] = format_timestamp_to_custom_format($application_end_time_timestamp);
         $variables['is_application_period_active'] = $is_application_period_active;
