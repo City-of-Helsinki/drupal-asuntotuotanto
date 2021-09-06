@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.user.sales.field_full_name
     - field.field.user.sales.field_phone_number
     - user_bundle.user_type.sales
 id: user.sales.default
@@ -34,6 +35,14 @@ content:
       link_to_entity: false
     third_party_settings: {  }
     type: string
+  field_full_name:
+    weight: 7
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
   field_phone_number:
     weight: 6
     label: above
