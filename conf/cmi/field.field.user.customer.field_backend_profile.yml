@@ -1,0 +1,19 @@
+uuid: b094f28d-ae02-4fe1-aeee-a3b22972071d
+langcode: fi
+status: true
+dependencies:
+  config:
+    - field.storage.user.field_backend_profile
+    - user_bundle.user_type.customer
+id: user.customer.field_backend_profile
+field_name: field_backend_profile
+entity_type: user
+bundle: customer
+label: 'Backend profile'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string
