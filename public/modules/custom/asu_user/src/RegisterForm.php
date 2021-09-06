@@ -60,6 +60,16 @@ class RegisterForm extends BaseForm {
     $config = \Drupal::config('asu_user.external_user_fields');
     $fields = $config->get('external_data_map');
 
+    $bundle = FALSE;
+    $form_object = $form_state->getFormObject();
+    if ($form_object instanceof ContentEntityForm) {
+      $bundle = $form_object->getEntity()->bundle();
+    }
+
+    if ($bundle !== 'customer') {
+      return $form;
+    }
+
     foreach ($fields as $field => $info) {
       $form['basic_information'][$field] = [
         '#type' => $info['type'],
