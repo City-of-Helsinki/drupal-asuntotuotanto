@@ -52,6 +52,7 @@ dependencies:
     - field.field.node.project.field_publication_start_time
     - field.field.node.project.field_realty_id
     - field.field.node.project.field_roof_material
+    - field.field.node.project.field_salesperson
     - field.field.node.project.field_sanitation
     - field.field.node.project.field_services
     - field.field.node.project.field_services_url
@@ -165,6 +166,7 @@ hidden:
   field_publication_start_time: true
   field_realty_id: true
   field_roof_material: true
+  field_salesperson: true
   field_sanitation: true
   field_services: true
   field_services_url: true
