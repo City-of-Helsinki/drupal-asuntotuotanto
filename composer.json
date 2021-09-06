@@ -154,6 +154,9 @@
             },
             "drupal/jquery_ui_touch_punch": {
                 "jQuery UI Touch Punch library [https://www.drupal.org/project/jquery_ui_touch_punch/issues/3159222]": "https://www.drupal.org/files/issues/2021-02-26/jquery_ui_touch_punch.patch"
+            },
+            "drupal/user_bundle": {
+                "Automated D9 compatibility fixes": "https://www.drupal.org/files/issues/2021-01-04/user_bundle.1.x-dev.rector-3.patch"
             }
         }
     },
