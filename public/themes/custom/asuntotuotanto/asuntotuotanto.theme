@@ -257,6 +257,19 @@ function asuntotuotanto_theme_suggestions_input_alter(&$suggestions, array $vari
 }
 
 /**
+ * Implements hook_preprocess_links().
+ */
+function asuntotuotanto_preprocess_links__language_block(&$variables) {
+  $links = $variables['links'];
+
+  foreach ($links as $key => $link) {
+    if ($key !== 'fi') {
+      unset($variables['links'][$key]);
+    }
+  }
+}
+
+/**
  * Implements hook_theme_suggestions_container_alter().
  */
 function asuntotuotanto_theme_suggestions_container_alter(&$suggestions, array $variables) {
