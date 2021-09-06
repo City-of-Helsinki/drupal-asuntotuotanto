@@ -20,9 +20,6 @@ dependencies:
     - field.field.node.project.field_coordinate_lon
     - field.field.node.project.field_district
     - field.field.node.project.field_energy_class
-    - field.field.node.project.field_estate_agent
-    - field.field.node.project.field_estate_agent_email
-    - field.field.node.project.field_estate_agent_phone
     - field.field.node.project.field_estimated_completion
     - field.field.node.project.field_estimated_completion_date
     - field.field.node.project.field_has_elevator
@@ -410,30 +407,6 @@ content:
     settings: {  }
     third_party_settings: {  }
     type: options_buttons
-    region: content
-  field_estate_agent:
-    weight: 29
-    settings:
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
-    type: string_textfield
-    region: content
-  field_estate_agent_email:
-    weight: 30
-    settings:
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
-    type: email_default
-    region: content
-  field_estate_agent_phone:
-    weight: 31
-    settings:
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
-    type: string_textfield
     region: content
   field_estimated_completion:
     weight: 20

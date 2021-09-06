@@ -21,9 +21,6 @@ dependencies:
     - field.field.node.project.field_coordinate_lon
     - field.field.node.project.field_district
     - field.field.node.project.field_energy_class
-    - field.field.node.project.field_estate_agent
-    - field.field.node.project.field_estate_agent_email
-    - field.field.node.project.field_estate_agent_phone
     - field.field.node.project.field_estimated_completion
     - field.field.node.project.field_estimated_completion_date
     - field.field.node.project.field_has_elevator
@@ -137,9 +134,6 @@ hidden:
   field_coordinate_lon: true
   field_district: true
   field_energy_class: true
-  field_estate_agent: true
-  field_estate_agent_email: true
-  field_estate_agent_phone: true
   field_estimated_completion_date: true
   field_has_elevator: true
   field_has_sauna: true
