@@ -40,7 +40,7 @@
   %}
 {% endif %}
 
-<div{{ attributes.addClass(classes) }}>
+<div{{ attributes.addClass(classes) }} aria-label="{{ 'Language switcher'|t }}">
   {{ title_prefix }}
   {% if label %}
     <h2{{ title_attributes }}>{{ label }}</h2>
