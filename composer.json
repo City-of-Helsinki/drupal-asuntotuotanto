@@ -66,6 +66,7 @@
         "drupal/swiftmailer": "^2.0",
         "drupal/twig_tweak": "2.8",
         "drupal/ultimate_cron": "^2.0@alpha",
+        "drupal/user_bundle": "^1.0",
         "drupal/user_registrationpassword": "^1.0@alpha",
         "drupal/views_infinite_scroll": "^1.8",
         "drupal/yearonly": "^9.0",

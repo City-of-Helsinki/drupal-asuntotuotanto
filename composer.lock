@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "643a076ae7e7192b04aed190de14ed3e",
+    "content-hash": "b51bdfc67a5a194b0e795e33fc5173c8",
     "packages": [
         {
             "name": "City-of-Helsinki/php-hauki-client",
@@ -7326,6 +7326,58 @@
             "homepage": "https://www.drupal.org/project/ultimate_cron",
             "support": {
                 "source": "https://git.drupalcode.org/project/ultimate_cron"
+            }
+        },
+        {
+            "name": "drupal/user_bundle",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/user_bundle.git",
+                "reference": "8.x-1.0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/user_bundle-8.x-1.0.zip",
+                "reference": "8.x-1.0",
+                "shasum": "e311fa67e1b3a6077ec2dc6304a012fb05c850d3"
+            },
+            "require": {
+                "drupal/core": "^8.7.7 || ^9"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "8.x-1.0",
+                    "datestamp": "1590590189",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "amateescu",
+                    "homepage": "https://www.drupal.org/user/729614"
+                },
+                {
+                    "name": "chrisolof",
+                    "homepage": "https://www.drupal.org/user/610882"
+                },
+                {
+                    "name": "mrsimonelliott",
+                    "homepage": "https://www.drupal.org/user/258167"
+                }
+            ],
+            "description": "Provides configurable user account types (user bundles).",
+            "homepage": "https://www.drupal.org/project/user_bundle",
+            "support": {
+                "source": "https://git.drupalcode.org/project/user_bundle"
             }
         },
         {
