@@ -3,5 +3,5 @@ langcode: fi
 status: true
 dependencies: {  }
 id: customer
-label: Customer
+label: Asiakas
 description: ''
