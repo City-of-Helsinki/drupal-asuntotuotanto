@@ -237,12 +237,12 @@ final class Initialize extends ResourceBase {
    */
   protected function getProperties() {
     return [
-      'project_has_elevator',
-      'project_has_sauna',
-      'has_apartment_sauna',
-      'has_terrace',
-      'has_balcony',
-      'has_yard',
+      'PROJECT_HAS_ELEVATOR',
+      'PROJECT_HAS_SAUNA',
+      'HAS_APARTMENT_SAUNA',
+      'HAS_TERRACE',
+      'HAS_BALCONY',
+      'HAS_YARD',
     ];
   }
 
@@ -253,9 +253,9 @@ final class Initialize extends ResourceBase {
    */
   protected function getBuildingTypes() {
     return [
-      'block_of_flats',
-      'row_house',
-      'house',
+      'BLOCK_OF_FLATS',
+      'ROW_HOUSE',
+      'HOUSE',
     ];
   }
 
@@ -266,10 +266,10 @@ final class Initialize extends ResourceBase {
    */
   protected function getNewDevelopmentStatus() {
     return [
-      'under_planning',
-      'under_construction',
-      'pre_marketing',
-      'ready_to_move',
+      'UNDER_PLANNING',
+      'UNDER_CONSTRUCTION',
+      'PRE_MARKETING',
+      'READY_TO_MOVE',
     ];
   }
 
@@ -280,10 +280,10 @@ final class Initialize extends ResourceBase {
    */
   protected function getProjectStatesOfSale() {
     return [
-      'for_sale',
-      'pre_marketing',
-      'processing',
-      'ready',
+      'FOR_SALE',
+      'PRE_MARKETING',
+      'PROCESSING',
+      'READY',
     ];
   }
 
