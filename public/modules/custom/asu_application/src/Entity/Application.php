@@ -96,6 +96,9 @@ class Application extends EditorialContentEntityBase implements ContentEntityInt
 
   /**
    * Get the ids of the apartments in application.
+   *
+   * @return array
+   *   Array of ids.
    */
   public function getApartmentIds(): array {
     $apartments = [];
@@ -119,6 +122,7 @@ class Application extends EditorialContentEntityBase implements ContentEntityInt
    * Is additional applicant set to the application form.
    *
    * @return bool
+   *   Does the application have additional applicants.
    */
   public function hasAdditionalApplicant(): bool {
     return $this->applicant->isEmpty() ? FALSE : TRUE;
@@ -128,6 +132,7 @@ class Application extends EditorialContentEntityBase implements ContentEntityInt
    * Application has been sent to backend and therefore is locked.
    *
    * @return bool
+   *   Application has been sent.
    */
   public function isLocked(): bool {
     return $this->field_locked->value ? TRUE : FALSE;
