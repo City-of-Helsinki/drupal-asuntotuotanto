@@ -17,14 +17,16 @@
 
         if (hasActiveHeaderSubmenu && currentWindowWidth >= 992) {
           headerElement.classList.add("has-submenu");
-
-          [...subMenuDesktopElementItems].map((submenu) => {
-            const mainMenuParentElement = submenu.parentElement.parentElement;
-
-            if (mainMenuParentElement.classList.contains("is-active")) {
-              submenu.setAttribute("aria-hidden", false);
-            }
-          });
+          [...subMenuDesktopElementItems]
+            .filter((submenu) =>
+              submenu.parentElement.parentElement.classList.contains(
+                "is-active"
+              )
+            )
+            .map((submenu) => {
+              const mainMenuParentElement = submenu.parentElement.parentElement;
+              return submenu.setAttribute("aria-hidden", false);
+            });
         }
       }
     },
