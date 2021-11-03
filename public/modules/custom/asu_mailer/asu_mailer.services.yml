@@ -1,0 +1,5 @@
+services:
+  asu_mailer.application_subscriber:
+    class: Drupal\asu_mailer\EventSubscriber\ApplicationSubscriber
+    tags:
+      - { name: event_subscriber }

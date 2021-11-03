@@ -36,7 +36,6 @@ final class Filters extends ResourceBase {
     $currentLanguage = \Drupal::languageManager()->getCurrentLanguage();
     $config = \Drupal::config('asu_rest.filters');
     $filters = $config->get('filters');
-
     $vocabularies = Vocabulary::loadMultiple();
     $responseData = [];
 
@@ -52,12 +51,15 @@ final class Filters extends ResourceBase {
       $items = [];
 
       if ($taxonomy_name == 'districts') {
-
         $projects = \Drupal::entityTypeManager()
           ->getStorage('node')
           ->loadByProperties(['type' => 'project']);
 
-        $items = [];
+        $items = [
+          'Hitas' => [],
+          'Haso' => [],
+        ];
+
         // Get all unique districts separately for both ownership types.
         foreach ($projects as $project) {
           if (!$project->field_ownership_type->first()) {
@@ -79,7 +81,7 @@ final class Filters extends ResourceBase {
         $vocabulary_name = $vocabularies[$terms[0]->bundle()]->get('name');
         $index_hitas = [
           'label' => $vocabulary_name,
-          'items' => $items['project_district_hitas'],
+          'items' => isset($items['project_district_hitas']) ? array_unique($items['project_district_hitas']) : [],
           'suffix' => NULL,
         ];
         $responseData[strtolower('project_district_hitas')] = $index_hitas;
@@ -87,7 +89,7 @@ final class Filters extends ResourceBase {
         $vocabulary_name = $vocabularies[$terms[0]->bundle()]->get('name');
         $index_haso = [
           'label' => $vocabulary_name,
-          'items' => $items['project_district_haso'],
+          'items' => isset($items['project_district_haso']) ? array_unique($items['project_district_haso']) : [],
           'suffix' => NULL,
         ];
 
@@ -114,9 +116,10 @@ final class Filters extends ResourceBase {
     }
 
     foreach ($filters['taxonomy_machinename'] as $taxonomy_name => $elastic_index_name) {
-      $terms = \Drupal::entityTypeManager()
-        ->getStorage('taxonomy_term')
-        ->loadTree($taxonomy_name, 0, NULL, TRUE);
+      /** @var \Drupal\config_terms\TermStorageInterface $term_storage */
+      $term_storage = \Drupal::entityTypeManager()
+        ->getStorage('config_terms_term');
+      $terms = $term_storage->loadTree($taxonomy_name);
 
       if (!$terms) {
         continue;
@@ -124,12 +127,11 @@ final class Filters extends ResourceBase {
 
       $items = [];
       foreach ($terms as $term) {
-        $items[] = $term->field_machine_readable_name->value;
+        $items[] = $term->id();
       }
 
-      $vocabulary_name = $vocabularies[$terms[0]->bundle()]->get('name');
       $index_data = [
-        'label' => $vocabulary_name,
+        'label' => $this->t('State of sale'),
         'items' => $items,
         'suffix' => NULL,
       ];

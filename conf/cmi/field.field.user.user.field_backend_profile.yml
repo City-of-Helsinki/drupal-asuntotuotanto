@@ -1,0 +1,20 @@
+uuid: 715d6644-a57d-4fa0-9f08-822159e1f1fb
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.user.field_backend_profile
+  module:
+    - user
+id: user.user.field_backend_profile
+field_name: field_backend_profile
+entity_type: user
+bundle: user
+label: 'Backend profile'
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

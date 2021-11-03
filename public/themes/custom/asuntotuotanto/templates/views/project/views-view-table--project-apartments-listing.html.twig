@@ -1,0 +1,269 @@
+{#
+/**
+ * @file
+ * Theme override for displaying a view as a table.
+ *
+ * Available variables:
+ * - attributes: Remaining HTML attributes for the element.
+ *   - class: HTML classes that can be used to style contextually through CSS.
+ * - title : The title of this group of rows.
+ * - header: The table header columns.
+ *   - attributes: Remaining HTML attributes for the element.
+ *   - content: HTML classes to apply to each header cell, indexed by
+ *   the header's key.
+ *   - default_classes: A flag indicating whether default classes should be
+ *     used.
+ * - caption_needed: Is the caption tag needed.
+ * - caption: The caption for this table.
+ * - accessibility_description: Extended description for the table details.
+ * - accessibility_summary: Summary for the table details.
+ * - rows: Table row items. Rows are keyed by row number.
+ *   - attributes: HTML classes to apply to each row.
+ *   - columns: Row column items. Columns are keyed by column number.
+ *     - attributes: HTML classes to apply to each column.
+ *     - content: The column content.
+ *   - default_classes: A flag indicating whether default classes should be
+ *     used.
+ * - responsive: A flag indicating whether table is responsive.
+ * - sticky: A flag indicating whether table header is sticky.
+ * - summary_element: A render array with table summary information (if any).
+ *
+ * @see template_preprocess_views_view_table()
+ */
+#}
+
+{{ attach_library('asuntotuotanto/apartments-list-item-toggle') }}
+
+{%
+  set classes = [
+    'cols-' ~ header|length,
+    responsive ? 'responsive-enabled',
+    sticky ? 'sticky-enabled',
+  ]
+%}
+
+<div class="project__apartments project__apartments--mobile" aria-hidden="true">
+  <ul class="project__apartments-list wrapper wrapper--mw-1264">
+    {% for row in rows %}
+      {% set apartment_number = row.columns.field_apartment_number.content.0.field_output['#markup']|striptags|trim %}
+      {% set apartment_structure = row.columns.field_apartment_structure.content.0.field_output['#markup']|striptags|trim	 %}
+      {% set debt_free_sales_price = row.columns.field_debt_free_sales_price.content.0.field_output['#markup']|striptags|trim %}
+      {% set floor = row.columns.field_floor.content.0.field_output['#markup']|striptags|trim %}
+      {% set living_area_size = row.columns.field_living_area.content.0.field_output['#markup']|striptags|trim %}
+      {% set nid = row.columns.nid.content.0.field_output['#markup']|striptags|trim %}
+
+      {% set application_status = row.application_status %}
+      {% set is_application_period_active = row.is_application_period_active %}
+      {% set application_url = row.application_url %}
+
+      <li class="project__apartments-item">
+        <button
+          aria-expanded="false"
+          class="project__apartments-item-button"
+          aria-label="Open apartment {{ apartment_number }} information"
+        >
+          <span>{{ apartment_number }}</span>
+          <span aria-hidden="true" class="project__apartment-application-status project__apartment-application-status--{{ application_status.status|trim }}"></span>
+          <span>{{ apartment_structure }}</span>
+          {% include "@hdbt/misc/icon.twig" with {icon: 'angle-down', label: ''} %}
+        </button>
+        <div aria-hidden="true" class="project__apartments-item-content is-hidden">
+          <ul class="project__apartments-item-details-list">
+            <li class="project__apartments-item-details-item">
+              <p>
+                <span>
+                  {% trans %}
+                    Floor
+                  {% endtrans %}
+                </span>
+                <span>
+                  {{ floor }}
+                </span>
+              </p>
+            </li>
+            <li class="project__apartments-item-details-item">
+              <p>
+                <span>
+                  {% trans %}
+                    Living area size
+                  {% endtrans %}
+                </span>
+                <span>
+                  {{ living_area_size }} m<sup>2</sup>
+                </span>
+              </p>
+            </li>
+            <li class="project__apartments-item-details-item">
+              <p>
+                <span>
+                  {% trans %}
+                    Debt free sales price
+                  {% endtrans %}
+                </span>
+                <span>
+                  {{ debt_free_sales_price }} €
+                </span>
+              </p>
+            </li>
+            <li class="project__apartments-item-details-item">
+              <p>
+                <span>
+                  {% trans %}
+                    Application status
+                  {% endtrans %}
+                </span>
+                <span>
+                  <span aria-hidden="true" class="project__apartment-application-status project__apartment-application-status--{{ application_status.status|trim }}"></span>
+                  {{ application_status.label }}
+                </span>
+              </p>
+            </li>
+          </ul>
+          {% include '@asuntotuotanto/button/button.html.twig' with {
+            type: 'secondary',
+            disabled: false,
+            label: 'Learn more about the apartment'|t,
+            href: url('entity.node.canonical', { 'node': nid }),
+            aria_label: 'Learn more'|t ~ ', ' ~ 'apartment'|t ~ ' ' ~ apartment_number
+            }
+          %}
+          {% if is_application_period_active %}
+            {% include '@asuntotuotanto/button/button.html.twig' with {
+              type: 'primary',
+              disabled: false,
+              label: 'Create an application'|t,
+              href: application_url,
+              aria_label: 'Create an application'|t ~ ', ' ~ 'apartment'|t ~ ' ' ~ apartment_number
+              }
+            %}
+          {% endif %}
+        </div>
+      </li>
+    {% endfor %}
+  </ul>
+</div>
+
+<div class="project__apartments project__apartments--desktop wrapper wrapper--mw-1264" aria-hidden="true">
+  <table{{ attributes.addClass(classes, 'project__apartments-table') }}>
+    {% if caption_needed %}
+      <caption>
+      {% if caption %}
+        {{ caption }}
+      {% else %}
+        {{ title }}
+      {% endif %}
+      {% if (summary_element is not empty) %}
+        {{ summary_element }}
+      {% endif %}
+      </caption>
+    {% endif %}
+    {% if header %}
+      <thead>
+        <tr>
+          {% for key, column in header %}
+            {% if
+              key is not same as ('field_apartment_structure') and
+              key is not same as ('nid') and
+              key is not same as ('field_application_url') %}
+                  {% if column.default_classes %}
+                    {%
+                      set column_classes = [
+                        'views-field',
+                        'views-field-' ~ fields[key],
+                      ]
+                    %}
+                  {% endif %}
+                  <th{{ column.attributes.addClass(column_classes).setAttribute('scope', 'col') }}>
+                    {%- if column.wrapper_element -%}
+                      <{{ column.wrapper_element }}>
+                        {%- if column.url -%}
+                          <a href="{{ column.url }}" title="{{ column.title }}" rel="nofollow">{{ column.content }}{{ column.sort_indicator }}</a>
+                        {%- else -%}
+                          {{ column.content }}{{ column.sort_indicator }}
+                        {%- endif -%}
+                      </{{ column.wrapper_element }}>
+                    {%- else -%}
+                      {%- if column.url -%}
+                        <a href="{{ column.url }}" title="{{ column.title }}" rel="nofollow">{{ column.content }}{{ column.sort_indicator }}</a>
+                      {%- else -%}
+                        {{- column.content }}{{ column.sort_indicator }}
+                      {%- endif -%}
+                    {%- endif -%}
+                  </th>
+            {% endif %}
+          {% endfor %}
+          <th>
+            {% trans %}
+              Application status
+            {% endtrans %}
+          </th>
+          <th>
+            <span class="visually-hidden">
+              {% trans %}
+                Actions
+              {% endtrans %}
+            </span>
+          </th>
+        </tr>
+      </thead>
+    {% endif %}
+    <tbody>
+      {% for row in rows %}
+        {% set apartment_number = row.columns.field_apartment_number.content.0.field_output['#markup']|striptags|trim %}
+        {% set apartment_structure = row.columns.field_apartment_structure.content.0.field_output['#markup']|striptags|trim	 %}
+        {% set debt_free_sales_price = row.columns.field_debt_free_sales_price.content.0.field_output['#markup']|striptags|trim %}
+        {% set floor = row.columns.field_floor.content.0.field_output['#markup']|striptags|trim %}
+        {% set living_area_size = row.columns.field_living_area.content.0.field_output['#markup']|striptags|trim %}
+        {% set nid = row.columns.nid.content.0.field_output['#markup']|striptags|trim %}
+
+        {% set application_status = row.application_status %}
+        {% set is_application_period_active = row.is_application_period_active %}
+        {% set application_url = row.application_url %}
+
+        <tr{{ row.attributes }}>
+          <td>
+            <span>{{ apartment_number }}</span>
+            <span>{{ apartment_structure }}</span>
+          </td>
+          <td>
+            <span>{{ floor }}</span>
+          </td>
+          <td>
+            <span>{{ living_area_size }} m<sup>2</sup></span>
+          </td>
+          <td>
+            <span>{{ debt_free_sales_price }} €</span>
+          </td>
+          <td>
+            <span>
+              <span aria-hidden="true" class="project__apartment-application-status project__apartment-application-status--{{ application_status.status|trim }}"></span>
+              {{ application_status.label }}
+            </span>
+          </td>
+          <td>
+            {% include '@asuntotuotanto/button/button.html.twig' with {
+              type: 'supplementary',
+              disabled: false,
+              size: 'small',
+              label: 'Learn more'|t,
+              href: url('entity.node.canonical', { 'node': nid }),
+              aria_label: 'Learn more'|t ~ ', ' ~ 'apartment'|t ~ ' ' ~ apartment_number
+              }
+            %}
+            {% if is_application_period_active %}
+              {% include '@asuntotuotanto/button/button.html.twig' with {
+                type: 'secondary',
+                disabled: false,
+                size: 'small',
+                label: 'Create an application'|t,
+                href: application_url,
+                aria_label: 'Create an application'|t ~ ', ' ~ 'apartment'|t ~ ' ' ~ apartment_number
+                }
+              %}
+            {% endif %}
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>

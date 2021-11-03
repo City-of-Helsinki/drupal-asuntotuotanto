@@ -1,0 +1,13 @@
+application.application_type.*:
+  type: config_entity
+  label: 'Application Type settings'
+  mapping:
+    id:
+      type: string
+      label: 'Machine-readable name'
+    uuid:
+      type: stype
+      label: 'UUID'
+    label:
+      type: label
+      label: 'Label'

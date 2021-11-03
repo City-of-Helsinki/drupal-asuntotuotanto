@@ -1,0 +1,12 @@
+uuid: de980a62-06ad-42d1-ada5-e368ceb29463
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+_core:
+  default_config_hash: b0XK3387F_O-XCxozCWvCVEVmNuctDMeX05ccqPn9gg
+id: node.parent_service
+label: 'Parent service'
+targetEntityType: node
+cache: true

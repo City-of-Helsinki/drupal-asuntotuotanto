@@ -1,0 +1,18 @@
+uuid: 350f7890-343e-40bf-9878-bf07eb3a1d3c
+langcode: en
+status: true
+dependencies:
+  module:
+    - asu_application
+id: asu_application.field_aso_changer
+field_name: field_aso_changer
+entity_type: asu_application
+type: boolean
+settings: {  }
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

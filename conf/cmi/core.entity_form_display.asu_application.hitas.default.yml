@@ -1,0 +1,32 @@
+uuid: 381b8e27-03db-40b2-a960-144202189586
+langcode: en
+status: true
+dependencies:
+  config:
+    - asu_application.application_type.hitas
+    - field.field.asu_application.hitas.field_hitas_owner
+    - field.field.asu_application.hitas.field_personal_id
+  module:
+    - asu_application
+id: asu_application.hitas.default
+targetEntityType: asu_application
+bundle: hitas
+mode: default
+content:
+  field_hitas_owner:
+    weight: 27
+    settings:
+      display_label: true
+    third_party_settings: {  }
+    type: boolean_checkbox
+    region: content
+  field_personal_id:
+    weight: 26
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+hidden:
+  uid: true

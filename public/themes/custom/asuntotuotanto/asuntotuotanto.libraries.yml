@@ -1,7 +1,16 @@
-user-tools:
+application-form-actions:
   js:
-    dist/js/userToolsNavigation.min.js: {}
+    dist/js/applicationFormActions.min.js: {}
+
+showcase-gallery:
+  js:
+    dist/js/showcaseGallery.min.js: {}
+    /libraries/slick/slick/slick.min.js: { minified: true }
+  css:
+    base:
+      /libraries/slick/slick/slick.css: {}
   dependencies:
+    - core/drupal
     - core/jquery
 
 apartments-list-item-toggle:
@@ -11,6 +20,16 @@ apartments-list-item-toggle:
 sticky-navigation:
   js:
     dist/js/stickyNavigation.min.js: {}
+
+user-tools:
+  js:
+    dist/js/userToolsNavigation.min.js: {}
+  dependencies:
+    - core/jquery
+
+faq:
+  js:
+    dist/js/faq.min.js: {}
 
 global-styling:
   version: 1.x
@@ -24,3 +43,4 @@ global-scripting:
     dist/js/bundle.min.js: {}
   dependencies:
     - core/drupal
+    - core/jquery

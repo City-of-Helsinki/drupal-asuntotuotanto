@@ -1,0 +1,10 @@
+uuid: 1a4d294b-db08-414c-a95a-d6ca8b7af776
+langcode: en
+status: true
+dependencies: {  }
+id: cta_block
+label: 'CTA Block'
+icon_uuid: null
+icon_default: null
+description: 'Call-to-action block with a title and a link (looking like a button).'
+behavior_plugins: {  }

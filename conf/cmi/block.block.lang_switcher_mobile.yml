@@ -1,9 +1,8 @@
-uuid: 3b6de023-8cd7-4b49-a10f-031f057a61a4
+uuid: 225e1c89-81f8-4092-9116-2a75d2bcdfdb
 langcode: en
 status: true
 dependencies:
   module:
-    - context
     - language
   theme:
     - asuntotuotanto
@@ -18,12 +17,4 @@ settings:
   label: 'Language switcher (mobile)'
   provider: language
   label_display: '0'
-visibility:
-  view_inclusion:
-    id: view_inclusion
-    negate: null
-    view_inclusion: {  }
-  request_path_exclusion:
-    id: request_path_exclusion
-    pages: ''
-    negate: null
+visibility: {  }

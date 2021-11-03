@@ -1,0 +1,50 @@
+uuid: 51633b14-486c-47ea-bd8f-8170eec963a6
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.contact_information_with_map.field_address
+    - field.field.paragraph.contact_information_with_map.field_email
+    - field.field.paragraph.contact_information_with_map.field_phone
+    - field.field.paragraph.contact_information_with_map.field_title
+    - paragraphs.paragraphs_type.contact_information_with_map
+  module:
+    - address
+id: paragraph.contact_information_with_map.default
+targetEntityType: paragraph
+bundle: contact_information_with_map
+mode: default
+content:
+  field_address:
+    weight: 1
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    type: address_default
+    region: content
+  field_email:
+    weight: 2
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_phone:
+    weight: 3
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_title:
+    weight: 0
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+hidden:
+  search_api_excerpt: true

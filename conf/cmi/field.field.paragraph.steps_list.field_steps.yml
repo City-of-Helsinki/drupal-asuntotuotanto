@@ -1,0 +1,94 @@
+uuid: 93234dd7-d83c-4de9-bdb3-3484e1af0011
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_steps
+    - paragraphs.paragraphs_type.step
+    - paragraphs.paragraphs_type.steps_list
+  module:
+    - entity_reference_revisions
+id: paragraph.steps_list.field_steps
+field_name: field_steps
+entity_type: paragraph
+bundle: steps_list
+label: Steps
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    negate: 0
+    target_bundles:
+      step: step
+    target_bundles_drag_drop:
+      accordion:
+        weight: 23
+        enabled: false
+      accordion_item:
+        weight: 24
+        enabled: false
+      banner:
+        weight: 25
+        enabled: false
+      columns:
+        weight: 26
+        enabled: false
+      content_cards:
+        weight: 27
+        enabled: false
+      from_library:
+        weight: 28
+        enabled: false
+      gallery:
+        weight: 29
+        enabled: false
+      gallery_slide:
+        weight: 30
+        enabled: false
+      hero:
+        weight: 31
+        enabled: false
+      image:
+        weight: 32
+        enabled: false
+      latest_news:
+        weight: 33
+        enabled: false
+      liftup_with_image:
+        weight: 34
+        enabled: false
+      liftup_with_image_and_links:
+        weight: 35
+        enabled: false
+      list_of_links:
+        weight: 36
+        enabled: false
+      list_of_links_item:
+        weight: 37
+        enabled: false
+      news_info_card:
+        weight: 38
+        enabled: false
+      remote_video:
+        weight: 39
+        enabled: false
+      stacked_text_blocks_with_image:
+        weight: 40
+        enabled: false
+      step:
+        enabled: true
+        weight: 41
+      steps_list:
+        weight: 42
+        enabled: false
+      text:
+        weight: 43
+        enabled: false
+      text_block_with_link:
+        weight: 44
+        enabled: false
+field_type: entity_reference_revisions

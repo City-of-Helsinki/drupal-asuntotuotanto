@@ -1,0 +1,12 @@
+<ul class="news-listing">
+  {% for row in rows %}
+    {%
+      set row_classes = [
+        'news-listing__item',
+      ]
+    %}
+    <li{{ row.attributes.addClass(row_classes) }}>
+      {{- row.content -}}
+    </li>
+  {% endfor %}
+</ul>

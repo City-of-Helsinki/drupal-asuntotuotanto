@@ -1,0 +1,208 @@
+{#
+/**
+ * @file
+ * Theme override for a 'form' element.
+ *
+ * Available variables
+ * - attributes: A list of HTML attributes for the wrapper element.
+ * - children: The child elements of the form.
+ *
+ * @see template_preprocess_form()
+ */
+#}
+
+{% set classes = [
+  'application-form',
+  'application-form--add',
+  'wrapper',
+  'wrapper--mw-1200'
+] %}
+
+<form{{ attributes|without('class') }} {{ create_attribute({'class': classes}) }}>
+  {{ link(
+    'Go back to applications'|t,
+    "internal:/user/applications",
+    { 'class':['application-form__back-link']} )
+  }}
+  <div class="application-form__header">
+    <h1>
+      <span>
+          HASO-{% trans %}application{% endtrans %}
+      </span>
+      {{ element['#project_name'] }}
+    </h1>
+    <p>
+      {% trans %}
+      Submit an application during the application period. You can search for up to 5 apartments. Apartments should be marked in the order in which you wish to be selected. If you are ranked 1st in the draw, you will only be offered the apartment that is on your highest list.
+      {% endtrans %}
+    </p>
+    <a href="https://google.fi">
+      {% trans %}
+        Read more about the application guide
+      {% endtrans %}
+    </a>
+  </div>
+  <div class="application-form__content">
+    <section class="application-form__section">
+    <article class="application application--form-teaser">
+        <figure class="application__image">
+          <img src="{{ element.application_project_information['#teaser_values'].project_main_image_url }}" alt="{{ 'Image of the project'|t }}">
+        </figure>
+        <div class="application__content">
+          <h2 class="application__project-name">
+            <span class="visually-hidden">
+              {% trans %}
+                Project name
+              {% endtrans %}
+              {{ ': ' }}
+            </span>
+            {{ element.application_project_information['#teaser_values'].project_name }}
+          </h2>
+          <p class="application__project-address">
+            <span class="visually-hidden">
+              {% trans %}
+                Address
+              {% endtrans %}
+              {{ ': ' }}
+            </span>
+            <strong>
+              {{ element.application_project_information['#teaser_values'].project_district }}{{ ',' }}
+            </strong>
+            {{ element.application_project_information['#teaser_values'].project_address }}
+          </p>
+          <span class="application__project-ownership-type">
+            <span class="visually-hidden">
+              {% trans %}
+                Ownership type
+              {% endtrans %}
+              {{ ': ' }}
+            </span>
+            {{ element.application_project_information['#teaser_values'].project_ownership_type }}
+          </span>
+          <ul class="application__date-information">
+            <li>
+              {% include "@hdbt/misc/icon.twig" with {icon: 'cogwheel', label: ''} %}
+              <span class="visually-hidden">
+                {% trans %}
+                  Estimated completion
+                {% endtrans %}
+                {{ ': ' }}
+              </span>
+              {{ element.application_project_information['#teaser_values'].project_estimated_completion }}
+            </li>
+            <li>
+              {% set date = element.application_project_information['#teaser_values'].application_end_time|date("d.m.Y") %}
+              {% set time = element.application_project_information['#teaser_values'].application_end_time|date("H.i") %}
+              {% include "@hdbt/misc/icon.twig" with {icon: 'check-circle-fill', label: ''} %}
+              {% trans %}
+                The application period is open until {{ time }} on {{ date }}
+              {% endtrans %}
+            </li>
+          </ul>
+        </div>
+      </article>
+      {% include "@asuntotuotanto/form/application/custom-apartment-list.html.twig" %}
+      {{ element.apartment }}
+    </section>
+    <section class="application-form__section">
+      <h3>
+        {% trans %}
+          Draw
+        {% endtrans %}
+      </h3>
+      <p>
+        {% trans %}
+        Once we have drawn the apartments, we will notify you of your investment in the queue by email.
+        {% endtrans %}
+      </p>
+      <h3>
+        {% trans %}
+        Editing the application
+        {% endtrans %}
+      </h3>
+      <p>
+        {% trans %}
+        During the application period, you can edit the application or change the apartment you have applied for. Make the necessary changes and resubmit your application before the application deadline.
+        {% endtrans %}
+      </p>
+    </section>
+    <section class="application-form__section">
+      <h2>
+        {% trans %}
+          Applicants social Security Number
+        {% endtrans %}
+      </h2>
+      <p>
+        {% trans %}
+        Enter your ID's last 4 characters.
+        {% endtrans %}
+      </p>
+      <div class="application-form__personal-id">
+        <p aria-label="{% trans %} The beginning of social security number {% endtrans %} {{ element['#pid_start'] }}">{{ element['#pid_start'] }}</p>
+          {{ element.field_personal_id }}
+      </div>
+    </section>
+    <section class="application-form__section">
+      <h2>
+        {% trans %}
+          HASO owner
+        {% endtrans %}
+      </h2>
+    </section>
+    <section class="application-form__section">
+      <h2>
+        {% trans %}
+          Right of Residence Number
+        {% endtrans %}
+      </h2>
+      <p>
+        {% trans %}
+          In order to apply for HASO aparment you need right of residence number
+        {% endtrans %}
+      </p>
+      {{ element.field_right_of_residence_number }}
+    </section>
+    <section class="application-form__section">
+      <h2>
+        {% trans %}
+          Previous ownership
+        {% endtrans %}
+      </h2>
+      <p>
+        {% trans %}
+          I currently own an HASO apartment but I'm planning to let it go.
+        {% endtrans %}
+      </p>
+      {{ element.field_aso_changer }}
+    </section>
+    <section class="application-form__section">
+      <h2>
+        {% trans %}
+          Are you looking for an apartment with a family with children?
+        {% endtrans %}
+      </h2>
+      <p>
+        {% trans %}
+        There is a minor child in my household who is living, being born or coming to live in the same household at the time of the revision of the terms of trade. Pending adoption is also taken into account.
+        {% endtrans %}
+      </p>
+      {{ element.has_children }}
+    </section>
+    <section class="application-form__section">
+      <h2>
+        {% trans %}
+          Are you looking for an apartment with someone?
+        {% endtrans %}
+      </h2>
+      <div class="application-form__input-elements">
+        {{ element.applicant }}
+      </div>
+    </section>
+  </div>
+  <div class="application-form__actions">
+    {{ element.form_build_id }} {# required #}
+    {{ element.form_id }} {# required #}
+    {{ element.form_token  }} {# required #}
+    {{ element.actions }}
+  </div>
+</form>

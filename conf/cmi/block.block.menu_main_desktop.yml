@@ -1,18 +1,17 @@
-uuid: e4124267-cb53-4aa6-8a77-a95034e1b804
+uuid: 6620c409-8cf7-4ba5-b449-a8ce923e2668
 langcode: en
 status: true
 dependencies:
   config:
     - system.menu.main
   module:
-    - context
     - menu_block
   theme:
     - asuntotuotanto
 id: menu_main_desktop
 theme: asuntotuotanto
 region: header_top
-weight: 0
+weight: -6
 provider: null
 plugin: 'menu_block:main'
 settings:
@@ -29,12 +28,4 @@ settings:
   suggestion: main__desktop
   label_type: block
   label_link: false
-visibility:
-  view_inclusion:
-    id: view_inclusion
-    negate: null
-    view_inclusion: {  }
-  request_path_exclusion:
-    id: request_path_exclusion
-    pages: ''
-    negate: null
+visibility: {  }

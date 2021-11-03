@@ -1,0 +1,36 @@
+<?php
+
+/**
+ * @file
+ * Module.install.
+ */
+
+use Drupal\contact_emails\Entity\ContactEmail;
+
+/**
+ * Create contact email content entity for contact form.
+ */
+function asu_mailer_update_8002() {
+  $values = [
+    'langcode' => 'en',
+    'contact_form' => 'apply_for_free_apartment',
+    'subject' => 'Yhteydenottopyyntö vapaaseen huoneistoon [contact_message:field_apartment_information]',
+    'message' => 'Käyttäjä täytti hakemuslomakkeen vapaaseen huoneistoon [contact_message:created:date:long]
+
+Huoneisto: [contact_message:field_apartment_information
+Nimi: [contact_message:field_name]
+Syntymäaika: [contact_message:field_date_of_birth:date:short]
+Puhelinnumero: [contact_message:field_phone_number]
+Sähköposti: [contact_message:mail:value]
+
+Viesti: [contact_message:message]',
+    'message__format' => 'full_html',
+    'append_message' => 0,
+    'recipient_type' => 'manual',
+    'recipients' => 'test@test.fi',
+    'reply_to_type' => 'submitter',
+    'status' => 1,
+  ];
+  $email = ContactEmail::create($values);
+  $email->save();
+}

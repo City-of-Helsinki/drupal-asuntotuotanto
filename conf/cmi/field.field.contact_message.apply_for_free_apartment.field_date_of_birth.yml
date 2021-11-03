@@ -1,0 +1,21 @@
+uuid: 1130c13e-7cff-442d-b8d0-e0a79752c2cd
+langcode: en
+status: true
+dependencies:
+  config:
+    - contact.form.apply_for_free_apartment
+    - field.storage.contact_message.field_date_of_birth
+  module:
+    - datetime
+id: contact_message.apply_for_free_apartment.field_date_of_birth
+field_name: field_date_of_birth
+entity_type: contact_message
+bundle: apply_for_free_apartment
+label: 'Date of birth'
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: datetime

@@ -1,0 +1,10 @@
+uuid: 3c7ad5a0-a346-4072-b6c6-01f41ff372a5
+langcode: fi
+status: true
+dependencies:
+  module:
+    - media
+id: media.content_main_image
+label: 'Content Main Image'
+targetEntityType: media
+cache: true

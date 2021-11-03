@@ -1,0 +1,10 @@
+uuid: 1a003c4c-2a4d-4cec-be3a-f0f6aaa3ff6b
+langcode: en
+status: true
+dependencies: {  }
+id: contact_persons
+label: 'Contact persons'
+icon_uuid: null
+icon_default: null
+description: 'Let''s you list persons with contact details.'
+behavior_plugins: {  }

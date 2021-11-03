@@ -1,0 +1,17 @@
+asu_user.user_edit:
+  path: '/user/{user}/edit'
+  defaults:
+    _entity_form: 'user.default'
+  requirements:
+    _entity_access: user.update
+    user: \d+
+  options:
+    _admin_route: FALSE
+
+asu_user.delete_test_users:
+  path: '/admin/people/delete-test-users'
+  defaults:
+    _form: '\Drupal\asu_user\Form\DeleteTestUsersForm'
+    _title: 'Delete all test users'
+  requirements:
+    _permission: 'administer content'

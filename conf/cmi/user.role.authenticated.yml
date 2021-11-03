@@ -5,12 +5,20 @@ dependencies: {  }
 _core:
   default_config_hash: 83Nuup-6oYkkdAsvg3nrR2pBOgtTXEV1JrzpCCLkYLM
 id: authenticated
-label: 'Authenticated user'
+label: 'Sisäänkirjautunut käyttäjä'
 weight: 1
 is_admin: false
 permissions:
   - 'access content'
+  - 'access site-wide contact form'
+  - 'administer rest resources'
+  - 'create application'
   - 'display eu cookie compliance popup'
+  - 'restful get asu_applications'
+  - 'restful get asu_filters'
+  - 'restful get asu_initialize'
+  - 'restful post asu_elastic_proxy'
+  - 'restful post mailinglist'
   - 'use text format full_html'
   - 'view media'
   - 'view remote entities'

@@ -1,0 +1,206 @@
+<?php
+
+/**
+ * @file
+ * Module.install.
+ */
+
+use Drupal\menu_link_content\Entity\MenuLinkContent;
+use Drupal\taxonomy\Entity\Term;
+
+/**
+ * Add menu links to react application automatically.
+ *
+ * @throws \Drupal\Core\Entity\EntityStorageException
+ */
+function asu_apartment_search_update_8001() {
+  $menu_name = 'main';
+
+  $hitas = MenuLinkContent::create([
+    'title' => 'Omistusasunnot',
+    'link' => ['uri' => 'route:asu_apartment_search.hitas_content'],
+    'menu_name' => $menu_name,
+    'expanded' => TRUE,
+    'weight' => 1,
+  ]);
+
+  $hitas->addTranslation('en', [
+    'title' => t('Owner-occupied housing'),
+  ]
+  );
+
+  $hitas->addTranslation('sv', [
+    'title' => t('Ägarboende'),
+  ]
+  );
+
+  $hitas->save();
+
+  $hitas_second_level_main_link = MenuLinkContent::create([
+    'title' => 'Etsi asuntoa',
+    'link' => ['uri' => 'route:asu_apartment_search.hitas_content'],
+    'parent' => $hitas->getPluginId(),
+    'expanded' => TRUE,
+  ]);
+
+  $hitas_second_level_main_link->addTranslation('en', [
+    'title' => t('Search for apartment'),
+  ]
+  );
+
+  $hitas_second_level_main_link->addTranslation('sv', [
+    'title' => t('Sök efter lägenhet'),
+  ]
+  );
+
+  $hitas_second_level_main_link->save();
+
+  $hitas_second_level = MenuLinkContent::create([
+    'title' => 'Tulevia kohteita',
+    'link' => ['uri' => 'route:asu_apartment_search.hitas_upcoming'],
+    'parent' => $hitas->getPluginId(),
+    'expanded' => TRUE,
+  ]);
+
+  $hitas_second_level->addTranslation('en', [
+    'title' => t('Upcoming projects'),
+  ]
+  );
+
+  $hitas_second_level->addTranslation('sv', [
+    'title' => t('Kommande projekt'),
+  ]
+  );
+
+  $hitas_second_level->save();
+
+  $haso = MenuLinkContent::create([
+    'title' => 'Asumisoikeusasunnot',
+    'link' => ['uri' => 'route:asu_apartment_search.haso'],
+    'menu_name' => $menu_name,
+    'expanded' => TRUE,
+    'weight' => 2,
+  ]);
+
+  $haso->addTranslation('en', [
+    'title' => t('Right-of-occupancy apartments'),
+  ]
+  );
+
+  $haso->addTranslation('sv', [
+    'title' => t('Bostadsrätter'),
+  ]
+  );
+
+  $haso->save();
+
+  $haso_second_level_main_link = MenuLinkContent::create([
+    'title' => 'Etsi asuntoa',
+    'link' => ['uri' => 'route:asu_apartment_search.haso'],
+    'parent' => $haso->getPluginId(),
+    'expanded' => TRUE,
+  ]);
+
+  $haso_second_level_main_link->addTranslation('en', [
+    'title' => t('Search for apartment'),
+  ]
+  );
+
+  $haso_second_level_main_link->addTranslation('sv', [
+    'title' => t('Sök efter lägenhet'),
+  ]
+  );
+
+  $haso_second_level_main_link->save();
+
+  $haso_second_level = MenuLinkContent::create([
+    'title' => 'Tulevia kohteita',
+    'link' => ['uri' => 'route:asu_apartment_search.haso_upcoming'],
+    'parent' => $haso->getPluginId(),
+    'expanded' => TRUE,
+  ]);
+
+  $haso_second_level->addTranslation('en', [
+    'title' => t('Upcoming projects'),
+  ]
+  );
+
+  $haso_second_level->addTranslation('sv', [
+    'title' => t('Kommande projekt'),
+  ]
+  );
+
+  $haso_second_level->save();
+}
+
+/**
+ * Add taxonomy terms to News category vocabularity automatically.
+ */
+function asu_apartment_search_update_8002() {
+  $vocabularity = 'news_category';
+
+  $term_common = Term::create([
+    'name' => 'Common',
+    'vid' => $vocabularity,
+    'uuid' => 'a4cd9585-84aa-4a1b-ae53-6976cc08f4a4',
+  ]);
+
+  $term_haso = Term::create([
+    'name' => 'HASO',
+    'vid' => $vocabularity,
+    'uuid' => '72d1416b-cf66-4820-b4cd-060098c18d6f',
+  ]);
+
+  $term_hitas = Term::create([
+    'name' => 'HITAS',
+    'vid' => $vocabularity,
+    'uuid' => 'daab6bb3-6810-456f-9922-1e70878024eb',
+  ]);
+
+  $term_common->save();
+  $term_haso->save();
+  $term_hitas->save();
+}
+
+/**
+ * Add taxonomy terms to FAQ category vocabularity automatically.
+ */
+function asu_apartment_search_update_8003() {
+  $vocabularity = 'faq_category';
+
+  $term_common = Term::create([
+    'name' => 'Common',
+    'vid' => $vocabularity,
+    'uuid' => '34fd6937-7e5c-449d-a833-042b4fc7b967',
+  ]);
+
+  $term_buying = Term::create([
+    'name' => 'Buying',
+    'vid' => $vocabularity,
+    'uuid' => '5237f303-02f3-4929-b8dd-3375b8e10121',
+  ]);
+
+  $term_price = Term::create([
+    'name' => 'Price',
+    'vid' => $vocabularity,
+    'uuid' => '81b20f4a-986e-4b40-ac26-a1c0ed3695b6',
+  ]);
+
+  $term_owning = Term::create([
+    'name' => 'Owning',
+    'vid' => $vocabularity,
+    'uuid' => '59da223c-3e7a-43df-85ab-849f919d688e',
+  ]);
+
+  $term_selling = Term::create([
+    'name' => 'Selling',
+    'vid' => $vocabularity,
+    'uuid' => '537cc3d2-5375-476d-8bc4-923b38007606',
+  ]);
+
+  $term_common->save();
+  $term_buying->save();
+  $term_price->save();
+  $term_owning->save();
+  $term_selling->save();
+}

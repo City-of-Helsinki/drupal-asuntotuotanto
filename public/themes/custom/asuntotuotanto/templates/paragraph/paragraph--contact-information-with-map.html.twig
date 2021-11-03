@@ -1,0 +1,86 @@
+{#
+/**
+ * @file
+ * Default theme implementation to display a paragraph.
+ *
+ * Available variables:
+ * - paragraph: Full paragraph entity.
+ *   Only method names starting with "get", "has", or "is" and a few common
+ *   methods such as "id", "label", and "bundle" are available. For example:
+ *   - paragraph.getCreatedTime() will return the paragraph creation timestamp.
+ *   - paragraph.id(): The paragraph ID.
+ *   - paragraph.bundle(): The type of the paragraph, for example, "image" or "text".
+ *   - paragraph.getOwnerId(): The user ID of the paragraph author.
+ *   See Drupal\paragraphs\Entity\Paragraph for a full list of public properties
+ *   and methods for the paragraph object.
+ * - content: All paragraph items. Use {{ content }} to print them all,
+ *   or print a subset such as {{ content.field_example }}. Use
+ *   {{ content|without('field_example') }} to temporarily suppress the printing
+ *   of a given child element.
+ * - attributes: HTML attributes for the containing element.
+ *   The attributes.class element may contain one or more of the following
+ *   classes:
+ *   - paragraphs: The current template type (also known as a "theming hook").
+ *   - paragraphs--type-[type]: The current paragraphs type. For example, if the paragraph is an
+ *     "Image" it would result in "paragraphs--type--image". Note that the machine
+ *     name will often be in a short form of the human readable label.
+ *   - paragraphs--view-mode--[view_mode]: The View Mode of the paragraph; for example, a
+ *     preview would result in: "paragraphs--view-mode--preview", and
+ *     default: "paragraphs--view-mode--default".
+ * - view_mode: View mode; for example, "preview" or "full".
+ * - logged_in: Flag for authenticated user status. Will be true when the
+ *   current user is a logged-in member.
+ * - is_admin: Flag for admin user status. Will be true when the current user
+ *   is an administrator.
+ *
+ * @see template_preprocess_paragraph()
+ *
+ * @ingroup themeable
+ */
+#}
+{%
+  set classes = [
+  'contact-information-with-map',
+  view_mode ? 'contact-information-with-map--' ~ view_mode|clean_class,
+  not paragraph.isPublished() ? 'contact-information-with-map--unpublished'
+]
+%}
+{% block paragraph %}
+  {% set title = content.field_title.0 %}
+  {% set locality = content.field_address.0.locality['#value'] %}
+  {% set address_line1 = content.field_address.0.address_line1['#value'] %}
+  {% set postal_code = content.field_address.0.postal_code['#value'] %}
+  {% set email = content.field_email.0 %}
+  {% set phone = content.field_phone.0 %}
+
+  {% set embed_url_parameters = locality|lower ~ '/' ~ street_name ~ '/' ~ street_number %}
+
+  <div{{ attributes.addClass(classes) }}>
+    <h2 class="contact-information-with-map__title">{{ title }}</h2>
+    <div class="contact-information-with-map__content">
+      <ul class="contact-information-with-map__information">
+        <li class="contact-information-with-map__information-item">
+          <span class="visually-hidden">{{ "Address"|t }}</span>
+          {{ address_line1 }}
+        </li>
+        <li class="contact-information-with-map__information-item">
+          <span class="visually-hidden">{{ "Postal code and city"|t }}</span>
+          {{ postal_code }} {{ locality }}
+        </li>
+        <li class="contact-information-with-map__information-item">
+          <span class="visually-hidden">{{ "Email"|t }}</span>
+          {% include "@hdbt/misc/icon.twig" with {icon: 'envelope', label: ''} %}
+          {{ email }}
+        </li>
+        <li class="contact-information-with-map__information-item">
+          <span class="visually-hidden">{{ "Phone"|t }}</span>
+          {% include "@hdbt/misc/icon.twig" with {icon: 'phone', label: ''} %}
+          {{ phone }}
+        </li>
+      </ul>
+    </div>
+    <div class="contact-information-with-map__map">
+      <div style="position: relative; width:100%; padding-bottom:52%;"> <iframe title="Palvelukartta - Etusivu" style="position: absolute; top: 0; left: 0; border: none; width: 100%; height: 100%;" src="https://palvelukartta.hel.fi/fi/embed/address/{{ embed_url_parameters }}?city=helsinki,espoo,vantaa,kauniainen"></iframe></div>
+    </div>
+  </div>
+{% endblock paragraph %}

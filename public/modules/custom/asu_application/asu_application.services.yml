@@ -1,0 +1,12 @@
+services:
+  logger.channel.asu_application:
+    parent: logger.channel_base
+    arguments: [ 'asu_application' ]
+
+  asu_application.application_subscriber:
+    class: Drupal\asu_application\EventSubscriber\ApplicationSubscriber
+    arguments:
+      - '@logger.channel.asu_application'
+      - '@asu_api.backendapi'
+    tags:
+      - { name: event_subscriber }

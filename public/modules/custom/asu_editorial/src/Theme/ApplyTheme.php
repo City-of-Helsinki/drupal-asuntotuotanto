@@ -2,6 +2,7 @@
 
 namespace Drupal\asu_editorial\Theme;
 
+use Drupal\user\Entity\User;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Theme\ThemeNegotiatorInterface;
 
@@ -32,13 +33,15 @@ class ApplyTheme implements ThemeNegotiatorInterface {
    * {@inheritDoc}
    */
   private function negotiateRoute(RouteMatchInterface $route_match) {
-    $theme = FALSE;
+    $user = User::load(\Drupal::currentUser()->id());
 
     if ($route_match->getRouteName() == 'entity.user.canonical') {
-      $theme = 'asu_admin';
+      if ($user->hasRole('customer')) {
+        return 'asuntotuotanto';
+      }
     }
 
-    return $theme;
+    return FALSE;
   }
 
 }

@@ -1,0 +1,19 @@
+uuid: e2f4c170-3c3b-49fa-964b-78d25f3f2108
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_phone
+    - paragraphs.paragraphs_type.contact_information_with_map
+id: paragraph.contact_information_with_map.field_phone
+field_name: field_phone
+entity_type: paragraph
+bundle: contact_information_with_map
+label: Phone
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

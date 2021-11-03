@@ -1,0 +1,11 @@
+uuid: b49e76bc-6a62-4031-ad08-05e55ad64f4c
+langcode: en
+status: true
+dependencies: {  }
+id: upcoming
+vid: state_of_sale
+label: Tuleva
+parents:
+  - '0'
+description: ''
+weight: 0

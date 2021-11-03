@@ -38,6 +38,14 @@
         "sub-menu__button"
       );
 
+      const desktopNavigationElement = document.getElementById(
+        "block-menu-main-desktop"
+      );
+
+      const userToolsNavigationElement = document.getElementById(
+        "block-usertools-desktop"
+      );
+
       const handleMobileNavigationClose = () => {
         mobileNavigationElement.setAttribute("aria-hidden", true);
         mobileNavigationToggleButtonElement.setAttribute(
@@ -91,8 +99,12 @@
 
       if (currentWindowWidth > 992) {
         mobileNavigationToggleButtonElement.setAttribute("aria-hidden", true);
+        desktopNavigationElement.setAttribute("aria-hidden", false);
+        userToolsNavigationElement.setAttribute("aria-hidden", false);
       } else {
         mobileNavigationToggleButtonElement.setAttribute("aria-hidden", false);
+        desktopNavigationElement.setAttribute("aria-hidden", true);
+        userToolsNavigationElement.setAttribute("aria-hidden", true);
       }
 
       window.addEventListener("resize", () => {
@@ -100,12 +112,16 @@
 
         if (currentWindowWidth > 992) {
           mobileNavigationToggleButtonElement.setAttribute("aria-hidden", true);
+          desktopNavigationElement.setAttribute("aria-hidden", false);
+          userToolsNavigationElement.setAttribute("aria-hidden", false);
           handleMobileNavigationClose();
         } else {
           mobileNavigationToggleButtonElement.setAttribute(
             "aria-hidden",
             false
           );
+          desktopNavigationElement.setAttribute("aria-hidden", true);
+          userToolsNavigationElement.setAttribute("aria-hidden", true);
         }
       });
 
@@ -145,6 +161,15 @@
 
       window.addEventListener("resize", () => {
         currentWindowWidth = window.innerWidth;
+
+        if (currentWindowWidth > 992) {
+          languageSwitcherWrapper.attr("aria-hidden", "true");
+          languageSwitcherToggleButton.attr("aria-expanded", "false");
+          languageSwitcherToggleButton.attr("aria-hidden", "false");
+        } else {
+          languageSwitcherWrapper.attr("aria-hidden", "false");
+          languageSwitcherToggleButton.attr("aria-hidden", "true");
+        }
       });
 
       const outsideClickListener = function outsideClickListener(event) {

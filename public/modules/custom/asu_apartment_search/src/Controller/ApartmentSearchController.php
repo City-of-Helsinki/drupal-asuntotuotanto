@@ -12,12 +12,52 @@ class ApartmentSearchController extends ControllerBase {
   /**
    * Returns a renderable array for a asuntohaku page.
    */
-  public function content() {
+  public function hitas(): array {
     // @todo Should be replaced with block when frontend theme is available.
     $build = [
-      '#markup' => '<div id="search"></div>',
+      '#markup' => '<div id="asu_react_search"></div>',
       '#attached' => [
-        'library' => 'asu_apartment_search/apartment-search',
+        'library' => 'asu_apartment_search/hitas-apartment-search',
+      ],
+    ];
+    return $build;
+  }
+
+  /**
+   * Returns a renderable array for a asuntohaku page.
+   */
+  public function hitas_upcoming(): array {
+    // @todo Should be replaced with block when frontend theme is available.
+    $build = [
+      '#markup' => '<div id="asu_react_search"></div>',
+      '#attached' => [
+        'library' => 'asu_apartment_search/hitas-apartment-upcoming',
+      ],
+    ];
+    return $build;
+  }
+
+  /**
+   * Returns a renderable array for a asuntohaku page.
+   */
+  public function haso() {
+    $build = [
+      '#markup' => '<div id="asu_react_search"></div>',
+      '#attached' => [
+        'library' => 'asu_apartment_search/haso-apartment-search',
+      ],
+    ];
+    return $build;
+  }
+
+  /**
+   * Returns a renderable array for a asuntohaku page.
+   */
+  public function haso_upcoming() {
+    $build = [
+      '#markup' => '<div id="asu_react_search"></div>',
+      '#attached' => [
+        'library' => 'asu_apartment_search/haso-apartment-upcoming',
       ],
     ];
     return $build;

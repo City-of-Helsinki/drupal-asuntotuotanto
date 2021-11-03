@@ -1,0 +1,10 @@
+uuid: 05fdf118-0526-49ee-b9ac-b08699657614
+langcode: fi
+status: true
+dependencies: {  }
+id: stacked_text_blocks_with_image
+label: 'Pinotut tekstilohkot kuvalla'
+icon_uuid: null
+icon_default: null
+description: 'Mahdollisuus lisätä tekstilohkoja pinotusti yhdellä kuvalla näiden vierellä.'
+behavior_plugins: {  }

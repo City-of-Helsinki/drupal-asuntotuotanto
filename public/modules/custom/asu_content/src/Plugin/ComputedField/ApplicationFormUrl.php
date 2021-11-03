@@ -4,7 +4,6 @@ namespace Drupal\asu_content\Plugin\ComputedField;
 
 use Drupal\computed_field_plugin\Traits\ComputedSingleItemTrait;
 use Drupal\Core\Field\FieldItemList;
-use Drupal\Core\Site\Settings;
 use Drupal\Core\TypedData\DataDefinitionInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\node\Entity\Node;
@@ -68,23 +67,86 @@ class ApplicationFormUrl extends FieldItemList {
         $reference['referring_entity'] instanceof Node &&
         $this->getEntity()->hasField('field_apartment_number')
       ) {
+        $value = '';
         $referencing_node = $reference['referring_entity'];
+        $baseurl = \Drupal::request()->getSchemeAndHttpHost();
 
-        if (!isset($referencing_node->field_ownership_type->referencedEntities()[0])) {
+        // Application url cannot be indexed if ownership type or end time is missing.
+        if (
+        !isset($referencing_node->field_ownership_type->referencedEntities()[0]) ||
+        !$referencing_node->field_application_end_time->value
+        ) {
           return [
             '#markup' => '',
           ];
         }
 
-        $baseurl = Settings::get('asuntotuotanto_public_url');
-        $apartment_type = strtolower($referencing_node->field_ownership_type->referencedEntities()[0]->getName());
-        $value = $baseurl . '/application/add/' . $apartment_type . '/' . $referencing_node->id();
+        if (
+          !$referencing_node->field_application_end_time->value ||
+          $this->isBeforeApplicationTimeEnd($referencing_node->field_application_end_time->value)
+        ) {
+          $apartment_type = strtolower($referencing_node->field_ownership_type->referencedEntities()[0]->getName());
+          $value = $baseurl . '/application/add/' . $apartment_type . '/' . $referencing_node->id();
+        }
+        else {
+          $value = $baseurl . '/contact/apply_for_free_apartment?apartment=' . $current_entity->id();
+        }
       }
     }
 
     return [
       '#markup' => $value,
     ];
+  }
+
+  /**
+   *
+   */
+  protected function chingleComputeValue() {
+    $current_entity = $this->getEntity();
+    $reverse_references = $this->reverseEntities->getReverseReferences($current_entity);
+    $value = FALSE;
+
+    foreach ($reverse_references as $reference) {
+      if (
+        !empty($reference) &&
+        $reference['referring_entity'] instanceof Node &&
+        $this->getEntity()->hasField('field_apartment_number')
+      ) {
+        $value = '';
+        $referencing_node = $reference['referring_entity'];
+        $application_baseurl = Settings::get('asuntotuotanto_public_url');
+
+        if (!empty($referencing_node->get('field_ownership_type')->first())) {
+          $apartment_type = $referencing_node->get('field_ownership_type')
+            ->first()
+            ->get('entity')
+            ->getTarget()
+            ->getValue()->getName();
+          $value = $application_baseurl . '/application/add/' . lcfirst($apartment_type) . '/' . $referencing_node->id();
+        }
+      }
+    }
+
+    return [
+      '#markup' => $value,
+    ];
+  }
+
+  /**
+   * Check application status.
+   *
+   * @param string $endTime
+   *   End time.
+   *
+   * @return bool
+   *   Application status.
+   */
+  private function isBeforeApplicationTimeEnd(string $endTime) {
+    $end = strtotime($endTime);
+    $date = new \DateTime();
+    $now = $date->getTimestamp();
+    return $now < $end;
   }
 
 }

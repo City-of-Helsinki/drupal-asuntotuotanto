@@ -1,0 +1,15 @@
+  <section data-drupal-messages aria-label="{{ 'Notification'|t }}" class="hds-notification">
+    <div role="contentinfo" aria-labelledby="{{ id }}" class="hds-notification__content">
+      <div class="hds-notification__label" role="heading" aria-level="2">
+        {% include "@hdbt/misc/icon.twig" with {icon: 'info-circle-fill'} %}
+        <span id="{{ id }}">
+          {{ label }}
+        </span>
+      </div>
+      <div class="hds-notification__body">
+        <p>
+          {{ description }}
+        </p>
+      </div>
+    </div>
+  </section>

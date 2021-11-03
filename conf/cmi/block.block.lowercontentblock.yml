@@ -1,4 +1,4 @@
-uuid: 782ca3dd-323d-4078-9a08-07c3a9d5c576
+uuid: bcc4516f-cba0-426e-9761-0805cfa237d2
 langcode: en
 status: true
 dependencies:
@@ -6,6 +6,8 @@ dependencies:
     - hdbt_content
   theme:
     - asuntotuotanto
+_core:
+  default_config_hash: tNA-kZeJYbWgoVL9w2tJxX5TkbOqzXQVOVardatKtk8
 id: lowercontentblock
 theme: asuntotuotanto
 region: after_content

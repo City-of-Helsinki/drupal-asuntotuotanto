@@ -5,10 +5,14 @@
  * Functions to support theming in the HDBT Subtheme.
  */
 
+use Drupal\asu_application\Applications;
+use Drupal\Core\Url;
 use Drupal\file\Entity\File;
 use Drupal\node\Entity\Node;
+use Drupal\user\Entity\User;
 use Drupal\taxonomy\Entity\Term;
-use Drupal\Core\Url;
+use Drupal\paragraphs\Entity\Paragraph;
+use Drupal\asu_api\Api\ElasticSearchApi\Request\ProjectApartmentsRequest;
 
 /**
  * Helper function to get the icons path.
@@ -36,6 +40,7 @@ function asuntotuotanto_get_icons_path() {
 function asuntotuotanto_preprocess(&$variables) {
   $variables['asuntotuotanto_icons_path'] = asuntotuotanto_get_icons_path();
   $variables['#attached']['drupalSettings']['asuntotuotanto_icons_path'] = $variables['asuntotuotanto_icons_path'];
+  $variables['current_user_id'] = \Drupal::currentUser()->id() ?? NULL;
 }
 
 /**
@@ -73,30 +78,53 @@ function asuntotuotanto_preprocess_menu(&$variables) {
       }
 
       if ($menu_block_configuration_suggestion === 'main__desktop') {
+        $language = Drupal::languageManager()->getCurrentLanguage();
+        $current_langcode = $language->getId();
         $items = $variables['items'];
-        $current_path = Url::fromRoute('<current>')->toString();
+        $current_path = "/$current_langcode" . \Drupal::service('path.current')->getPath() . "?lang=$current_langcode";
 
         foreach ($items as $key => $item) {
           $is_active = FALSE;
-          $is_below_item_active = FALSE;
           $below = $item['below'];
-          $url = $item['url']->toString();
+          $url = $item['url'];
 
-          if ($current_path === $url) {
+          if ($url->isExternal()) {
+            $url_string = $url->toString() . "?lang=$current_langcode";
+          }
+          else {
+            $url_string = "/$current_langcode/" . $url->getInternalPath() . "?lang=$current_langcode";
+          }
+
+          $variables['items'][$key]['is_active'] = $is_active;
+          $variables['items'][$key]['url'] = $url;
+
+          if ($current_path === $url_string) {
             $is_active = TRUE;
           }
 
           if ($below) {
-            foreach ($below as $below_item) {
-              $below_url = $below_item['url']->toString();
+            foreach ($below as $below_key => $below_item) {
+              $is_below_item_active = FALSE;
+              $below_url = $below_item['url'];
 
-              if ($current_path === $below_url) {
+              if ($below_url->isExternal()) {
+                $below_url_string = $below_url->toString() . "?lang=$current_langcode";
+              }
+              else {
+                $below_url_string = "/$current_langcode/" . $below_url->getInternalPath() . "?lang=$current_langcode";
+              }
+
+              if ($current_path === $below_url_string) {
                 $is_below_item_active = TRUE;
               }
-            }
 
-            if ($is_active || $is_below_item_active) {
-              $variables['items'][$key]['attributes']->addClass('is-active');
+              $variables['items'][$key]['below'][$below_key]['is_active'] = $is_below_item_active;
+
+              if ($is_active || $is_below_item_active) {
+                $variables['items'][$key]['attributes']->addClass('is-active');
+              }
+
+              $variables['items'][$key]['below'][$below_key]['url'] = $below_url;
             }
           }
         }
@@ -118,11 +146,263 @@ function asuntotuotanto_preprocess_menu(&$variables) {
 }
 
 /**
+ * Implements hook_theme_suggestions_HOOK_alter() for taxonomies.
+ *
+ * {@inheritdoc}
+ */
+function asuntotuotanto_theme_suggestions_taxonomy_term_alter(&$suggestions, $vars, $hook) {
+  $suggestions[] = 'taxonomy_term__' . $vars['elements']['#view_mode'];
+}
+
+/**
+ * Implements hook_preprocess_views_view().
+ *
+ * {@inheritdoc}
+ */
+function asuntotuotanto_preprocess_views_view(&$variables) {
+  $view = $variables['view'];
+  $view_id = $view->id();
+
+  switch ($view_id) {
+    case 'news':
+      if ($view->getTitle()) {
+        $variables['page_title'] = $view->getTitle();
+      }
+
+      break;
+
+    case 'applications':
+      $current_user = User::load(\Drupal::currentUser()->id());
+      $variables['is_email_valid'] = $current_user->get('field_email_is_valid')->getValue()[0]['value'] ?? NULL;
+
+      break;
+
+    case 'project_apartments_listing':
+      $variables['apartments_count'] = $view->total_rows;
+
+      break;
+  }
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function asuntotuotanto_preprocess_views_view_table(&$variables) {
+  $view = $variables['view'];
+  $view_id = $view->id();
+
+  if ($view_id === 'project_apartments_listing') {
+    $rows = $variables['rows'];
+    $status = Applications::create()->getApartmentApplicationStatuses();
+
+    foreach ($rows as $key => $row) {
+      $apartmentId = (int) trim(strip_tags($row['columns']['nid']['content'][0]['field_output']['#markup']));
+      $applicationCount = $status[$apartmentId] ?? 0;
+
+      $applicationCountEnum = Applications::resolveApplicationCountEnum((int) $applicationCount);
+
+      $variables['rows'][$key]['application_status'] = get_apartment_application_status($applicationCountEnum);
+
+      $parent_node_results = \Drupal::entityTypeManager()
+        ->getListBuilder('node')
+        ->getStorage()
+        ->loadByProperties([
+          'type' => 'project',
+          'status' => 1,
+          'field_apartments' => $apartmentId,
+        ]
+        );
+
+      if (!$parent_node_results) {
+        continue;
+      }
+
+      $parent_node_nid = key($parent_node_results);
+      $parent_node = Node::load($parent_node_nid);
+      $is_application_period_active = FALSE;
+
+      $application_start_time_value = $parent_node->get('field_application_start_time')->value;
+      $application_start_time_timestamp = format_date_to_unix_timestamp($application_start_time_value);
+      $application_end_time_value = $parent_node->get('field_application_end_time')->value;
+      $application_end_time_timestamp = format_date_to_unix_timestamp($application_end_time_value);
+      $current_timestamp = time();
+
+      if ($current_timestamp >= $application_start_time_timestamp && $current_timestamp <= $application_end_time_timestamp) {
+        $is_application_period_active = TRUE;
+      }
+
+      $langcode = Drupal::languageManager()->getCurrentLanguage()->getId();
+
+      $ownership_type_entity = $parent_node->get('field_ownership_type')->entity;
+
+      $project_id = $parent_node->id();
+      $ownership_type = $ownership_type_entity ? strtolower($ownership_type_entity->getName()) : '';
+      $application_url = "/$langcode/application/add/$ownership_type/$project_id";
+
+      $variables['rows'][$key]['is_application_period_active'] = $is_application_period_active;
+      $variables['rows'][$key]['application_url'] = $application_url;
+    }
+  }
+}
+
+/**
+ * Implements hook_theme_suggestions_input_alter().
+ */
+function asuntotuotanto_theme_suggestions_input_alter(&$suggestions, array $variables) {
+  $element = $variables['element'];
+
+  if (isset($element['#attributes']['data-twig-suggestion'])) {
+    $suggestions[] = 'input__' . $element['#type'] . '__' . $element['#attributes']['data-twig-suggestion'];
+  }
+}
+
+/**
+ * Implements hook_preprocess_links().
+ */
+function asuntotuotanto_preprocess_links__language_block(&$variables) {
+  $links = $variables['links'];
+
+  foreach ($links as $key => $link) {
+    if ($key !== 'fi') {
+      unset($variables['links'][$key]);
+    }
+  }
+}
+
+/**
+ * Implements hook_theme_suggestions_container_alter().
+ */
+function asuntotuotanto_theme_suggestions_container_alter(&$suggestions, array $variables) {
+  $element = $variables['element'];
+
+  if (isset($element['#type']) && $element['#type'] == 'view') {
+    $suggestions[] = 'container__' . $element['#name'];
+    $suggestions[] = 'container__' . $element['#name'] . '__' . $element['#display_id'];
+  }
+
+  if (isset($element['#type']) && $element['#type'] == 'container' && isset($element['children']['#type'])) {
+    $suggestions[] = 'container__' . $element['children']['#type'];
+  }
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function asuntotuotanto_form_alter(&$form, &$form_state, $form_id) {
+  if ($form['#id'] == 'user-login-form') {
+    $form['name']['#description'] = FALSE;
+    $form['pass']['#description'] = FALSE;
+  }
+
+  if ($form['#id'] == 'user-pass') {
+    unset($form['mail']);
+  }
+
+  if ($form['#id'] == 'user-register-form') {
+    $form['account']['pass']['#description'] = FALSE;
+    $form['actions']['submit']['#attributes']['data-twig-suggestion'] = 'register_form_submit_button';
+  }
+
+  if ($form['#id'] == 'user-form') {
+    $form['account']['mail']['#description'] = FALSE;
+    $form['account']['pass']['#description'] = FALSE;
+  }
+
+  if ($form['#id'] == 'asu-application-hitas-add-form') {
+    $project_id = $form['#project_id'];
+    $elastic = \Drupal::service('asu_api.elasticapi');
+    $request = new ProjectApartmentsRequest($project_id);
+    $apartmentResponse = $elastic->getApartmentService()
+      ->getProjectApartments($request);
+
+    $application_teaser_values = $apartmentResponse->getApplicationTeaserValues();
+    $form['application_project_information'] = $application_teaser_values;
+  }
+
+  if ($form['#id'] == 'asu-application-haso-add-form') {
+    $project_id = $form['#project_id'];
+    $elastic = \Drupal::service('asu_api.elasticapi');
+    $request = new ProjectApartmentsRequest($project_id);
+    $apartmentResponse = $elastic->getApartmentService()
+      ->getProjectApartments($request);
+
+    $application_teaser_values = $apartmentResponse->getApplicationTeaserValues();
+    $form['application_project_information'] = $application_teaser_values;
+  }
+
+  if ($form['#id'] == 'asu-application-hitas-form') {
+    $project_id = $form['#project_id'];
+    $elastic = \Drupal::service('asu_api.elasticapi');
+    $request = new ProjectApartmentsRequest($project_id);
+    $apartmentResponse = $elastic->getApartmentService()
+      ->getProjectApartments($request);
+
+    $application_teaser_values = $apartmentResponse->getApplicationTeaserValues();
+    $form['application_project_information'] = $application_teaser_values;
+  }
+
+  if ($form['#id'] == 'asu-application-haso-form') {
+    $project_id = $form['#project_id'];
+    $elastic = \Drupal::service('asu_api.elasticapi');
+    $request = new ProjectApartmentsRequest($project_id);
+    $apartmentResponse = $elastic->getApartmentService()
+      ->getProjectApartments($request);
+
+    $application_teaser_values = $apartmentResponse->getApplicationTeaserValues();
+    $form['application_project_information'] = $application_teaser_values;
+  }
+
+  if ($form['#id'] == 'views-exposed-form-faq-faq-page-hitas') {
+    $form['actions']['reset']['#attributes']['data-twig-suggestion'] = 'faq_form_reset_button';
+  }
+
+  if ($form['#id'] == 'views-exposed-form-faq-faq-page-haso') {
+    $form['actions']['reset']['#attributes']['data-twig-suggestion'] = 'faq_form_reset_button';
+  }
+
+}
+
+/**
  * Implements hook_preprocess_node().
  */
 function asuntotuotanto_preprocess_node(&$variables) {
-  $node = $variables['node'];
+  $node = Node::load($variables['node']->id());
   $bundle = $node->getType();
+
+  if ($node->field_content && !empty($node->field_content->getValue())) {
+
+    foreach ($node->field_content->getValue() as $value) {
+      $paragraph = FALSE;
+
+      if (!empty($value['entity'])) {
+        $paragraph = $value['entity'];
+      }
+      elseif (!empty($value['target_id'])) {
+        $paragraph = Paragraph::load($value['target_id']);
+      }
+
+      if (!empty($paragraph) && $paragraph instanceof Paragraph) {
+        if ($paragraph->type->getValue()[0]["target_id"] === "text") {
+          $text = strip_tags($paragraph->get('field_text')->value);
+          $text = str_replace(["\r", "\n"], ' ', $text);
+
+          if (strlen($text) > 80) {
+            if ($variables['view_mode'] === 'teaser_prominent') {
+              if (strlen($text) > 230) {
+                $text = rtrim(substr($text, 0, 230)) . "...";
+              }
+            }
+            else {
+              $text = rtrim(substr($text, 0, 80)) . "...";
+            }
+          }
+
+          $variables['summary'] = $text;
+          break;
+        }
+      }
+    }
+  }
 
   switch ($bundle) {
     case 'project':
@@ -156,16 +436,16 @@ function asuntotuotanto_preprocess_node(&$variables) {
 
       if (!empty($apartment_debt_free_sales_prices)) {
         $apartment_debt_free_sales_prices_minmax = [
-          "min" => number_format(min($apartment_debt_free_sales_prices), 2, ',', '.'),
-          "max" => number_format(max($apartment_debt_free_sales_prices), 2, ',', '.'),
+          "min" => number_format(min($apartment_debt_free_sales_prices), 2, ',', ' '),
+          "max" => number_format(max($apartment_debt_free_sales_prices), 2, ',', ' '),
         ];
         $apartment_debt_free_sales_prices_string = $apartment_debt_free_sales_prices_minmax['min'] . " € - " . $apartment_debt_free_sales_prices_minmax['max'] . " €";
       }
 
       if (!empty($apartment_sales_prices)) {
         $apartment_sales_prices_minmax = [
-          "min" => number_format(min($apartment_sales_prices), 2, ',', '.'),
-          "max" => number_format(max($apartment_sales_prices), 2, ',', '.'),
+          "min" => number_format(min($apartment_sales_prices), 2, ',', ' '),
+          "max" => number_format(max($apartment_sales_prices), 2, ',', ' '),
         ];
         $apartment_sales_prices_string = $apartment_sales_prices_minmax['min'] . " € - " . $apartment_sales_prices_minmax['max'] . " €";
       }
@@ -181,37 +461,41 @@ function asuntotuotanto_preprocess_node(&$variables) {
       $services = $node->get('field_services')->getValue();
       $services_stack = [];
 
-      foreach ($services as $key => $service) {
-        $term_id = $service['term_id'];
+      if (count($services) > 0) {
+        foreach ($services as $key => $service) {
+          $term_id = $service['term_id'];
 
-        if ($term_id !== '0') {
-          $service_name = Term::load($term_id)->name->value;
-          $service_distance = $service['distance'];
+          if ($term_id !== '0') {
+            $service_name = Term::load($term_id)->name->value;
+            $service_distance = $service['distance'];
 
-          $services_stack[] = [
-            'name' => $service_name,
-            'distance' => $service_distance,
-          ];
+            $services_stack[] = [
+              'name' => $service_name,
+              'distance' => $service_distance,
+            ];
+          }
         }
       }
 
       $project_attachments = $node->get('field_project_attachments')->getValue();
       $attachments_stack = [];
 
-      foreach ($project_attachments as $key => $attachment) {
-        $target_id = $attachment['target_id'];
-        $file = File::load($target_id);
-        $description = $attachment['description'];
-        $file_name = $file->getFilename();
-        $file_size = format_size($file->getSize());
-        $file_uri = file_create_url($file->getFileUri());
+      if (count($project_attachments) > 0) {
+        foreach ($project_attachments as $key => $attachment) {
+          $target_id = $attachment['target_id'];
+          $file = File::load($target_id);
+          $description = $attachment['description'];
+          $file_name = $file->getFilename();
+          $file_size = format_size($file->getSize());
+          $file_uri = file_create_url($file->getFileUri());
 
-        $attachments_stack[$key] = [
-          'description' => $description,
-          'name' => $file_name,
-          'size' => $file_size,
-          'uri' => $file_uri,
-        ];
+          $attachments_stack[$key] = [
+            'description' => $description,
+            'name' => $file_name,
+            'size' => $file_size,
+            'uri' => $file_uri,
+          ];
+        }
       }
 
       $application_start_time_value = $node->get('field_application_start_time')->value;
@@ -233,6 +517,22 @@ function asuntotuotanto_preprocess_node(&$variables) {
         $is_application_period_active = TRUE;
       }
 
+      if (!empty($node->field_street_address->value)) {
+        $street_address_splitted = split_address_line($node->field_street_address->value);
+
+        $street_name = $street_address_splitted['street'];
+        $street_number_addition = $street_address_splitted['number_addition'];
+
+        if (!empty($street_number_addition)) {
+          $street_number_addition = $street_number_addition[0] === '-' ? $street_number_addition : "-$street_number_addition";
+        }
+
+        $street_number = $street_address_splitted['number'] . $street_number_addition ?? NULL;
+
+        $variables['street_name'] = $street_name ?? NULL;
+        $variables['street_number'] = $street_number ?? NULL;
+      }
+
       $variables['application_start_time'] = format_timestamp_to_custom_format($application_start_time_timestamp);
       $variables['application_end_time'] = format_timestamp_to_custom_format($application_end_time_timestamp);
       $variables['apartments_count'] = count($apartments);
@@ -247,8 +547,10 @@ function asuntotuotanto_preprocess_node(&$variables) {
       break;
 
     case 'apartment':
-      $cta_image_file_target_id = $node->get('field_images')->getValue()[0]['target_id'];
-      $variables['cta_image'] = load_responsive_image_style($cta_image_file_target_id, 'image__3_2');
+      if (count($node->get('field_images')->getValue()) > 0) {
+        $cta_image_file_target_id = $node->get('field_images')->getValue()[0]['target_id'];
+        $variables['cta_image'] = load_responsive_image_style($cta_image_file_target_id, 'image__3_2');
+      }
 
       $parent_node_results = \Drupal::entityTypeManager()
         ->getListBuilder('node')
@@ -280,16 +582,25 @@ function asuntotuotanto_preprocess_node(&$variables) {
           $is_application_period_in_the_past = TRUE;
         }
 
-        $street_address = $parent_node->get('field_street_address')->value;
-        $postal_code = $parent_node->get('field_postal_code')->value;
-        $city = $parent_node->get('field_city')->value;
-        $district = Term::load($parent_node->get('field_district')->target_id)->name->value;
-        $ownership_type = Term::load($parent_node->get('field_ownership_type')->target_id)->name->value;
+        if (count($parent_node->get('field_district')->getValue()) > 0) {
+          $district = Term::load($parent_node->get('field_district')->getValue()[0]['target_id'])->name->value ?? NULL;
+        }
+
+        if (count($parent_node->get('field_ownership_type')->getValue()) > 0) {
+          $ownership_type = Term::load($parent_node->get('field_ownership_type')->getValue()[0]['target_id'])->name->value ?? NULL;
+        }
 
         $project_description = $parent_node->get('field_project_description')->value;
         $project_area_description = $parent_node->get('field_project_area_description')->value;
-        $building_type = Term::load($parent_node->get('field_building_type')->target_id)->name->value;
-        $energy_class = Term::load($parent_node->get('field_energy_class')->target_id)->name->value;
+
+        if (count($parent_node->get('field_building_type')->getValue()) > 0) {
+          $building_type = Term::load($parent_node->get('field_building_type')->getValue()[0]['target_id'])->name->value ?? NULL;
+        }
+
+        if (count($parent_node->get('field_energy_class')->getValue()) > 0) {
+          $energy_class = Term::load($parent_node->get('field_energy_class')->getValue()[0]['target_id'])->name->value ?? NULL;
+        }
+
         $accessibility = $parent_node->get('field_project_accessibility')->value;
         $services = $parent_node->get('field_services')->getValue();
         $services_url = $parent_node->get('field_services_url')->getValue()[0] ?? NULL;
@@ -299,61 +610,95 @@ function asuntotuotanto_preprocess_node(&$variables) {
         $attachments_stack = [];
         $estimated_completion_date = new DateTime($parent_node->get('field_estimated_completion_date')->value);
 
-        $site_owner = Term::load($parent_node->get('field_site_owner')->target_id)->name->value;
+        if (count($parent_node->get('field_site_owner')->getValue()) > 0) {
+          $site_owner = Term::load($parent_node->get('field_site_owner')->getValue()[0]['target_id'])->name->value ?? NULL;
+        }
+
         $site_renter = $parent_node->get('field_site_renter')->value;
 
-        foreach ($services as $key => $service) {
-          $term_id = $service['term_id'];
+        if (count($services) > 0) {
+          foreach ($services as $key => $service) {
+            $term_id = $service['term_id'];
 
-          if ($term_id !== '0') {
-            $service_name = Term::load($term_id)->name->value;
-            $service_distance = $service['distance'];
+            if ($term_id !== '0') {
+              $service_name = Term::load($term_id)->name->value;
+              $service_distance = $service['distance'];
 
-            $services_stack[] = [
-              'name' => $service_name,
-              'distance' => $service_distance,
-            ];
+              $services_stack[] = [
+                'name' => $service_name,
+                'distance' => $service_distance,
+              ];
+            }
           }
         }
 
-        foreach ($apartment_attachments as $key => $attachment) {
-          $target_id = $attachment['target_id'];
-          $file = File::load($target_id);
+        if (count($apartment_attachments) > 0) {
+          foreach ($apartment_attachments as $key => $attachment) {
+            $target_id = $attachment['target_id'];
+            $file = File::load($target_id);
 
-          if ($file) {
-            $description = $attachment['description'];
-            $file_name = $file->getFilename();
-            $file_size = format_size($file->getSize());
-            $file_uri = file_create_url($file->getFileUri());
+            if ($file) {
+              $description = $attachment['description'];
+              $file_name = $file->getFilename();
+              $file_size = format_size($file->getSize());
+              $file_uri = file_create_url($file->getFileUri());
 
-            array_push($attachments_stack, [
-              'description' => $description,
-              'name' => $file_name,
-              'size' => $file_size,
-              'uri' => $file_uri,
-            ]);
+              array_push($attachments_stack, [
+                'description' => $description,
+                'name' => $file_name,
+                'size' => $file_size,
+                'uri' => $file_uri,
+              ]);
+            }
           }
         }
 
-        foreach ($project_attachments as $key => $attachment) {
-          $target_id = $attachment['target_id'];
-          $file = File::load($target_id);
+        if (count($project_attachments) > 0) {
+          foreach ($project_attachments as $key => $attachment) {
+            $target_id = $attachment['target_id'];
+            $file = File::load($target_id);
 
-          if ($file) {
-            $description = $attachment['description'];
-            $file_name = $file->getFilename();
-            $file_size = format_size($file->getSize());
-            $file_uri = file_create_url($file->getFileUri());
+            if ($file) {
+              $description = $attachment['description'];
+              $file_name = $file->getFilename();
+              $file_size = format_size($file->getSize());
+              $file_uri = file_create_url($file->getFileUri());
 
-            array_push($attachments_stack, [
-              'description' => $description,
-              'name' => $file_name,
-              'size' => $file_size,
-              'uri' => $file_uri,
-            ]);
+              array_push($attachments_stack, [
+                'description' => $description,
+                'name' => $file_name,
+                'size' => $file_size,
+                'uri' => $file_uri,
+              ]);
+            }
           }
         }
 
+        $street_address = $parent_node->get('field_street_address')->value ?? NULL;
+        $postal_code = $parent_node->get('field_postal_code')->value ?? NULL;
+        $city = $parent_node->get('field_city')->value ?? NULL;
+        $coordinate_lat = $parent_node->get('field_coordinate_lat')->value ?? NULL;
+        $coordinate_lon = $parent_node->get('field_coordinate_lon')->value ?? NULL;
+
+        if (!empty($street_address)) {
+          $street_address_splitted = split_address_line($street_address);
+
+          $street_name = $street_address_splitted['street'];
+          $street_number_addition = $street_address_splitted['number_addition'];
+
+          if (!empty($street_number_addition)) {
+            $street_number_addition = $street_number_addition[0] === '-' ? $street_number_addition : "-$street_number_addition";
+          }
+
+          $street_number = $street_address_splitted['number'] . $street_number_addition ?? NULL;
+
+          $variables['street_name'] = $street_name ?? NULL;
+          $variables['street_number'] = $street_number ?? NULL;
+        }
+
+        $variables['coordinate_lat'] = $coordinate_lat;
+        $variables['coordinate_lon'] = $coordinate_lon;
+        $variables['city'] = $city;
         $variables['application_start_time'] = format_timestamp_to_custom_format($application_start_time_timestamp);
         $variables['application_end_time'] = format_timestamp_to_custom_format($application_end_time_timestamp);
         $variables['is_application_period_active'] = $is_application_period_active;
@@ -380,61 +725,80 @@ function asuntotuotanto_preprocess_node(&$variables) {
 /**
  * Implements hook_preprocess_HOOK().
  */
-function asuntotuotanto_preprocess_views_view(&$variables) {
-  $view = $variables['view'];
+function asuntotuotanto_preprocess_pager(&$variables) {
+  // Cast current to be INT instead of FLOAT.
+  $variables['current'] = isset($variables['current']) ? (int) $variables['current'] : 1;
 
-  switch ($view->id()) {
-    case 'project_apartments_listing':
-      $variables['apartments_count'] = $view->total_rows;
-      break;
+  // Check for last pager item href link.
+  if (!empty($variables['items']['last']['href'])) {
+    $splittedLink = explode("page=", $variables['items']['last']['href'])[1];
+    $variables['pager_total_amount'] = (int) $splittedLink + 1;
+  }
+  else {
+    if (!empty($variables['items']['pages'])) {
+      $lastArrayItem = end($variables['items']['pages'])['href'];
+      $splittedLink = explode("page=", $lastArrayItem)[1];
+      $variables['pager_total_amount'] = (int) $splittedLink + 1;
+    }
   }
 }
 
 /**
- * Implements hook_preprocess_HOOK().
+ *
  */
-function asuntotuotanto_preprocess_views_view_table(&$variables) {
-  $view = $variables['view'];
-
-  switch ($view->id()) {
-    case 'project_apartments_listing':
-      $rows = $variables['rows'];
-
-      foreach ($rows as $key => $row) {
-        $nid = (int) trim(strip_tags($row['columns']['nid']['content'][0]['field_output']['#markup']));
-        $variables['rows'][$key]['application_status'] = get_apartment_application_status($nid);
-
-        $parent_node_results = \Drupal::entityTypeManager()
-          ->getListBuilder('node')
-          ->getStorage()
-          ->loadByProperties([
-            'type' => 'project',
-            'status' => 1,
-            'field_apartments' => $nid,
-          ]
-        );
-
-        if ($parent_node_results) {
-          $parent_node_nid = key($parent_node_results);
-          $parent_node = Node::load($parent_node_nid);
-          $is_application_period_active = FALSE;
-
-          $application_start_time_value = $parent_node->get('field_application_start_time')->value;
-          $application_start_time_timestamp = format_date_to_unix_timestamp($application_start_time_value);
-          $application_end_time_value = $parent_node->get('field_application_end_time')->value;
-          $application_end_time_timestamp = format_date_to_unix_timestamp($application_end_time_value);
-          $current_timestamp = time();
-
-          if ($current_timestamp >= $application_start_time_timestamp && $current_timestamp <= $application_end_time_timestamp) {
-            $is_application_period_active = TRUE;
-          }
-
-          $variables['rows'][$key]['is_application_period_active'] = $is_application_period_active;
-        }
-      }
-
-      break;
+function asuntotuotanto_preprocess_user(&$variables) {
+  $store = \Drupal::service('asu_user.tempstore');
+  $fields = \Drupal::config('asu_user.external_user_fields')->get('external_data_map');
+  foreach ($fields as $field_name => $field) {
+    $variables['content'][$field_name] = $store->get($field_name);
   }
+}
+
+/**
+ * Implements template_preprocess_paragraph().
+ */
+function asuntotuotanto_preprocess_paragraph(array &$variables) {
+  /** @var \Drupal\paragraphs\Entity\Paragraph $paragraph */
+  $paragraph = $variables['paragraph'];
+  $paragraph_type = $paragraph->getType();
+
+  if ($paragraph_type == 'showcase_block') {
+    if ($paragraph->hasField('field_showcases')) {
+      $variables['showcases_count'] = count($paragraph->get('field_showcases')->getValue());
+    }
+  }
+
+  if ($paragraph_type == 'contact_information_with_map') {
+    $address_object = $paragraph->get('field_address')->getValue()[0];
+    $address_line1 = $address_object['address_line1'];
+    $address_split = split_address_line($address_line1);
+
+    $street_name = $address_split['street'];
+    $street_number_addition = $address_split['number_addition'];
+
+    if (!empty($street_number_addition)) {
+      $street_number_addition = $street_number_addition[0] === '-' ? $street_number_addition : "-$street_number_addition";
+    }
+
+    $street_number = $address_split['number'] . $street_number_addition ?? NULL;
+
+    $variables['street_name'] = $street_name ?? NULL;
+    $variables['street_number'] = $street_number ?? NULL;
+  }
+}
+
+/**
+ * Custom split_address_line().
+ */
+function split_address_line($address_line) {
+  $match = [];
+  $pattern = '#^((?:[^\d\n]*)*)(\d{1,5})\s?([\w[:punct:]\-/]*)$#';
+  preg_match($pattern, $address_line, $match);
+  $street = $match[1] ?? $address_line;
+  $number = $match[2] ?? '';
+  $numberAddition = $match[3] ?? '';
+
+  return ['street' => $street, 'number' => $number, 'number_addition' => $numberAddition];
 }
 
 /**
@@ -446,6 +810,23 @@ function format_date_to_unix_timestamp($string) {
   $timestamp = $date->format('U');
 
   return $timestamp;
+}
+
+/**
+ * Custom get_apartment_application_status().
+ */
+function get_apartment_application_status($application_status) {
+  $application_status_mapping = [
+    "NONE" => t('No applicants'),
+    "LOW" => t('Few applicants'),
+    "MEDIUM" => t('A little applicants'),
+    "HIGH" => t('A lot of applicants'),
+  ];
+
+  return [
+    "status" => strtolower($application_status),
+    "label" => $application_status_mapping[$application_status],
+  ];
 }
 
 /**
@@ -493,24 +874,4 @@ function load_responsive_image_style($image_file_target_id, $responsive_image_st
   $renderer->addCacheableDependency($image_build, $file);
 
   return $image_build;
-}
-
-/**
- * Custom get_apartment_application_status().
- */
-function get_apartment_application_status($nid) {
-  $application_status_mapping = [
-    "NONE" => t('No applicants'),
-    "LOW" => t('Few applicants'),
-    "MEDIUM" => t('A little applicants'),
-    "HIGH" => t('A lot of applicants'),
-  ];
-
-  // @todo Update this value with dynamic status from API.
-  $application_status = 'NONE';
-
-  return [
-    "status" => strtolower($application_status),
-    "label" => $application_status_mapping[$application_status],
-  ];
 }

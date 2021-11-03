@@ -1,0 +1,23 @@
+uuid: 07ce2141-c3ad-4e3f-b559-9064ad9d34ab
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_liftup_image_links_design
+    - paragraphs.paragraphs_type.liftup_with_image_and_links
+  module:
+    - options
+id: paragraph.liftup_with_image_and_links.field_liftup_image_links_design
+field_name: field_liftup_image_links_design
+entity_type: paragraph
+bundle: liftup_with_image_and_links
+label: Design
+description: ''
+required: true
+translatable: false
+default_value:
+  -
+    value: image-on-right
+default_value_callback: ''
+settings: {  }
+field_type: list_string

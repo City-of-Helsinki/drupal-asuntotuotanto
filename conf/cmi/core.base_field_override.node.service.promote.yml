@@ -1,0 +1,24 @@
+uuid: da5f4403-641d-4934-a493-6e8903034249
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.service
+_core:
+  default_config_hash: SLl_mQ1w1PhBUBnjKgJG5-612pA6-XE9TKT18-K0gMU
+id: node.service.promote
+field_name: promote
+entity_type: node
+bundle: service
+label: 'Promoted to front page'
+description: ''
+required: false
+translatable: true
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

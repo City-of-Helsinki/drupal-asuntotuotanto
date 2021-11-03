@@ -1,0 +1,23 @@
+uuid: 1cdcc0df-46f5-4eb6-931e-5fcb232e2a44
+langcode: en
+status: true
+dependencies:
+  config:
+    - asu_application.application_type.haso
+    - field.storage.asu_application.field_aso_changer
+id: asu_application.haso.field_aso_changer
+field_name: field_aso_changer
+entity_type: asu_application
+bundle: haso
+label: 'Aso changer'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'Yes'
+  off_label: 'No'
+field_type: boolean

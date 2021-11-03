@@ -1,0 +1,20 @@
+uuid: 1fe9e6cf-b9ef-4bd1-a6ce-16a1c5fc448b
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: node.field_right_of_occupancy_payment
+field_name: field_right_of_occupancy_payment
+entity_type: node
+type: decimal
+settings:
+  precision: 10
+  scale: 2
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

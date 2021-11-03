@@ -1,0 +1,19 @@
+uuid: 897ff34a-7b84-4736-b4ef-66ec6a9ac683
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_liftup_with_image_title
+    - paragraphs.paragraphs_type.liftup_with_image_and_links
+id: paragraph.liftup_with_image_and_links.field_liftup_with_image_title
+field_name: field_liftup_with_image_title
+entity_type: paragraph
+bundle: liftup_with_image_and_links
+label: Title
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

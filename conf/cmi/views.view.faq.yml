@@ -1,0 +1,504 @@
+uuid: 3d7d78b0-5992-4b07-b9e5-f36aa1c8c7f6
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.taxonomy_term.faq_teaser
+    - taxonomy.vocabulary.faq_category
+    - taxonomy.vocabulary.faq_haso
+    - taxonomy.vocabulary.faq_hitas
+  module:
+    - better_exposed_filters
+    - taxonomy
+    - user
+id: faq
+label: FAQ
+module: views
+description: ''
+tag: ''
+base_table: taxonomy_term_field_data
+base_field: tid
+display:
+  default:
+    display_plugin: default
+    id: default
+    display_title: Default
+    position: 0
+    display_options:
+      access:
+        type: perm
+        options:
+          perm: 'access content'
+      cache:
+        type: tag
+        options: {  }
+      query:
+        type: views_query
+        options:
+          disable_sql_rewrite: false
+          distinct: false
+          replica: false
+          query_comment: ''
+          query_tags: {  }
+      exposed_form:
+        type: bef
+        options:
+          submit_button: Apply
+          reset_button: true
+          reset_button_label: Reset
+          exposed_sorts_label: 'Sort by'
+          expose_sort_order: true
+          sort_asc_label: Asc
+          sort_desc_label: Desc
+          text_input_required: 'Select any filter and click on Apply to see results'
+          text_input_required_format: full_html
+          bef:
+            general:
+              autosubmit: true
+              autosubmit_exclude_textfield: false
+              autosubmit_textfield_delay: 500
+              autosubmit_hide: true
+              input_required: false
+              allow_secondary: false
+              secondary_label: 'Advanced options'
+              secondary_open: false
+            filter:
+              field_faq_category_target_id:
+                plugin_id: bef
+                advanced:
+                  sort_options: false
+                  rewrite:
+                    filter_rewrite_values: ''
+                  collapsible: false
+                  is_secondary: false
+                select_all_none: false
+                select_all_none_nested: false
+                display_inline: false
+      pager:
+        type: none
+        options:
+          items_per_page: null
+          offset: 0
+      style:
+        type: default
+      row:
+        type: 'entity:taxonomy_term'
+        options:
+          relationship: none
+          view_mode: faq_teaser
+      fields:
+        name:
+          id: name
+          table: taxonomy_term_field_data
+          field: name
+          entity_type: taxonomy_term
+          entity_field: name
+          label: ''
+          alter:
+            alter_text: false
+            make_link: false
+            absolute: false
+            trim: false
+            word_boundary: false
+            ellipsis: false
+            strip_tags: false
+            html: false
+          hide_empty: false
+          empty_zero: false
+          type: string
+          settings:
+            link_to_entity: true
+          plugin_id: term_name
+          relationship: none
+          group_type: group
+          admin_label: ''
+          exclude: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_alter_empty: true
+          click_sort_column: value
+          group_column: value
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+          convert_spaces: false
+      filters:
+        status:
+          value: '1'
+          table: taxonomy_term_field_data
+          field: status
+          plugin_id: boolean
+          entity_type: taxonomy_term
+          entity_field: status
+          id: status
+          expose:
+            operator: ''
+            operator_limit_selection: false
+            operator_list: {  }
+          group: 1
+        vid:
+          id: vid
+          table: taxonomy_term_field_data
+          field: vid
+          value:
+            faq_hitas: faq_hitas
+          entity_type: taxonomy_term
+          entity_field: vid
+          plugin_id: bundle
+          expose:
+            operator_limit_selection: false
+            operator_list: {  }
+        field_faq_category_target_id:
+          id: field_faq_category_target_id
+          table: taxonomy_term__field_faq_category
+          field: field_faq_category_target_id
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: or
+          value: {  }
+          group: 1
+          exposed: true
+          expose:
+            operator_id: field_faq_category_target_id_op
+            label: ''
+            description: ''
+            use_operator: false
+            operator: field_faq_category_target_id_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: category
+            required: false
+            remember: false
+            multiple: true
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              admin: '0'
+              content_producer: '0'
+              customer: '0'
+            reduce: false
+          is_grouped: false
+          group_info:
+            label: 'FAQ Category (field_faq_category)'
+            description: null
+            identifier: field_faq_category_target_id
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items:
+              1: {  }
+              2: {  }
+              3: {  }
+          reduce_duplicates: true
+          type: select
+          limit: true
+          vid: faq_category
+          hierarchy: false
+          error_message: true
+          plugin_id: taxonomy_index_tid
+        langcode:
+          id: langcode
+          table: taxonomy_term_field_data
+          field: langcode
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: in
+          value:
+            '***LANGUAGE_language_content***': '***LANGUAGE_language_content***'
+          group: 1
+          exposed: false
+          expose:
+            operator_id: ''
+            label: ''
+            description: ''
+            use_operator: false
+            operator: ''
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: ''
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+            reduce: false
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          entity_type: taxonomy_term
+          entity_field: langcode
+          plugin_id: language
+      sorts:
+        weight:
+          id: weight
+          table: taxonomy_term_field_data
+          field: weight
+          relationship: none
+          group_type: group
+          admin_label: ''
+          order: ASC
+          exposed: false
+          expose:
+            label: ''
+          entity_type: taxonomy_term
+          entity_field: weight
+          plugin_id: standard
+      title: FAQ
+      header: {  }
+      footer: {  }
+      empty: {  }
+      relationships: {  }
+      arguments: {  }
+      display_extenders: {  }
+      use_ajax: true
+    cache_metadata:
+      max-age: -1
+      contexts:
+        - 'languages:language_content'
+        - 'languages:language_interface'
+        - url
+        - user
+        - user.permissions
+      tags: {  }
+  faq_page_haso:
+    display_plugin: page
+    id: faq_page_haso
+    display_title: 'FAQ Page - Haso'
+    position: 1
+    display_options:
+      display_extenders:
+        metatag_display_extender: {  }
+      path: faq/haso
+      display_description: ''
+      exposed_block: true
+      defaults:
+        filters: false
+        filter_groups: false
+      menu:
+        type: none
+        title: 'Frequently asked questions'
+        description: ''
+        expanded: false
+        parent: ''
+        weight: 3
+        context: '0'
+        menu_name: main
+      filters:
+        status:
+          value: '1'
+          table: taxonomy_term_field_data
+          field: status
+          plugin_id: boolean
+          entity_type: taxonomy_term
+          entity_field: status
+          id: status
+          expose:
+            operator: ''
+            operator_limit_selection: false
+            operator_list: {  }
+          group: 1
+        vid:
+          id: vid
+          table: taxonomy_term_field_data
+          field: vid
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: in
+          value:
+            faq_haso: faq_haso
+          group: 1
+          exposed: false
+          expose:
+            operator_id: ''
+            label: ''
+            description: ''
+            use_operator: false
+            operator: ''
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: ''
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+            reduce: false
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          entity_type: taxonomy_term
+          entity_field: vid
+          plugin_id: bundle
+        field_faq_category_target_id:
+          id: field_faq_category_target_id
+          table: taxonomy_term__field_faq_category
+          field: field_faq_category_target_id
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: or
+          value: {  }
+          group: 1
+          exposed: true
+          expose:
+            operator_id: field_faq_category_target_id_op
+            label: ''
+            description: ''
+            use_operator: false
+            operator: field_faq_category_target_id_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: category
+            required: false
+            remember: false
+            multiple: true
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              admin: '0'
+              content_producer: '0'
+              customer: '0'
+            reduce: false
+          is_grouped: false
+          group_info:
+            label: 'FAQ Category (field_faq_category)'
+            description: null
+            identifier: field_faq_category_target_id
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items:
+              1: {  }
+              2: {  }
+              3: {  }
+          reduce_duplicates: true
+          type: select
+          limit: true
+          vid: faq_category
+          hierarchy: false
+          error_message: true
+          plugin_id: taxonomy_index_tid
+        langcode:
+          id: langcode
+          table: taxonomy_term_field_data
+          field: langcode
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: in
+          value:
+            '***LANGUAGE_language_content***': '***LANGUAGE_language_content***'
+          group: 1
+          exposed: false
+          expose:
+            operator_id: ''
+            label: ''
+            description: ''
+            use_operator: false
+            operator: ''
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: ''
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+            reduce: false
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          entity_type: taxonomy_term
+          entity_field: langcode
+          plugin_id: language
+      filter_groups:
+        operator: AND
+        groups:
+          1: AND
+    cache_metadata:
+      max-age: -1
+      contexts:
+        - 'languages:language_content'
+        - 'languages:language_interface'
+        - url
+        - user
+        - user.permissions
+      tags: {  }
+  faq_page_hitas:
+    display_plugin: page
+    id: faq_page_hitas
+    display_title: 'FAQ Page - Hitas'
+    position: 1
+    display_options:
+      display_extenders:
+        metatag_display_extender: {  }
+      path: faq/hitas
+      display_description: ''
+      exposed_block: true
+      menu:
+        type: none
+        title: 'Frequently asked questions'
+        description: ''
+        expanded: false
+        parent: ''
+        weight: 3
+        context: '0'
+        menu_name: main
+    cache_metadata:
+      max-age: -1
+      contexts:
+        - 'languages:language_content'
+        - 'languages:language_interface'
+        - url
+        - user
+        - user.permissions
+      tags: {  }

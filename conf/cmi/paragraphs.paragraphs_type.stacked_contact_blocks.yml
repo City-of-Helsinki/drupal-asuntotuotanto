@@ -1,0 +1,10 @@
+uuid: 0d64f71b-a7a5-428f-966e-29d652b877bf
+langcode: en
+status: true
+dependencies: {  }
+id: stacked_contact_blocks
+label: 'Stacked contact blocks'
+icon_uuid: null
+icon_default: null
+description: 'Let''s you add multiple stacked contact text blocks.'
+behavior_plugins: {  }

@@ -1,0 +1,8 @@
+uuid: 7e4d044c-aac2-41d0-8275-37aad0a83362
+langcode: fi
+status: true
+dependencies: {  }
+_core:
+  default_config_hash: jft6YhftUbVuhqdGjSDHEB3JMtY61jI7gjO4sCz3jMg
+id: hitas
+label: Hitas

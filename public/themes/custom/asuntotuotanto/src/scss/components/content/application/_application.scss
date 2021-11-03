@@ -1,0 +1,215 @@
+.application {
+  &.application--submitted-teaser {
+    background-color: var(--color-white);
+    border: 1px solid var(--color-black-10);
+    margin-bottom: $spacing-m;
+
+    @media screen and (min-width: $breakpoint-l) {
+      display: flex;
+    }
+
+    &:not(:first-of-type) {
+      margin-top: $spacing-m;
+    }
+  }
+
+  &.application--draft-teaser {
+    background-color: var(--color-black-10);
+    border: 1px solid var(--color-black-10);
+    margin-bottom: $spacing-m;
+
+    @media screen and (min-width: $breakpoint-l) {
+      display: flex;
+    }
+
+    &:not(:first-of-type) {
+      margin-top: $spacing-m;
+    }
+  }
+
+  &.application--form-teaser {
+    background-color: var(--color-white);
+
+    @media screen and (min-width: $breakpoint-l) {
+      display: flex;
+    }
+  }
+}
+
+.application__image {
+  margin: 0;
+  display: flex;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .application--submitted-teaser &,
+  .application--draft-teaser &,
+  .application--form-teaser & {
+    @media screen and (min-width: $breakpoint-l) {
+      width: 30%;
+    }
+  }
+}
+
+.application__wrapper {
+  .application--submitted-teaser & {
+    padding: $spacing-m $spacing-s;
+
+    @media screen and (min-width: $breakpoint-l) {
+      width: 70%;
+      display: flex;
+    }
+  }
+
+  .application--draft-teaser & {
+    padding: $spacing-m $spacing-s;
+
+    @media screen and (min-width: $breakpoint-l) {
+      width: 70%;
+      display: flex;
+    }
+  }
+
+  .application--form-teaser & {
+    background-color: var(--color-white);
+    padding: $spacing-m 0;
+    position: relative;
+
+    @media screen and (min-width: $breakpoint-l) {
+      width: 70%;
+      display: flex;
+      padding: $spacing-m $spacing-s;
+    }
+  }
+}
+
+.application__content {
+  .application--draft-teaser &,
+  .application--submitted-teaser & {
+    @media screen and (min-width: $breakpoint-l) {
+      flex-grow: 1;
+    }
+  }
+
+  .application--form-teaser & {
+    margin-top: $spacing-s;
+    margin-bottom: $spacing-m;
+
+    @media screen and (min-width: $breakpoint-l) {
+      margin: 0 0 0 $spacing-s;
+      flex-grow: 1;
+    }
+  }
+}
+
+.application__project-name {
+  .application--submitted-teaser &,
+  .application--draft-teaser &,
+  .application--form-teaser & {
+    @include font-size($fontsize-heading-m, 29px);
+    font-weight: $font-weight-bold;
+    margin: 0 0 $spacing-3-xs;
+  }
+}
+
+.application__project-address {
+  .application--submitted-teaser &,
+  .application--draft-teaser &,
+  .application--form-teaser & {
+    @include font-size($fontsize-body-m, 24px);
+    margin: 0 0 $spacing-3-xs;
+  }
+}
+
+.application__project-ownership-type {
+  .application--submitted-teaser &,
+  .application--draft-teaser &,
+  .application--form-teaser & {
+    @include font-size($fontsize-body-s, 26px);
+    background-color: var(--color-engel);
+    color: var(--color-black-90);
+    margin: 0 0 $spacing-m;
+    padding: $spacing-3-xs $spacing-2-xs;
+    display: inline-block;
+  }
+}
+
+.application__date-information {
+  .application--draft-teaser &,
+  .application--submitted-teaser & {
+    list-style: none;
+    margin: auto 0 0;
+    padding: 0;
+
+    li {
+      @include font-size($fontsize-body-m, 24px);
+      align-items: center;
+      display: flex;
+      margin: 0;
+
+      svg {
+        margin-right: $spacing-xs;
+      }
+
+      &:not(:first-child) {
+        margin-top: $spacing-2-xs;
+      }
+    }
+  }
+
+  .application--form-teaser & {
+    list-style: none;
+    margin: auto 0 0;
+    padding: 0;
+    width: 100%;
+
+    li {
+      @include font-size($fontsize-body-m, 24px);
+      align-items: center;
+      display: flex;
+      margin: 0;
+
+      svg {
+        margin-right: $spacing-xs;
+      }
+
+      &:not(:first-child) {
+        margin-top: $spacing-2-xs;
+      }
+
+      &:last-child {
+        background-color: var(--color-success-light);
+        box-shadow: inset 8px 0 0 0 var(--color-success);
+        align-items: center;
+        display: flex;
+        padding: $spacing-2-xs $spacing-s;
+
+        svg {
+          margin-right: $spacing-2-xs;
+          color: var(--color-success);
+        }
+      }
+    }
+  }
+}
+
+.application__actions {
+  .application--draft-teaser &,
+  .application--submitted-teaser & {
+    margin-top: $spacing-m;
+
+    @media screen and (min-width: $breakpoint-l) {
+      margin-top: 0;
+    }
+
+    .hds-button {
+      @media screen and (max-width: $breakpoint-l - 1px) {
+        width: 100%;
+      }
+    }
+  }
+}

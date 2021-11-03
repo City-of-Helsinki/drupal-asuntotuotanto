@@ -1,0 +1,17 @@
+uuid: f0aa1976-d6f4-48b7-b51f-2f7d71830ff6
+langcode: fi
+status: true
+dependencies:
+  module:
+    - focal_point
+name: stacked_text_blocks_with_image_s
+label: 'Stacked text blocks with image S'
+effects:
+  cbac08ee-e9a6-457d-bb76-acee8ee7ce40:
+    uuid: cbac08ee-e9a6-457d-bb76-acee8ee7ce40
+    id: focal_point_scale_and_crop
+    weight: 1
+    data:
+      width: 800
+      height: 887
+      crop_type: focal_point

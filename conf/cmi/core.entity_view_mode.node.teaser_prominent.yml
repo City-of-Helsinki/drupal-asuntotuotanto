@@ -1,0 +1,10 @@
+uuid: 1d23350d-c440-4e48-94af-2907afe8f57d
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: node.teaser_prominent
+label: 'Teaser Prominent'
+targetEntityType: node
+cache: true

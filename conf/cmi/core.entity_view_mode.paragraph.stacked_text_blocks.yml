@@ -1,0 +1,10 @@
+uuid: 5f9adf94-d168-4c10-800e-753ba36a3825
+langcode: en
+status: true
+dependencies:
+  module:
+    - paragraphs
+id: paragraph.stacked_text_blocks
+label: 'Stacked text blocks'
+targetEntityType: paragraph
+cache: true

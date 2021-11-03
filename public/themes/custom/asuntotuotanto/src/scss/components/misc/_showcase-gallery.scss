@@ -1,9 +1,19 @@
 .showcase-gallery {
-  .slick {
-    position: relative;
+  position: relative;
 
-    img {
-      width: 100%;
+  img {
+    width: 100%;
+  }
+
+  .slick {
+    max-height: 330px;
+
+    @media screen and (min-width: $breakpoint-m) and (max-width: $breakpoint-l - 1px) {
+      max-height: 395px;
+    }
+
+    @media screen and (min-width: $breakpoint-l) {
+      max-height: 550px;
     }
   }
 
@@ -28,7 +38,13 @@
       width: 64px;
     }
 
-    svg {
+    &:hover,
+    &:focus {
+      background-color: rgba($color-white, .4);
+    }
+
+    &::before {
+      content: "";
       height: 36px;
       width: 36px;
 
@@ -37,18 +53,21 @@
         width: 48px;
       }
     }
-
-    &:hover,
-    &:focus {
-      background-color: rgba($color-white, .4);
-    }
   }
 
   .slick-prev {
     left: 0;
+
+    &::before {
+      background-image: url('../icons/angle-left.svg');
+    }
   }
 
   .slick-next {
     right: 0;
+
+    &::before {
+      background-image: url('../icons/angle-right.svg');
+    }
   }
 }

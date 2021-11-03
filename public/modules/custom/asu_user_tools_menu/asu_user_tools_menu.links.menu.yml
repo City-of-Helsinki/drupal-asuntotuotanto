@@ -11,8 +11,15 @@ asu_user_tools_menu.user_information:
   weight: 1
   parent: asu_user_tools_menu.user_name
 
-asu_user_tools_menu.logout:
+asu_user_tools_menu.user_applications:
+  title: 'Applications'
+  menu_name: user-tools-menu
+  route_name: asu_user_tools_menu.user_applications_page
   weight: 2
+  parent: asu_user_tools_menu.user_name
+
+asu_user_tools_menu.logout:
+  weight: 3
   menu_name: user-tools-menu
   title: 'Log out'
   route_name: user.logout
