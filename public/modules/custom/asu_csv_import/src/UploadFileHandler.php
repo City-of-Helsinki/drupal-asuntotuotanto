@@ -105,11 +105,15 @@ class UploadFileHandler {
    *   Csv file.
    * @param string $langcode
    *   Language code from the form state.
+   * @param int $status
+   *   Node status.
    *
    * @return array
    *   Array of nodes to update or create.
+   *
+   * @throws \Drupal\Core\TypedData\Exception\ReadOnlyException
    */
-  public function createNodes(File $file, $langcode, $status = 0) {
+  public function createNodes(File $file, string $langcode, int $status = 0) {
     $field_definitions = $this->entityFieldManager->getFieldDefinitions('node', 'apartment');
     $update_nodes = [];
     $create_nodes = [];
@@ -166,12 +170,10 @@ class UploadFileHandler {
 
           if (!$node || $node->bundle() !== 'apartment') {
             throw new \Exception('You are not allowed to set the \'nid\' field manually.');
-            return;
           }
 
           if ($node->field_apartment_number->value !== $node_fields['field_apartment_number']) {
             throw new \Exception('Apartment number is not matching with the node. You are not allowed to change the apartment number manually. Contact the administrator.');
-            return;
           }
 
           foreach ($node_fields as $key => $val) {
@@ -248,7 +250,7 @@ class UploadFileHandler {
         }
         try {
           if ($field != 'empty') {
-            $value = $apt->{$field}->value ? : $apt->{$field}->getString();
+            $value = $apt->{$field}->value ?: $apt->{$field}->getString();
             $type = $apt->{$field}->getFieldDefinition()->getType();
             $data = $this->createValue($value, $type);
             if ($data) {
@@ -404,4 +406,5 @@ class UploadFileHandler {
     $results = array_keys($results, max($results));
     return $results[0];
   }
+
 }
