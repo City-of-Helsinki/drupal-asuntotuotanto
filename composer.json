@@ -146,18 +146,12 @@
             "drupal/field_group": {
                 "Custom patch to add classes for each horizontal tab": "patches/field_group_horizontal_tabs_classes.patch"
             },
-            "drupal/config_terms": {
-                "Custom patch to fix the bug with reading configurations": "patches/config_terms_fix_config_bug.patch"
-            },
             "drupal/hdbt_admin": {
                 "Custom hero addition": "./patches/custom_hero_addition.patch",
                 "Column paragraph modification": "./patches/columns_toggle_modification.patch"
             },
             "drupal/jquery_ui_touch_punch": {
                 "jQuery UI Touch Punch library [https://www.drupal.org/project/jquery_ui_touch_punch/issues/3159222]": "https://www.drupal.org/files/issues/2021-02-26/jquery_ui_touch_punch.patch"
-            },
-            "drupal/user_bundle": {
-                "Automated D9 compatibility fixes": "https://www.drupal.org/files/issues/2021-01-04/user_bundle.1.x-dev.rector-3.patch"
             }
         }
     },
