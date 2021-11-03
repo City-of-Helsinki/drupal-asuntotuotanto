@@ -23,7 +23,7 @@
                 "is-active"
               )
             )
-            .foreach((submenu) => {
+            .forEach((submenu) => {
               submenu.setAttribute("aria-hidden", false);
             });
         }
