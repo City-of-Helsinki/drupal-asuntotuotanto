@@ -1,5 +1,4 @@
-label: Vahtikoira
-description: 'Viimeisimmät lokimerkinnät'
+label: 'Uudelleenkäytettävät lohkot'
 display:
   default:
     display_title: Isäntä
@@ -13,42 +12,43 @@ display:
           sort_desc_label: Laskevasti
       pager:
         options:
+          tags:
+            previous: '‹ Edellinen'
+            next: 'Seuraava ›'
           expose:
             items_per_page_label: 'Merkintöjä sivua kohti'
             items_per_page_options_all_label: '- Kaikki -'
             offset_label: Offset
-          tags:
-            previous: '‹ Edellinen'
-            next: 'Seuraava ›'
       fields:
-        nothing:
-          admin_label: Ikoni
-        wid:
-          label: WID
-        severity:
-          label: Vakavuus
+        label:
+          label: Otsikko
+          separator: ', '
         type:
           label: Tyyppi
-        timestamp:
-          label: Päivämäärä
-        message:
-          label: Viesti
-        name:
-          label: Käyttäjä
           separator: ', '
-        link:
+        paragraphs__target_id:
+          label: Lohkot
+          separator: ', '
+        langcode:
+          label: Kieli
+          separator: ', '
+        id:
+          label: ID
+          separator: ', '
+        changed:
+          label: Muuttunut
+          separator: ', '
+        operations:
           label: Toimenpiteet
       filters:
+        label:
+          expose:
+            label: Otsikko
+          group_info:
+            label: Otsikko
         type:
           expose:
             label: Tyyppi
-        severity:
-          expose:
-            label: Vakavuus
-      title: 'Viimeisimmät lokimerkinnät'
-      empty:
-        area:
-          admin_label: 'Yhtään lokimerkintää ei ole saatavilla.'
-          content: 'Yhtään lokimerkintää ei ole saatavilla.'
-  page:
+      title: 'Uudelleenkäytettävät lohkot'
+  page_1:
     display_title: Sivu

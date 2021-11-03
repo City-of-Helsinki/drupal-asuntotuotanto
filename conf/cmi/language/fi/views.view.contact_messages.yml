@@ -4,7 +4,7 @@ display:
     display_options:
       exposed_form:
         options:
-          submit_button: Suodatin
+          submit_button: Käytä
           reset_button_label: Palauta
           exposed_sorts_label: Lajittele
           sort_asc_label: Nousevasti
@@ -16,26 +16,30 @@ display:
             items_per_page_options_all_label: '- Kaikki -'
             offset_label: Offset
           tags:
-            previous: '‹ Edellinen'
-            next: 'Seuraava ›'
+            previous: '‹ edellinen'
+            next: 'seuraava ›'
+            first: '« ensimmäinen'
+            last: 'viimeinen »'
       fields:
-        path:
-          label: Polku
-        count:
-          label: Laskuri
-        timestamp:
-          label: 'Viimeksi käytetty'
-        langcode:
-          label: Kieli
-        redirect_404_operations:
+        message_bulk_form:
+          action_title: Valinnalla
+        subject:
+          label: Aihe
+          separator: ', '
+        name:
+          separator: ', '
+        contact_form_label:
+          label: Yhteydenotto
+        created:
+          label: Luotu
+        operations:
           label: Toimenpiteet
       filters:
-        path:
+        contact_form:
           expose:
-            label: Polku
-        langcode:
-          expose:
-            label: Kieli
-      title: 'Korjaa 404-sivut'
+            label: Yhteydenotto
   page_1:
     display_title: Sivu
+    display_options:
+      menu:
+        title: Lista
