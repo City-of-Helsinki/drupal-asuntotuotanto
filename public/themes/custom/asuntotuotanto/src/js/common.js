@@ -23,8 +23,8 @@
                 "is-active"
               )
             )
-            .map((submenu) => {
-              return submenu.setAttribute("aria-hidden", false);
+            .foreach((submenu) => {
+              submenu.setAttribute("aria-hidden", false);
             });
         }
       }
