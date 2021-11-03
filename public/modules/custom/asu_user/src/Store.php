@@ -8,7 +8,6 @@ use Drupal\Core\TempStore\PrivateTempStore;
  * Temporary data store.
  */
 class Store {
-
   /**
    * Temporary store.
    *
@@ -17,6 +16,8 @@ class Store {
   private PrivateTempStore $store;
 
   /**
+   * Configuration.
+   *
    * @var array|\Drupal\Core\Config\ImmutableConfig
    */
   private ?array $config;
@@ -73,14 +74,14 @@ class Store {
   /**
    * Set multiple values to store by configuration.
    *
-   * @param array $fields
    * @param array $data
+   *   Values to store.
    */
   public function setMultipleByConfiguration(array $data) {
     if ($this->config) {
       foreach ($data as $key => $value) {
         // Get the index number of configuration by external field name.
-        // Only set store-values if they are configured no matter what API returns.
+        // Only store values if they are configured no matter what API returns.
         $fieldNumber = array_search($key, array_column($this->config, 'external_field'));
         if (!is_bool($fieldNumber) && isset(array_keys($this->config)[$fieldNumber])) {
           // Set the value to store by internal filed name.
