@@ -24,7 +24,6 @@
               )
             )
             .map((submenu) => {
-              const mainMenuParentElement = submenu.parentElement.parentElement;
               return submenu.setAttribute("aria-hidden", false);
             });
         }
