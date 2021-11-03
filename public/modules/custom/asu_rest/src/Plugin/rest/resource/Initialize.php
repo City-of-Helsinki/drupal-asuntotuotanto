@@ -5,11 +5,7 @@ namespace Drupal\asu_rest\Plugin\rest\resource;
 use Drupal\asu_application\Applications;
 use Drupal\asu_rest\UserDto;
 use Drupal\Core\Access\CsrfRequestHeaderAccessCheck;
-use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Drupal\file\Plugin\Field\FieldType\FileFieldItemList;
-use Drupal\image\Entity\ImageStyle;
-use Drupal\image\Plugin\Field\FieldType\ImageItem;
 use Drupal\rest\ModifiedResourceResponse;
 use Drupal\rest\Plugin\ResourceBase;
 use Drupal\user\Entity\User;
@@ -31,12 +27,6 @@ final class Initialize extends ResourceBase {
 
   /**
    * Return all data required by React to function properly.
-   *
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   The request.
-   *
-   * @return \Symfony\Component\HttpFoundation\Response
-   *   The HTTP response object.
    */
   public function get() {
     $response = [];
@@ -190,7 +180,11 @@ final class Initialize extends ResourceBase {
   }
 
   /**
+   * Get districts sorted by project ownership type.
+   *
    * @return array|array[]
+   *   Array of districts sorted by project ownership.
+   *
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
@@ -250,6 +244,7 @@ final class Initialize extends ResourceBase {
    * Return building types for react filters.
    *
    * @return array
+   *   Array of building types as enums.
    */
   protected function getBuildingTypes() {
     return [
@@ -263,6 +258,7 @@ final class Initialize extends ResourceBase {
    * Return new development status types for react filters.
    *
    * @return array
+   *   Array of new development status taxomomy values as enums.
    */
   protected function getNewDevelopmentStatus() {
     return [
@@ -277,6 +273,7 @@ final class Initialize extends ResourceBase {
    * Return project state of sales for react filtes.
    *
    * @return array
+   *   Array of project state of sale values as enums.
    */
   protected function getProjectStatesOfSale() {
     return [
