@@ -1,6 +1,10 @@
 (($, Drupal) => {
   Drupal.behaviors.applicationFormActions = {
     attach: function attach() {
+      const screenReaderInformationBoxElement = document.getElementsByClassName(
+        "sr-information-box"
+      )[0];
+
       const applicationFormApartmentListElement = document.getElementById(
         "application_form_apartments_list"
       );
@@ -273,6 +277,14 @@
             target.value
           ).innerHTML;
 
+          const information = document.createElement("p");
+          information.appendChild(
+            document.createTextNode(
+              Drupal.t("Apartment list has been updated.")
+            )
+          );
+          screenReaderInformationBoxElement.append(information);
+
           const index = [...targetParent.parentElement.children].indexOf(
             targetParent
           );
@@ -305,6 +317,7 @@
 
           if (apartmentAddButton) {
             apartmentAddButton.removeAttribute("disabled");
+            apartmentAddButton.focus();
           }
         });
 
@@ -366,6 +379,14 @@
               target.focus();
             }
           }, 10);
+
+          const information = document.createElement("p");
+          information.appendChild(
+            document.createTextNode(
+              Drupal.t("Apartment list order has been updated.")
+            )
+          );
+          screenReaderInformationBoxElement.append(information);
         }
       };
 
@@ -401,6 +422,14 @@
                 target.focus();
               }
             }, 10);
+
+            const information = document.createElement("p");
+            information.appendChild(
+              document.createTextNode(
+                Drupal.t("Apartment list order has been updated.")
+              )
+            );
+            screenReaderInformationBoxElement.append(information);
           }
         }
       };
@@ -577,7 +606,7 @@
 
         const listPositionActionsRaiseButton = createButtonElement(
           "",
-          "Raise on the list",
+          `Raise on the list, apartment ${apartmentNumberValue}`,
           withSelectElement && true
         );
 
@@ -588,7 +617,7 @@
 
         const listPositionActionsLowerButton = createButtonElement(
           "",
-          "Lower on the list",
+          `Lower on the list, apartment ${apartmentNumberValue}`,
           withSelectElement && true
         );
 

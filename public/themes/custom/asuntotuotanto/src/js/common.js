@@ -6,6 +6,9 @@
         .getElementsByClassName("menu--main-menu is-desktop")[0]
         .getElementsByClassName("menu__item");
       const currentWindowWidth = window.innerWidth;
+      const subMenuDesktopElementItems = document
+        .getElementsByClassName("menu--main-menu is-desktop")[0]
+        .getElementsByClassName("sub-menu");
 
       if (mainMenuDesktopItemElements) {
         const hasActiveHeaderSubmenu = [
@@ -14,6 +17,15 @@
 
         if (hasActiveHeaderSubmenu && currentWindowWidth >= 992) {
           headerElement.classList.add("has-submenu");
+          [...subMenuDesktopElementItems]
+            .filter((submenu) =>
+              submenu.parentElement.parentElement.classList.contains(
+                "is-active"
+              )
+            )
+            .forEach((submenu) => {
+              submenu.setAttribute("aria-hidden", false);
+            });
         }
       }
     },

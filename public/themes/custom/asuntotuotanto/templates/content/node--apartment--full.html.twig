@@ -123,7 +123,7 @@
         </div>
       </div>
       <nav class="sticky-navigation__anchor-navigation">
-        <ul class="sticky-navigation__anchor-list" role="navigation">
+        <ul class="sticky-navigation__anchor-list">
           <li class="sticky-navigation__anchor-item">
             <a href="#showcase_gallery" class="sticky-navigation__anchor-link">
               {% include "@hdbt/misc/icon.twig" with {icon: 'photo-plus', label: ''} %}
@@ -213,7 +213,7 @@
     </div>
 
   <nav class="apartment__anchor-navigation apartment__anchor-navigation--desktop wrapper wrapper--mw-1264">
-    <ul class="apartment__anchor-list" role="navigation">
+    <ul class="apartment__anchor-list">
       <li class="apartment__anchor-item">
         <a href="#showcase_gallery" class="apartment__anchor-link">
           {% include "@hdbt/misc/icon.twig" with {icon: 'photo-plus', label: ''} %}
@@ -252,7 +252,7 @@
   </nav>
 
   <div class="apartment__content-wrapper wrapper wrapper--mw-1264">
-    <aside class="apartment__sidebar">
+    <aside class="apartment__sidebar" aria-label="{{ 'Apartment sidebar information'|t }}">
       <p class="apartment__application-information">
         {% trans %}
           The application period for the project starts on {{ application_start_time }} and ends on {{ application_end_time }}.
@@ -455,6 +455,7 @@
           {% set embed_link = embed_url_base ~ embed_url_suffix ~ "&city=helsinki,espoo,vantaa,kauniainen,kirkkonummi" %}
 
           <iframe
+            title="{{ 'Map location of the @apartment apartment'|t({'@apartment': label[0]['#context']['value'] }) }}"
             style="position: absolute; top: 0; left: 0; border: none; width: 100%; height: 100%;"
             src="{{ embed_link }}"></iframe>
 
