@@ -151,6 +151,11 @@ function asu_user_form_alter(&$form, FormStateInterface &$form_state, $form_id) 
   if ($form_id == 'user_form') {
     $backendApi = \Drupal::service('asu_api.backendapi');
     $user = User::load(\Drupal::currentUser()->id());
+
+    if ($user->hasRole('customer')) {
+      return;
+    }
+
     /** @var \Drupal\asu_user\Store $store */
     $store = \Drupal::service('asu_user.tempstore');
     $fieldMap = \Drupal::config('asu_user.external_user_fields')->get('external_data_map');
@@ -171,6 +176,7 @@ function asu_user_form_alter(&$form, FormStateInterface &$form_state, $form_id) 
       $form['actions']['submit']['#submit'][] = 'user_edit_submit';
     }
 
+    // @todo: Redirect in alter is bad.
     if ($response = asu_session_check_application_url()) {
       $response->send();
       return;

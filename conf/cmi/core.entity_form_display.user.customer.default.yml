@@ -1,0 +1,38 @@
+uuid: 981fc11b-1ca5-4960-9b1a-721d93aa60bd
+langcode: fi
+status: true
+dependencies:
+  config:
+    - field.field.user.customer.field_backend_password
+    - field.field.user.customer.field_backend_profile
+    - field.field.user.customer.field_backend_profile_id
+    - field.field.user.customer.field_email_is_valid
+    - user_bundle.user_type.customer
+id: user.customer.default
+targetEntityType: user
+bundle: customer
+mode: default
+content:
+  account:
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  contact:
+    weight: 1
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  translation:
+    weight: 2
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  field_backend_password: true
+  field_backend_profile: true
+  field_backend_profile_id: true
+  field_email_is_valid: true
+  langcode: true
+  language: true
+  path: true

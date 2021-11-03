@@ -1,12 +1,12 @@
-uuid: 202fbcb3-e7de-47e1-9f6c-f8027661d175
+uuid: ab0e0f0f-573d-4994-be11-24d6321fd1c8
 langcode: en
 status: true
 dependencies:
   module:
-    - node
-id: node.field_estate_agent
-field_name: field_estate_agent
-entity_type: node
+    - user
+id: user.field_phone_number
+field_name: field_phone_number
+entity_type: user
 type: string
 settings:
   max_length: 255
