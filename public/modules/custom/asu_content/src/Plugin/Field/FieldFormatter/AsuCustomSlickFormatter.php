@@ -7,7 +7,7 @@ use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\slick\Plugin\Field\FieldFormatter\SlickImageFormatter;
 
 /**
- * Combine floorplan_image with field_images in order to show them in slick carousel.
+ * Formatter used for project/apartment image field's combining.
  *
  * @FieldFormatter(
  *   id = "asu_custom_slick_formatter",
