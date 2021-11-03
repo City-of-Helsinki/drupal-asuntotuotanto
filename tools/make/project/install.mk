@@ -18,4 +18,4 @@ drush-locale-update: ## Update translations.
 	$(call drush,state:set locale.translation_last_checked 0)
 	$(call drush,locale:update)
 	$(call step,Import custom translations...)
-	$(call drush_on_docker,helfi:locale-import helfi_platform_config)
+	$(call drush,helfi:locale-import helfi_platform_config)
