@@ -1,4 +1,24 @@
 ((Drupal) => {
+  Drupal.behaviors.faqFilters = {
+    attach: function attach() {
+      const faqFilterElement = document.getElementsByClassName(
+        "faq__filters"
+      )[0];
+
+      const screenReaderInformationBoxElement = document.getElementsByClassName(
+        "sr-information-box"
+      )[0];
+
+      faqFilterElement.addEventListener("change", () => {
+        const information = document.createElement("p");
+        information.appendChild(
+          document.createTextNode(Drupal.t("FAQ Filters have been updated."))
+        );
+        screenReaderInformationBoxElement.append(information);
+      });
+    },
+  };
+
   Drupal.behaviors.faq = {
     attach: function attach() {
       const faqButtonElements = document.getElementsByClassName(
