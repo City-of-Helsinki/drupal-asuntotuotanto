@@ -27,7 +27,7 @@ final class IndexingTest extends ExistingSiteBase {
     /** @var \GuzzleHttp\ClientInterface $client */
     $client = $this->container->get('http_client');
     $result = json_decode(
-      $client->request('GET', $elastic_url)
+      $client->request('GET', 'localhost:9200/_search')
         ->getBody()
         ->getContents(),
       TRUE
