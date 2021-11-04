@@ -21,12 +21,12 @@ final class IndexingTest extends ExistingSiteBase {
    * Make sure indexed data is in correct format.
    */
   public function testElasticSearchIndexing() {
-    $index = Index::load('apartment');
-    $index->clear();
+    # $index = Index::load('apartment');
+    # $index->clear();
 
-    $index->getServerId();
+    # $index->getServerId();
     /** @var \Drupal\search_api\Entity\Server $server */
-    $server = $index->getServerInstance();
+    # $server = $index->getServerInstance();
 
     $elastic_url = Settings::get('ASU_ELASTICSEARCH_ADDRESS');
 
@@ -36,7 +36,7 @@ final class IndexingTest extends ExistingSiteBase {
 
     $this->assertArrayHasKey('hits', $result);
     $this->assertEmpty($result['hits']['hits']);
-
+    /*
     $apartment = $this->createNode($this->apartmentData());
 
     $apartment->save();
@@ -80,7 +80,7 @@ final class IndexingTest extends ExistingSiteBase {
 
     $this->assertIsNotArray($data['project_virtual_presentation_url']);
     $this->assertIsString($data['project_virtual_presentation_url']);
-
+    */
   }
 
   /**
