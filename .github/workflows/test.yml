@@ -41,7 +41,6 @@ jobs:
           fetch-depth: 1
 
       - name: Build project
-        uses: trendyminds/github-actions-rsync@master
         run: composer install
 
       - name: Run PHPCS
