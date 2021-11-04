@@ -6,7 +6,6 @@ namespace Drupal\Tests\asu_elastic\Functional;
 
 use Drupal\Core\Site\Settings;
 use Drupal\node\NodeInterface;
-use Drupal\search_api\Entity\Index;
 use Drupal\taxonomy\Entity\Vocabulary;
 use weitzman\DrupalTestTraits\ExistingSiteBase;
 
@@ -21,18 +20,23 @@ final class IndexingTest extends ExistingSiteBase {
    * Make sure indexed data is in correct format.
    */
   public function testElasticSearchIndexing() {
-    # $index = Index::load('apartment');
-    # $index->clear();
+    // $index = Index::load('apartment');
+    // $index->clear();
 
-    # $index->getServerId();
+    // $index->getServerId();
     /** @var \Drupal\search_api\Entity\Server $server */
-    # $server = $index->getServerInstance();
+    // $server = $index->getServerInstance();
 
     $elastic_url = Settings::get('ASU_ELASTICSEARCH_ADDRESS');
 
     /** @var \GuzzleHttp\ClientInterface $client */
     $client = $this->container->get('http_client');
-    $result = json_decode($client->request('GET', $elastic_url)->getBody()->getContents(), TRUE);
+    $result = json_decode(
+      $client->request('GET', $elastic_url)
+        ->getBody()
+        ->getContents(),
+      TRUE
+    );
 
     $this->assertArrayHasKey('hits', $result);
     $this->assertEmpty($result['hits']['hits']);
@@ -60,7 +64,12 @@ final class IndexingTest extends ExistingSiteBase {
 
     sleep(1);
 
-    $new_result = json_decode($client->request('GET', $elastic_url)->getBody()->getContents(), TRUE);
+    $new_result = json_decode(
+      $client->request('GET', $elastic_url)
+        ->getBody()
+        ->getContents(),
+      TRUE
+    );
 
     // We have hits.
     $this->assertNotEmpty($new_result['hits']['hits']);
@@ -111,7 +120,10 @@ final class IndexingTest extends ExistingSiteBase {
    */
   private function projectData(NodeInterface $apartment) {
     $heating_option = $this->createTerm(Vocabulary::load('heating_options'), ['Maalämpö']);
-    $construction_material = $this->createTerm(Vocabulary::load('construction_materials'), ['Puu']);
+    $construction_material = $this->createTerm(
+      Vocabulary::load('construction_materials'),
+      ['Puu']
+    );
 
     return [
       'type' => 'project',
