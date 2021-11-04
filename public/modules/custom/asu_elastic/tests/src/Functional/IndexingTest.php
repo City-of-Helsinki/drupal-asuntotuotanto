@@ -24,12 +24,14 @@ final class IndexingTest extends ExistingSiteBase {
 
     $elastic_url = Settings::get('ASU_ELASTICSEARCH_ADDRESS');
 
-    /** @var \GuzzleHttp\ClientInterface $client */
-    $client = $this->container->get('http_client');
+    $client = $this->container->get('http_client_factory')
+      ->fromOptions(['base_uri' => 'http://elastic:9200']);
+
     $result = json_decode(
-      $client->request('GET', 'localhost:9200/_search')
+      $client->request('GET', '/_search')
         ->getBody()
         ->getContents(),
+
       TRUE
     );
 
