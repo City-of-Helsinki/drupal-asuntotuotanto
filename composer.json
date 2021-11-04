@@ -205,11 +205,11 @@
     "scripts": {
         "copy-commit-message-script": "make copy-commit-message-script",
         "post-install-cmd": [
-            "rsync -a vendor/asuntomyynti/react public/modules/custom/asu_apartment_search/assets",
+            "rsync -a vendor/asuntomyynti/react public/modules/custom/asu_apartment_search/assets || true",
             "@copy-commit-message-script"
         ],
         "post-update-cmd": [
-            "rsync -a vendor/asuntomyynti/react public/modules/custom/asu_apartment_search/assets",
+            "rsync -a vendor/asuntomyynti/react public/modules/custom/asu_apartment_search/assets || true",
             "@copy-commit-message-script"
         ]
     }
