@@ -1,0 +1,56 @@
+on: [push]
+name: CI
+env:
+  SIMPLETEST_DB: "mysql://drupal:drupal@db:3306/drupal"
+  SIMPLETEST_BASE_URL: "http://127.0.0.1:8080"
+  SYMFONY_DEPRECATIONS_HELPER: disabled
+  DTT_BASE_URL: "http://127.0.0.1:8080"
+  ASU_ELASTICSEARCH_ADDRESS: "http://localhost:9200"
+  ASU_ELASTICSEARCH_USERNAME: "test"
+  ASU_ELASTICSEARCH_PASSWORD: "pass"
+  ASU_ASKO_HASO_ADDRESS: "testhaso@test.fi"
+  ASU_ASKO_HITAS_ADDRESS: "testhitas@test.fi"
+  ASU_DJANGO_BACKEND_URL: "https://django-backend-test-url.fi"
+jobs:
+  tests:
+    services:
+      db:
+        image: druidfi/db:mysql5.7-drupal
+        ports:
+          - 3306:3306
+
+      elastic:
+        image: docker.elastic.co/elasticsearch/elasticsearch:7.9.1
+        env:
+          discovery.type: single-node
+        options: >-
+          --health-cmd "curl http://localhost:9200/_cluster/health"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 10
+        ports:
+          - 9200:9200
+
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/city-of-helsinki/drupal-php-docker:8.0
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
+
+      - name: Build project
+        run: composer install
+
+      - name: Run PHPCS
+        run: vendor/bin/phpcs public/modules/custom/ --standard=Drupal
+
+      - name: Install Drupal
+        run: php -d sendmail_path=$(which true); vendor/bin/drush --yes -v site-install --existing-config --db-url="$SIMPLETEST_DB"
+
+      - name: Run PHPUnit tests
+        run: |
+          vendor/bin/drush runserver $SIMPLETEST_BASE_URL > /dev/null 2>&1 &
+          chromedriver --port=4444 > /dev/null 2>&1 &
+          vendor/bin/phpunit -c $GITHUB_WORKSPACE/phpunit.xml.dist --verbose
