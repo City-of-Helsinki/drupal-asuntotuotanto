@@ -115,7 +115,6 @@ if ($env = getenv('APP_ENV')) {
   $config['swiftmailer.transport']['smtp_credential_provider'] = 'swiftmailer';
 
   $settings['ASU_DJANGO_BACKEND_URL'] = getenv('ASU_DJANGO_BACKEND_URL');
-  $settings['ASU_ELASTICSEARCH_ADDRESS'] = getenv('ASU_ELASTICSEARCH_ADDRESS');
 
   $config['elasticsearch_connector.cluster.asuntotuotanto']['url'] = getenv('ASU_ELASTICSEARCH_ADDRESS');
 
