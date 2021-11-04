@@ -1,0 +1,20 @@
+diff --git a/user_bundle.install b/user_bundle.install
+index 1c1de15..4ffeb09 100644
+--- a/user_bundle.install
++++ b/user_bundle.install
+@@ -40,6 +40,7 @@ function user_bundle_install() {
+   $entity_definition_update_manager->installFieldStorageDefinition('type', 'user', 'user_bundle', $type_storage_definition);
+ 
+   // Add a new "Type" column and filter into the admin/people view.
++  /*
+   $module_handler = \Drupal::service('module_handler');
+   if ($module_handler->moduleExists('views')
+     && ($view = \Drupal::configFactory()->getEditable('views.view.user_admin_people'))) {
+@@ -66,6 +67,7 @@ function user_bundle_install() {
+     // Save our changes.
+     $view->save(TRUE);
+   }
++  */
+ }
+ 
+ /**

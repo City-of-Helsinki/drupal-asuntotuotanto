@@ -154,6 +154,9 @@
             },
             "drupal/jquery_ui_touch_punch": {
                 "jQuery UI Touch Punch library [https://www.drupal.org/project/jquery_ui_touch_punch/issues/3159222]": "https://www.drupal.org/files/issues/2021-02-26/jquery_ui_touch_punch.patch"
+            },
+            "drupal/user_bundle": {
+                "Custom patch prevents install from dying when trying to edit nonexisting admin configuration file.": "./patches/remove_editing_admin_configuration.patch"
             }
         }
     },
