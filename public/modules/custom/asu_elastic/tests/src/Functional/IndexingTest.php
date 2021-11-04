@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace Drupal\Tests\asu_elastic\Functional;
 
+use Drupal\Core\Site\Settings;
 use Drupal\node\NodeInterface;
 use Drupal\search_api\Entity\Index;
 use Drupal\taxonomy\Entity\Vocabulary;
@@ -27,7 +28,7 @@ final class IndexingTest extends ExistingSiteBase {
     /** @var \Drupal\search_api\Entity\Server $server */
     $server = $index->getServerInstance();
 
-    $elastic_url = 'http://elastic:9200/_search';
+    $elastic_url = Settings::get('ASU_ELASTICSEARCH_ADDRESS');
 
     /** @var \GuzzleHttp\ClientInterface $client */
     $client = $this->container->get('http_client');

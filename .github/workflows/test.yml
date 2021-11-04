@@ -4,9 +4,8 @@ env:
   SIMPLETEST_DB: "mysql://drupal:drupal@db:3306/drupal"
   SIMPLETEST_BASE_URL: "http://127.0.0.1:8080"
   SYMFONY_DEPRECATIONS_HELPER: disabled
-  DTT_BASE_URL: "http://127.0.0.1:8080"
   APP_ENV: "test"
-  ASU_ELASTICSEARCH_ADDRESS: "http://localhost:9200"
+  ASU_ELASTICSEARCH_ADDRESS: "http://localhost:9200/_search"
   ASU_ELASTICSEARCH_USERNAME: "test"
   ASU_ELASTICSEARCH_PASSWORD: "pass"
   ASU_ASKO_HASO_ADDRESS: "testhaso@test.fi"
