@@ -26,7 +26,7 @@ class ApartmentSearchController extends ControllerBase {
   /**
    * Returns a renderable array for a asuntohaku page.
    */
-  public function hitas_upcoming(): array {
+  public function hitasUpcoming(): array {
     // @todo Should be replaced with block when frontend theme is available.
     $build = [
       '#markup' => '<div id="asu_react_search"></div>',
@@ -53,7 +53,7 @@ class ApartmentSearchController extends ControllerBase {
   /**
    * Returns a renderable array for a asuntohaku page.
    */
-  public function haso_upcoming() {
+  public function hasoUpcoming() {
     $build = [
       '#markup' => '<div id="asu_react_search"></div>',
       '#attached' => [

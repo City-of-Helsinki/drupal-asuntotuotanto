@@ -18,21 +18,33 @@ class AuthenticationResponse extends Response {
    */
   private string $token;
 
-  private string $access;
+  /**
+   * Backend refresh token.
+   *
+   * @var string
+   */
+  private string $refreshToken;
 
   /**
    * Constructor.
    */
   public function __construct(array $content) {
     $this->token = $content['access'];
-    $this->access = $content['refresh'];
+    $this->refreshToken = $content['refresh'];
   }
 
   /**
-   * Get the token.
+   * Get the authentication token.
    */
   public function getToken() {
     return $this->token;
+  }
+
+  /**
+   * Get the refresh token.
+   */
+  public function getRefreshToken() {
+    return $this->refreshToken;
   }
 
   /**

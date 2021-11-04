@@ -10,12 +10,18 @@ use Psr\Http\Message\ResponseInterface;
  */
 class UserResponse extends Response {
 
+  /**
+   * Contents of the response.
+   *
+   * @var array
+   */
   private array $content;
 
   /**
    * Constructor.
    *
    * @param array $content
+   *   Contents of the response.
    */
   public function __construct(array $content) {
     $this->content = $content;

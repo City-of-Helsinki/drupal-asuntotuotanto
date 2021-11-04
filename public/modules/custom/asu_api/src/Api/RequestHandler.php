@@ -100,7 +100,7 @@ class RequestHandler {
    * @return \GuzzleHttp\Psr7\RequestInterface
    *   Request to send.
    */
-  public function buildRequest(\Drupal\asu_api\Api\Request $request): RequestInterface {
+  public function buildRequest(Request $request): RequestInterface {
     $method = $request->getMethod();
     $uri = "{$this->apiUrl}{$request->getPath()}";
     $payload = $request->toArray();
@@ -113,9 +113,9 @@ class RequestHandler {
   }
 
   /**
-   *
+   * Build authenticated request.
    */
-  public function buildAuthenticatedRequest(\Drupal\asu_api\Api\Request $request, string $token): RequestInterface {
+  public function buildAuthenticatedRequest(Request $request, string $token): RequestInterface {
     $method = $request->getMethod();
     $uri = "{$this->apiUrl}{$request->getPath()}";
     $payload = $request->toArray();

@@ -15,10 +15,25 @@ class UpdateUserRequest extends Request {
 
   protected const PATH = '/v1/profiles/';
 
+  /**
+   * Form state.
+   *
+   * @var Drupal\Core\Form\FormStateInterface
+   */
   private FormStateInterface $formState;
 
+  /**
+   * Fields to send.
+   *
+   * @var array
+   */
   private array $fields;
 
+  /**
+   * User.
+   *
+   * @var Drupal\user\UserInterface
+   */
   private UserInterface $user;
 
   /**

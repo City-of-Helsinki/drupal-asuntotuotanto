@@ -32,17 +32,22 @@ class CreateApplicationRequest extends Request {
    */
   private UserInterface $user;
 
+  /**
+   * Application object.
+   *
+   * @var Drupal\asu_application\Entity\Application
+   */
   private Application $application;
 
+  /**
+   * Project data.
+   *
+   * @var array
+   */
   private array $projectData;
 
   /**
    * Constructor.
-   *
-   * @param \Drupal\user\Entity\UserInterface $user
-   *   Owner of the application.
-   * @param \Drupal\asu_application\Entity\Application $application
-   *   Application.
    */
   public function __construct(
     UserInterface $user,
@@ -55,7 +60,7 @@ class CreateApplicationRequest extends Request {
   }
 
   /**
-   *
+   * Get apartments.
    */
   private function getApartments() {
     $apartments = [];
@@ -111,7 +116,7 @@ class CreateApplicationRequest extends Request {
   }
 
   /**
-   *
+   * Get primary applicant.
    */
   private function getApplicant() {
     if (!$this->application->hasAdditionalApplicant()) {

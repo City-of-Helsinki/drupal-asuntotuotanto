@@ -16,10 +16,25 @@ class AskoApplicationRequest {
 
   private const SENIOR = 55;
 
+  /**
+   * User object.
+   *
+   * @var Drupal\user\Entity\User
+   */
   private User $user;
 
+  /**
+   * Application object.
+   *
+   * @var Drupal\asu_application\Entity\Application
+   */
   private Application $application;
 
+  /**
+   * Name of the project.
+   *
+   * @var string
+   */
   private string $projectName;
 
   /**
@@ -35,6 +50,7 @@ class AskoApplicationRequest {
    * Application request data to array.
    *
    * @return array
+   *   Asko application request data as an array.
    *
    * @throws \Exception
    */
@@ -126,6 +142,7 @@ class AskoApplicationRequest {
    * Return request data formatted for email.
    *
    * @return string
+   *   Asko application formatted properly for email.
    */
   public function toMailFormat(): string {
     $body = '';
@@ -212,8 +229,13 @@ class AskoApplicationRequest {
   }
 
   /**
+   * Get the pid without decade divider.
+   *
    * @param string $personalId
+   *   Pid.
+   *
    * @return false|string
+   *   Personal id without divider.
    */
   private function personalIdWithoutDivider(string $personalId) {
     return substr($personalId, 1, 4);
