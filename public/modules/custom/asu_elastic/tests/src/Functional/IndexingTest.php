@@ -6,6 +6,7 @@ namespace Drupal\Tests\asu_elastic\Functional;
 
 use Drupal\Core\Site\Settings;
 use Drupal\node\NodeInterface;
+use Drupal\search_api\Entity\Index;
 use Drupal\taxonomy\Entity\Vocabulary;
 use weitzman\DrupalTestTraits\ExistingSiteBase;
 
@@ -20,23 +21,65 @@ final class IndexingTest extends ExistingSiteBase {
    * Make sure indexed data is in correct format.
    */
   public function testElasticSearchIndexing() {
+    $index = Index::load('apartment');
+    $index->clear();
+
+    $index->getServerId();
     /** @var \Drupal\search_api\Entity\Server $server */
+    $server = $index->getServerInstance();
 
     $elastic_url = Settings::get('ASU_ELASTICSEARCH_ADDRESS');
 
-    $client = $this->container->get('http_client_factory')
-      ->fromOptions(['base_uri' => 'http://elastic:9200']);
-
-    $result = json_decode(
-      $client->request('GET', '/_search')
-        ->getBody()
-        ->getContents(),
-
-      TRUE
-    );
+    /** @var \GuzzleHttp\ClientInterface $client */
+    $client = $this->container->get('http_client');
+    $result = json_decode($client->request('GET', $elastic_url)->getBody()->getContents(), TRUE);
 
     $this->assertArrayHasKey('hits', $result);
     $this->assertEmpty($result['hits']['hits']);
+
+    $apartment = $this->createNode($this->apartmentData());
+
+    $apartment->save();
+
+    $project = $this->createNode($this->projectData($apartment));
+
+    $date = new \DateTime();
+
+    $project->set('field_application_end_time', $date->format('Y-m-d H:i:s'));
+
+    $project->set('field_virtual_presentation_url', 'https://www.gooogle.fi');
+
+    $project->save();
+
+    sleep(1);
+
+    $server->getBackend()->updateIndex($index);
+
+    $dataSource = $index->getDataSourceIds();
+    $index->indexItems(-1, reset($dataSource));
+
+    sleep(1);
+
+    $new_result = json_decode($client->request('GET', $elastic_url)->getBody()->getContents(), TRUE);
+
+    // We have hits.
+    $this->assertNotEmpty($new_result['hits']['hits']);
+
+    $data = $new_result['hits']['hits'][0]['_source'];
+
+    // Single values should not be inside array.
+    $this->assertIsNotArray($data['title']);
+    $this->assertIsString($data['title']);
+
+    $this->assertIsNotArray($data['has_terrace']);
+    $this->assertFalse($data['has_terrace']);
+
+    $this->assertIsArray($data['project_heating_options']);
+    $this->assertNotEmpty($data['project_heating_options']);
+    $this->assertIsString($data['project_heating_options'][0]);
+
+    $this->assertIsNotArray($data['project_virtual_presentation_url']);
+    $this->assertIsString($data['project_virtual_presentation_url']);
 
   }
 
@@ -68,10 +111,7 @@ final class IndexingTest extends ExistingSiteBase {
    */
   private function projectData(NodeInterface $apartment) {
     $heating_option = $this->createTerm(Vocabulary::load('heating_options'), ['Maalämpö']);
-    $construction_material = $this->createTerm(
-      Vocabulary::load('construction_materials'),
-      ['Puu']
-    );
+    $construction_material = $this->createTerm(Vocabulary::load('construction_materials'), ['Puu']);
 
     return [
       'type' => 'project',
