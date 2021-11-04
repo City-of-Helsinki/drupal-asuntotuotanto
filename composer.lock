@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8807b1e7aec341fc86e2ff25ffdd51a9",
+    "content-hash": "90ccfbf31c31759100efe5ebfa979843",
     "packages": [
         {
             "name": "City-of-Helsinki/php-hauki-client",
@@ -18718,6 +18718,7 @@
         "drupal/context": 10,
         "drupal/elasticsearch_connector": 15,
         "drupal/entity_usage": 10,
+        "drupal/flysystem_azure": 20,
         "drupal/gin": 15,
         "drupal/gin_login": 5,
         "drupal/gin_toolbar": 10,
