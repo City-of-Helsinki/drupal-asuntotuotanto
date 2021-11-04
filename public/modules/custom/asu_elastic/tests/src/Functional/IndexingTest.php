@@ -20,12 +20,7 @@ final class IndexingTest extends ExistingSiteBase {
    * Make sure indexed data is in correct format.
    */
   public function testElasticSearchIndexing() {
-    // $index = Index::load('apartment');
-    // $index->clear();
-
-    // $index->getServerId();
     /** @var \Drupal\search_api\Entity\Server $server */
-    // $server = $index->getServerInstance();
 
     $elastic_url = Settings::get('ASU_ELASTICSEARCH_ADDRESS');
 
@@ -40,56 +35,7 @@ final class IndexingTest extends ExistingSiteBase {
 
     $this->assertArrayHasKey('hits', $result);
     $this->assertEmpty($result['hits']['hits']);
-    /*
-    $apartment = $this->createNode($this->apartmentData());
 
-    $apartment->save();
-
-    $project = $this->createNode($this->projectData($apartment));
-
-    $date = new \DateTime();
-
-    $project->set('field_application_end_time', $date->format('Y-m-d H:i:s'));
-
-    $project->set('field_virtual_presentation_url', 'https://www.gooogle.fi');
-
-    $project->save();
-
-    sleep(1);
-
-    $server->getBackend()->updateIndex($index);
-
-    $dataSource = $index->getDataSourceIds();
-    $index->indexItems(-1, reset($dataSource));
-
-    sleep(1);
-
-    $new_result = json_decode(
-      $client->request('GET', $elastic_url)
-        ->getBody()
-        ->getContents(),
-      TRUE
-    );
-
-    // We have hits.
-    $this->assertNotEmpty($new_result['hits']['hits']);
-
-    $data = $new_result['hits']['hits'][0]['_source'];
-
-    // Single values should not be inside array.
-    $this->assertIsNotArray($data['title']);
-    $this->assertIsString($data['title']);
-
-    $this->assertIsNotArray($data['has_terrace']);
-    $this->assertFalse($data['has_terrace']);
-
-    $this->assertIsArray($data['project_heating_options']);
-    $this->assertNotEmpty($data['project_heating_options']);
-    $this->assertIsString($data['project_heating_options'][0]);
-
-    $this->assertIsNotArray($data['project_virtual_presentation_url']);
-    $this->assertIsString($data['project_virtual_presentation_url']);
-    */
   }
 
   /**
