@@ -97,7 +97,7 @@ function asu_user_form_contact_message_apply_for_free_apartment_form_alter(&$for
   }
 
   // // Anonymous user must login.
-  // @todo: Redirecting in alter is bad practice.
+  // @todo Redirecting in alter is bad practice.
   // if (!\Drupal::currentUser()->isAuthenticated()) {
   // \Drupal::messenger()->addMessage(t('You must be logged
   // in to fill an application'));

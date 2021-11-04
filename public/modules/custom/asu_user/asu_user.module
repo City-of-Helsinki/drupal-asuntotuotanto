@@ -177,7 +177,7 @@ function asu_user_form_alter(&$form, FormStateInterface &$form_state, $form_id) 
       $form['actions']['submit']['#submit'][] = 'user_edit_submit';
     }
 
-    // @todo: Redirect in alter is bad.
+    // @todo Redirect in alter is bad.
     if ($response = asu_session_check_application_url()) {
       $response->send();
       return;
@@ -235,7 +235,10 @@ function asu_user_entity_base_field_info(EntityTypeInterface $entity_type) {
         $fields[$fieldname] = BaseFieldDefinition::create('asu_external_string')
           ->setName($fieldname)
           ->setTranslatable(FALSE)
-          ->setLabel(t($field_data['title']))
+          ->setLabel(t(
+            '@field_label',
+            ['@field_label', $field_data['title']]
+          ))
           ->setComputed(TRUE)
           ->setClass('\Drupal\asu_user\ExternalData')
           ->setDisplayConfigurable('view', TRUE)

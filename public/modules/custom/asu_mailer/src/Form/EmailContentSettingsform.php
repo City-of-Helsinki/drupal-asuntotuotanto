@@ -2,29 +2,13 @@
 
 namespace Drupal\asu_mailer\Form;
 
-use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Form to save configurations for emails.
  */
 class EmailContentSettingsform extends ConfigFormBase {
-
-  /**
-   * Constructor.
-   */
-  public function __construct(ConfigFactoryInterface $config_factory) {
-    parent::__construct($config_factory);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    return parent::create($container);
-  }
 
   /**
    * {@inheritdoc}
@@ -70,7 +54,10 @@ class EmailContentSettingsform extends ConfigFormBase {
       $configKey = $formId . '_' . $language;
       $form[$formId] = [
         '#type' => $details['type'],
-        '#title' => $this->t($details['title']),
+        '#title' => $this->t(
+          '@email_form_title',
+          ['@email_form_title', $details['title']]
+        ),
         '#default_value' => $config->get($configKey) ?? '',
         '#required' => TRUE,
       ];

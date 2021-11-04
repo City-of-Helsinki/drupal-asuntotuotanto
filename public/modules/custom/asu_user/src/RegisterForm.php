@@ -93,7 +93,10 @@ class RegisterForm extends BaseForm {
     foreach ($fields as $field => $info) {
       $form['basic_information'][$field] = [
         '#type' => $info['type'],
-        '#title' => $this->t($info['title']),
+        '#title' => $this->t(
+          '@basic_information_title',
+          ['@basic_information_title', $info['title']]
+        ),
         '#maxlength' => 255,
         '#required' => TRUE,
         '#attributes' => [
