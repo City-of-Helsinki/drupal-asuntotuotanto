@@ -128,6 +128,7 @@ if ($env = getenv('APP_ENV')) {
     $config['swiftmailer.transport']['smtp_encryption'] = '0';
 
     $settings['ASU_ELASTICSEARCH_ADDRESS'] = 'http://elastic:9200/_search';
+    $config['search_api.server.asuntotuotanto']['backend_config']['host'] = 'http://elastic:9200';
     $config['elasticsearch_connector.cluster.asuntotuotanto']['url'] = 'http://elastic:9200';
   }
 
