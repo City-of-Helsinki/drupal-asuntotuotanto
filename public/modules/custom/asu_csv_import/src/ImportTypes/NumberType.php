@@ -19,7 +19,7 @@ class NumberType extends ImportType {
       $this->value = $number ? $number : 0;
     }
     else {
-      throw new \Exception('NumberType expects proper numeric value');
+      throw new \Exception('Number field is expected to be proper numeric value');
     }
   }
 

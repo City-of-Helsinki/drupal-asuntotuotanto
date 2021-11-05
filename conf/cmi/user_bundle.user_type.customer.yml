@@ -1,0 +1,7 @@
+uuid: 5dadbf8a-bf9b-405d-94a7-dc3332ff94b5
+langcode: fi
+status: true
+dependencies: {  }
+id: customer
+label: Asiakas
+description: ''

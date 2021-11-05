@@ -2,6 +2,7 @@
 
 /**
  * @file
+ * Asu_user module.
  */
 
 use Drupal\Core\Form\FormStateInterface;
@@ -54,7 +55,7 @@ function asu_send_user_password_email(UserInterface $account) {
 }
 
 /**
- * @param \Drupal\user\Entity\UserInterface $account
+ * Send created user to backend.
  */
 function asu_create_backend_user(UserInterface $account) {
   /** @var Drupal\asu_api\Api\BackendApi\BackendApi $backendApi */
@@ -151,6 +152,11 @@ function asu_user_form_alter(&$form, FormStateInterface &$form_state, $form_id) 
   if ($form_id == 'user_form') {
     $backendApi = \Drupal::service('asu_api.backendapi');
     $user = User::load(\Drupal::currentUser()->id());
+
+    if ($user->hasRole('customer')) {
+      return;
+    }
+
     /** @var \Drupal\asu_user\Store $store */
     $store = \Drupal::service('asu_user.tempstore');
     $fieldMap = \Drupal::config('asu_user.external_user_fields')->get('external_data_map');
@@ -171,6 +177,7 @@ function asu_user_form_alter(&$form, FormStateInterface &$form_state, $form_id) 
       $form['actions']['submit']['#submit'][] = 'user_edit_submit';
     }
 
+    // @todo Redirect in alter is bad.
     if ($response = asu_session_check_application_url()) {
       $response->send();
       return;
@@ -182,11 +189,8 @@ function asu_user_form_alter(&$form, FormStateInterface &$form_state, $form_id) 
 
 /**
  * Additional submit handler for user_form.
- *
- * @param $form
- * @param $form_state
  */
-function user_edit_submit($form, &$form_state) {
+function user_edit_submit(array $form, FormStateInterface &$form_state) {
   /** @var \Drupal\asu_api\Api\BackendApi\BackendApi $bakendApi */
   $backendApi = \Drupal::service('asu_api.backendapi');
   $user = User::load(\Drupal::currentUser()->id());
@@ -231,7 +235,10 @@ function asu_user_entity_base_field_info(EntityTypeInterface $entity_type) {
         $fields[$fieldname] = BaseFieldDefinition::create('asu_external_string')
           ->setName($fieldname)
           ->setTranslatable(FALSE)
-          ->setLabel(t($field_data['title']))
+          ->setLabel(t(
+            '@field_label',
+            ['@field_label', $field_data['title']]
+          ))
           ->setComputed(TRUE)
           ->setClass('\Drupal\asu_user\ExternalData')
           ->setDisplayConfigurable('view', TRUE)
@@ -262,7 +269,7 @@ function asu_user_field_widget_info_alter(array &$info) {
 }
 
 /**
- *
+ * Get user fields from backend.
  */
 function asu_get_user_fields($account) {
   $backendApi = \Drupal::service('asu_api.backendapi');
@@ -290,37 +297,12 @@ function asu_get_user_fields($account) {
 }
 
 /**
- * User redirect after form submit.
+ * User redirect after user edit form submit.
  */
 function _asu_user_user_edit_form_submit($form, &$form_state) {
   $session = \Drupal::request()->getSession();
   if (!$session->get('asu_last_application_url')) {
     $form_state->setRedirect('entity.user.canonical', ['user' => \Drupal::currentUser()->id()]);
-  }
-}
-
-/**
- * Implements hook_form_alter().
- *
- * Prefill contact form with user information and query parameters.
- */
-function asu_user_form_contact_message_apply_for_free_apartment_form_alter(&$form, &$form_state, $form_id) {
-  $fields = [
-    'field_apartment_information' => \Drupal::request()->get('title') ?? '',
-  ];
-
-  $user = \Drupal::currentUser();
-
-  if (\Drupal::hasService('asu_user.tempstore')) {
-    $store = \Drupal::service('asu_user.tempstore');
-    $fields += [
-      'field_date_of_birth' => $store->get('date_of_birth'),
-      'field_name' => "{$store->get('first_name')} {$store->get('last_name')}",
-      'field_phone_number' => $store->get('phone_number'),
-    ];
-  }
-  foreach ($fields as $formFieldName => $data) {
-    $form[$formFieldName]['widget'][0]['value']['#default_value'] = $data ?? '';
   }
 }
 
@@ -346,7 +328,6 @@ function asu_update_account_profile_field_value(&$account) {
         $profileId = $result->field_backend_profile_value;
         $account->set('field_backend_profile', $profileId);
         return $profileId;
-        break;
       }
     }
   }

@@ -13,8 +13,10 @@ abstract class Response {
    * Create response class from http client response.
    *
    * @param \Psr\Http\Message\ResponseInterface $response
+   *   Response.
    *
    * @return Response
+   *   Response.
    */
   abstract public static function createFromHttpResponse(ResponseInterface $response): Response;
 
@@ -22,8 +24,10 @@ abstract class Response {
    * Is request statuscode 2xx.
    *
    * @param \Psr\Http\Message\ResponseInterface $response
+   *   Response.
    *
    * @return bool
+   *   Is request 2xx.
    *
    * @throws \Exception
    */

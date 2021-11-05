@@ -22,13 +22,15 @@ class CreateUserRequest extends Request {
    */
   private UserInterface $user;
 
+  /**
+   * User information.
+   *
+   * @var array
+   */
   private array $userInformation;
 
   /**
    * Construct.
-   *
-   * @param Drupal\user\UserInterface $user
-   *   Current user.
    */
   public function __construct(UserInterface $user, array $userInformation) {
     $this->user = $user;

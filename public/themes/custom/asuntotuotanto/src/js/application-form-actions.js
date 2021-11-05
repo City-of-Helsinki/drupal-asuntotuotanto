@@ -1,6 +1,10 @@
 (($, Drupal) => {
   Drupal.behaviors.applicationFormActions = {
     attach: function attach() {
+      const screenReaderInformationBoxElement = document.getElementsByClassName(
+        "sr-information-box"
+      )[0];
+
       const applicationFormApartmentListElement = document.getElementById(
         "application_form_apartments_list"
       );
@@ -41,7 +45,7 @@
           .filter((selectValue) => selectValue !== "0");
       };
 
-      const detectMutations = (mutations, observer) => {
+      const detectMutations = (mutations) => {
         mutations.forEach((mutation) => {
           if (mutation.type === "childList") {
             const listItem = document.getElementsByClassName(
@@ -273,6 +277,14 @@
             target.value
           ).innerHTML;
 
+          const information = document.createElement("p");
+          information.appendChild(
+            document.createTextNode(
+              Drupal.t("Apartment list has been updated.")
+            )
+          );
+          screenReaderInformationBoxElement.append(information);
+
           const index = [...targetParent.parentElement.children].indexOf(
             targetParent
           );
@@ -305,6 +317,7 @@
 
           if (apartmentAddButton) {
             apartmentAddButton.removeAttribute("disabled");
+            apartmentAddButton.focus();
           }
         });
 
@@ -358,6 +371,22 @@
           );
 
           originalSelectElementTarget.dispatchEvent(new Event("change"));
+
+          setTimeout(() => {
+            if (target.disabled) {
+              target.nextElementSibling.focus();
+            } else {
+              target.focus();
+            }
+          }, 10);
+
+          const information = document.createElement("p");
+          information.appendChild(
+            document.createTextNode(
+              Drupal.t("Apartment list order has been updated.")
+            )
+          );
+          screenReaderInformationBoxElement.append(information);
         }
       };
 
@@ -385,6 +414,22 @@
             );
 
             originalSelectElementTarget.dispatchEvent(new Event("change"));
+
+            setTimeout(() => {
+              if (target.disabled) {
+                target.previousElementSibling.focus();
+              } else {
+                target.focus();
+              }
+            }, 10);
+
+            const information = document.createElement("p");
+            information.appendChild(
+              document.createTextNode(
+                Drupal.t("Apartment list order has been updated.")
+              )
+            );
+            screenReaderInformationBoxElement.append(information);
           }
         }
       };
@@ -561,7 +606,7 @@
 
         const listPositionActionsRaiseButton = createButtonElement(
           "",
-          "Raise on the list",
+          `Raise on the list, apartment ${apartmentNumberValue}`,
           withSelectElement && true
         );
 
@@ -572,7 +617,7 @@
 
         const listPositionActionsLowerButton = createButtonElement(
           "",
-          "Lower on the list",
+          `Lower on the list, apartment ${apartmentNumberValue}`,
           withSelectElement && true
         );
 
@@ -626,6 +671,11 @@
           "Delete"
         );
 
+        formActionsDeleteButton.setAttribute(
+          "aria-label",
+          `Delete, aparment ${apartmentNumberValue}`
+        );
+
         const formActionsLink = document.createElement("a");
         const formActionsLinkText = document.createTextNode(
           Drupal.t("Open apartment page")
@@ -634,6 +684,10 @@
         formActionsLink.setAttribute(
           "href",
           `${window.location.origin}/node/${id}`
+        );
+        formActionsLink.setAttribute(
+          "aria-label",
+          `Open apartment page, aparment ${apartmentNumberValue}`
         );
 
         formActions.append(formActionsDeleteButton, formActionsLink);
@@ -691,6 +745,20 @@
               createApartmentListItem(listItemValues, select.value, false)
             );
           });
+
+          if (getApplicationFormApartmentListElementCount() === 1) {
+            const listItem = document.getElementsByClassName(
+              "application-form__apartments-item"
+            )[0];
+
+            const listItemActionButtons = listItem.querySelectorAll(
+              "[data-list-position-action-button]"
+            );
+
+            [...listItemActionButtons].map((button) => {
+              button.disabled = true;
+            });
+          }
 
           if (getApplicationFormApartmentListElementCount() < 5) {
             appendListItemToApartmentList();

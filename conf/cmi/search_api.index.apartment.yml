@@ -8,6 +8,7 @@ dependencies:
     - field.storage.node.field_apartment_number
     - field.storage.node.field_apartment_state_of_sale
     - field.storage.node.field_apartment_structure
+    - field.storage.node.field_right_of_occupancy_payment
     - field.storage.node.field_has_balcony
     - field.storage.node.field_balcony_description
     - field.storage.node.field_bathroom_appliances
@@ -17,6 +18,8 @@ dependencies:
     - field.storage.node.field_floorplan
     - field.storage.node.field_condition
     - field.storage.node.field_kitchen_appliances
+    - field.storage.node.field_right_of_occupancy_fee
+    - field.storage.node.field_right_of_occupancy_deposit
     - field.storage.node.field_living_area
     - field.storage.node.field_maintenance_fee
     - field.storage.node.field_room_count
@@ -292,7 +295,7 @@ field_settings:
   project_acc_salesperson:
     label: 'Accountable sales person'
     datasource_id: 'entity:node'
-    property_path: 'search_api_reverse_entity_references_node__field_apartments:field_acc_salesperson'
+    property_path: 'search_api_reverse_entity_references_node__field_apartments:field_salesperson:entity:field_full_name'
     type: string
   project_apartment_count:
     label: 'Number of apartments'
@@ -365,17 +368,17 @@ field_settings:
   project_estate_agent:
     label: 'Estate agent'
     datasource_id: 'entity:node'
-    property_path: 'search_api_reverse_entity_references_node__field_apartments:field_estate_agent'
+    property_path: 'search_api_reverse_entity_references_node__field_apartments:field_salesperson:entity:field_full_name'
     type: string
   project_estate_agent_email:
     label: 'Estate agent email'
     datasource_id: 'entity:node'
-    property_path: 'search_api_reverse_entity_references_node__field_apartments:field_estate_agent_email'
+    property_path: 'search_api_reverse_entity_references_node__field_apartments:field_salesperson:entity:mail'
     type: string
   project_estate_agent_phone:
     label: 'Estate agent telephone'
     datasource_id: 'entity:node'
-    property_path: 'search_api_reverse_entity_references_node__field_apartments:field_estate_agent_phone'
+    property_path: 'search_api_reverse_entity_references_node__field_apartments:field_salesperson:entity:field_phone_number'
     type: string
   project_estimated_completion:
     label: 'Estimated completion'
@@ -574,6 +577,30 @@ field_settings:
     dependencies:
       config:
         - field.storage.node.field_publish_on_oikotie
+  right_of_occupancy_deposit:
+    label: Käyttövastikevakuus
+    datasource_id: 'entity:node'
+    property_path: field_right_of_occupancy_deposit
+    type: cent
+    dependencies:
+      config:
+        - field.storage.node.field_right_of_occupancy_deposit
+  right_of_occupancy_fee:
+    label: Käyttövastike
+    datasource_id: 'entity:node'
+    property_path: field_right_of_occupancy_fee
+    type: cent
+    dependencies:
+      config:
+        - field.storage.node.field_right_of_occupancy_fee
+  right_of_occupancy_payment:
+    label: Asumisoikeusmaksu
+    datasource_id: 'entity:node'
+    property_path: field_right_of_occupancy_payment
+    type: cent
+    dependencies:
+      config:
+        - field.storage.node.field_right_of_occupancy_payment
   room_count:
     label: 'Number of rooms'
     datasource_id: 'entity:node'

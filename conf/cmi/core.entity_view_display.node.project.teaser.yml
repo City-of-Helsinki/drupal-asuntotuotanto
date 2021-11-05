@@ -21,9 +21,6 @@ dependencies:
     - field.field.node.project.field_coordinate_lon
     - field.field.node.project.field_district
     - field.field.node.project.field_energy_class
-    - field.field.node.project.field_estate_agent
-    - field.field.node.project.field_estate_agent_email
-    - field.field.node.project.field_estate_agent_phone
     - field.field.node.project.field_estimated_completion
     - field.field.node.project.field_estimated_completion_date
     - field.field.node.project.field_has_elevator
@@ -52,6 +49,7 @@ dependencies:
     - field.field.node.project.field_publication_start_time
     - field.field.node.project.field_realty_id
     - field.field.node.project.field_roof_material
+    - field.field.node.project.field_salesperson
     - field.field.node.project.field_sanitation
     - field.field.node.project.field_services
     - field.field.node.project.field_services_url
@@ -97,9 +95,6 @@ hidden:
   field_coordinate_lon: true
   field_district: true
   field_energy_class: true
-  field_estate_agent: true
-  field_estate_agent_email: true
-  field_estate_agent_phone: true
   field_estimated_completion: true
   field_estimated_completion_date: true
   field_has_elevator: true
@@ -128,6 +123,7 @@ hidden:
   field_publication_start_time: true
   field_realty_id: true
   field_roof_material: true
+  field_salesperson: true
   field_sanitation: true
   field_services: true
   field_services_url: true

@@ -41,10 +41,11 @@ class ApartmentService extends ServiceBase {
   /**
    * Get apartment by id.
    *
-   * @param $id
-   *   Id if aoartment
+   * @param int|string $id
+   *   Id of the apartment.
    *
    * @return \Drupal\asu_api\Api\ElasticSearchApi\Response\SingleApartmentResponse
+   *   Single apartment.
    *
    * @throws \Exception
    */

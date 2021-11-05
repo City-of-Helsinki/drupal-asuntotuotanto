@@ -40,6 +40,7 @@
 
 {% set heading_id = attributes.id ~ '-menu'|clean_id %}
 <nav role="navigation" aria-labelledby="{{ heading_id }}"{{ attributes.addClass(classes)|without('role', 'aria-labelledby') }} aria-hidden="true">
+  <h2 id="{{ heading_id }}" class="visually-hidden">{{ 'Footer secondary navigation in desktop mode'|t }}</h2>
   {# Menu. #}
   {% block content %}
     {{ content }}

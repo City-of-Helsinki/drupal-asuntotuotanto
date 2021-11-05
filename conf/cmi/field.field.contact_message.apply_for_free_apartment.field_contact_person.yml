@@ -1,0 +1,19 @@
+uuid: 6f397e40-9af3-428c-ad9d-01a7fd841c04
+langcode: en
+status: true
+dependencies:
+  config:
+    - contact.form.apply_for_free_apartment
+    - field.storage.contact_message.field_contact_person
+id: contact_message.apply_for_free_apartment.field_contact_person
+field_name: field_contact_person
+entity_type: contact_message
+bundle: apply_for_free_apartment
+label: 'Contact person'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: email

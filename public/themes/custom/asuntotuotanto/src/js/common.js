@@ -6,6 +6,9 @@
         .getElementsByClassName("menu--main-menu is-desktop")[0]
         .getElementsByClassName("menu__item");
       const currentWindowWidth = window.innerWidth;
+      const subMenuDesktopElementItems = document
+        .getElementsByClassName("menu--main-menu is-desktop")[0]
+        .getElementsByClassName("sub-menu");
 
       if (mainMenuDesktopItemElements) {
         const hasActiveHeaderSubmenu = [
@@ -14,6 +17,15 @@
 
         if (hasActiveHeaderSubmenu && currentWindowWidth >= 992) {
           headerElement.classList.add("has-submenu");
+          [...subMenuDesktopElementItems]
+            .filter((submenu) =>
+              submenu.parentElement.parentElement.classList.contains(
+                "is-active"
+              )
+            )
+            .forEach((submenu) => {
+              submenu.setAttribute("aria-hidden", false);
+            });
         }
       }
     },
@@ -36,6 +48,14 @@
 
       const mobileSubmenuButtonElements = document.getElementsByClassName(
         "sub-menu__button"
+      );
+
+      const desktopNavigationElement = document.getElementById(
+        "block-menu-main-desktop"
+      );
+
+      const userToolsNavigationElement = document.getElementById(
+        "block-usertools-desktop"
       );
 
       const handleMobileNavigationClose = () => {
@@ -91,8 +111,12 @@
 
       if (currentWindowWidth > 992) {
         mobileNavigationToggleButtonElement.setAttribute("aria-hidden", true);
+        desktopNavigationElement.setAttribute("aria-hidden", false);
+        userToolsNavigationElement.setAttribute("aria-hidden", false);
       } else {
         mobileNavigationToggleButtonElement.setAttribute("aria-hidden", false);
+        desktopNavigationElement.setAttribute("aria-hidden", true);
+        userToolsNavigationElement.setAttribute("aria-hidden", true);
       }
 
       window.addEventListener("resize", () => {
@@ -100,12 +124,16 @@
 
         if (currentWindowWidth > 992) {
           mobileNavigationToggleButtonElement.setAttribute("aria-hidden", true);
+          desktopNavigationElement.setAttribute("aria-hidden", false);
+          userToolsNavigationElement.setAttribute("aria-hidden", false);
           handleMobileNavigationClose();
         } else {
           mobileNavigationToggleButtonElement.setAttribute(
             "aria-hidden",
             false
           );
+          desktopNavigationElement.setAttribute("aria-hidden", true);
+          userToolsNavigationElement.setAttribute("aria-hidden", true);
         }
       });
 

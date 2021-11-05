@@ -7,12 +7,14 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "require": {
+        "asuntomyynti/react": "^0.4.0",
         "brainmaestro/composer-git-hooks": "^2.8",
         "composer/installers": "^1.9",
         "cweagans/composer-patches": "^1.6.7",
         "dinbror/blazy": "^1.8",
         "druidfi/omen": "^0.2.0",
         "drupal/admin_toolbar": "^2.4.0",
+        "drupal/allowed_formats": "^1.3",
         "drupal/api_tools": "^1.0",
         "drupal/auto_entitylabel": "^3.0@beta",
         "drupal/better_exposed_filters": "^5.0@beta",
@@ -27,12 +29,13 @@
         "drupal/contact_emails": "^1.20",
         "drupal/context": "^4.0@beta",
         "drupal/core-composer-scaffold": "^9.1",
-        "drupal/core-recommended": "9.1.12",
+        "drupal/core-recommended": "^9.1",
         "drupal/elasticsearch_connector": "^7.0@alpha",
         "drupal/email_registration": "^1.1",
         "drupal/entity": "^1.2",
         "drupal/entity_usage": "^2.0@beta",
         "drupal/field_group": "^3.1",
+        "drupal/flysystem_azure": "1.0.x-dev",
         "drupal/gdpr_compliance": "^1.18",
         "drupal/gin": "^3.0@alpha",
         "drupal/gin_login": "^1.0@RC",
@@ -66,6 +69,7 @@
         "drupal/swiftmailer": "^2.0",
         "drupal/twig_tweak": "2.8",
         "drupal/ultimate_cron": "^2.0@alpha",
+        "drupal/user_bundle": "^1.0",
         "drupal/user_registrationpassword": "^1.0@alpha",
         "drupal/views_infinite_scroll": "^1.8",
         "drupal/yearonly": "^9.0",
@@ -144,15 +148,15 @@
             "drupal/field_group": {
                 "Custom patch to add classes for each horizontal tab": "patches/field_group_horizontal_tabs_classes.patch"
             },
-            "drupal/config_terms": {
-                "Custom patch to fix the bug with reading configurations": "patches/config_terms_fix_config_bug.patch"
-            },
             "drupal/hdbt_admin": {
                 "Custom hero addition": "./patches/custom_hero_addition.patch",
                 "Column paragraph modification": "./patches/columns_toggle_modification.patch"
             },
             "drupal/jquery_ui_touch_punch": {
                 "jQuery UI Touch Punch library [https://www.drupal.org/project/jquery_ui_touch_punch/issues/3159222]": "https://www.drupal.org/files/issues/2021-02-26/jquery_ui_touch_punch.patch"
+            },
+            "drupal/user_bundle": {
+                "Custom patch prevents install from dying when trying to edit nonexisting admin configuration file.": "./patches/remove_editing_admin_configuration.patch"
             }
         }
     },
@@ -181,6 +185,17 @@
         {
             "type": "package",
             "package": {
+                "name": "asuntomyynti/react",
+                "version": "0.4.0",
+                "dist": {
+                    "url": "https://github.com/City-of-Helsinki/asuntomyynti-react/releases/download/v0.4.0/asuntomyynti-react-0.4.0.zip",
+                    "type": "zip"
+                }
+            }
+        },
+        {
+            "type": "package",
+            "package": {
                 "name": "dinbror/blazy",
                 "version": "1.8.2",
                 "type": "drupal-library",
@@ -195,9 +210,11 @@
     "scripts": {
         "copy-commit-message-script": "make copy-commit-message-script",
         "post-install-cmd": [
+            "rsync -a vendor/asuntomyynti/react public/modules/custom/asu_apartment_search/assets || true",
             "@copy-commit-message-script"
         ],
         "post-update-cmd": [
+            "rsync -a vendor/asuntomyynti/react public/modules/custom/asu_apartment_search/assets || true",
             "@copy-commit-message-script"
         ]
     }

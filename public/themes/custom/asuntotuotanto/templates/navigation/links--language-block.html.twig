@@ -33,44 +33,35 @@
 #}
 
 {% if links %}
-  <div {{ attributes.addClass('lang-switcher') }}>
-    <button id="lang-switcher-toggle" class="lang-switcher__button" aria-hidden="true" aria-controls="lang-switcher-dropdown" aria-expanded="false" aria-haspopup="true" aria-label="{{ 'Select language'|t }}">
-      {% if current_language and current_langcode %}
-        <span class="label" aria-label="{{ 'Current language is'|t }} {{ current_language|capitalize }}">{{ current_langcode|upper }}</span>
+  <ul class="lang-switcher__links">
+    {% for item in links %}
+      {% set language_link = '' %}
+      {% set lang = item.link['#options']['#abbreviation'] %}
+      {% set untranslated = item.link['#options']['#untranslated'] %}
+      {% set alternative_language = item.link['#options']['#alternative_language'] %}
+      {% set classes = ['lang-switcher__link'] %}
+
+      {# Check if link is part of alternative menu and set class accordingly. #}
+      {% set classes = classes|merge([alternative_language ? 'is-alternative' : '']) %}
+
+      {% if not untranslated and lang != current_langcode %}
+        {% set language_link = path('<current>', {'lang': item.link['#options']['language'].id}, {'language': item.link['#options']['language']}) %}
+        {% set element = 'a' %}
+      {% elseif lang == current_langcode %}
+        {% set element = 'span' %}
+        {% set classes = classes|merge([lang == current_langcode ? 'is-active' : '']) %}
+      {% else %}
+        {% set element = 'span' %}
+        {% set classes = classes|merge(['is-disabled']) %}
       {% endif %}
-    </button>
-    <div id="lang-switcher-dropdown" class="lang-switcher__dropdown" aria-hidden="true">
-      <ul class="lang-switcher__links">
-        {% for item in links %}
-          {% set language_link = '' %}
-          {% set lang = item.link['#options']['#abbreviation'] %}
-          {% set untranslated = item.link['#options']['#untranslated'] %}
-          {% set alternative_language = item.link['#options']['#alternative_language'] %}
-          {% set classes = ['lang-switcher__link'] %}
 
-          {# Check if link is part of alternative menu and set class accordingly. #}
-          {% set classes = classes|merge([alternative_language ? 'is-alternative' : '']) %}
-
-          {% if not untranslated and lang != current_langcode %}
-            {% set language_link = path('<current>', {'lang': item.link['#options']['language'].id}, {'language': item.link['#options']['language']}) %}
-            {% set element = 'a' %}
-          {% elseif lang == current_langcode %}
-            {% set element = 'span' %}
-            {% set classes = classes|merge([lang == current_langcode ? 'is-active' : '']) %}
-          {% else %}
-            {% set element = 'span' %}
-            {% set classes = classes|merge(['is-disabled']) %}
-          {% endif %}
-
-          <li class="lang-switcher__links-item">
-            <{{ element }}
-              {{ create_attribute({'class': classes}) }}
-              {{ language_link ? create_attribute({'href': language_link}) }}
-              {{ element == 'a' ? create_attribute({'lang': lang}) }}
-            >{{ item.text|capitalize }}</{{ element }}>
-          </li>
-        {% endfor %}
-      </ul>
-    </div>
-  </div>
+      <li class="lang-switcher__links-item">
+        <{{ element }}
+          {{ create_attribute({'class': classes}) }}
+          {{ language_link ? create_attribute({'href': language_link}) }}
+          {{ element == 'a' ? create_attribute({'lang': lang}) }}
+        >{{ item.text|capitalize }}</{{ element }}>
+      </li>
+    {% endfor %}
+  </ul>
 {% endif %}

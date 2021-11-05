@@ -12,10 +12,18 @@ class UserRequest extends Request {
   protected const METHOD = 'GET';
   protected const PATH = '/v1/profiles/';
 
+  /**
+   * User object.
+   *
+   * @var Drupal\user\Entity\User
+   */
   private User $user;
 
   /**
    * Constructor.
+   *
+   * @param Drupal\user\Entity\User $user
+   *   User object.
    */
   public function __construct(User $user) {
     $this->user = $user;

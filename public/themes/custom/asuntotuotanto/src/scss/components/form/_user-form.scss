@@ -33,6 +33,27 @@
     }
   }
 
+  &.user-form--contact {
+    max-width: 545px;
+
+    .hds-button {
+      width: 100%;
+
+      @media screen and (min-width: $breakpoint-m) {
+        width: auto;
+      }
+
+      + .hds-button {
+        margin-top: $spacing-2-xs;
+
+        @media screen and (min-width: $breakpoint-m) {
+          margin-left: $spacing-s;
+          margin-top: 0;
+        }
+      }
+    }
+  }
+
   .form-actions {
     margin-top: $spacing-m;
   }
@@ -48,6 +69,12 @@
     font-weight: $font-weight-bold;
     color: var(--color-black-90);
     margin: 0 0 $spacing-l;
+
+    + p {
+      @include font-size($fontsize-body-l, 27px);
+      margin: 0 0 $spacing-m;
+      color: var(--color-black-90);
+    }
   }
 
   > h2 {

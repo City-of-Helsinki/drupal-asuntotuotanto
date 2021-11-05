@@ -1,0 +1,23 @@
+uuid: 7df9252c-3a88-4c0b-9b16-7a329df964d6
+langcode: fi
+status: true
+dependencies:
+  config:
+    - field.storage.user.field_email_is_valid
+    - user_bundle.user_type.customer
+id: user.customer.field_email_is_valid
+field_name: field_email_is_valid
+entity_type: user
+bundle: customer
+label: 'Email is valid'
+description: ''
+required: false
+translatable: true
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: Ei
+field_type: boolean

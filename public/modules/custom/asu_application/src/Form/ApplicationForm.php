@@ -2,7 +2,6 @@
 
 namespace Drupal\asu_application\Form;
 
-use Drupal\asu_api\Api\ElasticSearchApi\Request\ProjectApartmentsRequest;
 use Drupal\asu_application\Entity\Application;
 use Drupal\asu_application\Event\ApplicationEvent;
 use Drupal\Core\Ajax\AjaxResponse;
@@ -53,10 +52,16 @@ class ApplicationForm extends ContentEntityForm {
       ]);
 
     // User must have valid email address to fill more than one applications.
-    if ($user->hasField('field_email_is_valid') && $user->field_email_is_valid->value == 0) {
+    if (
+      $user->hasField('field_email_is_valid') &&
+      $user->field_email_is_valid->value == 0
+    ) {
       $application = reset($applications);
-      // User must be able to access the one application they have already created.
-      if (!empty($applications) && $this->entity->id() === NULL || $application && $application->id() != $this->entity->id()) {
+
+      if (
+        !empty($applications) && $this->entity->id() === NULL ||
+        $application && $application->id() != $this->entity->id()
+      ) {
         $this->messenger()->addMessage($this->t('You cannot fill more than one application until you have confirmed your email address.
         To confirm your email you must click the link sent to your email address.'));
         $response = (new RedirectResponse($applicationsUrl, 301))->send();
@@ -219,9 +224,15 @@ class ApplicationForm extends ContentEntityForm {
   }
 
   /**
+   * Save application as draft.
+   *
    * @param array $form
+   *   Form.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   Form state.
+   *
    * @return \Drupal\Core\Ajax\AjaxResponse
+   *   Ajax response.
    */
   public function ajaxSaveDraft(array $form, FormStateInterface $form_state) {
     $this->updateEntityFieldsWithUserInput($form_state);
@@ -323,7 +334,9 @@ class ApplicationForm extends ContentEntityForm {
    * Ajax callback function to presave the form.
    *
    * @param array $form
+   *   Form.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   Form state.
    */
   public function saveApplicationCallback(array &$form, FormStateInterface $form_state) {
     $triggerName = $form_state->getTriggeringElement()['#name'];
@@ -361,9 +374,12 @@ class ApplicationForm extends ContentEntityForm {
   /**
    * Update entity.
    *
-   * @param $form
-   * @param $entity
-   * @param $apartmentValues
+   * @param array $form
+   *   Form.
+   * @param Drupal\asu_application\Entity\Application $entity
+   *   Application.
+   * @param array $apartmentValues
+   *   Apartments.
    */
   private function updateApartments(array $form, Application $entity, array $apartmentValues) {
     $apartments = [];
@@ -388,6 +404,7 @@ class ApplicationForm extends ContentEntityForm {
    * Update the entity with input fields.
    *
    * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   FormStateInterface.
    */
   private function updateEntityFieldsWithUserInput(FormStateInterface $form_state) {
     foreach ($form_state->getUserInput() as $key => $value) {
@@ -403,13 +420,15 @@ class ApplicationForm extends ContentEntityForm {
   /**
    * Figure out the divider in henkilötunnus.
    *
-   * @param string $dateString
+   * @param string|null $dateString
+   *   Date of birth.
    *
    * @return string
+   *   Pid divider.
    *
    * @throws \Exception
    */
-  private function getPersonalIdDivider(string $dateString) {
+  private function getPersonalIdDivider(?string $dateString) {
     $dividers = ['18' => '+', '19' => '-', '20' => 'A'];
     $year = (new \DateTime($dateString))->format('Y');
     return $dividers[substr($year, 0, 2)];
@@ -418,13 +437,15 @@ class ApplicationForm extends ContentEntityForm {
   /**
    * Turn date into henkilötunnus format "ddmmyy".
    *
-   * @param string $dateString
+   * @param string|null $dateString
+   *   Date of birth.
    *
    * @return string
+   *   Date of birth formatted as pid.
    *
    * @throws \Exception
    */
-  private function dateToPersonalId(string $dateString) {
+  private function dateToPersonalId(?string $dateString) {
     $date = new \DateTime($dateString);
     $day = $date->format('d');
     $month = $date->format('m');
@@ -433,12 +454,10 @@ class ApplicationForm extends ContentEntityForm {
   }
 
   /**
-   *
+   * Get url to applications page.
    */
   private function getUserApplicationsUrl(): string {
-    return \Drupal::request()->getSchemeAndHttpHost() .
-      '/user/' . \Drupal::currentUser()->id() .
-      '/applications';
+    return \Drupal::request()->getSchemeAndHttpHost() . '/user/applications';
   }
 
   /**
@@ -462,20 +481,26 @@ class ApplicationForm extends ContentEntityForm {
     $endTime = strtotime($endDate);
     $now = time();
 
+    $value = FALSE;
+
     switch ($period) {
       case "before":
-        return $now < $startTime;
+        $value = $now < $startTime;
 
-      break;
+        break;
+
       case "during":
-        return $now > $startTime && $now < $endTime;
+        $value = $now > $startTime && $now < $endTime;
 
-      break;
+        break;
+
       case "after":
-        return $now > $endTime;
+        $value = $now > $endTime;
 
-      break;
+        break;
     }
+
+    return $value;
   }
 
 }

@@ -9,7 +9,6 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\rest\ModifiedResourceResponse;
 use Drupal\rest\Plugin\ResourceBase;
 use Drupal\user\Entity\User;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Provides a resource to get user applications.
@@ -28,12 +27,6 @@ final class Initialize extends ResourceBase {
 
   /**
    * Return all data required by React to function properly.
-   *
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   The request.
-   *
-   * @return \Symfony\Component\HttpFoundation\Response
-   *   The HTTP response object.
    */
   public function get() {
     $response = [];
@@ -119,23 +112,9 @@ final class Initialize extends ResourceBase {
   }
 
   /**
-   * Get the filters.
-   */
-  private function getFilters(): array {
-    try {
-      $content = $this->doGetFilters();
-      return $content;
-    }
-    catch (\Exception $e) {
-      \Drupal::logger('asu_filters')->critical('Unable to create filter for react component: ' . $e->getMessage());
-      return [];
-    }
-  }
-
-  /**
    * Get all values used in React filter bar.
    */
-  protected function doGetFilters() {
+  protected function getFilters() {
     $responseData = [];
 
     $districts = $this->getDistrictsByProjectOwnershipType();
@@ -201,7 +180,11 @@ final class Initialize extends ResourceBase {
   }
 
   /**
+   * Get districts sorted by project ownership type.
+   *
    * @return array|array[]
+   *   Array of districts sorted by project ownership.
+   *
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
@@ -213,24 +196,26 @@ final class Initialize extends ResourceBase {
 
     $projects = \Drupal::entityTypeManager()
       ->getStorage('node')
-      ->loadByProperties(['type' => 'project']);
+      ->loadByProperties([
+        'type' => 'project',
+        'status' => 1,
+      ]);
 
     // Get all unique districts separately for both ownership types.
     foreach ($projects as $project) {
-      if (!$project->field_ownership_type->first()) {
+      if ($project->field_ownership_type->isEmpty() ||
+          !$ownership = $project->field_ownership_type->first()->entity->getName()) {
         continue;
       }
-      if (!$ownership = $project->field_ownership_type->first()->entity->getName()) {
+      if ($project->field_district->isEmpty()) {
         continue;
       }
 
       // Take half_hitas into account.
-      $ownership_type = $ownership = $ownership == 'Haso' ? 'haso' : 'hitas';
+      $ownership_type = $ownership == 'Haso' ? 'haso' : 'hitas';
 
       $district = $project->field_district->first()->entity;
-
       $name = $district->getName();
-
       if (!array_search($name, $items[strtolower($ownership_type)])) {
         $items[strtolower($ownership_type)][] = $name;
       }
@@ -246,12 +231,12 @@ final class Initialize extends ResourceBase {
    */
   protected function getProperties() {
     return [
-      'project_has_elevator',
-      'project_has_sauna',
-      'has_apartment_sauna',
-      'has_terrace',
-      'has_balcony',
-      'has_yard',
+      'PROJECT_HAS_ELEVATOR',
+      'PROJECT_HAS_SAUNA',
+      'HAS_APARTMENT_SAUNA',
+      'HAS_TERRACE',
+      'HAS_BALCONY',
+      'HAS_YARD',
     ];
   }
 
@@ -259,12 +244,13 @@ final class Initialize extends ResourceBase {
    * Return building types for react filters.
    *
    * @return array
+   *   Array of building types as enums.
    */
   protected function getBuildingTypes() {
     return [
-      $this->t('Block of flats'),
-      $this->t('Row house'),
-      $this->t('House'),
+      'BLOCK_OF_FLATS',
+      'ROW_HOUSE',
+      'HOUSE',
     ];
   }
 
@@ -272,13 +258,14 @@ final class Initialize extends ResourceBase {
    * Return new development status types for react filters.
    *
    * @return array
+   *   Array of new development status taxomomy values as enums.
    */
   protected function getNewDevelopmentStatus() {
     return [
-      $this->t('Under planning'),
-      $this->t('Under construction'),
-      $this->t('Pre marketing'),
-      $this->t('Ready to move'),
+      'UNDER_PLANNING',
+      'UNDER_CONSTRUCTION',
+      'PRE_MARKETING',
+      'READY_TO_MOVE',
     ];
   }
 
@@ -286,14 +273,14 @@ final class Initialize extends ResourceBase {
    * Return project state of sales for react filtes.
    *
    * @return array
+   *   Array of project state of sale values as enums.
    */
   protected function getProjectStatesOfSale() {
     return [
-      $this->t('For sale'),
-      $this->t('Upcoming'),
-      $this->t('Pre marketing'),
-      $this->t('Processing'),
-      $this->t('Ready'),
+      'FOR_SALE',
+      'PRE_MARKETING',
+      'PROCESSING',
+      'READY',
     ];
   }
 

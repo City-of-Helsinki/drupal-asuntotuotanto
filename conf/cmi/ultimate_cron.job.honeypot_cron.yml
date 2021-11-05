@@ -1,0 +1,17 @@
+uuid: 6f6da24d-414e-47ef-8bad-2ba2e41172e1
+langcode: fi
+status: true
+dependencies:
+  module:
+    - honeypot
+title: 'Default cron handler'
+id: honeypot_cron
+weight: 0
+module: honeypot
+callback: honeypot_cron
+scheduler:
+  id: simple
+launcher:
+  id: serial
+logger:
+  id: database

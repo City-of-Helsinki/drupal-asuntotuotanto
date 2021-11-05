@@ -10,6 +10,7 @@ weight: 1
 is_admin: false
 permissions:
   - 'access content'
+  - 'access site-wide contact form'
   - 'administer rest resources'
   - 'create application'
   - 'display eu cookie compliance popup'
@@ -20,4 +21,10 @@ permissions:
   - 'restful post mailinglist'
   - 'use text format full_html'
   - 'view media'
+  - 'view remote entities'
+  - 'view media'
+  - 'display eu cookie compliance popup'
+  - 'access content'
+  - 'use text format full_html'
+  - 'use text format minimal'
   - 'view remote entities'

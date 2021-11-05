@@ -1,0 +1,19 @@
+uuid: 088f598e-4cea-47df-b8de-f49c6d929673
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.user.field_phone_number
+    - user_bundle.user_type.sales
+id: user.sales.field_phone_number
+field_name: field_phone_number
+entity_type: user
+bundle: sales
+label: 'Phone number'
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

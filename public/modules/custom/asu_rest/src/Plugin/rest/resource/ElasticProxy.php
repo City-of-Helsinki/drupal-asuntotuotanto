@@ -21,6 +21,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * )
  */
 class ElasticProxy extends ResourceBase {
+  /**
+   * Elasticsearch api.
+   *
+   * @var Drupal\asu_api\Api\ElasticSearchApi\ElasticSearchApi
+   */
   private ElasticSearchApi $elasticSearchApi;
 
   /**

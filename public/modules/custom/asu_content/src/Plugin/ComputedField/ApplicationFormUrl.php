@@ -42,7 +42,10 @@ class ApplicationFormUrl extends FieldItemList {
    *   (optional) The parent object of the data property, or NULL if it is the
    *   root of a typed data tree. Defaults to NULL.
    */
-  public function __construct(DataDefinitionInterface $definition, $name = NULL, TypedDataInterface $parent = NULL) {
+  public function __construct(
+    DataDefinitionInterface $definition,
+    $name = NULL,
+    TypedDataInterface $parent = NULL) {
     parent::__construct($definition, $name, $parent);
     $this->reverseEntities = \Drupal::service('asu_content.collect_reverse_entity');
   }
@@ -67,22 +70,30 @@ class ApplicationFormUrl extends FieldItemList {
         $reference['referring_entity'] instanceof Node &&
         $this->getEntity()->hasField('field_apartment_number')
       ) {
+        $value = '';
         $referencing_node = $reference['referring_entity'];
+        $baseurl = \Drupal::request()->getSchemeAndHttpHost();
 
-        if (!isset($referencing_node->field_ownership_type->referencedEntities()[0])) {
+        // Application url cannot be indexed if:
+        // Ownership type or end time is missing.
+        if (
+        !isset($referencing_node->field_ownership_type->referencedEntities()[0]) ||
+        !$referencing_node->field_application_end_time->value
+        ) {
           return [
             '#markup' => '',
           ];
         }
 
-        $baseurl = \Drupal::request()->getSchemeAndHttpHost();
-
-        if ($this->isBeforeApplicationTimeEnd($referencing_node->field_application_end_time->value)) {
+        if (
+          !$referencing_node->field_application_end_time->value ||
+          $this->isBeforeApplicationTimeEnd($referencing_node->field_application_end_time->value)
+        ) {
           $apartment_type = strtolower($referencing_node->field_ownership_type->referencedEntities()[0]->getName());
           $value = $baseurl . '/application/add/' . $apartment_type . '/' . $referencing_node->id();
         }
         else {
-          $value = $baseurl . '/contact/apply_for_free_apartment?title=' . $referencing_node->getTitle() . ' ' . $current_entity->field_apartment_number->value;
+          $value = $baseurl . '/contact/apply_for_free_apartment?apartment=' . $current_entity->id();
         }
       }
     }

@@ -1,0 +1,59 @@
+uuid: 163de27a-6f53-4fd3-af8a-22a1b3673836
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.user.sales.field_full_name
+    - field.field.user.sales.field_phone_number
+    - user_bundle.user_type.sales
+  module:
+    - path
+id: user.sales.default
+targetEntityType: user
+bundle: sales
+mode: default
+content:
+  account:
+    weight: -10
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+  contact:
+    weight: 5
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+  field_full_name:
+    weight: 32
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_phone_number:
+    weight: 31
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  language:
+    weight: 0
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+  path:
+    type: path
+    weight: 30
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  translation:
+    weight: 10
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+hidden:
+  langcode: true

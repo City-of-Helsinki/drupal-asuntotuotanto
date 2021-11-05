@@ -10,6 +10,11 @@ use Psr\Http\Message\ResponseInterface;
  */
 class ProxyResponse extends Response {
 
+  /**
+   * Proxy request content.
+   *
+   * @var array
+   */
   private array $content;
 
   /**

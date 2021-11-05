@@ -13,18 +13,34 @@ use Drupal\Core\TypedData\TypedDataInterface;
 class ExternalData extends FieldItemList {
   use ComputedItemListTrait;
 
+  /**
+   * User store.
+   *
+   * @var \Drupal\asu_user\Store
+   */
   private Store $store;
 
   /**
+   * Construct.
    *
+   * @param \Drupal\Core\TypedData\DataDefinitionInterface $definition
+   *   DataDefinitionInterface.
+   * @param string|null $name
+   *   Name.
+   * @param \Drupal\Core\TypedData\TypedDataInterface|null $parent
+   *   TypedDataInterface.
    */
-  public function __construct(DataDefinitionInterface $definition, $name = NULL, TypedDataInterface $parent = NULL) {
+  public function __construct(
+    DataDefinitionInterface $definition,
+    $name = NULL,
+    TypedDataInterface $parent = NULL
+  ) {
     parent::__construct($definition, $name, $parent);
     $this->store = \Drupal::service('asu_user.tempstore');
   }
 
   /**
-   * Compute the value.
+   * {@inheritDoc}
    */
   protected function computeValue() {
     $delta = 0;
@@ -33,7 +49,7 @@ class ExternalData extends FieldItemList {
   }
 
   /**
-   *
+   * {@inheritDoc}
    */
   public function getValue() {
     $this->ensureComputedValue();

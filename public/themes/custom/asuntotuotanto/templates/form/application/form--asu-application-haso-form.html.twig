@@ -21,7 +21,7 @@
 <form{{ attributes|without('class') }} {{ create_attribute({'class': classes}) }}>
   {{ link(
     'Go back to applications'|t,
-    "internal:/user/#{current_user_id}/applications",
+    "internal:/user/applications",
     { 'class':['application-form__back-link']} )
   }}
   <div class="application-form__header">
@@ -46,8 +46,7 @@
     <section class="application-form__section">
     <article class="application application--form-teaser">
         <figure class="application__image">
-          {# <img src="http://Asu:asunnot_2020@{{ element.application_project_information.project_main_image_url }}" alt=""> #}
-          <img src="https://images.pexels.com/photos/6054896/pexels-photo-6054896.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260" alt="">
+          <img src="{{ element.application_project_information['#teaser_values'].project_main_image_url }}" alt="{{ 'Image of the project'|t }}">
         </figure>
         <div class="application__content">
           <h2 class="application__project-name">

@@ -20,9 +20,6 @@ dependencies:
     - field.field.node.project.field_coordinate_lon
     - field.field.node.project.field_district
     - field.field.node.project.field_energy_class
-    - field.field.node.project.field_estate_agent
-    - field.field.node.project.field_estate_agent_email
-    - field.field.node.project.field_estate_agent_phone
     - field.field.node.project.field_estimated_completion
     - field.field.node.project.field_estimated_completion_date
     - field.field.node.project.field_has_elevator
@@ -51,6 +48,7 @@ dependencies:
     - field.field.node.project.field_publication_start_time
     - field.field.node.project.field_realty_id
     - field.field.node.project.field_roof_material
+    - field.field.node.project.field_salesperson
     - field.field.node.project.field_sanitation
     - field.field.node.project.field_services
     - field.field.node.project.field_services_url
@@ -65,7 +63,7 @@ dependencies:
     - field.field.node.project.field_virtual_presentation_url
     - field.field.node.project.field_zoning_info
     - field.field.node.project.field_zoning_status
-    - image.style.23_10_m
+    - image.style.3_2_m
     - node.type.project
     - responsive_image.styles.showcase_gallery
   module:
@@ -228,7 +226,7 @@ content:
     type: entity_reference_label
     region: content
   field_holding_type:
-    weight: 33
+    weight: 32
     label: above
     settings:
       link: true
@@ -243,6 +241,62 @@ content:
     third_party_settings: {  }
     type: string
     region: content
+  field_images:
+    type: slick_image
+    weight: 41
+    region: content
+    label: hidden
+    settings:
+      style: ''
+      optionset: default
+      optionset_thumbnail: ''
+      skin: ''
+      skin_thumbnail: ''
+      image_style: 3_2_m
+      responsive_image_style: showcase_gallery
+      thumbnail_effect: ''
+      thumbnail_position: ''
+      media_switch: ''
+      thumbnail_style: ''
+      ratio: ''
+      grid: null
+      grid_medium: null
+      grid_small: null
+      visible_items: null
+      layout: ''
+      thumbnail_caption: ''
+      cache: 0
+      current_view_mode: default
+      background: false
+      caption:
+        title: '0'
+        alt: '0'
+      use_theme_field: false
+      preserve_keys: false
+      override: false
+      overridables:
+        arrows: '0'
+        autoplay: '0'
+        dots: '0'
+        draggable: '0'
+        infinite: '0'
+        mouseWheel: '0'
+        randomize: '0'
+        variableWidth: '0'
+      skin_arrows: ''
+      skin_dots: ''
+      fx: ''
+      icon: ''
+      view_mode: ''
+      box_caption: ''
+      box_caption_custom: ''
+      box_media_style: ''
+      box_style: ''
+      _uri: ''
+      breakpoints: {  }
+      sizes: ''
+      grid_header: ''
+    third_party_settings: {  }
   field_new_development_status:
     weight: 27
     label: above
@@ -278,7 +332,7 @@ content:
     type: string
     region: content
   field_project_accessibility:
-    weight: 36
+    weight: 35
     label: hidden
     settings:
       link_to_entity: false
@@ -286,14 +340,14 @@ content:
     type: string
     region: content
   field_project_area_description:
-    weight: 40
+    weight: 39
     label: hidden
     settings: {  }
     third_party_settings: {  }
     type: basic_string
     region: content
   field_project_attachments:
-    weight: 38
+    weight: 37
     label: above
     settings:
       use_description_as_link_text: true
@@ -301,7 +355,7 @@ content:
     type: file_default
     region: content
   field_project_description:
-    weight: 39
+    weight: 38
     label: hidden
     settings: {  }
     third_party_settings: {  }
@@ -332,6 +386,14 @@ content:
     third_party_settings: {  }
     type: string
     region: content
+  field_salesperson:
+    weight: 42
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
   field_sanitation:
     weight: 4
     label: above
@@ -341,14 +403,14 @@ content:
     type: string
     region: content
   field_services:
-    weight: 35
+    weight: 34
     label: above
     settings: {  }
     third_party_settings: {  }
     type: asu_service_formatter
     region: content
   field_services_url:
-    weight: 37
+    weight: 36
     label: above
     settings:
       trim_length: 80
@@ -358,62 +420,6 @@ content:
       target: ''
     third_party_settings: {  }
     type: link
-    region: content
-  field_shared_apartment_images:
-    weight: 32
-    label: hidden
-    settings:
-      style: ''
-      optionset: default
-      optionset_thumbnail: ''
-      skin: ''
-      skin_thumbnail: ''
-      image_style: 23_10_m
-      responsive_image_style: showcase_gallery
-      thumbnail_effect: ''
-      thumbnail_position: ''
-      media_switch: ''
-      thumbnail_style: ''
-      ratio: ''
-      grid: null
-      grid_medium: null
-      grid_small: null
-      visible_items: null
-      layout: ''
-      thumbnail_caption: ''
-      cache: 0
-      current_view_mode: default
-      background: false
-      caption:
-        title: '0'
-        alt: '0'
-      preserve_keys: false
-      override: false
-      overridables:
-        arrows: '0'
-        autoplay: '0'
-        dots: '0'
-        draggable: '0'
-        infinite: '0'
-        mouseWheel: '0'
-        randomize: '0'
-        variableWidth: '0'
-      skin_arrows: ''
-      skin_dots: ''
-      fx: ''
-      icon: ''
-      view_mode: ''
-      box_caption: ''
-      box_caption_custom: ''
-      box_media_style: ''
-      box_style: ''
-      _uri: ''
-      breakpoints: {  }
-      sizes: ''
-      grid_header: ''
-      use_theme_field: false
-    third_party_settings: {  }
-    type: slick_image
     region: content
   field_site_area:
     weight: 16
@@ -443,7 +449,7 @@ content:
     type: string
     region: content
   field_state_of_sale:
-    weight: 41
+    weight: 40
     label: above
     settings:
       link: true
@@ -459,7 +465,7 @@ content:
     type: string
     region: content
   field_tasks:
-    weight: 34
+    weight: 33
     label: above
     settings: {  }
     third_party_settings: {  }
@@ -495,13 +501,9 @@ hidden:
   field_acc_salesperson: true
   field_completion_date: true
   field_constructor: true
-  field_estate_agent: true
-  field_estate_agent_email: true
-  field_estate_agent_phone: true
   field_estimated_completion: true
   field_estimated_completion_date: true
   field_housing_manager: true
-  field_images: true
   field_import_apartments: true
   field_main_image: true
   field_material_choice_dl: true
@@ -510,6 +512,7 @@ hidden:
   field_premarketing_start_time: true
   field_project_manager: true
   field_publication_end_time: true
+  field_shared_apartment_images: true
   field_shareholder_meeting_date: true
   field_virtual_presentation_url: true
   langcode: true

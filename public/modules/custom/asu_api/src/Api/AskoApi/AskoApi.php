@@ -59,6 +59,7 @@ class AskoApi {
    *   Hitas or haso email address.
    *
    * @return string
+   *   Email address where to send the application.
    */
   public function getEmailAddress(string $type): string {
     if (in_array($type, ['hitas', 'haso'])) {
@@ -71,6 +72,7 @@ class AskoApi {
    * Get title for email by application type.
    *
    * @param string $type
+   *   Hitas or Haso.
    *
    * @return string
    *   Title for application email.
@@ -90,6 +92,7 @@ class AskoApi {
    *   Name of the project.
    *
    * @return Drupal\asu_api\Api\AskoApi\Request\AskoApplicationRequest
+   *   Request object.
    */
   public function getAskoApplicationRequest(User $user, Application $application, string $projectName): AskoApplicationRequest {
     return new AskoApplicationRequest($user, $application, $projectName);

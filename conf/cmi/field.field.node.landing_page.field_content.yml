@@ -18,6 +18,7 @@ dependencies:
     - paragraphs.paragraphs_type.showcase_block
     - paragraphs.paragraphs_type.stacked_contact_blocks
     - paragraphs.paragraphs_type.stacked_text_blocks_with_image
+    - paragraphs.paragraphs_type.text
   module:
     - entity_reference_revisions
 _core:
@@ -42,6 +43,7 @@ settings:
       list_of_links: list_of_links
       liftup_with_image: liftup_with_image
       content_cards: content_cards
+      text: text
       stacked_text_blocks_with_image: stacked_text_blocks_with_image
       from_library: from_library
       remote_video: remote_video
@@ -133,8 +135,8 @@ settings:
         weight: 50
         enabled: false
       text:
+        enabled: true
         weight: -15
-        enabled: false
       text_block_with_link:
         weight: 38
         enabled: false

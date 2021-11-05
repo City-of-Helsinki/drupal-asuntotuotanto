@@ -27,5 +27,5 @@ type: news
 description: 'Content type for news content with rich editing capabilities.'
 help: ''
 new_revision: true
-preview_mode: 1
+preview_mode: 0
 display_submitted: false

@@ -37,7 +37,11 @@ class AsuExternalStringItem extends StringItem {
   /**
    * Constructor.
    */
-  public function __construct(DataDefinitionInterface $definition, $name = NULL, TypedDataInterface $parent = NULL) {
+  public function __construct(
+    DataDefinitionInterface $definition,
+    $name = NULL,
+    TypedDataInterface $parent = NULL
+  ) {
     parent::__construct($definition, $name, $parent);
     $this->store = \Drupal::service('asu_user.tempstore');
   }
