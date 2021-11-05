@@ -365,6 +365,21 @@ field_settings:
     datasource_id: 'entity:node'
     property_path: 'search_api_reverse_entity_references_node__field_apartments:field_energy_class'
     type: object
+  project_estate_agent:
+    label: 'Estate agent'
+    datasource_id: 'entity:node'
+    property_path: 'search_api_reverse_entity_references_node__field_apartments:field_salesperson:entity:field_full_name'
+    type: string
+  project_estate_agent_email:
+    label: 'Estate agent email'
+    datasource_id: 'entity:node'
+    property_path: 'search_api_reverse_entity_references_node__field_apartments:field_salesperson:entity:mail'
+    type: string
+  project_estate_agent_phone:
+    label: 'Estate agent telephone'
+    datasource_id: 'entity:node'
+    property_path: 'search_api_reverse_entity_references_node__field_apartments:field_salesperson:entity:field_phone_number'
+    type: string
   project_estimated_completion:
     label: 'Estimated completion'
     datasource_id: 'entity:node'
