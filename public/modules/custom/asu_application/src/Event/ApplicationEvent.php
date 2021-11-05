@@ -41,7 +41,11 @@ class ApplicationEvent extends Event {
   /**
    * {@inheritdoc}
    */
-  public function __construct($applicationId, string $projectName, string $projectUuid, array $apartmentUuids) {
+  public function __construct(
+    $applicationId,
+    string $projectName,
+    string $projectUuid,
+    array $apartmentUuids) {
     $this->applicationId = $applicationId;
     $this->projectName = $projectName;
     $this->projectUuid = $projectUuid;
@@ -59,20 +63,21 @@ class ApplicationEvent extends Event {
    * Get the name of the project.
    *
    * @return string
+   *   Name of the project.
    */
   public function getProjectName(): string {
     return $this->projectName;
   }
 
   /**
-   *
+   * Project uuid.
    */
   public function getProjectUuid(): string {
     return $this->projectUuid;
   }
 
   /**
-   *
+   * Apartment uuids.
    */
   public function getApartmentUuids(): array {
     return $this->apartmentUuids;

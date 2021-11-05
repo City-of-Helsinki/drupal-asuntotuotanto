@@ -97,7 +97,7 @@ class Applications {
   /**
    * Get applications for single project.
    *
-   * @param int|string
+   * @param int|string $id
    *   Id of the project.
    *
    * @return array

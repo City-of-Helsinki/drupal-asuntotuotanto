@@ -12,6 +12,11 @@ class ProxyRequest extends Request {
   protected const METHOD = 'GET';
   protected const PATH = '/_search';
 
+  /**
+   * Request array.
+   *
+   * @var array
+   */
   private $requestArray;
 
   /**

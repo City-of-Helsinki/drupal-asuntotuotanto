@@ -42,7 +42,10 @@ class ApplicationFormUrl extends FieldItemList {
    *   (optional) The parent object of the data property, or NULL if it is the
    *   root of a typed data tree. Defaults to NULL.
    */
-  public function __construct(DataDefinitionInterface $definition, $name = NULL, TypedDataInterface $parent = NULL) {
+  public function __construct(
+    DataDefinitionInterface $definition,
+    $name = NULL,
+    TypedDataInterface $parent = NULL) {
     parent::__construct($definition, $name, $parent);
     $this->reverseEntities = \Drupal::service('asu_content.collect_reverse_entity');
   }
@@ -71,7 +74,8 @@ class ApplicationFormUrl extends FieldItemList {
         $referencing_node = $reference['referring_entity'];
         $baseurl = \Drupal::request()->getSchemeAndHttpHost();
 
-        // Application url cannot be indexed if ownership type or end time is missing.
+        // Application url cannot be indexed if:
+        // Ownership type or end time is missing.
         if (
         !isset($referencing_node->field_ownership_type->referencedEntities()[0]) ||
         !$referencing_node->field_application_end_time->value
@@ -90,40 +94,6 @@ class ApplicationFormUrl extends FieldItemList {
         }
         else {
           $value = $baseurl . '/contact/apply_for_free_apartment?apartment=' . $current_entity->id();
-        }
-      }
-    }
-
-    return [
-      '#markup' => $value,
-    ];
-  }
-
-  /**
-   *
-   */
-  protected function chingleComputeValue() {
-    $current_entity = $this->getEntity();
-    $reverse_references = $this->reverseEntities->getReverseReferences($current_entity);
-    $value = FALSE;
-
-    foreach ($reverse_references as $reference) {
-      if (
-        !empty($reference) &&
-        $reference['referring_entity'] instanceof Node &&
-        $this->getEntity()->hasField('field_apartment_number')
-      ) {
-        $value = '';
-        $referencing_node = $reference['referring_entity'];
-        $application_baseurl = Settings::get('asuntotuotanto_public_url');
-
-        if (!empty($referencing_node->get('field_ownership_type')->first())) {
-          $apartment_type = $referencing_node->get('field_ownership_type')
-            ->first()
-            ->get('entity')
-            ->getTarget()
-            ->getValue()->getName();
-          $value = $application_baseurl . '/application/add/' . lcfirst($apartment_type) . '/' . $referencing_node->id();
         }
       }
     }

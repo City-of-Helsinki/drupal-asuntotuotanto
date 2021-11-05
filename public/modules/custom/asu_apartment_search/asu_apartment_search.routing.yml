@@ -8,7 +8,7 @@ asu_apartment_search.hitas_content:
 asu_apartment_search.hitas_upcoming:
   path: '/asuntohaku/hitas/tulevat'
   defaults:
-    _controller: '\Drupal\asu_apartment_search\Controller\ApartmentSearchController::hitas_upcoming'
+    _controller: '\Drupal\asu_apartment_search\Controller\ApartmentSearchController::hitasUpcoming'
   requirements:
     _permission: 'access content'
 
@@ -22,6 +22,6 @@ asu_apartment_search.haso:
 asu_apartment_search.haso_upcoming:
   path: '/asuntohaku/haso/tulevat'
   defaults:
-    _controller: '\Drupal\asu_apartment_search\Controller\ApartmentSearchController::haso_upcoming'
+    _controller: '\Drupal\asu_apartment_search\Controller\ApartmentSearchController::hasoUpcoming'
   requirements:
     _permission: 'access content'

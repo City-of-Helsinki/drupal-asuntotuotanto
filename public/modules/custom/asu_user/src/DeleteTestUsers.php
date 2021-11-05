@@ -6,10 +6,9 @@ use Drupal\user\Entity\User;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 
 /**
- * Class DeleteTestUsers.
+ * Delete users with test_ prefix.
  */
 class DeleteTestUsers {
-
   /**
    * The entity type manager.
    *
@@ -18,14 +17,14 @@ class DeleteTestUsers {
   protected $entityTypeManager;
 
   /**
-   * Constructs an object.
+   * Constructor.
    */
   public function __construct(EntityTypeManagerInterface $entityTypeManager) {
     $this->entityTypeManager = $entityTypeManager;
   }
 
   /**
-   *
+   * Execute user deletion.
    */
   public function doDeleteTestUsers() {
     $user_ids = \Drupal::entityQuery('user')->execute();

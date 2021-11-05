@@ -21,7 +21,7 @@ class ApplicationResponse extends Response {
   /**
    * Constructor.
    *
-   * @param object $content
+   * @param array $content
    *   Contents of the response.
    */
   public function __construct(array $content) {

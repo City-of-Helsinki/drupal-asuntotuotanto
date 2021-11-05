@@ -36,8 +36,12 @@ class UserService extends ServiceBase {
    * Get user information from backend.
    *
    * @param \Drupal\asu_api\Api\Request $request
+   *   Request.
+   * @param string $token
+   *   Authentication token.
    *
    * @return \Drupal\asu_api\Api\Response
+   *   Response.
    *
    * @throws \GuzzleHttp\Exception\GuzzleException
    */
@@ -51,8 +55,12 @@ class UserService extends ServiceBase {
    * Send updated user data to backend.
    *
    * @param \Drupal\asu_api\Api\Request $request
+   *   Request.
+   * @param string $token
+   *   Authentication token.
    *
    * @return \Drupal\asu_api\Api\Response
+   *   Response.
    *
    * @throws \GuzzleHttp\Exception\GuzzleException
    */

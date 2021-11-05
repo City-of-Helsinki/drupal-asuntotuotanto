@@ -3,6 +3,7 @@ module:
   admin_toolbar: 0
   admin_toolbar_tools: 0
   aet: 0
+  allowed_formats: 0
   api_tools: 0
   asu_apartment_search: 0
   asu_api: 0
@@ -31,7 +32,7 @@ module:
   config: 0
   config_filter: 0
   config_ignore: 0
-  config_replace: 0
+  config_rewrite: 0
   config_terms: 0
   config_translation: 0
   config_update: 0
@@ -56,12 +57,13 @@ module:
   entity: 0
   entity_reference_revisions: 0
   entity_usage: 0
-  features: 0
   field: 0
   field_group: 0
   field_ui: 0
   file: 0
   filter: 0
+  flysystem: 0
+  flysystem_azure: 0
   focal_point: 0
   gdpr_compliance: 0
   gin_toolbar: 0
@@ -70,7 +72,6 @@ module:
   hdbt_admin_tools: 0
   hdbt_component_library: 0
   hdbt_content: 0
-  hdbt_hyphenopoly: 0
   helfi_api_base: 0
   helfi_azure_fs: 0
   helfi_base_config: 0
@@ -142,6 +143,7 @@ module:
   twig_tweak: 0
   ultimate_cron: 0
   update: 0
+  update_helper: 0
   user: 0
   user_bundle: 0
   user_registrationpassword: 0

@@ -115,7 +115,6 @@ if ($env = getenv('APP_ENV')) {
   $config['swiftmailer.transport']['smtp_credential_provider'] = 'swiftmailer';
 
   $settings['ASU_DJANGO_BACKEND_URL'] = getenv('ASU_DJANGO_BACKEND_URL');
-  $settings['ASU_ELASTICSEARCH_ADDRESS'] = getenv('ASU_ELASTICSEARCH_ADDRESS');
 
   $config['elasticsearch_connector.cluster.asuntotuotanto']['url'] = getenv('ASU_ELASTICSEARCH_ADDRESS');
 
@@ -128,7 +127,6 @@ if ($env = getenv('APP_ENV')) {
     $config['swiftmailer.transport']['smtp_port'] = '1025';
     $config['swiftmailer.transport']['smtp_encryption'] = '0';
 
-    $settings['ASU_ELASTICSEARCH_ADDRESS'] = 'http://elastic:9200';
     $config['elasticsearch_connector.cluster.asuntotuotanto']['url'] = 'http://elastic:9200';
   }
 

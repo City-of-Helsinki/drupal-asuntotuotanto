@@ -53,13 +53,13 @@ class DecimalType extends ImportType {
   /**
    * Decimal is valid if it passes one of the three checks.
    *
-   * @param float $decimal
+   * @param float $input
    *   Decimal.
    *
    * @return bool
    *   Is allowed.
    */
-  private function isAllowedValue($input): bool {
+  private function isAllowedValue(float $input): bool {
     if (empty($input)) {
       return TRUE;
     }

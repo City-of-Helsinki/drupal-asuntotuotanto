@@ -50,3 +50,7 @@ permissions:
   - 'view paragraph content text'
   - 'view paragraph content text_block_with_link'
   - 'view remote entities'
+  - 'view media'
+  - 'display eu cookie compliance popup'
+  - 'access content'
+  - 'view remote entities'

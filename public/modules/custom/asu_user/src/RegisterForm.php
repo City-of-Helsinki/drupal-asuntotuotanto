@@ -19,7 +19,6 @@ use Drupal\user\RegisterForm as BaseForm;
  * Customized registration form.
  */
 class RegisterForm extends BaseForm {
-
   /**
    * Backend api class.
    *
@@ -27,12 +26,36 @@ class RegisterForm extends BaseForm {
    */
   private BackendApi $backendApi;
 
+  /**
+   * User store.
+   *
+   * @var \Drupal\asu_user\Store
+   */
   private Store $store;
 
   /**
    * Construct.
+   *
+   * @param \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository
+   *   Entity repository.
+   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
+   *   Language manager.
+   * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface|null $entity_type_bundle_info
+   *   EntityTypeBundleInfoInterface.
+   * @param \Drupal\Component\Datetime\TimeInterface|null $time
+   *   Time interface.
+   * @param \Drupal\asu_api\Api\BackendApi $backendApi
+   *   Backend api.
+   * @param \Drupal\asu_user\Store $store
+   *   User store.
    */
-  public function __construct(EntityRepositoryInterface $entity_repository, LanguageManagerInterface $language_manager, EntityTypeBundleInfoInterface $entity_type_bundle_info = NULL, TimeInterface $time = NULL, BackendApi $backendApi, Store $store) {
+  public function __construct(
+    EntityRepositoryInterface $entity_repository,
+    LanguageManagerInterface $language_manager,
+    EntityTypeBundleInfoInterface $entity_type_bundle_info = NULL,
+    TimeInterface $time = NULL,
+    BackendApi $backendApi,
+    Store $store) {
     parent::__construct($entity_repository, $language_manager, $entity_type_bundle_info, $time);
     $this->backendApi = $backendApi;
     $this->store = $store;
@@ -59,21 +82,21 @@ class RegisterForm extends BaseForm {
     $form = parent::form($form, $form_state);
     $config = \Drupal::config('asu_user.external_user_fields');
     $fields = $config->get('external_data_map');
-
     $bundle = FALSE;
     $form_object = $form_state->getFormObject();
     if ($form_object instanceof ContentEntityForm) {
       $bundle = $form_object->getEntity()->bundle();
     }
-
     if ($bundle !== 'customer') {
       return $form;
     }
-
     foreach ($fields as $field => $info) {
       $form['basic_information'][$field] = [
         '#type' => $info['type'],
-        '#title' => $this->t($info['title']),
+        '#title' => $this->t(
+          '@basic_information_title',
+          ['@basic_information_title', $info['title']]
+        ),
         '#maxlength' => 255,
         '#required' => TRUE,
         '#attributes' => [
@@ -102,26 +125,26 @@ class RegisterForm extends BaseForm {
    */
   public function save(array $form, FormStateInterface $form_state) {
     $account = $this->entity;
-
     // Default login flow.
     $pass = $account->getPassword();
     $admin = $form_state->getValue('administer_users');
     $notify = !$form_state->isValueEmpty('notify');
     $account->save();
-
     // Create user to backend.
     if ($account->hasRole('customer')) {
       $this->store->setMultipleByConfiguration($form_state->getUserInput());
       $this->sendToBackend($account, $form_state);
-
       $form_state->set('user', $account);
       $form_state->setValue('uid', $account->id());
-
-      $this->logger('user')->notice('New user: %name %email.', ['%name' => $form_state->getValue('name'), '%email' => '<' . $form_state->getValue('mail') . '>', 'type' => $account->toLink($this->t('Edit'), 'edit-form')->toString()]);
-
+      $this->logger('user')->notice('New user: %name %email.',
+        [
+          '%name' => $form_state->getValue('name'),
+          '%email' => '<' . $form_state->getValue('mail') . '>',
+          'type' => $account->toLink($this->t('Edit'), 'edit-form')
+            ->toString(),
+        ]);
       // Add plain text password into user account to generate mail tokens.
       $account->password = $pass;
-
       user_login_finalize($account);
     }
   }
@@ -130,13 +153,11 @@ class RegisterForm extends BaseForm {
    * Send the user information to Django backend.
    */
   private function sendToBackend(UserInterface $account, FormStateInterface $form_state) {
-    /** @var \Drupal\user\UserInterface $account */
     try {
       $request = new CreateUserRequest($account, $form_state->getUserInput());
       $response = $this->backendApi
         ->getUserService()
         ->createUser($request);
-
       $account->field_backend_profile = $response->getProfileId();
       $account->field_backend_password = $response->getPassword();
       $account->save();

@@ -14,8 +14,10 @@ class ApplicationService extends ServiceBase {
   /**
    * Send newly created application to backend.
    *
-   * @param \Drupal\asu_api\BackendApi\Request\ApplicationRequest $request
+   * @param \Drupal\asu_api\BackendApi\Request\CreateApplicationRequest $request
    *   ApplicationRequest.
+   * @param string $token
+   *   Authentication token.
    *
    * @return \Drupal\asu_api\Api\BackendApi\Response\ApplicationResponse
    *   ApplicationResponse.

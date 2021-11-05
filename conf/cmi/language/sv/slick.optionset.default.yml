@@ -1,4 +1,5 @@
 label: Förvald
 options:
   settings:
+    prevArrow: Föregående
     nextArrow: Nästa
