@@ -1,6 +1,5 @@
 parameters:
   asu_api.backend.base_url_variable: 'ASU_DJANGO_BACKEND_URL'
-  asu_api.drupal.base_url_variable: 'ASU_ASUNTOTUOTANTO_URL'
   asu_api.elastic.base_url_variable: 'ASU_ELASTICSEARCH_ADDRESS'
   asu_api.elastic.username_variable: 'ASU_ELASTICSEARCH_USERNAME'
   asu_api.elastic.password_variable: 'ASU_ELASTICSEARCH_PASSWORD'
@@ -8,13 +7,22 @@ parameters:
   asu_api.asko.haso_address_variable: 'ASU_ASKO_HASO_ADDRESS'
 
 services:
-  asu_api.backendapi:
-    class: Drupal\asu_api\Api\BackendApi\BackendApi
+  asu_api.backend_client:
+    factory: ['Drupal\asu_api\Api\ClientFactory', 'create']
+    class: GuzzleHttp\Client
     arguments: ['%asu_api.backend.base_url_variable%']
 
-  asu_api.drupalapi:
-    class: Drupal\asu_api\Api\DrupalApi\DrupalApi
-    arguments: ['%asu_api.drupal.base_url_variable%']
+  asu_api.apimanager:
+    class: Drupal\asu_api\ApiManager
+    arguments: ['asu_api.backendapi']
+
+  asu_api.backendapi:
+    class: Drupal\asu_api\Api\BackendApi\BackendApi
+    arguments: ['asu_api.backend_client']
+
+  asu_api.backend.authentication:
+    class: Drupal\asu_api\Api\Backend\AuthenticationService
+    arguments: ['@asu_api.backend_client', '']
 
   asu_api.elasticapi:
     class: Drupal\asu_api\Api\ElasticSearchApi\ElasticSearchApi

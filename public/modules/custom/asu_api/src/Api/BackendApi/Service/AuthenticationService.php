@@ -4,8 +4,10 @@ namespace Drupal\asu_api\Api\BackendApi\Service;
 
 use Drupal\asu_api\Api\BackendApi\Request\AuthenticationRequest;
 use Drupal\asu_api\Api\BackendApi\Response\AuthenticationResponse;
+use Drupal\asu_api\Api\ClientFactory;
 use Drupal\asu_api\Api\RequestHandler;
 use Drupal\user\UserInterface;
+use GuzzleHttp\Client;
 use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
@@ -16,32 +18,24 @@ class AuthenticationService {
   private const TOKEN_KEY = 'asu_token';
 
   /**
-   * Request handler.
-   *
-   * @var \Drupal\asu_api\Api\RequestHandler
-   */
-  private RequestHandler $requestHandler;
-
-  /**
    * User session.
    *
    * @var \Symfony\Component\HttpFoundation\Session\Session
    */
   private Session $session;
 
+  private Client $client;
+
   /**
    * Constructor.
    *
    * AuthenticationService constructor.
    *
-   * @param \Drupal\asu_api\Api\RequestHandler $requestHandler
-   *   Request handler class.
    * @param \Symfony\Component\HttpFoundation\Session\Session $session
    *   User session.
    */
-  public function __construct(RequestHandler $requestHandler, Session $session) {
-    $this->requestHandler = $requestHandler;
-    $this->session = $session;
+  public function __construct(Client $client) {
+    $this->client = $client;
   }
 
   /**
@@ -50,26 +44,24 @@ class AuthenticationService {
    * @param \Drupal\user\UserInterface $user
    *   Current user.
    *
-   * @return bool
-   *   Is authentication handled properly.
+   * @return string
+   *   Authentication token.
    */
-  public function handleAuthentication(UserInterface $user): ?string {
-    if (!$this->isApiAuthenticated($user)) {
+  public function handleAuthentication(UserInterface $user, Session $session): ?string {
+    if (!$this->hasValidAuthToken($user, $session)) {
       try {
         $authenticationResponse = $this->authenticate($user);
-        $this->session->set(self::TOKEN_KEY, $authenticationResponse->getToken());
+        $session->set(self::TOKEN_KEY, $authenticationResponse->getToken());
         return $authenticationResponse->getToken();
       }
       catch (\Exception $e) {
+        // @todo: Token is not set and authentication failed. Emergency.
         \Drupal::messenger()->addMessage('exception: ' . $e->getMessage());
         // Token is not set and authentication failed. Emergency.
         return NULL;
       }
     }
-    else {
-      return $this->session->get(self::TOKEN_KEY);
-    }
-    return NULL;
+    return $session->get(self::TOKEN_KEY);
   }
 
   /**
@@ -81,8 +73,8 @@ class AuthenticationService {
    * @return bool
    *   Is user able to send authenticated requests to backend.
    */
-  private function isApiAuthenticated(UserInterface $user): bool {
-    if ($token = $this->session->get(self::TOKEN_KEY)) {
+  private function hasValidAuthToken(UserInterface $user, Session $session): bool {
+    if ($token = $session->get(self::TOKEN_KEY)) {
       return $this->isTokenAlive($token);
     }
     return FALSE;
@@ -124,7 +116,7 @@ class AuthenticationService {
    */
   private function authenticate(UserInterface $user): AuthenticationResponse {
     $request = new AuthenticationRequest($user);
-    $response = $this->requestHandler->post($request->getPath(), $request->toArray());
+    $response = $this->client->post($request->getPath(), $request->toArray());
     return AuthenticationResponse::createFromHttpResponse($response);
   }
 
@@ -132,7 +124,7 @@ class AuthenticationService {
    * Get user token.
    */
   public function getUserToken(): string {
-    $this->session->get(self::TOKEN_KEY);
+    return $this->session->get(self::TOKEN_KEY);
   }
 
 }

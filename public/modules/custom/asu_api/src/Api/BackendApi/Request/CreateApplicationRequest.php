@@ -2,13 +2,15 @@
 
 namespace Drupal\asu_api\Api\BackendApi\Request;
 
+use Drupal\asu_api\Api\BackendApi\Response\CreateApplicationResponse;
 use Drupal\asu_api\Api\Request;
+use Drupal\asu_api\Api\Response;
 use Drupal\asu_application\Entity\Application;
 use Drupal\user\UserInterface;
 use phpDocumentor\Reflection\Types\Integer;
 
 /**
- * Create application request.
+ * A request to create an application.
  */
 class CreateApplicationRequest extends Request {
   /**
@@ -24,6 +26,8 @@ class CreateApplicationRequest extends Request {
    * @var string
    */
   protected const METHOD = 'POST';
+
+  protected const AUTHENTICATED = TRUE;
 
   /**
    * User object.
@@ -57,6 +61,31 @@ class CreateApplicationRequest extends Request {
     $this->user = $user;
     $this->application = $application;
     $this->projectData = $projectData;
+  }
+
+  /**
+   * Data to array.
+   *
+   * @return array
+   *   Array which is sent to API.
+   */
+  public function toArray(): array {
+    $values = [
+      'application_uuid' => $this->application->uuid(),
+      'application_type' => $this->application->bundle(),
+      'ssn_suffix' => $this->application->field_personal_id->value,
+      'has_children' => $this->application->getHasChildren(),
+      'additional_applicant' => $this->getApplicant(),
+      'right_of_residence' => $this->application->field_right_of_residence_number->value,
+      'project_id' => $this->projectData['uuid'],
+      'apartments' => $this->getApartments(),
+    ];
+
+    return $values;
+  }
+
+  public function getUser() {
+    return $this->user;
   }
 
   /**
@@ -137,25 +166,9 @@ class CreateApplicationRequest extends Request {
     ];
   }
 
-  /**
-   * Data to array.
-   *
-   * @return array
-   *   Array which is sent to API.
-   */
-  public function toArray(): array {
-    $values = [
-      'application_uuid' => $this->application->uuid(),
-      'application_type' => $this->application->bundle(),
-      'ssn_suffix' => $this->application->field_personal_id->value,
-      'has_children' => $this->application->getHasChildren(),
-      'additional_applicant' => $this->getApplicant(),
-      'right_of_residence' => $this->application->field_right_of_residence_number->value,
-      'project_id' => $this->projectData['uuid'],
-      'apartments' => $this->getApartments(),
-    ];
-
-    return $values;
+  public static function getResponse(Request $request): Response
+  {
+    return CreateApplicationResponse::createFromHttpResponse($request);
   }
 
 }

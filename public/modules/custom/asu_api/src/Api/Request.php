@@ -7,9 +7,9 @@ namespace Drupal\asu_api\Api;
  */
 abstract class Request {
 
+  protected const AUTHENTICATED = FALSE;
   protected const METHOD = 'GET';
   protected const PATH = '';
-  protected const AUTHENTICATED = FALSE;
 
   /**
    * Gets the HTTP method.
@@ -45,5 +45,17 @@ abstract class Request {
   public function toArray(): array {
     return [];
   }
+
+  public function requiresAuthentication() {
+    return static::AUTHENTICATED;
+  }
+
+  /**
+   * Create response object which matches this request.
+   *
+   * @param Drupal\asu_api\api\ApiRequest $request
+   * @return Response
+   */
+  abstract static function getResponse(Request $request): Response;
 
 }

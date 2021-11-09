@@ -100,7 +100,7 @@ class RequestHandler {
    * @return \GuzzleHttp\Psr7\RequestInterface
    *   Request to send.
    */
-  public function buildRequest(Request $request): RequestInterface {
+  public function buildGuzzleRequest(Request $request): RequestInterface {
     $method = $request->getMethod();
     $uri = "{$this->apiUrl}{$request->getPath()}";
     $payload = $request->toArray();
@@ -121,7 +121,7 @@ class RequestHandler {
     $payload = $request->toArray();
     $headers = [
       'Content-Type' => 'application/json',
-      'Authorization' => 'Bearer ' . $token,
+      'Authorization' => sprintf("Bearer %s", $token),
     ];
     return new Request(
       $method,

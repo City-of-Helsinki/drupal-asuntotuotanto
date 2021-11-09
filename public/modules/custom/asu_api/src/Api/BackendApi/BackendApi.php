@@ -5,7 +5,12 @@ namespace Drupal\asu_api\Api\BackendApi;
 use Drupal\asu_api\Api\BackendApi\Service\ApplicationService;
 use Drupal\asu_api\Api\BackendApi\Service\AuthenticationService;
 use Drupal\asu_api\Api\BackendApi\Service\UserService;
+use Drupal\asu_api\Api\ClientFactory;
+use Drupal\asu_api\Api\Request;
 use Drupal\asu_api\Api\RequestHandler;
+use Drupal\asu_api\Api\Response;
+use http\Client;
+use Psr\Http\Message\RequestInterface;
 
 /**
  * Integration to django.
@@ -33,15 +38,25 @@ class BackendApi {
    */
   private UserService $userService;
 
+  private \GuzzleHttp\Client $client;
+
   /**
    * Constructor.
    */
-  public function __construct(string $backendUrlVariable) {
-    $url = getenv($backendUrlVariable);
-    $requestHandler = new RequestHandler($url);
-    $this->authenticationService = new AuthenticationService($requestHandler, \Drupal::request()->getSession());
-    $this->applicationService = new ApplicationService($requestHandler);
-    $this->userService = new UserService($requestHandler);
+  public function __construct(ClientFactory $clientFactory, AuthenticationService $auth) {
+    $this->clientFactory = $clientFactory;
+    $this->authenticationService = $auth;
+  }
+
+  public function send(Request $request, array $options = []): Response {
+    if ($request->requiresAuthentication()) {
+      if($token = $this->authenticationService->handleAuthentication($request->getUser())) {
+        $options['headers']['Authorization'] = sprintf("Bearer %s", $token);
+      }
+    }
+    $client = $this->clientFactory->createClient($options);
+    $response = $client->send(ClientFactory::createRequest($request), $options['headers']);
+    return $request::getResponse($response);
   }
 
   /**
