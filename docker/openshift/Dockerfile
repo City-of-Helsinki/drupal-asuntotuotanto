@@ -19,5 +19,5 @@ RUN chmod +x /crons/*
 COPY docker/openshift/custom.locations /etc/nginx/conf.d/custom.locations
 
 # Temporary elasticsearch cert fix
-COPY docker/cert/temp-elastic.crt /usr/local/share/ca-certificates
+COPY docker/certs/temp-elastic.crt /usr/local/share/ca-certificates
 RUN update-ca-certificates
