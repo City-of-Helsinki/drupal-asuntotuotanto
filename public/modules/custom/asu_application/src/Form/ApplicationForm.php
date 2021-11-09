@@ -206,8 +206,8 @@ class ApplicationForm extends ContentEntityForm {
         $form['#project_uuid'],
         $form['#apartment_uuids']
       );
-      $event_dispatcher = \Drupal::service('event_dispatcher');
-      $event_dispatcher->dispatch($event, ApplicationEvent::EVENT_NAME);
+      \Drupal::service('event_dispatcher')
+        ->dispatch($event, ApplicationEvent::EVENT_NAME);
       $this->entity->set('field_locked', 1);
       $this->entity->save();
       $this->messenger()->addStatus($this->t('Your application has been submitted successfully.
