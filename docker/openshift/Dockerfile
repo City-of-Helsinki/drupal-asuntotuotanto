@@ -17,7 +17,3 @@ RUN chmod +x /crons/*
 
 # Copy nginx overrides.
 COPY docker/openshift/custom.locations /etc/nginx/conf.d/custom.locations
-
-# Temporary elasticsearch cert fix
-COPY docker/certs/temp-elastic.crt /usr/local/share/ca-certificates
-RUN update-ca-certificates
