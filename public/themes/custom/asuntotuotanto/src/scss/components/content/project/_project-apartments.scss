@@ -201,7 +201,8 @@
     tr {
       display: inline-flex;
       width: 100%;
-      gap: $spacing-l;
+      // gap: $spacing-l;
+      gap: 0.75rem;
 
       th {
         @include font-size($fontsize-body-m, $lineheight-l);
@@ -223,7 +224,8 @@
         }
 
         &:nth-child(4) {
-          min-width: 150px;
+          // min-width: 150px;
+          min-width: 385px;
         }
 
         &:nth-child(5) {
