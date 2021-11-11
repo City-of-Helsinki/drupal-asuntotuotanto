@@ -236,6 +236,8 @@
   tbody {
     padding-left: $spacing-l;
     padding-right: $spacing-l;
+    display: flex;
+    flex-direction: column;
 
     tr {
       border-top: 1px solid var(--color-black-20);
