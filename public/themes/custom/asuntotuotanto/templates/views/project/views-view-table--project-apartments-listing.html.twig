@@ -47,7 +47,8 @@
     {% for row in rows %}
       {% set apartment_number = row.columns.field_apartment_number.content.0.field_output['#markup']|striptags|trim %}
       {% set apartment_structure = row.columns.field_apartment_structure.content.0.field_output['#markup']|striptags|trim	 %}
-      {% set debt_free_sales_price = row.columns.field_debt_free_sales_price.content.0.field_output['#markup']|striptags|trim %}
+      {# {% set debt_free_sales_price = row.columns.field_debt_free_sales_price.content.0.field_output['#markup']|striptags|trim %} #}
+      {% set right_of_occupancy_payment = row.columns.field_right_of_occupancy_payment.content.0.field_output['#markup']|striptags|trim %}
       {% set floor = row.columns.field_floor.content.0.field_output['#markup']|striptags|trim %}
       {% set living_area_size = row.columns.field_living_area.content.0.field_output['#markup']|striptags|trim %}
       {% set nid = row.columns.nid.content.0.field_output['#markup']|striptags|trim %}
@@ -97,11 +98,11 @@
               <p>
                 <span>
                   {% trans %}
-                    Debt free sales price
+                    Asumisoikeusmaksu
                   {% endtrans %}
                 </span>
                 <span>
-                  {{ debt_free_sales_price }} €
+                  {{ right_of_occupancy_payment }} €
                 </span>
               </p>
             </li>
@@ -211,7 +212,8 @@
       {% for row in rows %}
         {% set apartment_number = row.columns.field_apartment_number.content.0.field_output['#markup']|striptags|trim %}
         {% set apartment_structure = row.columns.field_apartment_structure.content.0.field_output['#markup']|striptags|trim	 %}
-        {% set debt_free_sales_price = row.columns.field_debt_free_sales_price.content.0.field_output['#markup']|striptags|trim %}
+        {# {% set debt_free_sales_price = row.columns.field_debt_free_sales_price.content.0.field_output['#markup']|striptags|trim %} #}
+        {% set right_of_occupancy_payment = row.columns.field_right_of_occupancy_payment.content.0.field_output['#markup']|striptags|trim %}
         {% set floor = row.columns.field_floor.content.0.field_output['#markup']|striptags|trim %}
         {% set living_area_size = row.columns.field_living_area.content.0.field_output['#markup']|striptags|trim %}
         {% set nid = row.columns.nid.content.0.field_output['#markup']|striptags|trim %}
@@ -232,7 +234,7 @@
             <span>{{ living_area_size }} m<sup>2</sup></span>
           </td>
           <td>
-            <span>{{ debt_free_sales_price }} €</span>
+            <span>{{ right_of_occupancy_payment }} €</span>
           </td>
           <td>
             <span>
