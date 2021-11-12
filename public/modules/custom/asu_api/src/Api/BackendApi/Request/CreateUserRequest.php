@@ -2,11 +2,13 @@
 
 namespace Drupal\asu_api\Api\BackendApi\Request;
 
+use Psr\Http\Message\ResponseInterface;
+use Drupal\asu_api\Api\BackendApi\Response\CreateUserResponse;
 use Drupal\asu_api\Api\Request;
 use Drupal\user\UserInterface;
 
 /**
- * Create user request.
+ * A request to create new backend user.
  */
 class CreateUserRequest extends Request {
   protected const METHOD = 'POST';
@@ -51,7 +53,7 @@ class CreateUserRequest extends Request {
 
     if ($this->userInformation) {
       foreach ($fieldMap as $field => $information) {
-        $data[$information['external_field']] = $this->userInformation[$field];
+        $data[$information['external_field']] = isset($this->userInformation[$field]) ? $this->userInformation[$field] : '';
       }
     }
 
@@ -61,6 +63,13 @@ class CreateUserRequest extends Request {
     $data['contact_language'] = $this->user->getPreferredLangcode();
 
     return $data;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function getResponse(ResponseInterface $response): CreateUserResponse {
+    return CreateUserResponse::createFromHttpResponse($response);
   }
 
 }

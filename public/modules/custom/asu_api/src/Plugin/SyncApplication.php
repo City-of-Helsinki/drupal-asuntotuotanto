@@ -4,8 +4,8 @@ declare(strict_types = 1);
 
 namespace Drupal\asu_api\Plugin\QueueWorker;
 
+use Drupal\asu_api\Api\BackendApi\BackendApi;
 use Drupal\asu_api\Api\BackendApi\Request\CreateApplicationRequest;
-use Drupal\asu_api\ApiManager;
 use Drupal\asu_application\Entity\Application;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Queue\QueueWorkerBase;
@@ -23,19 +23,25 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class SyncApplication extends QueueWorkerBase implements ContainerFactoryPluginInterface {
 
-  private ApiManager $apiManager;
+  /**
+   * Backend api.
+   *
+   * @var Drupal\asu_api\Api\BackendApi\BackendApi
+   */
+  private BackendApi $backendApi;
 
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, ApiManager $apiManager)
-  {
+  /**
+   * Constructor.
+   */
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, BackendApi $backendApi) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->apiManager = $apiManager;
+    $this->backendApi = $backendApi;
   }
 
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition)
-  {
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     return new static(
       $configuration,
       $plugin_id,
@@ -47,30 +53,30 @@ class SyncApplication extends QueueWorkerBase implements ContainerFactoryPluginI
   /**
    * {@inheritdoc}
    */
-  public function processItem($data)
-  {
+  public function processItem($data) {
     $application = Application::load($data);
     try {
-      /** @var Node $project */
+      /** @var \Drupal\node\Entity\Node $project */
       $project = Node::load($application->getProjectId());
 
-      /** @var Node[] $apartments */
+      /** @var \Drupal\node\Entity\Node[] $apartments */
       $apartments = Node::loadMultiple($application->getApartmentIds());
       $apartmentData = [];
-      foreach($apartments as $apartment) {
+      foreach ($apartments as $apartment) {
         $apartmentData[$apartment->id()] = $apartment->uuid();
       }
 
       $projectData = [
         'uuid' => $project->uuid(),
-        'apartment_uuids' => $apartmentData
+        'apartment_uuids' => $apartmentData,
       ];
       $request = new CreateApplicationRequest($application->getOwner(), $application, $projectData);
-      $this->apiManager->handleBackendRequest($request);
+      $this->backendApi->send($request);
     }
-    catch(\Exception $e) {
-      // @todo: Logger should maybe log about this particular application.
+    catch (\Exception $e) {
+      // @todo Logger should maybe log about this particular application.
       throw $e;
     }
   }
+
 }

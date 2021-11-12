@@ -6,7 +6,7 @@ use Drupal\asu_api\Api\Response;
 use Psr\Http\Message\ResponseInterface;
 
 /**
- * Response for user creation request.
+ * Response for user information request.
  */
 class UserResponse extends Response {
 
@@ -40,7 +40,7 @@ class UserResponse extends Response {
   /**
    * {@inheritDoc}
    */
-  public static function createFromHttpResponse(ResponseInterface $response): Response {
+  public static function createFromHttpResponse(ResponseInterface $response): self {
     if (!self::requestOk($response)) {
       throw new RequestException('Bad status code: ' . $response->getStatusCode());
     }

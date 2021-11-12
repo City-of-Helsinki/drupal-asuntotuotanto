@@ -4,10 +4,10 @@ namespace Drupal\asu_api\Api\BackendApi\Request;
 
 use Drupal\asu_api\Api\BackendApi\Response\CreateApplicationResponse;
 use Drupal\asu_api\Api\Request;
-use Drupal\asu_api\Api\Response;
 use Drupal\asu_application\Entity\Application;
 use Drupal\user\UserInterface;
 use phpDocumentor\Reflection\Types\Integer;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * A request to create an application.
@@ -84,12 +84,21 @@ class CreateApplicationRequest extends Request {
     return $values;
   }
 
+  /**
+   * Get user.
+   *
+   * @return Drupal\user\UserInterface
+   *   User object.
+   */
   public function getUser() {
     return $this->user;
   }
 
   /**
    * Get apartments.
+   *
+   * @return array
+   *   Array of apartments.
    */
   private function getApartments() {
     $apartments = [];
@@ -146,6 +155,9 @@ class CreateApplicationRequest extends Request {
 
   /**
    * Get primary applicant.
+   *
+   * @return array
+   *   Applicant information.
    */
   private function getApplicant() {
     if (!$this->application->hasAdditionalApplicant()) {
@@ -166,9 +178,11 @@ class CreateApplicationRequest extends Request {
     ];
   }
 
-  public static function getResponse(Request $request): Response
-  {
-    return CreateApplicationResponse::createFromHttpResponse($request);
+  /**
+   * {@inheritdoc}
+   */
+  public static function getResponse(ResponseInterface $response): CreateApplicationResponse {
+    return CreateApplicationResponse::createFromHttpResponse($response);
   }
 
 }

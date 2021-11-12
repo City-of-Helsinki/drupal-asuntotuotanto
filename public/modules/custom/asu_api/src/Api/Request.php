@@ -2,8 +2,10 @@
 
 namespace Drupal\asu_api\Api;
 
+use Psr\Http\Message\ResponseInterface;
+
 /**
- * The request class.
+ * Custom request class.
  */
 abstract class Request {
 
@@ -46,16 +48,25 @@ abstract class Request {
     return [];
   }
 
-  public function requiresAuthentication() {
+  /**
+   * Does endpoint require auth token.
+   *
+   * @return bool
+   *   Endpoint requires authentication.
+   */
+  public function requiresAuthentication(): bool {
     return static::AUTHENTICATED;
   }
 
   /**
-   * Create response object which matches this request.
+   * Create custom response object for http client response.
    *
-   * @param Drupal\asu_api\api\ApiRequest $request
-   * @return Response
+   * @param Psr\Http\Message\ResponseInterface $response
+   *   Guzzle request to map.
+   *
+   * @return Drupal\asu_api\Response
+   *   Custom response class.
    */
-  abstract static function getResponse(Request $request): Response;
+  abstract public static function getResponse(ResponseInterface $response): Response;
 
 }
