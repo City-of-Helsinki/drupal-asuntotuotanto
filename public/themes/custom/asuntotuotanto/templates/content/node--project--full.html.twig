@@ -288,7 +288,7 @@
               </p>
             </li>
           {% endif %}
-          {% if apartment_sales_prices|render %}
+          {% if project_type != "HASO" and apartment_sales_prices|render %}
             <li class="project__details-item">
               <p>
                 <span>{% trans %}Sales price{% endtrans %}</span>
@@ -296,11 +296,19 @@
               </p>
             </li>
           {% endif %}
-          {% if apartment_debt_free_sales_prices|render %}
+          {% if project_type != "HASO" and apartment_debt_free_sales_prices|render %}
             <li class="project__details-item">
               <p>
                 <span>{% trans %}Debt free sales price{% endtrans %}</span>
                 <span>{{ apartment_debt_free_sales_prices }}</span>
+              </p>
+            </li>
+          {% endif %}
+          {% if project_type == "HASO" and apartment_prices|render %}
+            <li class="project__details-item">
+              <p>
+                <span>{% trans %}Right of occupancy payment{% endtrans %}</span>
+                <span>{{ apartment_prices }}</span>
               </p>
             </li>
           {% endif %}
