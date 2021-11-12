@@ -26,7 +26,7 @@ class Store {
    * Constructor.
    */
   public function __construct() {
-    $this->store = \Drupal::service('tempstore.private')->get('user');
+
     $this->config = \Drupal::config('asu_user.external_user_fields')->get('external_data_map');
   }
 
@@ -69,26 +69,6 @@ class Store {
       $values[$value['external_field']] = $this->get($field) ?? '-';
     }
     return $values;
-  }
-
-  /**
-   * Set multiple values to store by configuration.
-   *
-   * @param array $data
-   *   Values to store.
-   */
-  public function setMultipleByConfiguration(array $data) {
-    if ($this->config) {
-      foreach ($data as $key => $value) {
-        // Get the index number of configuration by external field name.
-        // Only store values if they are configured no matter what API returns.
-        $fieldNumber = array_search($key, array_column($this->config, 'external_field'));
-        if (!is_bool($fieldNumber) && isset(array_keys($this->config)[$fieldNumber])) {
-          // Set the value to store by internal filed name.
-          $this->store->set(array_keys($this->config)[$fieldNumber], $value);
-        }
-      }
-    }
   }
 
 }

@@ -4,21 +4,19 @@ namespace Drupal\asu_user;
 
 use Drupal\asu_api\Api\BackendApi\BackendApi;
 use Drupal\asu_api\Api\BackendApi\Request\CreateUserRequest;
-use Drupal\asu_api\Exception\RequestException;
-use Drupal\asu_api\Exception\ResponseParameterException;
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\user\UserInterface;
+use Drupal\user_bundle\TypedRegisterForm;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\user\RegisterForm as BaseForm;
 
 /**
  * Customized registration form.
  */
-class RegisterForm extends BaseForm {
+class RegisterForm extends TypedRegisterForm {
   /**
    * Backend api class.
    *
@@ -46,7 +44,7 @@ class RegisterForm extends BaseForm {
    *   Time interface.
    * @param \Drupal\asu_api\Api\BackendApi $backendApi
    *   Backend api.
-   * @param \Drupal\asu_user\Store $store
+   * @param \Drupal\asu_user\Customer $customer
    *   User store.
    */
   public function __construct(
@@ -55,10 +53,10 @@ class RegisterForm extends BaseForm {
     EntityTypeBundleInfoInterface $entity_type_bundle_info = NULL,
     TimeInterface $time = NULL,
     BackendApi $backendApi,
-    Store $store) {
+    Customer $customer) {
     parent::__construct($entity_repository, $language_manager, $entity_type_bundle_info, $time);
     $this->backendApi = $backendApi;
-    $this->store = $store;
+    $this->customer = $customer;
   }
 
   /**
@@ -71,7 +69,7 @@ class RegisterForm extends BaseForm {
       $container->get('entity_type.bundle.info'),
       $container->get('datetime.time'),
       $container->get('asu_api.backendapi'),
-      $container->get('asu_user.tempstore')
+      $container->get('asu_user.customer')
     );
   }
 
@@ -82,20 +80,16 @@ class RegisterForm extends BaseForm {
     $form = parent::form($form, $form_state);
     $config = \Drupal::config('asu_user.external_user_fields');
     $fields = $config->get('external_data_map');
-    $bundle = FALSE;
     $form_object = $form_state->getFormObject();
-    if ($form_object instanceof ContentEntityForm) {
-      $bundle = $form_object->getEntity()->bundle();
-    }
-    if ($bundle !== 'customer') {
+    if ($form_object->getEntity()->bundle() != 'customer') {
       return $form;
     }
     foreach ($fields as $field => $info) {
       $form['basic_information'][$field] = [
         '#type' => $info['type'],
         '#title' => $this->t(
-          '@basic_information_title',
-          ['@basic_information_title', $info['title']]
+          "@{$info['title']}",
+          ["@{$info['title']}" => $info['title']]
         ),
         '#maxlength' => 255,
         '#required' => TRUE,
@@ -125,14 +119,11 @@ class RegisterForm extends BaseForm {
    */
   public function save(array $form, FormStateInterface $form_state) {
     $account = $this->entity;
-    // Default login flow.
     $pass = $account->getPassword();
-    $admin = $form_state->getValue('administer_users');
-    $notify = !$form_state->isValueEmpty('notify');
     $account->save();
     // Create user to backend.
-    if ($account->hasRole('customer')) {
-      $this->store->setMultipleByConfiguration($form_state->getUserInput());
+    if ($account->bundle() == 'customer') {
+      $this->customer->updateUserExternalFields($form_state->getUserInput());
       $this->sendToBackend($account, $form_state);
       $form_state->set('user', $account);
       $form_state->setValue('uid', $account->id());
@@ -155,20 +146,12 @@ class RegisterForm extends BaseForm {
   private function sendToBackend(UserInterface $account, FormStateInterface $form_state) {
     try {
       $request = new CreateUserRequest($account, $form_state->getUserInput());
-      $response = $this->backendApi
-        ->getUserService()
-        ->createUser($request);
+      /** @var \Drupal\asu_api\Api\BackendApi\Response\CreateUserResponse $response */
+      $response = $this->backendApi->send($request);
+
       $account->field_backend_profile = $response->getProfileId();
       $account->field_backend_password = $response->getPassword();
       $account->save();
-    }
-    catch (ResponseParameterException $e) {
-      // @todo Proper logging and error handling.
-      // Request failed.
-      $this->messenger()->addError('Backend returned unsatisfactory parameters.' . $e->getMessage());
-    }
-    catch (RequestException $e) {
-      $this->messenger()->addError('Backend returned non-200 response:' . $e->getMessage());
     }
     catch (\Exception $e) {
       // Something unexpected happened.
