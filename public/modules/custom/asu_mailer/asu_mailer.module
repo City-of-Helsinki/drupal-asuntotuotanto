@@ -10,46 +10,10 @@
  */
 function asu_mailer_mail(string $key, array &$message, array $params) {
   switch ($key) {
-    case 'application_asko_haso':
-      send_asko_haso_mail($message, $params);
-      break;
-
-    case 'application_asko_hitas':
-      send_asko_hitas_mail($message, $params);
-      break;
-
     case 'application_user_confirmation':
       send_application_confirmation($message, $params);
       break;
   }
-}
-
-/**
- * Send the HASO application to As-Ko.
- *
- * @param array $message
- *   Message variable.
- * @param array $params
- *   Parameters variable.
- */
-function send_asko_haso_mail(array &$message, array $params) {
-  $message['from'] = \Drupal::config('system.site')->get('mail');
-  $message['subject'] = 'asohakemus_haso';
-  $message['body'][] = $params['message'];
-}
-
-/**
- * Send the HITAS application to As-Ko.
- *
- * @param array $message
- *   Message variable.
- * @param array $params
- *   Parameters variable.
- */
-function send_asko_hitas_mail(array &$message, array $params) {
-  $message['from'] = \Drupal::config('system.site')->get('mail');
-  $message['subject'] = 'asoy_hakemus';
-  $message['body'][] = $params['message'];
 }
 
 /**

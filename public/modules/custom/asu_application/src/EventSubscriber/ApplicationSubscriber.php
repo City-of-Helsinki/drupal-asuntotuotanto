@@ -2,14 +2,12 @@
 
 namespace Drupal\asu_application\EventSubscriber;
 
-use Drupal\asu_api\Api\BackendApi\Response\CreateApplicationResponse;
-use Drupal\asu_api\ApiManager;
-use Drupal\asu_api\Exception\ApplicationRequestException;
 use Drupal\asu_api\Api\BackendApi\Request\CreateApplicationRequest;
 use Drupal\asu_api\Api\BackendApi\BackendApi;
 use Drupal\asu_application\Event\ApplicationEvent;
 use Drupal\Core\Messenger\MessengerTrait;
 use Drupal\Core\Queue\QueueFactory;
+use Drupal\Core\Queue\QueueInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -25,22 +23,35 @@ class ApplicationSubscriber implements EventSubscriberInterface {
    * @var \Psr\Log\LoggerInterface
    */
   private LoggerInterface $logger;
-  private ApiManager $apiManager;
-  private QueueFactory $queueFactory;
+
+  /**
+   * Backend api.
+   *
+   * @var Drupal\asu_api\Api\BackendApi\BackendApi
+   */
+  private BackendApi $backendApi;
+
+  /**
+   * Queueworker.
+   *
+   * @var Drupal\Core\Queue\QueueInterface
+   */
+  private QueueInterface $queue;
 
   /**
    * Constructor.
    *
    * @param \Psr\Log\LoggerInterface $logger
    *   Logger.
-   * @param ApiManager $apiManager
+   * @param \Drupal\asu_api\Api\BackendApi\BackendApi $backendApi
    *   Api manager.
-   * @param QueueFactory $queueFactory
+   * @param \Drupal\Core\Queue\QueueFactory $queueFactory
+   *   Queue factory.
    */
-  public function __construct(LoggerInterface $logger, ApiManager $apiManager, QueueFactory $queueFactory) {
+  public function __construct(LoggerInterface $logger, BackendApi $backendApi, QueueFactory $queueFactory) {
     $this->logger = $logger;
-    $this->apiManager = $apiManager;
-    $this->queueFactory = $queueFactory;
+    $this->backendApi = $backendApi;
+    $this->queue = $queueFactory->get('application_api_queue');
   }
 
   /**
@@ -65,7 +76,6 @@ class ApplicationSubscriber implements EventSubscriberInterface {
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
   public function sendApplicationToBackend(ApplicationEvent $applicationEvent) {
-
     $entity_type = 'asu_application';
     $entity_id = $applicationEvent->getApplicationId();
 
@@ -82,19 +92,17 @@ class ApplicationSubscriber implements EventSubscriberInterface {
           'apartment_uuids' => $applicationEvent->getApartmentUuids(),
         ]
       );
-      $this->apiManager->handleBackendRequest($request);
-      // @todo: notice in event.
+      $this->backendApi->send($request);
+      // @todo Notice in event.
       $this->logger->notice('User sent an application to backend successfully');
     }
-    catch(\Exception $e) {
+    catch (\Exception $e) {
       $this->logger->critical(sprintf(
         'Exception while sending application %s: %s',
         $application->id(),
         $e->getMessage()
       ));
-
-      $this->queueFactory->get('application_api_queue')
-        ->createItem($application->id());
+      $this->queue->createItem($application->id());
     }
 
   }
