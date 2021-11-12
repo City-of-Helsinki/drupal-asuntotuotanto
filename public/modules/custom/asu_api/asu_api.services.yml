@@ -9,7 +9,9 @@ services:
     factory: ['Drupal\asu_api\Api\ClientFactory', 'create']
     class: GuzzleHttp\Client
     arguments: ['%asu_api.backend.base_url_variable%']
-
+  logger.channel.asu_api:
+    parent: logger.channel_base
+    arguments: ['backend_api']
   asu_api.backendapi:
     class: Drupal\asu_api\Api\BackendApi\BackendApi
-    arguments: ['@asu_api.backend_client']
+    arguments: ['@asu_api.backend_client', '@logger.channel.asu_api']

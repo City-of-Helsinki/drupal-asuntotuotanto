@@ -27,11 +27,10 @@ function asu_user_entity_type_alter(array &$entity_types) {
  */
 function asu_user_user_login(UserInterface $account) {
   if ($account->hasRole('customer')) {
-    asu_update_account_profile_field_value($account);
     asu_validate_email($account);
     asu_send_user_password_email($account);
     asu_create_backend_user($account);
-    asu_authenticate_user($account);
+    asu_get_user_external_field_data($account);
     asu_redirect_on_login_by_session($account);
   }
 }
@@ -69,7 +68,6 @@ function asu_create_backend_user(UserInterface $account) {
   $customer = \Drupal::service('asu_user.customer');
 
   $profileId = $account->field_backend_profile->value;
-
   if (!$profileId) {
     \Drupal::logger('asu_user')->critical('User should already have backend profile created.');
     try {
@@ -88,23 +86,6 @@ function asu_create_backend_user(UserInterface $account) {
 }
 
 /**
- * Get auth token from backend.
- */
-function asu_authenticate_user(UserInterface $account) {
-  // @todo User cannot request token if logged in right after registering.
-  // User entity hasn't been updated yet most likely.
-  /** @var \Drupal\asu_api\Api\BackendApi\BackendApi $backendApi */
-  $backendApi = \Drupal::service('asu_api.backendapi');
-  try {
-    asu_get_user_fields($account);
-  }
-  catch (\Exception $e) {
-    \Drupal::logger('backend_api')->critical('Unable to authenticate: ' . $e->getMessage());
-    \Drupal::messenger()->addMessage('Unable to authenticate with backend.');
-  }
-}
-
-/**
  * If user has asu_last_application_url set, redirect to application form.
  */
 function asu_redirect_on_login_by_session() {
@@ -116,23 +97,28 @@ function asu_redirect_on_login_by_session() {
 /**
  * Get the user data from django backend.
  */
-function asu_get_external_user_field_data(UserInterface $account) {
+function asu_get_user_external_field_data(UserInterface $account) {
   /** @var \Drupal\asu_api\Api\BackendApi\BackendApi $backendApi */
   $backendApi = \Drupal::service('asu_api.backendapi');
   /** @var \Drupal\asu_user\Customer $customer */
   $customer = \Drupal::service('asu_user.customer');
 
-  // @todo Duplicate maybe.
-  asu_get_user_fields($account);
+  $profileId = $account->field_backend_profile->value;
+  // Workaround for the first login right after registering.
+  // Cached user object wouldn't contain backend api information.
+  if (!$profileId) {
+    $profileId = asu_get_user_profile_id($account);
+    $account->set('field_backend_profile_value', $profileId);
+  }
+
+  $request = new UserRequest($account);
+  /** @var \Drupal\asu_api\Api\BackendApi\Response\UserResponse $userResponse */
+  $userResponse = $backendApi->send($request);
+  $customer->updateUserExternalFields($userResponse->getUserInformation());
+
   $request = new UserRequest($account);
   $userInformationResponse = $backendApi->send($request);
   $customer->updateUserExternalFields($userInformationResponse->getUserInformation());
-}
-
-/**
- * Implements hook_form_alter().
- */
-function asu_user_form_alter(&$form, FormStateInterface &$form_state, $form_id) {
 }
 
 /**
@@ -230,32 +216,6 @@ function asu_user_field_widget_info_alter(array &$info) {
 }
 
 /**
- * Get user fields from backend.
- */
-function asu_get_user_fields($account) {
-  $backendApi = \Drupal::service('asu_api.backendapi');
-  /** @var \Drupal\asu_user\Customer $customer */
-  $customer = \Drupal::service('asu_user.customer');
-
-  $profileId = $account->field_backend_profile->value;
-  // Workaround for the first login right after registering.
-  // Cached user object wouldn't contain backend api information.
-  if (!$profileId) {
-    $profileId = asu_update_account_profile_field_value($account);
-  }
-
-  try {
-    $request = new UserRequest($account);
-    /** @var \Drupal\asu_api\Api\BackendApi\Response\UserResponse $userResponse */
-    $userResponse = $backendApi->send($request);
-    $customer->updateUserExternalFields($userResponse->getUserInformation());
-  }
-  catch (\Exception $e) {
-    // Failed to fetch user data.
-  }
-}
-
-/**
  * User redirect after user edit form submit.
  */
 function _asu_user_user_edit_form_submit($form, &$form_state) {
@@ -268,7 +228,7 @@ function _asu_user_user_edit_form_submit($form, &$form_state) {
 /**
  * Workaround for first time login cache problem.
  */
-function asu_update_account_profile_field_value(&$account) {
+function asu_get_user_profile_id(&$account) {
   $profileId = $account->field_backend_profile->value;
   if (!$profileId) {
     $database = \Drupal::database();
@@ -281,7 +241,6 @@ function asu_update_account_profile_field_value(&$account) {
     if ($results = $query->fetchAll()) {
       foreach ($results as $result) {
         $profileId = $result->field_backend_profile_value;
-        $account->set('field_backend_profile', $profileId);
         return $profileId;
       }
     }

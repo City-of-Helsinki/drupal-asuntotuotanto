@@ -6,6 +6,8 @@ use Drupal\asu_api\Api\BackendApi\Request\AuthenticationRequest;
 use Drupal\asu_api\Api\Request;
 use Drupal\asu_api\Api\Response;
 use Drupal\asu_user\Customer;
+use Drupal\Core\Logger\LoggerChannel;
+use Psr\Log\LoggerInterface;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Request as GuzzleRequest;
 
@@ -22,10 +24,23 @@ class BackendApi {
   private Client $client;
 
   /**
-   * Constructor.
+   * Logger.
+   *
+   * @var \Psr\Log\LoggerInterface
    */
-  public function __construct(Client $client) {
+  private LoggerChannel $logger;
+
+  /**
+   * Constructor.
+   *
+   * @param GuzzleHttp\Client $client
+   *   Http client.
+   * @param Psr\Log\LoggerInterface $logger
+   *   Logger.
+   */
+  public function __construct(Client $client, LoggerInterface $logger) {
     $this->client = $client;
+    $this->logger = $logger;
   }
 
   /**
@@ -41,7 +56,7 @@ class BackendApi {
    *
    * @throws \GuzzleHttp\Exception\GuzzleException
    */
-  public function send(Request $request, array $options = []): Response {
+  public function send(Request $request, array $options = []): ?Response {
     $options['headers'] = [];
     if ($request->requiresAuthentication()) {
       if ($token = $this->handleAuthentication()) {
@@ -61,8 +76,8 @@ class BackendApi {
       );
     }
     catch (\Exception $e) {
-      // Request failed.
-      die($e->getMessage());
+      $this->logger->emergency(sprintf('%s failed: %s', get_class($request), $e->getMessage()));
+      throw $e;
     }
 
     return $request::getResponse($return);

@@ -4,7 +4,7 @@ namespace Drupal\asu_api\Api\BackendApi\Request;
 
 use Drupal\asu_api\Api\BackendApi\Response\UserResponse;
 use Drupal\asu_api\Api\Request;
-use Drupal\user\Entity\User;
+use Drupal\user\UserInterface;
 use Psr\Http\Message\ResponseInterface;
 
 /**
@@ -18,17 +18,17 @@ class UserRequest extends Request {
   /**
    * User object.
    *
-   * @var Drupal\user\Entity\User
+   * @var Drupal\user\UserInterface
    */
-  private User $user;
+  private UserInterface $user;
 
   /**
    * Constructor.
    *
-   * @param Drupal\user\Entity\User $user
+   * @param Drupal\user\UserInterface $user
    *   User object.
    */
-  public function __construct(User $user) {
+  public function __construct(UserInterface $user) {
     $this->user = $user;
   }
 

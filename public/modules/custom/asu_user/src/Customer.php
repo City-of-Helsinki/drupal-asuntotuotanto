@@ -88,6 +88,11 @@ class Customer {
 
   /**
    * Set user authentication token.
+   *
+   * @param string $token
+   *   Backend authentication token.
+   *
+   * @throws \Drupal\Core\TempStore\TempStoreException
    */
   public function setToken(string $token) {
     $this->store->set(self::API_TOKEN, $token);
