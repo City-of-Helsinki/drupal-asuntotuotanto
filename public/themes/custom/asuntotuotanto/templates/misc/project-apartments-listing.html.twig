@@ -25,6 +25,11 @@
           {% set living_area_size = apartment.living_area_size|striptags|trim %}
           {% set nid = apartment.id|striptags|trim %}
 
+          {% if debt_free_sales_price == 0 %}
+            {% set debt_free_sales_price = row.columns.field_right_of_occupancy_payment.content.0.field_output['#markup']|striptags|trim %}
+            {% set price_title = 'Right of occupancy payment' %}
+          {% endif %}
+
           {% set application_status = apartment.applications %}
           {% set is_application_period_active = apartment.is_application_period_active %}
 
@@ -69,7 +74,7 @@
                   <p>
                     <span>
                       {% trans %}
-                        Debt free sales price
+                        {{ price title }}
                       {% endtrans %}
                     </span>
                     <span>
@@ -134,7 +139,7 @@
             </th>
             <th>
               {% trans %}
-                Debt free sales price
+                {{ price_title }}
               {% endtrans %}
             </th>
             <th>

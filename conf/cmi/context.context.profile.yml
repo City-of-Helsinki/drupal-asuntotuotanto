@@ -14,7 +14,7 @@ conditions:
   route:
     id: route
     routes: entity.user.canonical
-    negate: 0
+    negate: false
     uuid: f2742879-2edf-43dd-8f87-e17e98880fa4
     context_mapping: {  }
 reactions:

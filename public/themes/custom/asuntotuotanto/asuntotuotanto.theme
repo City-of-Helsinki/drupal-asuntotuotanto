@@ -195,6 +195,20 @@ function asuntotuotanto_preprocess_views_view_table(&$variables) {
     $rows = $variables['rows'];
     $status = Applications::create()->getApartmentApplicationStatuses();
 
+    $parent_node_results = \Drupal::entityTypeManager()
+      ->getListBuilder('node')
+      ->getStorage()
+      ->loadByProperties([
+          'type' => 'project',
+          'status' => 1,
+          'field_apartments' => $variables['result'][0]->nid,
+        ]
+      );
+
+    $parent = reset($parent_node_results);
+    $price_title = $parent->field_ownership_type->entity->name->value == 'HASO' ? t('Right of occupancy payment') : t('Debt-free sales price');
+    $variables['header']['field_debt_free_sales_price']['content'] = $price_title;
+
     foreach ($rows as $key => $row) {
       $apartmentId = (int) trim(strip_tags($row['columns']['nid']['content'][0]['field_output']['#markup']));
       $applicationCount = $status[$apartmentId] ?? 0;
@@ -203,22 +217,10 @@ function asuntotuotanto_preprocess_views_view_table(&$variables) {
 
       $variables['rows'][$key]['application_status'] = get_apartment_application_status($applicationCountEnum);
 
-      $parent_node_results = \Drupal::entityTypeManager()
-        ->getListBuilder('node')
-        ->getStorage()
-        ->loadByProperties([
-          'type' => 'project',
-          'status' => 1,
-          'field_apartments' => $apartmentId,
-        ]
-        );
-
-      if (!$parent_node_results) {
+      if (!$parent) {
         continue;
       }
-
-      $parent_node_nid = key($parent_node_results);
-      $parent_node = Node::load($parent_node_nid);
+      $parent_node = $parent;
       $is_application_period_active = FALSE;
 
       $application_start_time_value = $parent_node->get('field_application_start_time')->value;
@@ -406,21 +408,26 @@ function asuntotuotanto_preprocess_node(&$variables) {
 
   switch ($bundle) {
     case 'project':
-      $apartments = $node->get('field_apartments')->getValue();
+      $apartments = $node->field_apartments;
 
       $apartment_structures = [];
       $apartment_living_area_sizes = [];
       $apartment_sales_prices = [];
       $apartment_debt_free_sales_prices = [];
+      $prices = [];
+      $project_type = $node->field_ownership_type->entity->name->value;
 
       foreach ($apartments as $key => $apartment) {
-        $apartment_target_id = $apartment['target_id'];
-        $apartment_node = Node::load($apartment_target_id);
+        $apartment_node = $apartment->entity;
         $apartment_sales_price = $apartment_node->hasField('field_sales_price') ? $apartment_node->get('field_sales_price')->value : 0;
         $apartment_debt_free_sales_price = $apartment_node->hasField('field_debt_free_sales_price') ? $apartment_node->get('field_debt_free_sales_price')->value : 0;
         $apartment_living_area_size = $apartment_node->hasField('field_living_area') ? $apartment_node->get('field_living_area')->value : 0;
         $apartment_structure = $apartment_node->hasField('field_apartment_structure') ? $apartment_node->get('field_apartment_structure')->value : 0;
 
+        if ($project_type == 'HASO') {
+          $price = $apartment_node->hasField('field_right_of_occupancy_payment') ? $apartment_node->field_right_of_occupancy_payment->value : 0;
+          array_push($prices, $price);
+        }
         array_push($apartment_sales_prices, $apartment_sales_price);
         array_push($apartment_debt_free_sales_prices, $apartment_debt_free_sales_price);
         array_push($apartment_living_area_sizes, $apartment_living_area_size);
@@ -429,6 +436,7 @@ function asuntotuotanto_preprocess_node(&$variables) {
 
       $apartment_debt_free_sales_prices_string = '';
       $apartment_sales_prices_string = '';
+      $prices_string = '';
 
       if (isset($apartment_structures)) {
         sort($apartment_structures);
@@ -456,6 +464,14 @@ function asuntotuotanto_preprocess_node(&$variables) {
           "max" => number_format(max($apartment_living_area_sizes), 1, ',', NULL),
         ];
         $apartment_living_area_sizes_string = $apartment_living_area_sizes_minmax['min'] . " - " . $apartment_living_area_sizes_minmax['max'];
+      }
+
+      if (!empty($prices)) {
+        $prices_minmax = [
+          "min" => number_format(min($prices), 1, ',', NULL),
+          "max" => number_format(max($prices), 1, ',', NULL),
+        ];
+        $prices_string = $prices_minmax['min'] . " - " . $prices_minmax['max'];
       }
 
       $services = $node->get('field_services')->getValue();
@@ -498,11 +514,6 @@ function asuntotuotanto_preprocess_node(&$variables) {
         }
       }
 
-      $application_start_time_value = $node->get('field_application_start_time')->value;
-      $application_start_time_timestamp = format_date_to_unix_timestamp($application_start_time_value);
-      $application_end_time_value = $node->get('field_application_end_time')->value;
-      $application_end_time_timestamp = format_date_to_unix_timestamp($application_end_time_value);
-
       $estimated_completion_date = new DateTime($node->get('field_estimated_completion_date')->value);
 
       $is_application_period_active = FALSE;
@@ -544,6 +555,8 @@ function asuntotuotanto_preprocess_node(&$variables) {
       $variables['services'] = $services_stack ?? NULL;
       $variables['estimated_completion_date'] = $estimated_completion_date->format('m/Y') ?? NULL;
       $variables['is_application_period_active'] = $is_application_period_active;
+      $variables['project_type'] = $project_type;
+      $variables['apartment_prices'] = $prices_string;
       break;
 
     case 'apartment':
@@ -817,7 +830,7 @@ function format_date_to_unix_timestamp($string) {
  */
 function get_apartment_application_status($application_status) {
   $application_status_mapping = [
-    "NONE" => t('No applicants'),
+    "NONE" => t('Few applicants'),
     "LOW" => t('Few applicants'),
     "MEDIUM" => t('A little applicants'),
     "HIGH" => t('A lot of applicants'),
