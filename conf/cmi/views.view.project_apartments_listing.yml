@@ -5,7 +5,6 @@ dependencies:
   config:
     - field.storage.node.field_apartment_number
     - field.storage.node.field_apartment_structure
-    - field.storage.node.field_debt_free_sales_price
     - field.storage.node.field_floor
     - field.storage.node.field_living_area
     - field.storage.node.field_ownership_type
@@ -385,14 +384,14 @@ display:
           separator: ', '
           field_api_classes: false
           plugin_id: field
-        field_debt_free_sales_price:
-          id: field_debt_free_sales_price
-          table: node__field_debt_free_sales_price
-          field: field_debt_free_sales_price
+        field_right_of_occupancy_payment:
+          id: field_right_of_occupancy_payment
+          table: node__field_right_of_occupancy_payment
+          field: field_right_of_occupancy_payment
           relationship: none
           group_type: group
           admin_label: ''
-          label: 'Debt free sales price'
+          label: 'Right of occupancy payment'
           exclude: false
           alter:
             alter_text: false
@@ -425,7 +424,7 @@ display:
           element_class: ''
           element_label_type: ''
           element_label_class: ''
-          element_label_colon: false
+          element_label_colon: true
           element_wrapper_type: ''
           element_wrapper_class: ''
           element_default_classes: true
@@ -436,10 +435,10 @@ display:
           click_sort_column: value
           type: number_decimal
           settings:
-            thousand_separator: ' '
+            thousand_separator: .
             prefix_suffix: false
             decimal_separator: ','
-            scale: 0
+            scale: 2
           group_column: value
           group_columns: {  }
           group_rows: true
@@ -822,7 +821,6 @@ display:
       tags:
         - 'config:field.storage.node.field_apartment_number'
         - 'config:field.storage.node.field_apartment_structure'
-        - 'config:field.storage.node.field_debt_free_sales_price'
         - 'config:field.storage.node.field_floor'
         - 'config:field.storage.node.field_living_area'
         - 'config:field.storage.node.field_ownership_type'
@@ -848,7 +846,6 @@ display:
       tags:
         - 'config:field.storage.node.field_apartment_number'
         - 'config:field.storage.node.field_apartment_structure'
-        - 'config:field.storage.node.field_debt_free_sales_price'
         - 'config:field.storage.node.field_floor'
         - 'config:field.storage.node.field_living_area'
         - 'config:field.storage.node.field_ownership_type'
