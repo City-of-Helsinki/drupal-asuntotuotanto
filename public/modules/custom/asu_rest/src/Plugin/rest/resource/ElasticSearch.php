@@ -68,8 +68,19 @@ class ElasticSearch extends ResourceBase {
     }
 
     $response = [];
-    foreach ($results->getResultItems() as $key => $item) {
-      $response[$key] = $item->getFields();
+    foreach ($results->getResultItems() as $item) {
+      $parsed = [];
+
+      foreach($item->getFields() as $key => $field) {
+        if (count($field->getValues() ) > 1) {
+          $parsed[$key] = $field->getValues();
+        }
+        else {
+          $parsed[$key] = isset($field->getValues()[0]) ? $field->getValues()[0] : '';
+        }
+      }
+
+      $response[] = $parsed;
     }
 
     $headers = getenv('APP_ENV') == 'testing' ? [
@@ -93,10 +104,6 @@ class ElasticSearch extends ResourceBase {
 
     if ($parameters->project_ownership_type && !empty($parameters->project_ownership_type)) {
       $baseConditionGroup->addCondition('project_ownership_type', array_map('strtolower', $parameters->project_ownership_type), 'IN');
-    }
-
-    if ($parameters->language && !empty($parameters->language)) {
-      $baseConditionGroup->addCondition('_language', array_map('strtolower', $parameters->language), 'IN');
     }
 
     if ($parameters->districts && !empty($parameters->districts)) {
@@ -159,5 +166,11 @@ class ElasticSearch extends ResourceBase {
     }
 
   }
+
+function flatten(array $array) {
+$return = array();
+array_walk_recursive($array, function($a) use (&$return) { $return[] = $a; });
+return $return;
+}
 
 }
