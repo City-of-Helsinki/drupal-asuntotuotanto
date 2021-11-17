@@ -51,8 +51,6 @@ class ElasticSearch extends ResourceBase {
       'Access-Control-Allow-Headers' => '*',
     ] : [];
 
-    xdebug_break();
-
     if ($parameters->get('price') && !$parameters->get('project_ownership_type')) {
       $message = "Field project_ownership_type must be also set
        if price parameter is set.";
