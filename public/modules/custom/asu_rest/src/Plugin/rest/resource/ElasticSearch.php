@@ -6,7 +6,6 @@ use Drupal\rest\ModifiedResourceResponse;
 use Drupal\rest\Plugin\ResourceBase;
 use Drupal\search_api\Entity\Index;
 use Drupal\search_api\Query\QueryInterface;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
@@ -27,15 +26,14 @@ class ElasticSearch extends ResourceBase {
   /**
    * {@inheritDoc}
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, array $serializer_formats, LoggerInterface $logger) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition, $serializer_formats, $logger);
-  }
-
-  /**
-   * {@inheritDoc}
-   */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static($configuration, $plugin_id, $plugin_definition, $container->getParameter('serializer.formats'), $container->get('logger.factory')->get('elastic_proxy'));
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->getParameter('serializer.formats'),
+      $container->get('logger.factory')->get('elastic_proxy'),
+    );
   }
 
   /**
@@ -47,9 +45,19 @@ class ElasticSearch extends ResourceBase {
   public function post(array $data) : ModifiedResourceResponse {
     $parameters = new ParameterBag($data);
 
+    $headers = getenv('APP_ENV') == 'testing' ? [
+      'Access-Control-Allow-Origin' => '*',
+      'Access-Control-Allow-Methods' => '*',
+      'Access-Control-Allow-Headers' => '*',
+    ] : [];
+
+    xdebug_break();
+
     if ($parameters->get('price') && !$parameters->get('project_ownership_type')) {
-      $this->logger->critical('React trying to query apartment price without ownership type. Cannot execute.');
-      return new ModifiedResourceResponse(['message' => "Missing ownership type. You must sen project_ownership_type ('hitas' or 'haso') when sending price parameter."], 500);
+      $message = "Field project_ownership_type must be also set
+       if price parameter is set.";
+      $this->logger->critical(sprintf('Apartment request failed: %s.', $message));
+      return new ModifiedResourceResponse(['message' => $message], 500, $headers);
     }
 
     $indexes = Index::loadMultiple();
@@ -70,27 +78,38 @@ class ElasticSearch extends ResourceBase {
     }
     catch (\Exception $e) {
       $this->logger->critical('Could not fetch apartments for react search component: ' . $e->getMessage());
-      return new ModifiedResourceResponse(['message' => 'Proxy query for apartments failed.'], 500);
+      return new ModifiedResourceResponse(['message' => 'Apartment query failed.'], 500);
     }
 
+    // @todo Replace with elasticsearch_connector patch solution.
+    $arrays = [
+      'image_urls',
+      'project_image_urls',
+      'services',
+      'project_construction_materials',
+    ];
 
-    $response = [];
+    $apartments = [];
     foreach ($results->getResultItems() as $item) {
-      $parsed = array_map(function ($field) {
-        if (count($field->getValues()) > 1) {
-          return $field->getValues();
-        }
-        return isset($field->getValues()[0]) ? $field->getValues()[0] : '';
-      }, $item->getFields());
+      $parsed = [];
+      foreach ($item->getFields() as $key => $field) {
+        // Array values as arrays, otherwise the value or empty string.
+        $parsed[$key] = in_array($key, $arrays) ? $field->getValues()
+          : ($field->getValues()[0] ? $field->getValues()[0] : '');
+      }
 
-      $response[] = $parsed;
+      // $parsed['project_construction_materials'] = [];
+      $apartments[] = $parsed;
     }
 
-    $headers = getenv('APP_ENV') == 'testing' ? [
-      'Access-Control-Allow-Origin' => '*',
-      'Access-Control-Allow-Methods' => '*',
-      'Access-Control-Allow-Headers' => '*',
-    ] : [];
+    // @todo Replace with aggregated_field processor.
+    $response = [];
+    foreach ($apartments as $apartment) {
+      if (!$apartment['project_id']) {
+        continue;
+      }
+      $response[$apartment['project_id']][] = $apartment;
+    }
 
     return new ModifiedResourceResponse($response, 200, $headers);
   }
@@ -102,7 +121,7 @@ class ElasticSearch extends ResourceBase {
     $baseConditionGroup = $query->getConditionGroup();
 
     if ($language = \Drupal::languageManager()->getCurrentLanguage()->getId()) {
-      $baseConditionGroup->addCondition('_language', array_map('strtolower', [$language]), 'IN');
+      $baseConditionGroup->addCondition('_language', [$language], 'IN');
     }
 
     $fieldsIn = [
@@ -110,24 +129,42 @@ class ElasticSearch extends ResourceBase {
       'project_district',
       'project_building_type',
       'new_development_status',
-      'project_state_of_sale,',
     ];
 
     foreach ($fieldsIn as $field) {
       if ($parameters->get($field)) {
-        $value = is_array($parameters->get($field)) ? $parameters->get($field) : [$parameters->get($field)];
-        $baseConditionGroup->addCondition($field, array_map('strtolower', $value), 'IN');
+        $value = is_array($parameters->get($field)) ?
+          array_map('strtolower', $parameters->get($field)) :
+          [$parameters->get($field)];
+        $baseConditionGroup->addCondition($field, $value, 'IN');
       }
     }
 
-    if (!empty($parameters->properties)) {
-      foreach ($parameters->properties as $property) {
+    if (empty($parameters->get('project_state_of_sale'))) {
+      $baseConditionGroup->addCondition('project_state_of_sale', ['upcoming'], 'NOT IN');
+    }
+    else {
+      $states = array_map('strtolower', $parameters->get('project_state_of_sale'));
+      $key = array_search('upcoming', $states, 'IN');
+      if ($key === FALSE) {
+        $group = $query->createConditionGroup('OR');
+        $group->addCondition('project_state_of_sale', $states, 'IN');
+        $group->addCondition('project_state_of_sale', ['upcoming'], '<>');
+        $baseConditionGroup->addConditionGroup($group);
+      }
+      else {
+        $baseConditionGroup->addCondition('project_state_of_sale', ['upcoming'], 'IN');
+      }
+    }
+
+    if ($parameters->get('properties')) {
+      foreach ($parameters->get('properties') as $property) {
         $baseConditionGroup->addCondition($property, TRUE);
       }
     }
 
     if ($roomCount = $parameters->get('room_count')) {
-      $key = array_search('5+', $roomCount);
+      $key = array_search('5', $roomCount);
       if ($key === FALSE) {
         $baseConditionGroup->addCondition('room_count', $roomCount, 'IN');
       }
@@ -139,7 +176,7 @@ class ElasticSearch extends ResourceBase {
         else {
           $group = $query->createConditionGroup('OR');
           $group->addCondition('room_count', 5, '>=');
-          $group->addCondition('room_count', array_map('strtolower', $roomCount), 'IN');
+          $group->addCondition('room_count', $roomCount, 'IN');
           $baseConditionGroup->addConditionGroup($group);
         }
       }
@@ -151,8 +188,15 @@ class ElasticSearch extends ResourceBase {
       $baseConditionGroup->addCondition('living_area', [$min, $max], 'BETWEEN');
     }
 
+    // @todo Debt free sales price won't be needed in future.
+    if ($value = $parameters->get('debt_free_sales_price')) {
+      if (!$parameters->get('price')) {
+        $baseConditionGroup->addCondition('debt_free_sales_price', $value, '<');
+      }
+    }
+
     if ($value = $parameters->get('price')) {
-      $field = strtolower($parameters->get('project_ownership_type')) === 'hitas' ?
+      $field = strtolower($parameters->get('project_ownership_type')) == 'hitas' ?
         'debt_free_sales_price' : 'right_of_occupancy_payment';
       $baseConditionGroup->addCondition($field, $value, '<');
     }
