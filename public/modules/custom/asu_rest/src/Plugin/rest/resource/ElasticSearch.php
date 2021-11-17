@@ -43,7 +43,7 @@ class ElasticSearch extends ResourceBase {
    * @return \Drupal\rest\ModifiedResourceResponse
    *   The HTTP response object.
    */
-  public function post() : ModifiedResourceResponse {
+  public function post(array $data) : ModifiedResourceResponse {
     $parameters = json_decode(\Drupal::request()->getContent());
 
     $indexes = Index::loadMultiple();
@@ -69,16 +69,12 @@ class ElasticSearch extends ResourceBase {
 
     $response = [];
     foreach ($results->getResultItems() as $item) {
-      $parsed = [];
-
-      foreach($item->getFields() as $key => $field) {
+      $parsed = array_map(function($field) {
         if (count($field->getValues() ) > 1) {
-          $parsed[$key] = $field->getValues();
+          return $field->getValues();
         }
-        else {
-          $parsed[$key] = isset($field->getValues()[0]) ? $field->getValues()[0] : '';
-        }
-      }
+        return isset($field->getValues()[0]) ? $field->getValues()[0] : '';
+      }, $item->getFields());
 
       $response[] = $parsed;
     }
@@ -102,75 +98,56 @@ class ElasticSearch extends ResourceBase {
       $baseConditionGroup->addCondition('_language', array_map('strtolower', [$language]), 'IN');
     }
 
-    if ($parameters->project_ownership_type && !empty($parameters->project_ownership_type)) {
-      $baseConditionGroup->addCondition('project_ownership_type', array_map('strtolower', $parameters->project_ownership_type), 'IN');
+    $fieldsIn = [
+      'project_ownership_type',
+      'project_district',
+      'project_building_type',
+      'new_development_status',
+      'project_state_of_sale,',
+    ];
+
+    foreach ($fieldsIn as $field) {
+      if (!empty($parameters[$field])) {
+        $baseConditionGroup->addCondition($field, array_map('strtolower', $parameters[$field]), 'IN');
+      }
     }
 
-    if ($parameters->districts && !empty($parameters->districts)) {
-      $baseConditionGroup->addCondition('project_district', array_map('strtolower', $parameters->districts), 'IN');
-    }
-
-    if ($parameters->project_building_type && !empty($parameters->project_building_type)) {
-      $baseConditionGroup->addCondition('project_building_type', array_map('strtolower', $parameters->project_building_type), 'IN');
-    }
-
-    if ($parameters->properties && !empty($parameters->properties)) {
+    if (!empty($parameters->properties)) {
       foreach ($parameters->properties as $property) {
         $baseConditionGroup->addCondition($property, TRUE);
       }
     }
 
-    if ($parameters->project_new_development_status && !empty($parameters->project_new_development_status)) {
-      $baseConditionGroup->addCondition('new_development_status', array_map('strtolower', $parameters->project_new_development_status), 'IN');
-    }
-
-    if ($parameters->project_state_of_sale && !empty($parameters->project_state_of_sale)) {
-      $baseConditionGroup->addCondition('project_state_of_sale', array_map('strtolower', $parameters->project_state_of_sale), 'IN');
-    }
-
-    if ($parameters->room_count && !empty($parameters->room_count)) {
+    if (!empty($parameters->room_count)) {
       $roomCount = $parameters->room_count;
-      $group = NULL;
 
       $key = array_search('5+', $roomCount);
-      if ($key !== FALSE) {
+      if ($key === FALSE) {
+        $baseConditionGroup->addCondition('room_count', $roomCount, 'IN');
+      }
+      else {
         unset($roomCount[$key]);
         if (empty($roomCount)) {
           $baseConditionGroup->addCondition('room_count', 5, '>=');
-        }
-        else {
+        } else {
           $group = $query->createConditionGroup('OR');
           $group->addCondition('room_count', 5, '>=');
-        }
-      }
-
-      if (!empty($roomCount)) {
-        if ($group) {
           $group->addCondition('room_count', array_map('strtolower', $roomCount), 'IN');
           $baseConditionGroup->addConditionGroup($group);
-        }
-        else {
-          $baseConditionGroup->addCondition('room_count', array_map('strtolower', $roomCount), 'IN');
         }
       }
     }
 
-    if ($parameters->living_area && !empty($parameters->living_area)) {
+    if (!empty($parameters->living_area)) {
       $min = isset($parameters->living_area[0]) ? (int) $parameters->living_area[0] : 0;
       $max = isset($parameters->living_area[1]) ? (int) $parameters->living_area[1] : 5000;
       $baseConditionGroup->addCondition('living_area', [$min, $max], 'BETWEEN');
     }
 
-    if ($parameters->debt_free_sales_price && !empty($parameters->living_area)) {
+    if (!empty($parameters->debt_free_sales_price)) {
       $baseConditionGroup->addCondition('debt_free_sales_price', $parameters->debt_free_sales_price, '<');
     }
 
   }
-
-function flatten(array $array) {
-$return = array();
-array_walk_recursive($array, function($a) use (&$return) { $return[] = $a; });
-return $return;
-}
 
 }
