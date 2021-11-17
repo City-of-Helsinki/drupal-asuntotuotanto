@@ -8,6 +8,7 @@ use Drupal\search_api\Entity\Index;
 use Drupal\search_api\Query\QueryInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
  * Provides a resource to get user applications.
@@ -44,7 +45,12 @@ class ElasticSearch extends ResourceBase {
    *   The HTTP response object.
    */
   public function post(array $data) : ModifiedResourceResponse {
-    $parameters = json_decode(\Drupal::request()->getContent());
+    $parameters = new ParameterBag($data);
+
+    if ($parameters->get('price') && !$parameters->get('project_ownership_type')) {
+      $this->logger->critical('React trying to query apartment price without ownership type. Cannot execute.');
+      return new ModifiedResourceResponse(['message' => "Missing ownership type. You must sen project_ownership_type ('hitas' or 'haso') when sending price parameter."], 500);
+    }
 
     $indexes = Index::loadMultiple();
     $index = isset($indexes['apartment']) ? $indexes['apartment'] : reset($indexes);
@@ -67,10 +73,11 @@ class ElasticSearch extends ResourceBase {
       return new ModifiedResourceResponse(['message' => 'Proxy query for apartments failed.'], 500);
     }
 
+
     $response = [];
     foreach ($results->getResultItems() as $item) {
-      $parsed = array_map(function($field) {
-        if (count($field->getValues() ) > 1) {
+      $parsed = array_map(function ($field) {
+        if (count($field->getValues()) > 1) {
           return $field->getValues();
         }
         return isset($field->getValues()[0]) ? $field->getValues()[0] : '';
@@ -91,7 +98,7 @@ class ElasticSearch extends ResourceBase {
   /**
    * Add conditions to the query.
    */
-  private function addConditions(QueryInterface &$query, \stdClass $parameters) {
+  private function addConditions(QueryInterface &$query, ParameterBag $parameters) {
     $baseConditionGroup = $query->getConditionGroup();
 
     if ($language = \Drupal::languageManager()->getCurrentLanguage()->getId()) {
@@ -107,8 +114,9 @@ class ElasticSearch extends ResourceBase {
     ];
 
     foreach ($fieldsIn as $field) {
-      if (!empty($parameters[$field])) {
-        $baseConditionGroup->addCondition($field, array_map('strtolower', $parameters[$field]), 'IN');
+      if ($parameters->get($field)) {
+        $value = is_array($parameters->get($field)) ? $parameters->get($field) : [$parameters->get($field)];
+        $baseConditionGroup->addCondition($field, array_map('strtolower', $value), 'IN');
       }
     }
 
@@ -118,9 +126,7 @@ class ElasticSearch extends ResourceBase {
       }
     }
 
-    if (!empty($parameters->room_count)) {
-      $roomCount = $parameters->room_count;
-
+    if ($roomCount = $parameters->get('room_count')) {
       $key = array_search('5+', $roomCount);
       if ($key === FALSE) {
         $baseConditionGroup->addCondition('room_count', $roomCount, 'IN');
@@ -129,7 +135,8 @@ class ElasticSearch extends ResourceBase {
         unset($roomCount[$key]);
         if (empty($roomCount)) {
           $baseConditionGroup->addCondition('room_count', 5, '>=');
-        } else {
+        }
+        else {
           $group = $query->createConditionGroup('OR');
           $group->addCondition('room_count', 5, '>=');
           $group->addCondition('room_count', array_map('strtolower', $roomCount), 'IN');
@@ -138,14 +145,16 @@ class ElasticSearch extends ResourceBase {
       }
     }
 
-    if (!empty($parameters->living_area)) {
+    if (!empty($parameters->get('living_area'))) {
       $min = isset($parameters->living_area[0]) ? (int) $parameters->living_area[0] : 0;
       $max = isset($parameters->living_area[1]) ? (int) $parameters->living_area[1] : 5000;
       $baseConditionGroup->addCondition('living_area', [$min, $max], 'BETWEEN');
     }
 
-    if (!empty($parameters->debt_free_sales_price)) {
-      $baseConditionGroup->addCondition('debt_free_sales_price', $parameters->debt_free_sales_price, '<');
+    if ($value = $parameters->get('price')) {
+      $field = strtolower($parameters->get('project_ownership_type')) === 'hitas' ?
+        'debt_free_sales_price' : 'right_of_occupancy_payment';
+      $baseConditionGroup->addCondition($field, $value, '<');
     }
 
   }
