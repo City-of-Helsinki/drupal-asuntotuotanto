@@ -177,7 +177,7 @@ class ElasticSearch extends ResourceBase {
 
     if ($parameters->get('properties')) {
       foreach ($parameters->get('properties') as $property) {
-        $baseConditionGroup->addCondition($property, TRUE);
+        $baseConditionGroup->addCondition(strtolower($property), TRUE);
       }
     }
 
