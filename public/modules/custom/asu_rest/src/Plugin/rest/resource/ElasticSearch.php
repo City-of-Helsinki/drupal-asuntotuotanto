@@ -93,7 +93,7 @@ class ElasticSearch extends ResourceBase {
       foreach ($item->getFields() as $key => $field) {
         // Array values as arrays, otherwise the value or empty string.
         $parsed[$key] = in_array($key, $arrays) ? $field->getValues()
-          : ($field->getValues()[0] ? $field->getValues()[0] : '');
+          : (isset($field->getValues()[0]) ? $field->getValues()[0] : '');
       }
 
       // $parsed['project_construction_materials'] = [];
