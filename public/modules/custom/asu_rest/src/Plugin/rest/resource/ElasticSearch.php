@@ -52,8 +52,8 @@ class ElasticSearch extends ResourceBase {
     ] : [];
 
     if ($parameters->get('price') && !$parameters->get('project_ownership_type')) {
-      $message = "Field project_ownership_type must be also set
-       if price parameter is set.";
+      $message = "Field project_ownership_type must be set
+       if the 'price' parameter is set.";
       $this->logger->critical(sprintf('Apartment request failed: %s.', $message));
       return new ModifiedResourceResponse(['message' => $message], 500, $headers);
     }
@@ -122,19 +122,39 @@ class ElasticSearch extends ResourceBase {
       $baseConditionGroup->addCondition('_language', [$language], 'IN');
     }
 
-    $fieldsIn = [
+    $simpleConditions = [
       'project_ownership_type',
       'project_district',
       'project_building_type',
       'new_development_status',
+      'project_building_type',
+      'project_has_elevator',
+      'project_has_sauna',
+      'has_apartment_sauna',
+      'has_terrace',
+      'has_balcony',
+      'has_yard'
     ];
 
-    foreach ($fieldsIn as $field) {
+    foreach ($simpleConditions as $field) {
+      $value = null;
       if ($parameters->get($field)) {
-        $value = is_array($parameters->get($field)) ?
-          array_map('strtolower', $parameters->get($field)) :
-          [$parameters->get($field)];
-        $baseConditionGroup->addCondition($field, $value, 'IN');
+        $isBool = filter_var($parameters->get($field), FILTER_VALIDATE_BOOL);
+
+        if (is_string($parameters->get($field)) && !$isBool) {
+          $value = array_map('strtolower', [$parameters->get($field)]);
+        }
+        elseif (is_array($parameters->get($field))) {
+          $value = array_map('strtolower', $parameters->get($field));
+        }
+        elseif ($isBool) {
+          $baseConditionGroup->addCondition($field, $parameters->get($field), '=');
+        }
+
+        if(isset($value)) {
+          $baseConditionGroup->addCondition($field, $value, 'IN');
+        }
+
       }
     }
 
@@ -147,7 +167,7 @@ class ElasticSearch extends ResourceBase {
       if ($key === FALSE) {
         $group = $query->createConditionGroup('OR');
         $group->addCondition('project_state_of_sale', $states, 'IN');
-        $group->addCondition('project_state_of_sale', ['upcoming'], '<>');
+        $group->addCondition('project_state_of_sale', ['upcoming'], 'NOT IN');
         $baseConditionGroup->addConditionGroup($group);
       }
       else {
@@ -181,8 +201,8 @@ class ElasticSearch extends ResourceBase {
     }
 
     if (!empty($parameters->get('living_area'))) {
-      $min = isset($parameters->living_area[0]) ? (int) $parameters->living_area[0] : 0;
-      $max = isset($parameters->living_area[1]) ? (int) $parameters->living_area[1] : 5000;
+      $min = isset($parameters->get('living_area')[0]) ? (int) $parameters->get('living_area')[0] : 0;
+      $max = isset($parameters->get('living_area')[1]) ? (int) $parameters->get('living_area')[1] : 5000;
       $baseConditionGroup->addCondition('living_area', [$min, $max], 'BETWEEN');
     }
 
