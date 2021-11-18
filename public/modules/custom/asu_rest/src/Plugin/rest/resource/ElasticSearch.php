@@ -133,11 +133,11 @@ class ElasticSearch extends ResourceBase {
       'has_apartment_sauna',
       'has_terrace',
       'has_balcony',
-      'has_yard'
+      'has_yard',
     ];
 
     foreach ($simpleConditions as $field) {
-      $value = null;
+      $value = NULL;
       if ($parameters->get($field)) {
         $isBool = filter_var($parameters->get($field), FILTER_VALIDATE_BOOL);
 
@@ -151,7 +151,7 @@ class ElasticSearch extends ResourceBase {
           $baseConditionGroup->addCondition($field, $parameters->get($field), '=');
         }
 
-        if(isset($value)) {
+        if (isset($value)) {
           $baseConditionGroup->addCondition($field, $value, 'IN');
         }
 
