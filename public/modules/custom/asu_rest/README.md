@@ -4,7 +4,7 @@ Custom module which extends core REST module.
 
 ## Endpoints
 
-###Filters 
+###Filters
 
 - Mainly used by react apartment filtering widget.
 - Returns filters that can be used to filter data indexed in ElasticSearch.
@@ -16,10 +16,10 @@ example:
 
 GET /{fi/en/sv}/filters
 
-Parameters: 
+Parameters:
 None
 
-returns: 
+returns:
 {
   {
     "elastic_index_field_name": {
@@ -40,9 +40,9 @@ returns:
 
 - Adding users to mailinglist.
 - User can:
-  - Request a notification for certain project. 
+  - Request a notification for certain project.
   - Request to be added to a mailinglist.
-  
+
 ```
 Example:
 POST /fi/en/sv/mailinglist
@@ -59,4 +59,33 @@ Returns: Success/error message with appropriate status code.
 
 Future:
 404 : Resource not found :: Either the project is not found or the premarketing start time has already gone.
+```
+
+###Elasticseach
+
+- Query the apartments indexed in elasticsrach
+
+```
+Example:
+POST /{fi/en/sv}/elasticsearch
+
+Parameters: (* = mandatory field)
+- project_ownership_type: string - "hitas"
+- project_district      : array  - ["Kaarela", "Käpylä"]
+- project_state_of_sale : array  - ["FOR_SALE", "READY", "UPCOMING"]
+- room_count            : array  - [2,3,5]
+- living_area           : array  - [0, 9999]  # min and max
+- price                 : int    - 12399900   # requires project_ownership_type value
+- project_has_sauna     : bool   - true/false # property
+- has_apartment_sauna   : bool   - true/false # property
+- has_terrace           : bool   - true/false # property
+- has_yard              : bool   - true/false # property
+- has_balcony           : bool   - true/false # property
+
+
+Returns: Success/error message with appropriate status code.
+200 : OK
+500 : price field without project ownership type
+500 : parameter is of wrong type
+
 ```

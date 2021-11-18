@@ -135,12 +135,6 @@ final class Initialize extends ResourceBase {
       'suffix' => NULL,
     ];
 
-    $responseData['project_new_development_status'] = [
-      'label' => $this->t('New development status'),
-      'items' => $this->getNewDevelopmentStatus(),
-      'suffix' => NULL,
-    ];
-
     $responseData['project_state_of_sale'] = [
       'label' => $this->t('State of sale'),
       'items' => $this->getProjectStatesOfSale(),
@@ -255,21 +249,6 @@ final class Initialize extends ResourceBase {
   }
 
   /**
-   * Return new development status types for react filters.
-   *
-   * @return array
-   *   Array of new development status taxomomy values as enums.
-   */
-  protected function getNewDevelopmentStatus() {
-    return [
-      'UNDER_PLANNING',
-      'UNDER_CONSTRUCTION',
-      'PRE_MARKETING',
-      'READY_TO_MOVE',
-    ];
-  }
-
-  /**
    * Return project state of sales for react filtes.
    *
    * @return array
@@ -279,7 +258,6 @@ final class Initialize extends ResourceBase {
     return [
       'FOR_SALE',
       'PRE_MARKETING',
-      'PROCESSING',
       'READY',
     ];
   }
