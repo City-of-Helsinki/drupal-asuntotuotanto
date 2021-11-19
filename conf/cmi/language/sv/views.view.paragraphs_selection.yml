@@ -1,6 +1,6 @@
 display:
   default:
-    display_title: Förvald
+    display_title: Huvud
     display_options:
       pager:
         options:

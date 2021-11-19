@@ -1,0 +1,17 @@
+uuid: 58357d87-db37-4125-b134-a9bac89ff25b
+langcode: fi
+status: true
+dependencies:
+  module:
+    - asu_rest
+    - serialization
+    - user
+id: asu_elasticsearch
+plugin_id: asu_elasticsearch
+granularity: method
+configuration:
+  POST:
+    supported_formats:
+      - json
+    supported_auth:
+      - cookie
