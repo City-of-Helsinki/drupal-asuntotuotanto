@@ -76,11 +76,7 @@ Parameters: (* = mandatory field)
 - room_count            : array  - [2,3,5]
 - living_area           : array  - [0, 9999]  # min and max
 - price                 : int    - 12399900   # requires project_ownership_type value
-- project_has_sauna     : bool   - true/false # property
-- has_apartment_sauna   : bool   - true/false # property
-- has_terrace           : bool   - true/false # property
-- has_yard              : bool   - true/false # property
-- has_balcony           : bool   - true/false # property
+- properties            : array  - ['project_has_sauna','has_apartment_sauna','has_terrace']
 
 
 Returns: Success/error message with appropriate status code.
