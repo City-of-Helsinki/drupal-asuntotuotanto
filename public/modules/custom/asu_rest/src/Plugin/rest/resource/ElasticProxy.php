@@ -53,25 +53,7 @@ class ElasticProxy extends ResourceBase {
    *   The HTTP response object.
    */
   public function post(array $data) : ModifiedResourceResponse {
-    $response = [];
-    try {
-      $proxyRequest = $this->elasticSearchApi
-        ->getApartmentService()
-        ->proxyRequest($data);
-      $response = $proxyRequest->getHits();
-    }
-    catch (\Exception $e) {
-      \Drupal::logger('asu_elastic_proxy')->critical('Could not fetch apartments for react search component: ' . $e->getMessage());
-      return new ModifiedResourceResponse(['message' => 'Proxy query for apartments failed.'], 500);
-    }
-
-    $headers = getenv('APP_ENV') == 'testing' ? [
-      'Access-Control-Allow-Origin' => '*',
-      'Access-Control-Allow-Methods' => '*',
-      'Access-Control-Allow-Headers' => '*',
-    ] : [];
-
-    return new ModifiedResourceResponse($response, 200, $headers);
+    return new ModifiedResourceResponse(['message' => 'This endpoint is deprecated.'], 500);
   }
 
 }
