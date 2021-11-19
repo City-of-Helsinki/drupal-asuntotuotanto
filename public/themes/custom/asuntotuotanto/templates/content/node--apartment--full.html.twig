@@ -103,8 +103,8 @@
 						{% if apartment_structure|render %}
 							<span>{{ apartment_structure }}</span>
 						{% endif %}
-						<span aria-hidden="true"></span>
-						{% if living_area_size_m2|render %}
+						{% if living_area_size_m2|render and living_area_size_m2|render != '0,0' %}
+              <span aria-hidden="true"></span>
 							<span>{{ living_area_size_m2 }}
 								m<sup>2</sup>
 							</span>
@@ -194,28 +194,30 @@
 					label: 'Create an application'|t,
 					href: application_url
 					}
-        		%}
-			{% elseif is_application_period_in_the_past %}
-				<p>
-					{% trans %}
-						The application period for the project ended on
-						{{ application_end_time }}.
-					{% endtrans %}
-				</p>
-			{% elseif application_start_time == null and application_end_time == null %}
-				{% trans %}
-					No application period specified for the project.
-				{% endtrans %}
-			{% else %}
-				<p>
-					{% trans %}
-						The application period for the project starts on
-						{{ application_start_time }}
-						and ends on
-						{{ application_end_time }}.
-					{% endtrans %}
-				</p>
-			{% endif %}
+        %}
+      {% elseif is_application_period_in_the_past %}
+        <p class="apartment__application-information">
+          {% trans %}
+            The application period for the project ended on
+            {{ application_end_time }}.
+          {% endtrans %}
+        </p>
+      {% elseif application_start_time == null and application_end_time == null %}
+        <p class="apartment__application-information">
+          {% trans %}
+            No application period specified for the project.
+          {% endtrans %}
+        </p>
+      {% else %}
+        <p class="apartment__application-information">
+          {% trans %}
+            The application period for the project starts on
+            {{ application_start_time }}
+            and ends on
+            {{ application_end_time }}.
+          {% endtrans %}
+        </p>
+      {% endif %}
 		</div>
 	</div>
 
@@ -271,28 +273,22 @@
 		<aside class="apartment__sidebar" aria-label="{{ 'Apartment sidebar information'|t }}">
 			<p class="apartment__application-information">
 				{% if is_application_period_in_the_past %}
-					<p>
-						{% trans %}
-						The application period for the project ended on
-						{{ application_end_time }}.
-						{% endtrans %}
-					</p>
+          {% trans %}
+            The application period for the project ended on
+            {{ application_end_time }}.
+          {% endtrans %}
 				{% elseif application_start_time == null and application_end_time == null %}
-					<p>
-						{% trans %}
-							No application period specified for the project.
-						{% endtrans %}
-					</p>
+          {% trans %}
+            No application period specified for the project.
+          {% endtrans %}
 				{% else %}
-					<p>
-						{% trans %}
-						The application period for the project starts on
-						{{ application_start_time }}
-						and ends on
-						{{ application_end_time }}.
-						{% endtrans %}
-					</p>
-			{% endif %}
+          {% trans %}
+            The application period for the project starts on
+            {{ application_start_time }}
+            and ends on
+            {{ application_end_time }}.
+          {% endtrans %}
+			  {% endif %}
 			</p>
 		</aside>
 		<div class="apartment__content">
@@ -320,14 +316,12 @@
 			{% endif %}
 			<div class="apartment__details">
 				<h2 class="apartment__details-label">
-					{% 
-						if (living_area_size_m2|render == '0,0' or living_area_size_m2|render == null)
-						and (floor|render <= '0')
-						and (sales_price|render == '0,00€' or sales_price|render == '')
-						and (debt_free_sales_price|render == '0,00€' or debt_free_sales_price|render == '')
-						and (apartment_number|render == '')
-						and (apartment_structure|render == '')
-					%}
+					{% if (living_area_size_m2|render == '0,0' or living_area_size_m2|render == null)
+              and (floor|render <= '0')
+              and (sales_price|render == '0,00€' or sales_price|render == '')
+              and (debt_free_sales_price|render == '0,00€' or debt_free_sales_price|render == '')
+              and (apartment_number|render == '')
+              and (apartment_structure|render == '') %}
 					{% else %}
 						{% trans %}
 							Details

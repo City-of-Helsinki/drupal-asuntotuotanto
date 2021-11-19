@@ -217,14 +217,22 @@
   <div class="project__content-wrapper wrapper wrapper--mw-1264">
     <aside class="project__sidebar" aria-label="{{ 'Project sidebar information'|t }}">
       <p class="project__apartment-count-information">
-        {% trans %}
-          {{ apartments_count }} apartments
-        {% endtrans %}
+        {% if apartments_count  > 0  %}
+          {% trans %}
+            {{ apartments_count }} apartments
+          {% endtrans %}
+        {% endif %}
       </p>
       <p class="project__application-information">
-        {% trans %}
-          The application period for the destination starts on {{ application_start_time }} and ends on {{ application_end_time }}.
-        {% endtrans %}
+        {% if application_start_time  == null and application_end_time == null  %}
+          {% trans %}
+            No application specified for the project.
+          {% endtrans %}
+        {% else %}
+          {% trans %}
+            The application period for the destination starts on {{ application_start_time }} and ends on {{ application_end_time }}.
+          {% endtrans %}
+        {% endif %}
       </p>
     </aside>
     <div class="project__content">
@@ -251,12 +259,24 @@
       {% endif %}
       <div class="project__details">
         <h2 class="project__details-label">
-          {% trans %}
-            Details
-          {% endtrans %}
+          {% if (district|render == null or district|render == '')
+              and (building_type|render == null or building_type|render == '')
+              and (apartment_structures|render == null or apartment_structures|render == '')
+              and (apartment_living_area_sizes_m2|render == '0,0 - 0,0' or apartment_living_area_sizes_m2|render == null)
+              and (apartment_sales_prices|render == '0,00 € - 0,00 €' or apartment_sales_prices|render == null)
+              and (apartment_debt_free_sales_prices|render == '0,00 € - 0,00 €' or apartment_debt_free_sales_prices|render == null)
+              and (apartment_prices|render == null)
+              and (energy_class|render == null)
+              and (accessibility|render == null)
+              and (site_owner|render == null) %}
+          {% else %}
+						{% trans %}
+							Details
+						{% endtrans %}
+					{% endif %}
         </h2>
         <ul class="project__details-list">
-          {% if district|render %}
+          {% if district|render and district|render != null and district|render != '' %}
             <li class="project__details-item">
               <p>
                 <span>{% trans %}District{% endtrans %}</span>
@@ -264,7 +284,7 @@
               </p>
             </li>
           {% endif %}
-          {% if building_type|render %}
+          {% if building_type|render and building_type|render != null and building_type|render != '' %}
             <li class="project__details-item">
               <p>
                 <span>{% trans %}Building type{% endtrans %}</span>
@@ -272,7 +292,7 @@
               </p>
             </li>
           {% endif %}
-          {% if apartment_structures|render %}
+          {% if apartment_structures|render and apartment_structures|render != null and apartment_structures|render != '' %}
             <li class="project__details-item">
               <p>
                 <span>{% trans %}Apartment stuctures{% endtrans %}</span>
@@ -280,7 +300,7 @@
               </p>
             </li>
           {% endif %}
-          {% if apartment_living_area_sizes_m2|render %}
+          {% if apartment_living_area_sizes_m2|render and apartment_living_area_sizes_m2|render != '0,0 - 0,0' and apartment_living_area_sizes_m2|render != null %}
             <li class="project__details-item">
               <p>
                 <span>{% trans %}Living area sizes{% endtrans %} (m<sup>2</sup>)</span>
@@ -288,7 +308,7 @@
               </p>
             </li>
           {% endif %}
-          {% if project_type != "HASO" and apartment_sales_prices|render %}
+          {% if project_type != "HASO" and apartment_sales_prices|render and apartment_sales_prices|render != null and apartment_sales_prices|render != '0,00 € - 0,00 €' %}
             <li class="project__details-item">
               <p>
                 <span>{% trans %}Sales price{% endtrans %}</span>
@@ -296,7 +316,7 @@
               </p>
             </li>
           {% endif %}
-          {% if project_type != "HASO" and apartment_debt_free_sales_prices|render %}
+          {% if project_type != "HASO" and apartment_debt_free_sales_prices|render and apartment_debt_free_sales_prices|render != null and apartment_debt_free_sales_prices|render != '0,00 € - 0,00 €' %}
             <li class="project__details-item">
               <p>
                 <span>{% trans %}Debt free sales price{% endtrans %}</span>
@@ -304,7 +324,7 @@
               </p>
             </li>
           {% endif %}
-          {% if project_type == "HASO" and apartment_prices|render %}
+          {% if project_type == "HASO" and apartment_prices|render and apartment_prices|render != null %}
             <li class="project__details-item">
               <p>
                 <span>{% trans %}Right of occupancy payment{% endtrans %}</span>
@@ -312,7 +332,7 @@
               </p>
             </li>
           {% endif %}
-          {% if energy_class|render %}
+          {% if energy_class|render and energy_class|render != null %}
             <li class="project__details-item">
               <p>
                 <span>{% trans %}Energy class{% endtrans %}</span>
@@ -320,7 +340,7 @@
               </p>
             </li>
           {% endif %}
-          {% if accessibility|render %}
+          {% if accessibility|render and accessibility|render != null %}
             <li class="project__details-item">
               <p>
                 <span>{% trans %}Accessibility{% endtrans %}</span>
@@ -328,7 +348,7 @@
               </p>
             </li>
           {% endif %}
-          {% if site_owner|render %}
+          {% if site_owner|render and site_owner|render != null %}
             <li class="project__details-item">
               <p>
                 <span>{% trans %}Site owner{% endtrans %}</span>
