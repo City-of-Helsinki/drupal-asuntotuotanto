@@ -94,7 +94,7 @@
 {% set apartment_number = content.field_apartment_number.0 %}
 
 <article{{attributes.addClass(classes)}}>
-	<div class="sticky-navigation is-hidden" aria-hidden="true" id="sticky_navigation">
+  <div class="sticky-navigation is-hidden" aria-hidden="true" id="sticky_navigation">
 		<div class="sticky-navigation__container wrapper wrapper--mw-1264">
 			<div class="sticky-navigation__content">
 				<div class="sticky-navigation__content-section">
@@ -236,7 +236,7 @@
 				<a href="#showcase_gallery" class="apartment__anchor-link">
 					{% include "@hdbt/misc/icon.twig" with {icon: 'photo-plus', label: ''} %}
 					{% trans %}
-					Images
+					  Images
 					{% endtrans %}
 				</a>
 			</li>
@@ -244,7 +244,7 @@
 				<a href="#apartment_information" class="apartment__anchor-link">
 					{% include "@hdbt/misc/icon.twig" with {icon: 'info-circle', label: ''} %}
 					{% trans %}
-					Information
+					  Information
 					{% endtrans %}
 				</a>
 			</li>
@@ -253,7 +253,7 @@
 					<a href="#apartment_attachments" class="apartment__anchor-link">
 						{% include "@asuntotuotanto/misc/icon.twig" with {icon: 'floor-plan', label: ''} %}
 						{% trans %}
-						Floor plan
+						  Floor plan
 						{% endtrans %}
 					</a>
 				</li>
@@ -262,7 +262,7 @@
 				<a href="#apartment_location" class="apartment__anchor-link">
 					{% include "@hdbt/misc/icon.twig" with {icon: 'location', label: ''} %}
 					{% trans %}
-					Location
+					  Location
 					{% endtrans %}
 				</a>
 			</li>
@@ -308,7 +308,7 @@
 				<div class="apartment__information">
 					<h2 class="apartment__information-label" id="apartment_information">
 						{% trans %}
-						Apartment information
+						  Apartment information
 						{% endtrans %}
 					</h2>
 					<div class="apartment__project-description">{{ project_description|raw }}</div>
@@ -416,7 +416,7 @@
 				<div class="apartment__attachments">
 					<h2 class="apartment__attachments-label" id="apartment_attachments">
 						{% trans %}
-						Attachments
+						  Attachments
 						{% endtrans %}
 					</h2>
 					<ul class="apartment__attachments-list">
@@ -454,7 +454,7 @@
 			<div class="apartment__area-overview">
 				<h2 class="apartment__area-overview-label">
 					{% trans %}
-					Area overview
+					  Area overview
 					{% endtrans %}
 				</h2>
 				{% if services|length > 0 %}
@@ -483,24 +483,22 @@
 				<div class="apartment__map-location">
 					<h2 class="apartment__map-location-label">
 						{% trans %}
-						Location
+						  Location
 						{% endtrans %}
 					</h2>
-					<div>
+          <div>
+            {% set embed_url_base = "https://palvelukartta.hel.fi/fi/embed" %}
 
-						{% set embed_url_base = "https://palvelukartta.hel.fi/fi/embed" %}
+            {% if coordinate_lat|render and coordinate_lon|render %}
+              {% set embed_url_suffix = "/?lat=" ~ coordinate_lat ~ "&lon=" ~ coordinate_lon %}
+            {% else %}
+              {% set embed_url_parameters = city|lower ~ '/' ~ street_name ~ '/' ~ street_number %}
+              {% set embed_url_suffix = "/address/" ~ embed_url_parameters %}
+            {% endif %}
 
-						{% if coordinate_lat|render and coordinate_lon|render %}
-							{% set embed_url_suffix = "/?lat=" ~ coordinate_lat ~ "&lon=" ~ coordinate_lon %}
-						{% else %}
-							{% set embed_url_parameters = city|lower ~ '/' ~ street_name ~ '/' ~ street_number %}
-							{% set embed_url_suffix = "/address/" ~ embed_url_parameters %}
-						{% endif %}
+            {% set embed_link = embed_url_base ~ embed_url_suffix ~ "&city=helsinki,espoo,vantaa,kauniainen,kirkkonummi" %}
 
-						{% set embed_link = embed_url_base ~ embed_url_suffix ~ "&city=helsinki,espoo,vantaa,kauniainen,kirkkonummi" %}
-
-						<iframe title="{{ 'Map location of the @apartment apartment'|t({'@apartment': label[0]['#context']['value'] }) }}" style="position: absolute; top: 0; left: 0; border: none; width: 100%; height: 100%;" src="{{ embed_link }}"></iframe>
-
+            <iframe title="{{ 'Map location of the @apartment apartment'|t({'@apartment': label[0]['#context']['value'] }) }}" style="position: absolute; top: 0; left: 0; border: none; width: 100%; height: 100%;" src="{{ embed_link }}"></iframe>
 					</div>
 				</div>
 			{% endif %}
@@ -521,7 +519,7 @@
 				<div class="apartment__cta-content">
 					<h2>
 						{% trans %}
-						Could this be your home?
+						  Could this be your home?
 						{% endtrans %}
 					</h2>
 					{% include '@asuntotuotanto/button/button.html.twig' with {
@@ -532,7 +530,7 @@
 							icon_last: true,
 							icon_last_type: 'arrow-right'
 						}
-          			%}
+          %}
 				</div>
 			</div>
 		</div>

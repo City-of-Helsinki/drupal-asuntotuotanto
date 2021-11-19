@@ -173,7 +173,7 @@
       <div class="project__images--missing"></div>
     {% endif %}
     {% if images|render %}
-        {{ images }}
+      {{ images }}
     {% endif %}
   </div>
 
@@ -365,31 +365,31 @@
               Attachments
             {% endtrans %}
           </h2>
-            <ul class="project__attachments-list">
-              {% for attachment in attachments %}
-                {% set description = attachment.description %}
-                {% set name = attachment.name %}
-                {% set size = attachment.size %}
-                {% set uri = attachment.uri %}
+          <ul class="project__attachments-list">
+            {% for attachment in attachments %}
+              {% set description = attachment.description %}
+              {% set name = attachment.name %}
+              {% set size = attachment.size %}
+              {% set uri = attachment.uri %}
 
-                <li class="project__attachment-item">
-                  <a href="{{ uri }}" download="{{ description ?: name }}" class="project__attachment-link">
-                    {% include "@hdbt/misc/icon.twig" with {icon: 'document', label: ''} %}
-                    <div class="project__attachment-content">
-                      <p class="project__attachment-description">{{ 'Download'|t }}</p>
-                      <p class="project__attachment-name">
-                        <span class="visually-hidden">({{ 'File name'|t }})</span>
-                        {{ description ?: name }}
-                      </p>
-                      <p class="project__attachment-size">
-                        <span class="visually-hidden">({{ 'File size'|t }})</span>
-                        {{ size }}
-                      </p>
-                    </div>
-                  </a>
-                </li>
-              {% endfor %}
-            </ul>
+              <li class="project__attachment-item">
+                <a href="{{ uri }}" download="{{ description ?: name }}" class="project__attachment-link">
+                  {% include "@hdbt/misc/icon.twig" with {icon: 'document', label: ''} %}
+                  <div class="project__attachment-content">
+                    <p class="project__attachment-description">{{ 'Download'|t }}</p>
+                    <p class="project__attachment-name">
+                      <span class="visually-hidden">({{ 'File name'|t }})</span>
+                      {{ description ?: name }}
+                    </p>
+                    <p class="project__attachment-size">
+                      <span class="visually-hidden">({{ 'File size'|t }})</span>
+                      {{ size }}
+                    </p>
+                  </div>
+                </a>
+              </li>
+            {% endfor %}
+          </ul>
         </div>
       {% endif %}
     </div>
@@ -430,7 +430,6 @@
           {% endtrans %}
         </h2>
         <div>
-
           {% set embed_url_base = "https://palvelukartta.hel.fi/fi/embed" %}
 
           {% if coordinate_lat|render and coordinate_lon|render %}
@@ -445,8 +444,8 @@
           <iframe
             title="{{ 'Map location of the @project project'|t({'@project': label[0]['#context']['value'] }) }}"
             style="position: absolute; top: 0; left: 0; border: none; width: 100%; height: 100%;"
-            src="{{ embed_link }}"></iframe>
-
+            src="{{ embed_link }}">
+          </iframe>
         </div>
       </div>
     {% endif %}
