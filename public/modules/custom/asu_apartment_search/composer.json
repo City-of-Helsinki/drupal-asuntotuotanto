@@ -5,25 +5,18 @@
     "homepage": "https://www.hel.fi/asuntotuotanto",
     "minimum-stability": "dev",
     "require": {
-        "city-of-helsinki/asuntomyynti-react": "0.3.0"
-    },
-    "scripts": {
-        "post-autoload-dump": [
-            "yarn install --frozen-lockfile --cwd vendor/city-of-helsinki/asuntomyynti-react",
-            "yarn --cwd vendor/city-of-helsinki/asuntomyynti-react build:drupal",
-            "cp -rf vendor/city-of-helsinki/asuntomyynti-react/build/drupal/ assets/react"
-        ]
+        "city-of-helsinki/asuntomyynti-react": "0.5.0"
     },
     "repositories": [
         {
             "type": "package",
             "package": {
                 "name": "city-of-helsinki/asuntomyynti-react",
-                "version": "0.3.0",
+                "version": "0.5.0",
                 "source": {
                     "url": "https://github.com/City-of-Helsinki/asuntomyynti-react",
                     "type": "git",
-                    "reference": "aed03f3b116babba88a922c07277dfb975108452"
+                    "reference": "origin/develop"
                 }
             }
         }
