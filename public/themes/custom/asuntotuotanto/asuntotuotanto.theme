@@ -12,7 +12,6 @@ use Drupal\node\Entity\Node;
 use Drupal\user\Entity\User;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\paragraphs\Entity\Paragraph;
-use Drupal\asu_api\Api\ElasticSearchApi\Request\ProjectApartmentsRequest;
 
 /**
  * Helper function to get the icons path.
@@ -310,47 +309,14 @@ function asuntotuotanto_form_alter(&$form, &$form_state, $form_id) {
     $form['account']['pass']['#description'] = FALSE;
   }
 
-  if ($form['#id'] == 'asu-application-hitas-add-form') {
+  if (
+    $form['#id'] == 'asu-application-hitas-add-form'||
+    $form['#id'] == 'asu-application-haso-add-form' ||
+    $form['#id'] == 'asu-application-hitas-form'||
+    $form['#id'] == 'asu-application-haso-form'
+  ) {
     $project_id = $form['#project_id'];
-    $elastic = \Drupal::service('asu_api.elasticapi');
-    $request = new ProjectApartmentsRequest($project_id);
-    $apartmentResponse = $elastic->getApartmentService()
-      ->getProjectApartments($request);
-
-    $application_teaser_values = $apartmentResponse->getApplicationTeaserValues();
-    $form['application_project_information'] = $application_teaser_values;
-  }
-
-  if ($form['#id'] == 'asu-application-haso-add-form') {
-    $project_id = $form['#project_id'];
-    $elastic = \Drupal::service('asu_api.elasticapi');
-    $request = new ProjectApartmentsRequest($project_id);
-    $apartmentResponse = $elastic->getApartmentService()
-      ->getProjectApartments($request);
-
-    $application_teaser_values = $apartmentResponse->getApplicationTeaserValues();
-    $form['application_project_information'] = $application_teaser_values;
-  }
-
-  if ($form['#id'] == 'asu-application-hitas-form') {
-    $project_id = $form['#project_id'];
-    $elastic = \Drupal::service('asu_api.elasticapi');
-    $request = new ProjectApartmentsRequest($project_id);
-    $apartmentResponse = $elastic->getApartmentService()
-      ->getProjectApartments($request);
-
-    $application_teaser_values = $apartmentResponse->getApplicationTeaserValues();
-    $form['application_project_information'] = $application_teaser_values;
-  }
-
-  if ($form['#id'] == 'asu-application-haso-form') {
-    $project_id = $form['#project_id'];
-    $elastic = \Drupal::service('asu_api.elasticapi');
-    $request = new ProjectApartmentsRequest($project_id);
-    $apartmentResponse = $elastic->getApartmentService()
-      ->getProjectApartments($request);
-
-    $application_teaser_values = $apartmentResponse->getApplicationTeaserValues();
+    $application_teaser_values = getProjectApartmentTeaserValues($project_id);
     $form['application_project_information'] = $application_teaser_values;
   }
 
@@ -887,4 +853,51 @@ function load_responsive_image_style($image_file_target_id, $responsive_image_st
   $renderer->addCacheableDependency($image_build, $file);
 
   return $image_build;
+}
+
+/**
+ * Get project teaser values.
+ *
+ * @param $project_id
+ *   Project id.
+ * @return array[]
+ *   Project teaser values.
+ */
+function getProjectApartmentTeaserValues($project_id) {
+  $projects = \Drupal::entityTypeManager()
+    ->getListBuilder('node')
+    ->getStorage()
+    ->loadByProperties([
+        'type' => 'project',
+        'status' => 1,
+        'nid' => $project_id,
+      ]
+    );
+
+  $project = reset($projects);
+
+  $fields = [
+    'project_name' => 'field_housing_company',
+    'project_estimated_completion' => 'field_estimated_completion',
+    'application_end_time' => 'field_application_end_time',
+  ];
+
+  $values = [];
+
+  $values['project_ownership_type'] = $project->field_ownership_type->entity ? $project->field_ownership_type->entity->name->value : '';
+  $values['project_district'] = $project->field_district->entity ? $project->field_district->entity->name->value : '';
+  $values['project_main_image_url'] = isset($project->field_main_image[0]) ? file_create_url($project->field_main_image[0]->entity->getFileUri()) : '';
+
+  foreach ($fields as $key => $field) {
+    if ($project->hasField($field)) {
+      $values[$key] = $project->get($field)->value ?? '';
+    } else {
+      $values[$key] = '';
+    }
+  }
+
+  return [
+    '#teaser_values' => $values
+  ];
+
 }
