@@ -11,6 +11,7 @@ permissions:
   - 'access content overview'
   - 'access files overview'
   - 'access toolbar'
+  - 'administer applications'
   - 'change own username'
   - 'create apartment content'
   - 'create article content'
