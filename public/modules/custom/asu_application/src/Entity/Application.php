@@ -7,6 +7,7 @@ use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\user\Entity\User;
 use Drupal\user\EntityOwnerInterface;
 use Drupal\user\EntityOwnerTrait;
 
@@ -243,8 +244,19 @@ class Application extends EditorialContentEntityBase implements ContentEntityInt
     $parameters = \Drupal::routeMatch()->getParameters();
     $project_id = $parameters->get('project_id');
 
+    $user = User::load(\Drupal::currentUser()->id());
+    $user_id = NULL;
+    if ($user->bundle() == 'sales') {
+      if(\Drupal::request()->get('user_id')) {
+        $user_id = \Drupal::request()->get('user_id');
+      }
+    }
+    else {
+      $user_id = $user->id();
+    }
+
     $values += [
-      'uid' => \Drupal::currentUser()->id(),
+      'uid' => $user_id,
       'project_id' => $project_id,
     ];
 
