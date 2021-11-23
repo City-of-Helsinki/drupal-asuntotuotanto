@@ -32,11 +32,19 @@ class CreateUserRequest extends Request {
   private array $userInformation;
 
   /**
+   * Customer or sales.
+   *
+   * @var string
+   */
+  private string $accountType;
+
+  /**
    * Construct.
    */
-  public function __construct(UserInterface $user, array $userInformation) {
+  public function __construct(UserInterface $user, array $userInformation, string $accountType = 'customer') {
     $this->user = $user;
     $this->userInformation = $userInformation;
+    $this->accountType = $accountType;
   }
 
   /**
@@ -51,7 +59,7 @@ class CreateUserRequest extends Request {
       'email' => $this->user->getEmail(),
     ];
 
-    if ($this->userInformation) {
+    if ($this->accountType == 'customer' && $this->userInformation) {
       foreach ($fieldMap as $field => $information) {
         $data[$information['external_field']] = isset($this->userInformation[$field]) ? $this->userInformation[$field] : '';
       }
@@ -61,6 +69,7 @@ class CreateUserRequest extends Request {
     $dateOfBirth = (new \DateTime($this->user->date_of_birth->value))->format('Y-m-d');
     $data['date_of_birth'] = $dateOfBirth;
     $data['contact_language'] = $this->user->getPreferredLangcode();
+    $data['account_type'] = $this->accountType;
 
     return $data;
   }
