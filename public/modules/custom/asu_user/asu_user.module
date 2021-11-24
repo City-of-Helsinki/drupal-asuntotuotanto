@@ -272,7 +272,7 @@ function asu_user_entity_operation(EntityInterface $entity) {
   ) {
     $operations = [];
     $operations['create_application'] = [
-      'title' => t('Create new user and an application'),
+      'title' => t('Create an application for user'),
       'url' => Url::fromRoute('asu_application.admin_create_application', ['user_id' => $entity->id()]),
       'weight' => 50,
     ];
