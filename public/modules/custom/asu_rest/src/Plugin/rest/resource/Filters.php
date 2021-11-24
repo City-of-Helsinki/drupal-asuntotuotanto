@@ -178,7 +178,13 @@ final class Filters extends ResourceBase {
     return $count;
   }
 
-  private function getActiveProjectDistricts() {
+  /**
+   * Get districts which have active projects.
+   *
+   * @return array
+   *   districts separately for haso and hitas
+   */
+  private function getActiveProjectDistricts(): array {
     $indexes = Index::loadMultiple();
     $index = isset($indexes['apartment']) ? $indexes['apartment'] : reset($indexes);
     $query = $index->query();
@@ -190,7 +196,7 @@ final class Filters extends ResourceBase {
 
     $projects = [
       'hitas' => [],
-      'haso' => []
+      'haso' => [],
     ];
 
     foreach ($resultItems as $resultItem) {
@@ -202,7 +208,7 @@ final class Filters extends ResourceBase {
       }
     }
 
-    foreach($projects as $key => $project) {
+    foreach ($projects as $key => $project) {
       $filtered = array_unique($project);
       asort($filtered);
       $projects[$key] = $filtered;
