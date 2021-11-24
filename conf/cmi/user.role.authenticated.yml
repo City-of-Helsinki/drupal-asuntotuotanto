@@ -19,7 +19,6 @@ permissions:
   - 'restful get asu_filters'
   - 'restful get asu_initialize'
   - 'restful get filter_rest_resource'
-  - 'restful post asu_elastic_proxy'
   - 'restful post asu_elasticsearch'
   - 'restful post mailinglist'
   - 'use text format full_html'

@@ -3,6 +3,7 @@
 namespace Drupal\asu_rest\Plugin\rest\resource;
 
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\search_api\Entity\Index;
 use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\rest\Plugin\ResourceBase;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -51,37 +52,14 @@ final class Filters extends ResourceBase {
       $items = [];
 
       if ($taxonomy_name == 'districts') {
-        $projects = \Drupal::entityTypeManager()
-          ->getStorage('node')
-          ->loadByProperties(['type' => 'project']);
-
-        $items = [
-          'Hitas' => [],
-          'Haso' => [],
-        ];
 
         // Get all unique districts separately for both ownership types.
-        foreach ($projects as $project) {
-          if (!$project->field_ownership_type->first()) {
-            continue;
-          }
-          if (!$ownership = $project->field_ownership_type->first()->entity->getName()) {
-            continue;
-          }
-          $ownership = $ownership == 'Haso' ? 'Haso' : 'Hitas';
-          $district = $project->field_district->first()->entity;
-
-          $name = $district->hasTranslation($currentLanguage->getId()) ?
-            $district->getTranslation($currentLanguage->getId())->getName() : $district->getName();
-          if (!array_search($name, $items[$ownership])) {
-            $items[strtolower('project_district_' . $ownership)][] = $name;
-          }
-        }
+        $activeProjectDistricts = $this->getActiveProjectDistricts();
 
         $vocabulary_name = $vocabularies[$terms[0]->bundle()]->get('name');
         $index_hitas = [
           'label' => $vocabulary_name,
-          'items' => isset($items['project_district_hitas']) ? array_unique($items['project_district_hitas']) : [],
+          'items' => $activeProjectDistricts['hitas'],
           'suffix' => NULL,
         ];
         $responseData[strtolower('project_district_hitas')] = $index_hitas;
@@ -89,7 +67,7 @@ final class Filters extends ResourceBase {
         $vocabulary_name = $vocabularies[$terms[0]->bundle()]->get('name');
         $index_haso = [
           'label' => $vocabulary_name,
-          'items' => isset($items['project_district_haso']) ? array_unique($items['project_district_haso']) : [],
+          'items' => $activeProjectDistricts['haso'],
           'suffix' => NULL,
         ];
 
@@ -160,7 +138,7 @@ final class Filters extends ResourceBase {
       'suffix' => 'm2',
     ];
 
-    $responseData['debt_free_sales_price'] = [
+    $responseData['price'] = [
       'items' => [
         $this->t('Price at most'),
       ],
@@ -195,9 +173,51 @@ final class Filters extends ResourceBase {
    *   Array of room counts
    */
   protected function getRoomCount() {
-    $count = array_map('strval', range(1, 4, 1));
+    $count = array_map('strval', range(1, 4));
     $count[] = "5+";
     return $count;
+  }
+
+  /**
+   * Get districts which have active projects.
+   *
+   * @return array
+   *   districts separately for haso and hitas
+   */
+  private function getActiveProjectDistricts(): array {
+    $indexes = Index::loadMultiple();
+    $index = isset($indexes['apartment']) ? $indexes['apartment'] : reset($indexes);
+    $query = $index->query();
+    $query->range(0, 10000);
+    $query->addCondition('_language', ['fi'], 'IN');
+    $query->addCondition('project_state_of_sale', ['upcoming'], 'NOT IN');
+    $query->addCondition('project_ownership_type', ['hitas', 'haso'], 'IN');
+    $resultItems = $query->execute()->getResultItems();
+
+    $projects = [
+      'hitas' => [],
+      'haso' => [],
+    ];
+
+    foreach ($resultItems as $resultItem) {
+      if (isset($resultItem->getField('project_ownership_type')->getValues()[0])) {
+        $district = isset($resultItem->getField('project_district')->getValues()[0]) ? $resultItem->getField('project_district')->getValues()[0] : '';
+        if ($district) {
+          $projects[strtolower($resultItem->getField('project_ownership_type')->getValues()[0])][] = $district;
+        }
+      }
+    }
+
+    foreach ($projects as $key => $project) {
+      $filtered = array_unique($project);
+      asort($filtered);
+      $projects[$key] = $filtered;
+    }
+
+    return [
+      'hitas' => array_values($projects['hitas']),
+      'haso' => array_values($projects['haso']),
+    ];
   }
 
 }
