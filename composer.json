@@ -7,7 +7,7 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "require": {
-        "asuntomyynti/react": "^0.4.0",
+        "asuntomyynti/react": "^0.5.0",
         "brainmaestro/composer-git-hooks": "^2.8",
         "composer/installers": "^1.9",
         "cweagans/composer-patches": "^1.6.7",
@@ -186,9 +186,9 @@
             "type": "package",
             "package": {
                 "name": "asuntomyynti/react",
-                "version": "0.4.0",
+                "version": "0.5.0",
                 "dist": {
-                    "url": "https://github.com/City-of-Helsinki/asuntomyynti-react/releases/download/v0.4.0/asuntomyynti-react-0.4.0.zip",
+                    "url": "https://github.com/City-of-Helsinki/asuntomyynti-react/releases/download/v0.5.0/asuntomyynti-react-0.5.0.zip",
                     "type": "zip"
                 }
             }

@@ -189,19 +189,22 @@
 }
 
 .project__apartments-table {
-  background-color: var(--color-white);
+  background-color: $color-white;
   display: flex;
   flex-direction: column;
   width: 100%;
+  border: none;
 
   thead {
     padding-left: $spacing-l;
     padding-right: $spacing-l;
+    background-color: transparent;
 
     tr {
-      display: inline-flex;
+      //display: inline-flex;
       width: 100%;
-      gap: $spacing-l;
+      // gap: $spacing-l;
+      gap: 0.75rem;
 
       th {
         @include font-size($fontsize-body-m, $lineheight-l);
@@ -209,6 +212,7 @@
         text-align: left;
         padding-bottom: $spacing-s;
         padding-top: $spacing-s;
+        color: $color-black;
 
         &:first-of-type {
           min-width: 140px;
@@ -223,7 +227,8 @@
         }
 
         &:nth-child(4) {
-          min-width: 150px;
+          // min-width: 150px;
+          min-width: 385px;
         }
 
         &:nth-child(5) {
@@ -236,6 +241,8 @@
   tbody {
     padding-left: $spacing-l;
     padding-right: $spacing-l;
+    display: flex;
+    flex-direction: column;
 
     tr {
       border-top: 1px solid var(--color-black-20);
@@ -248,12 +255,20 @@
         box-shadow: inset 0 1px 0 0 var(--color-black-90), inset 0 -1px 0 0 var(--color-black-90);
       }
 
+      &:hover {
+        // background-color: #f1f1f1;
+        background-color: transparent;
+        border-top: 1px solid $color-black;
+        border-bottom: 1px solid $color-black;
+      }
+
       td {
         @include font-size($fontsize-body-l, 27px);
         font-weight: $font-weight-regular;
         text-align: left;
         padding-bottom: $spacing-m;
         padding-top: $spacing-m;
+        border-bottom: none !important;
 
         &:first-of-type {
           align-items: center;

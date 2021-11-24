@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0c24c8b315d917f854b3133fbcbe537b",
+    "content-hash": "d6954b8259e4bd6f2dfab69fefa2a143",
     "packages": [
         {
             "name": "City-of-Helsinki/php-hauki-client",
@@ -126,10 +126,10 @@
         },
         {
             "name": "asuntomyynti/react",
-            "version": "0.4.0",
+            "version": "0.5.0",
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/City-of-Helsinki/asuntomyynti-react/releases/download/v0.4.0/asuntomyynti-react-0.4.0.zip"
+                "url": "https://github.com/City-of-Helsinki/asuntomyynti-react/releases/download/v0.5.0/asuntomyynti-react-0.5.0.zip"
             },
             "type": "library"
         },
