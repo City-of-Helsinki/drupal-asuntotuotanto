@@ -2,7 +2,6 @@
 
 namespace Drupal\asu_rest\Plugin\rest\resource;
 
-use Drupal\asu_api\Api\ElasticSearchApi\ElasticSearchApi;
 use Drupal\rest\ModifiedResourceResponse;
 use Drupal\rest\Plugin\ResourceBase;
 use Psr\Log\LoggerInterface;
@@ -21,26 +20,19 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * )
  */
 class ElasticProxy extends ResourceBase {
-  /**
-   * Elasticsearch api.
-   *
-   * @var Drupal\asu_api\Api\ElasticSearchApi\ElasticSearchApi
-   */
-  private ElasticSearchApi $elasticSearchApi;
 
   /**
    * {@inheritDoc}
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, array $serializer_formats, LoggerInterface $logger, ElasticSearchApi $elasticSearchApi) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition, $serializer_formats, $logger, $elasticSearchApi);
-    $this->elasticSearchApi = $elasticSearchApi;
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, array $serializer_formats, LoggerInterface $logger) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition, $serializer_formats, $logger);
   }
 
   /**
    * {@inheritDoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static($configuration, $plugin_id, $plugin_definition, $container->getParameter('serializer.formats'), $container->get('logger.factory')->get('elastic_proxy'), $container->get('asu_api.elasticapi'));
+    return new static($configuration, $plugin_id, $plugin_definition, $container->getParameter('serializer.formats'), $container->get('logger.factory')->get('elastic_proxy'));
   }
 
   /**

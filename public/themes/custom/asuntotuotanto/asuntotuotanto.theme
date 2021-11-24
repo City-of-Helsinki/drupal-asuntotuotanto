@@ -198,10 +198,10 @@ function asuntotuotanto_preprocess_views_view_table(&$variables) {
       ->getListBuilder('node')
       ->getStorage()
       ->loadByProperties([
-          'type' => 'project',
-          'status' => 1,
-          'field_apartments' => $variables['result'][0]->nid,
-        ]
+        'type' => 'project',
+        'status' => 1,
+        'field_apartments' => $variables['result'][0]->nid,
+      ]
       );
 
     $parent = reset($parent_node_results);
@@ -860,6 +860,7 @@ function load_responsive_image_style($image_file_target_id, $responsive_image_st
  *
  * @param $project_id
  *   Project id.
+ *
  * @return array[]
  *   Project teaser values.
  */
@@ -868,10 +869,10 @@ function getProjectApartmentTeaserValues($project_id) {
     ->getListBuilder('node')
     ->getStorage()
     ->loadByProperties([
-        'type' => 'project',
-        'status' => 1,
-        'nid' => $project_id,
-      ]
+      'type' => 'project',
+      'status' => 1,
+      'nid' => $project_id,
+    ]
     );
 
   $project = reset($projects);
@@ -891,13 +892,14 @@ function getProjectApartmentTeaserValues($project_id) {
   foreach ($fields as $key => $field) {
     if ($project->hasField($field)) {
       $values[$key] = $project->get($field)->value ?? '';
-    } else {
+    }
+    else {
       $values[$key] = '';
     }
   }
 
   return [
-    '#teaser_values' => $values
+    '#teaser_values' => $values,
   ];
 
 }

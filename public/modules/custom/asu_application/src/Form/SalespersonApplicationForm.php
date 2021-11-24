@@ -4,10 +4,8 @@ namespace Drupal\asu_application\Form;
 
 use Drupal\search_api\Entity\Index;
 use Drupal\user\Entity\User;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\node\Entity\Node;
 
 /**
  * Form which allows bulk adding images to apartments.
@@ -27,33 +25,54 @@ class SalespersonApplicationForm extends FormBase {
   public function buildForm(array $form, FormStateInterface $form_state, string $user_id = NULL, string $project_id = NULL) {
 
     if ($user_id) {
-
       $user = User::load($user_id);
-
       try {
         $projects = $this->getProjects();
       }
       catch (\Exception $e) {
-
+        \Drupal::messenger()->addError($this->t('Failed to fetch projects'));
       }
+
+      $userApplications = \Drupal::entityTypeManager()
+        ->getStorage('asu_application')
+        ->loadByProperties(['uid' => $user->id()]);
+
+      $userActiveApplications = array_filter($userApplications, function ($application) use ($projects) {
+        foreach ($projects as $key => $project) {
+          if ($key == $application->getProjectId()) {
+            return TRUE;
+          }
+        }
+        return FALSE;
+      });
 
       $options = [];
       $ownership = [];
-      foreach ($projects as $item) {
-        if (isset($result[$item->getFields()['project_id']->getValues()[0]])) {
-          continue;
-        }
-        $options[$item->getFields()['project_id']->getValues()[0]] = $item->getFields()['apartment_address']->getValues()[0];
-        $ownership[$item->getFields()['project_id']->getValues()[0]] = $item->getFields()['project_ownership_type']->getValues()[0];
+      foreach ($projects as $key => $project) {
+        $options[$key] = $project['title'];
+        $ownership[$key] = strtolower($project['ownership_type']);
       }
 
       $form['user'] = [
-        '#markup' => sprintf('<h3>%s: %s</h3>',$this->t('For user'), $user->getEmail()),
+        '#markup' => sprintf('<h3>%s: %s</h3>', $this->t('User'), $user->getEmail()),
       ];
+
+      if (!empty($userApplications)) {
+        $form['user_applications_title'] = [
+          '#markup' => sprintf('<h4>%s</h4>', $this->t('User applications for active projects')),
+        ];
+
+        /** @var \Drupal\asu_application\Entity\Application $application */
+        foreach ($userApplications as $key => $application) {
+          $form['user_applications_' . $key] = [
+            '#markup' => $projects[$application->getProjectId()]['title'] . '<br>',
+          ];
+        }
+      }
 
       $form['user_id'] = [
         '#type' => 'hidden',
-        '#value' => $user->id()
+        '#value' => $user->id(),
       ];
 
       $form['projects'] = [
@@ -62,28 +81,22 @@ class SalespersonApplicationForm extends FormBase {
         '#options' => $options,
         '#empty_option' => 'Select project',
         '#empty_value' => 0,
-        '#required' => TRUE
-        #'#default_value' => t('Select project')
+        '#required' => TRUE,
       ];
 
       $form['project_ownership_types'] = [
         '#type' => 'hidden',
-        '#value' => json_encode($ownership)
+        '#value' => json_encode($ownership),
       ];
 
       $form['submit'] = [
         '#type' => 'submit',
-        '#value' => $this->t('Select'),
+        '#value' => $this->t('Create application'),
       ];
 
       return $form;
     }
 
-    $form['submit'] = [
-      '#type' => 'submit',
-      '#value' => $this->t('Create application'),
-    ];
-    return $form;
   }
 
   /**
@@ -93,17 +106,24 @@ class SalespersonApplicationForm extends FormBase {
     $values = $form_state->cleanValues()->getValues();
 
     if (!isset($values['projects']) || !isset($values['user_id'])) {
-      // not possible
+      \Drupal::messenger()->addError($this->t('User or project was not selected'));
+      return;
     }
 
     $ownershipTypes = json_decode($values['project_ownership_types'], TRUE);
-
     $projectId = $values['projects'];
     $userId = $values['user_id'];
-    $ownershipType = $ownershipTypes[(int)$projectId];
+    $ownershipType = $ownershipTypes[(int) $projectId];
 
-    $form_state->setRedirect('entity.asu_application.add_form', ['application_type' => strtolower($ownershipType), 'project_id' => $projectId], ['query' => ['user_id' => $userId]]);
-
+    \Drupal::request()->query->remove('destination');
+    $form_state->setRedirect(
+      'entity.asu_application.add_form',
+      [
+        'application_type' => strtolower($ownershipType),
+        'project_id' => (int) $projectId,
+      ],
+      ['query' => ['user_id' => $userId]],
+    );
   }
 
   /**
@@ -130,9 +150,19 @@ class SalespersonApplicationForm extends FormBase {
 
     $projectData = $query->execute()->getResultItems();
 
-    return array_filter($projectData, function($item) {
-      return (!empty($item->getFields()['project_id']->getValues()) && !empty($item->getFields()['apartment_address']->getValues()));
-    });
+    $projects = [];
+    foreach ($projectData as $apartment) {
+      if (!empty($apartment->getField('project_id')->getValues()) && !empty($apartment->getField('project_housing_company')->getValues())) {
+        if (!isset($projects[$apartment->getField('project_id')->getValues()[0]])) {
+          $projects[$apartment->getField('project_id')->getValues()[0]] = [
+            'title' => $apartment->getField('project_housing_company')->getValues()[0],
+            'ownership_type' => $apartment->getField('project_ownership_type')->getValues()[0],
+          ];
+        }
+      }
+    }
+
+    return $projects;
   }
 
 }
