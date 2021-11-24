@@ -246,9 +246,12 @@ class Application extends EditorialContentEntityBase implements ContentEntityInt
 
     $user = User::load(\Drupal::currentUser()->id());
     $user_id = NULL;
-    if ($user->bundle() == 'sales') {
-      if(\Drupal::request()->get('user_id')) {
+    if ($user->bundle() == 'sales' || $user->access('create')) {
+      if (\Drupal::request()->get('user_id')) {
         $user_id = \Drupal::request()->get('user_id');
+      }
+      else {
+        throw new \Exception('Tried to create new application without user.');
       }
     }
     else {
