@@ -9,10 +9,7 @@ use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
-use Drupal\Core\Session\AccountInterface;
-use Drupal\user\Entity\User;
 use Drupal\user\UserInterface;
-use Drupal\user_bundle\Entity\TypedUser;
 use Drupal\user_bundle\TypedRegisterForm;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -152,10 +149,12 @@ class RegisterForm extends TypedRegisterForm {
    * Customer creates new account.
    *
    * @param array $form
-   * @param FormStateInterface $form_state
+   *   The form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The form state.
    */
   public function saveCustomer(array $form, FormStateInterface $form_state) {
-    /** @var TypedUser $account */
+    /** @var \Drupal\user_bundle\Entity\TypedUser $account */
     $account = $this->entity;
     $pass = $account->getPassword();
 
@@ -170,12 +169,11 @@ class RegisterForm extends TypedRegisterForm {
 
       // @todo Tempstore is useless at this point, check the other functions as well.
       /** @var Customer $customer */
-      # $this->customer->updateUserExternalFields($form_state->getUserInput());
-
+      // $this->customer->updateUserExternalFields($form_state->getUserInput());
       try {
         $this->sendToBackend($account, $form_state);
       }
-      catch(\Exception $e) {
+      catch (\Exception $e) {
         // Log failure.
       }
 
@@ -197,7 +195,9 @@ class RegisterForm extends TypedRegisterForm {
    * Sales person creates new customer account.
    *
    * @param array $form
-   * @param FormStateInterface $form_state
+   *   The form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The form state.
    */
   private function saveNewCustomer(array $form, FormStateInterface $form_state) {
     $pass = $form_state->getValues()['pass'];
@@ -225,11 +225,11 @@ class RegisterForm extends TypedRegisterForm {
     $result = $user->save();
 
     // @todo Check if create application button was pressed.
-    $form_state->setRedirect('asu_application.create_application', ['user_id' => $user->id()]);
+    $form_state->setRedirect('asu_application.admin_create_application', ['user_id' => $user->id()]);
 
     // Create user to backend.
     if ($user->bundle() == 'customer') {
-      # $this->customer->updateUserExternalFields($form_state->getUserInput());
+      // $this->customer->updateUserExternalFields($form_state->getUserInput());
       $this->sendToBackend($user, $form_state);
       $form_state->set('user', $user);
       $form_state->setValue('uid', $user->id());
@@ -248,12 +248,12 @@ class RegisterForm extends TypedRegisterForm {
    * Salesperson creates new salesperson.
    *
    * @param array $form
-   * @param FormStateInterface $form_state
-   * @throws \Drupal\Core\Entity\EntityMalformedException
-   * @throws \Drupal\Core\Entity\EntityStorageException
+   *   The form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The form state.
    */
   private function saveSales(array $form, FormStateInterface $form_state) {
-    /** @var TypedUser $account */
+    /** @var \Drupal\user_bundle\Entity\TypedUser $account */
     $account = $this->entity;
     $pass = $account->getPassword();
 
@@ -265,7 +265,7 @@ class RegisterForm extends TypedRegisterForm {
     // Create user to backend.
     if ($account->bundle() == 'sales') {
       /** @var Customer $customer */
-      # $this->customer->updateUserExternalFields($form_state->getUserInput());
+      // $this->customer->updateUserExternalFields($form_state->getUserInput());
       $this->sendToBackend($account, $form_state, 'sales');
       $form_state->set('user', $account);
       $form_state->setValue('uid', $account->id());
@@ -284,7 +284,7 @@ class RegisterForm extends TypedRegisterForm {
    * Send the user information to Django backend.
    */
   private function sendToBackend(UserInterface $account, FormStateInterface $form_state, $account_type = 'customer') {
-    $request = new CreateUserRequest($account, $form_state->getUserInput(), $account_type );
+    $request = new CreateUserRequest($account, $form_state->getUserInput(), $account_type);
     /** @var \Drupal\asu_api\Api\BackendApi\Response\CreateUserResponse $response */
     $response = $this->backendApi->send($request);
 

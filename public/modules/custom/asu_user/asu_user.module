@@ -5,6 +5,8 @@
  * Contains asu_user module.
  */
 
+use Drupal\Core\Url;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\asu_api\Api\BackendApi\Request\UpdateUserRequest;
 use Drupal\Core\Field\BaseFieldDefinition;
@@ -258,4 +260,22 @@ function asu_session_check_application_url(): ?RedirectResponse {
     return new RedirectResponse(\Drupal::request()->getSchemeAndHttpHost() . $url, 301);
   }
   return NULL;
+}
+
+/**
+ * Implements hook_entity_operation().
+ */
+function asu_user_entity_operation(EntityInterface $entity) {
+  if (
+    $entity instanceof UserInterface &&
+    $entity->bundle() == 'customer'
+  ) {
+    $operations = [];
+    $operations['create_application'] = [
+      'title' => t('Create new user and an application'),
+      'url' => Url::fromRoute('asu_application.admin_create_application', ['user_id' => $entity->id()]),
+      'weight' => 50,
+    ];
+    return $operations;
+  }
 }

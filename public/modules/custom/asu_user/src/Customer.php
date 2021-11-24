@@ -48,7 +48,7 @@ class Customer {
   }
 
   /**
-   * Get field either from userentity or store.
+   * Get field either from user entity or store.
    *
    * @param string $name
    *   Name of the field.
@@ -62,10 +62,12 @@ class Customer {
     if ($this->user->hasField($name)) {
       return $this->user->get($name)->first()->value;
     }
+    /*
     if ($this->user->bundle() != 'customer') {
-      throw new \Exception('Trying to access external data of an user of a wrong type.');
+    throw new \Exception('Trying to access external data of an user of a wrong type.');
     }
-    return $this->store->get($name);
+     */
+    return '';
   }
 
   /**
