@@ -194,6 +194,8 @@
   flex-direction: column;
   width: 100%;
   border: none;
+  margin-left: auto;
+  margin-right: auto;
 
   thead {
     padding-left: $spacing-l;
@@ -202,9 +204,8 @@
 
     tr {
       //display: inline-flex;
-      width: 100%;
       // gap: $spacing-l;
-      gap: 0.75rem;
+      width: 100%;
 
       th {
         @include font-size($fontsize-body-m, $lineheight-l);
@@ -214,25 +215,39 @@
         padding-top: $spacing-s;
         color: $color-black;
 
+        // Apartment
         &:first-of-type {
-          min-width: 140px;
+          min-width: 175px;
+          text-align: left;
         }
 
+        // Floor
         &:nth-child(2) {
-          min-width: 40px;
+          min-width: 80px;
         }
 
+        // Living area size
         &:nth-child(3) {
-          min-width: 110px;
+          min-width: 120px;
         }
 
+        // Not used field
         &:nth-child(4) {
           // min-width: 150px;
-          min-width: 385px;
+          min-width: 0px;
+          width: 0;
+          margin: 0;
+          padding: 0;
         }
 
+        // Debt free price / Right of occupancy payment
         &:nth-child(5) {
-          min-width: 150px;
+          min-width: 145px;
+        }
+
+        // Application status
+        &:nth-child(6) {
+          min-width: 145px;
         }
       }
     }
@@ -275,7 +290,7 @@
           display: inline-flex;
           gap: $spacing-s;
           justify-content: flex-start;
-          min-width: 140px;
+          min-width: 160px;
 
           span:first-of-type {
             @include font-size($fontsize-body-xl, $lineheight-l);
@@ -293,7 +308,7 @@
         }
 
         &:nth-child(4) {
-          min-width: 150px;
+          min-width: 190px;
         }
 
         &:nth-child(5) {
