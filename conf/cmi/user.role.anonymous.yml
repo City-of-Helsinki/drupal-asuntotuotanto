@@ -12,7 +12,6 @@ permissions:
   - 'access content'
   - 'access content'
   - 'access site-wide contact form'
-  - 'create application'
   - 'display eu cookie compliance popup'
   - 'display eu cookie compliance popup'
   - 'restful get asu_applications'

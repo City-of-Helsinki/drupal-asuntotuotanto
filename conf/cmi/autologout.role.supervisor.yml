@@ -1,0 +1,3 @@
+enabled: true
+timeout: 1800
+url: /user/login
