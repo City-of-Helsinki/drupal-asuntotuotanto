@@ -8,6 +8,7 @@ use Drupal\Core\Access\CsrfRequestHeaderAccessCheck;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\rest\ModifiedResourceResponse;
 use Drupal\rest\Plugin\ResourceBase;
+use Drupal\search_api\Entity\Index;
 use Drupal\user\Entity\User;
 
 /**
@@ -162,7 +163,7 @@ final class Initialize extends ResourceBase {
       'suffix' => 'm2',
     ];
 
-    $responseData['debt_free_sales_price'] = [
+    $responseData['price'] = [
       'items' => [
         $this->t('Price at most'),
       ],
@@ -183,38 +184,39 @@ final class Initialize extends ResourceBase {
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
   protected function getDistrictsByProjectOwnershipType() {
-    $items = [
+    $indexes = Index::loadMultiple();
+    $index = isset($indexes['apartment']) ? $indexes['apartment'] : reset($indexes);
+    $query = $index->query();
+    $query->range(0, 10000);
+    $query->addCondition('_language', ['fi'], 'IN');
+    $query->addCondition('project_state_of_sale', ['upcoming'], 'NOT IN');
+    $query->addCondition('project_ownership_type', ['hitas', 'haso'], 'IN');
+    $resultItems = $query->execute()->getResultItems();
+
+    $projects = [
       'hitas' => [],
       'haso' => [],
     ];
 
-    $projects = \Drupal::entityTypeManager()
-      ->getStorage('node')
-      ->loadByProperties([
-        'type' => 'project',
-        'status' => 1,
-      ]);
-
-    // Get all unique districts separately for both ownership types.
-    foreach ($projects as $project) {
-      if ($project->field_ownership_type->isEmpty() ||
-          !$ownership = $project->field_ownership_type->first()->entity->getName()) {
-        continue;
-      }
-      if ($project->field_district->isEmpty()) {
-        continue;
-      }
-
-      // Take half_hitas into account.
-      $ownership_type = $ownership == 'Haso' ? 'haso' : 'hitas';
-
-      $district = $project->field_district->first()->entity;
-      $name = $district->getName();
-      if (!array_search($name, $items[strtolower($ownership_type)])) {
-        $items[strtolower($ownership_type)][] = $name;
+    foreach ($resultItems as $resultItem) {
+      if (isset($resultItem->getField('project_ownership_type')->getValues()[0])) {
+        $district = isset($resultItem->getField('project_district')->getValues()[0]) ? $resultItem->getField('project_district')->getValues()[0] : '';
+        if ($district) {
+          $projects[strtolower($resultItem->getField('project_ownership_type')->getValues()[0])][] = $district;
+        }
       }
     }
-    return $items;
+
+    foreach ($projects as $key => $project) {
+      $filtered = array_unique($project);
+      asort($filtered);
+      $projects[$key] = $filtered;
+    }
+
+    return [
+      'hitas' => array_values($projects['hitas']),
+      'haso' => array_values($projects['haso']),
+    ];
   }
 
   /**

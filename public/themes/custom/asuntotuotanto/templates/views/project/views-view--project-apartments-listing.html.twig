@@ -36,6 +36,7 @@
     'project-apartments-listing'
   ]
 %}
+
 <div{{ attributes.addClass(classes) }}>
   {{ title_prefix }}
   {{ title }}
@@ -50,29 +51,31 @@
   {{ exposed }}
   {{ attachment_before }}
 
-  <div class="project-apartments-listing__header wrapper wrapper--mw-1264">
-    <h2>
-      {% trans %}
-        Project apartments
-      {% endtrans %}
-    </h2>
-    <h3>
-      {% trans %}
-        In total {{ apartments_count }} apartment
-      {% plural apartments_count %}
-        In total {{ apartments_count }} apartments
-      {% endtrans %}
-    </h3>
-  </div>
+  {% if rows %}
+    <div class="project-apartments-listing__header wrapper wrapper--mw-1264">
+      <h2>
+        {% trans %}
+          Project apartments
+        {% endtrans %}
+      </h2>
+      <h3>
+        {% trans %}
+          In total {{ apartments_count }} apartment
+        {% plural apartments_count %}
+          In total {{ apartments_count }} apartments
+        {% endtrans %}
+      </h3>
+    </div>
 
-  <div class="project-apartments-listing__content">
-    {% if rows -%}
-      {{ rows }}
-    {% elseif empty -%}
-      {{ empty }}
-    {% endif %}
-    {{ pager }}
-  </div>
+    <div class="project-apartments-listing__content">
+      {% if rows -%}
+        {{ rows }}
+      {% elseif empty -%}
+        {{ empty }}
+      {% endif %}
+      {{ pager }}
+    </div>
+  {% endif %}
 
   {{ attachment_after }}
   {{ more }}
