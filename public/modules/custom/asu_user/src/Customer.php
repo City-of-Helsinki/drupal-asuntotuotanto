@@ -64,7 +64,9 @@ class Customer {
     }
     /*
     if ($this->user->bundle() != 'customer') {
-    throw new \Exception('Trying to access external data of an user of a wrong type.');
+    throw new \Exception(
+    'Trying to access external data of an user of a wrong type.'
+    );
     }
      */
     return '';
