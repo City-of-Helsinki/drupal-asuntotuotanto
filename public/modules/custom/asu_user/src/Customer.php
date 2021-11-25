@@ -74,7 +74,11 @@ class Customer {
    * Update user fields on store.
    */
   public function updateUserExternalFields(array $data) {
-    StoreHelper::setMultipleValuesToStoreByConfiguration($this->store, $this->config, $data);
+    StoreHelper::setMultipleValuesToStoreByConfiguration(
+      $this->store,
+      $this->config,
+      $data
+    );
   }
 
   /**

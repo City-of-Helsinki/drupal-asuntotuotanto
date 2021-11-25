@@ -4,4 +4,4 @@ asu_application.admin_create_application:
     _title: 'Create application'
     _form: '\Drupal\asu_application\Form\SalespersonApplicationForm'
   requirements:
-    _permission: 'administer content'
+    _permission: 'administer applications'

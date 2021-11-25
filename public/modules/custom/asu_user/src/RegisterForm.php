@@ -73,6 +73,7 @@ class RegisterForm extends TypedRegisterForm {
       return $form;
     }
 
+    // @codingStandardsIgnoreStart
     $config = \Drupal::config('asu_user.external_user_fields');
     $fields = $config->get('external_data_map');
     foreach ($fields as $field => $info) {
@@ -92,6 +93,7 @@ class RegisterForm extends TypedRegisterForm {
         '#default_value' => '',
       ];
     }
+    // @codingStandardsIgnoreEnd
 
     if (
       \Drupal::currentUser()->isAuthenticated() &&
@@ -216,7 +218,7 @@ class RegisterForm extends TypedRegisterForm {
     $user->set('timezone', 'Europe/Helsinki');
 
     if ($user->hasField('field_email_is_valid')) {
-      $user->set('email_is_valid', 1);
+      $user->set('field_email_is_valid', 1);
     }
 
     $user->addRole('customer');

@@ -68,10 +68,10 @@ class ApplicationForm extends ContentEntityForm {
         'uid' => $owner->id(),
       ]);
 
-    // User must have valid email address to fill more than one applications.
+    // User must have valid email address to fill more than one application.
     if (
       $owner->hasField('field_email_is_valid') &&
-      $owner->field_email_is_valid->value == 0 &&
+      $owner->get('field_email_is_valid')->value == 0 &&
       !$owner->access('create')
     ) {
       $application = reset($applications);
@@ -140,7 +140,7 @@ class ApplicationForm extends ContentEntityForm {
     $endDate = $project_data['application_end_date'];
 
     if (!isset($startDate) || !isset($endDate)) {
-      $this->logger()->critical('User tried to access application form of a project with no start or end date: project id' . $project_id);
+      $this->logger('asu_application')->critical('User tried to access application form of a project with no start or end date: project id' . $project_id);
       $this->messenger()->addMessage($this->t('The apartment you tried to apply has no start or end date.'));
       return new RedirectResponse($applicationsUrl);
     }
