@@ -2,11 +2,13 @@
 
 namespace Drupal\asu_api\Api\BackendApi\Request;
 
+use Psr\Http\Message\ResponseInterface;
+use Drupal\asu_api\Api\BackendApi\Response\CreateUserResponse;
 use Drupal\asu_api\Api\Request;
 use Drupal\user\UserInterface;
 
 /**
- * Create user request.
+ * A request to create new backend user.
  */
 class CreateUserRequest extends Request {
   protected const METHOD = 'POST';
@@ -30,11 +32,19 @@ class CreateUserRequest extends Request {
   private array $userInformation;
 
   /**
+   * Customer or sales.
+   *
+   * @var string
+   */
+  private string $accountType;
+
+  /**
    * Construct.
    */
-  public function __construct(UserInterface $user, array $userInformation) {
+  public function __construct(UserInterface $user, array $userInformation, string $accountType = 'customer') {
     $this->user = $user;
     $this->userInformation = $userInformation;
+    $this->accountType = $accountType;
   }
 
   /**
@@ -49,9 +59,9 @@ class CreateUserRequest extends Request {
       'email' => $this->user->getEmail(),
     ];
 
-    if ($this->userInformation) {
+    if ($this->accountType == 'customer' && $this->userInformation) {
       foreach ($fieldMap as $field => $information) {
-        $data[$information['external_field']] = $this->userInformation[$field];
+        $data[$information['external_field']] = isset($this->userInformation[$field]) ? $this->userInformation[$field] : '';
       }
     }
 
@@ -59,8 +69,16 @@ class CreateUserRequest extends Request {
     $dateOfBirth = (new \DateTime($this->user->date_of_birth->value))->format('Y-m-d');
     $data['date_of_birth'] = $dateOfBirth;
     $data['contact_language'] = $this->user->getPreferredLangcode();
+    $data['account_type'] = $this->accountType;
 
     return $data;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function getResponse(ResponseInterface $response): CreateUserResponse {
+    return CreateUserResponse::createFromHttpResponse($response);
   }
 
 }

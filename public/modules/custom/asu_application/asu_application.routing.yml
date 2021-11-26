@@ -1,0 +1,7 @@
+asu_application.admin_create_application:
+  path: '/application/create/{user_id}'
+  defaults:
+    _title: 'Create application'
+    _form: '\Drupal\asu_application\Form\SalespersonApplicationForm'
+  requirements:
+    _permission: 'administer applications'

@@ -2,18 +2,22 @@
 
 namespace Drupal\asu_api\Api\BackendApi\Request;
 
+use Psr\Http\Message\ResponseInterface;
+use Drupal\asu_api\Api\BackendApi\Response\UpdateUserResponse;
 use Drupal\asu_api\Api\Request;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\user\UserInterface;
 
 /**
- * Update user information in backend.
+ * Update existing user information in backend.
  */
 class UpdateUserRequest extends Request {
 
   protected const METHOD = 'PUT';
 
   protected const PATH = '/v1/profiles/';
+
+  protected const AUTHENTICATED = TRUE;
 
   /**
    * Form state.
@@ -73,6 +77,13 @@ class UpdateUserRequest extends Request {
     $data['contact_language'] = $this->user->getPreferredLangcode();
 
     return $data;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function getResponse(ResponseInterface $response): UpdateUserResponse {
+    return UpdateUserResponse::createFromHttpResponse($response);
   }
 
 }

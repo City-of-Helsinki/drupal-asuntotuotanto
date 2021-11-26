@@ -4,34 +4,25 @@ namespace Drupal\asu_user;
 
 use Drupal\asu_api\Api\BackendApi\BackendApi;
 use Drupal\asu_api\Api\BackendApi\Request\CreateUserRequest;
-use Drupal\asu_api\Exception\RequestException;
-use Drupal\asu_api\Exception\ResponseParameterException;
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\user\UserInterface;
+use Drupal\user_bundle\TypedRegisterForm;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\user\RegisterForm as BaseForm;
 
 /**
  * Customized registration form.
  */
-class RegisterForm extends BaseForm {
+class RegisterForm extends TypedRegisterForm {
   /**
    * Backend api class.
    *
    * @var \Drupal\asu_api\Api\BackendApi\BackendApi
    */
   private BackendApi $backendApi;
-
-  /**
-   * User store.
-   *
-   * @var \Drupal\asu_user\Store
-   */
-  private Store $store;
 
   /**
    * Construct.
@@ -46,19 +37,16 @@ class RegisterForm extends BaseForm {
    *   Time interface.
    * @param \Drupal\asu_api\Api\BackendApi $backendApi
    *   Backend api.
-   * @param \Drupal\asu_user\Store $store
-   *   User store.
    */
   public function __construct(
     EntityRepositoryInterface $entity_repository,
     LanguageManagerInterface $language_manager,
     EntityTypeBundleInfoInterface $entity_type_bundle_info = NULL,
     TimeInterface $time = NULL,
-    BackendApi $backendApi,
-    Store $store) {
+    BackendApi $backendApi
+  ) {
     parent::__construct($entity_repository, $language_manager, $entity_type_bundle_info, $time);
     $this->backendApi = $backendApi;
-    $this->store = $store;
   }
 
   /**
@@ -71,7 +59,6 @@ class RegisterForm extends BaseForm {
       $container->get('entity_type.bundle.info'),
       $container->get('datetime.time'),
       $container->get('asu_api.backendapi'),
-      $container->get('asu_user.tempstore')
     );
   }
 
@@ -80,22 +67,21 @@ class RegisterForm extends BaseForm {
    */
   public function form(array $form, FormStateInterface $form_state): array {
     $form = parent::form($form, $form_state);
-    $config = \Drupal::config('asu_user.external_user_fields');
-    $fields = $config->get('external_data_map');
-    $bundle = FALSE;
     $form_object = $form_state->getFormObject();
-    if ($form_object instanceof ContentEntityForm) {
-      $bundle = $form_object->getEntity()->bundle();
-    }
-    if ($bundle !== 'customer') {
+
+    if ($form_object->getEntity()->bundle() != 'customer') {
       return $form;
     }
+
+    // @codingStandardsIgnoreStart
+    $config = \Drupal::config('asu_user.external_user_fields');
+    $fields = $config->get('external_data_map');
     foreach ($fields as $field => $info) {
       $form['basic_information'][$field] = [
         '#type' => $info['type'],
         '#title' => $this->t(
-          '@basic_information_title',
-          ['@basic_information_title', $info['title']]
+          "@{$info['title']}",
+          ["@{$info['title']}" => $info['title']]
         ),
         '#maxlength' => 255,
         '#required' => TRUE,
@@ -107,6 +93,22 @@ class RegisterForm extends BaseForm {
         '#default_value' => '',
       ];
     }
+    // @codingStandardsIgnoreEnd
+
+    if (
+      \Drupal::currentUser()->isAuthenticated() &&
+      in_array('salesperson', \Drupal::currentUser()->getRoles(TRUE)) ||
+      \Drupal::currentUser()->hasPermission('administer')  &&
+      $form_object->getFormId() == 'user_customer_register_form'
+    ) {
+      $form['create_application'] = [
+        '#type' => 'submit',
+        '#value' => $this->t('Create application for user'),
+        '#button_type' => 'primary',
+        '#submit' => ['::createApplication'],
+      ];
+    }
+
     return $form;
   }
 
@@ -124,16 +126,59 @@ class RegisterForm extends BaseForm {
    * {@inheritDoc}
    */
   public function save(array $form, FormStateInterface $form_state) {
+    $currentUser = \Drupal::currentUser();
+    $form_id = $form_state->getFormObject()->getFormId();
+    if (
+      $currentUser->isAuthenticated() &&
+      in_array('salesperson', $currentUser->getRoles(TRUE)) ||
+      $currentUser->hasPermission('Administer permissions')
+    ) {
+      if ($form_id == 'user_customer_register_form') {
+        $this->saveNewCustomer($form, $form_state);
+      }
+      if ($form_id == 'user_sales_register_form') {
+        $this->saveSales($form, $form_state);
+      }
+    }
+    else {
+      if ($form_id == 'user_customer_register_form') {
+        $this->saveCustomer($form, $form_state);
+      }
+    }
+  }
+
+  /**
+   * Customer creates new account.
+   *
+   * @param array $form
+   *   The form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The form state.
+   */
+  public function saveCustomer(array $form, FormStateInterface $form_state) {
+    /** @var \Drupal\user_bundle\Entity\TypedUser $account */
     $account = $this->entity;
-    // Default login flow.
     $pass = $account->getPassword();
-    $admin = $form_state->getValue('administer_users');
-    $notify = !$form_state->isValueEmpty('notify');
+
+    if (!$account->hasRole('customer')) {
+      $account->addRole('customer');
+    }
     $account->save();
+
     // Create user to backend.
-    if ($account->hasRole('customer')) {
-      $this->store->setMultipleByConfiguration($form_state->getUserInput());
-      $this->sendToBackend($account, $form_state);
+    // @todo This check might be unnecessary.
+    if ($account->bundle() == 'customer') {
+
+      // @todo Tempstore is useless at this point, check the other functions as well.
+      /** @var Customer $customer */
+      // $this->customer->updateUserExternalFields($form_state->getUserInput());
+      try {
+        $this->sendToBackend($account, $form_state);
+      }
+      catch (\Exception $e) {
+        // Log failure.
+      }
+
       $form_state->set('user', $account);
       $form_state->setValue('uid', $account->id());
       $this->logger('user')->notice('New user: %name %email.',
@@ -145,35 +190,116 @@ class RegisterForm extends BaseForm {
         ]);
       // Add plain text password into user account to generate mail tokens.
       $account->password = $pass;
-      user_login_finalize($account);
+    }
+  }
+
+  /**
+   * Sales person creates new customer account.
+   *
+   * @param array $form
+   *   The form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The form state.
+   */
+  private function saveNewCustomer(array $form, FormStateInterface $form_state) {
+    $pass = $form_state->getValues()['pass'];
+
+    $user = $form_state->getFormObject()->entity;
+
+    $user->setPassword($pass);
+    $user->enforceIsNew();
+    $user->setEmail($form_state->getUserInput()['mail']);
+    $user->setUsername(sprintf('%s %s', $form_state->getUserInput()['first_name'], $form_state->getUserInput()['last_name']));
+
+    $user->set('init', 'email');
+    $user->set('langcode', $form_state->getValues()['preferred_langcode']);
+    $user->set('preferred_langcode', $form_state->getValues()['preferred_langcode']);
+    $user->set('preferred_admin_langcode', $form_state->getValues()['preferred_admin_langcode']);
+    $user->set('timezone', 'Europe/Helsinki');
+
+    if ($user->hasField('field_email_is_valid')) {
+      $user->set('field_email_is_valid', 1);
+    }
+
+    $user->addRole('customer');
+    $user->activate();
+
+    $result = $user->save();
+
+    // @todo Check if create application button was pressed.
+    $form_state->setRedirect('asu_application.admin_create_application', ['user_id' => $user->id()]);
+
+    // Create user to backend.
+    if ($user->bundle() == 'customer') {
+      // $this->customer->updateUserExternalFields($form_state->getUserInput());
+      $this->sendToBackend($user, $form_state);
+      $form_state->set('user', $user);
+      $form_state->setValue('uid', $user->id());
+      $this->logger('user')->notice('New user: %name %email.',
+        [
+          '%name' => $form_state->getValue('name'),
+          '%email' => '<' . $form_state->getValue('mail') . '>',
+          'type' => $user->toLink($this->t('Edit'), 'edit-form')
+            ->toString(),
+        ]);
+      $user->password = $pass;
+    }
+  }
+
+  /**
+   * Salesperson creates new salesperson.
+   *
+   * @param array $form
+   *   The form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The form state.
+   */
+  private function saveSales(array $form, FormStateInterface $form_state) {
+    /** @var \Drupal\user_bundle\Entity\TypedUser $account */
+    $account = $this->entity;
+    $pass = $account->getPassword();
+
+    if (!$account->hasRole('salesperson')) {
+      $account->addRole('salesperson');
+    }
+    $account->save();
+
+    // Create user to backend.
+    if ($account->bundle() == 'sales') {
+      /** @var Customer $customer */
+      // $this->customer->updateUserExternalFields($form_state->getUserInput());
+      $this->sendToBackend($account, $form_state, 'sales');
+      $form_state->set('user', $account);
+      $form_state->setValue('uid', $account->id());
+      $this->logger('user')->notice('New user: %name %email.',
+        [
+          '%name' => $form_state->getValue('name'),
+          '%email' => '<' . $form_state->getValue('mail') . '>',
+          'type' => $account->toLink($this->t('Edit'), 'edit-form')
+            ->toString(),
+        ]);
+      $account->password = $pass;
     }
   }
 
   /**
    * Send the user information to Django backend.
    */
-  private function sendToBackend(UserInterface $account, FormStateInterface $form_state) {
-    try {
-      $request = new CreateUserRequest($account, $form_state->getUserInput());
-      $response = $this->backendApi
-        ->getUserService()
-        ->createUser($request);
-      $account->field_backend_profile = $response->getProfileId();
-      $account->field_backend_password = $response->getPassword();
-      $account->save();
-    }
-    catch (ResponseParameterException $e) {
-      // @todo Proper logging and error handling.
-      // Request failed.
-      $this->messenger()->addError('Backend returned unsatisfactory parameters.' . $e->getMessage());
-    }
-    catch (RequestException $e) {
-      $this->messenger()->addError('Backend returned non-200 response:' . $e->getMessage());
-    }
-    catch (\Exception $e) {
-      // Something unexpected happened.
-      $this->messenger()->addError('Unexpected exception while sending user to backend: ' . $e->getMessage());
-    }
+  private function sendToBackend(UserInterface $account, FormStateInterface $form_state, $account_type = 'customer') {
+    $request = new CreateUserRequest($account, $form_state->getUserInput(), $account_type);
+    /** @var \Drupal\asu_api\Api\BackendApi\Response\CreateUserResponse $response */
+    $response = $this->backendApi->send($request);
+
+    $account->field_backend_profile = $response->getProfileId();
+    $account->field_backend_password = $response->getPassword();
+    $account->save();
+  }
+
+  /**
+   * Callback, application creation form.
+   */
+  public function createApplication(array $form, FormStateInterface $form_state) {
+    $this->saveNewCustomer($form, $form_state);
   }
 
 }
