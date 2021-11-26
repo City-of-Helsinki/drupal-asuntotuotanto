@@ -53,10 +53,16 @@
       {% set nid = row.columns.nid.content.0.field_output['#markup']|striptags|trim %}
       {% set price_title = 'Debt-free sales price' %}
 
-      {% if debt_free_sales_price == null or debt_free_sales_price == '' %}
+      {# Doesn't work #}
+      {% if debt_free_sales_price == null or debt_free_sales_price == '' or debt_free_sales_price == 0 or debt_free_sales_price == '0,00' %}
         {% set debt_free_sales_price = row.columns.field_right_of_occupancy_payment.content.0.field_output['#markup']|striptags|trim %}
         {% set price_title = 'Right of occupancy payment' %}
       {% endif %}
+
+      {# Works -- it returns number on HASO & empty on Hitas #}
+      {# {{ row.columns.field_right_of_occupancy_payment.content.0.field_output['#markup']|striptags|trim|json_encode }} #}
+      {# Works -- it returns '0,00' on HASO & number on Hitas #}
+      {# {{ row.columns.field_debt_free_sales_price.content.0.field_output['#markup']|striptags|trim|render|json_encode }} #}
 
       {% set application_status = row.application_status %}
       {% set is_application_period_active = row.is_application_period_active %}
@@ -224,7 +230,7 @@
         {% set nid = row.columns.nid.content.0.field_output['#markup']|striptags|trim %}
         {% set price_title = 'Debt-free sales price' %}
 
-        {% if debt_free_sales_price == null or debt_free_sales_price == '' %}
+        {% if debt_free_sales_price == null or debt_free_sales_price == '' or debt_free_sales_price == 0 or debt_free_sales_price == '0,00' %}
           {% set debt_free_sales_price = row.columns.field_right_of_occupancy_payment.content.0.field_output['#markup']|striptags|trim %}
           {% set price_title = 'Right of occupancy payment' %}
         {% endif %}
@@ -245,7 +251,7 @@
             <span>{{ living_area_size }} m<sup>2</sup></span>
           </td>
           <td>
-            <span>{{ debt_free_sales_price }} €</span>
+            <span>{{ debt_free_sales_price }}</span> €
           </td>
           <td>
             <span>
