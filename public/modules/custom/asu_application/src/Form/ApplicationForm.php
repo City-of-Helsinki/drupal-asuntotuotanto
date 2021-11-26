@@ -46,7 +46,7 @@ class ApplicationForm extends ContentEntityForm {
 
       // Anonymous user must login.
       if (!$owner->isAuthenticated()) {
-        \Drupal::messenger()->addMessage($this->t('You must be logged in to fill an application'));
+        \Drupal::messenger()->addMessage($this->t('You must be logged in to fill an application. <a href="/user/login">Log in</a> or <a href="/user/register">create a new account</a>'));
         $project_type = strtolower($application_type_id);
         $application_url = "/application/add/$project_type/$project_id";
         $session = \Drupal::request()->getSession();

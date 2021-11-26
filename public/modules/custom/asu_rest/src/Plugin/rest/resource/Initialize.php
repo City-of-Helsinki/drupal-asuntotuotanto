@@ -32,7 +32,18 @@ final class Initialize extends ResourceBase {
   public function get() {
     $response = [];
 
-    $response['filters'] = $this->getFilters();
+    $filters = [];
+    if ($cache = \Drupal::cache()
+      ->get('asu_initialize_filters')) {
+      $filters = $cache->data;
+    }
+    else {
+      $filters = $this->getFilters();
+      \Drupal::cache()
+        ->set('asu_initialize_filters', $filters, (time() + 60 * 60));
+    }
+    $response['filters'] = $filters;
+
     $response['static_content'] = $this->getStaticContent();
     $response['apartment_application_status'] = $this->getApartmentApplicationStatus();
     $response['token'] = \Drupal::service('csrf_token')->get(CsrfRequestHeaderAccessCheck::TOKEN_KEY);

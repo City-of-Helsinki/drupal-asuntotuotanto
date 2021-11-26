@@ -41,10 +41,11 @@ class ApplicationEntityAccess extends EntityAccessControlHandler {
    * {@inheritdoc}
    */
   protected function checkCreateAccess(AccountInterface $account, array $context, $entity_bundle = NULL) {
-    return AccessResult::allowedIfHasPermissions($account, [
-      'create application',
-      'administer applications',
-    ]);
+    return AccessResult::allowedIfHasPermissions(
+      $account,
+      ['create application', 'administer applications'],
+      'OR'
+    );
   }
 
 }

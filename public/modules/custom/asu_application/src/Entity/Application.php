@@ -245,8 +245,7 @@ class Application extends EditorialContentEntityBase implements ContentEntityInt
     $project_id = $parameters->get('project_id');
 
     $user = User::load(\Drupal::currentUser()->id());
-    $user_id = NULL;
-    if ($user->bundle() == 'sales' || $user->access('create')) {
+    if ($user->bundle() == 'sales') {
       if (\Drupal::request()->get('user_id')) {
         $user_id = \Drupal::request()->get('user_id');
       }
