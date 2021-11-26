@@ -40,7 +40,7 @@ final class Initialize extends ResourceBase {
     else {
       $filters = $this->getFilters();
       \Drupal::cache()
-        ->set('asu_initialize_filters', $filters, (time()+60*60));
+        ->set('asu_initialize_filters', $filters, (time() + 60 * 60));
     }
     $response['filters'] = $filters;
 
