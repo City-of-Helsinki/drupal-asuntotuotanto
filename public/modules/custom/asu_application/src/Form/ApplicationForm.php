@@ -10,7 +10,6 @@ use Drupal\Core\Entity\ContentEntityForm;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Messenger\MessengerTrait;
 use Drupal\user\Entity\User;
-use http\Exception\InvalidArgumentException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
