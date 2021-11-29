@@ -16,9 +16,9 @@ class ExternalData extends FieldItemList {
   /**
    * User store.
    *
-   * @var \Drupal\asu_user\Store
+   * @var \Drupal\asu_user\Customer
    */
-  private Store $store;
+  private Customer $customer;
 
   /**
    * Construct.
@@ -36,7 +36,7 @@ class ExternalData extends FieldItemList {
     TypedDataInterface $parent = NULL
   ) {
     parent::__construct($definition, $name, $parent);
-    $this->store = \Drupal::service('asu_user.tempstore');
+    $this->customer = \Drupal::service('asu_user.customer');
   }
 
   /**
@@ -44,7 +44,7 @@ class ExternalData extends FieldItemList {
    */
   protected function computeValue() {
     $delta = 0;
-    $value = $this->store->get($this->getName());
+    $value = $this->customer->getUserField($this->getName());
     $this->list[$delta] = $this->createItem($delta, $value);
   }
 

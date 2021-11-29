@@ -53,7 +53,7 @@
       {% set nid = row.columns.nid.content.0.field_output['#markup']|striptags|trim %}
       {% set price_title = 'Debt-free sales price' %}
 
-      {% if debt_free_sales_price == 0 %}
+      {% if debt_free_sales_price == null or debt_free_sales_price == '' or debt_free_sales_price == 0 or debt_free_sales_price == '0,00' %}
         {% set debt_free_sales_price = row.columns.field_right_of_occupancy_payment.content.0.field_output['#markup']|striptags|trim %}
         {% set price_title = 'Right of occupancy payment' %}
       {% endif %}
@@ -224,7 +224,7 @@
         {% set nid = row.columns.nid.content.0.field_output['#markup']|striptags|trim %}
         {% set price_title = 'Debt-free sales price' %}
 
-        {% if debt_free_sales_price == 0 %}
+        {% if debt_free_sales_price == null or debt_free_sales_price == '' or debt_free_sales_price == 0 or debt_free_sales_price == '0,00' %}
           {% set debt_free_sales_price = row.columns.field_right_of_occupancy_payment.content.0.field_output['#markup']|striptags|trim %}
           {% set price_title = 'Right of occupancy payment' %}
         {% endif %}
@@ -245,7 +245,7 @@
             <span>{{ living_area_size }} m<sup>2</sup></span>
           </td>
           <td>
-            <span>{{ debt_free_sales_price }} €</span>
+            <span>{{ debt_free_sales_price }}</span> €
           </td>
           <td>
             <span>

@@ -1,6 +1,4 @@
 services:
-  asu_user.tempstore:
-    class: Drupal\asu_user\Store
   asu_user.delete_test_users:
     class: Drupal\asu_user\DeleteTestUsers
     arguments: ['@entity_type.manager']
@@ -8,3 +6,6 @@ services:
     class: \Drupal\asu_user\Commands\DeleteTestUsersCommands
     tags:
       - { name: drush.command }
+  asu_user.customer:
+    class: Drupal\asu_user\Customer
+    arguments: ['@current_user', '@tempstore.private']

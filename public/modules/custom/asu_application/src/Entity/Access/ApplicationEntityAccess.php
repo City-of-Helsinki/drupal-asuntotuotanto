@@ -19,12 +19,19 @@ class ApplicationEntityAccess extends EntityAccessControlHandler {
    */
   protected function checkAccess(EntityInterface $entity, $operation, AccountInterface $account) {
     $createPermission = 'create application';
+    $administratePermission = 'administer applications';
     switch ($operation) {
       case 'view':
-        return AccessResult::allowedIf(($account->id() === $entity->getOwnerId() && $account->hasPermission($createPermission)));
+        return AccessResult::allowedIf(
+          ($account->id() === $entity->getOwnerId() && $account->hasPermission($createPermission)) ||
+          $account->hasPermission($administratePermission)
+        );
 
       case 'update':
-        return AccessResult::allowedIf(($account->id() === $entity->getOwnerId() && $account->hasPermission($createPermission)));
+        return AccessResult::allowedIf(
+          ($account->id() === $entity->getOwnerId() && $account->hasPermission($createPermission)) ||
+          $account->hasPermission($administratePermission)
+        );
     }
 
     return AccessResult::neutral();
@@ -34,9 +41,11 @@ class ApplicationEntityAccess extends EntityAccessControlHandler {
    * {@inheritdoc}
    */
   protected function checkCreateAccess(AccountInterface $account, array $context, $entity_bundle = NULL) {
-    return AccessResult::allowedIfHasPermissions($account, [
-      'create application',
-    ]);
+    return AccessResult::allowedIfHasPermissions(
+      $account,
+      ['create application', 'administer applications'],
+      'OR'
+    );
   }
 
 }

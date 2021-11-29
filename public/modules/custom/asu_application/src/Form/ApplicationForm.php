@@ -26,65 +26,87 @@ class ApplicationForm extends ContentEntityForm {
     $project_id = $this->entity->get('project_id')->value;
     $application_type_id = $this->entity->bundle();
 
-    // Anonymous user must login.
-    if (!\Drupal::currentUser()->isAuthenticated()) {
-      \Drupal::messenger()->addMessage($this->t('You must be logged in to fill an application'));
-      $project_type = strtolower($application_type_id);
-      $application_url = "/application/add/$project_type/$project_id";
-      $session = \Drupal::request()->getSession();
-      $session->set('asu_last_application_url', $application_url);
-      return(new RedirectResponse('/user/login', 301));
+    $owner_id = \Drupal::request()->get('user_id');
+    if (!$owner_id) {
+      $owner_id = $this->entity->getOwnerId();
     }
 
-    // User must have customer role.
-    if (!in_array('customer', \Drupal::currentUser()->getRoles())) {
-      \Drupal::logger('asu_application')->critical('User without customer role tried to create application: User id: ' . \Drupal::currentUser()->id());
-      \Drupal::messenger()->addMessage($this->t('Users without customer role cannot fill applications.'));
-      return(new RedirectResponse(\Drupal::request()->getSchemeAndHttpHost(), 301));
+    /** @var \Drupal\user\Entity\User $currentUser */
+    $currentUser = User::load(\Drupal::currentUser()->id());
+
+    if ($owner_id != $currentUser->id() && $currentUser->access('create')) {
+      // User is not customer.
+      $owner = User::load($owner_id);
+      // Here we must get the user information
+      // Or we must get the user.
+    }
+    else {
+      // User is customer or not authenticated.
+      $owner = User::load($currentUser->id());
+
+      // Anonymous user must login.
+      if (!$owner->isAuthenticated()) {
+        \Drupal::messenger()->addMessage($this->t('You must be logged in to fill an application. <a href="/user/login">Log in</a> or <a href="/user/register">create a new account</a>'));
+        $project_type = strtolower($application_type_id);
+        $application_url = "/application/add/$project_type/$project_id";
+        $session = \Drupal::request()->getSession();
+        $session->set('asu_last_application_url', $application_url);
+        return(new RedirectResponse('/user/login', 301));
+      }
+
+      // User must have customer role.
+      if ($owner->bundle() != 'customer') {
+        \Drupal::logger('asu_application')->critical('User without customer role tried to create application: User id: ' . \Drupal::currentUser()->id());
+        \Drupal::messenger()->addMessage($this->t('Users without customer role cannot fill applications.'));
+        return(new RedirectResponse(\Drupal::request()->getSchemeAndHttpHost(), 301));
+      }
     }
 
-    /** @var \Drupal\user\Entity\User $user */
-    $user = User::load(\Drupal::currentUser()->id());
     $applications = \Drupal::entityTypeManager()
       ->getStorage('asu_application')
       ->loadByProperties([
-        'uid' => \Drupal::currentUser()->id(),
+        'uid' => $owner->id(),
       ]);
 
-    // User must have valid email address to fill more than one applications.
+    // User must have valid email address to fill more than one application.
     if (
-      $user->hasField('field_email_is_valid') &&
-      $user->field_email_is_valid->value == 0
+      $owner->hasField('field_email_is_valid') &&
+      $owner->get('field_email_is_valid')->value == 0 &&
+      !$owner->access('create')
     ) {
       $application = reset($applications);
 
       if (
-        !empty($applications) && $this->entity->id() === NULL ||
+        !empty($applications) && $this->entity->isNew() ||
         $application && $application->id() != $this->entity->id()
       ) {
         $this->messenger()->addMessage($this->t('You cannot fill more than one application until you have confirmed your email address.
-        To confirm your email you must click the link sent to your email address.'));
+        To confirm your email you must click the link that has been sent to your email address.'));
         $response = (new RedirectResponse($applicationsUrl, 301))->send();
         return $response;
       }
     }
 
     if ($this->entity->hasField('field_locked') && $this->entity->field_locked->value == 1) {
-      $this->messenger()->addMessage($this->t('This application has already been sent.'));
+      $this->messenger()->addMessage($this->t('You have already applied for this project.'));
       return new RedirectResponse($applicationsUrl);
     }
 
     $parameters = \Drupal::routeMatch()->getParameters();
     $form['#project_id'] = $project_id;
-    $bday = $user->date_of_birth->value;
 
+    // Redirect cases.
+    // @todo How to do this ?
+    // $bday = $owner->date_of_birth->value;
     try {
-      $project_data = $this->getApartments($project_id);
+      if (!$project_data = $this->getApartments($project_id)) {
+        throw new \InvalidArgumentException('Project or apartments for project not found.');
+      }
     }
     catch (\Exception $e) {
       // Project not found.
       $this->logger('asu_application')->critical('User tried to access nonexistent project of id ' . $project_id);
-      $this->messenger()->addMessage($this->t('Project not found'));
+      $this->messenger()->addMessage($this->t('Unfortunately the project you are trying to apply for is unavailable. If the problem persists send us a message.'));
       return new RedirectResponse($applicationsUrl);
     }
 
@@ -93,7 +115,7 @@ class ApplicationForm extends ContentEntityForm {
       $applications = \Drupal::entityTypeManager()
         ->getStorage('asu_application')
         ->loadByProperties([
-          'uid' => \Drupal::currentUser()->id(),
+          'uid' => $owner->id(),
           'project_id' => $project_id,
         ]);
 
@@ -120,31 +142,34 @@ class ApplicationForm extends ContentEntityForm {
     $endDate = $project_data['application_end_date'];
 
     if (!isset($startDate) || !isset($endDate)) {
-      $this->logger()->critical('User tried to access application form of a project with no start or end date: project id' . $project_id);
+      $this->logger('asu_application')->critical('User tried to access application form of a project with no start or end date: project id' . $project_id);
       $this->messenger()->addMessage($this->t('The apartment you tried to apply has no start or end date.'));
       return new RedirectResponse($applicationsUrl);
     }
 
     if ($this->isApplicationPeriod('before', $startDate, $endDate)) {
-      $this->messenger()->addMessage($this->t('The application period has not yet started'));
+      $this->messenger()->addMessage($this->t('The application period has not yet started. You cannot send the application until the application period starts.'));
       return new RedirectResponse($applicationsUrl);
     }
 
     if ($this->isApplicationPeriod('after', $startDate, $endDate)) {
-      $this->messenger()->addMessage($this->t('The application period has ended. You can still apply for the apartment by contacting us.'));
+      $this->messenger()->addMessage($this->t('The application period has ended. You can still apply for the apartment by contacting the responsible salesperson.'));
       $freeApplicationUrl = \Drupal::request()->getSchemeAndHttpHost() .
-        '/contact/apply_free_apartment?title=' . $project_data['project_name'];
+        '/contact/apply_for_free_apartment?title=' . $project_data['project_name'];
       return new RedirectResponse($freeApplicationUrl);
     }
 
+    // User may access and create application.
     // Pre-create the application if user comes to the form for the first time.
     if ($this->entity->isNew()) {
+      // @todo Bday.
       if ($this->entity->hasField('field_personal_id')) {
-        $personalIdDivider = $this->getPersonalIdDivider($bday);
-        $this->entity->set('field_personal_id', $personalIdDivider);
+        // $personalIdDivider = $this->getPersonalIdDivider($bday);
+        // $this->entity->set('field_personal_id', $personalIdDivider);
       }
 
       $this->entity->save();
+
       $url = $this->entity->toUrl()->toString();
       (new RedirectResponse($url . '/edit'))->send();
       return $form;
@@ -156,24 +181,29 @@ class ApplicationForm extends ContentEntityForm {
     // Set the apartments as a value to the form array.
     $form['#apartment_values'] = $apartments;
     $form['#project_name'] = $projectName;
-    $form['#pid_start'] = $this->dateToPersonalId($bday);
+
+    // @todo Bday.
+    // $form['#pid_start'] = $this->dateToPersonalId($bday);
     $form['#project_uuid'] = $project_data['project_uuid'];
     $form['#apartment_uuids'] = $project_data['apartment_uuids'];
 
     $form = parent::buildForm($form, $form_state);
 
-    $form['#title'] = $this->t('Application for') . ' ' . $projectName;
+    $form['#title'] = sprintf('%s %s', $this->t('Application for'), $projectName);
 
     $form['actions']['submit']['#value'] = $this->t('Send application');
 
-    $form['actions']['draft'] = [
-      '#type' => 'submit',
-      '#value' => t('Save as a draft'),
-      '#ajax' => [
-        'callback' => '::ajaxSaveDraft',
-        'event' => 'click',
-      ],
-    ];
+    // Show draft button only for customers.
+    if (!$currentUser->access('create')) {
+      $form['actions']['draft'] = [
+        '#type' => 'submit',
+        '#value' => t('Save as a draft'),
+        '#ajax' => [
+          'callback' => '::ajaxSaveDraft',
+          'event' => 'click',
+        ],
+      ];
+    }
     return $form;
   }
 
@@ -198,16 +228,16 @@ class ApplicationForm extends ContentEntityForm {
       }
     }
 
-    $user = User::load(\Drupal::currentUser()->id());
-    if ($user->hasField('field_email_is_valid') && $user->field_email_is_valid->value == 1) {
+    $owner = $this->entity->getOwner();
+    if ($owner->hasField('field_email_is_valid')) {
       $event = new ApplicationEvent(
         $this->entity->id(),
         $form['#project_name'],
         $form['#project_uuid'],
         $form['#apartment_uuids']
       );
-      $event_dispatcher = \Drupal::service('event_dispatcher');
-      $event_dispatcher->dispatch($event, ApplicationEvent::EVENT_NAME);
+      \Drupal::service('event_dispatcher')
+        ->dispatch($event, ApplicationEvent::EVENT_NAME);
       $this->entity->set('field_locked', 1);
       $this->entity->save();
       $this->messenger()->addStatus($this->t('Your application has been submitted successfully.
@@ -247,25 +277,6 @@ class ApplicationForm extends ContentEntityForm {
   }
 
   /**
-   * The form should only be active between designated application time.
-   *
-   * @param string $startTime
-   *   Start time as ISO string.
-   * @param string $endTime
-   *   End time as ISO string.
-   *
-   * @return bool
-   *   Is current moment between the project's application time.
-   */
-  private function isFormActive(string $startTime, string $endTime): bool {
-    $start = strtotime($startTime);
-    $end = strtotime($endTime);
-    $date = new \DateTime();
-    $now = $date->getTimestamp();
-    return $now < $end && $now > $start;
-  }
-
-  /**
    * Check that user is filling the correct form.
    *
    * @param string $formType
@@ -276,7 +287,7 @@ class ApplicationForm extends ContentEntityForm {
    * @return bool
    *   Does the apartment ownershiptype match the form's type.
    */
-  private function isCorrectApplicationFormForProject($formType, $ownershipType) {
+  private function isCorrectApplicationFormForProject($formType, $ownershipType): bool {
     return strtolower($formType) == strtolower($ownershipType);
   }
 
@@ -464,7 +475,7 @@ class ApplicationForm extends ContentEntityForm {
    * Check application period.
    *
    * @param string $period
-   *   Should be either 'before', 'after', or 'during'.
+   *   Should be either 'before', 'after', or 'now'.
    * @param string $startDate
    *   Project application start date as ISO string.
    * @param string $endDate
@@ -489,7 +500,7 @@ class ApplicationForm extends ContentEntityForm {
 
         break;
 
-      case "during":
+      case "now":
         $value = $now > $startTime && $now < $endTime;
 
         break;

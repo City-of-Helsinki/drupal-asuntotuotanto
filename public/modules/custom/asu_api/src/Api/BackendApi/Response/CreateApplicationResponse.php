@@ -9,7 +9,7 @@ use Psr\Http\Message\ResponseInterface;
 /**
  * Response for application request.
  */
-class ApplicationResponse extends Response {
+class CreateApplicationResponse extends Response {
 
   /**
    * Content.
