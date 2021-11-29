@@ -96,11 +96,10 @@ class ApplicationForm extends ContentEntityForm {
     $form['#project_id'] = $project_id;
 
     // Redirect cases.
-
     // @todo How to do this ?
     // $bday = $owner->date_of_birth->value;
     try {
-      if(!$project_data = $this->getApartments($project_id)) {
+      if (!$project_data = $this->getApartments($project_id)) {
         throw new \Exception('Project or apartments for project not found.');
       }
     }
