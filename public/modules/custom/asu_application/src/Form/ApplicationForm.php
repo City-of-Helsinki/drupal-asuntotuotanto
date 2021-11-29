@@ -55,7 +55,7 @@ class ApplicationForm extends ContentEntityForm {
       }
 
       // User must have customer role.
-      if (!in_array('customer', $owner)) {
+      if ($owner->bundle() != 'customer') {
         \Drupal::logger('asu_application')->critical('User without customer role tried to create application: User id: ' . \Drupal::currentUser()->id());
         \Drupal::messenger()->addMessage($this->t('Users without customer role cannot fill applications.'));
         return(new RedirectResponse(\Drupal::request()->getSchemeAndHttpHost(), 301));
@@ -95,19 +95,21 @@ class ApplicationForm extends ContentEntityForm {
     $parameters = \Drupal::routeMatch()->getParameters();
     $form['#project_id'] = $project_id;
 
+    // Redirect cases.
     // @todo How to do this ?
     // $bday = $owner->date_of_birth->value;
     try {
-      $project_data = $this->getApartments($project_id);
+      if (!$project_data = $this->getApartments($project_id)) {
+        throw new \InvalidArgumentException('Project or apartments for project not found.');
+      }
     }
     catch (\Exception $e) {
       // Project not found.
       $this->logger('asu_application')->critical('User tried to access nonexistent project of id ' . $project_id);
-      $this->messenger()->addMessage($this->t('Project not found'));
+      $this->messenger()->addMessage($this->t('Unfortunately the project you are trying to apply for is unavailable. If the problem persists send us a message.'));
       return new RedirectResponse($applicationsUrl);
     }
 
-    // Redirect cases.
     // If user already has an application for this project.
     if ($project_id = $parameters->get('project_id')) {
       $applications = \Drupal::entityTypeManager()
@@ -146,14 +148,14 @@ class ApplicationForm extends ContentEntityForm {
     }
 
     if ($this->isApplicationPeriod('before', $startDate, $endDate)) {
-      $this->messenger()->addMessage($this->t('The application period has not yet started'));
+      $this->messenger()->addMessage($this->t('The application period has not yet started. You cannot send the application until the application period starts.'));
       return new RedirectResponse($applicationsUrl);
     }
 
     if ($this->isApplicationPeriod('after', $startDate, $endDate)) {
-      $this->messenger()->addMessage($this->t('The application period has ended. You can still apply for the apartment by contacting us.'));
+      $this->messenger()->addMessage($this->t('The application period has ended. You can still apply for the apartment by contacting the responsible salesperson.'));
       $freeApplicationUrl = \Drupal::request()->getSchemeAndHttpHost() .
-        '/contact/apply_free_apartment?title=' . $project_data['project_name'];
+        '/contact/apply_for_free_apartment?title=' . $project_data['project_name'];
       return new RedirectResponse($freeApplicationUrl);
     }
 
