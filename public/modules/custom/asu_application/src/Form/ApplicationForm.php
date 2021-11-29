@@ -10,6 +10,7 @@ use Drupal\Core\Entity\ContentEntityForm;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Messenger\MessengerTrait;
 use Drupal\user\Entity\User;
+use http\Exception\InvalidArgumentException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
@@ -100,7 +101,7 @@ class ApplicationForm extends ContentEntityForm {
     // $bday = $owner->date_of_birth->value;
     try {
       if (!$project_data = $this->getApartments($project_id)) {
-        throw new \RuntimeException('Project or apartments for project not found.');
+        throw new \InvalidArgumentException('Project or apartments for project not found.');
       }
     }
     catch (\Exception $e) {
