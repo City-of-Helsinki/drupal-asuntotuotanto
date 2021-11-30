@@ -5,8 +5,8 @@ namespace Drupal\asu_api\Api\BackendApi;
 use Drupal\asu_api\Api\BackendApi\Request\AuthenticationRequest;
 use Drupal\asu_api\Api\Request;
 use Drupal\asu_api\Api\Response;
-use Drupal\asu_user\Customer;
-use Drupal\Core\Logger\LoggerChannel;
+use Drupal\Core\TempStore\PrivateTempStoreFactory;
+use Drupal\user\UserInterface;
 use Psr\Log\LoggerInterface;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Request as GuzzleRequest;
@@ -28,19 +28,22 @@ class BackendApi {
    *
    * @var \Psr\Log\LoggerInterface
    */
-  private LoggerChannel $logger;
+  private LoggerInterface $logger;
 
   /**
    * Constructor.
    *
    * @param GuzzleHttp\Client $client
    *   Http client.
+   * @param Drupal\Core\TempStore\PrivateTempStoreFactory $storeFactory
+   *   Private tempstore factory.
    * @param Psr\Log\LoggerInterface $logger
    *   Logger.
    */
-  public function __construct(Client $client, LoggerInterface $logger) {
+  public function __construct(Client $client, PrivateTempStoreFactory $storeFactory, LoggerInterface $logger) {
     $this->client = $client;
     $this->logger = $logger;
+    $this->store = $storeFactory->get('customer');
   }
 
   /**
@@ -62,10 +65,12 @@ class BackendApi {
       if ($token = $this->handleAuthentication()) {
         $options['headers']['Authorization'] = sprintf("Bearer %s", $token);
       }
+      else {
+      }
     }
 
     try {
-      $return = $this->client->send(
+      $response = $this->client->send(
         new GuzzleRequest(
           $request->getMethod(),
           $this->client->getConfig()['base_url'] . $request->getPath(),
@@ -80,7 +85,7 @@ class BackendApi {
       throw $e;
     }
 
-    return $request::getResponse($return);
+    return $request::getResponse($response);
   }
 
   /**
@@ -89,28 +94,29 @@ class BackendApi {
    * @return string|null
    *   Authentication token.
    */
-  private function handleAuthentication(): ?string {
-    $customer = \Drupal::service('asu_user.customer');
-    if (!$customer->hasValidAuthToken()) {
+  private function handleAuthentication(Request $request): ?string {
+    if (!$token = $this->store->get('asu_api_token')) {
       try {
-        $authenticationResponse = $this->authenticate($customer);
-        $customer->setToken($authenticationResponse->getToken());
+        $authenticationResponse = $this->authenticate($request->getSender());
+        $this->store->set('asu_api_token', $authenticationResponse->getToken());
         return $authenticationResponse->getToken();
       }
       catch (\Exception $e) {
         // @todo Token is not set and authentication failed, Emergency.
-        \Drupal::messenger()->addMessage('exception: ' . $e->getMessage());
+        \Drupal::messenger()->addMessage(
+          'Exception during backend authentication: ' . $e->getMessage()
+        );
         // Token is not set and authentication failed. Emergency.
         return NULL;
       }
     }
-    return $customer->getToken();
+    return $token;
   }
 
   /**
    * Send authentication request.
    *
-   * @param \Drupal\asu_user\Customer $customer
+   * @param Drupal\user\UserInterface $user
    *   Customer class.
    *
    * @return \Drupal\asu_api\Api\Response
@@ -118,8 +124,8 @@ class BackendApi {
    *
    * @throws \GuzzleHttp\Exception\GuzzleException
    */
-  private function authenticate(Customer $customer): Response {
-    $request = new AuthenticationRequest($customer);
+  private function authenticate(UserInterface $user): Response {
+    $request = new AuthenticationRequest($user);
     $response = $this->client->send(
       new GuzzleRequest(
         $request->getMethod(),

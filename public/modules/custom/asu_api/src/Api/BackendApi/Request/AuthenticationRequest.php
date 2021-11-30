@@ -2,10 +2,10 @@
 
 namespace Drupal\asu_api\Api\BackendApi\Request;
 
+use Drupal\user\UserInterface;
 use Psr\Http\Message\ResponseInterface;
 use Drupal\asu_api\Api\BackendApi\Response\AuthenticationResponse;
 use Drupal\asu_api\Api\Request;
-use Drupal\asu_user\Customer;
 
 /**
  * Request authentication token.
@@ -18,28 +18,28 @@ class AuthenticationRequest extends Request {
   /**
    * The customer.
    *
-   * @var \Drupal\asu_user\Customer
+   * @var \Drupal\user\UserInterface
    */
-  private Customer $customer;
+  private UserInterface $user;
 
   /**
    * AuthenticationRequest constructor.
    *
-   * @param \Drupal\asu_user\Customer $customer
+   * @param \Drupal\user\UserInterface $user
    *   Current user.
    */
-  public function __construct(Customer $customer) {
-    $this->customer = $customer;
+  public function __construct(UserInterface $user) {
+    $this->user = $user;
   }
 
   /**
    * Get user.
    *
-   * @return \Drupal\asu_user\Customer
+   * @return \Drupal\user\UserInterface
    *   Customer class.
    */
-  public function getUser(): Customer {
-    return $this->customer;
+  public function getUser(): UserInterface {
+    return $this->user;
   }
 
   /**
@@ -47,8 +47,8 @@ class AuthenticationRequest extends Request {
    */
   public function toArray(): array {
     return [
-      'profile_id' => $this->customer->getUserField('field_backend_profile'),
-      'password' => $this->customer->getUserField('field_backend_password'),
+      'profile_id' => $this->user->get('field_backend_profile'),
+      'password' => $this->user->get('field_backend_password'),
     ];
   }
 

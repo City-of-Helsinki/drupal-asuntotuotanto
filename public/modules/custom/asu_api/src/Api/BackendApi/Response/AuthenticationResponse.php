@@ -36,7 +36,7 @@ class AuthenticationResponse extends Response {
   /**
    * Get the authentication token.
    */
-  public function getToken() {
+  public function getToken(): string {
     return $this->token;
   }
 
