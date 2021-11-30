@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\asu_api\Api\BackendApi\Helper;
+namespace Drupal\asu_api;
 
 /**
  * Authentication helper.
