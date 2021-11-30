@@ -3,6 +3,7 @@
 namespace Drupal\asu_api\Api\BackendApi\Request;
 
 use Psr\Http\Message\ResponseInterface;
+use Drupal\asu_api\ApplicationHelper;
 use Drupal\asu_api\Api\BackendApi\Response\CreateUserResponse;
 use Drupal\asu_api\Api\Request;
 use Drupal\user\UserInterface;
@@ -18,7 +19,7 @@ class CreateUserRequest extends Request {
   protected const AUTHENTICATED = FALSE;
 
   /**
-   * User data in array.
+   * User to be sent to backend.
    *
    * @var array
    */
@@ -32,7 +33,7 @@ class CreateUserRequest extends Request {
   private array $userInformation;
 
   /**
-   * Customer or sales.
+   * Customer or salesperson.
    *
    * @var string
    */
@@ -65,9 +66,14 @@ class CreateUserRequest extends Request {
       }
     }
 
-    // @todo Onko väärä datetime.
-    $dateOfBirth = (new \DateTime($this->user->date_of_birth->value))->format('Y-m-d');
-    $data['date_of_birth'] = $dateOfBirth;
+    if (isset($this->userInformation['date_of_birth'])) {
+      try {
+        $data['date_of_birth'] = ApplicationHelper::formatDate($this->userInformation['date_of_birth']);
+      }
+      catch (\InvalidArgumentException $e) {
+      }
+    }
+
     $data['contact_language'] = $this->user->getPreferredLangcode();
     $data['account_type'] = $this->accountType;
 

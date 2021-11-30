@@ -4,6 +4,7 @@ namespace Drupal\asu_application\Form;
 
 use Drupal\asu_application\Entity\Application;
 use Drupal\asu_application\Event\ApplicationEvent;
+use Drupal\asu_application\Event\SalesApplicationEvent;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\RedirectCommand;
 use Drupal\Core\Entity\ContentEntityForm;
@@ -228,29 +229,43 @@ class ApplicationForm extends ContentEntityForm {
       }
     }
 
-    $owner = $this->entity->getOwner();
-    if ($owner->hasField('field_email_is_valid')) {
+    $currentUser = User::load(\Drupal::currentUser()->id());
+    if ($currentUser->bundle() == 'sales') {
+      $eventName = SalesApplicationEvent::EVENT_NAME;
+      $event = new SalesApplicationEvent(
+        $currentUser->id(),
+        $this->entity->id(),
+        $form['#project_name'],
+        $form['#project_uuid'],
+        $form['#apartment_uuids']
+      );
+    }
+    else {
+      $owner = $this->entity->getOwner();
+      if ($owner->hasField('field_email_is_valid') && !$owner->get('field_email_is_valid')->value) {
+        \Drupal::messenger()->addWarning(t('You cannot submit application before you have confirmed your email address.
+      To confirm your email address you must click the link sent to your email address.'));
+        $response = (new RedirectResponse($this->getUserApplicationsUrl(), 301))->send();
+        return $response;
+      }
+
+      $eventName = ApplicationEvent::EVENT_NAME;
       $event = new ApplicationEvent(
         $this->entity->id(),
         $form['#project_name'],
         $form['#project_uuid'],
         $form['#apartment_uuids']
       );
-      \Drupal::service('event_dispatcher')
-        ->dispatch($event, ApplicationEvent::EVENT_NAME);
-      $this->entity->set('field_locked', 1);
-      $this->entity->save();
-      $this->messenger()->addStatus($this->t('Your application has been submitted successfully.
-       You can no longer edit the application.'));
-      $content_entity_id = $this->entity->getEntityType()->id();
-      $form_state->setRedirect("entity.{$content_entity_id}.canonical", [$content_entity_id => $this->entity->id()]);
     }
-    else {
-      \Drupal::messenger(t('You cannot submit application before you have confirmed your email address.
-      To confirm your email address you must click the link sent to your email address.'));
-      $response = (new RedirectResponse($this->getUserApplicationsUrl(), 301))->send();
-      return $response;
-    }
+
+    \Drupal::service('event_dispatcher')
+      ->dispatch($event, $eventName);
+    $this->entity->set('field_locked', 1);
+    $this->entity->save();
+    $this->messenger()->addStatus($this->t('The application has been submitted successfully.
+     You can no longer edit the application.'));
+    $content_entity_id = $this->entity->getEntityType()->id();
+    $form_state->setRedirect("entity.{$content_entity_id}.canonical", [$content_entity_id => $this->entity->id()]);
   }
 
   /**

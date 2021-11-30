@@ -6,35 +6,17 @@ use Drupal\asu_api\Api\BackendApi\Response\CreateApplicationResponse;
 use Drupal\asu_api\Api\Request;
 use Drupal\asu_application\Entity\Application;
 use Drupal\user\UserInterface;
-use phpDocumentor\Reflection\Types\Integer;
 use Psr\Http\Message\ResponseInterface;
 
 /**
  * A request to create an application.
  */
 class CreateApplicationRequest extends Request {
-  /**
-   * Api path.
-   *
-   * @var string
-   */
   protected const PATH = '/v1/applications/';
 
-  /**
-   * Method.
-   *
-   * @var string
-   */
   protected const METHOD = 'POST';
 
   protected const AUTHENTICATED = TRUE;
-
-  /**
-   * User object.
-   *
-   * @var \Drupal\user\Entity\UserInterface|UserInterface
-   */
-  private UserInterface $user;
 
   /**
    * Application object.
@@ -54,11 +36,11 @@ class CreateApplicationRequest extends Request {
    * Constructor.
    */
   public function __construct(
-    UserInterface $user,
+    UserInterface $sender,
     Application $application,
     array $projectData
   ) {
-    $this->user = $user;
+    $this->sender = $sender;
     $this->application = $application;
     $this->projectData = $projectData;
   }
@@ -79,19 +61,10 @@ class CreateApplicationRequest extends Request {
       'right_of_residence' => $this->application->field_right_of_residence_number->value,
       'project_id' => $this->projectData['uuid'],
       'apartments' => $this->getApartments(),
+      'is_salesperson' => FALSE,
     ];
 
     return $values;
-  }
-
-  /**
-   * Get user.
-   *
-   * @return Drupal\user\UserInterface
-   *   User object.
-   */
-  public function getUser() {
-    return $this->user;
   }
 
   /**
@@ -117,43 +90,6 @@ class CreateApplicationRequest extends Request {
   }
 
   /**
-   * Calculates person's age from PID.
-   *
-   * @param string $pid
-   *   Personal identification number.
-   *
-   * @return int
-   *   Age.
-   */
-  private function calculateAgeFromPid(string $pid): Integer {
-    $century = substr($pid, 7, 1) === "-" ? 19 : 20;
-    $year = substr($pid, 5, 2);
-
-    $day = substr($pid, 1, 2);
-    $month = substr($pid, 3, 2);
-
-    $date = "{$day}-{$month}-{$century}{$year}";
-
-    return $this->dateDifferenceYears($date);
-  }
-
-  /**
-   * Get difference between two dates in years.
-   *
-   * @param string $date
-   *   Date to compare to 'now'.
-   *
-   * @return int
-   *   Difference between now and the given date in years.
-   */
-  private function dateDifferenceYears(string $date) {
-    $date = new \DateTime($date);
-    $now = new \DateTime();
-    $interval = $now->diff($date);
-    return $interval->y;
-  }
-
-  /**
    * Get primary applicant.
    *
    * @return array
@@ -164,7 +100,6 @@ class CreateApplicationRequest extends Request {
       return NULL;
     }
     $applicant = $this->application->getApplicants()[0];
-    // @todo Use external field map configuration.
     return [
       'first_name' => $applicant['first_name'],
       'last_name' => $applicant['last_name'],

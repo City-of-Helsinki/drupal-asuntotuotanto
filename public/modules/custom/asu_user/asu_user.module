@@ -67,14 +67,28 @@ function asu_send_user_password_email(UserInterface $account) {
 function asu_create_backend_user(UserInterface $account) {
   /** @var Drupal\asu_api\Api\BackendApi\BackendApi $backendApi */
   $backendApi = \Drupal::service('asu_api.backendapi');
-  $customer = \Drupal::service('asu_user.customer');
 
-  $profileId = $account->field_backend_profile->value;
-  if (!$profileId) {
+  if (!$profileId = $account->get('field_backend_profile')->value) {
     \Drupal::logger('asu_user')->critical('User should already have backend profile created.');
     try {
-      /** @var \Drupal\asu_user\Customer $customer */
-      $createUser = new CreateUserRequest($account, $customer->getUserExternalFieldData());
+
+      $userBundle = User::load($account->id())->bundle();
+
+      $type = $userBundle == 'sales' ? 'salesperson' : 'customer';
+
+      $config = \Drupal::config('asu_user.external_user_fields')
+        ->get('external_data_map');
+
+      $values = [];
+      if ($type == 'customer') {
+        $store = \Drupal::service('tempstore.private')->get('customer');
+
+        foreach ($config as $field => $value) {
+          $values[$value['external_field']] = $store->store->get($field) ?? '-';
+        }
+      }
+
+      $createUser = new CreateUserRequest($account, $values, $type);
       /** @var \Drupal\asu_api\Api\BackendApi\Response\CreateUserResponse $response */
       $response = $backendApi->send($createUser);
       $account->field_backend_profile = $response->getProfileId();
@@ -103,8 +117,7 @@ function asu_get_user_external_field_data(UserInterface $account) {
   /** @var \Drupal\asu_api\Api\BackendApi\BackendApi $backendApi */
   $backendApi = \Drupal::service('asu_api.backendapi');
   /** @var \Drupal\asu_user\Customer $customer */
-  $customer = \Drupal::service('asu_user.customer');
-
+  // $customer = \Drupal::service('asu_user.customer');
   $profileId = $account->field_backend_profile->value;
   // Workaround for the first login right after registering.
   // Cached user object wouldn't contain backend api information.
@@ -113,14 +126,18 @@ function asu_get_user_external_field_data(UserInterface $account) {
     $account->set('field_backend_profile_value', $profileId);
   }
 
-  $request = new UserRequest($account);
-  /** @var \Drupal\asu_api\Api\BackendApi\Response\UserResponse $userResponse */
-  $userResponse = $backendApi->send($request);
-  $customer->updateUserExternalFields($userResponse->getUserInformation());
-
-  $request = new UserRequest($account);
-  $userInformationResponse = $backendApi->send($request);
-  $customer->updateUserExternalFields($userInformationResponse->getUserInformation());
+  try {
+    $request = new UserRequest($account);
+    /** @var \Drupal\asu_api\Api\BackendApi\Response\UserResponse $userResponse */
+    $userResponse = $backendApi->send($request);
+    $customer->updateUserExternalFields($userResponse->getUserInformation());
+  }
+  catch (\Exception $e) {
+    \Drupal::logger('asu_backend_api')->emergency('Unable to fetch user information for user: ' . $account->id());
+    // @todo add contact form url if there is one.
+    \Drupal::messenger()->addWarning(t('We were unable to fetch your personal information.
+     If the problem persists contact us.'));
+  }
 }
 
 /**
@@ -266,6 +283,7 @@ function asu_session_check_application_url(): ?RedirectResponse {
  * Implements hook_entity_operation().
  */
 function asu_user_entity_operation(EntityInterface $entity) {
+  // Add action urls to user entity.
   if (
     $entity instanceof UserInterface &&
     $entity->bundle() == 'customer'
