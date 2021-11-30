@@ -5,6 +5,7 @@ namespace Drupal\asu_application\EventSubscriber;
 use Drupal\asu_api\Api\BackendApi\Request\CreateApplicationRequest;
 use Drupal\asu_api\Api\BackendApi\BackendApi;
 use Drupal\asu_application\Event\ApplicationEvent;
+use Drupal\asu_application\Event\SalesApplicationEvent;
 use Drupal\Core\Messenger\MessengerTrait;
 use Drupal\Core\Queue\QueueFactory;
 use Drupal\Core\Queue\QueueInterface;
@@ -63,6 +64,10 @@ class ApplicationSubscriber implements EventSubscriberInterface {
   public static function getSubscribedEvents() {
     $events = [];
     $events[ApplicationEvent::EVENT_NAME][] = ['sendApplicationToBackend', 5];
+    $events[SalesApplicationEvent::EVENT_NAME][] = [
+      'salesSendApplicationToBackend',
+      10,
+    ];
     return $events;
   }
 
@@ -94,7 +99,9 @@ class ApplicationSubscriber implements EventSubscriberInterface {
       );
       $this->backendApi->send($request);
       // @todo Notice in event.
-      $this->logger->notice('User sent an application to backend successfully');
+      $this->logger->notice(
+        'User sent an application to backend successfully'
+      );
     }
     catch (\Exception $e) {
       $this->logger->critical(sprintf(
@@ -105,6 +112,47 @@ class ApplicationSubscriber implements EventSubscriberInterface {
       $this->queue->createItem($application->id());
     }
 
+  }
+
+  /**
+   * Sales person sends application for customer.
+   */
+  public function salesSendApplicationToBackend(SalesApplicationEvent $applicationEvent) {
+    $entity_type = 'asu_application';
+    $entity_id = $applicationEvent->getApplicationId();
+
+    /** @var \Drupal\asu_application\Entity\Application $application */
+    $application = \Drupal::entityTypeManager()
+      ->getStorage($entity_type)
+      ->load($entity_id);
+    $user = $application->getOwner();
+
+    try {
+      // @todo Until the api is updated.
+      /*
+      $request = new CreateApplicationRequest(
+      $user,
+      $application,
+      [
+      'uuid' => $applicationEvent->getProjectUuid(),
+      'apartment_uuids' => $applicationEvent->getApartmentUuids(),
+      ]
+      );
+       */
+      // $this->backendApi->send($request);
+      // @todo Notice in event.
+      // $this->logger->notice(
+      // 'User sent an application to backend successfully'
+      // );
+    }
+    catch (\Exception $e) {
+      $this->logger->critical(sprintf(
+        'Exception while sending application %s: %s',
+        $application->id(),
+        $e->getMessage()
+      ));
+      $this->queue->createItem($application->id());
+    }
   }
 
 }
