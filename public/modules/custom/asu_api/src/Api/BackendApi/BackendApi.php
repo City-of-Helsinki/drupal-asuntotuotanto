@@ -5,6 +5,7 @@ namespace Drupal\asu_api\Api\BackendApi;
 use Drupal\asu_api\Api\BackendApi\Request\AuthenticationRequest;
 use Drupal\asu_api\Api\Request;
 use Drupal\asu_api\Api\Response;
+use Drupal\asu_api\Helper\AuthenticationHelper;
 use Drupal\Core\TempStore\PrivateTempStoreFactory;
 use Drupal\user\UserInterface;
 use Psr\Log\LoggerInterface;
@@ -77,13 +78,12 @@ class BackendApi {
         ),
         $options['headers']
       );
+      return $request::getResponse($response);
     }
     catch (\Exception $e) {
       $this->logger->emergency(sprintf('%s failed: %s', get_class($request), $e->getMessage()));
       throw $e;
     }
-
-    return $request::getResponse($response);
   }
 
   /**
@@ -98,7 +98,8 @@ class BackendApi {
    * @throws \GuzzleHttp\Exception\GuzzleException
    */
   private function handleAuthentication(UserInterface $account): ?string {
-    if (!$token = $this->store->get('asu_api_token')) {
+    $token = $this->store->get('asu_api_token');
+    if (!$token || !AuthenticationHelper::isTokenAlive($token)) {
       try {
         $authenticationResponse = $this->authenticate($account);
         $this->store->set('asu_api_token', $authenticationResponse->getToken());

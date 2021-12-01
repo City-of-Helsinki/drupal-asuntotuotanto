@@ -22,15 +22,13 @@ class StoreHelper {
    * @throws \Drupal\Core\TempStore\TempStoreException
    */
   public static function setMultipleValuesToStoreByConfiguration(PrivateTempStore $store, array $config, array $data) {
-    if ($config) {
-      foreach ($data as $key => $value) {
-        // Get the index number of configuration by external field name.
-        // Only store values if they are configured no matter what API returns.
-        $fieldNumber = array_search($key, array_column($config, 'external_field'));
-        if (!is_bool($fieldNumber) && isset(array_keys($config)[$fieldNumber])) {
-          // Set the value to store by internal filed name.
-          $store->set(array_keys($config)[$fieldNumber], $value);
-        }
+    foreach ($data as $key => $value) {
+      // Get the index number of configuration by external field name.
+      // Only store values if they are configured no matter what API returns.
+      $fieldNumber = array_search($key, array_column($config, 'external_field'));
+      if (!is_bool($fieldNumber) && isset(array_keys($config)[$fieldNumber])) {
+        // Set the value to store by internal filed name.
+        $store->set(array_keys($config)[$fieldNumber], $value);
       }
     }
   }

@@ -62,7 +62,14 @@ class SalesApplicationEvent extends Event {
   }
 
   /**
-   * Gets the application id.
+   * Get sender id.
+   */
+  public function getSenderId(): string {
+    return $this->senderId;
+  }
+
+  /**
+   * Get the application id.
    */
   public function getApplicationId(): string {
     return $this->applicationId;
@@ -79,14 +86,14 @@ class SalesApplicationEvent extends Event {
   }
 
   /**
-   * Project uuid.
+   * Get the project uuid.
    */
   public function getProjectUuid(): string {
     return $this->projectUuid;
   }
 
   /**
-   * Apartment uuids.
+   * Get selected apartments' uuids.
    */
   public function getApartmentUuids(): array {
     return $this->apartmentUuids;

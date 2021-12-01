@@ -4,6 +4,7 @@ namespace Drupal\asu_application\EventSubscriber;
 
 use Drupal\asu_api\Api\BackendApi\Request\CreateApplicationRequest;
 use Drupal\asu_api\Api\BackendApi\BackendApi;
+use Drupal\asu_api\Api\BackendApi\Request\SalesCreateApplicationRequest;
 use Drupal\asu_application\Event\ApplicationEvent;
 use Drupal\asu_application\Event\SalesApplicationEvent;
 use Drupal\Core\Messenger\MessengerTrait;
@@ -97,8 +98,9 @@ class ApplicationSubscriber implements EventSubscriberInterface {
           'apartment_uuids' => $applicationEvent->getApartmentUuids(),
         ]
       );
+      $request->setSender($user);
       $this->backendApi->send($request);
-      // @todo Notice in event.
+
       $this->logger->notice(
         'User sent an application to backend successfully'
       );
@@ -127,19 +129,21 @@ class ApplicationSubscriber implements EventSubscriberInterface {
       ->load($entity_id);
     $user = $application->getOwner();
 
+    $sender = User::load($applicationEvent->getSenderId());
+
     try {
       // @todo Until the api is updated.
-      /*
-      $request = new CreateApplicationRequest(
-      $user,
-      $application,
-      [
-      'uuid' => $applicationEvent->getProjectUuid(),
-      'apartment_uuids' => $applicationEvent->getApartmentUuids(),
-      ]
+      $request = new SalesCreateApplicationRequest(
+        $sender,
+        $application,
+        [
+          'uuid' => $applicationEvent->getProjectUuid(),
+          'apartment_uuids' => $applicationEvent->getApartmentUuids(),
+        ]
       );
-       */
-      // $this->backendApi->send($request);
+      $request->setSender($user);
+
+      $this->backendApi->send($request);
       // @todo Notice in event.
       // $this->logger->notice(
       // 'User sent an application to backend successfully'

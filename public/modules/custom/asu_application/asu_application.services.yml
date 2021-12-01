@@ -8,5 +8,6 @@ services:
     arguments:
       - '@logger.channel.asu_application'
       - '@asu_api.backendapi'
+      - '@queue'
     tags:
       - { name: event_subscriber }

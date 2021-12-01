@@ -55,7 +55,6 @@ class SalesCreateApplicationRequest extends Request {
     /** @var \Drupal\user\UserInterface $owner */
     $owner = $this->application->getOwner();
     $values = [
-      'is_salesperson' => TRUE,
        // Profile id is the customer profile uuid.
       'profile_id' => $owner->uuid(),
       'application_uuid' => $this->application->uuid(),

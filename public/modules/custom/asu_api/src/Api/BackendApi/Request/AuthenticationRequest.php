@@ -47,8 +47,8 @@ class AuthenticationRequest extends Request {
    */
   public function toArray(): array {
     return [
-      'profile_id' => $this->user->get('field_backend_profile'),
-      'password' => $this->user->get('field_backend_password'),
+      'profile_id' => $this->user->get('field_backend_profile')->value,
+      'password' => $this->user->get('field_backend_password')->value,
     ];
   }
 

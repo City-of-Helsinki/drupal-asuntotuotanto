@@ -58,6 +58,8 @@ class CreateUserRequest extends Request {
     $data = [
       'id' => $this->user->uuid(),
       'email' => $this->user->getEmail(),
+      'account_type' => $this->accountType,
+      'contact_language' => $this->user->getPreferredLangcode(),
     ];
 
     if ($this->accountType == 'customer' && $this->userInformation) {
@@ -73,9 +75,6 @@ class CreateUserRequest extends Request {
       catch (\InvalidArgumentException $e) {
       }
     }
-
-    $data['contact_language'] = $this->user->getPreferredLangcode();
-    $data['account_type'] = $this->accountType;
 
     return $data;
   }
