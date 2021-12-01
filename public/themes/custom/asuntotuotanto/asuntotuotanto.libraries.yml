@@ -21,6 +21,14 @@ sticky-navigation:
   js:
     dist/js/stickyNavigation.min.js: {}
 
+intense-images:
+  js:
+    //cdn.jsdelivr.net/npm/@tholman/intense-images@1.0.7/intense.min.js:
+      { type: external, minified: true }
+    dist/js/intenseImages.min.js: { minified: true }
+  dependencies:
+    - core/jquery
+
 user-tools:
   js:
     dist/js/userToolsNavigation.min.js: {}
