@@ -98,7 +98,7 @@ class RegisterForm extends TypedRegisterForm {
     if (
       \Drupal::currentUser()->isAuthenticated() &&
       in_array('salesperson', \Drupal::currentUser()->getRoles(TRUE)) ||
-      \Drupal::currentUser()->hasPermission('administer')  &&
+      \Drupal::currentUser()->hasPermission('administer') &&
       $form_object->getFormId() == 'user_customer_register_form'
     ) {
       $form['create_application'] = [
@@ -178,6 +178,7 @@ class RegisterForm extends TypedRegisterForm {
       ]);
     // Add plain text password into user account to generate mail tokens.
     $account->password = $pass;
+    user_login_finalize($account);
   }
 
   /**
@@ -196,7 +197,16 @@ class RegisterForm extends TypedRegisterForm {
     $user->setPassword($pass);
     $user->enforceIsNew();
     $user->setEmail($form_state->getUserInput()['mail']);
-    $user->setUsername(sprintf('%s %s', $form_state->getUserInput()['first_name'], $form_state->getUserInput()['last_name']));
+    $hash = substr(base64_encode(microtime()), 0, 7);
+
+    $user->setUsername(
+      sprintf(
+        '%s_%s_%s',
+        $form_state->getUserInput()['first_name'],
+        $form_state->getUserInput()['last_name'],
+        $hash
+      )
+    );
 
     $user->set('init', 'email');
     $user->set('langcode', $form_state->getValues()['preferred_langcode']);
@@ -213,8 +223,9 @@ class RegisterForm extends TypedRegisterForm {
 
     $user->save();
 
-    // @todo Check if create application button was pressed.
-    $form_state->setRedirect('asu_application.admin_create_application', ['user_id' => $user->id()]);
+    if ($form_state->getTriggeringElement()['#parents'][0] == 'create_application') {
+      $form_state->setRedirect('asu_application.admin_create_application', ['user_id' => $user->id()]);
+    }
 
     $this->sendToBackend($user, $form_state, 'customer');
 
@@ -228,7 +239,7 @@ class RegisterForm extends TypedRegisterForm {
           ->toString(),
       ]);
     $user->password = $pass;
-
+    \Drupal::messenger()->addMessage(t('New customer account was created'));
   }
 
   /**
@@ -287,7 +298,7 @@ class RegisterForm extends TypedRegisterForm {
    * Callback, application creation form.
    */
   public function createApplication(array $form, FormStateInterface $form_state) {
-    $this->saveNewCustomer($form, $form_state);
+    $this->salespersonCreatesCustomer($form, $form_state);
   }
 
 }

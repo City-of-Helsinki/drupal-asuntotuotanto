@@ -71,20 +71,16 @@ function asu_create_backend_user(UserInterface $account) {
   if (!$profileId = $account->get('field_backend_profile')->value) {
     \Drupal::logger('asu_user')->critical('User should already have backend profile created.');
     try {
-
       $userBundle = User::load($account->id())->bundle();
-
       $type = $userBundle == 'sales' ? 'salesperson' : 'customer';
-
       $config = \Drupal::config('asu_user.external_user_fields')
         ->get('external_data_map');
 
       $values = [];
       if ($type == 'customer') {
         $store = \Drupal::service('tempstore.private')->get('customer');
-
         foreach ($config as $field => $value) {
-          $values[$value['external_field']] = $store->store->get($field) ?? '-';
+          $values[$value['external_field']] = $store->get($field) ?? '-';
         }
       }
 
@@ -123,11 +119,12 @@ function asu_get_user_external_field_data(UserInterface $account) {
   // Cached user object wouldn't contain backend api information.
   if (!$profileId) {
     $profileId = asu_get_user_profile_id($account);
-    $account->set('field_backend_profile_value', $profileId);
+    $account->set('field_backend_profile', $profileId);
   }
 
   try {
     $request = new UserRequest($account);
+    $request->setSender($account);
     /** @var \Drupal\asu_api\Api\BackendApi\Response\UserResponse $userResponse */
     $userResponse = $backendApi->send($request);
     $customer->updateUserExternalFields($userResponse->getUserInformation());

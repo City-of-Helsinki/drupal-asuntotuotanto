@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\asu_api;
+namespace Drupal\asu_api\Helper;
 
 /**
  * Application helper.

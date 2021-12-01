@@ -35,12 +35,12 @@ class BackendApi {
    *
    * @param GuzzleHttp\Client $client
    *   Http client.
-   * @param Drupal\Core\TempStore\PrivateTempStoreFactory $storeFactory
-   *   Private tempstore factory.
    * @param Psr\Log\LoggerInterface $logger
    *   Logger.
+   * @param Drupal\Core\TempStore\PrivateTempStoreFactory $storeFactory
+   *   Private tempstore factory.
    */
-  public function __construct(Client $client, PrivateTempStoreFactory $storeFactory, LoggerInterface $logger) {
+  public function __construct(Client $client, LoggerInterface $logger, PrivateTempStoreFactory $storeFactory) {
     $this->client = $client;
     $this->logger = $logger;
     $this->store = $storeFactory->get('customer');
@@ -62,10 +62,8 @@ class BackendApi {
   public function send(Request $request, array $options = []): ?Response {
     $options['headers'] = [];
     if ($request->requiresAuthentication()) {
-      if ($token = $this->handleAuthentication()) {
+      if ($token = $this->handleAuthentication($request->getSender())) {
         $options['headers']['Authorization'] = sprintf("Bearer %s", $token);
-      }
-      else {
       }
     }
 
@@ -89,25 +87,26 @@ class BackendApi {
   }
 
   /**
-   * Make sure user is authenticated.
+   * Handle backend api authentication.
+   *
+   * @param \Drupal\user\UserInterface $account
+   *   User who is the sender of the request.
    *
    * @return string|null
    *   Authentication token.
+   *
+   * @throws \GuzzleHttp\Exception\GuzzleException
    */
-  private function handleAuthentication(Request $request): ?string {
+  private function handleAuthentication(UserInterface $account): ?string {
     if (!$token = $this->store->get('asu_api_token')) {
       try {
-        $authenticationResponse = $this->authenticate($request->getSender());
+        $authenticationResponse = $this->authenticate($account);
         $this->store->set('asu_api_token', $authenticationResponse->getToken());
         return $authenticationResponse->getToken();
       }
       catch (\Exception $e) {
-        // @todo Token is not set and authentication failed, Emergency.
-        \Drupal::messenger()->addMessage(
-          'Exception during backend authentication: ' . $e->getMessage()
-        );
-        // Token is not set and authentication failed. Emergency.
-        return NULL;
+        $this->logger->critical('Exception during backend authentication: ' . $e->getMessage());
+        throw $e;
       }
     }
     return $token;
