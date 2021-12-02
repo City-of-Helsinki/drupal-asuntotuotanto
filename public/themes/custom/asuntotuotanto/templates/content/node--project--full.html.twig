@@ -217,16 +217,16 @@
   <div class="project__content-wrapper wrapper wrapper--mw-1264">
     <aside class="project__sidebar" aria-label="{{ 'Project sidebar information'|t }}">
       <p class="project__apartment-count-information">
-        {% if apartments_count  > 0  %}
+        {% if apartments_count > 2 %}
           {% trans %}
             {{ apartments_count }} apartments
           {% endtrans %}
         {% endif %}
       </p>
       <p class="project__application-information">
-        {% if application_start_time  == null and application_end_time == null  %}
+        {% if application_start_time == null and application_end_time == null  %}
           {% trans %}
-            No application specified for the project.
+            Application period has not been specified yet.
           {% endtrans %}
         {% else %}
           {% trans %}
