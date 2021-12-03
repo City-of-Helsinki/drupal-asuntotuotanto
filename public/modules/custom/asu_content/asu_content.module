@@ -100,7 +100,6 @@ function asu_content_entity_presave(EntityInterface $entity) {
  * Implements hook_entity_update().
  */
 function asu_content_entity_update($entity) {
-  // @todo Remove when cron is running.
   if (
     $entity instanceof EntityInterface &&
     method_exists($entity, 'getType') &&
@@ -115,6 +114,8 @@ function asu_content_entity_update($entity) {
       }
     }
   }
+
+  // @todo Remove when cron is running.
   // Index instantly on testing environment.
   if (
     method_exists($entity, 'getType') &&
@@ -124,6 +125,7 @@ function asu_content_entity_update($entity) {
     $indexes = Index::loadMultiple();
     foreach ($indexes as $index) {
       $index->reindex();
+      $index->indexItems();
     }
   }
 }
@@ -168,11 +170,13 @@ function asu_content_node_insert(Node $node) {
   if (
     method_exists($node, 'getType') &&
     $node->getType() == 'project' &&
-    getenv('APP_ENV') == 'testing'
+    getenv('APP_ENV') == 'testing' ||
+    getenv('APP_ENV') == 'test'
   ) {
     $indexes = Index::loadMultiple();
     foreach ($indexes as $index) {
       $index->reindex();
+      $index->indexItems();
     }
   }
 }
