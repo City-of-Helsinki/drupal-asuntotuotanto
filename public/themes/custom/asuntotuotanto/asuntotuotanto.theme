@@ -258,8 +258,8 @@ function asuntotuotanto_preprocess_views_view_table(&$variables) {
       $variables['rows'][$key]['apartment_number'] = $variables['view']->result[$key]->_entity->get('field_apartment_number')->value;
     }
 
-    usort($variables['rows'], function($a, $b){
-      return strnatcasecmp($a['apartment_number'],$b['apartment_number']);
+    usort($variables['rows'], function ($a, $b) {
+      return strnatcasecmp($a['apartment_number'], $b['apartment_number']);
     });
 
   }
@@ -426,6 +426,7 @@ function asuntotuotanto_preprocess_node(&$variables) {
       }
 
       if (!empty($apartment_debt_free_sales_prices)) {
+        $apartment_debt_free_sales_prices = array_filter($apartment_debt_free_sales_prices);
         $apartment_debt_free_sales_prices_minmax = [
           "min" => number_format(min($apartment_debt_free_sales_prices), 2, ',', ' '),
           "max" => number_format(max($apartment_debt_free_sales_prices), 2, ',', ' '),
@@ -434,6 +435,7 @@ function asuntotuotanto_preprocess_node(&$variables) {
       }
 
       if (!empty($apartment_sales_prices)) {
+        $apartment_sales_prices = array_filter($apartment_sales_prices);
         $apartment_sales_prices_minmax = [
           "min" => number_format(min($apartment_sales_prices), 2, ',', ' '),
           "max" => number_format(max($apartment_sales_prices), 2, ',', ' '),
@@ -442,6 +444,7 @@ function asuntotuotanto_preprocess_node(&$variables) {
       }
 
       if (!empty($apartment_living_area_sizes)) {
+        $apartment_living_area_sizes = array_filter($apartment_living_area_sizes);
         $apartment_living_area_sizes_minmax = [
           "min" => number_format(min($apartment_living_area_sizes), 1, ',', NULL),
           "max" => number_format(max($apartment_living_area_sizes), 1, ',', NULL),
@@ -450,6 +453,7 @@ function asuntotuotanto_preprocess_node(&$variables) {
       }
 
       if (!empty($prices)) {
+        $prices = array_filter($prices);
         $prices_minmax = [
           "min" => number_format(min($prices), 1, ',', NULL),
           "max" => number_format(max($prices), 1, ',', NULL),
@@ -501,7 +505,6 @@ function asuntotuotanto_preprocess_node(&$variables) {
       if ($node->get('field_estimated_completion_date')->value) {
         $estimated_completion_date = (new DateTime($node->get('field_estimated_completion_date')->value))->format('m/Y');
       }
-
 
       $is_application_period_active = FALSE;
       $application_start_time_timestamp = NULL;
@@ -607,7 +610,7 @@ function asuntotuotanto_preprocess_node(&$variables) {
 
         $current_timestamp = time();
         if ($application_start_time_timestamp && $application_end_time_value) {
-          if($current_timestamp > $application_start_time_timestamp && $current_timestamp < $application_end_time_timestamp) {
+          if ($current_timestamp > $application_start_time_timestamp && $current_timestamp < $application_end_time_timestamp) {
             $is_application_period_active = TRUE;
           }
           if ($current_timestamp > $application_end_time_timestamp) {
@@ -961,7 +964,6 @@ function getProjectApartmentTeaserValues($project_id) {
 
 }
 
-
 /**
  * Add fullscreen functionality to slick.
  */
@@ -969,8 +971,4 @@ function asuntotuotanto_preprocess_blazy(&$variables) {
   // dd($variables);
   $variables['image']['#attributes']['data-image'] = file_create_url($variables['image']['#uri']);
   $variables['#attached']['library'][] = 'asuntotuotanto/intense-images';
-}
-
-function asuntotuotanto_is_application_time() {
-
 }
