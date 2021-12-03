@@ -512,12 +512,14 @@ function asuntotuotanto_preprocess_node(&$variables) {
         $application_start_time_value = $node->get('field_application_start_time')->value
       ) {
         $application_start_time_timestamp = format_date_to_unix_timestamp($application_start_time_value);
+        $application_start = (new \Datetime($application_start_time_value))->format('d.m.Y H:i');
       }
       if (
         $node->hasField('field_application_end_time') &&
         $application_end_time_value = $node->get('field_application_end_time')->value
       ) {
         $application_end_time_timestamp = format_date_to_unix_timestamp($application_end_time_value);
+        $application_end = (new \Datetime($application_end_time_value))->format('d.m.Y H:i');
       }
 
       $current_timestamp = time();
@@ -546,8 +548,8 @@ function asuntotuotanto_preprocess_node(&$variables) {
         $variables['street_number'] = $street_number ?? NULL;
       }
 
-      $variables['application_start_time'] = $application_start_time_timestamp;
-      $variables['application_end_time'] = $application_end_time_timestamp;
+      $variables['application_start_time'] = $application_start;
+      $variables['application_end_time'] = $application_end;
 
       $variables['apartments_count'] = count($apartments) < 2 ? 0 : count($apartments);
       $variables['apartment_sales_prices'] = $apartment_sales_prices_string;
@@ -593,12 +595,14 @@ function asuntotuotanto_preprocess_node(&$variables) {
           $application_start_time_value = $project->get('field_application_start_time'
           )->value) {
           $application_start_time_timestamp = format_date_to_unix_timestamp($application_start_time_value);
+          $application_start = (new \DateTime($application_start_time_value))->format('d.m.Y H:i');
         }
         if (
           $project->hasField('field_application_end_time') &&
           $application_end_time_value = $project->get('field_application_end_time')->value
         ) {
           $application_end_time_timestamp = format_date_to_unix_timestamp($application_end_time_value);
+          $application_end = (new \DateTime($application_end_time_value))->format('d.m.Y H:i');
         }
 
         $current_timestamp = time();
@@ -639,7 +643,7 @@ function asuntotuotanto_preprocess_node(&$variables) {
         $attachments_stack = [];
         $estimated_completion_date = NULL;
         if ($project->get('field_estimated_completion_date')->value) {
-          $estimated_completion_date = new DateTime($project->get('field_estimated_completion_date')->value);
+          $estimated_completion_date = (new DateTime($project->get('field_estimated_completion_date')->value))->format('d.m.Y H:i:s');
         }
 
         if (count($project->get('field_site_owner')->getValue()) > 0) {
@@ -731,8 +735,8 @@ function asuntotuotanto_preprocess_node(&$variables) {
         $variables['coordinate_lat'] = $coordinate_lat;
         $variables['coordinate_lon'] = $coordinate_lon;
         $variables['city'] = $city;
-        $variables['application_start_time'] = $application_start_time_timestamp;
-        $variables['application_end_time'] = $application_end_time_timestamp;
+        $variables['application_start_time'] = $application_start;
+        $variables['application_end_time'] = $application_end;
         $variables['is_application_period_active'] = $is_application_period_active;
         $variables['is_application_period_in_the_past'] = $is_application_period_in_the_past;
         $variables['district'] = $district ?? NULL;
