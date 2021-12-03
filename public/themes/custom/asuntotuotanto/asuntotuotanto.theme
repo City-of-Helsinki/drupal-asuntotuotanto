@@ -509,6 +509,8 @@ function asuntotuotanto_preprocess_node(&$variables) {
       $is_application_period_active = FALSE;
       $application_start_time_timestamp = NULL;
       $application_end_time_timestamp = NULL;
+      $application_start = NULL;
+      $application_end = NULL;
 
       if (
         $node->hasField('field_application_start_time') &&
