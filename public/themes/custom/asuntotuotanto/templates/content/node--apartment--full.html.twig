@@ -195,20 +195,8 @@
 					href: application_url
 					}
         %}
-      {% elseif is_application_period_in_the_past %}
-        <p class="apartment__application-information">
-          {% trans %}
-            The application period for the project ended on
-            {{ application_end_time }}.
-          {% endtrans %}
-        </p>
-      {% elseif application_start_time == null and application_end_time == null %}
-        <p class="apartment__application-information">
-          {% trans %}
-            No application period specified for the project.
-          {% endtrans %}
-        </p>
-      {% else %}
+      {% endif %}
+      {% if (is_application_period_in_the_past is same as(false)) and (application_start_time != null and application_end_time != null) %}
         <p class="apartment__application-information">
           {% trans %}
             The application period for the project starts on
@@ -272,16 +260,7 @@
 	<div class="apartment__content-wrapper wrapper wrapper--mw-1264">
 		<aside class="apartment__sidebar" aria-label="{{ 'Apartment sidebar information'|t }}">
 			<p class="apartment__application-information">
-				{% if is_application_period_in_the_past %}
-          {% trans %}
-            The application period for the project ended on
-            {{ application_end_time }}.
-          {% endtrans %}
-				{% elseif application_start_time == null and application_end_time == null %}
-          {% trans %}
-            No application period specified for the project.
-          {% endtrans %}
-				{% else %}
+        {% if (is_application_period_in_the_past is same as(false)) and (application_start_time != null and application_end_time != null) %}
           {% trans %}
             The application period for the project starts on
             {{ application_start_time }}
@@ -320,8 +299,10 @@
               and (floor|render <= '0')
               and (sales_price|render == '0,00€' or sales_price|render == '')
               and (debt_free_sales_price|render == '0,00€' or debt_free_sales_price|render == '')
-              and (apartment_number|render == '')
-              and (apartment_structure|render == '') %}
+              and (energy_class|render == null)
+              and (accessibility|render == null)
+              and (site_owner|render == null)
+          %}
 					{% else %}
 						{% trans %}
 							Details
