@@ -217,18 +217,25 @@
   <div class="project__content-wrapper wrapper wrapper--mw-1264">
     <aside class="project__sidebar" aria-label="{{ 'Project sidebar information'|t }}">
       <p class="project__apartment-count-information">
-        {% if apartments_count > 2 %}
+        {% if apartments_count >= 2 %}
           {% trans %}
             {{ apartments_count }} apartments
           {% endtrans %}
         {% endif %}
       </p>
       <p class="project__application-information">
+        {#
         {% if application_start_time == null and application_end_time == null  %}
           {% trans %}
             Application period has not been specified.
           {% endtrans %}
         {% else %}
+          {% trans %}
+            The application period for this project starts on {{ application_start_time }} and ends on {{ application_end_time }}.
+          {% endtrans %}
+        {% endif %}
+        #}
+        {% if application_start_time != null and application_end_time != null  %}
           {% trans %}
             The application period for this project starts on {{ application_start_time }} and ends on {{ application_end_time }}.
           {% endtrans %}
@@ -268,7 +275,8 @@
               and (apartment_prices|render == null)
               and (energy_class|render == null)
               and (accessibility|render == null)
-              and (site_owner|render == null) %}
+              and (site_owner|render == null)
+          %}
           {% else %}
 						{% trans %}
 							Details
