@@ -60,12 +60,17 @@ class CreateUserRequest extends Request {
       'email' => $this->user->getEmail(),
       'account_type' => $this->accountType,
       'contact_language' => $this->user->getPreferredLangcode(),
+      'is_salesperson' => FALSE
     ];
 
     if ($this->accountType == 'customer' && $this->userInformation) {
       foreach ($fieldMap as $field => $information) {
         $data[$information['external_field']] = isset($this->userInformation[$field]) ? $this->userInformation[$field] : '';
       }
+    }
+
+    if ($this->accountType != 'customer') {
+      $data['is_salesperson'] = TRUE;
     }
 
     if (isset($this->userInformation['date_of_birth'])) {

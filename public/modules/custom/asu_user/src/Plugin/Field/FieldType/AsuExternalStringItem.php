@@ -30,7 +30,7 @@ class AsuExternalStringItem extends StringItem {
   /**
    * Private tempstore.
    *
-   * @var PrivateTempStore
+   * @var \Drupal\Core\TempStore\PrivateTempStore
    */
   private PrivateTempStore $store;
 

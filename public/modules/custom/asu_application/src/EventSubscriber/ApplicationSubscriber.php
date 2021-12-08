@@ -10,6 +10,7 @@ use Drupal\asu_application\Event\SalesApplicationEvent;
 use Drupal\Core\Messenger\MessengerTrait;
 use Drupal\Core\Queue\QueueFactory;
 use Drupal\Core\Queue\QueueInterface;
+use Drupal\user\Entity\User;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -123,6 +124,8 @@ class ApplicationSubscriber implements EventSubscriberInterface {
     $entity_type = 'asu_application';
     $entity_id = $applicationEvent->getApplicationId();
 
+    $sender = User::load($applicationEvent->getSenderId());
+
     /** @var \Drupal\asu_application\Entity\Application $application */
     $application = \Drupal::entityTypeManager()
       ->getStorage($entity_type)
@@ -132,7 +135,6 @@ class ApplicationSubscriber implements EventSubscriberInterface {
     $sender = User::load($applicationEvent->getSenderId());
 
     try {
-      // @todo Until the api is updated.
       $request = new SalesCreateApplicationRequest(
         $sender,
         $application,
@@ -141,13 +143,13 @@ class ApplicationSubscriber implements EventSubscriberInterface {
           'apartment_uuids' => $applicationEvent->getApartmentUuids(),
         ]
       );
-      $request->setSender($user);
+
+      $request->setSender($sender);
 
       $this->backendApi->send($request);
-      // @todo Notice in event.
-      // $this->logger->notice(
-      // 'User sent an application to backend successfully'
-      // );
+      $this->logger->notice(
+       'Sales sent application to backend successfully'
+      );
     }
     catch (\Exception $e) {
       $this->logger->critical(sprintf(

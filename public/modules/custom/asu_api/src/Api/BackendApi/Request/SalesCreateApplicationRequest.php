@@ -56,14 +56,14 @@ class SalesCreateApplicationRequest extends Request {
     $owner = $this->application->getOwner();
     $values = [
        // Profile id is the customer profile uuid.
-      'profile_id' => $owner->uuid(),
+      'profile' => $owner->uuid(),
       'application_uuid' => $this->application->uuid(),
       'application_type' => $this->application->bundle(),
       'ssn_suffix' => $this->application->field_personal_id->value,
       'has_children' => $this->application->getHasChildren(),
       'additional_applicant' => $this->getApplicant(),
-      // 'right_of_residence' => $this->application
-      // ->field_right_of_residence_number->value,
+      'right_of_residence' => $this->application
+        ->field_right_of_residence_number->value,
       'project_id' => $this->projectData['uuid'],
       'apartments' => $this->getApartments(),
     ];

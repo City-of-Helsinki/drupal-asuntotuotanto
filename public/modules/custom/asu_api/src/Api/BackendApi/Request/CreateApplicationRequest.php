@@ -61,7 +61,6 @@ class CreateApplicationRequest extends Request {
       'right_of_residence' => $this->application->field_right_of_residence_number->value,
       'project_id' => $this->projectData['uuid'],
       'apartments' => $this->getApartments(),
-      'is_salesperson' => FALSE,
     ];
 
     return $values;

@@ -165,7 +165,7 @@ class RegisterForm extends TypedRegisterForm {
     }
     $account->save();
 
-    $this->sendToBackend($account, $form_state);
+    $this->sendToBackend($account, $form_state->getUserInput());
 
     $form_state->set('user', $account);
     $form_state->setValue('uid', $account->id());
@@ -227,7 +227,7 @@ class RegisterForm extends TypedRegisterForm {
       $form_state->setRedirect('asu_application.admin_create_application', ['user_id' => $user->id()]);
     }
 
-    $this->sendToBackend($user, $form_state, 'customer');
+    $this->sendToBackend($user, $form_state->getUserInput(), 'customer');
 
     $form_state->set('user', $user);
     $form_state->setValue('uid', $user->id());
@@ -261,7 +261,22 @@ class RegisterForm extends TypedRegisterForm {
 
     $account->save();
 
-    $this->sendToBackend($account, $form_state, 'salesperson');
+    $phone = '-';
+    if ($account->hasField('field_phone_number')) {
+      $phone = $account->get('field_phone_number')->getValue()[0] ?? '-';
+    }
+
+    $salespersonData = [
+      'first_name' => '-',
+      'last_name' => '-',
+      'phone_number' => $phone,
+      'street_address' => '-',
+      'postal_code' => '-',
+      'city' => '-',
+      'date_of_birth' => (new \Datetime())->format('Y-m-d'),
+    ];
+
+    $this->sendToBackend($account, $salespersonData, 'salesperson');
 
     $form_state->set('user', $account);
     $form_state->setValue('uid', $account->id());
@@ -278,13 +293,14 @@ class RegisterForm extends TypedRegisterForm {
   /**
    * Send the user information to Django backend.
    */
-  private function sendToBackend(UserInterface $account, FormStateInterface $form_state, $account_type = 'customer') {
+  private function sendToBackend(UserInterface $account, array $userInput, $account_type = 'customer') {
     try {
-      $request = new CreateUserRequest($account, $form_state->getUserInput(), $account_type);
+      $request = new CreateUserRequest($account, $userInput, $account_type);
       /** @var \Drupal\asu_api\Api\BackendApi\Response\CreateUserResponse $response */
       $response = $this->backendApi->send($request);
       $account->field_backend_profile = $response->getProfileId();
       $account->field_backend_password = $response->getPassword();
+      xdebug_break();
       $account->save();
     }
     catch (\Exception $e) {
