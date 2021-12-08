@@ -299,7 +299,9 @@
               and (floor|render <= '0')
               and (sales_price|render == '0,00€' or sales_price|render == '')
               and (debt_free_sales_price|render == '0,00€' or debt_free_sales_price|render == '')
-              and (apartment_structure|render == '')
+              and (energy_class|render == null)
+              and (accessibility|render == null)
+              and (site_owner|render == null)
           %}
 					{% else %}
 						{% trans %}
