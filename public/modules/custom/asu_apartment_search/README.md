@@ -1,11 +1,8 @@
 # City of Helsinki - Asuntotuotanto Apartment Search
 
-Initial setup for implementing Apartment Search (React app) to Asuntotuotanto Drupal.
-Note! This is not the preferred way to implement applications in to Drupal. Consult hel.fi developers for more preferable way to implement widgets. 
-
 ## Requirements
 
-Make sure NodeJS (minimum v12.18) is installed. 
+Make sure NodeJS (minimum v12.18) is installed.
 
 ## How to install
 
@@ -13,6 +10,7 @@ Run `composer install`. This will install asuntomyynti-react package from City o
 
 ## How to update
 
-Update the Asuntomyynti React package by running `composer update vendor/package:version`. For version see: https://github.com/City-of-Helsinki/asuntomyynti-react.  
-After updating the package run `composer install`.
-Commit the changed files and push them to repository.
+Update the Asuntomyynti React package by updating the composer file at the root of the project.
+You can manually adjust the package version to the latest. Remember to update lock file as well.
+For the lastest version see: https://github.com/City-of-Helsinki/asuntomyynti-react/releases.
+After updating the package running `composer install` will create you the built react application.
