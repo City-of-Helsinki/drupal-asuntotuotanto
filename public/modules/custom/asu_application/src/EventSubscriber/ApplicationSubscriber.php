@@ -132,8 +132,6 @@ class ApplicationSubscriber implements EventSubscriberInterface {
       ->load($entity_id);
     $user = $application->getOwner();
 
-    $sender = User::load($applicationEvent->getSenderId());
-
     try {
       $request = new SalesCreateApplicationRequest(
         $sender,

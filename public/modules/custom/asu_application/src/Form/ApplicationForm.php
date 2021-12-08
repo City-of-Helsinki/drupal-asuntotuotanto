@@ -23,23 +23,21 @@ class ApplicationForm extends ContentEntityForm {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
+    /** @var \Drupal\user\Entity\User $currentUser */
+    $currentUser = User::load(\Drupal::currentUser()->id());
+
     $applicationsUrl = $this->getUserApplicationsUrl();
     $project_id = $this->entity->get('project_id')->value;
     $application_type_id = $this->entity->bundle();
 
     $owner_id = \Drupal::request()->get('user_id');
-    if (!$owner_id) {
+    if ($owner_id && $currentUser->bundle() == 'sales') {
       $owner_id = $this->entity->getOwnerId();
     }
 
-    /** @var \Drupal\user\Entity\User $currentUser */
-    $currentUser = User::load(\Drupal::currentUser()->id());
-
+    // User is sales.
     if ($owner_id != $currentUser->id() && $currentUser->access('create')) {
-      // User is not customer.
       $owner = User::load($owner_id);
-      // Here we must get the user information
-      // Or we must get the user.
     }
     else {
       // User is customer or not authenticated.
@@ -58,7 +56,6 @@ class ApplicationForm extends ContentEntityForm {
       // User must have customer role.
       if ($owner->bundle() != 'customer') {
         \Drupal::logger('asu_application')->critical('User without customer role tried to create application: User id: ' . \Drupal::currentUser()->id());
-        \Drupal::messenger()->addMessage($this->t('Users without customer role cannot fill applications.'));
         return(new RedirectResponse(\Drupal::request()->getSchemeAndHttpHost(), 301));
       }
     }
@@ -97,8 +94,6 @@ class ApplicationForm extends ContentEntityForm {
     $form['#project_id'] = $project_id;
 
     // Redirect cases.
-    // @todo How to do this ?
-    // $bday = $owner->date_of_birth->value;
     try {
       if (!$project_data = $this->getApartments($project_id)) {
         throw new \InvalidArgumentException('Project or apartments for project not found.');
@@ -163,12 +158,6 @@ class ApplicationForm extends ContentEntityForm {
     // User may access and create application.
     // Pre-create the application if user comes to the form for the first time.
     if ($this->entity->isNew()) {
-      // @todo Bday.
-      if ($this->entity->hasField('field_personal_id')) {
-        // $personalIdDivider = $this->getPersonalIdDivider($bday);
-        // $this->entity->set('field_personal_id', $personalIdDivider);
-      }
-
       $this->entity->save();
 
       $url = $this->entity->toUrl()->toString();
@@ -183,8 +172,6 @@ class ApplicationForm extends ContentEntityForm {
     $form['#apartment_values'] = $apartments;
     $form['#project_name'] = $projectName;
 
-    // @todo Bday.
-    // $form['#pid_start'] = $this->dateToPersonalId($bday);
     $form['#project_uuid'] = $project_data['project_uuid'];
     $form['#apartment_uuids'] = $project_data['apartment_uuids'];
 

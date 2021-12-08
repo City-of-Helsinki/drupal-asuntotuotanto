@@ -103,7 +103,7 @@ class RegisterForm extends TypedRegisterForm {
     ) {
       $form['create_application'] = [
         '#type' => 'submit',
-        '#value' => $this->t('Create application for user'),
+        '#value' => $this->t('Create application for new user'),
         '#button_type' => 'primary',
         '#submit' => ['::createApplication'],
       ];
@@ -197,8 +197,8 @@ class RegisterForm extends TypedRegisterForm {
     $user->setPassword($pass);
     $user->enforceIsNew();
     $user->setEmail($form_state->getUserInput()['mail']);
-    $hash = substr(base64_encode(microtime()), 0, 7);
 
+    $hash = substr(base64_encode(microtime()), 0, 7);
     $user->setUsername(
       sprintf(
         '%s_%s_%s',
@@ -239,7 +239,9 @@ class RegisterForm extends TypedRegisterForm {
           ->toString(),
       ]);
     $user->password = $pass;
-    \Drupal::messenger()->addMessage(t('New customer account was created'));
+    \Drupal::messenger()->addMessage(
+      t('New customer account was created: @email', ['@email' => $form_state->getValue('mail')])
+    );
   }
 
   /**
@@ -280,13 +282,17 @@ class RegisterForm extends TypedRegisterForm {
 
     $form_state->set('user', $account);
     $form_state->setValue('uid', $account->id());
-    $this->logger('user')->notice('New user: %name %email.',
+    $this->logger('user')->notice('New user: %email.',
       [
-        '%name' => $form_state->getValue('name'),
         '%email' => '<' . $form_state->getValue('mail') . '>',
         'type' => $account->toLink($this->t('Edit'), 'edit-form')
           ->toString(),
       ]);
+
+    $this->messenger->addMessage(
+      $this->t('New sales user created: @email', ['@email' => $form_state->getValue('mail')])
+    );
+
     $account->password = $pass;
   }
 
@@ -300,7 +306,6 @@ class RegisterForm extends TypedRegisterForm {
       $response = $this->backendApi->send($request);
       $account->field_backend_profile = $response->getProfileId();
       $account->field_backend_password = $response->getPassword();
-      xdebug_break();
       $account->save();
     }
     catch (\Exception $e) {
