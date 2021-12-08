@@ -71,6 +71,10 @@
     }
   }
 
+  .slick-list {
+    max-height: 550px;
+  }
+
   .slide__content {
     cursor: pointer;
     position: relative;
