@@ -137,7 +137,7 @@ class RegisterForm extends TypedRegisterForm {
         $this->salespersonCreatesCustomer($form_state);
       }
       if ($form_id == 'user_sales_register_form') {
-        $this->saveSalesperson($form, $form_state);
+        $this->saveSalesperson($form_state);
       }
     }
     else {
@@ -250,7 +250,7 @@ class RegisterForm extends TypedRegisterForm {
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The form state.
    */
-  private function saveSalesperson(array $form, FormStateInterface $form_state) {
+  private function saveSalesperson(FormStateInterface $form_state) {
     /** @var \Drupal\user_bundle\Entity\TypedUser $account */
     $account = $this->entity;
     $pass = $account->getPassword();

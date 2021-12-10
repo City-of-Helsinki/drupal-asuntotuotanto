@@ -77,7 +77,8 @@ class CreateUserRequest extends Request {
       try {
         $data['date_of_birth'] = ApplicationHelper::formatDate($this->userInformation['date_of_birth']);
       }
-      catch (\InvalidArgumentException $e) {
+      catch (\Exception $e) {
+        $data['date_of_birth'] = NULL;
       }
     }
 
