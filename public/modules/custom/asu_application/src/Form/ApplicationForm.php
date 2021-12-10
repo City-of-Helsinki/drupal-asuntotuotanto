@@ -31,12 +31,12 @@ class ApplicationForm extends ContentEntityForm {
     $application_type_id = $this->entity->bundle();
 
     $owner_id = \Drupal::request()->get('user_id');
-    if ($owner_id && $currentUser->bundle() == 'sales') {
+    if ($owner_id && $currentUser->bundle() == 'sales' || $currentUser->hasPermission('administer')) {
       $owner_id = $this->entity->getOwnerId();
     }
 
     // User is sales.
-    if ($owner_id != $currentUser->id() && $currentUser->access('create')) {
+    if ($owner_id != $currentUser->id() || $currentUser->hasPermission('administer')) {
       $owner = User::load($owner_id);
     }
     else {
@@ -217,7 +217,7 @@ class ApplicationForm extends ContentEntityForm {
     }
 
     $currentUser = User::load(\Drupal::currentUser()->id());
-    if ($currentUser->bundle() == 'sales') {
+    if ($currentUser->bundle() == 'sales' || $currentUser->hasPermission('administer')) {
       $eventName = SalesApplicationEvent::EVENT_NAME;
       $event = new SalesApplicationEvent(
         $currentUser->id(),
