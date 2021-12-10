@@ -243,8 +243,6 @@ class RegisterForm extends TypedRegisterForm {
   /**
    * Salesperson creates new salesperson.
    *
-   * @param array $form
-   *   The form.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The form state.
    */
