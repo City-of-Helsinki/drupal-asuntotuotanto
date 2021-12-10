@@ -44,7 +44,7 @@ class UserRequest extends Request {
    */
   public function getBackendProfileId(): string {
     if (!$backendProfileId = $this->user->get('field_backend_profile')->value) {
-      throw new \Exception('Trying to fetch user data for user without backend profile: user id ' . $this->user->id());
+      throw new \InvalidArgumentException('Trying to fetch user data for user without backend profile: user id ' . $this->user->id());
     }
     return $backendProfileId;
   }

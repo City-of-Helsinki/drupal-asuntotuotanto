@@ -66,6 +66,9 @@ class BackendApi {
       if ($token = $this->handleAuthentication($request->getSender())) {
         $options['headers']['Authorization'] = sprintf("Bearer %s", $token);
       }
+      else {
+        throw new \InvalidArgumentException('Cannot authenticate request sender.');
+      }
     }
 
     try {

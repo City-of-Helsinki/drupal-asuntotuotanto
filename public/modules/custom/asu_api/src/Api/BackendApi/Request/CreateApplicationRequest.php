@@ -83,7 +83,7 @@ class CreateApplicationRequest extends Request {
       }
     }
     if (empty($apartments)) {
-      throw new \Exception('Application apartments cannot be empty.');
+      throw new \InvalidArgumentException('Application apartments cannot be empty.');
     }
     return $apartments;
   }

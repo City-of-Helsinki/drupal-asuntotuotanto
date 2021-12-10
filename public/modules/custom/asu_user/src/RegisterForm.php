@@ -134,7 +134,7 @@ class RegisterForm extends TypedRegisterForm {
       $currentUser->hasPermission('Administer permissions')
     ) {
       if ($form_id == 'user_customer_register_form') {
-        $this->salespersonCreatesCustomer($form, $form_state);
+        $this->salespersonCreatesCustomer($form_state);
       }
       if ($form_id == 'user_sales_register_form') {
         $this->saveSalesperson($form, $form_state);
@@ -184,12 +184,10 @@ class RegisterForm extends TypedRegisterForm {
   /**
    * Sales person creates new customer account.
    *
-   * @param array $form
-   *   The form.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The form state.
    */
-  private function salespersonCreatesCustomer(array $form, FormStateInterface $form_state) {
+  private function salespersonCreatesCustomer(FormStateInterface $form_state) {
     $pass = $form_state->getValues()['pass'];
 
     $user = $form_state->getFormObject()->entity;
@@ -319,7 +317,7 @@ class RegisterForm extends TypedRegisterForm {
    * Callback, application creation form.
    */
   public function createApplication(array $form, FormStateInterface $form_state) {
-    $this->salespersonCreatesCustomer($form, $form_state);
+    $this->salespersonCreatesCustomer($form_state);
   }
 
 }
