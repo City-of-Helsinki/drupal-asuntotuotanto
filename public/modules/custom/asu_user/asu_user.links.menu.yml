@@ -4,3 +4,26 @@ asu_user.delete-test-users:
   parent: entity.user.collection
   route_name: asu_user.delete_test_users
   weight: 100
+
+asu_user.overview:
+  title: 'Tools'
+  description: 'Content management helper pages.'
+  route_name: asu_user.list_all
+  parent: system.admin
+  weight: -9
+
+asu_user.menus:
+  title: 'Menus'
+  parent: asu_user.overview
+  route_name: entity.menu.collection
+  weight: 0
+
+asu_user.taxonomy:
+  title: 'Taxonomy'
+  parent: asu_user.overview
+  route_name: hdbt_admin_tools.taxonomy
+
+asu_user.user_interface_translations:
+  title: 'User interface translations'
+  parent: asu_user.overview
+  route_name: locale.translate_page
