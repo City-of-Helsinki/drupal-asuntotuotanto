@@ -54,7 +54,7 @@ class SalesCreateApplicationRequest extends Request {
   public function toArray(): array {
     /** @var \Drupal\user\UserInterface $owner */
     $owner = $this->application->getOwner();
-    $values = [
+    return [
        // Profile id is the customer profile uuid.
       'profile' => $owner->uuid(),
       'application_uuid' => $this->application->uuid(),
@@ -67,8 +67,6 @@ class SalesCreateApplicationRequest extends Request {
       'project_id' => $this->projectData['uuid'],
       'apartments' => $this->getApartments(),
     ];
-
-    return $values;
   }
 
   /**

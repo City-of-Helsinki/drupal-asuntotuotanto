@@ -130,7 +130,6 @@ class ApplicationSubscriber implements EventSubscriberInterface {
     $application = \Drupal::entityTypeManager()
       ->getStorage($entity_type)
       ->load($entity_id);
-    $user = $application->getOwner();
 
     try {
       $request = new SalesCreateApplicationRequest(
