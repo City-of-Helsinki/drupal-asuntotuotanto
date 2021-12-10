@@ -3,6 +3,7 @@
 namespace Drupal\asu_api\Api\BackendApi\Request;
 
 use Psr\Http\Message\ResponseInterface;
+use Drupal\asu_api\Helper\ApplicationHelper;
 use Drupal\asu_api\Api\BackendApi\Response\CreateUserResponse;
 use Drupal\asu_api\Api\Request;
 use Drupal\user\UserInterface;
@@ -18,7 +19,7 @@ class CreateUserRequest extends Request {
   protected const AUTHENTICATED = FALSE;
 
   /**
-   * User data in array.
+   * User to be sent to backend.
    *
    * @var array
    */
@@ -32,7 +33,7 @@ class CreateUserRequest extends Request {
   private array $userInformation;
 
   /**
-   * Customer or sales.
+   * Customer or salesperson.
    *
    * @var string
    */
@@ -57,6 +58,9 @@ class CreateUserRequest extends Request {
     $data = [
       'id' => $this->user->uuid(),
       'email' => $this->user->getEmail(),
+      'account_type' => $this->accountType,
+      'contact_language' => $this->user->getPreferredLangcode(),
+      'is_salesperson' => FALSE,
     ];
 
     if ($this->accountType == 'customer' && $this->userInformation) {
@@ -65,11 +69,18 @@ class CreateUserRequest extends Request {
       }
     }
 
-    // @todo Onko väärä datetime.
-    $dateOfBirth = (new \DateTime($this->user->date_of_birth->value))->format('Y-m-d');
-    $data['date_of_birth'] = $dateOfBirth;
-    $data['contact_language'] = $this->user->getPreferredLangcode();
-    $data['account_type'] = $this->accountType;
+    if ($this->accountType != 'customer') {
+      $data['is_salesperson'] = TRUE;
+    }
+
+    if (isset($this->userInformation['date_of_birth'])) {
+      try {
+        $data['date_of_birth'] = ApplicationHelper::formatDate($this->userInformation['date_of_birth']);
+      }
+      catch (\Exception $e) {
+        $data['date_of_birth'] = NULL;
+      }
+    }
 
     return $data;
   }

@@ -2,6 +2,7 @@
 
 namespace Drupal\asu_api\Api;
 
+use Drupal\asu_api\Exception\RequestException;
 use Psr\Http\Message\ResponseInterface;
 
 /**
@@ -33,7 +34,7 @@ abstract class Response {
    */
   public static function requestOk(ResponseInterface $response): bool {
     if ($response->getStatusCode() < 200 && $response->getStatusCode() > 299) {
-      throw new \Exception('Bad status code: ' . $response->getStatusCode());
+      throw new RequestException('Bad status code: ' . $response->getStatusCode());
     }
     return TRUE;
   }

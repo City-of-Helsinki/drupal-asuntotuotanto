@@ -98,12 +98,12 @@ class RegisterForm extends TypedRegisterForm {
     if (
       \Drupal::currentUser()->isAuthenticated() &&
       in_array('salesperson', \Drupal::currentUser()->getRoles(TRUE)) ||
-      \Drupal::currentUser()->hasPermission('administer')  &&
+      \Drupal::currentUser()->hasPermission('administer') &&
       $form_object->getFormId() == 'user_customer_register_form'
     ) {
       $form['create_application'] = [
         '#type' => 'submit',
-        '#value' => $this->t('Create application for user'),
+        '#value' => $this->t('Create application for new user'),
         '#button_type' => 'primary',
         '#submit' => ['::createApplication'],
       ];
@@ -134,15 +134,15 @@ class RegisterForm extends TypedRegisterForm {
       $currentUser->hasPermission('Administer permissions')
     ) {
       if ($form_id == 'user_customer_register_form') {
-        $this->saveNewCustomer($form, $form_state);
+        $this->salespersonCreatesCustomer($form_state);
       }
       if ($form_id == 'user_sales_register_form') {
-        $this->saveSales($form, $form_state);
+        $this->saveSalesperson($form_state);
       }
     }
     else {
       if ($form_id == 'user_customer_register_form') {
-        $this->saveCustomer($form, $form_state);
+        $this->saveCustomer($form_state);
       }
     }
   }
@@ -150,12 +150,10 @@ class RegisterForm extends TypedRegisterForm {
   /**
    * Customer creates new account.
    *
-   * @param array $form
-   *   The form.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The form state.
    */
-  public function saveCustomer(array $form, FormStateInterface $form_state) {
+  public function saveCustomer(FormStateInterface $form_state) {
     /** @var \Drupal\user_bundle\Entity\TypedUser $account */
     $account = $this->entity;
     $pass = $account->getPassword();
@@ -165,43 +163,29 @@ class RegisterForm extends TypedRegisterForm {
     }
     $account->save();
 
-    // Create user to backend.
-    // @todo This check might be unnecessary.
-    if ($account->bundle() == 'customer') {
+    $this->sendToBackend($account, $form_state->getUserInput());
 
-      // @todo Tempstore is useless at this point, check the other functions as well.
-      /** @var Customer $customer */
-      // $this->customer->updateUserExternalFields($form_state->getUserInput());
-      try {
-        $this->sendToBackend($account, $form_state);
-      }
-      catch (\Exception $e) {
-        // Log failure.
-      }
-
-      $form_state->set('user', $account);
-      $form_state->setValue('uid', $account->id());
-      $this->logger('user')->notice('New user: %name %email.',
-        [
-          '%name' => $form_state->getValue('name'),
-          '%email' => '<' . $form_state->getValue('mail') . '>',
-          'type' => $account->toLink($this->t('Edit'), 'edit-form')
-            ->toString(),
-        ]);
-      // Add plain text password into user account to generate mail tokens.
-      $account->password = $pass;
-    }
+    $form_state->set('user', $account);
+    $form_state->setValue('uid', $account->id());
+    $this->logger('user')->notice('New user: %name %email.',
+      [
+        '%name' => $form_state->getValue('name'),
+        '%email' => '<' . $form_state->getValue('mail') . '>',
+        'type' => $account->toLink($this->t('Edit'), 'edit-form')
+          ->toString(),
+      ]);
+    // Add plain text password into user account to generate mail tokens.
+    $account->password = $pass;
+    user_login_finalize($account);
   }
 
   /**
    * Sales person creates new customer account.
    *
-   * @param array $form
-   *   The form.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The form state.
    */
-  private function saveNewCustomer(array $form, FormStateInterface $form_state) {
+  private function salespersonCreatesCustomer(FormStateInterface $form_state) {
     $pass = $form_state->getValues()['pass'];
 
     $user = $form_state->getFormObject()->entity;
@@ -209,7 +193,16 @@ class RegisterForm extends TypedRegisterForm {
     $user->setPassword($pass);
     $user->enforceIsNew();
     $user->setEmail($form_state->getUserInput()['mail']);
-    $user->setUsername(sprintf('%s %s', $form_state->getUserInput()['first_name'], $form_state->getUserInput()['last_name']));
+
+    $hash = substr(base64_encode(microtime()), 0, 7);
+    $user->setUsername(
+      sprintf(
+        '%s_%s_%s',
+        $form_state->getUserInput()['first_name'],
+        $form_state->getUserInput()['last_name'],
+        $hash
+      )
+    );
 
     $user->set('init', 'email');
     $user->set('langcode', $form_state->getValues()['preferred_langcode']);
@@ -224,37 +217,36 @@ class RegisterForm extends TypedRegisterForm {
     $user->addRole('customer');
     $user->activate();
 
-    $result = $user->save();
+    $user->save();
 
-    // @todo Check if create application button was pressed.
-    $form_state->setRedirect('asu_application.admin_create_application', ['user_id' => $user->id()]);
-
-    // Create user to backend.
-    if ($user->bundle() == 'customer') {
-      // $this->customer->updateUserExternalFields($form_state->getUserInput());
-      $this->sendToBackend($user, $form_state);
-      $form_state->set('user', $user);
-      $form_state->setValue('uid', $user->id());
-      $this->logger('user')->notice('New user: %name %email.',
-        [
-          '%name' => $form_state->getValue('name'),
-          '%email' => '<' . $form_state->getValue('mail') . '>',
-          'type' => $user->toLink($this->t('Edit'), 'edit-form')
-            ->toString(),
-        ]);
-      $user->password = $pass;
+    if ($form_state->getTriggeringElement()['#parents'][0] == 'create_application') {
+      $form_state->setRedirect('asu_application.admin_create_application', ['user_id' => $user->id()]);
     }
+
+    $this->sendToBackend($user, $form_state->getUserInput(), 'customer');
+
+    $form_state->set('user', $user);
+    $form_state->setValue('uid', $user->id());
+    $this->logger('user')->notice('New user: %name %email.',
+      [
+        '%name' => $form_state->getValue('name'),
+        '%email' => '<' . $form_state->getValue('mail') . '>',
+        'type' => $user->toLink($this->t('Edit'), 'edit-form')
+          ->toString(),
+      ]);
+    $user->password = $pass;
+    \Drupal::messenger()->addMessage(
+      t('New customer account was created: @email', ['@email' => $form_state->getValue('mail')])
+    );
   }
 
   /**
    * Salesperson creates new salesperson.
    *
-   * @param array $form
-   *   The form.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The form state.
    */
-  private function saveSales(array $form, FormStateInterface $form_state) {
+  private function saveSalesperson(FormStateInterface $form_state) {
     /** @var \Drupal\user_bundle\Entity\TypedUser $account */
     $account = $this->entity;
     $pass = $account->getPassword();
@@ -262,44 +254,66 @@ class RegisterForm extends TypedRegisterForm {
     if (!$account->hasRole('salesperson')) {
       $account->addRole('salesperson');
     }
+
     $account->save();
 
-    // Create user to backend.
-    if ($account->bundle() == 'sales') {
-      /** @var Customer $customer */
-      // $this->customer->updateUserExternalFields($form_state->getUserInput());
-      $this->sendToBackend($account, $form_state, 'sales');
-      $form_state->set('user', $account);
-      $form_state->setValue('uid', $account->id());
-      $this->logger('user')->notice('New user: %name %email.',
-        [
-          '%name' => $form_state->getValue('name'),
-          '%email' => '<' . $form_state->getValue('mail') . '>',
-          'type' => $account->toLink($this->t('Edit'), 'edit-form')
-            ->toString(),
-        ]);
-      $account->password = $pass;
+    $phone = '-';
+    if ($account->hasField('field_phone_number')) {
+      $phone = $account->get('field_phone_number')->getValue()[0] ?? '-';
     }
+
+    $salespersonData = [
+      'first_name' => '-',
+      'last_name' => '-',
+      'phone_number' => $phone,
+      'street_address' => '-',
+      'postal_code' => '-',
+      'city' => '-',
+      'date_of_birth' => (new \Datetime())->format('Y-m-d'),
+    ];
+
+    $this->sendToBackend($account, $salespersonData, 'salesperson');
+
+    $form_state->set('user', $account);
+    $form_state->setValue('uid', $account->id());
+    $this->logger('user')->notice('New user: %email.',
+      [
+        '%email' => '<' . $form_state->getValue('mail') . '>',
+        'type' => $account->toLink($this->t('Edit'), 'edit-form')
+          ->toString(),
+      ]);
+
+    $this->messenger->addMessage(
+      $this->t('New sales user created: @email', ['@email' => $form_state->getValue('mail')])
+    );
+
+    $account->password = $pass;
   }
 
   /**
    * Send the user information to Django backend.
    */
-  private function sendToBackend(UserInterface $account, FormStateInterface $form_state, $account_type = 'customer') {
-    $request = new CreateUserRequest($account, $form_state->getUserInput(), $account_type);
-    /** @var \Drupal\asu_api\Api\BackendApi\Response\CreateUserResponse $response */
-    $response = $this->backendApi->send($request);
-
-    $account->field_backend_profile = $response->getProfileId();
-    $account->field_backend_password = $response->getPassword();
-    $account->save();
+  private function sendToBackend(UserInterface $account, array $userInput, $account_type = 'customer') {
+    try {
+      $request = new CreateUserRequest($account, $userInput, $account_type);
+      /** @var \Drupal\asu_api\Api\BackendApi\Response\CreateUserResponse $response */
+      $response = $this->backendApi->send($request);
+      $account->field_backend_profile = $response->getProfileId();
+      $account->field_backend_password = $response->getPassword();
+      $account->save();
+    }
+    catch (\Exception $e) {
+      \Drupal::logger('asu_backend_api')->emergency(
+        'Exception while creating user to backend: ' . $e->getMessage()
+      );
+    }
   }
 
   /**
    * Callback, application creation form.
    */
   public function createApplication(array $form, FormStateInterface $form_state) {
-    $this->saveNewCustomer($form, $form_state);
+    $this->salespersonCreatesCustomer($form_state);
   }
 
 }

@@ -4,6 +4,7 @@ namespace Drupal\asu_user\Plugin\Field\FieldType;
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Field\Plugin\Field\FieldType\StringItem;
+use Drupal\Core\TempStore\PrivateTempStore;
 use Drupal\Core\TypedData\DataDefinitionInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
 
@@ -29,9 +30,9 @@ class AsuExternalStringItem extends StringItem {
   /**
    * Private tempstore.
    *
-   * @var \Drupal\asu_user\Customer
+   * @var \Drupal\Core\TempStore\PrivateTempStore
    */
-  private Customer $customer;
+  private PrivateTempStore $store;
 
   /**
    * Constructor.
@@ -42,7 +43,7 @@ class AsuExternalStringItem extends StringItem {
     TypedDataInterface $parent = NULL
   ) {
     parent::__construct($definition, $name, $parent);
-    $this->customer = \Drupal::service('asu_user.customer');
+    $this->store = \Drupal::service('tempstore.private')->get('customer');
   }
 
   /**
@@ -77,9 +78,9 @@ class AsuExternalStringItem extends StringItem {
       $entity = $this->getEntity();
       if (!$entity->isNew()) {
         $name = $this->getFieldDefinition()->getFieldStorageDefinition()->getName();
-        $dataMap = \Drupal::config('asu_user.external_user_fields')->get('external_data_map');
+        $val = $this->store->get($name) ?? '';
         $value = [
-          'value' => $this->customer->getUserField($name),
+          'value' => $val,
         ];
         $this->setValue($value);
       }

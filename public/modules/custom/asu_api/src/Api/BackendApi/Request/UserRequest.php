@@ -43,7 +43,10 @@ class UserRequest extends Request {
    * Get users backend profile.
    */
   public function getBackendProfileId(): string {
-    return $this->user->field_backend_profile->value;
+    if (!$backendProfileId = $this->user->get('field_backend_profile')->value) {
+      throw new \InvalidArgumentException('Trying to fetch user data for user without backend profile: user id ' . $this->user->id());
+    }
+    return $backendProfileId;
   }
 
   /**

@@ -788,10 +788,13 @@ function asuntotuotanto_preprocess_pager(&$variables) {
  *
  */
 function asuntotuotanto_preprocess_user(&$variables) {
-  $customer = \Drupal::service('asu_user.customer');
-  $fields = \Drupal::config('asu_user.external_user_fields')->get('external_data_map');
-  foreach ($fields as $field_name => $field) {
-    $variables['content'][$field_name] = $customer->getUserField($field_name);
+  if (User::load(\drupal::currentUser()->id())->bundle() == 'customer') {
+    $customer = \Drupal::service('asu_user.customer');
+    $fields = \Drupal::config('asu_user.external_user_fields')->get('external_data_map');
+
+    foreach ($fields as $field_name => $field) {
+      $variables['content'][$field_name] = $customer->getUserField($field_name);
+    }
   }
 }
 
