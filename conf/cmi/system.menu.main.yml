@@ -5,6 +5,6 @@ dependencies: {  }
 _core:
   default_config_hash: DH2PmjFA9e0trIQIcoV9naKjUUsqs4pd6YWdlc-hM9M
 id: main
-label: 'Main navigation'
+label: Päävalikko
 description: 'Site section links'
 locked: true

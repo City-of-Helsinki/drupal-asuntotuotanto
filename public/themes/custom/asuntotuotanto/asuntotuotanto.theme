@@ -172,8 +172,10 @@ function asuntotuotanto_preprocess_views_view(&$variables) {
 
     case 'applications':
       $current_user = User::load(\Drupal::currentUser()->id());
-      $variables['is_email_valid'] = $current_user->get('field_email_is_valid')->getValue()[0]['value'] ?? NULL;
-
+      $variables['is_email_valid'] = NULL;
+      if ($current_user->hasField('field_email_is_valid')) {
+        $variables['is_email_valid'] = $current_user->get('field_email_is_valid')->getValue()[0]['value'] ?? NULL;
+      }
       break;
 
     case 'project_apartments_listing':
@@ -401,7 +403,10 @@ function asuntotuotanto_preprocess_node(&$variables) {
 
       $apartments = $node->field_apartments;
       foreach ($apartments as $apartment) {
-        $apartment_node = $apartment->entity;
+        if (!$apartment_node = $apartment->entity) {
+          continue;
+        }
+
         $apartment_sales_price = $apartment_node->hasField('field_sales_price') ? $apartment_node->get('field_sales_price')->value : 0;
         $apartment_debt_free_sales_price = $apartment_node->hasField('field_debt_free_sales_price') ? $apartment_node->get('field_debt_free_sales_price')->value : 0;
         $apartment_living_area_size = $apartment_node->hasField('field_living_area') ? $apartment_node->get('field_living_area')->value : 0;

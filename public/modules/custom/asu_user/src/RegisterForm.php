@@ -79,10 +79,7 @@ class RegisterForm extends TypedRegisterForm {
     foreach ($fields as $field => $info) {
       $form['basic_information'][$field] = [
         '#type' => $info['type'],
-        '#title' => $this->t(
-          "@{$info['title']}",
-          ["@{$info['title']}" => $info['title']]
-        ),
+        '#title' => $this->t($info['title']),
         '#maxlength' => 255,
         '#required' => TRUE,
         '#attributes' => [
@@ -259,14 +256,14 @@ class RegisterForm extends TypedRegisterForm {
 
     $phone = '-';
     if ($account->hasField('field_phone_number')) {
-      $phone = $account->get('field_phone_number')->getValue()[0] ?? '-';
+      $phone = $account->field_phone_number->value ?? '-';
     }
 
     $salespersonData = [
       'first_name' => '-',
       'last_name' => '-',
       'phone_number' => $phone,
-      'street_address' => '-',
+      'address' => '-',
       'postal_code' => '-',
       'city' => '-',
       'date_of_birth' => (new \Datetime())->format('Y-m-d'),
@@ -283,7 +280,7 @@ class RegisterForm extends TypedRegisterForm {
           ->toString(),
       ]);
 
-    $this->messenger->addMessage(
+    $this->messenger()->addMessage(
       $this->t('New sales user created: @email', ['@email' => $form_state->getValue('mail')])
     );
 

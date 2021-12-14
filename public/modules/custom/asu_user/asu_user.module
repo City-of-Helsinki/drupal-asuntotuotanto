@@ -29,10 +29,10 @@ function asu_user_entity_type_alter(array &$entity_types) {
  * Implements hook_user_login().
  */
 function asu_user_user_login(UserInterface $account) {
+  asu_create_backend_user($account);
   if ($account->hasRole('customer')) {
     asu_validate_email($account);
     asu_send_user_password_email($account);
-    // asu_create_backend_user($account);
     asu_get_user_external_field_data($account);
     asu_redirect_on_login_by_session($account);
   }
@@ -66,10 +66,10 @@ function asu_send_user_password_email(UserInterface $account) {
  * Send created user to backend.
  */
 function asu_create_backend_user(UserInterface $account) {
-  /** @var Drupal\asu_api\Api\BackendApi\BackendApi $backendApi */
-  $backendApi = \Drupal::service('asu_api.backendapi');
-
   if (!$profileId = $account->get('field_backend_profile')->value) {
+    /** @var Drupal\asu_api\Api\BackendApi\BackendApi $backendApi */
+    $backendApi = \Drupal::service('asu_api.backendapi');
+
     \Drupal::logger('asu_user')->critical('User should already have backend profile created.');
     try {
       $userBundle = User::load($account->id())->bundle();
@@ -78,11 +78,14 @@ function asu_create_backend_user(UserInterface $account) {
         ->get('external_data_map');
 
       $values = [];
-      if ($type == 'customer') {
-        $store = \Drupal::service('tempstore.private')->get('customer');
-        foreach ($config as $field => $value) {
-          $values[$value['external_field']] = $store->get($field) ?? '-';
-        }
+      $store = \Drupal::service('tempstore.private')->get('customer');
+      foreach ($config as $field => $value) {
+        $values[$value['external_field']] = $store->get($field) ?? '-';
+      }
+
+      if ($type == 'salesperson') {
+        $values['address'] = '-';
+        $values['date_of_birth'] = (new \DateTime())->format('Y-m-d');
       }
 
       $createUser = new CreateUserRequest($account, $values, $type);

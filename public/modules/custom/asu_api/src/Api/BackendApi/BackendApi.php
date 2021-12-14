@@ -6,7 +6,6 @@ use Drupal\asu_api\Api\BackendApi\Request\AuthenticationRequest;
 use Drupal\asu_api\Api\Request;
 use Drupal\asu_api\Api\Response;
 use Drupal\asu_api\Helper\AuthenticationHelper;
-use Drupal\Core\TempStore\PrivateTempStoreFactory;
 use Drupal\user\UserInterface;
 use Psr\Log\LoggerInterface;
 use GuzzleHttp\Client;
@@ -32,18 +31,24 @@ class BackendApi {
   private LoggerInterface $logger;
 
   /**
+   * Tempstore.
+   *
+   * @var Drupal\Core\TempStore\PrivateTempStore
+   */
+  private PrivateTempStore $store;
+
+  /**
    * Constructor.
    *
    * @param GuzzleHttp\Client $client
    *   Http client.
    * @param Psr\Log\LoggerInterface $logger
    *   Logger.
-   * @param Drupal\Core\TempStore\PrivateTempStoreFactory $storeFactory
-   *   Private tempstore factory.
    */
-  public function __construct(Client $client, LoggerInterface $logger, PrivateTempStoreFactory $storeFactory) {
+  public function __construct(Client $client, LoggerInterface $logger) {
     $this->client = $client;
     $this->logger = $logger;
+    $storeFactory = \Drupal::service('tempstore.private');
     $this->store = $storeFactory->get('customer');
   }
 
