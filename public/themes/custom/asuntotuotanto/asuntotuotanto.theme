@@ -401,7 +401,10 @@ function asuntotuotanto_preprocess_node(&$variables) {
 
       $apartments = $node->field_apartments;
       foreach ($apartments as $apartment) {
-        $apartment_node = $apartment->entity;
+        if (!$apartment_node = $apartment->entity) {
+          continue;
+        }
+
         $apartment_sales_price = $apartment_node->hasField('field_sales_price') ? $apartment_node->get('field_sales_price')->value : 0;
         $apartment_debt_free_sales_price = $apartment_node->hasField('field_debt_free_sales_price') ? $apartment_node->get('field_debt_free_sales_price')->value : 0;
         $apartment_living_area_size = $apartment_node->hasField('field_living_area') ? $apartment_node->get('field_living_area')->value : 0;

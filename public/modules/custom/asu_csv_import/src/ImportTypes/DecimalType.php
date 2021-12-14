@@ -25,7 +25,7 @@ class DecimalType extends ImportType {
       $this->value = $value;
     }
     else {
-      throw new \Exception('Value is not proper decimal.');
+      throw new \Exception('Given value is not proper decimal');
     }
   }
 
@@ -53,13 +53,13 @@ class DecimalType extends ImportType {
   /**
    * Decimal is valid if it passes one of the three checks.
    *
-   * @param float $input
+   * @param string $input
    *   Decimal.
    *
    * @return bool
    *   Is allowed.
    */
-  private function isAllowedValue(float $input): bool {
+  private function isAllowedValue(string $input): bool {
     if (empty($input)) {
       return TRUE;
     }

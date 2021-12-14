@@ -79,10 +79,7 @@ class RegisterForm extends TypedRegisterForm {
     foreach ($fields as $field => $info) {
       $form['basic_information'][$field] = [
         '#type' => $info['type'],
-        '#title' => $this->t(
-          "@{$info['title']}",
-          ["@{$info['title']}" => $info['title']]
-        ),
+        '#title' => $this->t($info['title']),
         '#maxlength' => 255,
         '#required' => TRUE,
         '#attributes' => [

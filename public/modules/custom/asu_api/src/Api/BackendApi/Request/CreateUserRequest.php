@@ -57,6 +57,7 @@ class CreateUserRequest extends Request {
     $data = [
       'id' => $this->user->uuid(),
       'email' => $this->user->getEmail(),
+      'is_salesperson' => FALSE
     ];
 
     if ($this->accountType == 'customer' && $this->userInformation) {
@@ -69,7 +70,6 @@ class CreateUserRequest extends Request {
     $dateOfBirth = (new \DateTime($this->user->date_of_birth->value))->format('Y-m-d');
     $data['date_of_birth'] = $dateOfBirth;
     $data['contact_language'] = $this->user->getPreferredLangcode();
-    $data['account_type'] = $this->accountType;
 
     return $data;
   }

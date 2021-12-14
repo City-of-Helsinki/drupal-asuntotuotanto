@@ -27,3 +27,8 @@ asu_user.user_interface_translations:
   title: 'User interface translations'
   parent: asu_user.overview
   route_name: locale.translate_page
+
+asu_user.bulk_edit_empty:
+  title: 'Apartment image bulk upload'
+  parent: asu_user.overview
+  route_name: asu_content.bulk_edit_empty

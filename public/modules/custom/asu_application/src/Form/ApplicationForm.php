@@ -211,6 +211,7 @@ class ApplicationForm extends ContentEntityForm {
    * {@inheritdoc}
    */
   public function save(array $form, FormStateInterface $form_state) {
+    $form_state['rebuild'] = TRUE;
     $values = $form_state->getUserInput();
 
     $this->updateEntityFieldsWithUserInput($form_state);
