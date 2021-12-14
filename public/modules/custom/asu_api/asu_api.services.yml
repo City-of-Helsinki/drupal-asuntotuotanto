@@ -14,4 +14,4 @@ services:
     arguments: ['backend_api']
   asu_api.backendapi:
     class: Drupal\asu_api\Api\BackendApi\BackendApi
-    arguments: ['@asu_api.backend_client', '@logger.channel.asu_api']
+    arguments: ['@asu_api.backend_client', '@logger.channel.asu_api', '@tempstore.private']

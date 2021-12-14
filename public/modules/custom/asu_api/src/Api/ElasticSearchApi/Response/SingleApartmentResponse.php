@@ -2,6 +2,7 @@
 
 namespace Drupal\asu_api\Api\ElasticSearchApi\Response;
 
+use Drupal\asu_api\Exception\RequestException;
 use Psr\Http\Message\ResponseInterface;
 
 /**
@@ -57,7 +58,7 @@ class SingleApartmentResponse {
     $responseContent = json_decode($response->getBody()->getContents(), TRUE);
     $content = $responseContent['hits']['hits'];
     if (empty($content)) {
-      throw new \Exception('No apartments found.');
+      throw new RequestException('No apartments found.');
     }
     return new self($content[0]['_source']);
   }

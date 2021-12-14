@@ -2,7 +2,7 @@
 
 namespace Drupal\asu_api\Api\BackendApi\Request;
 
-use Drupal\asu_api\Api\BackendApi\Response\CreateApplicationResponse;
+use Drupal\asu_api\Api\BackendApi\Response\SalesCreateApplicationResponse;
 use Drupal\asu_api\Api\Request;
 use Drupal\asu_application\Entity\Application;
 use Drupal\user\UserInterface;
@@ -11,8 +11,8 @@ use Psr\Http\Message\ResponseInterface;
 /**
  * A request to create an application.
  */
-class CreateApplicationRequest extends Request {
-  protected const PATH = '/v1/applications/';
+class SalesCreateApplicationRequest extends Request {
+  protected const PATH = '/v1/sales/applications/';
 
   protected const METHOD = 'POST';
 
@@ -52,18 +52,21 @@ class CreateApplicationRequest extends Request {
    *   Array which is sent to API.
    */
   public function toArray(): array {
-    $values = [
+    /** @var \Drupal\user\UserInterface $owner */
+    $owner = $this->application->getOwner();
+    return [
+       // Profile id is the customer profile uuid.
+      'profile' => $owner->uuid(),
       'application_uuid' => $this->application->uuid(),
       'application_type' => $this->application->bundle(),
       'ssn_suffix' => $this->application->field_personal_id->value,
       'has_children' => $this->application->getHasChildren(),
-      'additional_applicant' => $this->getApplicant(),
-      'right_of_residence' => $this->application->field_right_of_residence_number->value,
+      'additional_applicant' => $this->getApplicant() ?? FALSE,
+      'right_of_residence' => $this->application
+        ->field_right_of_residence_number->value,
       'project_id' => $this->projectData['uuid'],
       'apartments' => $this->getApartments(),
     ];
-
-    return $values;
   }
 
   /**
@@ -115,8 +118,8 @@ class CreateApplicationRequest extends Request {
   /**
    * {@inheritdoc}
    */
-  public static function getResponse(ResponseInterface $response): CreateApplicationResponse {
-    return CreateApplicationResponse::createFromHttpResponse($response);
+  public static function getResponse(ResponseInterface $response): SalesCreateApplicationResponse {
+    return SalesCreateApplicationResponse::createFromHttpResponse($response);
   }
 
 }
