@@ -172,8 +172,10 @@ function asuntotuotanto_preprocess_views_view(&$variables) {
 
     case 'applications':
       $current_user = User::load(\Drupal::currentUser()->id());
-      $variables['is_email_valid'] = $current_user->get('field_email_is_valid')->getValue()[0]['value'] ?? NULL;
-
+      $variables['is_email_valid'] = NULL;
+      if ($current_user->hasField('field_email_is_valid')) {
+        $variables['is_email_valid'] = $current_user->get('field_email_is_valid')->getValue()[0]['value'] ?? NULL;
+      }
       break;
 
     case 'project_apartments_listing':

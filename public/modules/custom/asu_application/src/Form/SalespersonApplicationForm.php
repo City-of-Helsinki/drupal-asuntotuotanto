@@ -37,15 +37,6 @@ class SalespersonApplicationForm extends FormBase {
         ->getStorage('asu_application')
         ->loadByProperties(['uid' => $user->id()]);
 
-      $userActiveApplications = array_filter($userApplications, function ($application) use ($projects) {
-        foreach ($projects as $key => $project) {
-          if ($key == $application->getProjectId()) {
-            return TRUE;
-          }
-        }
-        return FALSE;
-      });
-
       $options = [];
       $ownership = [];
       foreach ($projects as $key => $project) {
@@ -57,17 +48,22 @@ class SalespersonApplicationForm extends FormBase {
         '#markup' => sprintf('<h3>%s: %s</h3>', $this->t('User'), $user->getEmail()),
       ];
 
-      if (!empty($userApplications)) {
-        $form['user_applications_title'] = [
-          '#markup' => sprintf('<h4>%s</h4>', $this->t('User applications for active projects')),
-        ];
+      $form['user_applications_title'] = [
+        '#markup' => sprintf('<h4>%s</h4>', $this->t('User applications for active projects')),
+      ];
 
-        /** @var \Drupal\asu_application\Entity\Application $application */
+      if (!empty($userApplications)) {
         foreach ($userApplications as $key => $application) {
+          $status = $application->isLocked() ? $this->t('Already sent:') : $this->t('Draft:');
           $form['user_applications_' . $key] = [
-            '#markup' => $projects[$application->getProjectId()]['title'] . '<br>',
+            '#markup' => $status . ' ' . $projects[$application->getProjectId()]['title'] . '<br>',
           ];
         }
+      }
+      else {
+        $form['user_applications_' . $key] = [
+          '#markup' => $this->t('User has no applications for active projects.'),
+        ];
       }
 
       $form['user_id'] = [
@@ -96,7 +92,6 @@ class SalespersonApplicationForm extends FormBase {
 
       return $form;
     }
-
   }
 
   /**

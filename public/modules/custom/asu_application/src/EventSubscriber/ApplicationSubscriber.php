@@ -108,7 +108,7 @@ class ApplicationSubscriber implements EventSubscriberInterface {
     }
     catch (\Exception $e) {
       $this->logger->critical(sprintf(
-        'Exception while sending application %s: %s',
+        'Exception while sending application of id %s: %s',
         $application->id(),
         $e->getMessage()
       ));
@@ -147,6 +147,12 @@ class ApplicationSubscriber implements EventSubscriberInterface {
       $this->logger->notice(
        'Sales sent application to backend successfully'
       );
+
+      $application->set('field_locked', 1);
+      $application->save();
+      $this->messenger()->addStatus($this->t('The application has been submitted successfully.
+     You can no longer edit the application.'));
+
     }
     catch (\Exception $e) {
       $this->logger->critical(sprintf(
@@ -156,6 +162,7 @@ class ApplicationSubscriber implements EventSubscriberInterface {
       ));
       $this->queue->createItem($application->id());
     }
+
   }
 
 }

@@ -25,26 +25,13 @@ class ApplicationForm extends ContentEntityForm {
   public function buildForm(array $form, FormStateInterface $form_state) {
     /** @var \Drupal\user\Entity\User $currentUser */
     $currentUser = User::load(\Drupal::currentUser()->id());
-
     $applicationsUrl = $this->getUserApplicationsUrl();
     $project_id = $this->entity->get('project_id')->value;
     $application_type_id = $this->entity->bundle();
 
-    $owner_id = \Drupal::request()->get('user_id');
-    if ($owner_id && $currentUser->bundle() == 'sales' || $currentUser->hasPermission('administer')) {
-      $owner_id = $this->entity->getOwnerId();
-    }
-
-    // User is sales.
-    if ($owner_id != $currentUser->id() || $currentUser->hasPermission('administer')) {
-      $owner = User::load($owner_id);
-    }
-    else {
-      // User is customer or not authenticated.
-      $owner = User::load($currentUser->id());
-
+    if (!$currentUser->isAuthenticated()) {
       // Anonymous user must login.
-      if (!$owner->isAuthenticated()) {
+      if (!$currentUser->isAuthenticated()) {
         \Drupal::messenger()->addMessage($this->t('You must be logged in to fill an application. <a href="/user/login">Log in</a> or <a href="/user/register">create a new account</a>'));
         $project_type = strtolower($application_type_id);
         $application_url = "/application/add/$project_type/$project_id";
@@ -52,25 +39,29 @@ class ApplicationForm extends ContentEntityForm {
         $session->set('asu_last_application_url', $application_url);
         return(new RedirectResponse('/user/login', 301));
       }
+    }
 
-      // User must have customer role.
-      if ($owner->bundle() != 'customer') {
-        \Drupal::logger('asu_application')->critical('User without customer role tried to create application: User id: ' . \Drupal::currentUser()->id());
-        return(new RedirectResponse(\Drupal::request()->getSchemeAndHttpHost(), 301));
+    if ($currentUser->bundle() == 'customer') {
+      $owner_id = $currentUser->id();
+      $owner = $currentUser;
+    }
+    else {
+      if (!$owner_id = \Drupal::request()->get('user_id')) {
+        $owner_id = $this->entity->getOwnerId();
       }
+      $owner = User::load($owner_id);
     }
 
     $applications = \Drupal::entityTypeManager()
       ->getStorage('asu_application')
       ->loadByProperties([
-        'uid' => $owner->id(),
+        'uid' => $owner_id,
       ]);
 
     // User must have valid email address to fill more than one application.
     if (
       $owner->hasField('field_email_is_valid') &&
-      $owner->get('field_email_is_valid')->value == 0 &&
-      !$owner->access('create')
+      $owner->get('field_email_is_valid')->value == 0
     ) {
       $application = reset($applications);
 
@@ -182,7 +173,7 @@ class ApplicationForm extends ContentEntityForm {
     $form['actions']['submit']['#value'] = $this->t('Send application');
 
     // Show draft button only for customers.
-    if (!$currentUser->access('create')) {
+    if ($currentUser->bundle() == 'customer') {
       $form['actions']['draft'] = [
         '#type' => 'submit',
         '#value' => t('Save as a draft'),
@@ -199,7 +190,6 @@ class ApplicationForm extends ContentEntityForm {
    * {@inheritdoc}
    */
   public function save(array $form, FormStateInterface $form_state) {
-    $form_state['rebuild'] = TRUE;
     $values = $form_state->getUserInput();
 
     $this->updateEntityFieldsWithUserInput($form_state);
@@ -249,9 +239,7 @@ class ApplicationForm extends ContentEntityForm {
     \Drupal::service('event_dispatcher')
       ->dispatch($event, $eventName);
     $this->entity->set('field_locked', 1);
-    $this->entity->save();
-    $this->messenger()->addStatus($this->t('The application has been submitted successfully.
-     You can no longer edit the application.'));
+
     $content_entity_id = $this->entity->getEntityType()->id();
     $form_state->setRedirect("entity.{$content_entity_id}.canonical", [$content_entity_id => $this->entity->id()]);
   }
@@ -268,6 +256,7 @@ class ApplicationForm extends ContentEntityForm {
    *   Ajax response.
    */
   public function ajaxSaveDraft(array $form, FormStateInterface $form_state) {
+    $form_state->setRebuild(TRUE);
     $this->updateEntityFieldsWithUserInput($form_state);
     $this->entity->save();
 
