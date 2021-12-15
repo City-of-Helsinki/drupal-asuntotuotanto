@@ -292,11 +292,6 @@ field_settings:
     datasource_id: 'entity:node'
     property_path: 'search_api_reverse_entity_references_node__field_apartments:field_acc_financeofficer'
     type: string
-  project_acc_salesperson:
-    label: 'Accountable sales person'
-    datasource_id: 'entity:node'
-    property_path: 'search_api_reverse_entity_references_node__field_apartments:field_salesperson:entity:field_full_name'
-    type: string
   project_apartment_count:
     label: 'Number of apartments'
     datasource_id: 'entity:node'
@@ -316,6 +311,11 @@ field_settings:
     label: 'Attachments / URL'
     datasource_id: 'entity:node'
     property_path: 'search_api_reverse_entity_references_node__field_apartments:field_attachments_url'
+    type: string
+  project_barred_bank_account:
+    label: 'Barred bank account'
+    datasource_id: 'entity:node'
+    property_path: 'search_api_reverse_entity_references_node__field_apartments:field_barred_bank_account'
     type: string
   project_building_type:
     label: 'Building type'
@@ -500,6 +500,11 @@ field_settings:
     label: 'Realty ID'
     datasource_id: 'entity:node'
     property_path: 'search_api_reverse_entity_references_node__field_apartments:field_realty_id'
+    type: string
+  project_regular_bank_account:
+    label: 'Regular bank account'
+    datasource_id: 'entity:node'
+    property_path: 'search_api_reverse_entity_references_node__field_apartments:field_regular_bank_account'
     type: string
   project_roof_material:
     label: 'Roof material'

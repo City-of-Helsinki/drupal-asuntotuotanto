@@ -10,6 +10,7 @@ dependencies:
     - field.field.node.project.field_application_end_time
     - field.field.node.project.field_application_start_time
     - field.field.node.project.field_attachments_url
+    - field.field.node.project.field_barred_bank_account
     - field.field.node.project.field_building_type
     - field.field.node.project.field_city
     - field.field.node.project.field_completion_date
@@ -47,6 +48,7 @@ dependencies:
     - field.field.node.project.field_publication_end_time
     - field.field.node.project.field_publication_start_time
     - field.field.node.project.field_realty_id
+    - field.field.node.project.field_regular_bank_account
     - field.field.node.project.field_roof_material
     - field.field.node.project.field_salesperson
     - field.field.node.project.field_sanitation
@@ -72,6 +74,7 @@ dependencies:
     - datetime
     - field_group
     - file
+    - hdbt_admin_editorial
     - image
     - inline_entity_form
     - link
@@ -117,6 +120,8 @@ third_party_settings:
         - field_new_development_status
         - field_holding_type
         - field_project_description
+        - field_regular_bank_account
+        - field_barred_bank_account
       parent_name: group_project_tabs
       weight: 19
       format_type: tab
@@ -223,9 +228,6 @@ third_party_settings:
         - field_project_manager
         - field_constructor
         - field_housing_manager
-        - field_estate_agent
-        - field_estate_agent_email
-        - field_estate_agent_phone
         - field_salesperson
       parent_name: group_project_tabs
       weight: 24
@@ -339,6 +341,14 @@ content:
       placeholder_title: ''
     third_party_settings: {  }
     type: link_default
+    region: content
+  field_barred_bank_account:
+    weight: 18
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
     region: content
   field_building_type:
     weight: 78
@@ -591,6 +601,14 @@ content:
     region: content
   field_realty_id:
     weight: 10
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_regular_bank_account:
+    weight: 17
     settings:
       size: 60
       placeholder: ''

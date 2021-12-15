@@ -1,0 +1,21 @@
+uuid: ac5e58c8-037a-4fc9-b174-dc00d05bf23c
+langcode: fi
+status: true
+dependencies:
+  module:
+    - node
+id: node.field_regular_bank_account
+field_name: field_regular_bank_account
+entity_type: node
+type: string
+settings:
+  max_length: 100
+  is_ascii: false
+  case_sensitive: false
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false
