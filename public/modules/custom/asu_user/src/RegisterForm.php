@@ -268,7 +268,7 @@ class RegisterForm extends TypedRegisterForm {
       'phone_number' => $phone,
       'postal_code' => '-',
       'city' => '-',
-      'date_of_birth' => (new \Datetime())->format('Y-m-d')
+      'date_of_birth' => (new \Datetime())->format('Y-m-d'),
     ];
 
     $request = new CreateUserRequest($account, $accountData, 'salesperson');
