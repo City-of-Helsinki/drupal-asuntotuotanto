@@ -66,6 +66,10 @@ function asu_send_user_password_email(UserInterface $account) {
  * Send created user to backend.
  */
 function asu_create_backend_user(UserInterface $account) {
+  if ($account->hasPermission('administer')) {
+    return;
+  }
+
   if (!$profileId = $account->get('field_backend_profile')->value) {
     /** @var Drupal\asu_api\Api\BackendApi\BackendApi $backendApi */
     $backendApi = \Drupal::service('asu_api.backendapi');
