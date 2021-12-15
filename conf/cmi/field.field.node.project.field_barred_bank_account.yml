@@ -1,0 +1,19 @@
+uuid: ac3ed76a-04c0-4068-9ce5-888b8e0019aa
+langcode: fi
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_barred_bank_account
+    - node.type.project
+id: node.project.field_barred_bank_account
+field_name: field_barred_bank_account
+entity_type: node
+bundle: project
+label: 'Barred bank account'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

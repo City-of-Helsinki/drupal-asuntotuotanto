@@ -111,6 +111,11 @@ field_settings:
     dependencies:
       config:
         - field.storage.node.field_balcony_description
+  barred_bank_account:
+    label: 'Barred bank account'
+    datasource_id: 'entity:node'
+    property_path: 'search_api_reverse_entity_references_node__field_service_parent_service:field_barred_bank_account'
+    type: string
   bathroom_appliances:
     label: 'Bathroom appliances'
     datasource_id: 'entity:node'
@@ -291,11 +296,6 @@ field_settings:
     label: 'Accountable finance officer'
     datasource_id: 'entity:node'
     property_path: 'search_api_reverse_entity_references_node__field_apartments:field_acc_financeofficer'
-    type: string
-  project_acc_salesperson:
-    label: 'Accountable sales person'
-    datasource_id: 'entity:node'
-    property_path: 'search_api_reverse_entity_references_node__field_apartments:field_salesperson:entity:field_full_name'
     type: string
   project_apartment_count:
     label: 'Number of apartments'
@@ -577,6 +577,11 @@ field_settings:
     dependencies:
       config:
         - field.storage.node.field_publish_on_oikotie
+  regular_bank_account:
+    label: 'Regular bank account'
+    datasource_id: 'entity:node'
+    property_path: 'search_api_reverse_entity_references_node__field_service_parent_service:field_regular_bank_account'
+    type: string
   right_of_occupancy_deposit:
     label: Käyttövastikevakuus
     datasource_id: 'entity:node'
