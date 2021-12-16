@@ -165,20 +165,6 @@ function asu_content_node_insert(Node $node) {
     }
   }
 
-  // @todo Remove when cron is working
-  // Index instantly on testing environment.
-  if (
-    method_exists($node, 'getType') &&
-    $node->getType() == 'project' &&
-    getenv('APP_ENV') == 'testing' ||
-    getenv('APP_ENV') == 'test'
-  ) {
-    $indexes = Index::loadMultiple();
-    foreach ($indexes as $index) {
-      $index->reindex();
-      $index->indexItems();
-    }
-  }
 }
 
 /**
