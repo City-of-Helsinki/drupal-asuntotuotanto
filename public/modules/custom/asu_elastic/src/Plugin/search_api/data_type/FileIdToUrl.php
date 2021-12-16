@@ -39,7 +39,7 @@ class FileIdToUrl extends DataTypePluginBase {
    */
   private function getFileUrl($value) {
     if ($file = File::load((int) $value)) {
-      return  $file->createFileUrl(FALSE);
+      return $file->createFileUrl(FALSE);
     }
     return $value;
   }
