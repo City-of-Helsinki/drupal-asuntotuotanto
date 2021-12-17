@@ -219,7 +219,7 @@
   border: 1px solid $color-black-10;
   border-top: none;
   padding: $spacing-2-xs;
-  margin-top: -1.55rem;
+  margin-top: -1.5rem;
   display: flex;
   justify-content: flex-end;
 
@@ -270,7 +270,7 @@
 }
 
 .application__apartments {
-  margin-top: -1.5rem !important;
+  margin-top: -1.6rem !important;
 
   &--mobile {
     @media screen and (min-width: $breakpoint-xl) {
