@@ -2,6 +2,12 @@ application-form-actions:
   js:
     dist/js/applicationFormActions.min.js: {}
 
+application-apartment-listing:
+  js:
+    dist/js/applicationApartmentListing.min.js: {}
+  dependencies:
+    - core/jquery
+
 showcase-gallery:
   js:
     dist/js/showcaseGallery.min.js: {}
