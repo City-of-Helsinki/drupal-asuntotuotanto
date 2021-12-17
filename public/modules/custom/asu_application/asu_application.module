@@ -152,3 +152,42 @@ function asu_user_form_contact_message_apply_for_free_apartment_form_alter(&$for
     ];
   }
 }
+
+function asu_application_cron() {
+  // Handle drafted applications.
+  try {
+    $before = (new \Drupal\Core\Datetime\DrupalDateTime('-29 days'))
+      ->format(\Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface::DATETIME_STORAGE_FORMAT);
+    $after = (new \Drupal\Core\Datetime\DrupalDateTime('-31 days'))
+      ->format(\Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface::DATETIME_STORAGE_FORMAT);
+
+    $projects = \Drupal::entityQuery('node')
+      ->condition('type', 'project', '=')
+      ->condition('field_application_end_time', [$after,$before], 'BETWEEN')
+      ->execute();
+
+    if (!$projects) {
+      return;
+    }
+
+    $applicationIds = \Drupal::entityTypeManager()
+      ->getStorage('asu_application')
+      ->getQuery()
+      ->condition('project_id', $projects, 'IN')
+      ->condition('field_locked', 0, '=')
+      ->execute();
+
+    if (!$applicationIds) {
+      return;
+    }
+
+    $applications = \Drupal\asu_application\Entity\Application::loadMultiple($applicationIds);
+    /** @var \Drupal\asu_application\Entity\Application $application */
+    foreach ($applications as $application) {
+      $application->delete();
+    }
+  }
+  catch(\Exception $e) {
+    \Drupal::logger('asu_application_cron')->critical('Unable to perform application cron operation: ' . $e->getMessage());
+  }
+}
