@@ -6,12 +6,21 @@
  */
 #}
 
+{{ attach_library('asuntotuotanto/application-apartment-listing') }}
+
 {%
   set classes = [
     'application',
     view_mode ? 'application--' ~ view_mode|clean_class,
   ]
 %}
+
+{% set test = content['#teaser_values'].project_address %}
+{% set apartment_number = "A75" %}
+{% set apartment_structure = "4h, kt,s" %}
+{% set result_of_draw = "3." %}
+{% set current_ranking = "3." %}
+{% set booking_status = "Reserved" %}
 
 {% if content['#teaser_values'].application_url %}
   {% if view_mode == 'submitted_teaser' %}
@@ -81,6 +90,98 @@
         </div>
       </div>
     </article>
+
+    <div class="application__lottery application__lottery--show" id="application__lottery--show--submitted">
+      <a class="application__lottery-link application__lottery-link--show" id="application__lottery-link--show--submitted">
+        {% trans %}
+          Show apartment listing
+        {% endtrans %}
+      </a>
+    </div>
+
+    <ul class="application__apartments application__apartments--mobile project__apartments-list is-hidden application__lottery-results" id="application__lottery-results--submitted" aria-hidden="true">
+      {# Single lottery result (mobile) #}
+      <li class="project__apartments-item lottery-result lottery-result--mobile">
+        <button
+          aria-expanded="false"
+          class="project__apartments-item-button"
+          aria-label="Open apartment {{ apartment_number }} information"
+        >
+          <span>{{ apartment_number }}</span>
+          {# <span aria-hidden="true" class="project__apartment-application-status"></span> #}
+          <span>{{ apartment_structure }}</span>
+          {% include "@hdbt/misc/icon.twig" with {icon: 'angle-down', label: ''} %}
+        </button>
+        <div aria-hidden="true" class="project__apartments-item-content is-hidden">
+          <ul class="project__apartments-item-details-list">
+            <li class="project__apartments-item-details-item">
+              <p>
+                <span>
+                  {% trans %}
+                    Result of draw
+                  {% endtrans %}
+                </span>
+                <span>
+                  {{ result_of_draw }}
+                </span>
+              </p>
+            </li>
+            <li class="project__apartments-item-details-item">
+              <p>
+                <span>
+                  {% trans %}
+                    Current ranking
+                  {% endtrans %}
+                </span>
+                <span>
+                  {{ current_ranking }}
+                </span>
+              </p>
+            </li>
+            <li class="project__apartments-item-details-item">
+              <p>
+                <span>
+                  {% trans %}
+                    Booking status
+                  {% endtrans %}
+                </span>
+                <span>
+                  {{ booking_status }}
+                </span>
+              </p>
+            </li>
+          </ul>
+        </div>
+      </li>
+    </ul>
+
+    <table class="application__apartments application__apartments--desktop is-hidden application__lottery-results" id="application__lottery-results--submitted" aria-hidden="true">
+      <thead>
+        <tr>
+          <th>{% trans %}Applied for apartment{% endtrans %}</th>
+          <th>{% trans %}Result of draw{% endtrans %}</th>
+          <th>{% trans %}Current ranking{% endtrans %}</th>
+          <th>{% trans %}Booking status{% endtrans %}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {# Single lottery result (desktop) #}
+        <tr class="lottery-result lottery-result--desktop">
+          <td>{{ apartment_number }} <span>{{ apartment_structure }}</span></td>
+          <td>{{ result_of_draw }}</td>
+          <td>{{ current_ranking }}</td>
+          <td>{{ booking_status }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="application__lottery application__lottery--hide is-hidden" id="application__lottery--hide--submitted">
+      <a class="application__lottery-link application__lottery-link--hide" id="application__lottery-link--hide--submitted">
+        {% trans %}
+          Hide apartment listing
+        {% endtrans %}
+      </a>
+    </div>
   {% endif %}
 
   {% if view_mode == 'draft_teaser' %}
@@ -150,6 +251,98 @@
         </div>
       </div>
     </article>
+
+    <div class="application__lottery application__lottery--show" id="application__lottery--show--draft">
+      <a class="application__lottery-link application__lottery-link--show" id="application__lottery-link--show--draft">
+        {% trans %}
+          Show apartment listing
+        {% endtrans %}
+      </a>
+    </div>
+
+    <ul class="application__apartments application__apartments--mobile project__apartments-list is-hidden application__lottery-results" id="application__lottery-results--draft" aria-hidden="true">
+      {# Single lottery result (mobile) #}
+      <li class="project__apartments-item lottery-result lottery-result--mobile">
+        <button
+          aria-expanded="false"
+          class="project__apartments-item-button"
+          aria-label="Open apartment {{ apartment_number }} information"
+        >
+          <span>{{ apartment_number }}</span>
+          {# <span aria-hidden="true" class="project__apartment-application-status"></span> #}
+          <span>{{ apartment_structure }}</span>
+          {% include "@hdbt/misc/icon.twig" with {icon: 'angle-down', label: ''} %}
+        </button>
+        <div aria-hidden="true" class="project__apartments-item-content is-hidden">
+          <ul class="project__apartments-item-details-list">
+            <li class="project__apartments-item-details-item">
+              <p>
+                <span>
+                  {% trans %}
+                    Result of draw
+                  {% endtrans %}
+                </span>
+                <span>
+                  {{ result_of_draw }}
+                </span>
+              </p>
+            </li>
+            <li class="project__apartments-item-details-item">
+              <p>
+                <span>
+                  {% trans %}
+                    Current ranking
+                  {% endtrans %}
+                </span>
+                <span>
+                  {{ current_ranking }}
+                </span>
+              </p>
+            </li>
+            <li class="project__apartments-item-details-item">
+              <p>
+                <span>
+                  {% trans %}
+                    Booking status
+                  {% endtrans %}
+                </span>
+                <span>
+                  {{ booking_status }}
+                </span>
+              </p>
+            </li>
+          </ul>
+        </div>
+      </li>
+    </ul>
+
+    <table class="application__apartments application__apartments--desktop is-hidden application__lottery-results" id="application__lottery-results--draft" aria-hidden="true">
+      <thead>
+        <tr>
+          <th>{% trans %}Applied for apartment{% endtrans %}</th>
+          <th>{% trans %}Result of draw{% endtrans %}</th>
+          <th>{% trans %}Current ranking{% endtrans %}</th>
+          <th>{% trans %}Booking status{% endtrans %}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {# Single lottery result (desktop) #}
+        <tr class="lottery-result lottery-result--desktop">
+          <td>{{ apartment_number }} <span>{{ apartment_structure }}</span></td>
+          <td>{{ result_of_draw }}</td>
+          <td>{{ current_ranking }}</td>
+          <td>{{ booking_status }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="application__lottery application__lottery--hide is-hidden" id="application__lottery--hide--draft">
+      <a class="application__lottery-link application__lottery-link--hide" id="application__lottery-link--hide--draft">
+        {% trans %}
+          Hide apartment listing
+        {% endtrans %}
+      </a>
+    </div>
   {% endif %}
 
   {% if view_mode == 'full' %}
