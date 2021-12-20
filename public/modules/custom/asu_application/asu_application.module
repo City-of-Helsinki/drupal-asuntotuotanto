@@ -5,6 +5,9 @@
  * Contains asu_application.
  */
 
+use Drupal\asu_application\Entity\Application;
+use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
+use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\node\Entity\Node;
 use Drupal\file\Entity\File;
 
@@ -175,17 +178,21 @@ function asu_application_results_ajax($uuid) {
   return $result;
 }
 
+
+/**
+ * Cron for asu application.
+ */
 function asu_application_cron() {
   // Handle drafted applications.
   try {
-    $before = (new \Drupal\Core\Datetime\DrupalDateTime('-29 days'))
-      ->format(\Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface::DATETIME_STORAGE_FORMAT);
-    $after = (new \Drupal\Core\Datetime\DrupalDateTime('-31 days'))
-      ->format(\Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface::DATETIME_STORAGE_FORMAT);
+    $before = (new DrupalDateTime('-29 days'))
+      ->format(DateTimeItemInterface::DATETIME_STORAGE_FORMAT);
+    $after = (new DrupalDateTime('-31 days'))
+      ->format(DateTimeItemInterface::DATETIME_STORAGE_FORMAT);
 
     $projects = \Drupal::entityQuery('node')
       ->condition('type', 'project', '=')
-      ->condition('field_application_end_time', [$after,$before], 'BETWEEN')
+      ->condition('field_application_end_time', [$after, $before], 'BETWEEN')
       ->execute();
 
     if (!$projects) {
@@ -203,13 +210,13 @@ function asu_application_cron() {
       return;
     }
 
-    $applications = \Drupal\asu_application\Entity\Application::loadMultiple($applicationIds);
+    $applications = Application::loadMultiple($applicationIds);
     /** @var \Drupal\asu_application\Entity\Application $application */
     foreach ($applications as $application) {
       $application->delete();
     }
   }
-  catch(\Exception $e) {
+  catch (\Exception $e) {
     \Drupal::logger('asu_application_cron')->critical('Unable to perform application cron operation: ' . $e->getMessage());
   }
 }

@@ -67,7 +67,7 @@ class BackendApi {
    * @throws \GuzzleHttp\Exception\GuzzleException
    */
   public function send(Request $request, array $options = []): ?Response {
-    $options['headers'] = [];
+    $options['headers'] = $options['headers'] ?? [];
     if ($request->requiresAuthentication()) {
       if ($token = $this->handleAuthentication($request->getSender())) {
         $options['headers']['Authorization'] = sprintf("Bearer %s", $token);

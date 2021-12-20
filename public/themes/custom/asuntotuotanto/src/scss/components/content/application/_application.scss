@@ -219,7 +219,7 @@
   border: 1px solid $color-black-10;
   border-top: none;
   padding: $spacing-2-xs;
-  margin-top: -1.55rem;
+  margin-top: -1.5rem;
   display: flex;
   justify-content: flex-end;
 
@@ -270,7 +270,7 @@
 }
 
 .application__apartments {
-  margin-top: -1.5rem !important;
+  margin-top: -1.6rem !important;
 
   &--mobile {
     @media screen and (min-width: $breakpoint-xl) {
@@ -371,6 +371,51 @@
           }
         }
       }
+    }
+  }
+}
+
+.application__apartments-item-button {
+  align-items: center;
+  background-color: var(--color-white);
+  border-bottom: 0;
+  border-left: 0;
+  border-radius: 0;
+  border-right: 0;
+  border-top: 1px solid var(--color-black-20);
+  display: flex;
+  padding: $spacing-s;
+  width: 100%;
+  gap: $spacing-xs;
+
+  span {
+    @include font-size($fontsize-heading-xs, 27px);
+    color: var(--color-black-90);
+    pointer-events: none;
+
+    &:first-of-type {
+      @include font-size($fontsize-heading-m, 29px);
+      font-weight: $font-weight-bold;
+    }
+  }
+
+  svg {
+    flex-shrink: 0;
+    margin-left: auto;
+    pointer-events: none;
+  }
+
+  &:hover {
+    cursor: pointer;
+  }
+
+  &:focus {
+    outline: 1px auto;
+  }
+
+  &[aria-expanded="true"] {
+    svg {
+      transform: rotate(180deg);
     }
   }
 }

@@ -4,6 +4,9 @@
       const apartmentsListingElement = document.getElementsByClassName(
         "project__apartments"
       );
+      const applicationListingElement = document.getElementsByClassName(
+        "application__apartments"
+      );
       const buttonElements = document.getElementsByClassName(
         "project__apartments-item-button"
       );
@@ -22,6 +25,24 @@
           }
 
           if (element.classList.contains("project__apartments--desktop")) {
+            if (currentWindowWidth >= 1248) {
+              element.setAttribute("aria-hidden", false);
+            } else {
+              element.setAttribute("aria-hidden", true);
+            }
+          }
+        });
+
+        [...applicationListingElement].forEach((element) => {
+          if (element.classList.contains("application__apartments--mobile")) {
+            if (currentWindowWidth < 1248) {
+              element.setAttribute("aria-hidden", false);
+            } else {
+              element.setAttribute("aria-hidden", true);
+            }
+          }
+
+          if (element.classList.contains("application__apartments--desktop")) {
             if (currentWindowWidth >= 1248) {
               element.setAttribute("aria-hidden", false);
             } else {
