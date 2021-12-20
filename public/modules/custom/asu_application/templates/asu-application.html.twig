@@ -14,7 +14,7 @@
     view_mode ? 'application--' ~ view_mode|clean_class,
   ]
 %}
-
+{% set uuid = content['#teaser_values'].project_uuid %}
 {% set test = content['#teaser_values'].project_address %}
 {% set apartment_number = "A75" %}
 {% set apartment_structure = "4h, kt,s" %}
@@ -92,7 +92,7 @@
     </article>
 
     <div class="application__lottery application__lottery--show" id="application__lottery--show--submitted">
-      <a class="application__lottery-link application__lottery-link--show" id="application__lottery-link--show--submitted">
+      <a data-loaded="0" data-project="{{ uuid }}" class="asu-results application__lottery-link application__lottery-link--show" id="application__lottery-link--show--submitted">
         {% trans %}
           Show apartment listing
         {% endtrans %}
@@ -101,58 +101,61 @@
 
     <ul class="application__apartments application__apartments--mobile project__apartments-list is-hidden application__lottery-results" id="application__lottery-results--submitted" aria-hidden="true">
       {# Single lottery result (mobile) #}
-      <li class="project__apartments-item lottery-result lottery-result--mobile">
-        <button
-          aria-expanded="false"
-          class="project__apartments-item-button"
-          aria-label="Open apartment {{ apartment_number }} information"
-        >
-          <span>{{ apartment_number }}</span>
-          {# <span aria-hidden="true" class="project__apartment-application-status"></span> #}
-          <span>{{ apartment_structure }}</span>
-          {% include "@hdbt/misc/icon.twig" with {icon: 'angle-down', label: ''} %}
-        </button>
-        <div aria-hidden="true" class="project__apartments-item-content is-hidden">
-          <ul class="project__apartments-item-details-list">
-            <li class="project__apartments-item-details-item">
-              <p>
+
+      {% for key, apartment in content['#teaser_values'].application_apartments %}
+        <li loaded="0" class="project__apartments-item lottery-result lottery-result--mobile application-apartment-{{ key }}">
+          <button
+            aria-expanded="false"
+            class="project__apartments-item-button"
+            aria-label="Open apartment {{ apartment.number }} information"
+          >
+            <span>{{ apartment.number }}</span>
+            {# <span aria-hidden="true" class="project__apartment-application-status"></span> #}
+            <span>{{ apartment.structure }}</span>
+            {% include "@hdbt/misc/icon.twig" with {icon: 'angle-down', label: ''} %}
+          </button>
+          <div aria-hidden="true" class="project__apartments-item-content is-hidden">
+            <ul class="project__apartments-item-details-list">
+              <li class="project__apartments-item-details-item">
+                <p>
                 <span>
                   {% trans %}
                     Result of draw
                   {% endtrans %}
                 </span>
-                <span>
-                  {{ result_of_draw }}
+                <span class="result">
+                  -
                 </span>
-              </p>
-            </li>
-            <li class="project__apartments-item-details-item">
-              <p>
+                </p>
+              </li>
+              <li class="project__apartments-item-details-item">
+                <p>
                 <span>
                   {% trans %}
                     Current ranking
                   {% endtrans %}
                 </span>
-                <span>
-                  {{ current_ranking }}
+                <span class="current-position">
+                  -
                 </span>
-              </p>
-            </li>
-            <li class="project__apartments-item-details-item">
-              <p>
+                </p>
+              </li>
+              <li class="project__apartments-item-details-item">
+                <p>
                 <span>
                   {% trans %}
                     Booking status
                   {% endtrans %}
                 </span>
-                <span>
-                  {{ booking_status }}
+                <span class="current-status">
+                  -
                 </span>
-              </p>
-            </li>
-          </ul>
-        </div>
-      </li>
+                </p>
+              </li>
+            </ul>
+          </div>
+        </li>
+      {% endfor %}
     </ul>
 
     <table class="application__apartments application__apartments--desktop is-hidden application__lottery-results" id="application__lottery-results--submitted" aria-hidden="true">
@@ -166,12 +169,14 @@
       </thead>
       <tbody>
         {# Single lottery result (desktop) #}
-        <tr class="lottery-result lottery-result--desktop">
-          <td>{{ apartment_number }} <span>{{ apartment_structure }}</span></td>
-          <td>{{ result_of_draw }}</td>
-          <td>{{ current_ranking }}</td>
-          <td>{{ booking_status }}</td>
-        </tr>
+        {% for key, apartment in content['#teaser_values'].application_apartments %}
+          <tr loaded="0" class="lottery-result lottery-result--desktop application-apartment-{{ key }}">
+            <td>{{ apartment.number }} <span>{{ apartment.structure }}</span></td>
+            <td class="result">-</td>
+            <td class="current-position">-</td>
+            <td status="current-status">-</td>
+          </tr>
+        {% endfor %}
       </tbody>
     </table>
 
@@ -253,7 +258,7 @@
     </article>
 
     <div class="application__lottery application__lottery--show" id="application__lottery--show--draft">
-      <a class="application__lottery-link application__lottery-link--show" id="application__lottery-link--show--draft">
+      <a data-loaded="0" data-project="{{ uuid }}" class="asu-results application__lottery-link application__lottery-link--show" id="application__lottery-link--show--draft">
         {% trans %}
           Show apartment listing
         {% endtrans %}
@@ -262,58 +267,61 @@
 
     <ul class="application__apartments application__apartments--mobile project__apartments-list is-hidden application__lottery-results" id="application__lottery-results--draft" aria-hidden="true">
       {# Single lottery result (mobile) #}
-      <li class="project__apartments-item lottery-result lottery-result--mobile">
-        <button
-          aria-expanded="false"
-          class="project__apartments-item-button"
-          aria-label="Open apartment {{ apartment_number }} information"
-        >
-          <span>{{ apartment_number }}</span>
-          {# <span aria-hidden="true" class="project__apartment-application-status"></span> #}
-          <span>{{ apartment_structure }}</span>
-          {% include "@hdbt/misc/icon.twig" with {icon: 'angle-down', label: ''} %}
-        </button>
-        <div aria-hidden="true" class="project__apartments-item-content is-hidden">
-          <ul class="project__apartments-item-details-list">
-            <li class="project__apartments-item-details-item">
-              <p>
+
+      {% for key, apartment in content['#teaser_values'].application_apartments %}
+        <li class="project__apartments-item lottery-result lottery-result--mobile application-apartment-{{ key }}">
+          <button
+            aria-expanded="false"
+            class="project__apartments-item-button"
+            aria-label="Open apartment {{ apartment.number }} information"
+          >
+            <span>{{ apartment.number }}</span>
+            {# <span aria-hidden="true" class="project__apartment-application-status"></span> #}
+            <span>{{ apartment.structure }}</span>
+            {% include "@hdbt/misc/icon.twig" with {icon: 'angle-down', label: ''} %}
+          </button>
+          <div aria-hidden="true" class="project__apartments-item-content is-hidden">
+            <ul class="project__apartments-item-details-list">
+              <li class="project__apartments-item-details-item">
+                <p>
                 <span>
                   {% trans %}
                     Result of draw
                   {% endtrans %}
                 </span>
-                <span>
-                  {{ result_of_draw }}
+                <span class="result">
+                  -
                 </span>
-              </p>
-            </li>
-            <li class="project__apartments-item-details-item">
-              <p>
+                </p>
+              </li>
+              <li class="project__apartments-item-details-item">
+                <p>
                 <span>
                   {% trans %}
                     Current ranking
                   {% endtrans %}
                 </span>
-                <span>
-                  {{ current_ranking }}
+                <span class="current-position">
+                  -
                 </span>
-              </p>
-            </li>
-            <li class="project__apartments-item-details-item">
-              <p>
+                </p>
+              </li>
+              <li class="project__apartments-item-details-item">
+                <p>
                 <span>
                   {% trans %}
                     Booking status
                   {% endtrans %}
                 </span>
-                <span>
-                  {{ booking_status }}
+                <span class="status">
+                  -
                 </span>
-              </p>
-            </li>
-          </ul>
-        </div>
-      </li>
+                </p>
+              </li>
+            </ul>
+          </div>
+        </li>
+      {% endfor %}
     </ul>
 
     <table class="application__apartments application__apartments--desktop is-hidden application__lottery-results" id="application__lottery-results--draft" aria-hidden="true">
@@ -327,12 +335,14 @@
       </thead>
       <tbody>
         {# Single lottery result (desktop) #}
-        <tr class="lottery-result lottery-result--desktop">
-          <td>{{ apartment_number }} <span>{{ apartment_structure }}</span></td>
-          <td>{{ result_of_draw }}</td>
-          <td>{{ current_ranking }}</td>
-          <td>{{ booking_status }}</td>
-        </tr>
+        {% for key, apartment in content['#teaser_values'].application_apartments %}
+          <tr class="lottery-result lottery-result--desktop application-apartment-{{ key }}">
+            <td>{{ apartment.number }} <span>{{ apartment.structure }}</span></td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+          </tr>
+        {% endfor %}
       </tbody>
     </table>
 
