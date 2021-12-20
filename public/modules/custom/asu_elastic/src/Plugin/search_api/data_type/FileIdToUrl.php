@@ -39,8 +39,7 @@ class FileIdToUrl extends DataTypePluginBase {
    */
   private function getFileUrl($value) {
     if ($file = File::load((int) $value)) {
-      $host = getenv('DRUPAL_REVERSE_PROXY_ADDRESS');
-      return $host . '/' . $file->createFileUrl();
+      return $file->createFileUrl(FALSE);
     }
     return $value;
   }
