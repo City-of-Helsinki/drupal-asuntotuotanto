@@ -18,6 +18,7 @@ services:
       DTT_BASE_URL: "http://app:8080"
       SIMPLETEST_BASE_URL: "http://app:8080"
       SIMPLETEST_DB: "mysql://drupal:drupal@db:3306/drupal"
+      DRUPAL_REVERSE_PROXY_ADDRESS: "https://asuntotuotanto.docker.so"
     networks:
       - internal
       - stonehenge-network
