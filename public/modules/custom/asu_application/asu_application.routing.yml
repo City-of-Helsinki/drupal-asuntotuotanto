@@ -5,3 +5,9 @@ asu_application.admin_create_application:
     _form: '\Drupal\asu_application\Form\SalespersonApplicationForm'
   requirements:
     _permission: 'administer applications'
+
+asu_application.application_results:
+  path: '/call/ajax/application/results'
+  defaults:
+    _controller: '\Drupal\asu_application\Controller\ResultController::getResults'
+  methods: [GET]
