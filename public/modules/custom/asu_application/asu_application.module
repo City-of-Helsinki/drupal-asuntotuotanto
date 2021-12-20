@@ -43,15 +43,22 @@ function template_preprocess_asu_application(array &$variables) {
   $projectId = $application->getProjectId();
 
   try {
-    $projects = \Drupal::entityTypeManager()
+    $project = \Drupal::entityTypeManager()
       ->getStorage('node')
-      ->loadByProperties(['type' => 'project', 'nid' => $projectId]);
+    ->load($projectId);
 
-    if (empty($projects)) {
-      return [];
+    $apartments = \Drupal::entityTypeManager()
+      ->getStorage('node')
+      ->loadMultiple($application->getApartmentIds());
+
+    $apartmentData = [];
+    foreach($apartments as $apartment) {
+      $apartmentData[$apartment->id()] = [
+        'uuid' => $apartment->uuid(),
+        'number' => $apartment->field_apartment_number->value,
+        'structure' => $apartment->field_apartment_structure->value,
+      ];
     }
-
-    $project = $projects[$projectId];
 
     $main_image_file = File::load($project->field_main_image->target_id) ?? NULL;
 
@@ -61,6 +68,7 @@ function template_preprocess_asu_application(array &$variables) {
 
     $application_teaser_values = [
       '#teaser_values' => [
+        'project_uuid' => $project->uuid(),
         'project_name' => $project->field_housing_company->value,
         'project_address' => $project->field_street_address->value,
         'project_ownership_type' => $project->field_ownership_type->first()->entity->getName(),
@@ -68,6 +76,7 @@ function template_preprocess_asu_application(array &$variables) {
         'application_end_time' => $project->field_application_end_time->value,
         'project_main_image_url' => $main_image_file_url ?? NULL,
         'project_district' => $project->field_district->first()->entity->getName(),
+        'application_apartments' => $apartmentData,
       ],
     ];
     $application_teaser_values['#teaser_values']['application_url'] = $application->isLocked() ? "/application/$id" : "/application/$id/edit";
@@ -151,6 +160,19 @@ function asu_user_form_contact_message_apply_for_free_apartment_form_alter(&$for
       'field_phone_number' => $customer->get('phone_number'),
     ];
   }
+}
+
+function asu_application_results_ajax($uuid) {
+  try {
+    $request = new \Drupal\asu_api\Api\BackendApi\Request\ApplicationLotteryResult($uuid);
+    $request->setSender(\Drupal\user\Entity\User::load(\Drupal::currentUser()->id()));
+    $backendApi = \Drupal::service('asu_api.backendapi');
+    $result = $backendApi->send($request);
+  }
+  catch(\Exception $exception) {
+    $result = [];
+  }
+  return $result;
 }
 
 function asu_application_cron() {
