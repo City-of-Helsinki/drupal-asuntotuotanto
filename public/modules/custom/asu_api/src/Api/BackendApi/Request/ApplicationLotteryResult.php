@@ -12,35 +12,43 @@ use Psr\Http\Message\ResponseInterface;
  */
 class ApplicationLotteryResult extends Request
 {
-  protected const PATH = 'FILL THIS';
-
-  protected const METHOD = 'POST';
-
+  protected const METHOD = 'GET';
+  protected const PATH = '/profiles/{profile_uuid}/projects/{project_uuid}/apartment_positions';
   protected const AUTHENTICATED = TRUE;
 
-  private string $projectId;
+  private string $profileUuid;
+
+  /*
+   * Uuid of the project.
+   */
+  private string $projectUuid;
 
   /**
    * Constructor.
    */
   public function __construct(
-    string $projectId
+    string $profileUuid,
+    string $projectUuid
   )
   {
-    $this->projectId = $projectId;
+    $this->profileUuid = $profileUuid;
+    $this->projectUuid = $projectUuid;
   }
 
-  /**
-   * Data to array.
-   *
-   * @return array
-   *   Array which is sent to API.
-   */
-  public function toArray(): array
+  public function getPath(): string
   {
-    return [
-      'project_id' => $this->projectId
+    $path = parent::getPath();
+
+    $pathVariables = [
+      '{profile_uuid}' => $this->profileUuid,
+      '{project_uuid}' => $this->projectUuid,
     ];
+
+    foreach($pathVariables as $search => $replace) {
+      $path = str_replace($search, $replace, $path);
+    }
+
+    return $path;
   }
 
   /**
