@@ -7,6 +7,7 @@ use Drupal\asu_application\Event\ApplicationEvent;
 use Drupal\asu_application\Event\SalesApplicationEvent;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\RedirectCommand;
+use Drupal\Core\Ajax\UpdateBuildIdCommand;
 use Drupal\Core\Entity\ContentEntityForm;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Messenger\MessengerTrait;
@@ -265,6 +266,12 @@ class ApplicationForm extends ContentEntityForm {
     $url = $this->getUserApplicationsUrl();
     $response = new AjaxResponse();
     $response->addCommand(new RedirectCommand($url));
+    $response->addCommand(
+      new UpdateBuildIdCommand(
+        $form['#build_id_old'],
+        $form['#build_id']
+      )
+    );
     return $response;
   }
 
@@ -371,7 +378,15 @@ class ApplicationForm extends ContentEntityForm {
     // Update "has_children" value.
     $entity->set('has_children', $values['has_children']['value'] ?? 0);
     $entity->save();
-    return $form['apartment'];
+
+    $response = new AjaxResponse($form['apartment']);
+    $response->addCommand(
+      new UpdateBuildIdCommand(
+        $form['#build_id_old'],
+        $form['#build_id']
+      )
+    );
+    return $response;
   }
 
   /**

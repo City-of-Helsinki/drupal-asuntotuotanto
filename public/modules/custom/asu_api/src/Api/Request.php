@@ -9,7 +9,6 @@ use Psr\Http\Message\ResponseInterface;
  * Custom request class.
  */
 abstract class Request {
-
   protected const AUTHENTICATED = FALSE;
   protected const METHOD = 'GET';
   protected const PATH = '';
