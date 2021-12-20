@@ -13,9 +13,7 @@ use Drupal\user\UserInterface;
  */
 class CreateUserRequest extends Request {
   protected const METHOD = 'POST';
-
   protected const PATH = '/v1/profiles/';
-
   protected const AUTHENTICATED = FALSE;
 
   /**
