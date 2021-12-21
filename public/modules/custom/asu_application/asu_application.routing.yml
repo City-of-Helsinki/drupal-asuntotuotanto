@@ -7,7 +7,10 @@ asu_application.admin_create_application:
     _permission: 'administer applications'
 
 asu_application.application_results:
-  path: '/call/ajax/application/results'
+  path: '/user/application/results'
   defaults:
     _controller: '\Drupal\asu_application\Controller\ResultController::getResults'
-  methods: [GET]
+  methods: [POST]
+  requirements:
+    _access: 'TRUE'
+    #_csrf_token: 'TRUE'
