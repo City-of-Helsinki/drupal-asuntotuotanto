@@ -6,4 +6,7 @@ additional-applicant:
 application-results:
   version: 1.x
   js:
-    assets/js/application-results.js: {}
+    assets/js/application-results.js:
+  dependencies:
+    - core/drupal
+    - core/jquery
