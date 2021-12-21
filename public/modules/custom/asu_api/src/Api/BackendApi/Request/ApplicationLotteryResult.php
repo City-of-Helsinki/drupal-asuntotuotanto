@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Drupal\asu_api\Api\BackendApi\Request;
 
 use Drupal\asu_api\Api\BackendApi\Response\ApplicationLotteryResultResponse;
@@ -10,17 +9,17 @@ use Psr\Http\Message\ResponseInterface;
 /**
  * A request to create an application.
  */
-class ApplicationLotteryResult extends Request
-{
+class ApplicationLotteryResult extends Request {
   protected const METHOD = 'GET';
   protected const PATH = '/profiles/{profile_uuid}/projects/{project_uuid}/apartment_positions';
   protected const AUTHENTICATED = TRUE;
 
   private string $profileUuid;
 
-  /*
+  /**
    * Uuid of the project.
    */
+
   private string $projectUuid;
 
   /**
@@ -29,14 +28,15 @@ class ApplicationLotteryResult extends Request
   public function __construct(
     string $profileUuid,
     string $projectUuid
-  )
-  {
+  ) {
     $this->profileUuid = $profileUuid;
     $this->projectUuid = $projectUuid;
   }
 
-  public function getPath(): string
-  {
+  /**
+   * {@inheritDoc}
+   */
+  public function getPath(): string {
     $path = parent::getPath();
 
     $pathVariables = [
@@ -44,7 +44,7 @@ class ApplicationLotteryResult extends Request
       '{project_uuid}' => $this->projectUuid,
     ];
 
-    foreach($pathVariables as $search => $replace) {
+    foreach ($pathVariables as $search => $replace) {
       $path = str_replace($search, $replace, $path);
     }
 
@@ -54,8 +54,7 @@ class ApplicationLotteryResult extends Request
   /**
    * {@inheritdoc}
    */
-  public static function getResponse(ResponseInterface $response): ApplicationLotteryResultResponse
-  {
+  public static function getResponse(ResponseInterface $response): ApplicationLotteryResultResponse {
     return ApplicationLotteryResultResponse::createFromHttpResponse($response);
   }
 

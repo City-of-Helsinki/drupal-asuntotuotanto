@@ -42,20 +42,19 @@ function template_preprocess_asu_application(array &$variables) {
   $application = $variables['elements']['#asu_application'];
   $variables['view_mode'] = $variables['elements']['#view_mode'];
   $id = $application->id->value;
-
   $projectId = $application->getProjectId();
 
   try {
     $project = \Drupal::entityTypeManager()
       ->getStorage('node')
-    ->load($projectId);
+      ->load($projectId);
 
     $apartments = \Drupal::entityTypeManager()
       ->getStorage('node')
       ->loadMultiple($application->getApartmentIds());
 
     $apartmentData = [];
-    foreach($apartments as $apartment) {
+    foreach ($apartments as $apartment) {
       $apartmentData[$apartment->id()] = [
         'uuid' => $apartment->uuid(),
         'number' => $apartment->field_apartment_number->value,
@@ -79,6 +78,7 @@ function template_preprocess_asu_application(array &$variables) {
         'application_end_time' => $project->field_application_end_time->value,
         'project_main_image_url' => $main_image_file_url ?? NULL,
         'project_district' => $project->field_district->first()->entity->getName(),
+        'application_id' => $application->id(),
         'application_apartments' => $apartmentData,
       ],
     ];
@@ -164,20 +164,6 @@ function asu_user_form_contact_message_apply_for_free_apartment_form_alter(&$for
     ];
   }
 }
-
-function asu_application_results_ajax($uuid) {
-  try {
-    $request = new \Drupal\asu_api\Api\BackendApi\Request\ApplicationLotteryResult($uuid);
-    $request->setSender(\Drupal\user\Entity\User::load(\Drupal::currentUser()->id()));
-    $backendApi = \Drupal::service('asu_api.backendapi');
-    $result = $backendApi->send($request);
-  }
-  catch(\Exception $exception) {
-    $result = [];
-  }
-  return $result;
-}
-
 
 /**
  * Cron for asu application.
