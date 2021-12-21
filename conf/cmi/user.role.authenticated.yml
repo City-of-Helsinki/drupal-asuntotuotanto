@@ -15,6 +15,7 @@ permissions:
   - 'create application'
   - 'display eu cookie compliance popup'
   - 'display eu cookie compliance popup'
+  - 'opt-in or out of matomo tracking'
   - 'restful get asu_applications'
   - 'restful get asu_initialize'
   - 'restful get filter_rest_resource'
