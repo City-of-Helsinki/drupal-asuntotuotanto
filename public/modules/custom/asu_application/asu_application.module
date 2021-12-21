@@ -70,6 +70,18 @@ function template_preprocess_asu_application(array &$variables) {
         'project_district' => $project->field_district->first()->entity->getName(),
       ],
     ];
+
+    if ($variables['elements']['#view_mode'] == 'full') {
+      $application_fields = [
+        'field_personal_id' => $application->get('field_personal_id')->getValue(),
+        // 'field_hitas_owner' => $application->get('field_hitas_owner')->getValue(),
+        'has_children' => $application->get('has_children')->getValue(),
+        'applicant' => $application->get('applicant')->getValue(),
+        'apartments' => $application->get('apartment')->getValue(),
+      ];
+      $application_teaser_values['application'] = $application_fields;
+    }
+
     $application_teaser_values['#teaser_values']['application_url'] = $application->isLocked() ? "/application/$id" : "/application/$id/edit";
   }
   catch (\Exception $e) {
