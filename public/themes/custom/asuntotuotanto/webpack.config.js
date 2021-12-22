@@ -21,6 +21,8 @@ module.exports = {
         "./src/js/user-tools.js",
         "./src/js/application-form-actions.js",
         "./src/js/faq.js",
+        "./src/js/intense-images.js",
+        "./src/js/application-apartment-listing.js",
       ],
     }),
     stickyNavigation: ["./src/js/sticky-navigation.js"],
@@ -29,6 +31,8 @@ module.exports = {
     userToolsNavigation: ["./src/js/user-tools.js"],
     applicationFormActions: ["./src/js/application-form-actions.js"],
     faq: ["./src/js/faq.js"],
+    intenseImages: ["./src/js/intense-images.js"],
+    applicationApartmentListing: ["./src/js/application-apartment-listing.js"],
   },
   output: {
     devtoolLineToLine: true,

@@ -218,7 +218,6 @@ class ElasticSearch extends ResourceBase {
         'debt_free_sales_price' : 'right_of_occupancy_payment';
       $baseConditionGroup->addCondition($field, $value, '<');
     }
-
   }
 
 }

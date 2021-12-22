@@ -5,6 +5,9 @@
  * Contains asu_application.
  */
 
+use Drupal\asu_application\Entity\Application;
+use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
+use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\node\Entity\Node;
 use Drupal\file\Entity\File;
 
@@ -150,5 +153,47 @@ function asu_user_form_contact_message_apply_for_free_apartment_form_alter(&$for
       'field_name' => "{$customer->get('first_name')} {$customer->get('last_name')}",
       'field_phone_number' => $customer->get('phone_number'),
     ];
+  }
+}
+
+/**
+ * Cron for asu application.
+ */
+function asu_application_cron() {
+  // Handle drafted applications.
+  try {
+    $before = (new DrupalDateTime('-29 days'))
+      ->format(DateTimeItemInterface::DATETIME_STORAGE_FORMAT);
+    $after = (new DrupalDateTime('-31 days'))
+      ->format(DateTimeItemInterface::DATETIME_STORAGE_FORMAT);
+
+    $projects = \Drupal::entityQuery('node')
+      ->condition('type', 'project', '=')
+      ->condition('field_application_end_time', [$after, $before], 'BETWEEN')
+      ->execute();
+
+    if (!$projects) {
+      return;
+    }
+
+    $applicationIds = \Drupal::entityTypeManager()
+      ->getStorage('asu_application')
+      ->getQuery()
+      ->condition('project_id', $projects, 'IN')
+      ->condition('field_locked', 0, '=')
+      ->execute();
+
+    if (!$applicationIds) {
+      return;
+    }
+
+    $applications = Application::loadMultiple($applicationIds);
+    /** @var \Drupal\asu_application\Entity\Application $application */
+    foreach ($applications as $application) {
+      $application->delete();
+    }
+  }
+  catch (\Exception $e) {
+    \Drupal::logger('asu_application_cron')->critical('Unable to perform application cron operation: ' . $e->getMessage());
   }
 }

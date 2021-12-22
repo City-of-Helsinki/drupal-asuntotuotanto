@@ -3,6 +3,8 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.user.sales.field_backend_password
+    - field.field.user.sales.field_backend_profile
     - field.field.user.sales.field_full_name
     - field.field.user.sales.field_phone_number
     - user_bundle.user_type.sales
@@ -14,17 +16,17 @@ bundle: sales
 mode: default
 content:
   account:
-    weight: -10
+    weight: 0
+    region: content
     settings: {  }
     third_party_settings: {  }
-    region: content
   contact:
-    weight: 5
+    weight: 2
+    region: content
     settings: {  }
     third_party_settings: {  }
-    region: content
   field_full_name:
-    weight: 32
+    weight: 6
     settings:
       size: 60
       placeholder: ''
@@ -32,7 +34,7 @@ content:
     type: string_textfield
     region: content
   field_phone_number:
-    weight: 31
+    weight: 5
     settings:
       size: 60
       placeholder: ''
@@ -40,20 +42,22 @@ content:
     type: string_textfield
     region: content
   language:
-    weight: 0
+    weight: 1
+    region: content
     settings: {  }
     third_party_settings: {  }
-    region: content
   path:
     type: path
-    weight: 30
+    weight: 4
     region: content
     settings: {  }
     third_party_settings: {  }
   translation:
-    weight: 10
+    weight: 3
+    region: content
     settings: {  }
     third_party_settings: {  }
-    region: content
 hidden:
+  field_backend_password: true
+  field_backend_profile: true
   langcode: true

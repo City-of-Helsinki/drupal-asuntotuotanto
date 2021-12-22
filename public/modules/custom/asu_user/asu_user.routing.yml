@@ -15,3 +15,11 @@ asu_user.delete_test_users:
     _title: 'Delete all test users'
   requirements:
     _permission: 'administer content'
+
+asu_user.list_all:
+  path: '/admin/tools'
+  defaults:
+    _controller: '\Drupal\asu_user\Controller\ListController::build'
+    _title: 'Tools'
+  requirements:
+    _permission: 'administer content'

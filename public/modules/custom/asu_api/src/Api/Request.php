@@ -2,16 +2,23 @@
 
 namespace Drupal\asu_api\Api;
 
+use Drupal\user\UserInterface;
 use Psr\Http\Message\ResponseInterface;
 
 /**
  * Custom request class.
  */
 abstract class Request {
-
   protected const AUTHENTICATED = FALSE;
   protected const METHOD = 'GET';
   protected const PATH = '';
+
+  /**
+   * The user that will be sender of the request.
+   *
+   * @var Drupal\user\UserInterface
+   */
+  protected UserInterface $sender;
 
   /**
    * Gets the HTTP method.
@@ -36,6 +43,26 @@ abstract class Request {
       throw new \LogicException('Missing path.');
     }
     return static::PATH;
+  }
+
+  /**
+   * Set sender.
+   *
+   * @param Drupal\user\UserInterface $sender
+   *   The user sending the request.
+   */
+  public function setSender(UserInterface $sender) {
+    $this->sender = $sender;
+  }
+
+  /**
+   * Get the user sending the request.
+   */
+  public function getSender(): UserInterface {
+    if (!$this->sender && $this->requiresAuthentication()) {
+      throw new \InvalidArgumentException('Authenticated request requires the sender to be set.');
+    }
+    return $this->sender;
   }
 
   /**

@@ -172,8 +172,10 @@ function asuntotuotanto_preprocess_views_view(&$variables) {
 
     case 'applications':
       $current_user = User::load(\Drupal::currentUser()->id());
-      $variables['is_email_valid'] = $current_user->get('field_email_is_valid')->getValue()[0]['value'] ?? NULL;
-
+      $variables['is_email_valid'] = NULL;
+      if ($current_user->hasField('field_email_is_valid')) {
+        $variables['is_email_valid'] = $current_user->get('field_email_is_valid')->getValue()[0]['value'] ?? NULL;
+      }
       break;
 
     case 'project_apartments_listing':
@@ -220,15 +222,28 @@ function asuntotuotanto_preprocess_views_view_table(&$variables) {
         continue;
       }
       $parent_node = $parent;
+
       $is_application_period_active = FALSE;
+      $application_start_time_timestamp = NULL;
+      $application_end_time_timestamp = NULL;
 
-      $application_start_time_value = $parent_node->get('field_application_start_time')->value;
-      $application_start_time_timestamp = format_date_to_unix_timestamp($application_start_time_value);
-      $application_end_time_value = $parent_node->get('field_application_end_time')->value;
-      $application_end_time_timestamp = format_date_to_unix_timestamp($application_end_time_value);
+      if (
+        $parent_node->hasField('field_application_start_time') &&
+        $application_start_time_value = $parent_node->get('field_application_start_time')->value
+      ) {
+        $application_start_time_timestamp = format_date_to_unix_timestamp($application_start_time_value);
+      }
+      if ($application_end_time_value = $parent_node->get('field_application_end_time')->value) {
+        $application_end_time_timestamp = format_date_to_unix_timestamp($application_end_time_value);
+      }
+
       $current_timestamp = time();
-
-      if ($current_timestamp >= $application_start_time_timestamp && $current_timestamp <= $application_end_time_timestamp) {
+      if (
+        $application_start_time_timestamp &&
+        $application_end_time_value &&
+        $current_timestamp > $application_start_time_timestamp
+        && $current_timestamp < $application_end_time_timestamp
+      ) {
         $is_application_period_active = TRUE;
       }
 
@@ -242,7 +257,13 @@ function asuntotuotanto_preprocess_views_view_table(&$variables) {
 
       $variables['rows'][$key]['is_application_period_active'] = $is_application_period_active;
       $variables['rows'][$key]['application_url'] = $application_url;
+      $variables['rows'][$key]['apartment_number'] = $variables['view']->result[$key]->_entity->get('field_apartment_number')->value;
     }
+
+    usort($variables['rows'], function ($a, $b) {
+      return strnatcasecmp($a['apartment_number'], $b['apartment_number']);
+    });
+
   }
 }
 
@@ -334,11 +355,10 @@ function asuntotuotanto_form_alter(&$form, &$form_state, $form_id) {
  * Implements hook_preprocess_node().
  */
 function asuntotuotanto_preprocess_node(&$variables) {
-  $node = Node::load($variables['node']->id());
+  $node = $variables['node'];
   $bundle = $node->getType();
 
   if ($node->field_content && !empty($node->field_content->getValue())) {
-
     foreach ($node->field_content->getValue() as $value) {
       $paragraph = FALSE;
 
@@ -374,8 +394,6 @@ function asuntotuotanto_preprocess_node(&$variables) {
 
   switch ($bundle) {
     case 'project':
-      $apartments = $node->field_apartments;
-
       $apartment_structures = [];
       $apartment_living_area_sizes = [];
       $apartment_sales_prices = [];
@@ -383,8 +401,12 @@ function asuntotuotanto_preprocess_node(&$variables) {
       $prices = [];
       $project_type = $node->field_ownership_type->entity->name->value;
 
-      foreach ($apartments as $key => $apartment) {
-        $apartment_node = $apartment->entity;
+      $apartments = $node->field_apartments;
+      foreach ($apartments as $apartment) {
+        if (!$apartment_node = $apartment->entity) {
+          continue;
+        }
+
         $apartment_sales_price = $apartment_node->hasField('field_sales_price') ? $apartment_node->get('field_sales_price')->value : 0;
         $apartment_debt_free_sales_price = $apartment_node->hasField('field_debt_free_sales_price') ? $apartment_node->get('field_debt_free_sales_price')->value : 0;
         $apartment_living_area_size = $apartment_node->hasField('field_living_area') ? $apartment_node->get('field_living_area')->value : 0;
@@ -408,7 +430,8 @@ function asuntotuotanto_preprocess_node(&$variables) {
         sort($apartment_structures);
       }
 
-      if (!empty($apartment_debt_free_sales_prices)) {
+      if (array_filter($apartment_debt_free_sales_prices)) {
+        $apartment_debt_free_sales_prices = array_filter($apartment_debt_free_sales_prices);
         $apartment_debt_free_sales_prices_minmax = [
           "min" => number_format(min($apartment_debt_free_sales_prices), 2, ',', ' '),
           "max" => number_format(max($apartment_debt_free_sales_prices), 2, ',', ' '),
@@ -416,7 +439,8 @@ function asuntotuotanto_preprocess_node(&$variables) {
         $apartment_debt_free_sales_prices_string = $apartment_debt_free_sales_prices_minmax['min'] . " € - " . $apartment_debt_free_sales_prices_minmax['max'] . " €";
       }
 
-      if (!empty($apartment_sales_prices)) {
+      if (array_filter($apartment_sales_prices)) {
+        $apartment_sales_prices = array_filter($apartment_sales_prices);
         $apartment_sales_prices_minmax = [
           "min" => number_format(min($apartment_sales_prices), 2, ',', ' '),
           "max" => number_format(max($apartment_sales_prices), 2, ',', ' '),
@@ -424,7 +448,8 @@ function asuntotuotanto_preprocess_node(&$variables) {
         $apartment_sales_prices_string = $apartment_sales_prices_minmax['min'] . " € - " . $apartment_sales_prices_minmax['max'] . " €";
       }
 
-      if (!empty($apartment_living_area_sizes)) {
+      if (array_filter($apartment_living_area_sizes)) {
+        $apartment_living_area_sizes = array_filter($apartment_living_area_sizes);
         $apartment_living_area_sizes_minmax = [
           "min" => number_format(min($apartment_living_area_sizes), 1, ',', NULL),
           "max" => number_format(max($apartment_living_area_sizes), 1, ',', NULL),
@@ -432,7 +457,8 @@ function asuntotuotanto_preprocess_node(&$variables) {
         $apartment_living_area_sizes_string = $apartment_living_area_sizes_minmax['min'] . " - " . $apartment_living_area_sizes_minmax['max'];
       }
 
-      if (!empty($prices)) {
+      if (array_filter($prices)) {
+        $prices = array_filter($prices);
         $prices_minmax = [
           "min" => number_format(min($prices), 1, ',', NULL),
           "max" => number_format(max($prices), 1, ',', NULL),
@@ -480,17 +506,39 @@ function asuntotuotanto_preprocess_node(&$variables) {
         }
       }
 
-      $estimated_completion_date = new DateTime($node->get('field_estimated_completion_date')->value);
+      $estimated_completion_date = NULL;
+      if ($node->get('field_estimated_completion_date')->value) {
+        $estimated_completion_date = (new DateTime($node->get('field_estimated_completion_date')->value))->format('m/Y');
+      }
 
       $is_application_period_active = FALSE;
+      $application_start_time_timestamp = NULL;
+      $application_end_time_timestamp = NULL;
+      $application_start = NULL;
+      $application_end = NULL;
 
-      $application_start_time_value = $node->get('field_application_start_time')->value;
-      $application_start_time_timestamp = format_date_to_unix_timestamp($application_start_time_value);
-      $application_end_time_value = $node->get('field_application_end_time')->value;
-      $application_end_time_timestamp = format_date_to_unix_timestamp($application_end_time_value);
+      if (
+        $node->hasField('field_application_start_time') &&
+        $application_start_time_value = $node->get('field_application_start_time')->value
+      ) {
+        $application_start_time_timestamp = format_date_to_unix_timestamp($application_start_time_value);
+        $application_start = (new \Datetime($application_start_time_value))->format('d.m.Y H:i');
+      }
+      if (
+        $node->hasField('field_application_end_time') &&
+        $application_end_time_value = $node->get('field_application_end_time')->value
+      ) {
+        $application_end_time_timestamp = format_date_to_unix_timestamp($application_end_time_value);
+        $application_end = (new \Datetime($application_end_time_value))->format('d.m.Y H:i');
+      }
+
       $current_timestamp = time();
-
-      if ($current_timestamp >= $application_start_time_timestamp && $current_timestamp <= $application_end_time_timestamp) {
+      if (
+        $application_start_time_timestamp &&
+        $application_end_time_value &&
+        $current_timestamp > $application_start_time_timestamp
+        && $current_timestamp < $application_end_time_timestamp
+      ) {
         $is_application_period_active = TRUE;
       }
 
@@ -510,16 +558,17 @@ function asuntotuotanto_preprocess_node(&$variables) {
         $variables['street_number'] = $street_number ?? NULL;
       }
 
-      $variables['application_start_time'] = format_timestamp_to_custom_format($application_start_time_timestamp);
-      $variables['application_end_time'] = format_timestamp_to_custom_format($application_end_time_timestamp);
-      $variables['apartments_count'] = count($apartments);
+      $variables['application_start_time'] = $application_start;
+      $variables['application_end_time'] = $application_end;
+
+      $variables['apartments_count'] = count($apartments) < 2 ? 0 : count($apartments);
       $variables['apartment_sales_prices'] = $apartment_sales_prices_string;
       $variables['apartment_debt_free_sales_prices'] = $apartment_debt_free_sales_prices_string;
       $variables['apartment_structures'] = implode(", ", array_unique($apartment_structures));
       $variables['apartment_living_area_sizes_m2'] = $apartment_living_area_sizes_string ?? '';
       $variables['attachments'] = $attachments_stack ?? NULL;
       $variables['services'] = $services_stack ?? NULL;
-      $variables['estimated_completion_date'] = $estimated_completion_date->format('m/Y') ?? NULL;
+      $variables['estimated_completion_date'] = $estimated_completion_date;
       $variables['is_application_period_active'] = $is_application_period_active;
       $variables['project_type'] = $project_type;
       $variables['apartment_prices'] = $prices_string;
@@ -543,57 +592,75 @@ function asuntotuotanto_preprocess_node(&$variables) {
 
       if ($parent_node_results) {
         $parent_node_nid = key($parent_node_results);
-        $parent_node = Node::load($parent_node_nid);
+        $project = Node::load($parent_node_nid);
+
         $is_application_period_active = FALSE;
         $is_application_period_in_the_past = FALSE;
+        $application_start_time_timestamp = NULL;
+        $application_end_time_timestamp = NULL;
 
-        $application_start_time_value = $parent_node->get('field_application_start_time')->value;
-        $application_start_time_timestamp = format_date_to_unix_timestamp($application_start_time_value);
-        $application_end_time_value = $parent_node->get('field_application_end_time')->value;
-        $application_end_time_timestamp = format_date_to_unix_timestamp($application_end_time_value);
         $current_timestamp = time();
-
-        if ($current_timestamp > $application_start_time_timestamp && $current_timestamp < $application_end_time_timestamp) {
-          $is_application_period_active = TRUE;
+        if (
+          $project->hasField('field_application_start_time') &&
+          $application_start_time_value = $project->get('field_application_start_time'
+          )->value) {
+          $application_start_time_timestamp = format_date_to_unix_timestamp($application_start_time_value);
+          $application_start = (new \DateTime($application_start_time_value))->format('d.m.Y H:i');
+        }
+        if (
+          $project->hasField('field_application_end_time') &&
+          $application_end_time_value = $project->get('field_application_end_time')->value
+        ) {
+          $application_end_time_timestamp = format_date_to_unix_timestamp($application_end_time_value);
+          $application_end = (new \DateTime($application_end_time_value))->format('d.m.Y H:i');
         }
 
-        if ($current_timestamp > $application_end_time_timestamp) {
-          $is_application_period_in_the_past = TRUE;
+        $current_timestamp = time();
+        if ($application_start_time_timestamp && $application_end_time_value) {
+          if ($current_timestamp > $application_start_time_timestamp && $current_timestamp < $application_end_time_timestamp) {
+            $is_application_period_active = TRUE;
+          }
+          if ($current_timestamp > $application_end_time_timestamp) {
+            $is_application_period_in_the_past = TRUE;
+          }
         }
 
-        if (count($parent_node->get('field_district')->getValue()) > 0) {
-          $district = Term::load($parent_node->get('field_district')->getValue()[0]['target_id'])->name->value ?? NULL;
+        if (count($project->get('field_district')->getValue()) > 0) {
+          $district = Term::load($project->get('field_district')->getValue()[0]['target_id'])->name->value ?? NULL;
         }
 
-        if (count($parent_node->get('field_ownership_type')->getValue()) > 0) {
-          $ownership_type = Term::load($parent_node->get('field_ownership_type')->getValue()[0]['target_id'])->name->value ?? NULL;
+        if (count($project->get('field_ownership_type')->getValue()) > 0) {
+          $ownership_type = Term::load($project->get('field_ownership_type')->getValue()[0]['target_id'])->name->value ?? NULL;
         }
 
-        $project_description = $parent_node->get('field_project_description')->value;
-        $project_area_description = $parent_node->get('field_project_area_description')->value;
+        $project_description = $project->get('field_project_description')->value;
+        $project_area_description = $project->get('field_project_area_description')->value;
 
-        if (count($parent_node->get('field_building_type')->getValue()) > 0) {
-          $building_type = Term::load($parent_node->get('field_building_type')->getValue()[0]['target_id'])->name->value ?? NULL;
+        if (count($project->get('field_building_type')->getValue()) > 0) {
+          $building_type = Term::load($project->get('field_building_type')->getValue()[0]['target_id'])->name->value ?? NULL;
         }
 
-        if (count($parent_node->get('field_energy_class')->getValue()) > 0) {
-          $energy_class = Term::load($parent_node->get('field_energy_class')->getValue()[0]['target_id'])->name->value ?? NULL;
+        if (count($project->get('field_energy_class')->getValue()) > 0) {
+          $energy_class = Term::load($project->get('field_energy_class')->getValue()[0]['target_id'])->name->value ?? NULL;
         }
 
-        $accessibility = $parent_node->get('field_project_accessibility')->value;
-        $services = $parent_node->get('field_services')->getValue();
-        $services_url = $parent_node->get('field_services_url')->getValue()[0] ?? NULL;
+        $accessibility = $project->get('field_project_accessibility')->value;
+        $services = $project->get('field_services')->getValue();
+        $services_url = $project->get('field_services_url')->getValue()[0] ?? NULL;
         $services_stack = [];
-        $project_attachments = $parent_node->get('field_project_attachments')->getValue();
+        $project_attachments = $project->get('field_project_attachments')->getValue();
         $apartment_attachments = $node->get('field_apartment_attachments')->getValue();
         $attachments_stack = [];
-        $estimated_completion_date = new DateTime($parent_node->get('field_estimated_completion_date')->value);
-
-        if (count($parent_node->get('field_site_owner')->getValue()) > 0) {
-          $site_owner = Term::load($parent_node->get('field_site_owner')->getValue()[0]['target_id'])->name->value ?? NULL;
+        $estimated_completion_date = NULL;
+        if ($project->get('field_estimated_completion_date')->value) {
+          $estimated_completion_date = (new DateTime($project->get('field_estimated_completion_date')->value))->format('d.m.Y H:i:s');
         }
 
-        $site_renter = $parent_node->get('field_site_renter')->value;
+        if (count($project->get('field_site_owner')->getValue()) > 0) {
+          $site_owner = Term::load($project->get('field_site_owner')->getValue()[0]['target_id'])->name->value ?? NULL;
+        }
+
+        $site_renter = $project->get('field_site_renter')->value;
 
         if (count($services) > 0) {
           foreach ($services as $key => $service) {
@@ -653,11 +720,11 @@ function asuntotuotanto_preprocess_node(&$variables) {
           }
         }
 
-        $street_address = $parent_node->get('field_street_address')->value ?? NULL;
-        $postal_code = $parent_node->get('field_postal_code')->value ?? NULL;
-        $city = $parent_node->get('field_city')->value ?? NULL;
-        $coordinate_lat = $parent_node->get('field_coordinate_lat')->value ?? NULL;
-        $coordinate_lon = $parent_node->get('field_coordinate_lon')->value ?? NULL;
+        $street_address = $project->get('field_street_address')->value ?? NULL;
+        $postal_code = $project->get('field_postal_code')->value ?? NULL;
+        $city = $project->get('field_city')->value ?? NULL;
+        $coordinate_lat = $project->get('field_coordinate_lat')->value ?? NULL;
+        $coordinate_lon = $project->get('field_coordinate_lon')->value ?? NULL;
 
         if (!empty($street_address)) {
           $street_address_splitted = split_address_line($street_address);
@@ -678,8 +745,8 @@ function asuntotuotanto_preprocess_node(&$variables) {
         $variables['coordinate_lat'] = $coordinate_lat;
         $variables['coordinate_lon'] = $coordinate_lon;
         $variables['city'] = $city;
-        $variables['application_start_time'] = format_timestamp_to_custom_format($application_start_time_timestamp);
-        $variables['application_end_time'] = format_timestamp_to_custom_format($application_end_time_timestamp);
+        $variables['application_start_time'] = $application_start;
+        $variables['application_end_time'] = $application_end;
         $variables['is_application_period_active'] = $is_application_period_active;
         $variables['is_application_period_in_the_past'] = $is_application_period_in_the_past;
         $variables['district'] = $district ?? NULL;
@@ -693,7 +760,7 @@ function asuntotuotanto_preprocess_node(&$variables) {
         $variables['services'] = $services_stack ?? NULL;
         $variables['services_url'] = $services_url ?? NULL;
         $variables['attachments'] = $attachments_stack ?? NULL;
-        $variables['estimated_completion_date'] = $estimated_completion_date->format('m/Y') ?? NULL;
+        $variables['estimated_completion_date'] = $estimated_completion_date;
         $variables['site_owner'] = $site_owner ?? NULL;
         $variables['site_renter'] = $site_renter ?? NULL;
       }
@@ -726,10 +793,13 @@ function asuntotuotanto_preprocess_pager(&$variables) {
  *
  */
 function asuntotuotanto_preprocess_user(&$variables) {
-  $customer = \Drupal::service('asu_user.customer');
-  $fields = \Drupal::config('asu_user.external_user_fields')->get('external_data_map');
-  foreach ($fields as $field_name => $field) {
-    $variables['content'][$field_name] = $customer->getUserField($field_name);
+  if (User::load(\drupal::currentUser()->id())->bundle() == 'customer') {
+    $customer = \Drupal::service('asu_user.customer');
+    $fields = \Drupal::config('asu_user.external_user_fields')->get('external_data_map');
+
+    foreach ($fields as $field_name => $field) {
+      $variables['content'][$field_name] = $customer->getUserField($field_name);
+    }
   }
 }
 
@@ -902,4 +972,13 @@ function getProjectApartmentTeaserValues($project_id) {
     '#teaser_values' => $values,
   ];
 
+}
+
+/**
+ * Add fullscreen functionality to slick.
+ */
+function asuntotuotanto_preprocess_blazy(&$variables) {
+  // dd($variables);
+  $variables['image']['#attributes']['data-image'] = file_create_url($variables['image']['#uri']);
+  $variables['#attached']['library'][] = 'asuntotuotanto/intense-images';
 }

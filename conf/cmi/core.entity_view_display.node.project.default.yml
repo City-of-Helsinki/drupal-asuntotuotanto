@@ -10,6 +10,7 @@ dependencies:
     - field.field.node.project.field_application_end_time
     - field.field.node.project.field_application_start_time
     - field.field.node.project.field_attachments_url
+    - field.field.node.project.field_barred_bank_account
     - field.field.node.project.field_building_type
     - field.field.node.project.field_city
     - field.field.node.project.field_completion_date
@@ -47,6 +48,7 @@ dependencies:
     - field.field.node.project.field_publication_end_time
     - field.field.node.project.field_publication_start_time
     - field.field.node.project.field_realty_id
+    - field.field.node.project.field_regular_bank_account
     - field.field.node.project.field_roof_material
     - field.field.node.project.field_salesperson
     - field.field.node.project.field_sanitation
@@ -126,6 +128,14 @@ content:
       target: ''
     third_party_settings: {  }
     type: link
+    region: content
+  field_barred_bank_account:
+    weight: 44
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
     region: content
   field_building_type:
     weight: 31
@@ -372,6 +382,14 @@ content:
     region: content
   field_realty_id:
     weight: 9
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_regular_bank_account:
+    weight: 43
     label: above
     settings:
       link_to_entity: false

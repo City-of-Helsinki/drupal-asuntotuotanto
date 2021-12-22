@@ -5,6 +5,7 @@
  * Contains asu_user module.
  */
 
+use Drupal\asu_user\Helper\StoreHelper;
 use Drupal\Core\Url;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -28,10 +29,10 @@ function asu_user_entity_type_alter(array &$entity_types) {
  * Implements hook_user_login().
  */
 function asu_user_user_login(UserInterface $account) {
+  asu_create_backend_user($account);
   if ($account->hasRole('customer')) {
     asu_validate_email($account);
     asu_send_user_password_email($account);
-    asu_create_backend_user($account);
     asu_get_user_external_field_data($account);
     asu_redirect_on_login_by_session($account);
   }
@@ -65,16 +66,33 @@ function asu_send_user_password_email(UserInterface $account) {
  * Send created user to backend.
  */
 function asu_create_backend_user(UserInterface $account) {
-  /** @var Drupal\asu_api\Api\BackendApi\BackendApi $backendApi */
-  $backendApi = \Drupal::service('asu_api.backendapi');
-  $customer = \Drupal::service('asu_user.customer');
+  if ($account->hasPermission('administer')) {
+    return;
+  }
 
-  $profileId = $account->field_backend_profile->value;
-  if (!$profileId) {
+  if (!$profileId = $account->get('field_backend_profile')->value) {
+    /** @var Drupal\asu_api\Api\BackendApi\BackendApi $backendApi */
+    $backendApi = \Drupal::service('asu_api.backendapi');
+
     \Drupal::logger('asu_user')->critical('User should already have backend profile created.');
     try {
-      /** @var \Drupal\asu_user\Customer $customer */
-      $createUser = new CreateUserRequest($account, $customer->getUserExternalFieldData());
+      $userBundle = User::load($account->id())->bundle();
+      $type = $userBundle == 'sales' ? 'salesperson' : 'customer';
+      $config = \Drupal::config('asu_user.external_user_fields')
+        ->get('external_data_map');
+
+      $values = [];
+      $store = \Drupal::service('tempstore.private')->get('customer');
+      foreach ($config as $field => $value) {
+        $values[$value['external_field']] = $store->get($field) ?? '-';
+      }
+
+      if ($type == 'salesperson') {
+        $values['address'] = '-';
+        $values['date_of_birth'] = (new \DateTime())->format('Y-m-d');
+      }
+
+      $createUser = new CreateUserRequest($account, $values, $type);
       /** @var \Drupal\asu_api\Api\BackendApi\Response\CreateUserResponse $response */
       $response = $backendApi->send($createUser);
       $account->field_backend_profile = $response->getProfileId();
@@ -100,27 +118,39 @@ function asu_redirect_on_login_by_session() {
  * Get the user data from django backend.
  */
 function asu_get_user_external_field_data(UserInterface $account) {
-  /** @var \Drupal\asu_api\Api\BackendApi\BackendApi $backendApi */
-  $backendApi = \Drupal::service('asu_api.backendapi');
-  /** @var \Drupal\asu_user\Customer $customer */
-  $customer = \Drupal::service('asu_user.customer');
-
-  $profileId = $account->field_backend_profile->value;
-  // Workaround for the first login right after registering.
-  // Cached user object wouldn't contain backend api information.
-  if (!$profileId) {
-    $profileId = asu_get_user_profile_id($account);
-    $account->set('field_backend_profile_value', $profileId);
+  if ($account->bundle() != 'customer') {
+    return;
   }
 
-  $request = new UserRequest($account);
-  /** @var \Drupal\asu_api\Api\BackendApi\Response\UserResponse $userResponse */
-  $userResponse = $backendApi->send($request);
-  $customer->updateUserExternalFields($userResponse->getUserInformation());
+  if (!$profileId = $account->field_backend_profile->value) {
+    $profileId = asu_get_user_profile_id($account);
+    $account->set('field_backend_profile', $profileId);
+  }
 
-  $request = new UserRequest($account);
-  $userInformationResponse = $backendApi->send($request);
-  $customer->updateUserExternalFields($userInformationResponse->getUserInformation());
+  try {
+    $request = new UserRequest($account);
+    $request->setSender($account);
+
+    /** @var \Drupal\asu_api\Api\BackendApi\BackendApi $backendApi */
+    $backendApi = \Drupal::service('asu_api.backendapi');
+    /** @var \Drupal\asu_api\Api\BackendApi\Response\UserResponse $userResponse */
+    $userResponse = $backendApi->send($request);
+
+    $store = \Drupal::service('tempstore.private')->get('customer');
+    $config = \Drupal::config('asu_user.external_user_fields')
+      ->get('external_data_map');
+    StoreHelper::setMultipleValuesToStoreByConfiguration(
+      $store,
+      $config,
+      $userResponse->getUserInformation()
+    );
+  }
+  catch (\Exception $e) {
+    \Drupal::logger('asu_backend_api')->emergency('Unable to fetch user information for user: ' . $account->id());
+    // @todo add contact form url if there is one.
+    \Drupal::messenger()->addWarning(t('We were unable to fetch your personal information.
+     If the problem persists contact us.'));
+  }
 }
 
 /**
@@ -129,13 +159,13 @@ function asu_get_user_external_field_data(UserInterface $account) {
 function asu_user_form_user_customer_form_alter(&$form, FormStateInterface &$form_state) {
   if (in_array('customer', \Drupal::currentUser()->getRoles())) {
     $fieldMap = \Drupal::config('asu_user.external_user_fields')->get('external_data_map');
-    $customer = \Drupal::service('asu_user.customer');
+    $store = \Drupal::service('tempstore.private')->get('customer');
     // If a field value is missing, fetch user information.
     foreach ($fieldMap as $field => $field_data) {
       $form['basic_information'][$field] = [
         '#type' => $field_data['type'],
         '#title' => $field_data['title'],
-        '#default_value' => $customer->getUserField($field),
+        '#default_value' => $store->get($field),
       ];
     }
     $form['actions']['submit']['#submit'][] = 'user_edit_submit';
@@ -156,15 +186,23 @@ function user_edit_submit(array $form, FormStateInterface &$form_state) {
 
   try {
     $updateRequest = new UpdateUserRequest($user, $form_state, \Drupal::config('asu_user.external_user_fields')->get('external_data_map'));
+    $updateRequest->setSender($user);
+
     /** @var \Drupal\asu_api\Api\BackendApi\Response\UpdateUserResponse $updateUserResponse */
     $updateUserResponse = $backendApi->send($updateRequest);
 
-    /** @var \Drupal\asu_user\Customer $customer */
-    $customer = \Drupal::service('asu_user.customer');
-    $customer->updateUserExternalFields($updateUserResponse->getUserInformation());
+    $store = \Drupal::service('tempstore.private')->get('customer');
+    $config = \Drupal::config('asu_user.external_user_fields')->get('external_data_map');
+
+    $data = $updateUserResponse->getUserInformation();
+    foreach ($config as $field => $field_data) {
+      $store->set($field, $data[$field_data['external_field']]);
+    }
   }
   catch (\Exception $e) {
-    \Drupal::logger('asu_user')->critical('authentication failed.');
+    \Drupal::logger('asu_user')->critical(
+      'authentication failed while updating user information: ' . $e->getMessage()
+    );
   }
 }
 
@@ -266,6 +304,7 @@ function asu_session_check_application_url(): ?RedirectResponse {
  * Implements hook_entity_operation().
  */
 function asu_user_entity_operation(EntityInterface $entity) {
+  // Add action urls to user entity.
   if (
     $entity instanceof UserInterface &&
     $entity->bundle() == 'customer'

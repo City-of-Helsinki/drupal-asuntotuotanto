@@ -114,14 +114,19 @@ function asu_content_entity_update($entity) {
       }
     }
   }
+
+  // @todo Remove when cron is running.
   // Index instantly on testing environment.
   if (
     method_exists($entity, 'getType') &&
     $entity->getType() == 'project' &&
     getenv('APP_ENV') == 'testing'
   ) {
-    $index = Index::load('apartment');
-    $index->indexItems();
+    $indexes = Index::loadMultiple();
+    foreach ($indexes as $index) {
+      $index->reindex();
+      $index->indexItems();
+    }
   }
 }
 
@@ -159,15 +164,7 @@ function asu_content_node_insert(Node $node) {
       $node->save();
     }
   }
-  // Index instantly on testing environment.
-  if (
-    method_exists($node, 'getType') &&
-    $node->getType() == 'project' &&
-    getenv('APP_ENV') == 'testing'
-  ) {
-    $index = Index::load('apartment');
-    $index->indexItems();
-  }
+
 }
 
 /**

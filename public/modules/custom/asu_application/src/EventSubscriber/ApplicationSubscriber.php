@@ -4,10 +4,13 @@ namespace Drupal\asu_application\EventSubscriber;
 
 use Drupal\asu_api\Api\BackendApi\Request\CreateApplicationRequest;
 use Drupal\asu_api\Api\BackendApi\BackendApi;
+use Drupal\asu_api\Api\BackendApi\Request\SalesCreateApplicationRequest;
 use Drupal\asu_application\Event\ApplicationEvent;
+use Drupal\asu_application\Event\SalesApplicationEvent;
 use Drupal\Core\Messenger\MessengerTrait;
 use Drupal\Core\Queue\QueueFactory;
 use Drupal\Core\Queue\QueueInterface;
+use Drupal\user\Entity\User;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -63,6 +66,10 @@ class ApplicationSubscriber implements EventSubscriberInterface {
   public static function getSubscribedEvents() {
     $events = [];
     $events[ApplicationEvent::EVENT_NAME][] = ['sendApplicationToBackend', 5];
+    $events[SalesApplicationEvent::EVENT_NAME][] = [
+      'salesSendApplicationToBackend',
+      10,
+    ];
     return $events;
   }
 
@@ -92,9 +99,60 @@ class ApplicationSubscriber implements EventSubscriberInterface {
           'apartment_uuids' => $applicationEvent->getApartmentUuids(),
         ]
       );
+      $request->setSender($user);
       $this->backendApi->send($request);
-      // @todo Notice in event.
-      $this->logger->notice('User sent an application to backend successfully');
+
+      $this->logger->notice(
+        'User sent an application to backend successfully'
+      );
+    }
+    catch (\Exception $e) {
+      $this->logger->critical(sprintf(
+        'Exception while sending application of id %s: %s',
+        $application->id(),
+        $e->getMessage()
+      ));
+      $this->queue->createItem($application->id());
+    }
+
+  }
+
+  /**
+   * Sales person sends application for customer.
+   */
+  public function salesSendApplicationToBackend(SalesApplicationEvent $applicationEvent) {
+    $entity_type = 'asu_application';
+    $entity_id = $applicationEvent->getApplicationId();
+
+    $sender = User::load($applicationEvent->getSenderId());
+
+    /** @var \Drupal\asu_application\Entity\Application $application */
+    $application = \Drupal::entityTypeManager()
+      ->getStorage($entity_type)
+      ->load($entity_id);
+
+    try {
+      $request = new SalesCreateApplicationRequest(
+        $sender,
+        $application,
+        [
+          'uuid' => $applicationEvent->getProjectUuid(),
+          'apartment_uuids' => $applicationEvent->getApartmentUuids(),
+        ]
+      );
+
+      $request->setSender($sender);
+
+      $this->backendApi->send($request);
+      $this->logger->notice(
+       'Sales sent application to backend successfully'
+      );
+
+      $application->set('field_locked', 1);
+      $application->save();
+      $this->messenger()->addStatus($this->t('The application has been submitted successfully.
+     You can no longer edit the application.'));
+
     }
     catch (\Exception $e) {
       $this->logger->critical(sprintf(

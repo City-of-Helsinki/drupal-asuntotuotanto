@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\asu_api\Api\BackendApi\Helper;
+namespace Drupal\asu_api\Helper;
 
 /**
  * Authentication helper.
@@ -18,7 +18,7 @@ class AuthenticationHelper {
    */
   public static function isTokenAlive(string $token): bool {
     $token = explode(',', base64_decode($token));
-    foreach ($token as $key => $value) {
+    foreach ($token as $value) {
       if (strpos($value, 'exp') !== FALSE) {
         $int = (int) filter_var($value, FILTER_SANITIZE_NUMBER_INT);
         return strtotime('now') < $int;

@@ -4,8 +4,10 @@ namespace Drupal\asu_application\Form;
 
 use Drupal\asu_application\Entity\Application;
 use Drupal\asu_application\Event\ApplicationEvent;
+use Drupal\asu_application\Event\SalesApplicationEvent;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\RedirectCommand;
+use Drupal\Core\Ajax\UpdateBuildIdCommand;
 use Drupal\Core\Entity\ContentEntityForm;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Messenger\MessengerTrait;
@@ -22,30 +24,15 @@ class ApplicationForm extends ContentEntityForm {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
+    /** @var \Drupal\user\Entity\User $currentUser */
+    $currentUser = User::load(\Drupal::currentUser()->id());
     $applicationsUrl = $this->getUserApplicationsUrl();
     $project_id = $this->entity->get('project_id')->value;
     $application_type_id = $this->entity->bundle();
 
-    $owner_id = \Drupal::request()->get('user_id');
-    if (!$owner_id) {
-      $owner_id = $this->entity->getOwnerId();
-    }
-
-    /** @var \Drupal\user\Entity\User $currentUser */
-    $currentUser = User::load(\Drupal::currentUser()->id());
-
-    if ($owner_id != $currentUser->id() && $currentUser->access('create')) {
-      // User is not customer.
-      $owner = User::load($owner_id);
-      // Here we must get the user information
-      // Or we must get the user.
-    }
-    else {
-      // User is customer or not authenticated.
-      $owner = User::load($currentUser->id());
-
+    if (!$currentUser->isAuthenticated()) {
       // Anonymous user must login.
-      if (!$owner->isAuthenticated()) {
+      if (!$currentUser->isAuthenticated()) {
         \Drupal::messenger()->addMessage($this->t('You must be logged in to fill an application. <a href="/user/login">Log in</a> or <a href="/user/register">create a new account</a>'));
         $project_type = strtolower($application_type_id);
         $application_url = "/application/add/$project_type/$project_id";
@@ -53,26 +40,29 @@ class ApplicationForm extends ContentEntityForm {
         $session->set('asu_last_application_url', $application_url);
         return(new RedirectResponse('/user/login', 301));
       }
+    }
 
-      // User must have customer role.
-      if ($owner->bundle() != 'customer') {
-        \Drupal::logger('asu_application')->critical('User without customer role tried to create application: User id: ' . \Drupal::currentUser()->id());
-        \Drupal::messenger()->addMessage($this->t('Users without customer role cannot fill applications.'));
-        return(new RedirectResponse(\Drupal::request()->getSchemeAndHttpHost(), 301));
+    if ($currentUser->bundle() == 'customer') {
+      $owner_id = $currentUser->id();
+      $owner = $currentUser;
+    }
+    else {
+      if (!$owner_id = \Drupal::request()->get('user_id')) {
+        $owner_id = $this->entity->getOwnerId();
       }
+      $owner = User::load($owner_id);
     }
 
     $applications = \Drupal::entityTypeManager()
       ->getStorage('asu_application')
       ->loadByProperties([
-        'uid' => $owner->id(),
+        'uid' => $owner_id,
       ]);
 
     // User must have valid email address to fill more than one application.
     if (
       $owner->hasField('field_email_is_valid') &&
-      $owner->get('field_email_is_valid')->value == 0 &&
-      !$owner->access('create')
+      $owner->get('field_email_is_valid')->value == 0
     ) {
       $application = reset($applications);
 
@@ -96,8 +86,6 @@ class ApplicationForm extends ContentEntityForm {
     $form['#project_id'] = $project_id;
 
     // Redirect cases.
-    // @todo How to do this ?
-    // $bday = $owner->date_of_birth->value;
     try {
       if (!$project_data = $this->getApartments($project_id)) {
         throw new \InvalidArgumentException('Project or apartments for project not found.');
@@ -162,12 +150,6 @@ class ApplicationForm extends ContentEntityForm {
     // User may access and create application.
     // Pre-create the application if user comes to the form for the first time.
     if ($this->entity->isNew()) {
-      // @todo Bday.
-      if ($this->entity->hasField('field_personal_id')) {
-        // $personalIdDivider = $this->getPersonalIdDivider($bday);
-        // $this->entity->set('field_personal_id', $personalIdDivider);
-      }
-
       $this->entity->save();
 
       $url = $this->entity->toUrl()->toString();
@@ -182,8 +164,6 @@ class ApplicationForm extends ContentEntityForm {
     $form['#apartment_values'] = $apartments;
     $form['#project_name'] = $projectName;
 
-    // @todo Bday.
-    // $form['#pid_start'] = $this->dateToPersonalId($bday);
     $form['#project_uuid'] = $project_data['project_uuid'];
     $form['#apartment_uuids'] = $project_data['apartment_uuids'];
 
@@ -194,7 +174,7 @@ class ApplicationForm extends ContentEntityForm {
     $form['actions']['submit']['#value'] = $this->t('Send application');
 
     // Show draft button only for customers.
-    if (!$currentUser->access('create')) {
+    if ($currentUser->bundle() == 'customer') {
       $form['actions']['draft'] = [
         '#type' => 'submit',
         '#value' => t('Save as a draft'),
@@ -228,29 +208,41 @@ class ApplicationForm extends ContentEntityForm {
       }
     }
 
-    $owner = $this->entity->getOwner();
-    if ($owner->hasField('field_email_is_valid')) {
+    $currentUser = User::load(\Drupal::currentUser()->id());
+    if ($currentUser->bundle() == 'sales' || $currentUser->hasPermission('administer')) {
+      $eventName = SalesApplicationEvent::EVENT_NAME;
+      $event = new SalesApplicationEvent(
+        $currentUser->id(),
+        $this->entity->id(),
+        $form['#project_name'],
+        $form['#project_uuid'],
+        $form['#apartment_uuids']
+      );
+    }
+    else {
+      $owner = $this->entity->getOwner();
+      if ($owner->hasField('field_email_is_valid') && !$owner->get('field_email_is_valid')->value) {
+        \Drupal::messenger()->addWarning(t('You cannot submit application before you have confirmed your email address.
+      To confirm your email address you must click the link sent to your email address.'));
+        $response = (new RedirectResponse($this->getUserApplicationsUrl(), 301))->send();
+        return $response;
+      }
+
+      $eventName = ApplicationEvent::EVENT_NAME;
       $event = new ApplicationEvent(
         $this->entity->id(),
         $form['#project_name'],
         $form['#project_uuid'],
         $form['#apartment_uuids']
       );
-      \Drupal::service('event_dispatcher')
-        ->dispatch($event, ApplicationEvent::EVENT_NAME);
-      $this->entity->set('field_locked', 1);
-      $this->entity->save();
-      $this->messenger()->addStatus($this->t('Your application has been submitted successfully.
-       You can no longer edit the application.'));
-      $content_entity_id = $this->entity->getEntityType()->id();
-      $form_state->setRedirect("entity.{$content_entity_id}.canonical", [$content_entity_id => $this->entity->id()]);
     }
-    else {
-      \Drupal::messenger(t('You cannot submit application before you have confirmed your email address.
-      To confirm your email address you must click the link sent to your email address.'));
-      $response = (new RedirectResponse($this->getUserApplicationsUrl(), 301))->send();
-      return $response;
-    }
+
+    \Drupal::service('event_dispatcher')
+      ->dispatch($event, $eventName);
+    $this->entity->set('field_locked', 1);
+
+    $content_entity_id = $this->entity->getEntityType()->id();
+    $form_state->setRedirect("entity.{$content_entity_id}.canonical", [$content_entity_id => $this->entity->id()]);
   }
 
   /**
@@ -265,6 +257,7 @@ class ApplicationForm extends ContentEntityForm {
    *   Ajax response.
    */
   public function ajaxSaveDraft(array $form, FormStateInterface $form_state) {
+    $form_state->setRebuild(TRUE);
     $this->updateEntityFieldsWithUserInput($form_state);
     $this->entity->save();
 
@@ -273,6 +266,12 @@ class ApplicationForm extends ContentEntityForm {
     $url = $this->getUserApplicationsUrl();
     $response = new AjaxResponse();
     $response->addCommand(new RedirectCommand($url));
+    $response->addCommand(
+      new UpdateBuildIdCommand(
+        $form['#build_id_old'],
+        $form['#build_id']
+      )
+    );
     return $response;
   }
 
@@ -379,7 +378,15 @@ class ApplicationForm extends ContentEntityForm {
     // Update "has_children" value.
     $entity->set('has_children', $values['has_children']['value'] ?? 0);
     $entity->save();
-    return $form['apartment'];
+
+    $response = new AjaxResponse($form['apartment']);
+    $response->addCommand(
+      new UpdateBuildIdCommand(
+        $form['#build_id_old'],
+        $form['#build_id']
+      )
+    );
+    return $response;
   }
 
   /**

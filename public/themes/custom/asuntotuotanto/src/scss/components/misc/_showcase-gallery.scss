@@ -30,7 +30,7 @@
     padding: 0;
     position: absolute;
     top: 0;
-    transition: background-color .2s ease-in-out;
+    transition: background-color 0.2s ease-in-out;
     width: 52px;
     z-index: 10;
 
@@ -40,7 +40,7 @@
 
     &:hover,
     &:focus {
-      background-color: rgba($color-white, .4);
+      background-color: rgba($color-white, 0.4);
     }
 
     &::before {
@@ -59,7 +59,7 @@
     left: 0;
 
     &::before {
-      background-image: url('../icons/angle-left.svg');
+      background-image: url("../icons/angle-left.svg");
     }
   }
 
@@ -67,7 +67,53 @@
     right: 0;
 
     &::before {
-      background-image: url('../icons/angle-right.svg');
+      background-image: url("../icons/angle-right.svg");
     }
+  }
+
+  .slick-list {
+    max-height: 550px;
+  }
+
+  .slide__content {
+    cursor: pointer;
+    position: relative;
+
+    &::after {
+      content: "Click on image for fullscreen";
+      position: absolute;
+      font-size: 0.875rem;
+      line-height: 1.625rem;
+      background-color: $color-engel;
+      color: $color-black-90;
+      padding: 0.25rem 0.5rem;
+      top: 0;
+      left: 0;
+      opacity: 1;
+      cursor: default;
+
+      @media screen and (min-width: $breakpoint-xl) {
+        opacity: 0;
+      }
+    }
+
+    &:hover::after,
+    &:active::after {
+      opacity: 1;
+    }
+  }
+}
+
+figure {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  img {
+    transform: translate(0) !important;
+    width: 100%;
+    height: auto;
+    max-height: 100%;
+    object-fit: contain;
   }
 }
