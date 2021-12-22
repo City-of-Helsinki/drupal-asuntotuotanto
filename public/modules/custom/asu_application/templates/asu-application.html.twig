@@ -432,9 +432,9 @@
             </div>
           </article>
           {# {% include "@asuntotuotanto/form/application/custom-apartment-list.html.twig" %}
-          {{ element.apartment }} #}
           {# {% set apartments = content['#teaser_values'].application.apartments %} #}
-          {% set apartments = content.application.apartments %}
+          {% set apartments = content.application.apartments_data %}
+          {% set project_type = content['#teaser_values'].project_ownership_type %}
           {% if apartments|length > 0 %}
             <div class="application-form__apartments">
               <ul class="application-form__apartments-list-header">
@@ -443,12 +443,45 @@
                 <li><p>{% trans %}Floor{% endtrans %}</p></li>
                 <li><p>{% trans %}Living area size{% endtrans %}</p></li>
                 <li><p>{% trans %}Sales price{% endtrans %}</p></li>
-                <li><p>{% trans %}Debt free sales price{% endtrans %}</p></li>
+                <li><p>
+                  {% if project_type == 'HASO' %}
+                    {% trans %}Right of occupancy payment{% endtrans %}
+                  {% else %}
+                    {% trans %}Debt free sales price{% endtrans %}
+                  {% endif %}
+                </p></li>
               </ul>
               {% for apartment in apartments %}
-							  {% set apartment_info = apartment.information|striptags|trim %}
-                <ol class="application-form__apartments-list" id="application_form_apartments_list" aria-label="{{ 'Ordered list of apartments'|t }}">
-                  <li>{{ apartment_info }}</li>
+                {# {% set apartment_info = apartment.information|striptags|trim %} #}
+							  {% set apartment_number = apartment.apartment_number.0.value|striptags|trim %}
+                {% set apartment_structure = apartment.apartment_structure.0.value|striptags|trim|upper %}
+                {% set apartment_floor = apartment.apartment_floor.0.value|striptags|trim %}
+                {% set apartment_living_area = apartment.apartment_living_area.0.value|striptags|trim %}
+                {% set apartment_sales_price = apartment.apartment_sales_price.0.value|striptags|trim %}
+                {% set apartment_debt_free_sales_price = apartment.apartment_debt_free_sales_price.0.value|striptags|trim %}
+                {% set apartment_right_of_occupancy_payment = apartment.apartment_right_of_occupancy_payment.0.value|striptags|trim %}
+                <ol class="application-form__apartments-list application-form__apartments-list-header" id="application_form_apartments_list" aria-label="{{ 'Ordered list of apartments'|t }}">
+                  <li><p>
+                    <div class="application-form-apartment__list-position-actions">
+                      <button class="application-form-apartment__list-button" type="button" data-list-position-action-button="raise" disabled="">
+                        <span>Raise on the list</span>
+                      </button>
+                      <button class="application-form-apartment__list-button" type="button" data-list-position-action-button="lower" disabled="">
+                        <span>Lower on the list</span>
+                      </button>
+                    </div>
+                  </p></li>
+                  <li><p><strong>{{ apartment_number }}</strong><span class="application-form-apartment__list-span">{{ apartment_structure }}</span></p></li>
+                  <li><p>{{ apartment_floor }}</p></li>
+                  <li><p>{{ apartment_living_area }}</p></li>
+                  <li><p>{{ apartment_sales_price }}</p></li>
+                  <li><p>
+                    {% if project_type == 'HASO' %}
+                      {{ apartment_right_of_occupancy_payment }}
+                    {% else %}
+                      {{ apartment_debt_free_sales_price }}
+                    {% endif %}
+                  </p></li>
                 </ol>
                 <div aria-live="assertive" class="visually-hidden sr-information-box"></div>
 						  {% endfor %}
@@ -518,7 +551,6 @@
               Are you looking for an apartment with someone?
             {% endtrans %}
           </h2>
-          {# {{ element.applicant }} #}
           {# {{ content.application.applicant }} #}
           {# {{ content['#teaser_values'].applicant.0 }} #}
           <div class="application-form__input-elements">
