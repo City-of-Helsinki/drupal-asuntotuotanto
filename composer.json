@@ -54,6 +54,8 @@
         "drupal/jquery_ui_touch_punch": "^1.0",
         "drupal/key": "^1.14",
         "drupal/mailsystem": "^4.3",
+        "drupal/matomo": "^1.14",
+        "drupal/matomo_reports": "^1.1",
         "drupal/menu_block": "1.x-dev#17bc5a2094dec85a921fdac6aff0030bfe004744",
         "drupal/menu_block_current_language": "^1.4",
         "drupal/menu_link_attributes": "^1.2",
