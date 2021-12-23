@@ -190,6 +190,7 @@ function asu_application_cron() {
     $applications = Application::loadMultiple($applicationIds);
     /** @var \Drupal\asu_application\Entity\Application $application */
     foreach ($applications as $application) {
+      \Drupal::logger('asu_application')->info('Deleted draft application for project of id: ' . $application->getProjectId());
       $application->delete();
     }
   }
