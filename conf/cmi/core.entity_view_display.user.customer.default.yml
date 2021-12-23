@@ -14,66 +14,66 @@ bundle: customer
 mode: default
 content:
   address:
+    type: string
     label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
     weight: 3
     region: content
+  city:
+    type: string
+    label: above
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    type: string
-  city:
-    label: above
     weight: 5
     region: content
+  date_of_birth:
+    type: string
+    label: above
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    type: string
-  date_of_birth:
-    label: above
     weight: 6
     region: content
+  first_name:
+    type: string
+    label: above
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    type: string
-  first_name:
-    label: above
     weight: 0
     region: content
+  last_name:
+    type: string
+    label: above
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    type: string
-  last_name:
-    label: above
     weight: 1
     region: content
-    settings:
-      link_to_entity: false
-    third_party_settings: {  }
-    type: string
   member_for:
-    weight: 7
-    region: content
     settings: {  }
     third_party_settings: {  }
+    weight: 7
+    region: content
   phone_number:
+    type: string
     label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
     weight: 2
     region: content
+  postal_code:
+    type: string
+    label: above
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    type: string
-  postal_code:
-    label: above
     weight: 4
     region: content
-    settings:
-      link_to_entity: false
-    third_party_settings: {  }
-    type: string
 hidden:
   field_backend_password: true
   field_backend_profile: true

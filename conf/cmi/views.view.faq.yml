@@ -12,7 +12,7 @@ dependencies:
     - taxonomy
     - user
 id: faq
-label: FAQ
+label: UKK
 module: views
 description: ''
 tag: ''
@@ -20,26 +20,66 @@ base_table: taxonomy_term_field_data
 base_field: tid
 display:
   default:
-    display_plugin: default
     id: default
     display_title: Default
+    display_plugin: default
     position: 0
     display_options:
-      access:
-        type: perm
+      title: FAQ
+      fields:
+        name:
+          id: name
+          table: taxonomy_term_field_data
+          field: name
+          relationship: none
+          group_type: group
+          admin_label: ''
+          entity_type: taxonomy_term
+          entity_field: name
+          plugin_id: term_name
+          label: ''
+          exclude: false
+          alter:
+            alter_text: false
+            make_link: false
+            absolute: false
+            word_boundary: false
+            ellipsis: false
+            strip_tags: false
+            trim: false
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: value
+          type: string
+          settings:
+            link_to_entity: true
+          group_column: value
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+          convert_spaces: false
+      pager:
+        type: none
         options:
-          perm: 'access content'
-      cache:
-        type: tag
-        options: {  }
-      query:
-        type: views_query
-        options:
-          disable_sql_rewrite: false
-          distinct: false
-          replica: false
-          query_comment: ''
-          query_tags: {  }
+          offset: 0
+          items_per_page: null
       exposed_form:
         type: bef
         options:
@@ -74,90 +114,54 @@ display:
                 select_all_none: false
                 select_all_none_nested: false
                 display_inline: false
-      pager:
-        type: none
+      access:
+        type: perm
         options:
-          items_per_page: null
-          offset: 0
-      style:
-        type: default
-      row:
-        type: 'entity:taxonomy_term'
-        options:
-          relationship: none
-          view_mode: faq_teaser
-      fields:
-        name:
-          id: name
+          perm: 'access content'
+      cache:
+        type: tag
+        options: {  }
+      empty: {  }
+      sorts:
+        weight:
+          id: weight
           table: taxonomy_term_field_data
-          field: name
-          entity_type: taxonomy_term
-          entity_field: name
-          label: ''
-          alter:
-            alter_text: false
-            make_link: false
-            absolute: false
-            trim: false
-            word_boundary: false
-            ellipsis: false
-            strip_tags: false
-            html: false
-          hide_empty: false
-          empty_zero: false
-          type: string
-          settings:
-            link_to_entity: true
-          plugin_id: term_name
+          field: weight
           relationship: none
           group_type: group
           admin_label: ''
-          exclude: false
-          element_type: ''
-          element_class: ''
-          element_label_type: ''
-          element_label_class: ''
-          element_label_colon: true
-          element_wrapper_type: ''
-          element_wrapper_class: ''
-          element_default_classes: true
-          empty: ''
-          hide_alter_empty: true
-          click_sort_column: value
-          group_column: value
-          group_columns: {  }
-          group_rows: true
-          delta_limit: 0
-          delta_offset: 0
-          delta_reversed: false
-          delta_first_last: false
-          multi_type: separator
-          separator: ', '
-          field_api_classes: false
-          convert_spaces: false
+          entity_type: taxonomy_term
+          entity_field: weight
+          plugin_id: standard
+          order: ASC
+          expose:
+            label: ''
+            field_identifier: weight
+          exposed: false
+      arguments: {  }
       filters:
         status:
-          value: '1'
+          id: status
           table: taxonomy_term_field_data
           field: status
-          plugin_id: boolean
           entity_type: taxonomy_term
           entity_field: status
-          id: status
+          plugin_id: boolean
+          value: '1'
+          group: 1
           expose:
             operator: ''
             operator_limit_selection: false
             operator_list: {  }
-          group: 1
         vid:
           id: vid
           table: taxonomy_term_field_data
           field: vid
-          value:
-            faq_hitas: faq_hitas
           entity_type: taxonomy_term
           entity_field: vid
           plugin_id: bundle
+          value:
+            faq_hitas: faq_hitas
           expose:
             operator_limit_selection: false
             operator_list: {  }
@@ -168,6 +172,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: taxonomy_index_tid
           operator: or
           value: {  }
           group: 1
@@ -207,12 +212,11 @@ display:
               2: {  }
               3: {  }
           reduce_duplicates: true
-          type: select
-          limit: true
           vid: faq_category
+          type: select
           hierarchy: false
+          limit: true
           error_message: true
-          plugin_id: taxonomy_index_tid
         langcode:
           id: langcode
           table: taxonomy_term_field_data
@@ -220,6 +224,9 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          entity_type: taxonomy_term
+          entity_field: langcode
+          plugin_id: language
           operator: in
           value:
             '***LANGUAGE_language_content***': '***LANGUAGE_language_content***'
@@ -252,32 +259,26 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
-          entity_type: taxonomy_term
-          entity_field: langcode
-          plugin_id: language
-      sorts:
-        weight:
-          id: weight
-          table: taxonomy_term_field_data
-          field: weight
+      style:
+        type: default
+      row:
+        type: 'entity:taxonomy_term'
+        options:
           relationship: none
-          group_type: group
-          admin_label: ''
-          order: ASC
-          exposed: false
-          expose:
-            label: ''
-          entity_type: taxonomy_term
-          entity_field: weight
-          plugin_id: standard
-      title: FAQ
+          view_mode: faq_teaser
+      query:
+        type: views_query
+        options:
+          query_comment: ''
+          disable_sql_rewrite: false
+          distinct: false
+          replica: false
+          query_tags: {  }
+      relationships: {  }
+      use_ajax: true
       header: {  }
       footer: {  }
-      empty: {  }
-      relationships: {  }
-      arguments: {  }
       display_extenders: {  }
-      use_ajax: true
     cache_metadata:
       max-age: -1
       contexts:
@@ -288,42 +289,25 @@ display:
         - user.permissions
       tags: {  }
   faq_page_haso:
-    display_plugin: page
     id: faq_page_haso
-    display_title: 'FAQ Page - Haso'
+    display_title: 'UKK sivu - Haso'
+    display_plugin: page
     position: 1
     display_options:
-      display_extenders:
-        metatag_display_extender: {  }
-      path: faq/haso
-      display_description: ''
-      exposed_block: true
-      defaults:
-        filters: false
-        filter_groups: false
-      menu:
-        type: none
-        title: 'Frequently asked questions'
-        description: ''
-        expanded: false
-        parent: ''
-        weight: 3
-        context: '0'
-        menu_name: main
       filters:
         status:
-          value: '1'
+          id: status
           table: taxonomy_term_field_data
           field: status
-          plugin_id: boolean
           entity_type: taxonomy_term
           entity_field: status
-          id: status
+          plugin_id: boolean
+          value: '1'
+          group: 1
           expose:
             operator: ''
             operator_limit_selection: false
             operator_list: {  }
-          group: 1
         vid:
           id: vid
           table: taxonomy_term_field_data
@@ -331,6 +315,9 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          entity_type: taxonomy_term
+          entity_field: vid
+          plugin_id: bundle
           operator: in
           value:
             faq_haso: faq_haso
@@ -363,9 +350,6 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
-          entity_type: taxonomy_term
-          entity_field: vid
-          plugin_id: bundle
         field_faq_category_target_id:
           id: field_faq_category_target_id
           table: taxonomy_term__field_faq_category
@@ -373,6 +357,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: taxonomy_index_tid
           operator: or
           value: {  }
           group: 1
@@ -412,12 +397,11 @@ display:
               2: {  }
               3: {  }
           reduce_duplicates: true
-          type: select
-          limit: true
           vid: faq_category
+          type: select
           hierarchy: false
+          limit: true
           error_message: true
-          plugin_id: taxonomy_index_tid
         langcode:
           id: langcode
           table: taxonomy_term_field_data
@@ -425,6 +409,9 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          entity_type: taxonomy_term
+          entity_field: langcode
+          plugin_id: language
           operator: in
           value:
             '***LANGUAGE_language_content***': '***LANGUAGE_language_content***'
@@ -457,13 +444,27 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
-          entity_type: taxonomy_term
-          entity_field: langcode
-          plugin_id: language
       filter_groups:
         operator: AND
         groups:
           1: AND
+      defaults:
+        filters: false
+        filter_groups: false
+      display_description: ''
+      exposed_block: true
+      display_extenders:
+        metatag_display_extender: {  }
+      path: faq/haso
+      menu:
+        type: none
+        title: 'Frequently asked questions'
+        description: ''
+        weight: 3
+        expanded: false
+        menu_name: main
+        parent: ''
+        context: '0'
     cache_metadata:
       max-age: -1
       contexts:
@@ -474,25 +475,25 @@ display:
         - user.permissions
       tags: {  }
   faq_page_hitas:
-    display_plugin: page
     id: faq_page_hitas
-    display_title: 'FAQ Page - Hitas'
+    display_title: 'UKK sivu - Hitas'
+    display_plugin: page
     position: 1
     display_options:
+      display_description: ''
+      exposed_block: true
       display_extenders:
         metatag_display_extender: {  }
       path: faq/hitas
-      display_description: ''
-      exposed_block: true
       menu:
         type: none
         title: 'Frequently asked questions'
         description: ''
-        expanded: false
-        parent: ''
         weight: 3
-        context: '0'
+        expanded: false
         menu_name: main
+        parent: ''
+        context: '0'
     cache_metadata:
       max-age: -1
       contexts:

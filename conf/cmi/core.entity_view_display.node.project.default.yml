@@ -83,42 +83,42 @@ bundle: project
 mode: default
 content:
   field_apartment_count:
-    weight: 12
+    type: number_integer
     label: above
     settings:
       thousand_separator: ''
       prefix_suffix: true
     third_party_settings: {  }
-    type: number_integer
+    weight: 12
     region: content
   field_apartments:
-    weight: 6
+    type: entity_reference_label
     label: above
     settings:
       link: true
     third_party_settings: {  }
-    type: entity_reference_label
+    weight: 6
     region: content
   field_application_end_time:
-    weight: 21
+    type: datetime_default
     label: above
     settings:
       timezone_override: ''
       format_type: short
     third_party_settings: {  }
-    type: datetime_default
+    weight: 21
     region: content
   field_application_start_time:
-    weight: 20
+    type: datetime_default
     label: above
     settings:
       timezone_override: ''
       format_type: short
     third_party_settings: {  }
-    type: datetime_default
+    weight: 20
     region: content
   field_attachments_url:
-    weight: 5
+    type: link
     label: above
     settings:
       trim_length: 80
@@ -127,50 +127,50 @@ content:
       rel: ''
       target: ''
     third_party_settings: {  }
-    type: link
+    weight: 5
     region: content
   field_barred_bank_account:
-    weight: 44
+    type: string
     label: above
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    type: string
+    weight: 44
     region: content
   field_building_type:
-    weight: 31
+    type: entity_reference_label
     label: hidden
     settings:
       link: false
     third_party_settings: {  }
-    type: entity_reference_label
+    weight: 31
     region: content
   field_city:
-    weight: 8
+    type: string
     label: hidden
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    type: string
+    weight: 8
     region: content
   field_construction_materials:
-    weight: 24
+    type: entity_reference_label
     label: above
     settings:
       link: true
     third_party_settings: {  }
-    type: entity_reference_label
+    weight: 24
     region: content
   field_construction_year:
-    weight: 10
+    type: string
     label: above
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    type: string
+    weight: 10
     region: content
   field_coordinate_lat:
-    weight: 22
+    type: number_decimal
     label: above
     settings:
       thousand_separator: ''
@@ -178,10 +178,10 @@ content:
       scale: 6
       prefix_suffix: true
     third_party_settings: {  }
-    type: number_decimal
+    weight: 22
     region: content
   field_coordinate_lon:
-    weight: 23
+    type: number_decimal
     label: above
     settings:
       thousand_separator: ''
@@ -189,101 +189,101 @@ content:
       scale: 6
       prefix_suffix: true
     third_party_settings: {  }
-    type: number_decimal
+    weight: 23
     region: content
   field_district:
-    weight: 30
+    type: entity_reference_label
     label: above
     settings:
       link: false
     third_party_settings: {  }
-    type: entity_reference_label
+    weight: 30
     region: content
   field_energy_class:
-    weight: 26
+    type: entity_reference_label
     label: hidden
     settings:
       link: false
     third_party_settings: {  }
-    type: entity_reference_label
+    weight: 26
     region: content
   field_has_elevator:
-    weight: 13
+    type: boolean
     label: above
     settings:
       format: default
       format_custom_false: ''
       format_custom_true: ''
     third_party_settings: {  }
-    type: boolean
+    weight: 13
     region: content
   field_has_sauna:
-    weight: 14
+    type: boolean
     label: above
     settings:
       format: default
       format_custom_false: ''
       format_custom_true: ''
     third_party_settings: {  }
-    type: boolean
+    weight: 14
     region: content
   field_heating_options:
-    weight: 25
+    type: entity_reference_label
     label: above
     settings:
       link: true
     third_party_settings: {  }
-    type: entity_reference_label
+    weight: 25
     region: content
   field_holding_type:
-    weight: 32
+    type: entity_reference_label
     label: above
     settings:
       link: true
     third_party_settings: {  }
-    type: entity_reference_label
+    weight: 32
     region: content
   field_housing_company:
-    weight: 7
+    type: string
     label: above
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    type: string
+    weight: 7
     region: content
   field_images:
     type: slick_image
-    weight: 41
-    region: content
     label: hidden
     settings:
-      style: ''
-      optionset: default
-      optionset_thumbnail: ''
-      skin: ''
-      skin_thumbnail: ''
-      image_style: 3_2_m
-      responsive_image_style: showcase_gallery
-      thumbnail_effect: ''
-      thumbnail_position: ''
-      media_switch: ''
-      thumbnail_style: ''
-      ratio: ''
-      grid: null
-      grid_medium: null
-      grid_small: null
-      visible_items: null
-      layout: ''
-      thumbnail_caption: ''
-      cache: 0
-      current_view_mode: default
-      background: false
       caption:
         title: '0'
         alt: '0'
-      use_theme_field: false
-      preserve_keys: false
-      override: false
+      optionset: default
+      icon: ''
+      layout: ''
+      view_mode: ''
+      cache: 0
+      current_view_mode: default
+      skin: ''
+      fx: ''
+      style: ''
+      background: false
+      box_caption: ''
+      box_caption_custom: ''
+      box_media_style: ''
+      responsive_image_style: showcase_gallery
+      box_style: ''
+      image_style: 3_2_m
+      media_switch: ''
+      ratio: ''
+      thumbnail_style: ''
+      _uri: ''
+      breakpoints: {  }
+      sizes: ''
+      grid_header: ''
+      grid: null
+      grid_medium: null
+      grid_small: null
       overridables:
         arrows: '0'
         autoplay: '0'
@@ -293,142 +293,142 @@ content:
         mouseWheel: '0'
         randomize: '0'
         variableWidth: '0'
+      optionset_thumbnail: ''
+      skin_thumbnail: ''
+      thumbnail_caption: ''
+      thumbnail_effect: ''
+      thumbnail_position: ''
+      override: false
       skin_arrows: ''
       skin_dots: ''
-      fx: ''
-      icon: ''
-      view_mode: ''
-      box_caption: ''
-      box_caption_custom: ''
-      box_media_style: ''
-      box_style: ''
-      _uri: ''
-      breakpoints: {  }
-      sizes: ''
-      grid_header: ''
+      use_theme_field: false
+      preserve_keys: false
+      visible_items: null
     third_party_settings: {  }
+    weight: 41
+    region: content
   field_new_development_status:
-    weight: 27
+    type: entity_reference_label
     label: above
     settings:
       link: true
     third_party_settings: {  }
-    type: entity_reference_label
+    weight: 27
     region: content
   field_new_housing:
-    weight: 11
+    type: boolean
     label: above
     settings:
       format: default
       format_custom_false: ''
       format_custom_true: ''
     third_party_settings: {  }
-    type: boolean
+    weight: 11
     region: content
   field_ownership_type:
-    weight: 29
+    type: entity_reference_label
     label: hidden
     settings:
       link: false
     third_party_settings: {  }
-    type: entity_reference_label
+    weight: 29
     region: content
   field_postal_code:
-    weight: 1
+    type: string
     label: hidden
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    type: string
+    weight: 1
     region: content
   field_project_accessibility:
-    weight: 35
+    type: string
     label: hidden
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    type: string
+    weight: 35
     region: content
   field_project_area_description:
-    weight: 39
+    type: basic_string
     label: hidden
     settings: {  }
     third_party_settings: {  }
-    type: basic_string
+    weight: 39
     region: content
   field_project_attachments:
-    weight: 37
+    type: file_default
     label: above
     settings:
       use_description_as_link_text: true
     third_party_settings: {  }
-    type: file_default
+    weight: 37
     region: content
   field_project_description:
-    weight: 38
+    type: text_default
     label: hidden
     settings: {  }
     third_party_settings: {  }
-    type: text_default
+    weight: 38
     region: content
   field_publication_start_time:
-    weight: 19
+    type: datetime_default
     label: above
     settings:
-      format_type: medium
       timezone_override: ''
+      format_type: medium
     third_party_settings: {  }
-    type: datetime_default
+    weight: 19
     region: content
   field_realty_id:
-    weight: 9
+    type: string
     label: above
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    type: string
+    weight: 9
     region: content
   field_regular_bank_account:
-    weight: 43
+    type: string
     label: above
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    type: string
+    weight: 43
     region: content
   field_roof_material:
-    weight: 2
+    type: string
     label: above
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    type: string
+    weight: 2
     region: content
   field_salesperson:
-    weight: 42
+    type: entity_reference_label
     label: above
     settings:
       link: true
     third_party_settings: {  }
-    type: entity_reference_label
+    weight: 42
     region: content
   field_sanitation:
-    weight: 4
+    type: string
     label: above
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    type: string
+    weight: 4
     region: content
   field_services:
-    weight: 34
+    type: asu_service_formatter
     label: above
     settings: {  }
     third_party_settings: {  }
-    type: asu_service_formatter
+    weight: 34
     region: content
   field_services_url:
-    weight: 36
+    type: link
     label: above
     settings:
       trim_length: 80
@@ -437,10 +437,10 @@ content:
       rel: ''
       target: ''
     third_party_settings: {  }
-    type: link
+    weight: 36
     region: content
   field_site_area:
-    weight: 16
+    type: number_decimal
     label: above
     settings:
       thousand_separator: ''
@@ -448,49 +448,49 @@ content:
       scale: 2
       prefix_suffix: true
     third_party_settings: {  }
-    type: number_decimal
+    weight: 16
     region: content
   field_site_owner:
-    weight: 28
+    type: entity_reference_label
     label: above
     settings:
       link: false
     third_party_settings: {  }
-    type: entity_reference_label
+    weight: 28
     region: content
   field_site_renter:
-    weight: 15
+    type: string
     label: above
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    type: string
+    weight: 15
     region: content
   field_state_of_sale:
-    weight: 40
+    type: entity_reference_label
     label: above
     settings:
       link: true
     third_party_settings: {  }
-    type: entity_reference_label
+    weight: 40
     region: content
   field_street_address:
-    weight: 3
+    type: string
     label: hidden
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    type: string
+    weight: 3
     region: content
   field_tasks:
-    weight: 33
+    type: tasklist_formatter
     label: above
     settings: {  }
     third_party_settings: {  }
-    type: tasklist_formatter
+    weight: 33
     region: content
   field_zoning_info:
-    weight: 17
+    type: link
     label: above
     settings:
       trim_length: 80
@@ -499,21 +499,21 @@ content:
       rel: ''
       target: ''
     third_party_settings: {  }
-    type: link
+    weight: 17
     region: content
   field_zoning_status:
-    weight: 18
+    type: string
     label: above
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    type: string
+    weight: 18
     region: content
   links:
-    weight: 0
-    region: content
     settings: {  }
     third_party_settings: {  }
+    weight: 0
+    region: content
 hidden:
   field_acc_financeofficer: true
   field_acc_salesperson: true

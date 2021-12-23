@@ -1,7 +1,41 @@
 uuid: 1b80ee36-237d-4671-a2d6-9a8b11aeb24b
 langcode: en
 status: true
-dependencies: {  }
+dependencies:
+  config:
+    - media.type.file
+    - media.type.image
+    - media.type.remote_video
+    - media.type.soundcloud
+    - node.type.landing_page
+    - node.type.news
+    - node.type.page
+    - taxonomy.vocabulary.faq_category
+    - taxonomy.vocabulary.faq_haso
+    - taxonomy.vocabulary.faq_hitas
+    - taxonomy.vocabulary.keywords
+    - taxonomy.vocabulary.news_category
+  module:
+    - asu_application
+    - block
+    - content_translation
+    - eu_cookie_compliance
+    - file
+    - helfi_api_base
+    - locale
+    - media
+    - menu_link_content
+    - node
+    - paragraphs
+    - path
+    - pathauto
+    - redirect
+    - scheduler
+    - simple_sitemap
+    - system
+    - taxonomy
+    - toolbar
+    - view_unpublished
 _core:
   default_config_hash: fnOpQQ5r1eprWvQPrJPWRfDqxozQiZnwIdYFPKb0lbM
 id: admin
@@ -103,7 +137,6 @@ permissions:
   - 'translate faq_haso taxonomy_term'
   - 'translate faq_hitas taxonomy_term'
   - 'translate file media'
-  - 'translate hauki_resource'
   - 'translate image media'
   - 'translate interface'
   - 'translate keywords taxonomy_term'
@@ -112,13 +145,13 @@ permissions:
   - 'translate page node'
   - 'translate remote_video media'
   - 'translate soundcloud media'
-  - 'translate tpr_service'
-  - 'translate tpr_unit'
   - 'update any media'
   - 'update content translations'
   - 'update media'
   - 'view all media revisions'
   - 'view all revisions'
+  - 'view any unpublished content'
+  - 'view any unpublished content'
   - 'view landing_page revisions'
   - 'view news revisions'
   - 'view own unpublished content'

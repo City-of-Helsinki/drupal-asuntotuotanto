@@ -21,9 +21,9 @@ default_value_callback: ''
 settings:
   handler: 'default:paragraph'
   handler_settings:
-    negate: 0
     target_bundles:
       showcase: showcase
+    negate: 0
     target_bundles_drag_drop:
       accordion:
         weight: 26
@@ -80,8 +80,8 @@ settings:
         weight: 43
         enabled: false
       showcase:
-        enabled: true
         weight: 44
+        enabled: true
       showcase_block:
         weight: 45
         enabled: false

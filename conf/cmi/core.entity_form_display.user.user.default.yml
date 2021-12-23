@@ -20,25 +20,25 @@ content:
     third_party_settings: {  }
   contact:
     weight: 5
+    region: content
     settings: {  }
     third_party_settings: {  }
-    region: content
   field_backend_password:
+    type: string_textfield
     weight: 11
+    region: content
     settings:
       size: 60
       placeholder: ''
     third_party_settings: {  }
-    type: string_textfield
-    region: content
   field_backend_profile:
+    type: string_textfield
     weight: 10
+    region: content
     settings:
       size: 60
       placeholder: ''
     third_party_settings: {  }
-    type: string_textfield
-    region: content
   language:
     weight: 8
     region: content

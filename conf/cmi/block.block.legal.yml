@@ -18,17 +18,17 @@ plugin: 'menu_block:legal'
 settings:
   id: 'menu_block:legal'
   label: Legal
-  provider: menu_block
   label_display: '0'
+  provider: menu_block
   follow: false
   follow_parent: child
+  label_link: false
+  label_type: block
   level: 1
   depth: 1
   expand_all_items: false
   parent: 'legal:'
   suggestion: legal
-  label_type: block
-  label_link: false
 visibility:
   view_inclusion:
     id: view_inclusion
@@ -36,5 +36,5 @@ visibility:
     view_inclusion: {  }
   request_path_exclusion:
     id: request_path_exclusion
-    pages: ''
     negate: null
+    pages: ''
