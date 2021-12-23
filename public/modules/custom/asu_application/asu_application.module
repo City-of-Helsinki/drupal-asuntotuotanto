@@ -90,12 +90,15 @@ function template_preprocess_asu_application(array &$variables) {
       }
 
       $application_fields = [
-        'field_personal_id' => $application->get('field_personal_id')->getValue(),
-        // 'field_hitas_owner' => $application->get('field_hitas_owner')->getValue(),
+        'application_created_at' => $application->get('created')->getValue(),
+        'personal_id' => $application->get('field_personal_id')->getValue(),
         'has_children' => $application->get('has_children')->getValue(),
         'applicant' => $application->get('applicant')->getValue(),
+        'right_of_residence_number' => $application->get('field_right_of_residence_number')->getValue(),
         'apartments' => $application->get('apartment')->getValue(),
-        'apartments_data' => $apartments_data
+        'apartments_data' => $apartments_data,
+        // 'haso_owner' => $application->get('field_haso_owner')->getValue(),
+        // 'hitas_owner' => $application->get('field_hitas_owner')->getValue(),
       ];
       $application_teaser_values['application'] = $application_fields;
     }

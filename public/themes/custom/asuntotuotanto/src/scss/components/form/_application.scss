@@ -208,7 +208,8 @@
     }
 
     &:nth-child(2) {
-      min-width: 152px;
+      // min-width: 152px;
+      min-width: 170px;
     }
 
     &:nth-child(3) {
@@ -236,7 +237,7 @@
   list-style: none;
   counter-reset: apartment-list-counter;
 
-  > li {
+  & > li {
     counter-increment: apartment-list-counter;
     position: relative;
 
@@ -254,18 +255,17 @@
   }
 }
 
-.application-form-apartment__list-button {
-  margin-left: -$spacing-l !important;
-}
-
 .application-form-apartment__list-span {
   margin-left: $spacing-m;
 }
 
-.application-form__apartments-item {
-  &:last-child .application-form-apartment {
-    border-bottom: 1px solid var(--color-black-20);
-  }
+.application-form-apartment {
+  border-top: none;
+  border-bottom: 1px solid var(--color-black-20);
+}
+
+.application-form__apartments-list-header {
+  border-bottom: 1px solid var(--color-black-20);
 }
 
 .application-form__personal-id {

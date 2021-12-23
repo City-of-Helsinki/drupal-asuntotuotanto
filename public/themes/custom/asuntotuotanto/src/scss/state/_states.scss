@@ -16,3 +16,10 @@
   width: 100%;
   will-change: transform, box-shadow;
 }
+
+.is-disabled {
+  // color: currentColor;
+  cursor: not-allowed;
+  opacity: 0.5;
+  text-decoration: none;
+}
