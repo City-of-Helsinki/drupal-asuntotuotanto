@@ -1,7 +1,22 @@
 uuid: dd4b6d7b-c24c-464c-8bac-598e6046c3bc
 langcode: en
 status: true
-dependencies: {  }
+dependencies:
+  config:
+    - filter.format.full_html
+    - rest.resource.asu_elasticsearch
+    - rest.resource.asu_initialize
+    - rest.resource.mailinglist
+  module:
+    - asu_application
+    - contact
+    - eu_cookie_compliance
+    - filter
+    - helfi_api_base
+    - matomo
+    - media
+    - rest
+    - system
 _core:
   default_config_hash: 83Nuup-6oYkkdAsvg3nrR2pBOgtTXEV1JrzpCCLkYLM
 id: authenticated
@@ -16,14 +31,11 @@ permissions:
   - 'display eu cookie compliance popup'
   - 'display eu cookie compliance popup'
   - 'opt-in or out of matomo tracking'
-  - 'restful get asu_applications'
   - 'restful get asu_initialize'
-  - 'restful get filter_rest_resource'
   - 'restful post asu_elasticsearch'
   - 'restful post mailinglist'
   - 'use text format full_html'
   - 'use text format full_html'
-  - 'use text format minimal'
   - 'view media'
   - 'view media'
   - 'view remote entities'

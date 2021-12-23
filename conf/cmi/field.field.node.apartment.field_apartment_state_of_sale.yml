@@ -21,7 +21,7 @@ default_value_callback: ''
 settings:
   handler: 'default:config_terms_term'
   handler_settings:
+    target_vocab: apartment_state_of_sale
     target_bundles: null
     auto_create: false
-    target_vocab: apartment_state_of_sale
 field_type: entity_reference

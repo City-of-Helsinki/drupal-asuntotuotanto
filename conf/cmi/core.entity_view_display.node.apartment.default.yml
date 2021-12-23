@@ -60,46 +60,46 @@ bundle: apartment
 mode: default
 content:
   field_additional_information:
-    weight: 29
+    type: basic_string
     label: inline
     settings: {  }
     third_party_settings: {  }
-    type: basic_string
+    weight: 29
     region: content
   field_apartment_attachments:
-    weight: 57
+    type: file_default
     label: hidden
     settings:
       use_description_as_link_text: true
     third_party_settings: {  }
-    type: file_default
+    weight: 57
     region: content
   field_apartment_number:
-    weight: 2
+    type: string
     label: inline
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    type: string
+    weight: 2
     region: content
   field_apartment_state_of_sale:
-    weight: 58
+    type: entity_reference_label
     label: above
     settings:
       link: true
     third_party_settings: {  }
-    type: entity_reference_label
+    weight: 58
     region: content
   field_apartment_structure:
-    weight: 6
+    type: string
     label: hidden
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    type: string
+    weight: 6
     region: content
   field_application_url:
-    weight: 30
+    type: link
     label: hidden
     settings:
       trim_length: null
@@ -108,32 +108,32 @@ content:
       rel: '0'
       target: '0'
     third_party_settings: {  }
-    type: link
+    weight: 30
     region: content
   field_balcony_description:
-    weight: 13
+    type: basic_string
     label: inline
     settings: {  }
     third_party_settings: {  }
-    type: basic_string
+    weight: 13
     region: content
   field_bathroom_appliances:
-    weight: 14
+    type: basic_string
     label: inline
     settings: {  }
     third_party_settings: {  }
-    type: basic_string
+    weight: 14
     region: content
   field_condition:
-    weight: 53
+    type: entity_reference_label
     label: above
     settings:
       link: true
     third_party_settings: {  }
-    type: entity_reference_label
+    weight: 53
     region: content
   field_debt_free_sales_price:
-    weight: 20
+    type: number_decimal
     label: hidden
     settings:
       thousand_separator: ' '
@@ -141,10 +141,10 @@ content:
       scale: 2
       prefix_suffix: true
     third_party_settings: {  }
-    type: number_decimal
+    weight: 20
     region: content
   field_financing_fee:
-    weight: 21
+    type: number_decimal
     label: inline
     settings:
       thousand_separator: ''
@@ -152,85 +152,85 @@ content:
       scale: 2
       prefix_suffix: true
     third_party_settings: {  }
-    type: number_decimal
+    weight: 21
     region: content
   field_floor:
-    weight: 4
+    type: number_integer
     label: hidden
     settings:
       thousand_separator: ''
       prefix_suffix: true
     third_party_settings: {  }
-    type: number_integer
+    weight: 4
     region: content
   field_floor_max:
     type: number_integer
-    weight: 5
-    region: content
     label: inline
     settings:
       thousand_separator: ''
       prefix_suffix: true
     third_party_settings: {  }
+    weight: 5
+    region: content
   field_floorplan:
-    weight: 59
+    type: image
     label: above
     settings:
-      image_style: ''
       image_link: ''
+      image_style: ''
     third_party_settings: {  }
-    type: image
+    weight: 59
     region: content
   field_has_apartment_sauna:
-    weight: 16
+    type: boolean
     label: inline
     settings:
       format: default
       format_custom_false: ''
       format_custom_true: ''
     third_party_settings: {  }
-    type: boolean
+    weight: 16
     region: content
   field_has_balcony:
-    weight: 12
+    type: boolean
     label: inline
     settings:
       format: default
       format_custom_false: ''
       format_custom_true: ''
     third_party_settings: {  }
-    type: boolean
+    weight: 12
     region: content
   field_has_terrace:
-    weight: 11
+    type: boolean
     label: inline
     settings:
       format: default
       format_custom_false: ''
       format_custom_true: ''
     third_party_settings: {  }
-    type: boolean
+    weight: 11
     region: content
   field_has_yard:
-    weight: 10
+    type: boolean
     label: inline
     settings:
       format: default
       format_custom_false: ''
       format_custom_true: ''
     third_party_settings: {  }
-    type: boolean
+    weight: 10
     region: content
   field_housing_manager:
-    weight: 48
+    type: string
     label: above
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    type: string
+    weight: 48
     region: content
   field_images:
-    weight: 53
+    type: asu_custom_slick_formatter
     label: hidden
     settings:
       style: ''
@@ -283,17 +283,17 @@ content:
       grid_header: ''
       use_theme_field: false
     third_party_settings: {  }
-    type: asu_custom_slick_formatter
+    weight: 53
     region: content
   field_kitchen_appliances:
-    weight: 9
+    type: basic_string
     label: inline
     settings: {  }
     third_party_settings: {  }
-    type: basic_string
+    weight: 9
     region: content
   field_living_area:
-    weight: 3
+    type: number_decimal
     label: hidden
     settings:
       thousand_separator: ''
@@ -301,17 +301,17 @@ content:
       scale: 1
       prefix_suffix: false
     third_party_settings: {  }
-    type: number_decimal
+    weight: 3
     region: content
   field_loan_share:
-    weight: 31
+    type: number_unformatted
     label: inline
     settings: {  }
     third_party_settings: {  }
-    type: number_unformatted
+    weight: 31
     region: content
   field_maintenance_fee:
-    weight: 22
+    type: number_decimal
     label: inline
     settings:
       thousand_separator: ''
@@ -319,17 +319,17 @@ content:
       scale: 2
       prefix_suffix: true
     third_party_settings: {  }
-    type: number_decimal
+    weight: 22
     region: content
   field_other_fees:
-    weight: 27
+    type: basic_string
     label: inline
     settings: {  }
     third_party_settings: {  }
-    type: basic_string
+    weight: 27
     region: content
   field_parking_fee:
-    weight: 25
+    type: number_decimal
     label: inline
     settings:
       thousand_separator: ''
@@ -337,37 +337,37 @@ content:
       scale: 2
       prefix_suffix: true
     third_party_settings: {  }
-    type: number_decimal
+    weight: 25
     region: content
   field_parking_fee_explanation:
-    weight: 49
+    type: basic_string
     label: above
     settings: {  }
     third_party_settings: {  }
-    type: basic_string
+    weight: 49
     region: content
   field_publish_on_etuovi:
-    weight: 54
+    type: boolean
     label: above
     settings:
       format: default
       format_custom_false: ''
       format_custom_true: ''
     third_party_settings: {  }
-    type: boolean
+    weight: 54
     region: content
   field_publish_on_oikotie:
-    weight: 55
+    type: boolean
     label: above
     settings:
       format: default
       format_custom_false: ''
       format_custom_true: ''
     third_party_settings: {  }
-    type: boolean
+    weight: 55
     region: content
   field_right_of_occupancy_deposit:
-    weight: 61
+    type: number_decimal
     label: above
     settings:
       thousand_separator: ''
@@ -375,10 +375,10 @@ content:
       scale: 2
       prefix_suffix: true
     third_party_settings: {  }
-    type: number_decimal
+    weight: 61
     region: content
   field_right_of_occupancy_fee:
-    weight: 60
+    type: number_decimal
     label: above
     settings:
       thousand_separator: ''
@@ -386,10 +386,10 @@ content:
       scale: 2
       prefix_suffix: true
     third_party_settings: {  }
-    type: number_decimal
+    weight: 60
     region: content
   field_right_of_occupancy_payment:
-    weight: 62
+    type: number_decimal
     label: above
     settings:
       thousand_separator: ''
@@ -397,19 +397,19 @@ content:
       scale: 2
       prefix_suffix: true
     third_party_settings: {  }
-    type: number_decimal
+    weight: 62
     region: content
   field_room_count:
-    weight: 7
+    type: number_integer
     label: inline
     settings:
       thousand_separator: ''
       prefix_suffix: true
     third_party_settings: {  }
-    type: number_integer
+    weight: 7
     region: content
   field_sales_price:
-    weight: 19
+    type: number_decimal
     label: hidden
     settings:
       thousand_separator: ' '
@@ -417,58 +417,58 @@ content:
       scale: 2
       prefix_suffix: true
     third_party_settings: {  }
-    type: number_decimal
+    weight: 19
     region: content
   field_services_description:
-    weight: 28
+    type: basic_string
     label: inline
     settings: {  }
     third_party_settings: {  }
-    type: basic_string
+    weight: 28
     region: content
   field_showing_time:
-    weight: 18
+    type: datetime_default
     label: inline
     settings:
-      format_type: medium
       timezone_override: ''
+      format_type: medium
     third_party_settings: {  }
-    type: datetime_default
+    weight: 18
     region: content
   field_stock_end_number:
-    weight: 52
+    type: number_integer
     label: above
     settings:
       thousand_separator: ''
       prefix_suffix: true
     third_party_settings: {  }
-    type: number_integer
+    weight: 52
     region: content
   field_stock_start_number:
-    weight: 51
+    type: number_integer
     label: above
     settings:
       thousand_separator: ''
       prefix_suffix: true
     third_party_settings: {  }
-    type: number_integer
+    weight: 51
     region: content
   field_storage_description:
-    weight: 15
+    type: basic_string
     label: inline
     settings: {  }
     third_party_settings: {  }
-    type: basic_string
+    weight: 15
     region: content
   field_view_description:
-    weight: 17
+    type: basic_string
     label: inline
     settings: {  }
     third_party_settings: {  }
-    type: basic_string
+    weight: 17
     region: content
   field_water_fee:
-    weight: 23
+    type: number_decimal
     label: inline
     settings:
       thousand_separator: ''
@@ -476,27 +476,27 @@ content:
       scale: 2
       prefix_suffix: true
     third_party_settings: {  }
-    type: number_decimal
+    weight: 23
     region: content
   field_water_fee_explanation:
-    weight: 24
+    type: basic_string
     label: inline
     settings: {  }
     third_party_settings: {  }
-    type: basic_string
+    weight: 24
     region: content
   links:
-    weight: 0
-    region: content
     settings: {  }
     third_party_settings: {  }
-  street_address:
-    type: computed_render_array_formatter
     weight: 0
     region: content
+  street_address:
+    type: computed_render_array_formatter
     label: above
     settings: {  }
     third_party_settings: {  }
+    weight: 0
+    region: content
 hidden:
   asu_application_form_url: true
   asu_computed_apartment_images: true

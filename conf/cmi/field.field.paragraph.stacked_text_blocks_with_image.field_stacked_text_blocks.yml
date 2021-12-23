@@ -21,9 +21,9 @@ default_value_callback: ''
 settings:
   handler: 'default:paragraph'
   handler_settings:
-    negate: 0
     target_bundles:
       text_block_with_link: text_block_with_link
+    negate: 0
     target_bundles_drag_drop:
       accordion:
         weight: 21
@@ -80,6 +80,6 @@ settings:
         weight: 37
         enabled: false
       text_block_with_link:
-        enabled: true
         weight: 38
+        enabled: true
 field_type: entity_reference_revisions

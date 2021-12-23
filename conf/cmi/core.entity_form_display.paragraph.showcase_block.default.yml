@@ -16,17 +16,18 @@ bundle: showcase_block
 mode: default
 content:
   field_links:
+    type: link_target_field_widget
     weight: 2
+    region: content
     settings:
       placeholder_url: ''
       placeholder_title: ''
       link_target: ''
     third_party_settings: {  }
-    type: link_target_field_widget
-    region: content
   field_showcases:
     type: paragraphs
     weight: 1
+    region: content
     settings:
       title: Paragraph
       title_plural: Paragraphs
@@ -42,15 +43,14 @@ content:
         collapse_edit_all: collapse_edit_all
         duplicate: duplicate
     third_party_settings: {  }
-    region: content
   field_title:
+    type: string_textfield
     weight: 0
+    region: content
     settings:
       size: 60
       placeholder: ''
     third_party_settings: {  }
-    type: string_textfield
-    region: content
 hidden:
   created: true
   status: true

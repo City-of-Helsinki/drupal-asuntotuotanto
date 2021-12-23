@@ -1,4 +1,11 @@
+_core:
+  default_config_hash: P6YjZQN0wv2MHVDNRVc46Plx_OiZFESe-I78R-ovdVQ
 from-morelink: 'https://google.fi'
+popup-morelink: /gdpr-compliance/policy
+popup-text-cookies: ''
+popup-text-analytics: ''
+popup-btn-agree: ''
+popup-btn-findmore: ''
 user-register: 1
 user-login: 0
 contact_message-mode: null
@@ -15,15 +22,8 @@ webform-bundles: null
 popup-guests: 0
 popup-users: 0
 popup-position: bottom
-popup-morelink: /gdpr-compliance/policy
 popup-custom-color: 0
 popup-color: '#1157cc'
 popup-text: white
 button-color: '#fde143'
 button-text: black
-popup-text-cookies: ''
-popup-text-analytics: ''
-popup-btn-agree: ''
-popup-btn-findmore: ''
-_core:
-  default_config_hash: P6YjZQN0wv2MHVDNRVc46Plx_OiZFESe-I78R-ovdVQ

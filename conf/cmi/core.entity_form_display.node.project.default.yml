@@ -93,15 +93,15 @@ third_party_settings:
         - group_pictures_and_videos
         - group_persons_and_operators
         - group_apartments
+      label: 'Project tabs'
+      region: content
       parent_name: ''
       weight: 10
       format_type: tabs
-      region: content
       format_settings:
-        direction: horizontal
-        id: ''
         classes: ''
-      label: 'Project tabs'
+        id: ''
+        direction: horizontal
     group_basic:
       children:
         - langcode
@@ -122,17 +122,17 @@ third_party_settings:
         - field_project_description
         - field_regular_bank_account
         - field_barred_bank_account
+      label: Perustiedot
+      region: content
       parent_name: group_project_tabs
       weight: 19
       format_type: tab
-      region: content
       format_settings:
-        description: ''
-        formatter: closed
-        required_fields: true
-        id: ''
         classes: ''
-      label: Perustiedot
+        id: ''
+        formatter: closed
+        description: ''
+        required_fields: true
     group_properties:
       children:
         - field_has_elevator
@@ -151,32 +151,32 @@ third_party_settings:
         - field_site_owner
         - field_building_type
         - field_project_accessibility
+      label: Ominaisuudet
+      region: content
       parent_name: group_project_tabs
       weight: 20
       format_type: tab
-      region: content
       format_settings:
-        id: ''
         classes: ''
-        description: ''
+        id: ''
         formatter: closed
+        description: ''
         required_fields: true
-      label: Ominaisuudet
     group_tasklist:
       children:
         - field_tasks
+      label: Tehtävälista
+      region: content
       parent_name: ''
       weight: 0
       format_type: details_sidebar
-      region: content
       format_settings:
-        id: ''
         classes: ''
-        description: ''
+        id: ''
         open: true
+        description: ''
         required_fields: true
         weight: 0
-      label: Tehtävälista
     group_schedules:
       children:
         - field_publication_start_time
@@ -191,17 +191,17 @@ third_party_settings:
         - field_estimated_completion_date
         - field_completion_date
         - field_possession_transfer_date
+      label: Aikataulut
+      region: content
       parent_name: group_project_tabs
       weight: 22
       format_type: tab
-      region: content
       format_settings:
-        id: ''
         classes: ''
-        description: ''
+        id: ''
         formatter: closed
+        description: ''
         required_fields: true
-      label: Aikataulut
     group_pictures_and_videos:
       children:
         - field_attachments_url
@@ -210,17 +210,17 @@ third_party_settings:
         - field_shared_apartment_images
         - field_virtual_presentation_url
         - field_project_attachments
+      label: Liitteet
+      region: content
       parent_name: group_project_tabs
       weight: 23
       format_type: tab
-      region: content
       format_settings:
-        id: ''
         classes: ''
-        description: ''
+        id: ''
         formatter: closed
+        description: ''
         required_fields: true
-      label: Liitteet
     group_persons_and_operators:
       children:
         - field_acc_salesperson
@@ -229,48 +229,48 @@ third_party_settings:
         - field_constructor
         - field_housing_manager
         - field_salesperson
+      label: Toimijat
+      region: content
       parent_name: group_project_tabs
       weight: 24
       format_type: tab
-      region: content
       format_settings:
-        id: ''
         classes: ''
-        description: ''
+        id: ''
         formatter: closed
+        description: ''
         required_fields: true
-      label: Toimijat
     group_apartments:
       children:
         - field_apartments
         - field_import_apartments
+      label: Huoneistot
+      region: content
       parent_name: group_project_tabs
       weight: 26
       format_type: tab
-      region: content
       format_settings:
-        id: ''
         classes: ''
-        description: ''
+        id: ''
         formatter: closed
+        description: ''
         required_fields: true
-      label: Huoneistot
     group_neighbourhood:
       children:
         - field_services
         - field_services_url
         - field_project_area_description
+      label: Asuinalue
+      region: content
       parent_name: group_project_tabs
       weight: 21
       format_type: tab
-      region: content
       format_settings:
-        id: ''
         classes: ''
-        description: ''
+        id: ''
         formatter: closed
+        description: ''
         required_fields: true
-      label: Asuinalue
 id: node.project.default
 targetEntityType: node
 bundle: project
@@ -283,30 +283,32 @@ content:
     settings: {  }
     third_party_settings: {  }
   field_acc_financeofficer:
+    type: string_textfield
     weight: 25
+    region: content
     settings:
       size: 60
       placeholder: ''
     third_party_settings: {  }
-    type: string_textfield
-    region: content
   field_acc_salesperson:
+    type: string_textfield
     weight: 24
+    region: content
     settings:
       size: 60
       placeholder: ''
     third_party_settings: {  }
-    type: string_textfield
-    region: content
   field_apartment_count:
+    type: number
     weight: 13
+    region: content
     settings:
       placeholder: ''
     third_party_settings: {  }
-    type: number
-    region: content
   field_apartments:
+    type: inline_entity_form_complex
     weight: 48
+    region: content
     settings:
       form_mode: default
       override_labels: true
@@ -315,200 +317,198 @@ content:
       allow_new: true
       allow_existing: true
       match_operator: CONTAINS
-      revision: false
+      allow_duplicate: false
       collapsible: false
       collapsed: false
-      allow_duplicate: false
+      revision: false
     third_party_settings: {  }
-    type: inline_entity_form_complex
-    region: content
   field_application_end_time:
+    type: datetime_default
     weight: 16
+    region: content
     settings: {  }
     third_party_settings: {  }
-    type: datetime_default
-    region: content
   field_application_start_time:
+    type: datetime_default
     weight: 15
+    region: content
     settings: {  }
     third_party_settings: {  }
-    type: datetime_default
-    region: content
   field_attachments_url:
+    type: link_default
     weight: 24
+    region: content
     settings:
       placeholder_url: ''
       placeholder_title: ''
     third_party_settings: {  }
-    type: link_default
-    region: content
   field_barred_bank_account:
+    type: string_textfield
     weight: 18
+    region: content
     settings:
       size: 60
       placeholder: ''
     third_party_settings: {  }
-    type: string_textfield
-    region: content
   field_building_type:
+    type: options_select
     weight: 78
+    region: content
     settings: {  }
     third_party_settings: {  }
-    type: options_select
-    region: content
   field_city:
+    type: string_textfield
     weight: 8
+    region: content
     settings:
       size: 60
       placeholder: ''
     third_party_settings: {  }
-    type: string_textfield
-    region: content
   field_completion_date:
+    type: datetime_default
     weight: 22
+    region: content
     settings: {  }
     third_party_settings: {  }
-    type: datetime_default
-    region: content
   field_construction_materials:
+    type: options_buttons
     weight: 65
+    region: content
     settings: {  }
     third_party_settings: {  }
-    type: options_buttons
-    region: content
   field_construction_year:
+    type: string_textfield
     weight: 11
+    region: content
     settings:
       size: 60
       placeholder: ''
     third_party_settings: {  }
-    type: string_textfield
-    region: content
   field_constructor:
+    type: string_textfield
     weight: 27
+    region: content
     settings:
       size: 60
       placeholder: ''
     third_party_settings: {  }
-    type: string_textfield
-    region: content
   field_coordinate_lat:
+    type: number
     weight: 74
+    region: content
     settings:
       placeholder: ''
     third_party_settings: {  }
-    type: number
-    region: content
   field_coordinate_lon:
-    weight: 75
-    settings:
-      placeholder: ''
-    third_party_settings: {  }
     type: number
+    weight: 75
     region: content
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
   field_district:
-    weight: 9
-    settings: {  }
-    third_party_settings: {  }
     type: options_select
+    weight: 9
     region: content
+    settings: {  }
+    third_party_settings: {  }
   field_energy_class:
+    type: options_buttons
     weight: 68
+    region: content
     settings: {  }
     third_party_settings: {  }
-    type: options_buttons
-    region: content
   field_estimated_completion:
+    type: string_textfield
     weight: 20
+    region: content
     settings:
       size: 60
       placeholder: ''
     third_party_settings: {  }
-    type: string_textfield
-    region: content
   field_estimated_completion_date:
+    type: datetime_default
     weight: 21
+    region: content
     settings: {  }
     third_party_settings: {  }
-    type: datetime_default
-    region: content
   field_has_elevator:
+    type: boolean_checkbox
     weight: 63
+    region: content
     settings:
       display_label: true
     third_party_settings: {  }
-    type: boolean_checkbox
-    region: content
   field_has_sauna:
+    type: boolean_checkbox
     weight: 64
+    region: content
     settings:
       display_label: true
     third_party_settings: {  }
-    type: boolean_checkbox
-    region: content
   field_heating_options:
+    type: options_buttons
     weight: 67
+    region: content
     settings: {  }
     third_party_settings: {  }
-    type: options_buttons
-    region: content
   field_holding_type:
+    type: options_buttons
     weight: 15
+    region: content
     settings: {  }
     third_party_settings: {  }
-    type: options_buttons
-    region: content
   field_housing_company:
+    type: string_textfield
     weight: 3
+    region: content
     settings:
       size: 60
       placeholder: ''
     third_party_settings: {  }
-    type: string_textfield
-    region: content
   field_housing_manager:
+    type: string_textfield
     weight: 28
+    region: content
     settings:
       size: 60
       placeholder: ''
     third_party_settings: {  }
-    type: string_textfield
-    region: content
   field_images:
+    type: image_image
     weight: 26
+    region: content
     settings:
       progress_indicator: throbber
       preview_image_style: thumbnail
     third_party_settings: {  }
-    type: image_image
-    region: content
   field_import_apartments:
+    type: asu_csv_file_widget
     weight: 81
+    region: content
     settings:
       progress_indicator: throbber
     third_party_settings: {  }
-    type: asu_csv_file_widget
-    region: content
   field_main_image:
+    type: image_image
     weight: 25
+    region: content
     settings:
       progress_indicator: throbber
       preview_image_style: thumbnail
     third_party_settings: {  }
-    type: image_image
-    region: content
   field_material_choice_dl:
-    weight: 17
-    settings: {  }
-    third_party_settings: {  }
     type: datetime_default
+    weight: 17
     region: content
-  field_new_development_status:
-    weight: 14
     settings: {  }
     third_party_settings: {  }
+  field_new_development_status:
     type: options_buttons
+    weight: 14
     region: content
+    settings: {  }
+    third_party_settings: {  }
   field_new_housing:
     type: boolean_checkbox
     weight: 12
@@ -517,17 +517,17 @@ content:
       display_label: true
     third_party_settings: {  }
   field_ownership_type:
-    weight: 4
-    settings: {  }
-    third_party_settings: {  }
     type: options_buttons
+    weight: 4
     region: content
-  field_possession_transfer_date:
-    weight: 23
     settings: {  }
     third_party_settings: {  }
+  field_possession_transfer_date:
     type: datetime_default
+    weight: 23
     region: content
+    settings: {  }
+    third_party_settings: {  }
   field_postal_code:
     type: string_textfield
     weight: 7
@@ -537,203 +537,203 @@ content:
       placeholder: ''
     third_party_settings: {  }
   field_pre_marketing_end_time:
+    type: datetime_default
     weight: 14
+    region: content
     settings: {  }
     third_party_settings: {  }
-    type: datetime_default
-    region: content
   field_premarketing_start_time:
+    type: datetime_default
     weight: 13
+    region: content
     settings: {  }
     third_party_settings: {  }
-    type: datetime_default
-    region: content
   field_project_accessibility:
+    type: string_textfield
     weight: 79
+    region: content
     settings:
       size: 60
       placeholder: ''
     third_party_settings: {  }
-    type: string_textfield
-    region: content
   field_project_area_description:
+    type: string_textarea
     weight: 84
+    region: content
     settings:
       rows: 5
       placeholder: ''
     third_party_settings: {  }
-    type: string_textarea
-    region: content
   field_project_attachments:
+    type: file_generic
     weight: 30
+    region: content
     settings:
       progress_indicator: throbber
     third_party_settings: {  }
-    type: file_generic
-    region: content
   field_project_description:
+    type: text_textarea
     weight: 16
+    region: content
     settings:
       rows: 5
       placeholder: ''
     third_party_settings: {  }
-    type: text_textarea
-    region: content
   field_project_manager:
+    type: string_textfield
     weight: 26
+    region: content
     settings:
       size: 60
       placeholder: ''
     third_party_settings: {  }
-    type: string_textfield
-    region: content
   field_publication_end_time:
+    type: datetime_default
     weight: 12
+    region: content
     settings: {  }
     third_party_settings: {  }
-    type: datetime_default
-    region: content
   field_publication_start_time:
+    type: datetime_default
     weight: 11
+    region: content
     settings: {  }
     third_party_settings: {  }
-    type: datetime_default
-    region: content
   field_realty_id:
+    type: string_textfield
     weight: 10
+    region: content
     settings:
       size: 60
       placeholder: ''
     third_party_settings: {  }
-    type: string_textfield
-    region: content
   field_regular_bank_account:
+    type: string_textfield
     weight: 17
+    region: content
     settings:
       size: 60
       placeholder: ''
     third_party_settings: {  }
-    type: string_textfield
-    region: content
   field_roof_material:
+    type: string_textfield
     weight: 66
+    region: content
     settings:
       size: 60
       placeholder: ''
     third_party_settings: {  }
-    type: string_textfield
-    region: content
   field_salesperson:
+    type: select2_entity_reference
     weight: 32
+    region: content
     settings:
       width: 100%
+      autocomplete: false
       match_operator: CONTAINS
       match_limit: 10
-      autocomplete: false
     third_party_settings: {  }
-    type: select2_entity_reference
-    region: content
   field_sanitation:
+    type: string_textfield
     weight: 71
+    region: content
     settings:
       size: 60
       placeholder: ''
     third_party_settings: {  }
-    type: string_textfield
-    region: content
   field_services:
+    type: asu_service_widget
     weight: 80
+    region: content
     settings: {  }
     third_party_settings: {  }
-    type: asu_service_widget
-    region: content
   field_services_url:
+    type: link_default
     weight: 82
+    region: content
     settings:
       placeholder_url: ''
       placeholder_title: ''
     third_party_settings: {  }
-    type: link_default
-    region: content
   field_shared_apartment_images:
+    type: image_image
     weight: 28
+    region: content
     settings:
       progress_indicator: throbber
       preview_image_style: thumbnail
     third_party_settings: {  }
-    type: image_image
-    region: content
   field_shareholder_meeting_date:
-    weight: 18
-    settings: {  }
-    third_party_settings: {  }
     type: datetime_default
+    weight: 18
     region: content
+    settings: {  }
+    third_party_settings: {  }
   field_site_area:
-    weight: 69
-    settings:
-      placeholder: ''
-    third_party_settings: {  }
     type: number
+    weight: 69
     region: content
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
   field_site_owner:
+    type: options_select
     weight: 77
+    region: content
     settings: {  }
     third_party_settings: {  }
-    type: options_select
-    region: content
   field_site_renter:
+    type: string_textfield
     weight: 70
+    region: content
     settings:
       size: 60
       placeholder: ''
     third_party_settings: {  }
-    type: string_textfield
-    region: content
   field_state_of_sale:
-    weight: 5
-    settings: {  }
-    third_party_settings: {  }
     type: options_select
+    weight: 5
     region: content
-  field_street_address:
-    weight: 6
-    settings:
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
-    type: string_textfield
-    region: content
-  field_tasks:
-    weight: 47
     settings: {  }
     third_party_settings: {  }
-    type: tasklist_widget
+  field_street_address:
+    type: string_textfield
+    weight: 6
     region: content
-  field_virtual_presentation_url:
-    weight: 29
-    settings:
-      placeholder_url: ''
-      placeholder_title: ''
-    third_party_settings: {  }
-    type: link_default
-    region: content
-  field_zoning_info:
-    weight: 72
-    settings:
-      placeholder_url: ''
-      placeholder_title: ''
-    third_party_settings: {  }
-    type: link_default
-    region: content
-  field_zoning_status:
-    weight: 73
     settings:
       size: 60
       placeholder: ''
     third_party_settings: {  }
-    type: string_textfield
+  field_tasks:
+    type: tasklist_widget
+    weight: 47
     region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_virtual_presentation_url:
+    type: link_default
+    weight: 29
+    region: content
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: {  }
+  field_zoning_info:
+    type: link_default
+    weight: 72
+    region: content
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: {  }
+  field_zoning_status:
+    type: string_textfield
+    weight: 73
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
   langcode:
     type: language_select
     weight: 1
@@ -749,10 +749,10 @@ content:
     third_party_settings: {  }
   promote:
     type: boolean_checkbox
-    settings:
-      display_label: true
     weight: 5
     region: content
+    settings:
+      display_label: true
     third_party_settings: {  }
   publish_on:
     type: datetime_timestamp_no_default
@@ -762,17 +762,17 @@ content:
     third_party_settings: {  }
   status:
     type: boolean_checkbox
-    settings:
-      display_label: true
     weight: 9
     region: content
+    settings:
+      display_label: true
     third_party_settings: {  }
   sticky:
     type: boolean_checkbox
-    settings:
-      display_label: true
     weight: 6
     region: content
+    settings:
+      display_label: true
     third_party_settings: {  }
   title:
     type: string_textfield
@@ -790,12 +790,12 @@ content:
   uid:
     type: entity_reference_autocomplete
     weight: 2
+    region: content
     settings:
       match_operator: CONTAINS
+      match_limit: 10
       size: 60
       placeholder: ''
-      match_limit: 10
-    region: content
     third_party_settings: {  }
   unpublish_on:
     type: datetime_timestamp_no_default
