@@ -39,12 +39,12 @@ function asu_application_theme_suggestions_asu_application(array $variables) {
  * Implements hook_preprocess_form().
  */
 function template_preprocess_asu_application(array &$variables) {
+
   $application = $variables['elements']['#asu_application'];
   $variables['view_mode'] = $variables['elements']['#view_mode'];
   $id = $application->id->value;
 
   $projectId = $application->getProjectId();
-
   try {
     $projects = \Drupal::entityTypeManager()
       ->getStorage('node')
@@ -64,6 +64,7 @@ function template_preprocess_asu_application(array &$variables) {
 
     $application_teaser_values = [
       '#teaser_values' => [
+        'language' => \Drupal::languageManager()->getCurrentLanguage()->getId(),
         'project_name' => $project->field_housing_company->value,
         'project_address' => $project->field_street_address->value,
         'project_ownership_type' => $project->field_ownership_type->first()->entity->getName(),
@@ -73,10 +74,59 @@ function template_preprocess_asu_application(array &$variables) {
         'project_district' => $project->field_district->first()->entity->getName(),
       ],
     ];
+
+    if ($variables['elements']['#view_mode'] == 'full') {
+      $apartments = \Drupal::entityTypeManager()
+        ->getStorage('node')
+        ->loadMultiple($application->getApartmentIds());
+
+      $apartments_data = [];
+      foreach($apartments as $apartment) {
+        $apartments_data[$apartment->id()] = [
+          'apartment_id' => $apartment->id(),
+          'apartment_number' => $apartment->get('field_apartment_number')->getValue(),
+          'apartment_structure' => $apartment->get('field_apartment_structure')->getValue(),
+          'apartment_floor' => $apartment->get('field_floor')->getValue(),
+          'apartment_living_area' => $apartment->get('field_living_area')->getValue(),
+          'apartment_sales_price' => $apartment->get('field_sales_price')->getValue(),
+          'apartment_debt_free_sales_price' => $apartment->get('field_debt_free_sales_price')->getValue(),
+          'apartment_right_of_occupancy_payment' => $apartment->get('field_right_of_occupancy_payment')->getValue()
+        ];
+      }
+
+      $application_fields = [
+        'application_created_at' => $application->get('created')->getValue(),
+        'personal_id' => $application->get('field_personal_id')->getValue(),
+        'has_children' => $application->get('has_children')->getValue(),
+        'applicant' => $application->get('applicant')->getValue(),
+        'apartments' => $application->get('apartment')->getValue(),
+        'field_right_of_residence_number' => '',
+        'apartments_data' => $apartments_data,
+        #'haso_owner' => $application->get('field_haso_owner')->getValue(),
+        'hitas_owner' => ''
+      ];
+
+      if ($application->hasField('field_right_of_residence_number')) {
+        $application_fields['field_right_of_residence_number'] = $application->get('field_right_of_residence_number')->getValue();
+      }
+
+      if ($application->hasField('field_hitas_owner')) {
+        $application_fields['hitas_owner'] = $application->get('field_hitas_owner')->getValue();
+      }
+
+      $application_teaser_values['application'] = $application_fields;
+    }
+
     $application_teaser_values['#teaser_values']['application_url'] = $application->isLocked() ? "/application/$id" : "/application/$id/edit";
   }
   catch (\Exception $e) {
-    \Drupal::logger('asu_application')->critical('Could not access project apartments for project ' . $projectId);
+    \Drupal::logger('asu_application')->critical(
+      sprintf(
+        'Error while fetching apartment data for project of id %s: %s',
+        $projectId,
+        $e->getMessage()
+      )
+    );
     $application_teaser_values = [];
   }
 
