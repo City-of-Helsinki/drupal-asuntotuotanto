@@ -365,10 +365,9 @@
         <div class="application-form__input-elements">
           <div class="application-form__application-information">
             <p class="application-form__application-information-tooltip">
-              {% set application_created_at = content.application.application_created_at.0.value %}
+              {% set application_created_at = content.application.application_created_at.0.value|date("d.m.Y") %}
               {% trans %}
-              {# TODO: date needs to be formatted correctly #}
-                The application was sent on {{ application_created_at|date("d.m.Y") }} at {{ application_created_at|date("H.i") }}.
+                The application was sent on {{ application_created_at }}.
               {% endtrans %}
             </p>
           </div>
@@ -420,7 +419,6 @@
                 </span>
                 {{ content['#teaser_values'].project_ownership_type }}
               </span>
-              {# TODO: don't know which field should be here #}
               {# <ul class="application__date-information">
                 <li>
                   {% include "@hdbt/misc/icon.twig" with {icon: 'cogwheel', label: ''} %}
