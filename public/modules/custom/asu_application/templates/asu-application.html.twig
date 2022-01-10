@@ -15,8 +15,6 @@
   ]
 %}
 
-{{ drupal_breakpoint() }}
-
 {% if content['#teaser_values'].application_url %}
   {% if view_mode == 'submitted_teaser' %}
     <article{{ attributes.addClass(classes) }}>
@@ -467,6 +465,8 @@
               </ul>
               <ol class="application-form__apartments-list" id="application_form_apartments_list" aria-label="{{ 'Ordered list of apartments'|t }}">
                 {% for apartment in apartments %}
+                  {% set language = content['#teaser_values'].language %}
+                  {% set apartment_id = apartment.apartment_id %}
                   {% set apartment_number = apartment.apartment_number.0.value|striptags|trim %}
                   {% set apartment_structure = apartment.apartment_structure.0.value|striptags|trim|upper %}
                   {% set apartment_floor = apartment.apartment_floor.0.value|striptags|trim %}
@@ -491,7 +491,7 @@
                           <span>{{ apartment_structure }}</span>
                         </p>
                       </div>
-                      <div class="application-form-apartment__list-position-actions">
+                      <div class="application-form-apartment__list-position-actions invisible">
                         <button type="button" data-list-position-action-button="raise" disabled="">
                           <span>{% trans %}Raise on the list{% endtrans %}</span>
                         </button>
@@ -520,10 +520,7 @@
                         </li>
                       </ul>
                       <div class="application-form-apartment__actions">
-                        <button disabled class="application-form-apartment__apartment-delete-button" type="button" aria-label="Delete, aparment {{ apartment_number }}">
-                          <span>{% trans %}Delete{% endtrans %}</span>
-                        </button>
-                        <a href="#" Xclass="is-disabled" aria-label="Open apartment page, aparment {{ apartment_number }}">{% trans %}Open apartment page{% endtrans %}</a></div>
+                        <a href="{{ "/#{language}/node/#{apartment_id}" }}" aria-label="Open apartment page, apartment {{ apartment_number }}">{% trans %}Open apartment page{% endtrans %}</a></div>
                     </article>
                   </li>
                   <div aria-live="assertive" class="visually-hidden sr-information-box"></div>
@@ -552,6 +549,7 @@
             </div>
           </div>
         </section>
+        {% if content.application.right_of_residence_number.0.value %}
         <section class="application-form__section">
           <h2>
             {% trans %}
@@ -560,13 +558,14 @@
           </h2>
           <div class="field--type-string field--name-field-personal-id field--widget-string-textfield js-form-wrapper form-wrapper">
             <div class="js-form-item form-item js-form-type-textfield form-item-field-personal-id-0-value js-form-item-field-personal-id-0-value hds-text-input">
-              <label for="edit-field-personal-id-0-value" class="js-form-required form-required hds-text-input__label">{% trans %}Serial number{% endtrans %}</label>
               <div class="hds-text-input__input-wrapper">
                 <input readonly class="js-text-full text-full form-text required hds-text-input__input" type="text" value="{{ content.application.right_of_residence_number.0.value }}" size="60" aria-label="{% trans %} Residence number is {% endtrans %} {{ content.application.right_of_residence_number.0.value }}">
               </div>
             </div>
           </div>
         </section>
+        {% endif %}
+
         {# TODO: 'content.application.haso_owner' is for some reason not available; needs to get available somehow in asu_application.module #}
         {% if content.application.haso_owner %}
           <section class="application-form__section">
@@ -639,7 +638,7 @@
                 {% else %}
                   <input disabled type="checkbox" id="edit-applicant-0-has-additional-applicant" value="{{ content['#teaser_values'].applicant }}" class="form-checkbox hds-checkbox__input">
                 {% endif %}
-                <label for="edit-applicant-0-has-additional-applicant" class="option hds-checkbox__label">{% trans %}Add additional applicant{% endtrans %}</label>
+                <label for="edit-applicant-0-has-additional-applicant" class="option hds-checkbox__label">{% trans %}Yes{% endtrans %}</label>
               </div>
 
               {% if content.application.applicant.0.first_name != null and content.application.applicant.0.last_name != null %}
@@ -674,6 +673,7 @@
                     </div>
                   </div> #}
 
+                  {#
                   <div class="js-form-item form-item js-form-type-textfield form-item-applicant-0-personal-id js-form-item-applicant-0-personal-id hds-text-input">
                     <label for="edit-applicant-0-personal-id" class="hds-text-input__label">{% trans %}Personal id{% endtrans %}</label>
                     <div class="hds-text-input__input-wrapper">
@@ -684,6 +684,7 @@
                       {% trans %}last 5 characters{% endtrans %}
                     </div>
                   </div>
+                  #}
 
                   <div class="js-form-item form-item js-form-type-textfield form-item-applicant-0-address js-form-item-applicant-0-address hds-text-input">
                     <label for="edit-applicant-0-address" class="hds-text-input__label">{% trans %}Street address{% endtrans %}</label>
