@@ -26,23 +26,28 @@ content:
     settings: {  }
     third_party_settings: {  }
   field_full_name:
+    type: string_textfield
     weight: 6
+    region: content
     settings:
       size: 60
       placeholder: ''
     third_party_settings: {  }
-    type: string_textfield
-    region: content
   field_phone_number:
+    type: string_textfield
     weight: 5
+    region: content
     settings:
       size: 60
       placeholder: ''
     third_party_settings: {  }
-    type: string_textfield
-    region: content
   language:
     weight: 1
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  matomo:
+    weight: 3
     region: content
     settings: {  }
     third_party_settings: {  }

@@ -1,3 +1,5 @@
+_core:
+  default_config_hash: PCARWq16qMmNlSjsYkW56NMREpF5bCpdznofRAhOd8s
 session:
   parameter: language
 url:
@@ -12,5 +14,3 @@ url:
     fi: ''
     sv: ''
 selected_langcode: fi
-_core:
-  default_config_hash: PCARWq16qMmNlSjsYkW56NMREpF5bCpdznofRAhOd8s

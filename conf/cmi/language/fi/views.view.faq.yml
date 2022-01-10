@@ -1,17 +1,6 @@
 label: UKK
 display:
-  default:
-    display_options:
-      filters:
-        field_faq_category_target_id:
-          group_info:
-            description: ''
   faq_page_haso:
     display_title: 'UKK sivu - Haso'
-    display_options:
-      filters:
-        field_faq_category_target_id:
-          group_info:
-            description: ''
   faq_page_hitas:
     display_title: 'UKK sivu - Hitas'

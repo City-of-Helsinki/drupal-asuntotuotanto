@@ -21,9 +21,9 @@ content:
     third_party_settings: {  }
   contact:
     weight: 5
+    region: content
     settings: {  }
     third_party_settings: {  }
-    region: content
   translation:
     weight: 12
     region: content

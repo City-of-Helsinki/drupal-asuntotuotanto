@@ -15,21 +15,21 @@ mode: default
 content:
   field_main_content_blocks:
     type: entity_reference_revisions_entity_view
-    weight: 1
     label: hidden
     settings:
       view_mode: stacked_text_blocks
       link: ''
     third_party_settings: {  }
+    weight: 1
     region: content
   field_stacked_text_blocks:
-    weight: 0
+    type: entity_reference_revisions_entity_view
     label: hidden
     settings:
       view_mode: stacked_text_blocks
       link: ''
     third_party_settings: {  }
-    type: entity_reference_revisions_entity_view
+    weight: 0
     region: content
 hidden:
   search_api_excerpt: true

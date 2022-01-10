@@ -13,9 +13,7 @@ use Psr\Http\Message\ResponseInterface;
  */
 class SalesCreateApplicationRequest extends Request {
   protected const PATH = '/v1/sales/applications/';
-
   protected const METHOD = 'POST';
-
   protected const AUTHENTICATED = TRUE;
 
   /**
@@ -99,7 +97,7 @@ class SalesCreateApplicationRequest extends Request {
    */
   private function getApplicant() {
     if (!$this->application->hasAdditionalApplicant()) {
-      return NULL;
+      return [];
     }
     $applicant = $this->application->getApplicants()[0];
     return [

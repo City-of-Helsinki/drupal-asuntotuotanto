@@ -16,27 +16,27 @@ bundle: step
 mode: default
 content:
   field_icon:
+    type: select2_icon_widget
     weight: 1
+    region: content
     settings: {  }
     third_party_settings: {  }
-    type: select2_icon_widget
-    region: content
   field_step_desc_point:
+    type: text_textarea
     weight: 2
+    region: content
     settings:
       rows: 5
       placeholder: ''
     third_party_settings: {  }
-    type: text_textarea
-    region: content
   field_title:
+    type: string_textfield
     weight: 0
+    region: content
     settings:
       size: 60
       placeholder: ''
     third_party_settings: {  }
-    type: string_textfield
-    region: content
 hidden:
   created: true
   status: true

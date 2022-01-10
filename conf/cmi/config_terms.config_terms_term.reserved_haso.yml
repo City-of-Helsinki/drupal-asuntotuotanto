@@ -7,5 +7,5 @@ vid: apartment_state_of_sale
 label: 'Reserved (HASO)'
 parents:
   - '0'
-description: ''
 weight: 0
+description: ''

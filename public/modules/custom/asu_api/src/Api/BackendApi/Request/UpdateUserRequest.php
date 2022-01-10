@@ -12,11 +12,8 @@ use Drupal\user\UserInterface;
  * Update existing user information in backend.
  */
 class UpdateUserRequest extends Request {
-
   protected const METHOD = 'PUT';
-
   protected const PATH = '/v1/profiles/';
-
   protected const AUTHENTICATED = TRUE;
 
   /**
