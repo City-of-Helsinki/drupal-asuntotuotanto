@@ -6,8 +6,7 @@ dependencies:
     - field.field.user.user.field_backend_password
     - field.field.user.user.field_backend_profile
     - field.field.user.user.field_email_is_valid
-  module:
-    - user
+    - user_bundle.user_type.user
 id: user.user.default
 targetEntityType: user
 bundle: user
@@ -19,37 +18,28 @@ content:
     settings: {  }
     third_party_settings: {  }
   contact:
-    weight: 5
+    weight: 2
     region: content
     settings: {  }
     third_party_settings: {  }
-  field_backend_password:
-    type: string_textfield
-    weight: 11
-    region: content
-    settings:
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
-  field_backend_profile:
-    type: string_textfield
-    weight: 10
-    region: content
-    settings:
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
   language:
-    weight: 8
+    weight: 3
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  matomo:
+    weight: 1
     region: content
     settings: {  }
     third_party_settings: {  }
   translation:
-    weight: 9
+    weight: 4
     region: content
     settings: {  }
     third_party_settings: {  }
 hidden:
+  field_backend_password: true
+  field_backend_profile: true
   field_backend_profile_id: true
   field_email_is_valid: true
   langcode: true
