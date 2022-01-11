@@ -18,7 +18,7 @@ class ListController {
   use StringTranslationTrait;
 
   /**
-   * Controller to build hy admin tools list.
+   * Controller to build by admin tools list.
    *
    * @return array
    *   Render array.
@@ -74,6 +74,23 @@ class ListController {
         ],
       ];
     }
+
+    $faked_blocks['image_bulk_upload'] = [
+      'title' => $this->t('Apartment image bulk upload'),
+      'description' => '',
+      'content' => [
+        '#theme' => 'admin_block_content',
+        '#content' => [
+          'navigation' => [
+            #'url' => Url::fromRoute('asu_user.bulk_edit_empty'),
+            'url' => Url::fromUri('internal:/admin/apartment/bulk-edit'),
+            'title' => $this->t('Bulk upload apartment images'),
+            'description' => 'Upload images for multiple apartments',
+            'options' => '',
+          ],
+        ],
+      ],
+    ];
 
     if ($current_user->hasPermission('access taxonomy overview')) {
       $faked_blocks['taxonomy'] = [
@@ -131,30 +148,6 @@ class ListController {
         ],
       ];
     }
-
-    $faked_blocks['image_bulk_upload'] = [
-      'title' => $this->t('Apartment image bulk upload'),
-      'description' => '',
-      'content' => [
-        '#theme' => 'admin_block_content',
-        '#content' => [
-          'navigation' => [
-            'url' => Url::fromRoute('asu_user.bulk_edit_empty'),
-            'title' => $this->t('Bulk upload apartment images'),
-            'description' => 'Upload images for multiple apartments',
-            'options' => '',
-          ],
-        ],
-      ],
-    ];
-    /*
-    asu_user.bulk-uploa:d
-    title: 'Bulk upload'
-    description: 'Bulk upload images for apartments'
-    parent: system.admin_content
-    route_name: asu_content.bulk_edit_empty
-    weight: 100
-     */
 
     return [
       '#theme' => 'admin_page',
