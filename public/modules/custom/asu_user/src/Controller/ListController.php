@@ -82,7 +82,6 @@ class ListController {
         '#theme' => 'admin_block_content',
         '#content' => [
           'navigation' => [
-            #'url' => Url::fromRoute('asu_user.bulk_edit_empty'),
             'url' => Url::fromUri('internal:/admin/apartment/bulk-edit'),
             'title' => $this->t('Bulk upload apartment images'),
             'description' => 'Upload images for multiple apartments',
