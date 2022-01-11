@@ -794,11 +794,12 @@ function asuntotuotanto_preprocess_pager(&$variables) {
  */
 function asuntotuotanto_preprocess_user(&$variables) {
   if (User::load(\drupal::currentUser()->id())->bundle() == 'customer') {
-    $customer = \Drupal::service('asu_user.customer');
-    $fields = \Drupal::config('asu_user.external_user_fields')->get('external_data_map');
-
+    $fields = \Drupal::config('asu_user.external_user_fields')
+      ->get('external_data_map');
+    $store = \Drupal::service('tempstore.private')
+      ->get('customer');
     foreach ($fields as $field_name => $field) {
-      $variables['content'][$field_name] = $customer->getUserField($field_name);
+      $variables['content'][$field_name] = $store->get($field_name);
     }
   }
 }

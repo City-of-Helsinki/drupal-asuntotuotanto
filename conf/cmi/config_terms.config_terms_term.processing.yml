@@ -7,5 +7,5 @@ vid: state_of_sale
 label: Processing
 parents:
   - '0'
-description: ''
 weight: 2
+description: ''

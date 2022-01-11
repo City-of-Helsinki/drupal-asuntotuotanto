@@ -36,7 +36,6 @@ default_value_callback: ''
 settings:
   handler: 'default:paragraph'
   handler_settings:
-    negate: 0
     target_bundles:
       columns: columns
       banner: banner
@@ -52,6 +51,7 @@ settings:
       liftup_with_image_and_links: liftup_with_image_and_links
       showcase_block: showcase_block
       stacked_contact_blocks: stacked_contact_blocks
+    negate: 0
     target_bundles_drag_drop:
       accordion:
         weight: -22
@@ -60,14 +60,14 @@ settings:
         weight: -21
         enabled: false
       banner:
-        enabled: true
         weight: -26
+        enabled: true
       columns:
-        enabled: true
         weight: -27
-      contact_information_with_map:
         enabled: true
+      contact_information_with_map:
         weight: 31
+        enabled: true
       contact_person:
         weight: 35
         enabled: false
@@ -75,14 +75,14 @@ settings:
         weight: 36
         enabled: false
       content_cards:
-        enabled: true
         weight: -23
+        enabled: true
       cta_block:
         weight: 33
         enabled: false
       from_library:
-        enabled: true
         weight: 21
+        enabled: true
       gallery:
         weight: -20
         enabled: false
@@ -96,17 +96,17 @@ settings:
         weight: -17
         enabled: false
       latest_news:
-        enabled: true
         weight: 28
+        enabled: true
       liftup_with_image:
-        enabled: true
         weight: -24
+        enabled: true
       liftup_with_image_and_links:
-        enabled: true
         weight: 33
-      list_of_links:
         enabled: true
+      list_of_links:
         weight: -25
+        enabled: true
       list_of_links_item:
         weight: -16
         enabled: false
@@ -114,20 +114,20 @@ settings:
         weight: 32
         enabled: false
       remote_video:
-        enabled: true
         weight: 27
+        enabled: true
       showcase:
         weight: 46
         enabled: false
       showcase_block:
-        enabled: true
         weight: 47
+        enabled: true
       stacked_contact_blocks:
-        enabled: true
         weight: 49
-      stacked_text_blocks_with_image:
         enabled: true
+      stacked_text_blocks_with_image:
         weight: 20
+        enabled: true
       step:
         weight: 49
         enabled: false
@@ -135,8 +135,8 @@ settings:
         weight: 50
         enabled: false
       text:
-        enabled: true
         weight: -15
+        enabled: true
       text_block_with_link:
         weight: 38
         enabled: false

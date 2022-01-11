@@ -17,15 +17,15 @@ plugin: 'menu_block:user-tools-menu'
 settings:
   id: 'menu_block:user-tools-menu'
   label: 'User tools (mobile)'
-  provider: menu_block
   label_display: '0'
+  provider: menu_block
   follow: false
   follow_parent: child
+  label_link: false
+  label_type: block
   level: 1
   depth: 2
   expand_all_items: true
   parent: 'user-tools-menu:'
   suggestion: user_tools_menu__mobile
-  label_type: block
-  label_link: false
 visibility: {  }

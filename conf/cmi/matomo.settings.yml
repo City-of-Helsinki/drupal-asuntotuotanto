@@ -1,3 +1,5 @@
+_core:
+  default_config_hash: UU4O0O7HBps8GkqpeZWeDF8nYdKkhMXJC7QScWXjVMA
 site_id: ''
 url_http: ''
 url_https: ''
@@ -34,5 +36,3 @@ translation_set: false
 cache: false
 page_title_hierarchy: false
 page_title_hierarchy_exclude_home: true
-_core:
-  default_config_hash: UU4O0O7HBps8GkqpeZWeDF8nYdKkhMXJC7QScWXjVMA

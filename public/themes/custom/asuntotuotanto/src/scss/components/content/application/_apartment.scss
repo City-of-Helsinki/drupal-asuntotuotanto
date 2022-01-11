@@ -1,11 +1,19 @@
 @-webkit-keyframes spin {
-  0% { -webkit-transform: rotate(0deg); }
-  100% { -webkit-transform: rotate(360deg); }
+  0% {
+    -webkit-transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+  }
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .application-form-apartment {
@@ -50,7 +58,8 @@
     margin-bottom: 0;
     order: 3;
     margin-right: $spacing-l;
-    min-width: 120px;
+    // min-width: 120px;
+    min-width: 140px;
   }
 
   .application-form__apartments-item--with-select & {
@@ -201,13 +210,13 @@
 
     &:first-child {
       &:before {
-        background-image: url('../icons/arrow-up.svg');
+        background-image: url("../icons/arrow-up.svg");
       }
     }
 
     &:nth-child(2) {
       &:before {
-        background-image: url('../icons/arrow-down.svg');
+        background-image: url("../icons/arrow-down.svg");
       }
     }
 
@@ -216,7 +225,7 @@
       border-color: var(--color-black-50);
 
       &::before {
-        opacity: .5;
+        opacity: 0.5;
       }
     }
 
@@ -342,7 +351,7 @@
     }
 
     &:after {
-      background-image: url('../icons/trash.svg');
+      background-image: url("../icons/trash.svg");
       background-size: 100%;
       content: "";
       display: inline-block;
@@ -381,7 +390,7 @@
     }
 
     &:after {
-      background-image: url('../icons/angle-right--blue.svg');
+      background-image: url("../icons/angle-right--blue.svg");
       background-size: 100%;
       content: "";
       display: inline-block;

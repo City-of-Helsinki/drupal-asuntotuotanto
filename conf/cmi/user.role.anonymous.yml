@@ -1,7 +1,20 @@
 uuid: 705f5163-6930-4960-92b5-ce09f0389400
 langcode: en
 status: true
-dependencies: {  }
+dependencies:
+  config:
+    - rest.resource.asu_elasticsearch
+    - rest.resource.asu_initialize
+    - rest.resource.mailinglist
+  module:
+    - asu_application
+    - contact
+    - eu_cookie_compliance
+    - helfi_api_base
+    - media
+    - paragraphs_type_permissions
+    - rest
+    - system
 _core:
   default_config_hash: EDyVdaROG6pYzyEct43c01Wq4gpATszrk-qR6gqnQ84
 id: anonymous
@@ -15,9 +28,7 @@ permissions:
   - 'create application'
   - 'display eu cookie compliance popup'
   - 'display eu cookie compliance popup'
-  - 'restful get asu_applications'
   - 'restful get asu_initialize'
-  - 'restful get filter_rest_resource'
   - 'restful post asu_elasticsearch'
   - 'restful post mailinglist'
   - 'view media'
