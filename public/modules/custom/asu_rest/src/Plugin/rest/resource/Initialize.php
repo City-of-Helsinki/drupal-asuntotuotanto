@@ -58,9 +58,10 @@ final class Initialize extends ResourceBase {
     if (\Drupal::currentUser()->isAuthenticated()) {
       $user = User::load(\Drupal::currentUser()->id());
       $response['user'] = $this->getUser($user);
+      // $response['user']['applications'] = [17 => [50, 51]];
       $response['user']['applications'] = $this->getUserApplications($user);
       // @todo Followed projects.
-      $response['user']['followed_projects'][] = 15;
+      $response['user']['followed_projects'] = [];
     }
 
     $headers = getenv('APP_ENV') == 'testing' ? [
@@ -95,9 +96,14 @@ final class Initialize extends ResourceBase {
    * @return array
    *   Array of applications by user.
    */
-  private function getUserApplications(User $user) {
-    return Applications::applicationsByUser($user->id())
-      ->getApartmentApplicationsByProject();
+  private function getUserApplications(User $user): array {
+    $applicationStatus = [];
+    $applications = Applications::get('user', $user->id())
+      ->getApplications();
+    foreach ($applications as $application) {
+      $applicationStatus[$application->getProjectId()] = $application->getApartmentIds();
+    }
+    return $applicationStatus;
   }
 
   /**
@@ -107,9 +113,8 @@ final class Initialize extends ResourceBase {
    *   Array of application statuses by apartment.
    */
   private function getApartmentApplicationStatus(): array {
-    return Applications::create()
-      ->getApartmentApplicationStatuses();
-
+    return Applications::get()
+      ->getApplicationCount();
   }
 
   /**

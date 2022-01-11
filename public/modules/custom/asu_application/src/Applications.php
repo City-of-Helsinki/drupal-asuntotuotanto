@@ -6,7 +6,6 @@ namespace Drupal\asu_application;
  * Handles applications.
  */
 class Applications {
-
   const HIGH_ENUM = 'HIGH';
   const MEDIUM = 10;
   const MEDIUM_ENUM = 'MEDIUM';
@@ -29,135 +28,106 @@ class Applications {
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
-  public function __construct(string $userId = NULL) {
+  public function __construct(?string $type, $id) {
     $applicationStorage = \Drupal::entityTypeManager()
       ->getStorage('asu_application');
 
-    try {
-      if (!$userId) {
-        $this->applications = $applicationStorage->loadMultiple();
-      }
-      else {
-        $this->applications = $applicationStorage
-          ->loadByProperties(['uid' => $userId, 'status' => 1]);
-      }
+    $condition = [
+      'field_locked' => 1,
+    ];
+
+    switch ($type) {
+      case 'user':
+        $condition['uid'] = $id;
+        break;
+
+      case 'project':
+        $condition['project_id'] = $id;
+        break;
+
+      case 'apartment':
+        $condition['apartment'] = $id;
+        break;
+
+      default:
+        $condition = [];
     }
-    catch (\Exception $e) {
-      $this->applications = [];
-    }
+
+    $this->applications = $applicationStorage->loadByProperties($condition);
   }
 
   /**
-   * Get all applications for all applications.
+   * Get applications based on type.
    *
-   * @return static
+   * @param string $by
+   *   By "customer" or by "project" or by "apartment".
+   * @param string $id
+   *   Id of the customer, project or apartment.
+   *
+   * @return \Drupal\asu_application\Entity\Applications
    *
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
-  public static function create(): self {
-    return new self();
+  public static function get(string $by = NULL, string $id = NULL): Applications {
+    return new self($by, $id);
   }
 
   /**
-   * Get applications by user.
-   *
-   * @param string $userId
-   *   User whose applications are resolved.
-   *
-   * @return static
-   *
-   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
-   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
-   */
-  public static function applicationsByUser(string $userId): self {
-    return new self($userId);
-  }
-
-  /**
-   * Get applications for all projects.
+   * Get all application entities.
    *
    * @return array
-   *   Array of apartment ids by project.
    */
-  public function getApartmentApplicationsByProject(): array {
-    if (empty($this->applications)) {
-      return [];
-    }
-    $applicationsByProject = [];
-
-    /** @var \Drupal\asu_application\Entity\Application $application */
-    foreach ($this->applications as $application) {
-      $apartmentIds = $application->getApartmentIds();
-      $applicationsByProject[$application->getProjectId()] = $apartmentIds;
-    }
-    return $applicationsByProject;
+  public function getApplications(): array {
+    return $this->applications;
   }
 
   /**
-   * Get applications for single project.
-   *
-   * @param int|string $id
-   *   Id of the project.
+   * Get project ids for applications.
    *
    * @return array
-   *   Array of apartment ids by project.
+   *   Projects with applications.
    */
-  public function getApartmentApplicationStatusesForProject($id): array {
-    if (empty($this->applications)) {
+  public function getProjectIds(): array {
+    $projectIds = [];
+    foreach ($this->applications as $application) {
+      $projectIds[] = $application->getProjectId();
+    }
+    return $projectIds;
+  }
+
+  /**
+   * Get the application count.
+   *
+   * @param bool $enum
+   *   Return as enum or numeric.
+   *
+   * @return array
+   *   Application count by apartment.
+   */
+  public function getApplicationCount($enum = TRUE): array {
+    if (!$this->applications) {
       return [];
     }
+    /** @var \Drupal\asu_application\Entity\Application $x */
 
-    $applicationsForProject = [];
-
+    $counts = [];
     /** @var \Drupal\asu_application\Entity\Application $application */
     foreach ($this->applications as $application) {
-      if ($application->getProjectId() == $id) {
-        $applicationsForProject[] = $application;
+      foreach ($application->getApartmentIds() as $id) {
+        $counts[$id] = isset($counts[$id]) ? $counts[$id] + 1 : 1;
       }
     }
 
-    $this->applications = $applicationsForProject;
-
-    return $this->getApartmentApplicationStatuses();
-  }
-
-  /**
-   * Get apartment applications.
-   */
-  public function getApartmentApplications() {
-    if (empty($this->applications)) {
-      return [];
-    }
-    $applications = [];
-
-    /** @var \Drupal\asu_application\Entity\Application $application */
-    foreach ($this->applications as $application) {
-      $apartmentIds = $application->getApartmentIds();
-      $applications = array_merge($applications, $apartmentIds);
+    if ($enum) {
+      $enums = [];
+      foreach ($counts as $key => $count) {
+        $enums[$key] = self::resolveApplicationCountEnum($count);
+      }
+      return $enums;
     }
 
-    return $applications;
-  }
-
-  /**
-   * Return application count as status text instead of numeric.
-   *
-   * @return array
-   *   Apartment application status.
-   */
-  public function getApartmentApplicationStatuses(): array {
-    $applications = $this->getApartmentApplications();
-
-    $counts = array_count_values($applications);
-
-    $applicationStatuses = [];
-
-    foreach ($counts as $key => $count) {
-      $applicationStatuses[$key] = $this::resolveApplicationCountEnum($count);
-    }
-
-    return $applicationStatuses;
+    return $counts;
   }
 
   /**
@@ -182,6 +152,8 @@ class Applications {
     if ($count > self::MEDIUM) {
       return self::HIGH_ENUM;
     }
+
+    return '';
   }
 
 }

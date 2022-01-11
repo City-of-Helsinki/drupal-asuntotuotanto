@@ -5,6 +5,7 @@
  * Functions to support theming in the HDBT Subtheme.
  */
 
+use Drupal\node\NodeInterface;
 use Drupal\asu_application\Applications;
 use Drupal\Core\Url;
 use Drupal\file\Entity\File;
@@ -133,7 +134,7 @@ function asuntotuotanto_preprocess_menu(&$variables) {
 
     case 'user-tools-menu':
       $items = $variables['items']['asu_user_tools_menu.user_name']['below'];
-      
+
       $variables['#cache']['contexts'][] = 'user';
 
       foreach ($items as $key => $item) {
@@ -196,29 +197,70 @@ function asuntotuotanto_preprocess_views_view_table(&$variables) {
 
   if ($view_id === 'project_apartments_listing') {
     $rows = $variables['rows'];
-    $status = Applications::create()->getApartmentApplicationStatuses();
 
-    $parent_node_results = \Drupal::entityTypeManager()
-      ->getListBuilder('node')
-      ->getStorage()
-      ->loadByProperties([
-        'type' => 'project',
-        'status' => 1,
-        'field_apartments' => $variables['result'][0]->nid,
-      ]
-      );
+    $parent_node = \Drupal::routeMatch()->getParameter('node');
 
-    $parent = reset($parent_node_results);
+    if ($parent_node && $parent_node instanceof NodeInterface) {
+      $nid = $parent_node->id();
+    }
+    else {
+      $parent_node_results = \Drupal::entityTypeManager()
+        ->getListBuilder('node')
+        ->getStorage()
+        ->loadByProperties([
+          'type' => 'project',
+          'status' => 1,
+          'field_apartments' => $variables['result'][0]->nid,
+        ]
+        );
+      $parent_node = reset($parent_node_results);
+    }
+
+    $status = Applications::get('project', $nid)
+      ->getApplicationCount(FALSE);
+
+    $parent = $parent_node;
     $price_title = $parent->field_ownership_type->entity->name->value == 'HASO' ? t('Right of occupancy payment') : t('Debt-free sales price');
     $variables['header']['field_debt_free_sales_price']['content'] = $price_title;
 
+    $forSaleState = [
+      'open_for_applications',
+      'free_for_reservations',
+    ];
+
+    $reservedState = [
+      'reserved_haso',
+      'reserved',
+      'sold',
+    ];
+
+    $upcoming = [
+      'apartment_for_sale',
+    ];
+
     foreach ($rows as $key => $row) {
       $apartmentId = (int) trim(strip_tags($row['columns']['nid']['content'][0]['field_output']['#markup']));
+      $stateOfSale = trim(strip_tags($row['columns']['field_apartment_state_of_sale']['content'][0]['field_output']['#markup']));
       $applicationCount = $status[$apartmentId] ?? 0;
 
-      $applicationCountEnum = Applications::resolveApplicationCountEnum((int) $applicationCount);
+      if (in_array($stateOfSale, $forSaleState)) {
+        $applicationCountEnum = Applications::resolveApplicationCountEnum((int) $applicationCount);
+        $variables['rows'][$key]['application_status'] = get_apartment_application_status($applicationCountEnum);
+      }
 
-      $variables['rows'][$key]['application_status'] = get_apartment_application_status($applicationCountEnum);
+      if (in_array($stateOfSale, $reservedState)) {
+        $variables['rows'][$key]['application_status'] = [
+          'status' => 'none',
+          'label' => t('Reserved'),
+        ];
+      }
+
+      if (in_array($stateOfSale, $upcoming)) {
+        $variables['rows'][$key]['application_status'] = [
+          'status' => 'none',
+          'label' => t('Not applicable yet'),
+        ];
+      }
 
       if (!$parent) {
         continue;
@@ -869,7 +911,6 @@ function format_date_to_unix_timestamp($string) {
  */
 function get_apartment_application_status($application_status) {
   $application_status_mapping = [
-    "NONE" => t('Few applicants'),
     "LOW" => t('Few applicants'),
     "MEDIUM" => t('A little applicants'),
     "HIGH" => t('A lot of applicants'),
