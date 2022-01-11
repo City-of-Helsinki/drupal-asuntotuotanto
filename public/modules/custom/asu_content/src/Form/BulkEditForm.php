@@ -97,7 +97,7 @@ class BulkEditForm extends FormBase {
     if (isset($values['project'])) {
       $url = \Drupal::urlGenerator()
         ->generateFromRoute(
-        'asu_content.bulk_edit',
+        'asu_user.bulk_edit',
         ['id' => $values['project']],
         ['absolute' => TRUE]
       );

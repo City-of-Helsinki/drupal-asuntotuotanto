@@ -22,4 +22,24 @@ asu_user.list_all:
     _controller: '\Drupal\asu_user\Controller\ListController::build'
     _title: 'Tools'
   requirements:
-    _permission: 'administer content'
+    _role: 'salesperson+administrator'
+
+asu_user.bulk_edit_empty:
+  path: '/admin/apartment/bulk-edit'
+  defaults:
+    _form: '\Drupal\asu_content\Form\BulkEditForm'
+    _title: 'Valitse kohde'
+  options:
+    _admin_route: TRUE
+  requirements:
+    _role: 'salesperson+administrator'
+
+asu_user.bulk_edit:
+  path: '/admin/apartment/bulk-edit/{id}'
+  defaults:
+    _form: '\Drupal\asu_content\Form\BulkEditForm'
+  options:
+    _admin_route: TRUE
+  requirements:
+    _role: 'salesperson+administrator'
+
