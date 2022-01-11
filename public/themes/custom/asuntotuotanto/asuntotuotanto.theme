@@ -133,6 +133,8 @@ function asuntotuotanto_preprocess_menu(&$variables) {
 
     case 'user-tools-menu':
       $items = $variables['items']['asu_user_tools_menu.user_name']['below'];
+      
+      $variables['#cache']['contexts'][] = 'user';
 
       foreach ($items as $key => $item) {
         $url = $item['url']->toString();
