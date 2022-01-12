@@ -11,7 +11,7 @@ use Psr\Http\Message\ResponseInterface;
  */
 class ApplicationLotteryResult extends Request {
   protected const METHOD = 'GET';
-  protected const PATH = '/profiles/{profile_uuid}/projects/{project_uuid}/apartment_positions';
+  protected const PATH = '/v1/profiles/me/projects/{project_uuid}/reservations';
   protected const AUTHENTICATED = TRUE;
 
   private string $profileUuid;
