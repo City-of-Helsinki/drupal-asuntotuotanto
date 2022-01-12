@@ -2,9 +2,11 @@
 
 namespace Drupal\asu_application\Controller;
 
+use Drupal\asu_api\Api\BackendApi\Request\ApplicationLotteryResult;
 use Drupal\asu_application\Entity\Application;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\node\Entity\Node;
 use Drupal\user\Entity\User;
 
 /**
@@ -19,63 +21,51 @@ class ResultController extends ControllerBase {
     $user = User::load(\Drupal::currentUser()->id());
     $applicationId = \Drupal::request()->get('application_id');
     if ($user && $applicationId) {
+
+
       $backendApi = \Drupal::service('asu_api.backendapi');
       $application = Application::load($applicationId);
 
-      if (!$application->getOwnerId() != $user->id()) {
-        // Access denied.
+      $project = Node::load($application->getProjectId());
+      if ($application->getOwnerId() != $user->id()) {
+        return new AjaxResponse([], 401);
       }
 
       try {
-        // $request = new ApplicationLotteryResult($user->uuid, $application->getProjectId());
-        // $request->setSender($user);
-        /** @var \Drupal\asu_api\Api\BackendApi\Request\ApplicationLotteryResultResponse $response */
-        // $responseContent = $backendApi->send($request)->getContent();
-        $responseContent = [
-          [
-            [
-              'apartment_id' => '343',
-              'apartment' => 'A1',
-              'lottery_position' => '3',
-              'position' => '3',
-              'status' => 'reserved',
-            ],
-            [
-              'apartment_id' => '352',
-              'apartment' => 'A10',
-              'lottery_position' => '5',
-              'position' => '4',
-              'status' => 'reserved',
-            ],
-            [
-              'apartment_id' => '356',
-              'apartment' => 'A14',
-              'lottery_position' => '5',
-              'position' => '3',
-              'status' => 'reserved',
-            ],
-            [
-              'apartment_id' => '362',
-              'apartment' => 'A20',
-              'lottery_position' => '1',
-              'position' => '1',
-              'status' => 'reserved',
-            ],
-            [
-              'apartment_id' => '365',
-              'apartment' => 'A23',
-              'lottery_position' => '2',
-              'position' => '2',
-              'status' => 'reserved',
-            ],
-          ],
-        ];
-        return new AjaxResponse($responseContent);
+
+        try {
+          $request = new ApplicationLotteryResult($user->uuid(), $project->uuid());
+          $request->setSender($user);
+
+          /** @var \Drupal\asu_api\Api\BackendApi\Request\ApplicationLotteryResultResponse $response */
+          $responseContent = $backendApi
+            ->send($request)
+            ->getContent();
+          $results = [];
+        }
+        catch(Exception $e){
+          $this->getLogger('asu_api')->critical('Exception when customer tried to access his application results: ' . $e->getMessage());
+        }
+
+        foreach ($responseContent as $result) {
+          $apartment = \Drupal::service('entity.repository')->loadEntityByUuid('node', $result['apartment_uuid']);
+          $results[] = [
+            'apartment_id' => $apartment->id(),
+            'apartment_uuid' => $result['apartment_uuid'],
+            'apartment' => $apartment->field_apartment_number->value,
+            'position' => $result['lottery_position'],
+            'current_position' => $result['queue_position'],
+            'status' => t($result['status'])
+          ];
+        }
+
+        return new AjaxResponse($results);
       }
       catch (\Exception $e) {
-
+        return new AjaxResponse(400, []);
       }
     }
+    return new AjaxResponse([], 400);
   }
 
 }
