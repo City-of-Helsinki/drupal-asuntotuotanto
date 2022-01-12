@@ -56,6 +56,7 @@ function template_preprocess_asu_application(array &$variables) {
     $apartmentData = [];
     foreach ($apartments as $apartment) {
       $apartmentData[$apartment->id()] = [
+        'id' => $apartment->id(),
         'uuid' => $apartment->uuid(),
         'number' => $apartment->field_apartment_number->value,
         'structure' => $apartment->field_apartment_structure->value,
