@@ -13,12 +13,12 @@ pattern: '[node:menu-link:parents:join-path]/[node:field_service_visible_title]'
 selection_criteria:
   964bac8b-d6fb-4654-a535-8f2e3541903f:
     id: node_type
-    bundles:
-      service: service
     negate: false
+    uuid: 964bac8b-d6fb-4654-a535-8f2e3541903f
     context_mapping:
       node: node
-    uuid: 964bac8b-d6fb-4654-a535-8f2e3541903f
+    bundles:
+      service: service
 selection_logic: and
 weight: -5
 relationships: {  }

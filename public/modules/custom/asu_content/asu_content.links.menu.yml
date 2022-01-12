@@ -1,6 +1,0 @@
-asu_content.bulk-upload:
-  title: 'Bulk upload'
-  description: 'Bulk upload images for apartments'
-  parent: system.admin_content
-  route_name: asu_content.bulk_edit_empty
-  weight: 100

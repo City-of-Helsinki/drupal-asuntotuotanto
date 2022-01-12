@@ -351,7 +351,393 @@
   {% endif %}
 
   {% if view_mode == 'full' %}
+    {% set classes = [
+      'application-form',
+      'application-form--add',
+      'wrapper',
+      'wrapper--mw-1200'
+    ] %}
+
     {# FULL VIEW MODE #}
-    <h1>{{ content['#teaser_values'].project_name }}</h1>
+    <form{{ attributes|without('class') }} {{ create_attribute({'class': classes}) }}>
+      {{ link(
+        'Go back to applications'|t,
+        "internal:/user/applications",
+        { 'class':['application-form__back-link']} )
+      }}
+      <div class="application-form__header">
+        <h1>
+          <span>
+            {{ content['#teaser_values'].project_ownership_type }}-{% trans %}application{% endtrans %}
+          </span>
+          {{ content['#teaser_values'].project_name }}
+        </h1>
+        <div class="application-form__input-elements">
+          <div class="application-form__application-information">
+            <p class="application-form__application-information-tooltip">
+              {% set application_created_at = content.application.application_created_at.0.value|date("d.m.Y") %}
+              {% trans %}
+                The application was sent on {{ application_created_at }}.
+              {% endtrans %}
+            </p>
+          </div>
+        </div>
+        <div class="application-form__input-elements">
+          <div class="application-form__application-information">
+            <p class="application-form__application-information-tooltip">
+              {% trans %}
+                The application has been submitted and can no longer be edited.
+              {% endtrans %}
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="application-form__content">
+        <section class="application-form__section">
+          <article class="application application--form-teaser">
+            <figure class="application__image">
+              <img src="{{ content['#teaser_values'].project_main_image_url }}" alt="{{ 'Image of the project'|t }}">
+            </figure>
+            <div class="application__content">
+              <h2 class="application__project-name">
+                <span class="visually-hidden">
+                  {% trans %}
+                    Project name
+                  {% endtrans %}
+                  {{ ': ' }}
+                </span>
+                {{ content['#teaser_values'].project_name }}
+              </h2>
+              <p class="application__project-address">
+                <span class="visually-hidden">
+                  {% trans %}
+                    Address
+                  {% endtrans %}
+                  {{ ': ' }}
+                </span>
+                <strong>
+                  {{ content['#teaser_values'].project_district }}{{ ',' }}
+                </strong>
+                {{ content['#teaser_values'].project_address }}
+              </p>
+              <span class="application__project-ownership-type">
+                <span class="visually-hidden">
+                  {% trans %}
+                    Ownership type
+                  {% endtrans %}
+                  {{ ': ' }}
+                </span>
+                {{ content['#teaser_values'].project_ownership_type }}
+              </span>
+              {# <ul class="application__date-information">
+                <li>
+                  {% include "@hdbt/misc/icon.twig" with {icon: 'cogwheel', label: ''} %}
+                  <span class="visually-hidden">
+                    {% trans %}
+                      Estimated completion
+                    {% endtrans %}
+                    {{ ': ' }}
+                  </span>
+                  {{ content['#teaser_values'].project_estimated_completion }}
+                </li>
+                <li>
+                  {% set date = content['#teaser_values'].application_end_time|date("d.m.Y") %}
+                  {% set time = content['#teaser_values'].application_end_time|date("H.i") %}
+                  {% include "@hdbt/misc/icon.twig" with {icon: 'check-circle-fill', label: ''} %}
+                  {% trans %}
+                    The application period is open until {{ time }} on {{ date }}
+                  {% endtrans %}
+                  {% trans %}
+                    Search closed on XXX at YYY
+                  {% endtrans %}
+                </li>
+              </ul> #}
+            </div>
+          </article>
+          {# {% include "@asuntotuotanto/form/application/custom-apartment-list.html.twig" %} #}
+          {% set apartments = content.application.apartments_data %}
+          {% set project_type = content['#teaser_values'].project_ownership_type %}
+          {% if apartments|length > 0 %}
+            <div class="application-form__apartments">
+              <h2>{% trans %}Applied for following apartments{% endtrans %}</h2>
+              <p>You can see all the apartments below.</p>
+              <ul class="application-form__apartments-list-header">
+                <li><p>{% trans %}Order{% endtrans %}</p></li>
+                <li><p>{% trans %}Apartment{% endtrans %}</p></li>
+                <li><p>{% trans %}Floor{% endtrans %}</p></li>
+                <li><p>{% trans %}Living area size{% endtrans %}</p></li>
+                {% if project_type != 'HASO' %}<li><p>{% trans %}Sales price{% endtrans %}</p></li>{% endif %}
+                <li><p>
+                  {% if project_type == 'HASO' %}
+                    {% trans %}Right of occupancy payment{% endtrans %}
+                  {% else %}
+                    {% trans %}Debt free sales price{% endtrans %}
+                  {% endif %}
+                </p></li>
+              </ul>
+              <ol class="application-form__apartments-list" id="application_form_apartments_list" aria-label="{{ 'Ordered list of apartments'|t }}">
+                {% for apartment in apartments %}
+                  {% set language = content['#teaser_values'].language %}
+                  {% set apartment_id = apartment.apartment_id %}
+                  {% set apartment_number = apartment.apartment_number.0.value|striptags|trim %}
+                  {% set apartment_structure = apartment.apartment_structure.0.value|striptags|trim|upper %}
+                  {% set apartment_floor = apartment.apartment_floor.0.value|striptags|trim %}
+                  {% set apartment_living_area = apartment.apartment_living_area.0.value|striptags|trim %}
+                  {% set apartment_sales_price = apartment.apartment_sales_price.0.value|striptags|trim %}
+                  {% set apartment_debt_free_sales_price = apartment.apartment_debt_free_sales_price.0.value|striptags|trim %}
+                  {% set apartment_right_of_occupancy_payment = apartment.apartment_right_of_occupancy_payment.0.value|striptags|trim %}
+                  <li class="application-form__apartments-item">
+                    <article class="application-form-apartment">
+                      <p class="application-form-apartment__list-position is-desktop"></p>
+                      <div class="application-form-apartment__header">
+                        <p class="application-form-apartment__list-position is-mobile">
+                          <span class="visually-hidden">{% trans %}List position<{% endtrans %}</span>
+                          <span></span>
+                        </p>
+                        <p class="application-form-apartment__apartment-number">
+                          <span class="visually-hidden">{% trans %}Apartment{% endtrans %}</span>
+                          <span>{{ apartment_number }}</span>
+                        </p>
+                        <p class="application-form-apartment__apartment-structure">
+                          <span class="visually-hidden">{% trans %}Apartment structure{% endtrans %}</span>
+                          <span>{{ apartment_structure }}</span>
+                        </p>
+                      </div>
+                      <div class="application-form-apartment__list-position-actions invisible">
+                        <button type="button" data-list-position-action-button="raise" disabled="">
+                          <span>{% trans %}Raise on the list{% endtrans %}</span>
+                        </button>
+                        <button type="button" data-list-position-action-button="lower" disabled="">
+                          <span>{% trans %}Lower on the list{% endtrans %}</span>
+                        </button>
+                      </div>
+                      <ul class="application-form-apartment__information">
+                        <li>
+                          <span>{% trans %}Floor{% endtrans %}</span><span>{{ apartment_floor }}</span>
+                        </li>
+                        <li>
+                          <span>{% trans %}Living area size{% endtrans %}</span><span>{{ apartment_living_area }} m<sup>2</sup></span>
+                        </li>
+                        {% if project_type != 'HASO' %}
+                          <li>
+                            <span>{% trans %}Sales price{% endtrans %}</span><span>{{ apartment_sales_price }} €</span>
+                          </li>
+                        {% endif %}
+                        <li>
+                          {% if project_type != 'HASO' %}
+                            <span>{% trans %}Debt free sales price{% endtrans %}</span><span>{{ apartment_debt_free_sales_price }} €</span>
+                          {% else %}
+                            <span>{% trans %}Right of occupancy payment{% endtrans %}</span><span>{{ apartment_right_of_occupancy_payment }} €</span>
+                          {% endif %}
+                        </li>
+                      </ul>
+                      <div class="application-form-apartment__actions">
+                        <a href="{{ "/#{language}/node/#{apartment_id}" }}" aria-label="Open apartment page, apartment {{ apartment_number }}">{% trans %}Open apartment page{% endtrans %}</a></div>
+                    </article>
+                  </li>
+                  <div aria-live="assertive" class="visually-hidden sr-information-box"></div>
+                {% endfor %}
+              </ol>
+            </div>
+          {% endif %}
+        </section>
+        <section class="application-form__section">
+          <h2>
+            {% trans %}
+              Applicants Social Security Number
+            {% endtrans %}
+          </h2>
+          {# <p>
+            {% trans %}
+              Last 4 characters of your ID.
+            {% endtrans %}
+          </p> #}
+          <div class="field--type-string field--name-field-personal-id field--widget-string-textfield js-form-wrapper form-wrapper">
+            <div class="js-form-item form-item js-form-type-textfield form-item-field-personal-id-0-value js-form-item-field-personal-id-0-value hds-text-input">
+              <label for="edit-field-personal-id-0-value" class="js-form-required form-required hds-text-input__label">{% trans %}Personal id{% endtrans %}</label>
+              <div class="hds-text-input__input-wrapper">
+                <input readonly class="js-text-full text-full form-text required hds-text-input__input" type="text" value="{{ content.application.personal_id.0.value }}" size="60" maxlength="5" aria-label="{% trans %} The beginning of social security number {% endtrans %} {{ content.application.personal_id.0.value }}">
+              </div>
+            </div>
+          </div>
+        </section>
+        {% if content.application.right_of_residence_number.0.value %}
+        <section class="application-form__section">
+          <h2>
+            {% trans %}
+              Right of Residence Number
+            {% endtrans %}
+          </h2>
+          <div class="field--type-string field--name-field-personal-id field--widget-string-textfield js-form-wrapper form-wrapper">
+            <div class="js-form-item form-item js-form-type-textfield form-item-field-personal-id-0-value js-form-item-field-personal-id-0-value hds-text-input">
+              <div class="hds-text-input__input-wrapper">
+                <input readonly class="js-text-full text-full form-text required hds-text-input__input" type="text" value="{{ content.application.right_of_residence_number.0.value }}" size="60" aria-label="{% trans %} Residence number is {% endtrans %} {{ content.application.right_of_residence_number.0.value }}">
+              </div>
+            </div>
+          </div>
+        </section>
+        {% endif %}
+
+        {# TODO: 'content.application.haso_owner' is for some reason not available; needs to get available somehow in asu_application.module #}
+        {% if content.application.haso_owner %}
+          <section class="application-form__section">
+            <h2>
+              {% trans %}
+                Haso owner
+              {% endtrans %}
+            </h2>
+            <div class="field--type-boolean field--name-field-haso-owner field--widget-boolean-checkbox js-form-wrapper form-wrapper" id="edit-field-haso-owner-wrapper">
+              <div class="js-form-item form-item js-form-type-checkbox form-item-field-haso-owner-value js-form-item-field-haso-owner-value hds-checkbox">
+                <input disabled type="checkbox" id="edit-field-haso-owner-value" name="field_haso_owner[value]" value="{{ content.application.haso_owner }}" checked="checked" class="form-checkbox hds-checkbox__input">
+                <label for="edit-field-haso-owner-value" class="option hds-checkbox__label">{% trans %}I currently own a HASO apartment{% endtrans %}</label>
+              </div>
+            </div>
+          </section>
+        {% endif %}
+        {# TODO: 'content.application.hitas_owner' is for some reason not available; needs to get available somehow in asu_application.module #}
+        {% if content.application.hitas_owner %}
+          <section class="application-form__section">
+            <h2>
+              {% trans %}
+                Hitas owner
+              {% endtrans %}
+            </h2>
+            <div class="field--type-boolean field--name-field-hitas-owner field--widget-boolean-checkbox js-form-wrapper form-wrapper" id="edit-field-hitas-owner-wrapper">
+              <div class="js-form-item form-item js-form-type-checkbox form-item-field-hitas-owner-value js-form-item-field-hitas-owner-value hds-checkbox">
+                <input disabled type="checkbox" id="edit-field-hitas-owner-value" name="field_hitas_owner[value]" value="{{ content.application.hitas_owner }}" checked="checked" class="form-checkbox hds-checkbox__input">
+                <label for="edit-field-hitas-owner-value" class="option hds-checkbox__label">{% trans %}I currently own a HITAS apartment{% endtrans %}</label>
+              </div>
+            </div>
+          </section>
+        {% endif %}
+        <section class="application-form__section">
+          <h2>
+            {% trans %}
+              Are you looking for an apartment with a family with children?
+            {% endtrans %}
+          </h2>
+          <p>
+            {% trans %}
+              There is a minor child in my household who is living, being born or coming to live in the same household at the time of the revision of the terms of trade. Pending adoption is also taken into account.
+            {% endtrans %}
+          </p>
+          <div class="field--type-boolean field--name-has-children field--widget-boolean-checkbox js-form-wrapper form-wrapper">
+            <div class="js-form-item form-item js-form-type-checkbox form-item-has-children-value js-form-item-has-children-value hds-checkbox">
+              {% if content.application.has_children.0.value == '1' %}
+                <input disabled type="checkbox" id="edit-has-children-value" value="{{ content.application.has_children.0.value }}" checked="checked" class="form-checkbox hds-checkbox__input">
+              {% else %}
+                <input disabled type="checkbox" id="edit-has-children-value" value="{{ content.application.has_children.0.value }}" class="form-checkbox hds-checkbox__input">
+              {% endif %}
+              <label for="edit-has-children-value" class="option hds-checkbox__label">
+                {% trans %}
+                  I have underage children who are moving in with me
+                {% endtrans %}
+              </label>
+            </div>
+          </div>
+        </section>
+        <section class="application-form__section">
+          <h2>
+            {% trans %}
+              Are you looking for an apartment with someone?
+            {% endtrans %}
+          </h2>
+          <div class="application-form__input-elements">
+            <div class="field--type-asu-applicant field--name-applicant field--widget-asu-applicant-widget js-form-wrapper form-wrapper" id="edit-applicant-wrapper">
+              <div class="js-form-item form-item js-form-type-checkbox form-item-applicant-0-has-additional-applicant js-form-item-applicant-0-has-additional-applicant hds-checkbox">
+                {% if content.application.applicant.0.first_name != null and content.application.applicant.0.last_name != null %}
+                  <input disabled type="checkbox" id="edit-applicant-0-has-additional-applicant" value="{{ content['#teaser_values'].applicant }}" checked="checked" class="form-checkbox hds-checkbox__input">
+                {% else %}
+                  <input disabled type="checkbox" id="edit-applicant-0-has-additional-applicant" value="{{ content['#teaser_values'].applicant }}" class="form-checkbox hds-checkbox__input">
+                {% endif %}
+                <label for="edit-applicant-0-has-additional-applicant" class="option hds-checkbox__label">{% trans %}Yes{% endtrans %}</label>
+              </div>
+
+              {% if content.application.applicant.0.first_name != null and content.application.applicant.0.last_name != null %}
+                <div id="applicant-wrapper" class="application-form__applicant-form">
+                  <div class="application-form__application-information">
+                    <p class="application-form__application-information-tooltip">
+                      {% trans %}
+                        This applicant cannot complete another application for the same item.</p><p>
+                        If there are more than one buyer, they must all be notified as applicants now - <strong>buyers can no longer be added afterwards</strong>. Applicant also means applicant economy (persons registered at the same address). Spouses registered at a different address are also considered as applicant households. If you want more than one person to buy an apartment, mark them all as applicants.
+                      {% endtrans %}
+                    </p>
+                  </div>
+
+                  <div class="js-form-item form-item js-form-type-textfield form-item-applicant-0-first-name js-form-item-applicant-0-first-name hds-text-input">
+                    <label for="edit-applicant-0-first-name" class="hds-text-input__label">{% trans %}First name{% endtrans %}</label>
+                    <div class="hds-text-input__input-wrapper">
+                      <input readonly type="text" id="edit-applicant-0-first-name" value="{{ content.application.applicant.0.first_name }}" size="100" maxlength="50" class="form-text hds-text-input__input">
+                    </div>
+                  </div>
+
+                  <div class="js-form-item form-item js-form-type-textfield form-item-applicant-0-last-name js-form-item-applicant-0-last-name hds-text-input">
+                    <label for="edit-applicant-0-last-name" class="hds-text-input__label">{% trans %}Last name{% endtrans %}</label>
+                    <div class="hds-text-input__input-wrapper">
+                      <input readonly type="text" id="edit-applicant-0-last-name" value="{{ content.application.applicant.0.last_name }}" size="100" maxlength="50" class="form-text hds-text-input__input">
+                    </div>
+                  </div>
+
+                  {# <div class="js-form-item form-item js-form-type-date form-item-applicant-0-date-of-birth js-form-item-applicant-0-date-of-birth hds-text-input">
+                    <label for="edit-applicant-0-date-of-birth">Date of birth</label>
+                    <div class="hds-text-input__input-wrapper">
+                      <input readonly type="date" data-drupal-date-format="Y-m-d" id="edit-applicant-0-date-of-birth" value="{{ content.application.applicant.0.date_of_birth }}" size="30" class="form-date hds-text-input__input">
+                    </div>
+                  </div> #}
+
+                  {#
+                  <div class="js-form-item form-item js-form-type-textfield form-item-applicant-0-personal-id js-form-item-applicant-0-personal-id hds-text-input">
+                    <label for="edit-applicant-0-personal-id" class="hds-text-input__label">{% trans %}Personal id{% endtrans %}</label>
+                    <div class="hds-text-input__input-wrapper">
+                      <input readonly aria-describedby="edit-applicant-0-personal-id--description" type="text" id="edit-applicant-0-personal-id" value="{{ content.application.applicant.0.personal_id }}" size="60" maxlength="5" class="form-text hds-text-input__input">
+                    </div>
+
+                    <div id="edit-applicant-0-personal-id--description" class="description hds-text-input__helper-text">
+                      {% trans %}last 5 characters{% endtrans %}
+                    </div>
+                  </div>
+                  #}
+
+                  <div class="js-form-item form-item js-form-type-textfield form-item-applicant-0-address js-form-item-applicant-0-address hds-text-input">
+                    <label for="edit-applicant-0-address" class="hds-text-input__label">{% trans %}Street address{% endtrans %}</label>
+                    <div class="hds-text-input__input-wrapper">
+                      <input readonly type="text" id="edit-applicant-0-address" value="{{ content.application.applicant.0.address }}" size="60" maxlength="99" class="form-text hds-text-input__input">
+                    </div>
+                  </div>
+
+                  <div class="js-form-item form-item js-form-type-textfield form-item-applicant-0-postal-code js-form-item-applicant-0-postal-code hds-text-input">
+                    <label for="edit-applicant-0-postal-code" class="hds-text-input__label">{% trans %}Postal code{% endtrans %}</label>
+                    <div class="hds-text-input__input-wrapper">
+                      <input readonly type="text" id="edit-applicant-0-postal-code" value="{{ content.application.applicant.0.postal_code }}" size="50" maxlength="5" class="form-text hds-text-input__input">
+                    </div>
+                  </div>
+
+                  <div class="js-form-item form-item js-form-type-textfield form-item-applicant-0-city js-form-item-applicant-0-city hds-text-input">
+                    <label for="edit-applicant-0-city" class="hds-text-input__label">{% trans %}City{% endtrans %}</label>
+                    <div class="hds-text-input__input-wrapper">
+                      <input readonly type="text" id="edit-applicant-0-city" value="{{ content.application.applicant.0.city }}" size="50" maxlength="50" class="form-text hds-text-input__input">
+                    </div>
+                  </div>
+
+                  <div class="js-form-item form-item js-form-type-textfield form-item-applicant-0-phone js-form-item-applicant-0-phone hds-text-input">
+                    <label for="edit-applicant-0-phone" class="hds-text-input__label">{% trans %}Phone number{% endtrans %}</label>
+                    <div class="hds-text-input__input-wrapper">
+                      <input readonly type="text" id="edit-applicant-0-phone" value="{{ content.application.applicant.0.phone }}" size="20" maxlength="20" class="form-text hds-text-input__input">
+                    </div>
+                  </div>
+
+                  <div class="js-form-item form-item js-form-type-email form-item-applicant-0-email js-form-item-applicant-0-email hds-text-input">
+                    <label for="edit-applicant-0-email" class="hds-text-input__label">{% trans %}Email{% endtrans %}</label>
+                    <div class="hds-text-input__input-wrapper">
+                      <input readonly type="email" id="edit-applicant-0-email" value="{{ content.application.applicant.0.email }}" size="50" maxlength="99" class="form-email hds-text-input__input">
+                    </div>
+                  </div>
+                </div>
+              {% endif %}
+            </div>
+          </div>
+        </section>
+      </div>
+    </form>
   {% endif %}
 {% endif %}

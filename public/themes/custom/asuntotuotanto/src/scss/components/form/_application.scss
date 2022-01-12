@@ -1,5 +1,5 @@
 .page--application-form {
-  background-color: #FAFAFA;
+  background-color: #fafafa;
 }
 
 .application-form {
@@ -19,7 +19,7 @@
   text-decoration: none;
 
   &:before {
-    background-image: url('../icons/angle-left.svg');
+    background-image: url("../icons/angle-left.svg");
     background-size: 100%;
     content: "";
     display: inline-block;
@@ -114,7 +114,7 @@
       flex-direction: column;
 
       &:last-of-type {
-        margin-bottom: 0
+        margin-bottom: 0;
       }
     }
 
@@ -157,7 +157,7 @@
     margin: 0;
 
     &:before {
-      background-image: url('../icons/info-circle-fill.svg');
+      background-image: url("../icons/info-circle-fill.svg");
       background-position: right;
       background-size: 24px;
       content: "";
@@ -170,7 +170,7 @@
 }
 
 .application-form__actions {
-  padding-top: $spacing-l;
+  padding-top: $spacing-xl;
 }
 
 .application-form__apartments {
@@ -208,7 +208,8 @@
     }
 
     &:nth-child(2) {
-      min-width: 152px;
+      // min-width: 152px;
+      min-width: 170px;
     }
 
     &:nth-child(3) {
@@ -227,7 +228,6 @@
   p {
     @include font-size($fontsize-body-m, 24px);
     margin: 0;
-
   }
 }
 
@@ -237,13 +237,13 @@
   list-style: none;
   counter-reset: apartment-list-counter;
 
-  > li {
+  & > li {
     counter-increment: apartment-list-counter;
     position: relative;
 
     .application-form-apartment__list-position {
       &:before {
-        content: counter(apartment-list-counter) '.';
+        content: counter(apartment-list-counter) ".";
         @include font-size($fontsize-heading-m, 29px);
         font-weight: $font-weight-bold;
 
@@ -255,15 +255,22 @@
   }
 }
 
-.application-form__apartments-item {
-  &:last-child .application-form-apartment {
-    border-bottom: 1px solid var(--color-black-20);
-  }
+.application-form-apartment__list-span {
+  margin-left: $spacing-m;
+}
+
+.application-form-apartment {
+  border-top: none;
+  border-bottom: 1px solid var(--color-black-20);
+}
+
+.application-form__apartments-list-header {
+  border-bottom: 1px solid var(--color-black-20);
 }
 
 .application-form__personal-id {
   display: flex;
-  align-items:center;
+  align-items: center;
 
   > p {
     @include font-size($fontsize-body-m, 24px);

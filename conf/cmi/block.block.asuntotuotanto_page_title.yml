@@ -19,8 +19,8 @@ plugin: page_title_block
 settings:
   id: page_title_block
   label: 'Sivun otsikko'
-  provider: core
   label_display: '0'
+  provider: core
 visibility:
   view_inclusion:
     id: view_inclusion
@@ -28,18 +28,18 @@ visibility:
     view_inclusion: {  }
   request_path_exclusion:
     id: request_path_exclusion
-    pages: ''
     negate: true
+    pages: ''
   'entity_bundle:node':
     id: 'entity_bundle:node'
+    negate: true
+    context_mapping:
+      node: '@node.node_route_context:node'
     bundles:
       apartment: apartment
       news: news
       project: project
-    negate: true
-    context_mapping:
-      node: '@node.node_route_context:node'
   request_path:
     id: request_path
-    pages: '<front>'
     negate: true
+    pages: '<front>'

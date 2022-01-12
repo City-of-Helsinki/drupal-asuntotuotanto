@@ -1,7 +1,47 @@
 uuid: b9c741aa-1567-4959-9282-5f15bf449d38
 langcode: en
 status: true
-dependencies: {  }
+dependencies:
+  config:
+    - media.type.file
+    - media.type.image
+    - media.type.remote_video
+    - node.type.apartment
+    - node.type.article
+    - node.type.landing_page
+    - node.type.news
+    - node.type.page
+    - node.type.project
+    - taxonomy.vocabulary.apartment_state_of_sale
+    - taxonomy.vocabulary.building_types
+    - taxonomy.vocabulary.construction_materials
+    - taxonomy.vocabulary.districts
+    - taxonomy.vocabulary.energy_classes
+    - taxonomy.vocabulary.faq_category
+    - taxonomy.vocabulary.faq_haso
+    - taxonomy.vocabulary.faq_hitas
+    - taxonomy.vocabulary.general_condition
+    - taxonomy.vocabulary.heating_options
+    - taxonomy.vocabulary.holding_type
+    - taxonomy.vocabulary.keywords
+    - taxonomy.vocabulary.new_development_status
+    - taxonomy.vocabulary.news_category
+    - taxonomy.vocabulary.ownership_type
+    - taxonomy.vocabulary.services
+    - taxonomy.vocabulary.site_owners
+    - taxonomy.vocabulary.states_of_sale
+    - taxonomy.vocabulary.tasks
+  module:
+    - asu_application
+    - file
+    - locale
+    - media
+    - node
+    - paragraphs
+    - paragraphs_type_permissions
+    - system
+    - taxonomy
+    - toolbar
 id: salesperson
 label: Salesperson
 weight: -6

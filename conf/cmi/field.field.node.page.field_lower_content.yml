@@ -33,7 +33,6 @@ default_value_callback: ''
 settings:
   handler: 'default:paragraph'
   handler_settings:
-    negate: 0
     target_bundles:
       text: text
       columns: columns
@@ -46,10 +45,11 @@ settings:
       cta_block: cta_block
       steps_list: steps_list
       showcase_block: showcase_block
+    negate: 0
     target_bundles_drag_drop:
       accordion:
-        enabled: true
         weight: -27
+        enabled: true
       accordion_item:
         weight: -22
         enabled: false
@@ -57,20 +57,20 @@ settings:
         weight: -21
         enabled: false
       columns:
-        enabled: true
         weight: -28
+        enabled: true
       content_cards:
-        enabled: true
         weight: -23
+        enabled: true
       cta_block:
-        enabled: true
         weight: 29
+        enabled: true
       from_library:
-        enabled: true
         weight: 21
-      gallery:
         enabled: true
+      gallery:
         weight: -25
+        enabled: true
       gallery_slide:
         weight: -20
         enabled: false
@@ -78,8 +78,8 @@ settings:
         weight: -19
         enabled: false
       image:
-        enabled: true
         weight: -26
+        enabled: true
       latest_news:
         weight: 33
         enabled: false
@@ -90,8 +90,8 @@ settings:
         weight: 35
         enabled: false
       list_of_links:
-        enabled: true
         weight: -24
+        enabled: true
       list_of_links_item:
         weight: -17
         enabled: false
@@ -105,8 +105,8 @@ settings:
         weight: 44
         enabled: false
       showcase_block:
-        enabled: true
         weight: 45
+        enabled: true
       stacked_text_blocks_with_image:
         weight: 40
         enabled: false
@@ -114,11 +114,11 @@ settings:
         weight: 41
         enabled: false
       steps_list:
-        enabled: true
         weight: 42
-      text:
         enabled: true
+      text:
         weight: -29
+        enabled: true
       text_block_with_link:
         weight: 44
         enabled: false

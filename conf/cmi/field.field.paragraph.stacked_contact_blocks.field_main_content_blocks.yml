@@ -22,10 +22,10 @@ default_value_callback: ''
 settings:
   handler: 'default:paragraph'
   handler_settings:
-    negate: 0
     target_bundles:
       contact_persons: contact_persons
       text: text
+    negate: 0
     target_bundles_drag_drop:
       accordion:
         weight: 28
@@ -46,8 +46,8 @@ settings:
         weight: 35
         enabled: false
       contact_persons:
-        enabled: true
         weight: 36
+        enabled: true
       content_cards:
         weight: 33
         enabled: false
@@ -109,8 +109,8 @@ settings:
         weight: 52
         enabled: false
       text:
-        enabled: true
         weight: 53
+        enabled: true
       text_block_with_link:
         weight: 54
         enabled: false

@@ -1,7 +1,34 @@
 uuid: fb563b72-1a8a-4ad1-ae31-dd72ff6824aa
 langcode: en
 status: true
-dependencies: {  }
+dependencies:
+  config:
+    - media.type.file
+    - media.type.image
+    - media.type.remote_video
+    - media.type.soundcloud
+    - node.type.landing_page
+    - node.type.news
+    - node.type.page
+    - taxonomy.vocabulary.faq_category
+    - taxonomy.vocabulary.faq_haso
+    - taxonomy.vocabulary.faq_hitas
+    - taxonomy.vocabulary.keywords
+    - taxonomy.vocabulary.news_category
+  module:
+    - content_translation
+    - file
+    - helfi_api_base
+    - locale
+    - media
+    - node
+    - paragraphs
+    - path
+    - scheduler
+    - system
+    - taxonomy
+    - toolbar
+    - view_unpublished
 _core:
   default_config_hash: vrZv05Y6x-5ZH874GNgfIMO8AetqjY7vB0pzfvXDtUY
 id: content_producer
@@ -72,6 +99,8 @@ permissions:
   - 'update media'
   - 'view all media revisions'
   - 'view all revisions'
+  - 'view any unpublished landing_page content'
+  - 'view any unpublished page content'
   - 'view landing_page revisions'
   - 'view news revisions'
   - 'view own unpublished content'

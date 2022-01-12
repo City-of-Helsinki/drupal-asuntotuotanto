@@ -1,3 +1,25 @@
 .is-hidden {
   display: none !important;
 }
+
+.hds-text-input__input-wrapper .hds-text-input__input:read-only {
+  -webkit-appearance: none;
+  background-color: var(--input-background-default);
+  border: var(--border-width) solid var(--input-border-color-default);
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  color: var(--input-color-default);
+  font-size: 1.125em;
+  height: var(--input-height);
+  line-height: normal;
+  padding: 0 var(--spacing-s);
+  width: 100%;
+  will-change: transform, box-shadow;
+}
+
+.is-disabled {
+  // color: currentColor;
+  cursor: not-allowed;
+  opacity: 0.5;
+  text-decoration: none;
+}

@@ -15,11 +15,11 @@ bundle: apply_for_free_apartment
 mode: default
 content:
   field_contact_person:
-    weight: 0
+    type: basic_string
     label: above
     settings: {  }
     third_party_settings: {  }
-    type: basic_string
+    weight: 0
     region: content
 hidden:
   field_apartment_information: true

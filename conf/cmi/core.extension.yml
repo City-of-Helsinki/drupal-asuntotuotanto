@@ -1,3 +1,5 @@
+_core:
+  default_config_hash: R4IF-ClDHXxblLcG0L7MgsLvfBIMAvi_skumNFQwkDc
 module:
   address: 0
   admin_toolbar: 0
@@ -81,6 +83,7 @@ module:
   helfi_languages: 0
   helfi_media: 0
   helfi_platform_config: 0
+  helfi_toc: 0
   honeypot: 0
   image: 0
   image_style_quality: 0
@@ -96,6 +99,8 @@ module:
   linkit: 0
   locale: 0
   mailsystem: 0
+  matomo: 0
+  matomo_reports: 0
   media: 0
   media_entity_soundcloud: 0
   media_library: 0
@@ -141,6 +146,7 @@ module:
   token: 0
   token_filter: 0
   toolbar: 0
+  translatable_menu_link_uri: 0
   twig_tweak: 0
   ultimate_cron: 0
   update: 0
@@ -148,6 +154,7 @@ module:
   user: 0
   user_bundle: 0
   user_registrationpassword: 0
+  view_unpublished: 0
   views_infinite_scroll: 0
   views_ui: 0
   yearonly: 0
@@ -167,5 +174,3 @@ theme:
   asu_admin: 0
   asuntotuotanto: 0
 profile: minimal
-_core:
-  default_config_hash: R4IF-ClDHXxblLcG0L7MgsLvfBIMAvi_skumNFQwkDc
