@@ -14,16 +14,27 @@ class ApplicationLotteryResult extends Request {
   protected const PATH = '/v1/profiles/me/projects/{project_uuid}/reservations';
   protected const AUTHENTICATED = TRUE;
 
+  /**
+   * Profile uuid.
+   *
+   * @var string
+   */
   private string $profileUuid;
 
   /**
-   * Uuid of the project.
+   * Project uuid.
+   *
+   * @var string
    */
-
   private string $projectUuid;
 
   /**
    * Constructor.
+   *
+   * @param string $profileUuid
+   *   User profile uuid.
+   * @param string $projectUuid
+   *   Project uuid.
    */
   public function __construct(
     string $profileUuid,

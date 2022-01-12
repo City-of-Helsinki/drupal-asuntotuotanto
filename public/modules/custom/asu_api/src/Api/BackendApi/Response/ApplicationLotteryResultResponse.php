@@ -7,7 +7,7 @@ use Drupal\asu_api\Exception\ApplicationRequestException;
 use Psr\Http\Message\ResponseInterface;
 
 /**
- *
+ * Applicatio lottery result response.
  */
 class ApplicationLotteryResultResponse extends Response {
 
@@ -28,7 +28,7 @@ class ApplicationLotteryResultResponse extends Response {
   /**
    * Get the response contents.
    */
-  public function getContent() {
+  public function getContent(): array {
     return $this->result;
   }
 
