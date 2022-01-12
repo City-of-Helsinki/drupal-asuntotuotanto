@@ -91,7 +91,7 @@ function template_preprocess_asu_application(array &$variables) {
         ->loadMultiple($application->getApartmentIds());
 
       $apartments_data = [];
-      foreach($apartments as $apartment) {
+      foreach ($apartments as $apartment) {
         $apartments_data[$apartment->id()] = [
           'apartment_id' => $apartment->id(),
           'apartment_number' => $apartment->get('field_apartment_number')->getValue(),
@@ -100,7 +100,7 @@ function template_preprocess_asu_application(array &$variables) {
           'apartment_living_area' => $apartment->get('field_living_area')->getValue(),
           'apartment_sales_price' => $apartment->get('field_sales_price')->getValue(),
           'apartment_debt_free_sales_price' => $apartment->get('field_debt_free_sales_price')->getValue(),
-          'apartment_right_of_occupancy_payment' => $apartment->get('field_right_of_occupancy_payment')->getValue()
+          'apartment_right_of_occupancy_payment' => $apartment->get('field_right_of_occupancy_payment')->getValue(),
         ];
       }
 
@@ -112,8 +112,8 @@ function template_preprocess_asu_application(array &$variables) {
         'apartments' => $application->get('apartment')->getValue(),
         'field_right_of_residence_number' => '',
         'apartments_data' => $apartments_data,
-        #'haso_owner' => $application->get('field_haso_owner')->getValue(),
-        'hitas_owner' => ''
+        // 'haso_owner' => $application->get('field_haso_owner')->getValue(),
+        'hitas_owner' => '',
       ];
 
       if ($application->hasField('field_right_of_residence_number')) {
