@@ -176,7 +176,6 @@ function asu_content_cron() {
     'status' => 1,
   ];
 
-  // Get the nodes.
   $nodes = \Drupal::entityTypeManager()
     ->getStorage('node')
     ->loadByProperties($properties);
@@ -193,6 +192,4 @@ function asu_content_cron() {
       // @todo Logging.
     }
   }
-  // @todo Logging.
-  // Log updated ids
 }
