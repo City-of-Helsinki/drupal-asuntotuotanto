@@ -127,7 +127,7 @@ class ApplicationSubscriber implements EventSubscriberInterface {
       else {
         $this->logger->critical(
           'Unable to resolve error code from response message: ' . $e->getMessage()
-              );
+        );
       }
 
     }
@@ -199,7 +199,10 @@ class ApplicationSubscriber implements EventSubscriberInterface {
       else {
         $this->logger->critical(
           'Unable to resolve error code from response message: ' . $e->getMessage()
-              );
+        );
+        $this->messenger->addError(
+          t('Illegal application error while creating application. ' . $e->getMessage())
+        );
       }
 
     }
