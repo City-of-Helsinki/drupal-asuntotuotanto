@@ -5,6 +5,7 @@ namespace Drupal\asu_application\EventSubscriber;
 use Drupal\asu_api\Api\BackendApi\Request\CreateApplicationRequest;
 use Drupal\asu_api\Api\BackendApi\BackendApi;
 use Drupal\asu_api\Api\BackendApi\Request\SalesCreateApplicationRequest;
+use Drupal\asu_api\Exception\IllegalApplicationException;
 use Drupal\asu_application\Event\ApplicationEvent;
 use Drupal\asu_application\Event\SalesApplicationEvent;
 use Drupal\Core\Messenger\MessengerTrait;
@@ -106,6 +107,30 @@ class ApplicationSubscriber implements EventSubscriberInterface {
         'User sent an application to backend successfully'
       );
     }
+    catch (IllegalApplicationException $e) {
+      $code = $e->getApiErrorCode();
+      /** @var \Drupal\asu_api\ErrorCodeService $errorCodeService */
+
+      $this->logger->info(sprintf(
+          'Illegal application error with code %s: %s',
+          $code,
+          $e->getMessage())
+      );
+
+      $errorCodeService = \Drupal::service('asu_api.error_code_service');
+      $langCode = \Drupal::languageManager()->getCurrentLanguage()->getId();
+      $message = $errorCodeService->getErrorMessageByCode($code, $langCode);
+
+      if ($message) {
+        $this->messenger->addError($message);
+      }
+      else {
+        $this->logger->critical(
+          'Unable to resolve error code from response message: ' . $e->getMessage()
+              );
+      }
+
+    }
     catch (\Exception $e) {
       $this->logger->critical(sprintf(
         'Exception while sending application of id %s: %s',
@@ -152,6 +177,30 @@ class ApplicationSubscriber implements EventSubscriberInterface {
       $application->save();
       $this->messenger()->addStatus($this->t('The application has been submitted successfully.
      You can no longer edit the application.'));
+
+    }
+    catch (IllegalApplicationException $e) {
+      $code = $e->getApiErrorCode();
+      /** @var \Drupal\asu_api\ErrorCodeService $errorCodeService */
+
+      $this->logger->info(sprintf(
+          'Illegal application error with code %s: %s',
+          $code,
+          $e->getMessage())
+      );
+
+      $errorCodeService = \Drupal::service('asu_api.error_code_service');
+      $langCode = \Drupal::languageManager()->getCurrentLanguage()->getId();
+      $message = $errorCodeService->getErrorMessageByCode($code, $langCode);
+
+      if ($message) {
+        $this->messenger->addError($message);
+      }
+      else {
+        $this->logger->critical(
+          'Unable to resolve error code from response message: ' . $e->getMessage()
+              );
+      }
 
     }
     catch (\Exception $e) {
