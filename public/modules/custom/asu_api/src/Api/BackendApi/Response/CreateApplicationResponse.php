@@ -3,7 +3,10 @@
 namespace Drupal\asu_api\Api\BackendApi\Response;
 
 use Drupal\asu_api\Api\Response;
+use Drupal\asu_api\Exception\ApiException;
 use Drupal\asu_api\Exception\ApplicationRequestException;
+use Drupal\asu_api\Exception\IllegalApplicationException;
+use Drupal\asu_api\Exception\RequestException;
 use Psr\Http\Message\ResponseInterface;
 
 /**
@@ -37,6 +40,20 @@ class CreateApplicationResponse extends Response {
   }
 
   /**
+   * Set status code.
+   */
+  public function setStatus($code) {
+    $this->status = $code;
+  }
+
+  /**
+   * Get status code.
+   */
+  public function getStatus() {
+    return $this->status;
+  }
+
+  /**
    * Create new application response from http response.
    *
    * @param \Psr\Http\Message\ResponseInterface $response
@@ -53,6 +70,31 @@ class CreateApplicationResponse extends Response {
     }
     $content = json_decode($response->getBody()->getContents(), TRUE);
     return new self($content);
+  }
+
+  /**
+   * Is request statuscode 2xx.
+   *
+   * @param \Psr\Http\Message\ResponseInterface $response
+   *   Response.
+   *
+   * @return bool
+   *   Is request 2xx.
+   *
+   * @throws \Exception
+   */
+  public static function requestOk(ResponseInterface $response): bool {
+    $code = $response->getStatusCode();
+    if ($code === 500) {
+      throw new ApiException('Backend api error: ' . $response->getBody()->getContents(), $response->getStatusCode());
+    }
+    if ($code >= 400 && $code <= 499) {
+      throw new IllegalApplicationException($response->getBody()->getContents(), $response->getStatusCode());
+    }
+    if ($code < 200 || $code > 299) {
+      throw new RequestException('Bad status code: ' . $response->getStatusCode());
+    }
+    return TRUE;
   }
 
 }

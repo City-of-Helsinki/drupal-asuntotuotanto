@@ -33,7 +33,7 @@ abstract class Response {
    * @throws \Exception
    */
   public static function requestOk(ResponseInterface $response): bool {
-    if ($response->getStatusCode() < 200 && $response->getStatusCode() > 299) {
+    if ($response->getStatusCode() < 200 || $response->getStatusCode() > 299) {
       throw new RequestException('Bad status code: ' . $response->getStatusCode());
     }
     return TRUE;
