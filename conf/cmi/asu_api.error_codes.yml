@@ -1,0 +1,6 @@
+fi:
+  1000: 'Henkilötunnuksen loppuosa ei kelpaa. Tarkistathan syntymäajan ja henkilötunnuksen loppuosan.'
+  1001: 'Sinulla tai kanssahakijalla on jo hakemus tähän kohteeseen. Sinulla saa olla vain yksi hakemus kohteeseen.'
+en:
+  1000: 'The personal identification number is invalid. Please check your date of birth and the personal identification number.'
+  1001: 'You or the person you are applying with already has applied for this project. You may only have one application per project.'
