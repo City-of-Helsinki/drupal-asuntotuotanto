@@ -60,7 +60,7 @@ class IllegalApplicationException extends \Exception {
     if (!isset($matches[0])) {
       return FALSE;
     }
-    if ((strpos($message, $matches[0]) === 0)) {
+    if (strpos($message, $matches[0]) === 0) {
       return (string) $matches[0];
     }
     return '';
