@@ -88,7 +88,10 @@ class ApplicationSubscriber implements EventSubscriberInterface {
     $entity_id = $applicationEvent->getApplicationId();
 
     /** @var \Drupal\asu_application\Entity\Application $application */
-    $application = \Drupal::entityTypeManager()->getStorage($entity_type)->load($entity_id);
+    $application = \Drupal::entityTypeManager()
+      ->getStorage($entity_type)
+      ->load($entity_id);
+
     $user = $application->getOwner();
 
     try {
@@ -102,20 +105,18 @@ class ApplicationSubscriber implements EventSubscriberInterface {
       );
       $request->setSender($user);
       $this->backendApi->send($request);
+      $application->set('field_locked', 1);
+      $application->save();
 
       $this->logger->notice(
         'User sent an application to backend successfully'
       );
+
+      $this->messenger()->addMessage(t('Your application has been received. We will contact you when all the application has been processed.'));
     }
     catch (IllegalApplicationException $e) {
       $code = $e->getApiErrorCode();
       /** @var \Drupal\asu_api\ErrorCodeService $errorCodeService */
-
-      $this->logger->info(sprintf(
-          'Illegal application error with code %s: %s',
-          $code,
-          $e->getMessage())
-      );
 
       $errorCodeService = \Drupal::service('asu_api.error_code_service');
       $langCode = \Drupal::languageManager()->getCurrentLanguage()->getId();
@@ -126,8 +127,12 @@ class ApplicationSubscriber implements EventSubscriberInterface {
       }
       else {
         $this->logger->critical(
-          'Unable to resolve error code from response message: ' . $e->getMessage()
+          'Unable to resolve error code from response message for application .' .
+          $application->id() .
+          ': ' .
+          $e->getMessage()
         );
+        $this->messenger->addError('Unfortunately we were unable to handle your application.');
       }
 
     }
@@ -139,7 +144,6 @@ class ApplicationSubscriber implements EventSubscriberInterface {
       ));
       $this->queue->createItem($application->id());
     }
-
   }
 
   /**
@@ -175,6 +179,7 @@ class ApplicationSubscriber implements EventSubscriberInterface {
 
       $application->set('field_locked', 1);
       $application->save();
+
       $this->messenger()->addStatus($this->t('The application has been submitted successfully.
      You can no longer edit the application.'));
 

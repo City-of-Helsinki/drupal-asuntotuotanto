@@ -16,15 +16,17 @@ class IllegalApplicationException extends \Exception {
    *
    * @var string
    */
-  protected string $apiErrorCode;
+  protected string $apiErrorCode = '';
 
   /**
    * Constructor.
    */
-  public function __construct($message = "", $code = 0, $previous = NULL) {
-    $this->apiErrorCode = '';
-    if ($message && $code = $this->parseApiErrorCode($message)) {
-      $this->apiErrorCode = $code;
+  public function __construct($message = "", int $code = 0, $previous = NULL) {
+    if (is_array($message) && $value = reset($message)) {
+      $message = $value;
+    }
+    if ($message && $apiErrorCode = $this->parseApiErrorCode($message)) {
+      $this->apiErrorCode = $apiErrorCode;
     }
     parent::__construct($message, $code, $previous);
   }
@@ -61,6 +63,7 @@ class IllegalApplicationException extends \Exception {
     if ((strpos($message, $matches[0]) === 0)) {
       return (string) $matches[0];
     }
+    return '';
   }
 
 }

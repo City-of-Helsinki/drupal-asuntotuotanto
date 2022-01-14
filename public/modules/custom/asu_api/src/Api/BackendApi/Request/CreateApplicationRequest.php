@@ -56,10 +56,13 @@ class CreateApplicationRequest extends Request {
       'ssn_suffix' => $this->application->field_personal_id->value,
       'has_children' => $this->application->getHasChildren(),
       'additional_applicant' => $this->getApplicant(),
-      'right_of_residence' => $this->application->field_right_of_residence_number->value,
       'project_id' => $this->projectData['uuid'],
       'apartments' => $this->getApartments(),
     ];
+
+    if ($this->application->hasField('field_right_of_residence_number')) {
+      $values['right_of_residence'] = $this->application->field_right_of_residence_number->value;
+    }
 
     return $values;
   }

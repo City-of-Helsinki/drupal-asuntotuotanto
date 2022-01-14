@@ -239,7 +239,6 @@ class ApplicationForm extends ContentEntityForm {
 
     \Drupal::service('event_dispatcher')
       ->dispatch($event, $eventName);
-    $this->entity->set('field_locked', 1);
 
     $content_entity_id = $this->entity->getEntityType()->id();
     $form_state->setRedirect("entity.{$content_entity_id}.canonical", [$content_entity_id => $this->entity->id()]);
