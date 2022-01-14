@@ -132,7 +132,7 @@ class ApplicationSubscriber implements EventSubscriberInterface {
           ': ' .
           $e->getMessage()
         );
-        $this->messenger->addError('Unfortunately we were unable to handle your application.');
+        $this->messenger->addError(t('Unfortunately we were unable to handle your application.'));
       }
 
     }
@@ -206,7 +206,7 @@ class ApplicationSubscriber implements EventSubscriberInterface {
           'Unable to resolve error code from response message: ' . $e->getMessage()
         );
         $this->messenger->addError(
-          t('Illegal application error while creating application. ' . $e->getMessage())
+          'Illegal application error while creating application. ' . $e->getMessage()
         );
       }
 
@@ -217,6 +217,9 @@ class ApplicationSubscriber implements EventSubscriberInterface {
         $application->id(),
         $e->getMessage()
       ));
+      $this->messenger->addError(
+        'Illegal application error while creating application. ' . $e->getMessage()
+      );
       $this->queue->createItem($application->id());
     }
 
