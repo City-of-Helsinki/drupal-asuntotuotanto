@@ -36,6 +36,7 @@ label: Sisällöntuottaja
 weight: 3
 is_admin: null
 permissions:
+  - 'access content'
   - 'access content overview'
   - 'access files overview'
   - 'access media overview'

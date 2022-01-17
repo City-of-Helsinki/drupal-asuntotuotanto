@@ -118,7 +118,21 @@ final class Initialize extends ResourceBase {
   private function getStaticContent(): array {
     // @todo Followed projects.
     $uid = \Drupal::currentUser()->id();
-    $config = \Drupal::config('asu_rest.static_content')->get('static_content');
+    $contents = \Drupal::config('asu_rest.static_content')->get('static_content');
+    $urls = \Drupal::config('asu_rest.static_content')->get('static_urls');
+
+    $config = [];
+    foreach($contents as $key => $content) {
+      $config[$key] = (string)t($content);
+    }
+
+    $langCode = \Drupal::languageManager()->getCurrentLanguage()->getId();
+    $urls = array_map(function($string) use ($langCode){
+      return str_replace('@lang', $langCode, $string);
+    }, $urls);
+
+    $config = array_merge($config, $urls);
+
     $config['followed_projects_page_url'] = "/user/$uid/followed_projects";
     return $config;
   }
