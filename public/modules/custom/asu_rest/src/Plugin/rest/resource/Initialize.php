@@ -122,12 +122,12 @@ final class Initialize extends ResourceBase {
     $urls = \Drupal::config('asu_rest.static_content')->get('static_urls');
 
     $config = [];
-    foreach($contents as $key => $content) {
-      $config[$key] = (string)t($content);
+    foreach ($contents as $key => $content) {
+      $config[$key] = (string) t($content);
     }
 
     $langCode = \Drupal::languageManager()->getCurrentLanguage()->getId();
-    $urls = array_map(function($string) use ($langCode){
+    $urls = array_map(function ($string) use ($langCode) {
       return str_replace('@lang', $langCode, $string);
     }, $urls);
 
