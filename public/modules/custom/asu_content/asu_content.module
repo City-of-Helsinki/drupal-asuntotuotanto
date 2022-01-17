@@ -32,8 +32,9 @@ function asu_content_help($route_name, RouteMatchInterface $route_match) {
  *
  * {@inheritdoc}
  */
-function asu_content_form_alter(&$form, $form_state) {
-  asu_content_hide_node_title($form, $form_state);
+function asu_content_form_node_form_alter(&$form, $form_state) {
+  asu_content_hide_node_title($form);
+  asu_content_show_computed_fields($form, $form_state);
 }
 
 /**
@@ -41,7 +42,7 @@ function asu_content_form_alter(&$form, $form_state) {
  *
  * {@inheritDoc}
  */
-function asu_content_hide_node_title(&$form, $form_state) {
+function asu_content_hide_node_title(&$form) {
   $forms_to_hide_title_from = [
     'node_apartment_edit_form',
     'node_apartment_form',
@@ -53,6 +54,34 @@ function asu_content_hide_node_title(&$form, $form_state) {
 
   if (isset($form['title'])) {
     $form['title']['#access'] = FALSE;
+  }
+}
+
+function asu_content_show_computed_fields(&$form, $form_state){
+  $entity = $form_state->getFormObject()->getEntity();
+  if ($entity->isNew()) {
+    return;
+  }
+
+  if (
+    $entity->hasField('field_living_area') &&
+    $entity->hasField('field_debt_free_sales_price')
+  ) {
+    $price = $entity->field_debt_free_sales_price->value;
+    $living_area = $entity->field_living_area->value;
+
+    if (!$price || !$living_area) {
+      $value = 0;
+    }
+    else {
+      if ($price == 0 || $living_area == 0) {
+        $value = 0;
+      }
+      else {
+        $value = number_format((float) $price / $living_area, 2, '.', '');
+      }
+    }
+    $form['field_debt_free_sales_price']['widget'][0]['value']['#description'] = \Drupal\Core\Field\FieldFilteredMarkup::create($value . '€/m²');
   }
 }
 
