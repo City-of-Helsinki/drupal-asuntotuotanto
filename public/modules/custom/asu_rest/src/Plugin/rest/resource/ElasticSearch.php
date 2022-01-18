@@ -150,13 +150,13 @@ class ElasticSearch extends ResourceBase {
         elseif ($isBool) {
           $baseConditionGroup->addCondition($field, $parameters->get($field), '=');
         }
-
         if (isset($value)) {
           $baseConditionGroup->addCondition($field, $value, 'IN');
         }
-
       }
     }
+
+    $baseConditionGroup->addCondition('apartment_published', 'true', '=');
 
     if (empty($parameters->get('project_state_of_sale'))) {
       $baseConditionGroup->addCondition('project_state_of_sale', ['upcoming'], 'NOT IN');
