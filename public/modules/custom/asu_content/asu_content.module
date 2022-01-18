@@ -59,34 +59,6 @@ function asu_content_hide_node_title(&$form) {
   }
 }
 
-function asu_content_show_computed_fields(&$form, $form_state){
-  $entity = $form_state->getFormObject()->getEntity();
-  if ($entity->isNew()) {
-    return;
-  }
-
-  if (
-    $entity->hasField('field_living_area') &&
-    $entity->hasField('field_debt_free_sales_price')
-  ) {
-    $price = $entity->field_debt_free_sales_price->value;
-    $living_area = $entity->field_living_area->value;
-
-    if (!$price || !$living_area) {
-      $value = 0;
-    }
-    else {
-      if ($price == 0 || $living_area == 0) {
-        $value = 0;
-      }
-      else {
-        $value = number_format((float) $price / $living_area, 2, '.', '');
-      }
-    }
-    $form['field_debt_free_sales_price']['widget'][0]['value']['#description'] = \Drupal\Core\Field\FieldFilteredMarkup::create($value . '€/m²');
-  }
-}
-
 /**
  * Show computed field on apartment node.
  */
