@@ -380,7 +380,6 @@ class ApplicationForm extends ContentEntityForm {
     $entity->set('has_children', $values['has_children']['value'] ?? 0);
     $entity->save();
 
-    #$response = new AjaxResponse($form['apartment']);
     $response = new AjaxResponse();
     $response->addCommand(
       new UpdateBuildIdCommand(
