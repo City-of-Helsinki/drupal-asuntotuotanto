@@ -150,20 +150,6 @@ function asu_content_entity_update($entity) {
       }
     }
   }
-
-  // @todo Remove when cron is running.
-  // Index instantly on testing environment.
-  if (
-    method_exists($entity, 'getType') &&
-    $entity->getType() == 'project' &&
-    getenv('APP_ENV') == 'testing'
-  ) {
-    $indexes = Index::loadMultiple();
-    foreach ($indexes as $index) {
-      $index->reindex();
-      $index->indexItems();
-    }
-  }
 }
 
 /**
