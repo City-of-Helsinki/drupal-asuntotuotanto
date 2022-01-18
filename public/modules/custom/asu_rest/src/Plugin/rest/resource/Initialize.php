@@ -123,6 +123,7 @@ final class Initialize extends ResourceBase {
 
     $config = [];
     foreach ($contents as $key => $content) {
+      // phpcs:ignore
       $config[$key] = (string) t($content);
     }
 

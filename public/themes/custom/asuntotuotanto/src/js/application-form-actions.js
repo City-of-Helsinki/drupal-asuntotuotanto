@@ -1,6 +1,13 @@
 (($, Drupal) => {
   Drupal.behaviors.applicationFormActions = {
     attach: function attach() {
+      $(document).ajaxStop(() => {
+        // Prevent add new button from staying disabled after ajax.
+        const el = $("[id^=apartment_list_select_]");
+        if (el.length > 0 && el.is(':disabled')) {
+          el.prop('disabled', false);
+        }
+      })
       const screenReaderInformationBoxElement = document.getElementsByClassName(
         "sr-information-box"
       )[0];

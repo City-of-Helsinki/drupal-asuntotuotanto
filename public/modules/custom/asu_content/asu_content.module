@@ -5,9 +5,11 @@
  * Contains asu_content.module.
  */
 
+use Drupal\Core\Field\FieldFilteredMarkup;
 use Drupal\asu_content\ProjectUpdater;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\node\NodeForm;
 use Drupal\node\Entity\Node;
 use Drupal\search_api\Entity\Index;
 
@@ -32,8 +34,9 @@ function asu_content_help($route_name, RouteMatchInterface $route_match) {
  *
  * {@inheritdoc}
  */
-function asu_content_form_alter(&$form, $form_state) {
+function asu_content_form_node_form_alter(&$form, $form_state) {
   asu_content_hide_node_title($form, $form_state);
+  asu_content_show_computed_fields($form, $form_state);
 }
 
 /**
@@ -53,6 +56,37 @@ function asu_content_hide_node_title(&$form, $form_state) {
 
   if (isset($form['title'])) {
     $form['title']['#access'] = FALSE;
+  }
+}
+
+/**
+ * Show computed field on apartment node.
+ */
+function asu_content_show_computed_fields(&$form, $form_state) {
+  if ($form_state->getFormObject() instanceof NodeForm) {
+    $entity = $form_state->getFormObject()->getEntity();
+    if ($entity->isNew()) {
+      return;
+    }
+    if (
+      $entity->hasField('field_living_area') &&
+      $entity->hasField('field_debt_free_sales_price')
+    ) {
+      if (
+        !$entity->field_living_area->value ||
+        !$entity->field_debt_free_sales_price
+      ) {
+        return;
+      }
+
+      $price = $entity->field_debt_free_sales_price->value;
+      $living_area = $entity->field_living_area->value;
+
+      if ($price && $price != 0 && $living_area && $living_area != 0) {
+        $value = number_format((float) $price / $living_area, 2, '.', '');
+        $form['field_debt_free_sales_price']['widget'][0]['value']['#description'] = FieldFilteredMarkup::create($value . ' €/m²');
+      }
+    }
   }
 }
 
