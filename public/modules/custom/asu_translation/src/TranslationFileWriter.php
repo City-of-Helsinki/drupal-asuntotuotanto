@@ -50,7 +50,7 @@ class TranslationFileWriter {
    */
   public function writePoFile(array $fields = []) {
     $translations = $this->getFieldTranslations($fields);
-    $this->doWriteTranslationFiles($translations);
+    // $this->doWriteTranslationFiles($translations);
   }
 
   /**

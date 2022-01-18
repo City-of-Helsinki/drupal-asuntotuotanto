@@ -6,5 +6,5 @@ static_content:
   haso_instruction_text_mobile: 'How applying for haso apartments works ?'
   haso_instruction_icon_text: Instructions
 static_urls:
-  hitas_instruction_url: "/@lang/oppaat/hitas"
-  haso_instruction_url: "/@lang/oppaat/haso"
+  hitas_instruction_url: /@lang/oppaat/hitas
+  haso_instruction_url: /@lang/oppaat/haso
