@@ -5,9 +5,11 @@
  * Contains asu_content.module.
  */
 
+use Drupal\Core\Field\FieldFilteredMarkup;
 use Drupal\asu_content\ProjectUpdater;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\node\NodeForm;
 use Drupal\node\Entity\Node;
 use Drupal\search_api\Entity\Index;
 
@@ -86,6 +88,37 @@ function asu_content_show_computed_fields(&$form, $form_state){
 }
 
 /**
+ * Show computed field on apartment node.
+ */
+function asu_content_show_computed_fields(&$form, $form_state) {
+  if ($form_state->getFormObject() instanceof NodeForm) {
+    $entity = $form_state->getFormObject()->getEntity();
+    if ($entity->isNew()) {
+      return;
+    }
+    if (
+      $entity->hasField('field_living_area') &&
+      $entity->hasField('field_debt_free_sales_price')
+    ) {
+      if (
+        !$entity->field_living_area->value ||
+        !$entity->field_debt_free_sales_price
+      ) {
+        return;
+      }
+
+      $price = $entity->field_debt_free_sales_price->value;
+      $living_area = $entity->field_living_area->value;
+
+      if ($price && $price != 0 && $living_area && $living_area != 0) {
+        $value = number_format((float) $price / $living_area, 2, '.', '');
+        $form['field_debt_free_sales_price']['widget'][0]['value']['#description'] = FieldFilteredMarkup::create($value . ' €/m²');
+      }
+    }
+  }
+}
+
+/**
  * Implements hook_entity_presave().
  */
 function asu_content_entity_presave(EntityInterface $entity) {
@@ -111,9 +144,11 @@ function asu_content_entity_presave(EntityInterface $entity) {
       // When sold, unpublish apartment.
       // Unpublishing removes apartment from elasticsearch.
       if ($entity->isPublished()) {
-        // Get the id of sold state.
         if ($entity->field_apartment_state_of_sale->target_id == 'sold') {
           $entity->setUnpublished();
+          $entity->set('field_publish_on_oikotie', 0);
+          $entity->set('field_publish_on_etuovi', 0);
+
           \Drupal::messenger()->addMessage(
             t("Apartment @title was sold and is now unpublished.",
               ['@title' => $entity->title->value]
@@ -141,20 +176,6 @@ function asu_content_entity_update($entity) {
       if ($node->bundle() == 'apartment') {
         $node->save();
       }
-    }
-  }
-
-  // @todo Remove when cron is running.
-  // Index instantly on testing environment.
-  if (
-    method_exists($entity, 'getType') &&
-    $entity->getType() == 'project' &&
-    getenv('APP_ENV') == 'testing'
-  ) {
-    $indexes = Index::loadMultiple();
-    foreach ($indexes as $index) {
-      $index->reindex();
-      $index->indexItems();
     }
   }
 }

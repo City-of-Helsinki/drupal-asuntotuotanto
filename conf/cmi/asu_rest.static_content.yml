@@ -2,8 +2,9 @@ static_content:
   hitas_instruction_text: 'How applying for hitas apartments works ? What is required from the applicant ? Read our buyers guide for Hitas apartments before proceeding with the application.'
   hitas_instruction_text_mobile: 'How applying for hitas apartments works ?'
   hitas_instruction_icon_text: Instructions
-  hitas_instruction_url: /oppaat/hitas
   haso_instruction_text: 'How applying for haso apartments works ? What is required from the applicant ? Read our buyers guide for haso apartments before proceeding with the application.'
   haso_instruction_text_mobile: 'How applying for haso apartments works ?'
   haso_instruction_icon_text: Instructions
-  haso_instruction_url: /oppaat/haso
+static_urls:
+  hitas_instruction_url: /@lang/oppaat/hitas
+  haso_instruction_url: /@lang/oppaat/haso

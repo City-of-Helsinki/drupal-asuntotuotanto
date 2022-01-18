@@ -7,6 +7,7 @@ use Drupal\asu_application\Event\ApplicationEvent;
 use Drupal\asu_application\Event\SalesApplicationEvent;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\RedirectCommand;
+use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Ajax\UpdateBuildIdCommand;
 use Drupal\Core\Entity\ContentEntityForm;
 use Drupal\Core\Form\FormStateInterface;
@@ -378,12 +379,16 @@ class ApplicationForm extends ContentEntityForm {
     $entity->set('has_children', $values['has_children']['value'] ?? 0);
     $entity->save();
 
-    $response = new AjaxResponse($form['apartment']);
+    $response = new AjaxResponse();
     $response->addCommand(
       new UpdateBuildIdCommand(
         $form['#build_id_old'],
         $form['#build_id']
-      )
+      ),
+      new ReplaceCommand(
+        '#edit-apartment-wrapper',
+        $form['apartment']
+      ),
     );
     return $response;
   }

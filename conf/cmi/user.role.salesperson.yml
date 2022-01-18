@@ -39,9 +39,11 @@ dependencies:
     - node
     - paragraphs
     - paragraphs_type_permissions
+    - path
     - system
     - taxonomy
     - toolbar
+    - view_unpublished
 id: salesperson
 label: Salesperson
 weight: -6
@@ -57,6 +59,7 @@ permissions:
   - 'administer applications'
   - 'administer menu'
   - 'administer nodes'
+  - 'administer url aliases'
   - 'administer users'
   - 'bypass node access'
   - 'bypass paragraphs type content access'
@@ -119,6 +122,7 @@ permissions:
   - 'create terms in site_owners'
   - 'create terms in states_of_sale'
   - 'create terms in tasks'
+  - 'create url aliases'
   - 'delete own apartment content'
   - 'delete own article content'
   - 'delete own file media'
@@ -241,6 +245,13 @@ permissions:
   - 'update paragraph content steps_list'
   - 'update paragraph content text'
   - 'update paragraph content text_block_with_link'
+  - 'view any unpublished apartment content'
+  - 'view any unpublished article content'
+  - 'view any unpublished content'
+  - 'view any unpublished landing_page content'
+  - 'view any unpublished news content'
+  - 'view any unpublished page content'
+  - 'view any unpublished project content'
   - 'view own unpublished content'
   - 'view own unpublished media'
   - 'view paragraph content accordion'
