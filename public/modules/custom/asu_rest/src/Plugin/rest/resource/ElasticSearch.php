@@ -156,6 +156,7 @@ class ElasticSearch extends ResourceBase {
       }
     }
 
+    $baseConditionGroup->addCondition('project_published', 'true', '=');
     $baseConditionGroup->addCondition('apartment_published', 'true', '=');
 
     if (empty($parameters->get('project_state_of_sale'))) {

@@ -4,46 +4,46 @@ status: true
 dependencies:
   config:
     - field.storage.node.field_additional_information
+    - field.storage.node.field_floor_max
     - field.storage.node.field_apartment_number
     - field.storage.node.field_apartment_state_of_sale
     - field.storage.node.field_apartment_structure
+    - field.storage.node.field_right_of_occupancy_payment
+    - field.storage.node.field_has_balcony
     - field.storage.node.field_balcony_description
     - field.storage.node.field_bathroom_appliances
-    - field.storage.node.field_condition
     - field.storage.node.field_debt_free_sales_price
     - field.storage.node.field_financing_fee
     - field.storage.node.field_floor
-    - field.storage.node.field_floor_max
     - field.storage.node.field_floorplan
-    - field.storage.node.field_has_apartment_sauna
-    - field.storage.node.field_has_balcony
-    - field.storage.node.field_has_terrace
-    - field.storage.node.field_has_yard
+    - field.storage.node.field_condition
     - field.storage.node.field_kitchen_appliances
+    - field.storage.node.field_right_of_occupancy_fee
+    - field.storage.node.field_right_of_occupancy_deposit
     - field.storage.node.field_living_area
-    - field.storage.node.field_loan_share
     - field.storage.node.field_maintenance_fee
+    - field.storage.node.field_room_count
     - field.storage.node.field_other_fees
     - field.storage.node.field_parking_fee
     - field.storage.node.field_parking_fee_explanation
     - field.storage.node.field_publish_on_etuovi
     - field.storage.node.field_publish_on_oikotie
-    - field.storage.node.field_right_of_occupancy_deposit
-    - field.storage.node.field_right_of_occupancy_fee
-    - field.storage.node.field_right_of_occupancy_payment
-    - field.storage.node.field_room_count
     - field.storage.node.field_sales_price
+    - field.storage.node.field_has_apartment_sauna
     - field.storage.node.field_services_description
+    - field.storage.node.field_loan_share
     - field.storage.node.field_showing_time
     - field.storage.node.field_storage_description
+    - field.storage.node.field_has_terrace
     - field.storage.node.field_view_description
     - field.storage.node.field_water_fee
     - field.storage.node.field_water_fee_explanation
+    - field.storage.node.field_has_yard
     - search_api.server.asuntotuotanto
   module:
-    - computed_field_plugin
     - asu_elastic
     - node
+    - computed_field_plugin
     - search_api
 id: apartment
 name: Apartment
@@ -79,6 +79,14 @@ field_settings:
     dependencies:
       config:
         - field.storage.node.field_apartment_number
+  apartment_published:
+    label: Julkaistu
+    datasource_id: 'entity:node'
+    property_path: status
+    type: boolean
+    dependencies:
+      module:
+        - node
   apartment_state_of_sale:
     label: 'Apartment state of sale'
     datasource_id: 'entity:node'
@@ -496,6 +504,11 @@ field_settings:
     datasource_id: 'entity:node'
     property_path: 'search_api_reverse_entity_references_node__field_apartments:field_publication_start_time'
     type: object
+  project_published:
+    label: 'Project status'
+    datasource_id: 'entity:node'
+    property_path: 'search_api_reverse_entity_references_node__field_apartments:status'
+    type: boolean
   project_realty_id:
     label: 'Realty ID'
     datasource_id: 'entity:node'
