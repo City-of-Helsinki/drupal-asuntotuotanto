@@ -146,12 +146,12 @@ final class Initialize extends ResourceBase {
 
     $districts = $this->getDistrictsByProjectOwnershipType();
     $responseData['project_district_hitas'] = [
-      'label' => (string)$this->t('Districts'),
+      'label' => (string) $this->t('Districts'),
       'items' => $districts['hitas'],
       'suffix' => NULL,
     ];
     $responseData['project_district_haso'] = [
-      'label' => (string)$this->t('Districts'),
+      'label' => (string) $this->t('Districts'),
       'items' => $districts['haso'],
       'suffix' => NULL,
     ];
