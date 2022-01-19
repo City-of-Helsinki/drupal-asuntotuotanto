@@ -4,74 +4,16 @@ declare(strict_types = 1);
 
 namespace Drupal\Tests\asu_elastic\Functional;
 
-use Drupal\KernelTests\AssertLegacyTrait;
 use Drupal\node\NodeInterface;
 use Drupal\taxonomy\Entity\Vocabulary;
-use Drupal\Tests\RandomGeneratorTrait;
-use Drupal\Tests\UiHelperTrait;
-use PHPUnit\Framework\TestCase;
-use weitzman\DrupalTestTraits\DrupalTrait;
-use weitzman\DrupalTestTraits\Entity\NodeCreationTrait;
-use weitzman\DrupalTestTraits\Entity\TaxonomyCreationTrait;
-use weitzman\DrupalTestTraits\Entity\UserCreationTrait;
-use weitzman\DrupalTestTraits\GoutteTrait;
+use weitzman\DrupalTestTraits\ExistingSiteBase;
 
 /**
  * Test elasticsearch indexing.
  *
  * @group asu_elastic
  */
-final class IndexingTest extends TestCase {
-
-  use DrupalTrait;
-  use GoutteTrait;
-  use NodeCreationTrait;
-  use UserCreationTrait;
-  use TaxonomyCreationTrait;
-  use UiHelperTrait;
-
-  // The entity creation traits need this.
-  use RandomGeneratorTrait;
-
-  // Core is still using this in role creation, so it must be included here when
-  // using the UserCreationTrait.
-  use AssertLegacyTrait;
-
-  /**
-   * The database prefix of this test run.
-   *
-   * @var string
-   */
-  protected $databasePrefix;
-
-  /**
-   * The base URL.
-   *
-   * @var string
-   */
-  protected $baseUrl = 'http://localhost:8000';
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function setUp(): void {
-    parent::setUp();
-    $this->setupDrupal();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function tearDown(): void {
-    parent::tearDown();
-    $this->tearDownDrupal();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function prepareRequest() {
-  }
+final class IndexingTest extends ExistingSiteBase {
 
   /**
    * Make sure indexed data is in correct format.
