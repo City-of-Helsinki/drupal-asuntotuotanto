@@ -4,16 +4,76 @@ declare(strict_types = 1);
 
 namespace Drupal\Tests\asu_elastic\Functional;
 
+use Drupal\KernelTests\AssertLegacyTrait;
 use Drupal\node\NodeInterface;
 use Drupal\taxonomy\Entity\Vocabulary;
-use weitzman\DrupalTestTraits\ExistingSiteBase;
+use Drupal\Tests\RandomGeneratorTrait;
+use Drupal\Tests\UiHelperTrait;
+use PHPUnit\Framework\TestCase;
+use weitzman\DrupalTestTraits\DrupalTrait;
+use weitzman\DrupalTestTraits\Entity\NodeCreationTrait;
+use weitzman\DrupalTestTraits\Entity\TaxonomyCreationTrait;
+use weitzman\DrupalTestTraits\Entity\UserCreationTrait;
+use weitzman\DrupalTestTraits\GoutteTrait;
 
 /**
  * Test elasticsearch indexing.
  *
  * @group asu_elastic
  */
-final class IndexingTest extends ExistingSiteBase {
+final class IndexingTest extends TestCase
+{
+
+  use DrupalTrait;
+  use GoutteTrait;
+  use NodeCreationTrait;
+  use UserCreationTrait;
+  use TaxonomyCreationTrait;
+  use UiHelperTrait;
+
+  // The entity creation traits need this.
+  use RandomGeneratorTrait;
+
+  // Core is still using this in role creation, so it must be included here when
+  // using the UserCreationTrait.
+  use AssertLegacyTrait;
+
+  /**
+   * The database prefix of this test run.
+   *
+   * @var string
+   */
+  protected $databasePrefix;
+
+  /**
+   * The base URL.
+   *
+   * @var string
+   */
+  protected $baseUrl;
+
+  protected function setUp()
+  {
+    parent::setUp();
+    $this->setupDrupal();
+  }
+
+  /**
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   */
+  public function tearDown()
+  {
+    parent::tearDown();
+    $this->tearDownDrupal();
+  }
+
+  /**
+   * Override \Drupal\Tests\UiHelperTrait::prepareRequest since it generates
+   * an error, and does nothing useful for DTT. @see https://www.drupal.org/node/2246725.
+   */
+  protected function prepareRequest()
+  {
+  }
 
   /**
    * Make sure indexed data is in correct format.
