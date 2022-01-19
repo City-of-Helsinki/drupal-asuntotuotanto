@@ -49,8 +49,8 @@ jobs:
       - name: Install Drupal
         run: php -d sendmail_path=$(which true); vendor/bin/drush --yes -v site-install --existing-config --db-url="$SIMPLETEST_DB"
 
-      #- name: Run PHPUnit tests
-        #run: |
-          #vendor/bin/drush runserver $SIMPLETEST_BASE_URL > /dev/null 2>&1 &
-          #chromedriver --port=4444 > /dev/null 2>&1 &
-          #vendor/bin/phpunit -c $GITHUB_WORKSPACE/phpunit.xml.dist --verbose
+      - name: Run PHPUnit tests
+        run: |
+          vendor/bin/drush runserver $SIMPLETEST_BASE_URL > /dev/null 2>&1 &
+          chromedriver --port=4444 > /dev/null 2>&1 &
+          vendor/bin/phpunit -c $GITHUB_WORKSPACE/phpunit.xml.dist --verbose
