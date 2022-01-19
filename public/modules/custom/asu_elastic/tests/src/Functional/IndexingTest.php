@@ -49,7 +49,7 @@ final class IndexingTest extends TestCase {
    *
    * @var string
    */
-  protected $baseUrl;
+  protected $baseUrl = 'http://localhost:8000';
 
   /**
    * {@inheritdoc}
