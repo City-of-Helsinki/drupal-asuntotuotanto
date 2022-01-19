@@ -28,7 +28,7 @@ final class IndexingTest extends ExistingSiteBase {
     /** @var \Drupal\search_api\Entity\Server $server */
     $server = $index->getServerInstance();
 
-    $elastic_url = Settings::get('ASU_ELASTICSEARCH_ADDRESS');
+    $elastic_url = 'http://elastic:9200/_search';
 
     /** @var \GuzzleHttp\ClientInterface $client */
     $client = $this->container->get('http_client');
