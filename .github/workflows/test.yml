@@ -34,7 +34,7 @@ jobs:
 
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/city-of-helsinki/drupal-php-docker:8.0
+      image: ghcr.io/city-of-helsinki/drupal-php-docker:8.0-alpine
 
     steps:
       - uses: actions/checkout@v2
