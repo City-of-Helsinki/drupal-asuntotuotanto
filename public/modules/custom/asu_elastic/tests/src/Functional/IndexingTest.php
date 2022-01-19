@@ -21,8 +21,7 @@ use weitzman\DrupalTestTraits\GoutteTrait;
  *
  * @group asu_elastic
  */
-final class IndexingTest extends TestCase
-{
+final class IndexingTest extends TestCase {
 
   use DrupalTrait;
   use GoutteTrait;
@@ -52,8 +51,10 @@ final class IndexingTest extends TestCase
    */
   protected $baseUrl;
 
-  protected function setUp()
-  {
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp(): void {
     parent::setUp();
     $this->setupDrupal();
   }
@@ -61,8 +62,7 @@ final class IndexingTest extends TestCase
   /**
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
-  public function tearDown()
-  {
+  public function tearDown(): void {
     parent::tearDown();
     $this->tearDownDrupal();
   }
@@ -71,8 +71,7 @@ final class IndexingTest extends TestCase
    * Override \Drupal\Tests\UiHelperTrait::prepareRequest since it generates
    * an error, and does nothing useful for DTT. @see https://www.drupal.org/node/2246725.
    */
-  protected function prepareRequest()
-  {
+  protected function prepareRequest() {
   }
 
   /**
