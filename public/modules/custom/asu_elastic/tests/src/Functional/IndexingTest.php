@@ -5,7 +5,6 @@ declare(strict_types = 1);
 namespace Drupal\Tests\asu_elastic\Functional;
 
 use Drupal\node\NodeInterface;
-use Drupal\search_api\Entity\Index;
 use Drupal\taxonomy\Entity\Vocabulary;
 use weitzman\DrupalTestTraits\ExistingSiteBase;
 
@@ -20,12 +19,9 @@ final class IndexingTest extends ExistingSiteBase {
    * Make sure indexed data is in correct format.
    */
   public function testElasticSearchIndexing() {
-    $index = Index::load('apartment');
-    $index->clear();
-
-    /** @var \Drupal\search_api\Entity\Server $server */
-    $server = $index->getServerInstance();
-
+    // $index = Index::load('apartment');
+    // $index->clear();
+    // $server = $index->getServerInstance();
     // $query = $index->query();
     // $query->range(0, 10000);
     // $result = $query->execute();
@@ -50,11 +46,9 @@ final class IndexingTest extends ExistingSiteBase {
 
     sleep(1);
 
-    $server->getBackend()->updateIndex($index);
-
-    $dataSource = $index->getDataSourceIds();
-    $index->indexItems(-1, reset($dataSource));
-
+    // $server->getBackend()->updateIndex($index);
+    // $dataSource = $index->getDataSourceIds();
+    // $index->indexItems(-1, reset($dataSource));
     sleep(1);
 
     /*
