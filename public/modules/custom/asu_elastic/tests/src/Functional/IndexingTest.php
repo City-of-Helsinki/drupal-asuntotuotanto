@@ -4,7 +4,6 @@ declare(strict_types = 1);
 
 namespace Drupal\Tests\asu_elastic\Functional;
 
-use Drupal\Core\Site\Settings;
 use Drupal\node\NodeInterface;
 use Drupal\search_api\Entity\Index;
 use Drupal\taxonomy\Entity\Vocabulary;
