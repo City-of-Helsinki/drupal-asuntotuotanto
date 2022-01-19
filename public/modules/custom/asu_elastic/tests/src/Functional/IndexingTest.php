@@ -23,15 +23,21 @@ final class IndexingTest extends ExistingSiteBase {
     $index = Index::load('apartment');
     $index->clear();
 
-    $index->getServerId();
+    // $index->getServerId();
     /** @var \Drupal\search_api\Entity\Server $server */
     $server = $index->getServerInstance();
 
-    $elastic_url = 'http://elastic:9200/_search';
+    #$elastic_url = 'http://elastic:9200/_search';
 
     /** @var \GuzzleHttp\ClientInterface $client */
-    $client = $this->container->get('http_client');
-    $result = json_decode($client->request('GET', $elastic_url)->getBody()->getContents(), TRUE);
+    #$client = $this->container->get('http_client');
+    #$result = json_decode($client->request('GET', $elastic_url)->getBody()->getContents(), TRUE);
+
+    # $result =
+
+    $query = $index->query()->execute();
+    $query->range(0, 10000);
+    $result = $query->execute();
 
     $this->assertArrayHasKey('hits', $result);
     $this->assertEmpty($result['hits']['hits']);
@@ -59,12 +65,16 @@ final class IndexingTest extends ExistingSiteBase {
 
     sleep(1);
 
-    $new_result = json_decode($client->request('GET', $elastic_url)->getBody()->getContents(), TRUE);
+    $query2 = $index->query();
+    $query2->range(0, 10000);
+    $result2 = $query2->execute();
+
+    #$new_result = json_decode($client->request('GET', $elastic_url)->getBody()->getContents(), TRUE);
 
     // We have hits.
-    $this->assertNotEmpty($new_result['hits']['hits']);
+    $this->assertNotEmpty($result2['hits']['hits']);
 
-    $data = $new_result['hits']['hits'][0]['_source'];
+    $data = $result2['hits']['hits'][0]['_source'];
 
     // Single values should not be inside array.
     $this->assertIsNotArray($data['title']);
