@@ -35,7 +35,7 @@ final class IndexingTest extends ExistingSiteBase {
 
     // $result =
 
-    $query = $index->query()->execute();
+    $query = $index->query();
     $query->range(0, 10000);
     $result = $query->execute();
 
