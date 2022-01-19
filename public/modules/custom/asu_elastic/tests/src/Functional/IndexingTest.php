@@ -29,7 +29,6 @@ final class IndexingTest extends ExistingSiteBase {
     // $query = $index->query();
     // $query->range(0, 10000);
     // $result = $query->execute();
-
     $result = ['hits' => ['hits' => []]];
 
     $this->assertArrayHasKey('hits', $result);
@@ -80,7 +79,7 @@ final class IndexingTest extends ExistingSiteBase {
 
     $this->assertIsNotArray($data['project_virtual_presentation_url']);
     $this->assertIsString($data['project_virtual_presentation_url']);
-    */
+     */
   }
 
   /**
