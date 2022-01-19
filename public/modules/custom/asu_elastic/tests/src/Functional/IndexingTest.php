@@ -54,6 +54,7 @@ final class IndexingTest extends TestCase {
    */
   protected function setUp(): void {
     parent::setUp();
+    $this->baseUrl = 'http://127.0.0.1:8080';
     $this->setupDrupal();
   }
 
