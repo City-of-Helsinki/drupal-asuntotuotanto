@@ -23,17 +23,8 @@ final class IndexingTest extends ExistingSiteBase {
     $index = Index::load('apartment');
     $index->clear();
 
-    // $index->getServerId();
     /** @var \Drupal\search_api\Entity\Server $server */
     $server = $index->getServerInstance();
-
-    //$elastic_url = 'http://elastic:9200/_search';
-
-    /** @var \GuzzleHttp\ClientInterface $client */
-    //$client = $this->container->get('http_client');
-    //$result = json_decode($client->request('GET', $elastic_url)->getBody()->getContents(), TRUE);
-
-    // $result =
 
     $query = $index->query();
     $query->range(0, 10000);
@@ -69,9 +60,6 @@ final class IndexingTest extends ExistingSiteBase {
     $query2->range(0, 10000);
     $result2 = $query2->execute();
 
-    // $new_result = json_decode($client->request('GET', $elastic_url)->getBody()->getContents(), TRUE);
-
-    // We have hits.
     $this->assertNotEmpty($result2['hits']['hits']);
 
     $data = $result2['hits']['hits'][0]['_source'];
