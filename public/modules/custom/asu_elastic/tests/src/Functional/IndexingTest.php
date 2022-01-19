@@ -50,6 +50,22 @@ final class IndexingTest extends TestCase {
   protected $baseUrl;
 
   /**
+   * {@inheritdoc}
+   */
+  protected function setUp(): void {
+    parent::setUp();
+    $this->setupDrupal();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function tearDown(): void {
+    parent::tearDown();
+    $this->tearDownDrupal();
+  }
+
+  /**
    * Make sure indexed data is in correct format.
    */
   public function testElasticSearchIndexing() {
