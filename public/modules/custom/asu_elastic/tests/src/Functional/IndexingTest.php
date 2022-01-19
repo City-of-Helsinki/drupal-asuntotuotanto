@@ -60,7 +60,7 @@ final class IndexingTest extends TestCase {
   }
 
   /**
-   * @throws \Drupal\Core\Entity\EntityStorageException
+   * {@inheritdoc}
    */
   public function tearDown(): void {
     parent::tearDown();
@@ -68,8 +68,7 @@ final class IndexingTest extends TestCase {
   }
 
   /**
-   * Override \Drupal\Tests\UiHelperTrait::prepareRequest since it generates
-   * an error, and does nothing useful for DTT. @see https://www.drupal.org/node/2246725.
+   * {@inheritdoc}
    */
   protected function prepareRequest() {
   }
