@@ -4,7 +4,6 @@ declare(strict_types = 1);
 
 namespace Drupal\Tests\asu_elastic\Functional;
 
-use Drupal\Core\Site\Settings;
 use Drupal\node\NodeInterface;
 use Drupal\search_api\Entity\Index;
 use Drupal\taxonomy\Entity\Vocabulary;
@@ -32,14 +31,6 @@ final class IndexingTest extends ExistingSiteBase {
     $query->range(0, 10000);
     $result = $query->execute();
 
-    // $elastic_url = Settings::get('ASU_ELASTICSEARCH_ADDRESS');
-
-    // $client = $this->container->get('http_client');
-    // $result = json_decode($client->request('GET', $elastic_url)->getBody()->getContents(), TRUE);
-
-    // $this->assertArrayHasKey('hits', $result);
-    // $this->assertEmpty($result['hits']['hits']);
-
     $this->assertEmpty($result);
 
     $apartment = $this->createNode($this->apartmentData());
@@ -64,8 +55,6 @@ final class IndexingTest extends ExistingSiteBase {
     $index->indexItems(-1, reset($dataSource));
 
     sleep(1);
-
-    //$new_result = json_decode($client->request('GET', $elastic_url)->getBody()->getContents(), TRUE);
 
     $query2 = $index->query();
     $query2->range(0, 10000);
