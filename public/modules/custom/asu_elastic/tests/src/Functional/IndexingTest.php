@@ -32,7 +32,7 @@ final class IndexingTest extends ExistingSiteBase {
     /** @var \Drupal\elasticsearch_connector\Entity\Index $index */
     $index = reset($indexes);
 
-    /*
+
     $index->clear();
     $query = $index->query();
     $query->range(0, 10000);
@@ -85,7 +85,6 @@ final class IndexingTest extends ExistingSiteBase {
 
     $this->assertIsNotArray($data['project_virtual_presentation_url']);
     $this->assertIsString($data['project_virtual_presentation_url']);
-     */
   }
 
   /**
