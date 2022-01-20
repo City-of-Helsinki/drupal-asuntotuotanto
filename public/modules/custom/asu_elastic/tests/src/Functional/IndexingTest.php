@@ -40,12 +40,6 @@ final class IndexingTest extends ExistingSiteBase {
 
     $this->assertNotEmpty($result);
 
-    /*
-    $index->clear();
-    $query = $index->query();
-    $query->range(0, 10000);
-    $result = $query->execute();
-
     $this->assertEmpty($result);
 
     $apartment = $this->createNode($this->apartmentData());
@@ -71,9 +65,10 @@ final class IndexingTest extends ExistingSiteBase {
 
     sleep(1);
 
-    $query2 = $index->query();
-    $query2->range(0, 10000);
-    $new_result = $query->execute();
+    $new_result = json_decode(
+      $client->request('GET', 'http://elastic:9200/_search')->getBody()->getContents(),
+      TRUE
+    );
 
     // We have hits.
     $this->assertNotEmpty($new_result['hits']['hits']);
