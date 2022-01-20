@@ -31,8 +31,7 @@ final class IndexingTest extends ExistingSiteBase {
 
     /** @var \Drupal\elasticsearch_connector\Entity\Index $index */
     // $index = reset($indexes);
-    $index->clear();
-
+    // $index->clear();
     $client = $this->container->get('http_client');
     $result = json_decode(
       $client->request('GET', 'http://elastic:9200/_search')->getBody()->getContents(),
