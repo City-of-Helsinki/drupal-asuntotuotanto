@@ -4,9 +4,8 @@ declare(strict_types = 1);
 
 namespace Drupal\Tests\asu_elastic\Functional;
 
-use Drupal\Core\Site\Settings;
+use Drupal\search_api\Entity\Server;
 use Drupal\node\NodeInterface;
-use Drupal\search_api\Entity\Index;
 use Drupal\taxonomy\Entity\Vocabulary;
 use weitzman\DrupalTestTraits\ExistingSiteBase;
 
@@ -21,32 +20,34 @@ final class IndexingTest extends ExistingSiteBase {
    * Make sure indexed data is in correct format.
    */
   public function testElasticSearchIndexing() {
-    $index = Index::load('apartment');
-    $index->clear();
+    $servers = Server::loadMultiple();
+    $this->assertNotEmpty($servers, 'We have at least one server');
 
-    $index->getServerId();
     /** @var \Drupal\search_api\Entity\Server $server */
-    $server = $index->getServerInstance();
+    $server = reset($servers);
 
-    $elastic_url = Settings::get('ASU_ELASTICSEARCH_ADDRESS');
+    $indexes = $server->getIndexes();
+    $this->assertNotEmpty($indexes, 'We have at least one index');
 
-    /** @var \GuzzleHttp\ClientInterface $client */
+    /** @var \Drupal\elasticsearch_connector\Entity\Index $index */
+    $index = reset($indexes);
+    $index->clear();
     $client = $this->container->get('http_client');
-    $result = json_decode($client->request('GET', $elastic_url)->getBody()->getContents(), TRUE);
+    $result = json_decode(
+      $client->request('GET', 'http://elastic:9200/_search')->getBody()->getContents(),
+      TRUE
+    );
 
-    $this->assertArrayHasKey('hits', $result);
-    $this->assertEmpty($result['hits']['hits']);
+    $this->assertArrayHasKey('hits', $result, 'We get correct response');
+    $this->assertEmpty($result['hits']['hits'], 'No hits at this point');
 
     $apartment = $this->createNode($this->apartmentData());
 
     $apartment->save();
 
     $project = $this->createNode($this->projectData($apartment));
-
     $date = new \DateTime();
-
     $project->set('field_application_end_time', $date->format('Y-m-d H:i:s'));
-
     $project->set('field_virtual_presentation_url', 'https://www.gooogle.fi');
 
     $project->save();
@@ -58,29 +59,36 @@ final class IndexingTest extends ExistingSiteBase {
     $dataSource = $index->getDataSourceIds();
     $index->indexItems(-1, reset($dataSource));
 
-    sleep(1);
+    sleep(2);
 
-    $new_result = json_decode($client->request('GET', $elastic_url)->getBody()->getContents(), TRUE);
+    $new_result = json_decode(
+      $client->request('GET', 'http://elastic:9200/_search')->getBody()->getContents(),
+      TRUE
+    );
 
-    // We have hits.
-    $this->assertNotEmpty($new_result['hits']['hits']);
+    $this->assertNotEmpty($new_result['hits']['hits'], 'Index should have hits');
 
     $data = $new_result['hits']['hits'][0]['_source'];
 
     // Single values should not be inside array.
-    $this->assertIsNotArray($data['title']);
+    $this->assertIsNotArray($data['title'],
+      'Single values should not be in array');
     $this->assertIsString($data['title']);
 
-    $this->assertIsNotArray($data['has_terrace']);
+    $this->assertIsNotArray($data['has_terrace'],
+      'Boolean values should be booleans');
     $this->assertFalse($data['has_terrace']);
 
-    $this->assertIsArray($data['project_heating_options']);
+    $this->assertIsArray($data['project_heating_options'],
+      'Multivalued fields should be in arrays');
     $this->assertNotEmpty($data['project_heating_options']);
     $this->assertIsString($data['project_heating_options'][0]);
 
     $this->assertIsNotArray($data['project_virtual_presentation_url']);
     $this->assertIsString($data['project_virtual_presentation_url']);
 
+    // $this->assertNotEmpty($data['application_url']);
+    // $this->assertNotEmpty($data['application_url']);
   }
 
   /**
@@ -115,12 +123,14 @@ final class IndexingTest extends ExistingSiteBase {
 
     return [
       'type' => 'project',
-      'title' => 'project title',
+      'title' => 'Uusi projekti',
       'body' => 'This is the description of the project',
       'field_housing_company' => 'Taloyhtiö Yritys Oy',
       'field_construction materials' => [$construction_material],
       'field_heating_options' => [$heating_option],
       'field_apartments' => [$apartment->ID()],
+      'field_application_start_time' => (new \DateTime('yesterday'))->format('Y-m-d H:i:s'),
+      'field_application_end_time' => (new \DateTime('tomorrow'))->format('Y-m-d H:i:s'),
     ];
   }
 
