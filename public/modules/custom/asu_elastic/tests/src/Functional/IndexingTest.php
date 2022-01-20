@@ -88,7 +88,6 @@ final class IndexingTest extends ExistingSiteBase {
 
     $this->assertIsNotArray($data['project_virtual_presentation_url']);
     $this->assertIsString($data['project_virtual_presentation_url']);
-     */
   }
 
   /**
