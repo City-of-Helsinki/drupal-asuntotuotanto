@@ -49,9 +49,16 @@ jobs:
       - name: Install Drupal
         run: php -d sendmail_path=$(which true); vendor/bin/drush --yes -v site-install --existing-config --db-url="$SIMPLETEST_DB"
 
+      - name: Verify Elasticsearch connection from host
+          env:
+            ELASTIC_SEARCH_URL: http://localhost:9200
+          run: |
+            echo http://localhost:9200
+            curl -fsSL "$ELASTIC_SEARCH_URL/_cat/health?h=status"
+
+
       - name: Run PHPUnit tests
         run: |
-          curl -X GET 'localhost:9200/_cat/indices?v'
           drush runserver $SIMPLETEST_BASE_URL > /dev/null 2>&1 &
           sleep 15
           chromedriver --port=4444 > /dev/null 2>&1 &
