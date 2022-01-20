@@ -30,17 +30,16 @@ final class IndexingTest extends ExistingSiteBase {
     $this->assertNotEmpty($indexes, 'We have at least one index');
 
     /** @var \Drupal\elasticsearch_connector\Entity\Index $index */
-    // $index = reset($indexes);
-    // $index->clear();
+    $index = reset($indexes);
+    $index->clear();
     $client = $this->container->get('http_client');
     $result = json_decode(
       $client->request('GET', 'http://elastic:9200/_search')->getBody()->getContents(),
       TRUE
     );
 
-    $this->assertNotEmpty($result);
-
-    $this->assertEmpty($result);
+    $this->assertArrayHasKey('hits', $result, 'We get correct response');
+    $this->assertEmpty($result['hits']['hits'], 'No hits');
 
     $apartment = $this->createNode($this->apartmentData());
 

@@ -97,7 +97,7 @@ if ($env = getenv('APP_ENV')) {
 }
 
 if ($env = getenv('APP_ENV')) {
-  $settings['ASU_ELASTICSEARCH_ADDRESS'] = getenv('ASU_ELASTICSEARCH_ADDRESS')  ?? 'http://localhost:9200';
+  $settings['ASU_ELASTICSEARCH_ADDRESS'] = getenv('ASU_ELASTICSEARCH_ADDRESS')  ?? 'http://elastic:9200';
 
   $settings['ASU_ELASTICSEARCH_USERNAME'] = getenv('ASU_ELASTICSEARCH_USERNAME');
   $settings['ASU_ELASTICSEARCH_PASSWORD'] = getenv('ASU_ELASTICSEARCH_PASSWORD');
@@ -131,7 +131,7 @@ if ($env = getenv('APP_ENV')) {
   }
 
   if ($env === 'test') {
-    $config['elasticsearch_connector.cluster.asuntotuotanto']['url'] = 'http://127.0.0.1:9200';
+    $config['elasticsearch_connector.cluster.asuntotuotanto']['url'] = 'http://elastic:9200';
   }
 
   // Development environment.

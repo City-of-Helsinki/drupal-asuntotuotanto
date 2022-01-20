@@ -6,7 +6,7 @@ env:
   DTT_BASE_URL: "http://127.0.0.1:8080"
   SYMFONY_DEPRECATIONS_HELPER: disabled
   APP_ENV: "test"
-  ASU_ELASTICSEARCH_ADDRESS: "http://127.0.0.1:9200"
+  ASU_ELASTICSEARCH_ADDRESS: "http://elastic:9200"
   ASU_ELASTICSEARCH_USERNAME: "test"
   ASU_ELASTICSEARCH_PASSWORD: "pass"
   ASU_DJANGO_BACKEND_URL: "https://django-backend-test-url.fi"
