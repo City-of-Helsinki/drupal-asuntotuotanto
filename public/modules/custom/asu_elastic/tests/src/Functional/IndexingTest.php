@@ -20,14 +20,19 @@ final class IndexingTest extends ExistingSiteBase {
    * Make sure indexed data is in correct format.
    */
   public function testElasticSearchIndexing() {
-    $indexes = Index::loadMultiple();
-    /** @var \Drupal\search_api\Entity\Index $index */
-    $index = reset($indexes);
-    $index->clear();
+    $servers = \Drupal\search_api\Entity\Server::loadMultiple();
+    $this->assertNotEmpty($servers, 'We have at least one server');
 
     /** @var \Drupal\search_api\Entity\Server $server */
-    $server = $index->getServerInstance();
+    $server = reset($servers);
 
+    $indexes = $server->getIndexes();
+    $this->assertNotEmpty($indexes, 'We have at least one index');
+
+    /** @var \Drupal\elasticsearch_connector\Entity\Index $index */
+    $index = reset($indexes);
+
+    // $index->clear();
     $query = $index->query();
     $query->range(0, 10000);
     $result = $query->execute();
