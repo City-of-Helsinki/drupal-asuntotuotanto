@@ -20,8 +20,9 @@ final class IndexingTest extends ExistingSiteBase {
    * Make sure indexed data is in correct format.
    */
   public function testElasticSearchIndexing() {
-    /** @var  \Drupal\elasticsearch_connector\Entity\Index $index */
-    $index = Index::load('apartment');
+    $indexes = Index::loadMultiple();
+    /** @var \Drupal\search_api\Entity\Index $index */
+    $index = reset($indexes);
     $index->clear();
 
     /** @var \Drupal\search_api\Entity\Server $server */
