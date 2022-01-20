@@ -4,8 +4,8 @@ declare(strict_types = 1);
 
 namespace Drupal\Tests\asu_elastic\Functional;
 
+use Drupal\search_api\Entity\Server;
 use Drupal\node\NodeInterface;
-use Drupal\search_api\Entity\Index;
 use Drupal\taxonomy\Entity\Vocabulary;
 use weitzman\DrupalTestTraits\ExistingSiteBase;
 
@@ -20,7 +20,7 @@ final class IndexingTest extends ExistingSiteBase {
    * Make sure indexed data is in correct format.
    */
   public function testElasticSearchIndexing() {
-    $servers = \Drupal\search_api\Entity\Server::loadMultiple();
+    $servers = Server::loadMultiple();
     $this->assertNotEmpty($servers, 'We have at least one server');
 
     /** @var \Drupal\search_api\Entity\Server $server */
