@@ -51,6 +51,7 @@ jobs:
 
       - name: Run PHPUnit tests
         run: |
-          until vendor/bin/drush runserver $SIMPLETEST_BASE_URL; do echo "program ended with status $?"; done &
+          drush runserver $SIMPLETEST_BASE_URL > /dev/null 2>&1 &
+          sleep 15
           chromedriver --port=4444 > /dev/null 2>&1 &
           vendor/bin/phpunit -c $GITHUB_WORKSPACE/phpunit.xml.dist --verbose
