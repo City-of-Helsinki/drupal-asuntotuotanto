@@ -121,7 +121,7 @@ final class IndexingTest extends ExistingSiteBase {
     $heating_option = $this->createTerm(Vocabulary::load('heating_options'), ['Maalämpö']);
     $construction_material = $this->createTerm(Vocabulary::load('construction_materials'), ['Puu']);
 
-    return  [
+    return [
       'type' => 'project',
       'title' => 'Uusi projekti',
       'body' => 'This is the description of the project',
