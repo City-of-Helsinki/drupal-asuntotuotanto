@@ -20,7 +20,7 @@ jobs:
           - 3306:3306
 
       elastic:
-        image: docker.elastic.co/elasticsearch/elasticsearch:7.9.1
+        image: docker.elastic.co/elasticsearch/elasticsearch:7.9.2
         env:
           discovery.type: single-node
         options: >-
@@ -51,6 +51,7 @@ jobs:
 
       - name: Run PHPUnit tests
         run: |
+          curl -X GET http://127.0.0.1:9200/_aliases
           drush runserver $SIMPLETEST_BASE_URL > /dev/null 2>&1 &
           sleep 15
           chromedriver --port=4444 > /dev/null 2>&1 &
