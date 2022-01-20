@@ -105,8 +105,6 @@ class ApplicationSubscriber implements EventSubscriberInterface {
       );
       $request->setSender($user);
       $this->backendApi->send($request);
-      $application->set('field_locked', 1);
-      $application->save();
 
       $this->logger->notice(
         'User sent an application to backend successfully'
@@ -117,22 +115,21 @@ class ApplicationSubscriber implements EventSubscriberInterface {
     catch (IllegalApplicationException $e) {
       $code = $e->getApiErrorCode();
       /** @var \Drupal\asu_api\ErrorCodeService $errorCodeService */
-
       $errorCodeService = \Drupal::service('asu_api.error_code_service');
       $langCode = \Drupal::languageManager()->getCurrentLanguage()->getId();
       $message = $errorCodeService->getErrorMessageByCode($code, $langCode);
 
       if ($message) {
-        $this->messenger->addError($message);
+        $this->messenger()->addError($message);
       }
       else {
         $this->logger->critical(
-          'Unable to resolve error code from response message for application .' .
+          'Unable to resolve error code from response message for application' .
           $application->id() .
           ': ' .
           $e->getMessage()
         );
-        $this->messenger->addError(t('Unfortunately we were unable to handle your application.'));
+        $this->messenger()->addError(t('Unfortunately we were unable to handle your application.'));
       }
 
     }
@@ -143,6 +140,10 @@ class ApplicationSubscriber implements EventSubscriberInterface {
         $e->getMessage()
       ));
       $this->queue->createItem($application->id());
+    }
+    finally {
+      $application->set('field_locked', 1);
+      $application->save();
     }
   }
 
@@ -199,13 +200,13 @@ class ApplicationSubscriber implements EventSubscriberInterface {
       $message = $errorCodeService->getErrorMessageByCode($code, $langCode);
 
       if ($message) {
-        $this->messenger->addError($message);
+        $this->messenger()->addError($message);
       }
       else {
         $this->logger->critical(
           'Unable to resolve error code from response message: ' . $e->getMessage()
         );
-        $this->messenger->addError(
+        $this->messenger()->addError(
           'Illegal application error while creating application. ' . $e->getMessage()
         );
       }
@@ -217,7 +218,7 @@ class ApplicationSubscriber implements EventSubscriberInterface {
         $application->id(),
         $e->getMessage()
       ));
-      $this->messenger->addError(
+      $this->messenger()->addError(
         'Illegal application error while creating application. ' . $e->getMessage()
       );
       $this->queue->createItem($application->id());

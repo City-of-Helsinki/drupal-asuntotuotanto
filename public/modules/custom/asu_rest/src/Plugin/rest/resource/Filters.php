@@ -66,7 +66,7 @@ final class Filters extends ResourceBase {
 
         $vocabulary_name = $vocabularies[$terms[0]->bundle()]->get('name');
         $index_haso = [
-          'label' => $vocabulary_name,
+          'label' => t('Districts'),
           'items' => $activeProjectDistricts['haso'],
           'suffix' => NULL,
         ];

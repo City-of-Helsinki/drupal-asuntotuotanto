@@ -56,6 +56,7 @@ class CreateApplicationRequest extends Request {
       'ssn_suffix' => $this->application->field_personal_id->value,
       'has_children' => $this->application->getHasChildren(),
       'additional_applicant' => $this->getApplicant(),
+      'right_of_residence' => NULL,
       'project_id' => $this->projectData['uuid'],
       'apartments' => $this->getApartments(),
     ];
@@ -90,17 +91,17 @@ class CreateApplicationRequest extends Request {
   }
 
   /**
-   * Get primary applicant.
+   * Get additional applicant.
    *
-   * @return array
+   * @return array|object
    *   Applicant information.
    */
   private function getApplicant() {
     if (!$this->application->hasAdditionalApplicant()) {
-      return [];
+      return NULL;
     }
     $applicant = $this->application->getApplicants()[0];
-    return [
+    return (object) [
       'first_name' => $applicant['first_name'],
       'last_name' => $applicant['last_name'],
       'email' => $applicant['email'],

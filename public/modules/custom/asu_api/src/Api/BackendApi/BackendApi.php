@@ -100,18 +100,21 @@ class BackendApi {
         get_class($request),
         $e->getMessage()
       ));
-
-      $message = json_decode((string) $e->getResponse()->getBody(), TRUE);
-      if (is_array($message)) {
-        $result = array_reduce($message, 'array_merge', []);
+      $messages = json_decode((string) $e->getResponse()->getBody()->getContents(), TRUE);
+      if (is_array($messages) && count($messages) != count($messages, COUNT_RECURSIVE)) {
+        $result = array_reduce($messages, 'array_merge', []);
         $message = $result[0];
+      } else {
+        $message = $messages;
       }
 
-      throw new IllegalApplicationException(
-        $message,
-        (int) $e->getCode()
-      );
-
+      if (is_array($message) && isset($message['code'])) {
+        throw new IllegalApplicationException(
+          $message,
+          (int) $e->getCode()
+        );
+      }
+      throw $e;
     }
     catch (ServerException $e) {
       $this->logger->emergency(

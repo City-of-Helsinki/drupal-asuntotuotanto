@@ -116,7 +116,7 @@ class Application extends EditorialContentEntityBase implements ContentEntityInt
    *   Array of applicants.
    */
   public function getApplicants(): array {
-    return $this->applicant->getValue();
+    return $this->applicant->getValue() ?? [];
   }
 
   /**

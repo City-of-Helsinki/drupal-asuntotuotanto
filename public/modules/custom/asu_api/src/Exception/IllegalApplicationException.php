@@ -21,14 +21,9 @@ class IllegalApplicationException extends \Exception {
   /**
    * Constructor.
    */
-  public function __construct($message = "", int $code = 0, $previous = NULL) {
-    if (is_array($message) && $value = reset($message)) {
-      $message = $value;
-    }
-    if ($message && $apiErrorCode = $this->parseApiErrorCode($message)) {
-      $this->apiErrorCode = $apiErrorCode;
-    }
-    parent::__construct($message, $code, $previous);
+  public function __construct(array $message, int $code = 0, $previous = NULL) {
+    $this->apiErrorCode = $message['code'];
+    parent::__construct($message['message'], $code, $previous);
   }
 
   /**
@@ -43,27 +38,6 @@ class IllegalApplicationException extends \Exception {
    */
   public function __toString() {
     return __CLASS__ . ": [{$this->code}]: {$this->message}\n";
-  }
-
-  /**
-   * Parse api error code from the beginning of the message.
-   *
-   * @param string $message
-   *   Response message.
-   *
-   * @return string
-   *   Error code.
-   */
-  private function parseApiErrorCode(string $message): string {
-    $matches = [];
-    preg_match('(\d+)', $message, $matches);
-    if (!isset($matches[0])) {
-      return FALSE;
-    }
-    if (strpos($message, $matches[0]) === 0) {
-      return (string) $matches[0];
-    }
-    return '';
   }
 
 }
