@@ -51,7 +51,7 @@ jobs:
 
       - name: Run PHPUnit tests
         run: |
-          curl -X GET curl 'localhost:9200/_cat/indices?v' 
+          curl -X GET 'localhost:9200/_cat/indices?v'
           drush runserver $SIMPLETEST_BASE_URL > /dev/null 2>&1 &
           sleep 15
           chromedriver --port=4444 > /dev/null 2>&1 &
