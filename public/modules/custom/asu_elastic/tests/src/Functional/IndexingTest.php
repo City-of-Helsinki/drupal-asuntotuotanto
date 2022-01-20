@@ -39,7 +39,7 @@ final class IndexingTest extends ExistingSiteBase {
     );
 
     $this->assertArrayHasKey('hits', $result, 'We get correct response');
-    $this->assertEmpty($result['hits']['hits'], 'No hits');
+    $this->assertEmpty($result['hits']['hits'], 'No hits at this point');
 
     $apartment = $this->createNode($this->apartmentData());
 
@@ -59,15 +59,14 @@ final class IndexingTest extends ExistingSiteBase {
     $dataSource = $index->getDataSourceIds();
     $index->indexItems(-1, reset($dataSource));
 
-    sleep(1);
+    sleep(2);
 
     $new_result = json_decode(
       $client->request('GET', 'http://elastic:9200/_search')->getBody()->getContents(),
       TRUE
     );
 
-    // We have hits.
-    $this->assertNotEmpty($new_result['hits']['hits']);
+    $this->assertNotEmpty($new_result['hits']['hits'], 'Index should have hits');
 
     $data = $new_result['hits']['hits'][0]['_source'];
 
@@ -76,11 +75,12 @@ final class IndexingTest extends ExistingSiteBase {
       'Single values should not be in array');
     $this->assertIsString($data['title']);
 
-    $this->assertIsNotArray($data['has_terrace']);
+    $this->assertIsNotArray($data['has_terrace'],
+      'Boolean values should be booleans');
     $this->assertFalse($data['has_terrace']);
 
     $this->assertIsArray($data['project_heating_options'],
-      'This value should be in array.');
+      'Multivalued fields should be in arrays');
     $this->assertNotEmpty($data['project_heating_options']);
     $this->assertIsString($data['project_heating_options'][0]);
 
@@ -121,7 +121,7 @@ final class IndexingTest extends ExistingSiteBase {
     $heating_option = $this->createTerm(Vocabulary::load('heating_options'), ['Maalämpö']);
     $construction_material = $this->createTerm(Vocabulary::load('construction_materials'), ['Puu']);
 
-    $project = [
+    return  [
       'type' => 'project',
       'title' => 'Uusi projekti',
       'body' => 'This is the description of the project',
@@ -132,8 +132,6 @@ final class IndexingTest extends ExistingSiteBase {
       'field_application_start_time' => (new \DateTime('yesterday'))->format('Y-m-d H:i:s'),
       'field_application_end_time' => (new \DateTime('tomorrow'))->format('Y-m-d H:i:s'),
     ];
-
-    return $project;
   }
 
 }
