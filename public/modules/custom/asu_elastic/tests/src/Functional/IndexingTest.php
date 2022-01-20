@@ -21,20 +21,26 @@ final class IndexingTest extends ExistingSiteBase {
    * Make sure indexed data is in correct format.
    */
   public function testElasticSearchIndexing() {
+    /** @var  \Drupal\elasticsearch_connector\Entity\Index $index */
     $index = Index::load('apartment');
     $index->clear();
 
     /** @var \Drupal\search_api\Entity\Server $server */
     $server = $index->getServerInstance();
 
-    $elastic_url = Settings::get('ASU_ELASTICSEARCH_ADDRESS');
+    $query = $index->query();
+    $query->range(0, 10000);
+    $result = $query->execute();
 
-    /** @var \GuzzleHttp\ClientInterface $client */
-    $client = $this->container->get('http_client');
-    $result = json_decode($client->request('GET', $elastic_url)->getBody()->getContents(), TRUE);
+    // $elastic_url = Settings::get('ASU_ELASTICSEARCH_ADDRESS');
 
-    $this->assertArrayHasKey('hits', $result);
-    $this->assertEmpty($result['hits']['hits']);
+    // $client = $this->container->get('http_client');
+    // $result = json_decode($client->request('GET', $elastic_url)->getBody()->getContents(), TRUE);
+
+    // $this->assertArrayHasKey('hits', $result);
+    // $this->assertEmpty($result['hits']['hits']);
+
+    $this->assertEmpty($result);
 
     $apartment = $this->createNode($this->apartmentData());
 
@@ -59,7 +65,11 @@ final class IndexingTest extends ExistingSiteBase {
 
     sleep(1);
 
-    $new_result = json_decode($client->request('GET', $elastic_url)->getBody()->getContents(), TRUE);
+    //$new_result = json_decode($client->request('GET', $elastic_url)->getBody()->getContents(), TRUE);
+
+    $query2 = $index->query();
+    $query2->range(0, 10000);
+    $new_result = $query->execute();
 
     // We have hits.
     $this->assertNotEmpty($new_result['hits']['hits']);
