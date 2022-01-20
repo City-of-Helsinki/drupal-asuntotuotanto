@@ -130,6 +130,10 @@ if ($env = getenv('APP_ENV')) {
     $config['elasticsearch_connector.cluster.asuntotuotanto']['url'] = 'http://elastic:9200';
   }
 
+  if ($env === 'test') {
+    $config['elasticsearch_connector.cluster.asuntotuotanto']['url'] = 'http://127.0.0.1:9200';
+  }
+
   // Development environment.
   if ($env === 'development') {
     $config['elasticsearch_connector.cluster.asuntotuotanto']['options']['use_authentication'] = 1;
