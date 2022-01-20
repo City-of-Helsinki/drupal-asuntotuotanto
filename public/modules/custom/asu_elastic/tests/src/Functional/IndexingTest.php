@@ -24,7 +24,6 @@ final class IndexingTest extends ExistingSiteBase {
     $index = Index::load('apartment');
     $index->clear();
 
-    $index->getServerId();
     /** @var \Drupal\search_api\Entity\Server $server */
     $server = $index->getServerInstance();
 

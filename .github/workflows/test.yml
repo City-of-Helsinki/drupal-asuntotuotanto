@@ -8,8 +8,6 @@ env:
   ASU_ELASTICSEARCH_ADDRESS: "http://localhost:9200/_search"
   ASU_ELASTICSEARCH_USERNAME: "test"
   ASU_ELASTICSEARCH_PASSWORD: "pass"
-  ASU_ASKO_HASO_ADDRESS: "testhaso@test.fi"
-  ASU_ASKO_HITAS_ADDRESS: "testhitas@test.fi"
   ASU_DJANGO_BACKEND_URL: "https://django-backend-test-url.fi"
 jobs:
   tests:
@@ -33,7 +31,7 @@ jobs:
 
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/city-of-helsinki/drupal-php-docker:8.0
+      image: ghcr.io/city-of-helsinki/drupal-php-docker:8.0-alpine
 
     steps:
       - uses: actions/checkout@v2
@@ -49,8 +47,8 @@ jobs:
       - name: Install Drupal
         run: php -d sendmail_path=$(which true); vendor/bin/drush --yes -v site-install --existing-config --db-url="$SIMPLETEST_DB"
 
-      #- name: Run PHPUnit tests
-        #run: |
-          #vendor/bin/drush runserver $SIMPLETEST_BASE_URL > /dev/null 2>&1 &
-          #chromedriver --port=4444 > /dev/null 2>&1 &
-          #vendor/bin/phpunit -c $GITHUB_WORKSPACE/phpunit.xml.dist --verbose
+      - name: Run PHPUnit tests
+        run: |
+          vendor/bin/drush runserver $SIMPLETEST_BASE_URL > /dev/null 2>&1 &
+          chromedriver --port=4444 > /dev/null 2>&1 &
+          vendor/bin/phpunit -c $GITHUB_WORKSPACE/phpunit.xml.dist --verbose
