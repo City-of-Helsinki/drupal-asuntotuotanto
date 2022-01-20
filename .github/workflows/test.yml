@@ -9,6 +9,7 @@ env:
   ASU_ELASTICSEARCH_USERNAME: "test"
   ASU_ELASTICSEARCH_PASSWORD: "pass"
   ASU_DJANGO_BACKEND_URL: "https://django-backend-test-url.fi"
+  XDEBUG_MODE: off
 jobs:
   tests:
     services:
@@ -49,6 +50,6 @@ jobs:
 
       - name: Run PHPUnit tests
         run: |
-          vendor/bin/drush runserver $SIMPLETEST_BASE_URL > /dev/null 2>&1 &
+          until vendor/bin/drush runserver $SIMPLETEST_BASE_URL; do echo "program ended with status $?"; done &
           chromedriver --port=4444 > /dev/null 2>&1 &
           vendor/bin/phpunit -c $GITHUB_WORKSPACE/phpunit.xml.dist --verbose
