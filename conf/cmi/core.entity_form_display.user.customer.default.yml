@@ -18,21 +18,14 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
-  contact:
-    weight: 1
-    region: content
-    settings: {  }
-    third_party_settings: {  }
-  translation:
-    weight: 2
-    region: content
-    settings: {  }
-    third_party_settings: {  }
 hidden:
+  contact: true
   field_backend_password: true
   field_backend_profile: true
   field_backend_profile_id: true
   field_email_is_valid: true
   langcode: true
   language: true
+  matomo: true
   path: true
+  translation: true

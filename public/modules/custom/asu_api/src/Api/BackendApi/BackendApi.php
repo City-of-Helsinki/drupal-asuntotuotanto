@@ -5,9 +5,12 @@ namespace Drupal\asu_api\Api\BackendApi;
 use Drupal\asu_api\Api\BackendApi\Request\AuthenticationRequest;
 use Drupal\asu_api\Api\Request;
 use Drupal\asu_api\Api\Response;
+use Drupal\asu_api\Exception\IllegalApplicationException;
 use Drupal\asu_api\Helper\AuthenticationHelper;
 use Drupal\Core\TempStore\PrivateTempStore;
 use Drupal\user\UserInterface;
+use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Exception\ServerException;
 use Psr\Log\LoggerInterface;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Request as GuzzleRequest;
@@ -65,6 +68,7 @@ class BackendApi {
    *   Response object.
    *
    * @throws \GuzzleHttp\Exception\GuzzleException
+   * @throws \Drupal\asu_api\Exception\IllegalApplicationException
    */
   public function send(Request $request, array $options = []): ?Response {
     $options['headers'] = $options['headers'] ?? [];
@@ -89,8 +93,37 @@ class BackendApi {
       );
       return $request::getResponse($response);
     }
-    catch (\Exception $e) {
-      $this->logger->emergency(sprintf('%s failed: %s', get_class($request), $e->getMessage()));
+    catch (ClientException $e) {
+      $this->logger->info(
+        sprintf(
+        '%s client exception: %s',
+        get_class($request),
+        $e->getMessage()
+      ));
+      $messages = json_decode((string) $e->getResponse()->getBody()->getContents(), TRUE);
+      if (is_array($messages) && count($messages) != count($messages, COUNT_RECURSIVE)) {
+        $result = array_reduce($messages, 'array_merge', []);
+        $message = $result[0];
+      }
+      else {
+        $message = $messages;
+      }
+
+      if (is_array($message) && isset($message['code'])) {
+        throw new IllegalApplicationException(
+          $message,
+          (int) $e->getCode()
+        );
+      }
+      throw $e;
+    }
+    catch (ServerException $e) {
+      $this->logger->emergency(
+        sprintf(
+          '%s Backend server exception: %s',
+          get_class($request),
+          $e->getMessage()
+        ));
       throw $e;
     }
   }
