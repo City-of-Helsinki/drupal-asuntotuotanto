@@ -12,5 +12,5 @@ services:
   asu_api.backendapi:
     class: Drupal\asu_api\Api\BackendApi\BackendApi
     arguments: ['@asu_api.backend_client', '@logger.channel.asu_api']
-  asu_api.elasticapi:
-    class: Drupal\asu_api\Api\ElasticSearchApi\ElasticSearchApi
+  asu_api.error_code_service:
+    class: Drupal\asu_api\ErrorCodeService
