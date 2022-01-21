@@ -106,6 +106,9 @@ class ApplicationSubscriber implements EventSubscriberInterface {
       $request->setSender($user);
       $this->backendApi->send($request);
 
+      $application->set('field_locked', 1);
+      $application->save();
+
       $this->logger->notice(
         'User sent an application to backend successfully'
       );
@@ -139,11 +142,8 @@ class ApplicationSubscriber implements EventSubscriberInterface {
         $application->id(),
         $e->getMessage()
       ));
+      $this->messenger()->addError(t('Unfortunately we were unable to handle your application.'));
       $this->queue->createItem($application->id());
-    }
-    finally {
-      $application->set('field_locked', 1);
-      $application->save();
     }
   }
 
