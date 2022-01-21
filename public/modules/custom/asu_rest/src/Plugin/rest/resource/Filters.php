@@ -52,7 +52,6 @@ final class Filters extends ResourceBase {
       $items = [];
 
       if ($taxonomy_name == 'districts') {
-
         // Get all unique districts separately for both ownership types.
         $activeProjectDistricts = $this->getActiveProjectDistricts();
 
@@ -64,15 +63,12 @@ final class Filters extends ResourceBase {
         ];
         $responseData[strtolower('project_district_hitas')] = $index_hitas;
 
-        $vocabulary_name = $vocabularies[$terms[0]->bundle()]->get('name');
         $index_haso = [
           'label' => t('Districts'),
           'items' => $activeProjectDistricts['haso'],
           'suffix' => NULL,
         ];
-
         $responseData[strtolower('project_district_haso')] = $index_haso;
-
       }
       else {
         foreach ($terms as $term) {
