@@ -104,7 +104,8 @@ class BackendApi {
       if (is_array($messages) && count($messages) != count($messages, COUNT_RECURSIVE)) {
         $result = array_reduce($messages, 'array_merge', []);
         $message = $result[0];
-      } else {
+      }
+      else {
         $message = $messages;
       }
 
