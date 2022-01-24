@@ -533,7 +533,7 @@
         id,
         withSelectElement = false
       ) => {
-        const {
+        let {
           apartment_number: apartmentNumberValue,
           apartment_structure: apartmentStructureValue,
           apartment_floor: apartmentFloorValue,
@@ -541,6 +541,9 @@
           apartment_sales_price: apartmentSalesPriceValue,
           apartment_debt_free_sales_price: apartmentDebtFreeSalesPriceValue,
         } = values;
+
+        const project_type_element = document.querySelectorAll("[data-drupal-selector='asu-application-haso-form']");
+        const project_type = project_type_element.length > 0 ? "HASO" : "hitas";
 
         const li = createElementWithClasses("li", [
           "application-form__apartments-item",
@@ -652,15 +655,27 @@
           apartmentLivingAreaSizeValue
         );
 
+        let firstPriceTitle = ""
+        let secondPriceTitle = ""
+        if (project_type === "HASO") {
+          firstPriceTitle = Drupal.t("Right of occupancy payment");
+          secondPriceTitle = '';
+          apartmentDebtFreeSalesPriceValue = '';
+        } else {
+          firstPriceTitle = Drupal.t("Sales price");
+          secondPriceTitle = Drupal.t("Debt free sales price");
+        }
+
         const formApartmentInformationSalesPrice = createListItemElementWithText(
-          "Sales price",
+          firstPriceTitle,
           apartmentSalesPriceValue
         );
-
         const formApartmentInformationDebtFreeSalesPrice = createListItemElementWithText(
-          "Debt free sales price",
+          secondPriceTitle,
           apartmentDebtFreeSalesPriceValue
         );
+
+
 
         formApartmentInformation.append(
           formApartmentInformationFloor,

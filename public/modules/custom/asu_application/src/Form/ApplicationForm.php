@@ -71,8 +71,9 @@ class ApplicationForm extends ContentEntityForm {
         !empty($applications) && $this->entity->isNew() ||
         $application && $application->id() != $this->entity->id()
       ) {
-        $this->messenger()->addMessage($this->t('You cannot fill more than one application until you have confirmed your email address.
-        To confirm your email you must click the link that has been sent to your email address.'));
+        $this->messenger()->addMessage($this->t('You cannot fill more than one
+         application until you have confirmed your email address.
+         To confirm your email you must click the link that has been sent to your email address.'));
         $response = (new RedirectResponse($applicationsUrl, 301))->send();
         return $response;
       }
@@ -314,15 +315,22 @@ class ApplicationForm extends ContentEntityForm {
       $apartment = $apartmentReference->entity;
 
       $living_area_size_m2 = number_format($apartment->field_living_area->value, 1, ',', '');
-      $debt_free_sales_price = number_format($apartment->field_debt_free_sales_price->value, 0, ',', ' ');
-      $sales_price = number_format($apartment->field_sales_price->value, 0, ',', ' ');
-
       $number = $apartment->field_apartment_number->value;
       $structure = $apartment->field_apartment_structure->value;
       $floor = $apartment->field_floor->value;
       $floor_max = $apartment->field_floor_max->value;
 
-      $select_text = "$number | $structure | $floor / $floor_max |  {$living_area_size_m2} m2 | {$sales_price} € | {$debt_free_sales_price} €";
+      $type = $project->field_ownership_type->first()->entity->getName();
+      if ($type == 'HASO') {
+        $price = $apartment->field_right_of_occupancy_payment->value;
+        $second_price = '-';
+        $select_text = "$number | $structure | $floor / $floor_max | {$living_area_size_m2} m2 | {$price} € | {$second_price}";
+      }
+      else {
+        $debt_free_sales_price = number_format($apartment->field_debt_free_sales_price->value, 0, ',', ' ');
+        $sales_price = number_format($apartment->field_sales_price->value, 0, ',', ' ');
+        $select_text = "$number | $structure | $floor / $floor_max | {$living_area_size_m2} m2 | {$sales_price} € | {$debt_free_sales_price} €";
+      }
 
       $apartments[$apartment->id()] = $select_text;
       $apartmentsUuid[$apartment->id()] = $apartment->uuid();

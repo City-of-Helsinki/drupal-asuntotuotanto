@@ -62,6 +62,10 @@ function template_preprocess_asu_application(array &$variables) {
       $main_image_file_url = file_create_url($main_image_file->getFileUri());
     }
 
+    $district = $project->field_district->first() ?
+      $project->field_district->first()->entity->getName() :
+      '';
+
     $application_teaser_values = [
       '#teaser_values' => [
         'language' => \Drupal::languageManager()->getCurrentLanguage()->getId(),
@@ -71,7 +75,7 @@ function template_preprocess_asu_application(array &$variables) {
         'project_estimated_completion' => $project->field_estimated_completion->value,
         'application_end_time' => $project->field_application_end_time->value,
         'project_main_image_url' => $main_image_file_url ?? NULL,
-        'project_district' => $project->field_district->first()->entity->getName(),
+        'project_district' => $district,
       ],
     ];
 
