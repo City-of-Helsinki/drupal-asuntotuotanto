@@ -190,6 +190,11 @@
       <div class="application-form__input-elements">
         {{ element.applicant }}
       </div>
+      {# TODO: ticket ASU-1242 - english translation will be added later #}
+      {% trans %}
+        All applicants must be declared in advance. <b>New applicants cannot be added later.</b>
+      {% endtrans %}
+      <a href="/oppaat/haso">{% trans %}Read more from the buyers guide{% endtrans %}</a>
     </section>
   </div>
   <div class="application-form__actions">
