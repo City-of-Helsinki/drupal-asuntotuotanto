@@ -4,7 +4,9 @@ status: true
 dependencies:
   config:
     - asu_application.application_type.haso
+    - field.field.asu_application.haso.field_agreement_policy
     - field.field.asu_application.haso.field_aso_changer
+    - field.field.asu_application.haso.field_data_agreement_policy
     - field.field.asu_application.haso.field_personal_id
     - field.field.asu_application.haso.field_right_of_residence_number
   module:
@@ -14,9 +16,23 @@ targetEntityType: asu_application
 bundle: haso
 mode: default
 content:
+  field_agreement_policy:
+    type: boolean_checkbox
+    weight: 29
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
   field_aso_changer:
     type: boolean_checkbox
     weight: 28
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  field_data_agreement_policy:
+    type: boolean_checkbox
+    weight: 30
     region: content
     settings:
       display_label: true

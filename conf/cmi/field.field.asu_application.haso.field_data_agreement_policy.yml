@@ -1,0 +1,23 @@
+uuid: 5e0864bf-18ea-4d24-9b75-b61e9db8dfce
+langcode: fi
+status: true
+dependencies:
+  config:
+    - asu_application.application_type.haso
+    - field.storage.asu_application.field_data_agreement_policy
+id: asu_application.haso.field_data_agreement_policy
+field_name: field_data_agreement_policy
+entity_type: asu_application
+bundle: haso
+label: 'Data agreement policy'
+description: ''
+required: true
+translatable: true
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'Yes'
+  off_label: 'No'
+field_type: boolean
