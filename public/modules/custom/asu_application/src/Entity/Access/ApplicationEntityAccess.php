@@ -33,7 +33,6 @@ class ApplicationEntityAccess extends EntityAccessControlHandler {
           $account->hasPermission($administratePermission)
         );
     }
-
     return AccessResult::neutral();
   }
 

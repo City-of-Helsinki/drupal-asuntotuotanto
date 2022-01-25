@@ -203,6 +203,9 @@
     {{ element.form_build_id }} {# required #}
     {{ element.form_id }} {# required #}
     {{ element.form_token  }} {# required #}
+    {{ element.field_agreement_policy }}
+    {{ element.field_data_agreement_policy }}
+    <p>{% trans %} You cannot edit the application after it has been submitted.{% endtrans %}</p>
     {{ element.actions }}
   </div>
 </form>

@@ -72,8 +72,8 @@ class ApplicationForm extends ContentEntityForm {
         $application && $application->id() != $this->entity->id()
       ) {
         $this->messenger()->addMessage($this->t('You cannot fill more than one
-         application until you have confirmed your email address.
-         To confirm your email you must click the link that has been sent to your email address.'));
+        application until you have confirmed your email address.
+        To confirm your email you must click the link that has been sent to your email address.'));
         $response = (new RedirectResponse($applicationsUrl, 301))->send();
         return $response;
       }
@@ -180,6 +180,7 @@ class ApplicationForm extends ContentEntityForm {
       $form['actions']['draft'] = [
         '#type' => 'submit',
         '#value' => t('Save as a draft'),
+        '#attributes' => ['class' => ['hds-button--secondary']],
         '#ajax' => [
           'callback' => '::ajaxSaveDraft',
           'event' => 'click',

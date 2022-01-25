@@ -172,12 +172,22 @@
       <div class="application-form__input-elements">
         {{ element.applicant }}
       </div>
+      <p>
+        {# TODO: ticket ASU-1242 - english translation will be added later #}
+        {% trans %}
+          All applicants must be declared in advance. <b>New applicants cannot be added later.</b>
+        {% endtrans %}
+        <a href="/oppaat/hitas">{% trans %}Read more from the buyers guide{% endtrans %}</a>
+      </p>
     </section>
   </div>
   <div class="application-form__actions">
     {{ element.form_build_id }} {# required #}
     {{ element.form_id }} {# required #}
     {{ element.form_token  }} {# required #}
+    {{ element.field_agreement_policy }}
+    {{ element.field_data_agreement_policy }}
+    <p>{% trans %} You cannot edit the application after it has been submitted.{% endtrans %}</p>
     {{ element.actions }}
   </div>
 </form>
