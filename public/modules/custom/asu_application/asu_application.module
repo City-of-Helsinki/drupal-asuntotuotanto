@@ -36,6 +36,33 @@ function asu_application_theme_suggestions_asu_application(array $variables) {
 }
 
 /**
+ * Implements hook_form_alter();.
+ */
+function asu_application_form_alter(&$form, &$form_state) {
+  if (
+    $form['#form_id'] === 'asu_application_hitas_form' ||
+    $form['#form_id'] === 'asu_application_haso_form'
+  ) {
+    if (isset($form['field_data_agreement_policy'])) {
+      $form['field_data_agreement_policy']['widget']['value']['#title'] =
+        t(
+          'I have read <a href="@register">Registry policy</a>
+            and city\'s <a href="@privacy">Privacy Statement</a>',
+          [
+            '@register' => '/rekisteriseloste',
+            '@privacy' => '/tietosuojaperiaate',
+          ]
+        );
+    }
+
+    if (isset($form['field_agreement_policy'])) {
+      $form['field_agreement_policy']['widget']['value']['#title'] =
+        t('I affirm the correctness of the given data');
+    }
+  }
+}
+
+/**
  * Implements hook_preprocess_form().
  */
 function template_preprocess_asu_application(array &$variables) {
