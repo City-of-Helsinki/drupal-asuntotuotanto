@@ -84,6 +84,7 @@ module:
   helfi_media: 0
   helfi_platform_config: 0
   helfi_toc: 0
+  helfi_tunnistamo: 0
   honeypot: 0
   image: 0
   image_style_quality: 0
@@ -115,6 +116,7 @@ module:
   metatag_views: 0
   migrate: 0
   node: 0
+  openid_connect: 0
   options: 0
   page_cache: 0
   paragraphs_asymmetric_translation_widgets: 0
@@ -160,6 +162,7 @@ module:
   yearonly: 0
   pathauto: 1
   content_translation: 10
+  externalauth: 10
   views: 10
   paragraphs: 11
   minimal: 1000
