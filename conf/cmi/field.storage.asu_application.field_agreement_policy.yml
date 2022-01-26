@@ -1,0 +1,18 @@
+uuid: e3a3cc8b-c4ca-4dbd-ae49-5387acca60fc
+langcode: fi
+status: true
+dependencies:
+  module:
+    - asu_application
+id: asu_application.field_agreement_policy
+field_name: field_agreement_policy
+entity_type: asu_application
+type: boolean
+settings: {  }
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

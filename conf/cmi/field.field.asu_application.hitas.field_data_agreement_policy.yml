@@ -1,0 +1,23 @@
+uuid: b307939f-b053-4583-ba29-d093dace624d
+langcode: fi
+status: true
+dependencies:
+  config:
+    - asu_application.application_type.hitas
+    - field.storage.asu_application.field_data_agreement_policy
+id: asu_application.hitas.field_data_agreement_policy
+field_name: field_data_agreement_policy
+entity_type: asu_application
+bundle: hitas
+label: 'Data agreement policy'
+description: ''
+required: true
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: Käytössä
+  off_label: 'Pois päältä'
+field_type: boolean

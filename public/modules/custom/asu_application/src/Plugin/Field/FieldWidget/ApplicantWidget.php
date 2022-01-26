@@ -49,12 +49,6 @@ class ApplicantWidget extends WidgetBase {
       This applicant cannot complete another application for the same item.') . '</p>',
     ];
 
-    $element['application_information_text'] = [
-      '#type' => 'markup',
-      '#markup' => '<p>' . $this->t('
-      If there are more than one buyer, they must all be notified as applicants now - <strong>buyers can no longer be added afterwards</strong>. Applicant also means applicant economy (persons registered at the same address). Spouses registered at a different address are also considered as applicant households. If you want more than one person to buy an apartment, mark them all as applicants.') . '</p>',
-    ];
-
     $element['application_information_suffix'] = [
       '#type' => 'markup',
       '#markup' => '</div>',
