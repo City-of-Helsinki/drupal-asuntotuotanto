@@ -261,8 +261,16 @@ class ApplicationForm extends ContentEntityForm {
   public function ajaxSaveDraft(array $form, FormStateInterface $form_state) {
     $form_state->setRebuild(TRUE);
     $this->updateEntityFieldsWithUserInput($form_state);
+
+    if ($this->entity->hasField('field_agreement_policy')) {
+      $this->entity->set('field_agreement_policy', FALSE);
+    }
+    if ($this->entity->hasField('field_data_agreement_policy')) {
+      $this->entity->set('field_data_agreement_policy', FALSE);
+    }
     $this->entity->save();
 
+    $this->messenger()->deleteAll();
     $this->messenger()->addMessage($this->t('The application has been saved as a draft.
      You must submit the application before the application time expires.'));
     $url = $this->getUserApplicationsUrl();
