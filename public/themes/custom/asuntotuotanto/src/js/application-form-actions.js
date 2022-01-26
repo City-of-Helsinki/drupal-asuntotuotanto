@@ -8,6 +8,30 @@
           el.prop('disabled', false);
         }
       })
+      const lang = drupalSettings.path.currentLanguage;
+      const translation = {
+        "Delete": {
+          "fi": "Poista",
+          "en": "Delete",
+        },
+        "Open": {
+          "fi": "Katso huoneistoa",
+          "en": "Open apartment page",
+        },
+        "Apartment": {
+          "fi": "huoneisto",
+          "en": "apartment",
+        },
+        "Add": {
+          "fi": "Lisää uusi huoneisto",
+          "en": "Add an apartment to the list"
+        },
+        "Updated": {
+          "fi": "Huoneistojen järjestys on päivitetty",
+          "en": "Apartment list order has been updated."
+        }
+      }
+
       const screenReaderInformationBoxElement = document.getElementsByClassName(
         "sr-information-box"
       )[0];
@@ -201,7 +225,7 @@
 
         const apartmentSelectElementLabel = document.createElement("label");
         const apartmentSelectElementLabelText = document.createTextNode(
-          Drupal.t("Apartment")
+          translation["Apartment"][lang]
         );
         apartmentSelectElementLabel.appendChild(
           apartmentSelectElementLabelText
@@ -390,7 +414,7 @@
           const information = document.createElement("p");
           information.appendChild(
             document.createTextNode(
-              Drupal.t("Apartment list order has been updated.")
+              translation["Updated"][lang]
             )
           );
           screenReaderInformationBoxElement.append(information);
@@ -533,7 +557,7 @@
         id,
         withSelectElement = false
       ) => {
-        const {
+        let {
           apartment_number: apartmentNumberValue,
           apartment_structure: apartmentStructureValue,
           apartment_floor: apartmentFloorValue,
@@ -541,6 +565,9 @@
           apartment_sales_price: apartmentSalesPriceValue,
           apartment_debt_free_sales_price: apartmentDebtFreeSalesPriceValue,
         } = values;
+
+        const project_type_element = document.querySelectorAll("[data-drupal-selector='asu-application-haso-form']");
+        const project_type = project_type_element.length > 0 ? "HASO" : "hitas";
 
         const li = createElementWithClasses("li", [
           "application-form__apartments-item",
@@ -584,7 +611,7 @@
 
         const apartmentAddButton = createButtonElement(
           ["application-form-apartment__apartment-add-button"],
-          "Add an apartment to the list"
+          translation["Add"][lang]
         );
 
         apartmentAddButton.addEventListener(
@@ -652,13 +679,23 @@
           apartmentLivingAreaSizeValue
         );
 
+        let firstPriceTitle = ""
+        let secondPriceTitle = ""
+        if (project_type === "HASO") {
+          firstPriceTitle = Drupal.t("Right of occupancy payment");
+          secondPriceTitle = '';
+          apartmentDebtFreeSalesPriceValue = '';
+        } else {
+          firstPriceTitle = Drupal.t("Sales price");
+          secondPriceTitle = Drupal.t("Debt free sales price");
+        }
+
         const formApartmentInformationSalesPrice = createListItemElementWithText(
-          "Sales price",
+          firstPriceTitle,
           apartmentSalesPriceValue
         );
-
         const formApartmentInformationDebtFreeSalesPrice = createListItemElementWithText(
-          "Debt free sales price",
+          secondPriceTitle,
           apartmentDebtFreeSalesPriceValue
         );
 
@@ -675,17 +712,17 @@
 
         const formActionsDeleteButton = createButtonElement(
           ["application-form-apartment__apartment-delete-button"],
-          "Delete"
+          translation['Delete'][lang]
         );
 
         formActionsDeleteButton.setAttribute(
           "aria-label",
-          `Delete, aparment ${apartmentNumberValue}`
+          `${translation['Delete'][lang]}, ${translation['Apartment'][lang]} ${apartmentNumberValue}`
         );
 
         const formActionsLink = document.createElement("a");
         const formActionsLinkText = document.createTextNode(
-          Drupal.t("Open apartment page")
+          translation["Open"][lang]
         );
         formActionsLink.appendChild(formActionsLinkText);
         formActionsLink.setAttribute(
@@ -694,7 +731,7 @@
         );
         formActionsLink.setAttribute(
           "aria-label",
-          `Open apartment page, aparment ${apartmentNumberValue}`
+          `${translation["Open"][lang]}, ${translation["Apartment"][lang]} ${apartmentNumberValue}`
         );
 
         formActions.append(formActionsDeleteButton, formActionsLink);

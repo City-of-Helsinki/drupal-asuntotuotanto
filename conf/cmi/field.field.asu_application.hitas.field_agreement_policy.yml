@@ -1,0 +1,23 @@
+uuid: cd9e790b-0933-44c6-b35f-d6559c03eafc
+langcode: fi
+status: true
+dependencies:
+  config:
+    - asu_application.application_type.hitas
+    - field.storage.asu_application.field_agreement_policy
+id: asu_application.hitas.field_agreement_policy
+field_name: field_agreement_policy
+entity_type: asu_application
+bundle: hitas
+label: 'Agreement policy'
+description: ''
+required: true
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'Yes'
+  off_label: 'No'
+field_type: boolean

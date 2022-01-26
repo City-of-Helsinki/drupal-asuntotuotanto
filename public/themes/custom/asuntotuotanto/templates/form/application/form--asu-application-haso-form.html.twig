@@ -33,10 +33,10 @@
     </h1>
     <p>
       {% trans %}
-        Submit an application during the application period. You can search for up to 5 apartments. Apartments should be marked in the order in which you wish to be selected. If you are ranked 1st in the draw, you will only be offered the apartment that is on your highest list.
+        Submit an application during the application period. You can apply for up to 5 apartments. Apartments should be marked in the order in which you wish to be selected. If you are ranked 1st in the draw, you will only be offered the apartment that is on your highest list.
       {% endtrans %}
     </p>
-    <a href="https://google.fi">
+    <a href="/oppaat/haso">
       {% trans %}
         Read more about the application guide
       {% endtrans %}
@@ -115,21 +115,11 @@
           Once we have drawn the apartments, we will notify you of your investment in the queue by email.
         {% endtrans %}
       </p>
-      <h3>
-        {% trans %}
-          Editing the application
-        {% endtrans %}
-      </h3>
-      <p>
-        {% trans %}
-          During the application period, you can edit the application or change the apartment you have applied for. Make the necessary changes and resubmit your application before the application deadline.
-        {% endtrans %}
-      </p>
     </section>
     <section class="application-form__section">
       <h2>
         {% trans %}
-          Applicants Social Security Number
+          Applicant's Social Security Number
         {% endtrans %}
       </h2>
       <p>
@@ -141,13 +131,6 @@
         <p aria-label="{% trans %} The beginning of social security number {% endtrans %} {{ element['#pid_start'] }}">{{ element['#pid_start'] }}</p>
           {{ element.field_personal_id }}
       </div>
-    </section>
-    <section class="application-form__section">
-      <h2>
-        {% trans %}
-          HASO owner
-        {% endtrans %}
-      </h2>
     </section>
     <section class="application-form__section">
       <h2>
@@ -197,12 +180,20 @@
       <div class="application-form__input-elements">
         {{ element.applicant }}
       </div>
+      {# TODO: ticket ASU-1242 - english translation will be added later #}
+      {% trans %}
+        All applicants must be declared in advance. <b>New applicants cannot be added later.</b>
+      {% endtrans %}
+      <a href="/oppaat/haso">{% trans %}Read more from the buyers guide{% endtrans %}</a>
     </section>
   </div>
   <div class="application-form__actions">
     {{ element.form_build_id }} {# required #}
     {{ element.form_id }} {# required #}
     {{ element.form_token  }} {# required #}
+    {{ element.field_agreement_policy }}
+    {{ element.field_data_agreement_policy }}
+    <p>{% trans %} You cannot edit the application after it has been submitted.{% endtrans %}</p>
     {{ element.actions }}
   </div>
 </form>

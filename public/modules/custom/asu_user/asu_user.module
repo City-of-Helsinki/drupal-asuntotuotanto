@@ -87,14 +87,10 @@ function asu_create_backend_user(UserInterface $account) {
         $values[$value['external_field']] = $store->get($field) ?? '-';
       }
 
-      if ($type == 'salesperson') {
-        $values['address'] = '-';
-        $values['date_of_birth'] = (new \DateTime())->format('Y-m-d');
-      }
-
       $createUser = new CreateUserRequest($account, $values, $type);
       /** @var \Drupal\asu_api\Api\BackendApi\Response\CreateUserResponse $response */
       $response = $backendApi->send($createUser);
+
       $account->field_backend_profile = $response->getProfileId();
       $account->field_backend_password = $response->getPassword();
       $account->save();
