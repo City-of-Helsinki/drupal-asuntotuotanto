@@ -15,7 +15,7 @@ use weitzman\DrupalTestTraits\ExistingSiteBase;
 final class FieldTest extends ExistingSiteBase {
 
   /**
-   * Make sure indexed data is in correct format.
+   * Test project fields.
    */
   public function testProjectFields() {
     $requiredFields = [
@@ -49,7 +49,7 @@ final class FieldTest extends ExistingSiteBase {
   }
 
   /**
-   * Make sure indexed data is in correct format.
+   * Test apartment fields.
    */
   public function testApartmentFields() {
     $requiredFields = [
