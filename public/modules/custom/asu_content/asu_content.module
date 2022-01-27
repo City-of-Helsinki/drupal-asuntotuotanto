@@ -6,11 +6,22 @@
  */
 
 use Drupal\Core\Field\FieldFilteredMarkup;
+use Drupal\asu_content\Entity\Apartment;
+use Drupal\asu_content\Entity\Project;
 use Drupal\asu_content\ProjectUpdater;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\node\NodeForm;
 use Drupal\node\Entity\Node;
+
+function asu_content_entity_bundle_info_alter(array &$bundles): void {
+  if (isset($bundles['node']['project'])) {
+    $bundles['node']['project']['class'] = Project::class;
+  }
+  if (isset($bundles['node']['apartment'])) {
+    $bundles['node']['apartment']['class'] = Apartment::class;
+  }
+}
 
 /**
  * Implements hook_help().
@@ -112,8 +123,7 @@ function asu_content_entity_presave(EntityInterface $entity) {
 
       $entity->setTitle($title);
 
-      // When sold, unpublish apartment.
-      // Unpublishing removes apartment from elasticsearch.
+      // When sold, unpublish apartments.
       if ($entity->isPublished()) {
         if ($entity->field_apartment_state_of_sale->target_id == 'sold') {
           $entity->setUnpublished();
