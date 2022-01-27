@@ -24,7 +24,7 @@ final class FieldTest extends ExistingSiteBase {
       'field_ownership_type',
       'field_apartments',
       'field_state_of_sale',
-      'ƒield_holding_type',
+      'field_holding_type',
       'field_district',
       'field_street_address',
       'field_services',
