@@ -2,14 +2,14 @@
 
 namespace Drupal\asu_content\Plugin\ComputedField;
 
+use Drupal\asu_content\Entity\Apartment;
 use Drupal\computed_field_plugin\Traits\ComputedSingleItemTrait;
 use Drupal\Core\Field\FieldItemList;
 use Drupal\Core\TypedData\DataDefinitionInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
-use Drupal\node\Entity\Node;
 
 /**
- * Computed field StreetAddressField.
+ * Computed field ApplicationFormUrl.
  *
  * @ComputedField(
  *   id = "asu_application_form_url",
@@ -20,18 +20,10 @@ use Drupal\node\Entity\Node;
  * )
  */
 class ApplicationFormUrl extends FieldItemList {
-
   use ComputedSingleItemTrait;
 
   /**
-   * The reverse entity service.
-   *
-   * @var \Drupal\asu_content\CollectReverseEntity
-   */
-  protected $reverseEntities;
-
-  /**
-   * Constructs a StreetAddressField object.
+   * Constructs a ApplicationFormUrl object.
    *
    * @param \Drupal\Core\TypedData\DataDefinitionInterface $definition
    *   The data definition.
@@ -47,7 +39,6 @@ class ApplicationFormUrl extends FieldItemList {
     $name = NULL,
     TypedDataInterface $parent = NULL) {
     parent::__construct($definition, $name, $parent);
-    $this->reverseEntities = \Drupal::service('asu_content.collect_reverse_entity');
   }
 
   /**
@@ -60,63 +51,19 @@ class ApplicationFormUrl extends FieldItemList {
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
   protected function singleComputeValue() {
-    $current_entity = $this->getEntity();
-    $reverse_references = $this->reverseEntities->getReverseReferences($current_entity);
-    $value = FALSE;
-
-    foreach ($reverse_references as $reference) {
-      if (
-        !empty($reference) &&
-        $reference['referring_entity'] instanceof Node &&
-        $this->getEntity()->hasField('field_apartment_number')
-      ) {
-        $value = '';
-        $referencing_node = $reference['referring_entity'];
-        $baseurl = \Drupal::request()->getSchemeAndHttpHost();
-
-        // Application url cannot be indexed if:
-        // Ownership type or end time is missing.
-        if (
-        !isset($referencing_node->field_ownership_type->referencedEntities()[0]) ||
-        !$referencing_node->field_application_end_time->value
-        ) {
-          return [
-            '#markup' => '',
-          ];
-        }
-
-        if (
-          !$referencing_node->field_application_end_time->value ||
-          $this->isBeforeApplicationTimeEnd($referencing_node->field_application_end_time->value)
-        ) {
-          $apartment_type = strtolower($referencing_node->field_ownership_type->referencedEntities()[0]->getName());
-          $value = $baseurl . '/application/add/' . $apartment_type . '/' . $referencing_node->id();
-        }
-        else {
-          $value = $baseurl . '/contact/apply_for_free_apartment?apartment=' . $current_entity->id();
-        }
-      }
+    /** @var Drupal\asu_content\Entity\Apartment $apartment */
+    $apartment = $this->getEntity();
+    if (!$apartment instanceof Apartment ||
+        !$project = $apartment->getProject()
+    ) {
+      return [
+        '#markup' => '',
+      ];
     }
-
     return [
-      '#markup' => $value,
+      '#markup' => $apartment->getApplicationUrl($apartment->id())
     ];
   }
 
-  /**
-   * Check application status.
-   *
-   * @param string $endTime
-   *   End time.
-   *
-   * @return bool
-   *   Application status.
-   */
-  private function isBeforeApplicationTimeEnd(string $endTime) {
-    $end = strtotime($endTime);
-    $date = new \DateTime();
-    $now = $date->getTimestamp();
-    return $now < $end;
-  }
 
 }

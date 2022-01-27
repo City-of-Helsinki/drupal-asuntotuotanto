@@ -2,7 +2,7 @@
 
 namespace Drupal\asu_content;
 
-use Drupal\node\Entity\Node;
+use Drupal\asu_content\Entity\Project;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -35,7 +35,7 @@ class ProjectUpdater {
   /**
    * Update Apartments's state of sale based on Project's schedule.
    *
-   * @param \Drupal\node\Entity\Node $node
+   * @param Drupal\asu_content\Entity\Project $node
    *   Project node.
    *
    * @return int|mixed|string|null
@@ -43,39 +43,39 @@ class ProjectUpdater {
    *
    * @throws \Exception
    */
-  public function updateApartmentStateByApplicationTime(Node $node) {
-    if (!isset($node->{self::APPLICATION_START})) {
+  public function updateApartmentStateByApplicationTime(Project $project) {
+    if (!isset($project->{self::APPLICATION_START})) {
       $message = 'Application start time field is required';
       throw new \InvalidArgumentException($message);
     }
 
-    if (!isset($node->{self::APPLICATION_END})) {
+    if (!isset($project->{self::APPLICATION_END})) {
       $message = 'Application end time field is required';
       throw new \InvalidArgumentException($message);
     }
 
-    if ($this->isProjectWithinApplicationPeriod($node) &&
-      !$this->isProjectSetOpenForApplications($node)) {
-      return $this->updateApartmentsOpenForApplication($node);
+    if ($project->isApplicationPeriod() &&
+      !$this->isProjectSetOpenForApplications($project)) {
+      return $this->updateApartmentsOpenForApplication($project);
     }
 
-    if ($this->applicationTimeOver($node) &&
-        !$this->isProjectSetReserved($node)) {
-      return $this->updateApartmentsReserved($node);
+    if ($project->isApplicationPeriod('after') &&
+        !$this->isProjectSetReserved($project)) {
+      return $this->updateApartmentsReserved($project);
     }
   }
 
   /**
    * Update apartments state of sale.
    *
-   * @param \Drupal\node\Entity\Node $node
+   * @param Drupal\asu_content\Entity\Project $node
    *   Project node.
    *
    * @return int|mixed|string|null
    *   Project id.
    */
-  private function updateApartmentsOpenForApplication(Node $node) {
-    $apartments = $node->field_apartments->referencedEntities();
+  private function updateApartmentsOpenForApplication(Project $node) {
+    $apartments = $node->getApartmentEntities();
     foreach ($apartments as $apartment) {
       $apartment->field_apartment_state_of_sale = self::APARTMENT_APPLICATION_TARGET_STATE;
       $apartment->save();
@@ -86,14 +86,14 @@ class ProjectUpdater {
   /**
    * Update project apartments to new state after application period.
    *
-   * @param \Drupal\node\Entity\Node $node
+   * @param Drupal\asu_content\Entity\Project $node
    *   Project node.
    *
    * @return int|mixed|string|null
    *   Project id.
    */
-  private function updateApartmentsReserved(Node $node) {
-    $apartments = $node->field_apartments->referencedEntities();
+  private function updateApartmentsReserved(Project $node) {
+    $apartments = $node->getApartmentEntities();
     foreach ($apartments as $apartment) {
       $apartment->field_apartment_state_of_sale = self::APARTMENT_RESERVED_TARGET_STATE;
       $apartment->save();
@@ -104,7 +104,7 @@ class ProjectUpdater {
   /**
    * Check if the application time in progress.
    *
-   * @param \Drupal\node\Entity\Node $node
+   * @param Drupal\asu_content\Entity\Project $node
    *   Project node.
    *
    * @return bool
@@ -112,17 +112,14 @@ class ProjectUpdater {
    *
    * @throws \Exception
    */
-  private function isProjectWithinApplicationPeriod(Node $node) {
-    $start = new \DateTime($node->{self::APPLICATION_START}->value);
-    $end = new \DateTime($node->{self::APPLICATION_END}->value);
-    $now = new \DateTime();
-    return $now > $start && $now < $end;
+  private function isProjectWithinApplicationPeriod(Project $node) {
+
   }
 
   /**
    * Check if project apartments already set open for applications.
    *
-   * @param \Drupal\node\Entity\Node $node
+   * @param Drupal\asu_content\Entity\Project $node
    *   Project node.
    *
    * @return bool
@@ -130,8 +127,8 @@ class ProjectUpdater {
    *
    * @throws \Exception
    */
-  private function isProjectSetOpenForApplications(Node $node): bool {
-    $apartments = $node->field_apartments->referencedEntities();
+  private function isProjectSetOpenForApplications(Project $node): bool {
+    $apartments = $node->getApartmentEntities();
     if (!$apartment = reset($apartments)) {
       throw new \Exception('Project has no apartments.');
     }
@@ -144,7 +141,7 @@ class ProjectUpdater {
   /**
    * Check if application end date is in the past.
    *
-   * @param \Drupal\node\Entity\Node $node
+   * @param Drupal\asu_content\Entity\Project $node
    *   Project node.
    *
    * @return bool
@@ -152,16 +149,14 @@ class ProjectUpdater {
    *
    * @throws \Exception
    */
-  private function applicationTimeOver(Node $node): bool {
-    $now = new \DateTime();
-    $end = new \DateTime($node->{self::APPLICATION_END}->value);
-    return $now > $end;
+  private function applicationTimeOver(Project $node): bool {
+
   }
 
   /**
    * Check if project's apartments already been updated.
    *
-   * @param \Drupal\node\Entity\Node $node
+   * @param Drupal\asu_content\Entity\Project $node
    *   Project node.
    *
    * @return bool
@@ -169,7 +164,7 @@ class ProjectUpdater {
    *
    * @throws \Exception
    */
-  private function isProjectSetReserved(Node $node) {
+  private function isProjectSetReserved(Project $node) {
     $apartments = $node->field_apartments->referencedEntities();
     if (!$apartment = reset($apartments)) {
       throw new \Exception('Project has no apartments.');
