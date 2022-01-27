@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace Drupal\Tests\asu_elastic\Functional;
+namespace Drupal\Tests\asu_content\Functional;
 
 use Drupal\node\Entity\Node;
 use weitzman\DrupalTestTraits\ExistingSiteBase;
@@ -12,7 +12,7 @@ use weitzman\DrupalTestTraits\ExistingSiteBase;
  *
  * @group asu_elastic
  */
-final class IndexingTest extends ExistingSiteBase {
+final class FieldTest extends ExistingSiteBase {
 
   /**
    * Make sure indexed data is in correct format.
@@ -37,10 +37,10 @@ final class IndexingTest extends ExistingSiteBase {
 
     $project = Node::create([
       'type' => 'project',
-      'status' => FALSE
+      'status' => FALSE,
     ]);
 
-    foreach($requiredFields as $fieldName) {
+    foreach ($requiredFields as $fieldName) {
       $this->assertTrue(
         $project->hasField($fieldName),
         "field $fieldName exists on project",
@@ -62,19 +62,20 @@ final class IndexingTest extends ExistingSiteBase {
       'field_debt_free_sales_price',
       'field_right_of_occupancy_fee',
       'field_right_of_occupancy_deposit',
-      'field_floor_plan'
+      'field_floor_plan',
     ];
 
     $apartment = Node::create([
       'type' => 'apartment',
-      'status' => FALSE
+      'status' => FALSE,
     ]);
 
-    foreach($requiredFields as $fieldName) {
+    foreach ($requiredFields as $fieldName) {
       $this->assertTrue(
         $apartment->hasField($fieldName),
         "field $fieldName exists on apartment",
       );
     }
   }
+
 }
