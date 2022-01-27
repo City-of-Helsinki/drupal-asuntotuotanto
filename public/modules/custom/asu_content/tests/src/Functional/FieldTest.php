@@ -62,7 +62,7 @@ final class FieldTest extends ExistingSiteBase {
       'field_debt_free_sales_price',
       'field_right_of_occupancy_fee',
       'field_right_of_occupancy_deposit',
-      'field_floor_plan',
+      'field_floorplan',
     ];
 
     $apartment = Node::create([
