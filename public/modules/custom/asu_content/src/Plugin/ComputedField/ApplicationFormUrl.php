@@ -5,8 +5,6 @@ namespace Drupal\asu_content\Plugin\ComputedField;
 use Drupal\asu_content\Entity\Apartment;
 use Drupal\computed_field_plugin\Traits\ComputedSingleItemTrait;
 use Drupal\Core\Field\FieldItemList;
-use Drupal\Core\TypedData\DataDefinitionInterface;
-use Drupal\Core\TypedData\TypedDataInterface;
 
 /**
  * Computed field ApplicationFormUrl.
@@ -21,25 +19,6 @@ use Drupal\Core\TypedData\TypedDataInterface;
  */
 class ApplicationFormUrl extends FieldItemList {
   use ComputedSingleItemTrait;
-
-  /**
-   * Constructs a ApplicationFormUrl object.
-   *
-   * @param \Drupal\Core\TypedData\DataDefinitionInterface $definition
-   *   The data definition.
-   * @param string $name
-   *   (optional) The name of the created property, or NULL if it is the root
-   *   of a typed data tree. Defaults to NULL.
-   * @param \Drupal\Core\TypedData\TypedDataInterface $parent
-   *   (optional) The parent object of the data property, or NULL if it is the
-   *   root of a typed data tree. Defaults to NULL.
-   */
-  public function __construct(
-    DataDefinitionInterface $definition,
-    $name = NULL,
-    TypedDataInterface $parent = NULL) {
-    parent::__construct($definition, $name, $parent);
-  }
 
   /**
    * Compute the street address value.
@@ -61,9 +40,8 @@ class ApplicationFormUrl extends FieldItemList {
       ];
     }
     return [
-      '#markup' => $apartment->getApplicationUrl($apartment->id())
+      '#markup' => $apartment->getApplicationUrl($apartment->id()),
     ];
   }
-
 
 }

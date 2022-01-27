@@ -14,6 +14,9 @@ use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\node\NodeForm;
 use Drupal\node\Entity\Node;
 
+/**
+ * Implements hook_entity_bundle_info_alter().
+ */
 function asu_content_entity_bundle_info_alter(array &$bundles): void {
   if (isset($bundles['node']['project'])) {
     $bundles['node']['project']['class'] = Project::class;
@@ -41,8 +44,6 @@ function asu_content_help($route_name, RouteMatchInterface $route_match) {
 
 /**
  * Implements hook_form_BASE_FORM_ID_alter().
- *
- * {@inheritdoc}
  */
 function asu_content_form_node_form_alter(&$form, $form_state) {
   asu_content_hide_node_title($form);
@@ -51,8 +52,6 @@ function asu_content_form_node_form_alter(&$form, $form_state) {
 
 /**
  * Hide node title from specified node forms.
- *
- * {@inheritDoc}
  */
 function asu_content_hide_node_title(&$form) {
   $forms_to_hide_title_from = [

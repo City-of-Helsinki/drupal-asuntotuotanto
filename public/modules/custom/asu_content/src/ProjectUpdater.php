@@ -35,7 +35,7 @@ class ProjectUpdater {
   /**
    * Update Apartments's state of sale based on Project's schedule.
    *
-   * @param Drupal\asu_content\Entity\Project $node
+   * @param Drupal\asu_content\Entity\Project $project
    *   Project node.
    *
    * @return int|mixed|string|null
@@ -68,58 +68,43 @@ class ProjectUpdater {
   /**
    * Update apartments state of sale.
    *
-   * @param Drupal\asu_content\Entity\Project $node
+   * @param Drupal\asu_content\Entity\Project $project
    *   Project node.
    *
    * @return int|mixed|string|null
    *   Project id.
    */
-  private function updateApartmentsOpenForApplication(Project $node) {
-    $apartments = $node->getApartmentEntities();
+  private function updateApartmentsOpenForApplication(Project $project) {
+    $apartments = $project->getApartmentEntities();
     foreach ($apartments as $apartment) {
       $apartment->field_apartment_state_of_sale = self::APARTMENT_APPLICATION_TARGET_STATE;
       $apartment->save();
     }
-    return $node->id();
+    return $project->id();
   }
 
   /**
    * Update project apartments to new state after application period.
    *
-   * @param Drupal\asu_content\Entity\Project $node
+   * @param Drupal\asu_content\Entity\Project $project
    *   Project node.
    *
    * @return int|mixed|string|null
    *   Project id.
    */
-  private function updateApartmentsReserved(Project $node) {
-    $apartments = $node->getApartmentEntities();
+  private function updateApartmentsReserved(Project $project) {
+    $apartments = $project->getApartmentEntities();
     foreach ($apartments as $apartment) {
       $apartment->field_apartment_state_of_sale = self::APARTMENT_RESERVED_TARGET_STATE;
       $apartment->save();
     }
-    return $node->id();
-  }
-
-  /**
-   * Check if the application time in progress.
-   *
-   * @param Drupal\asu_content\Entity\Project $node
-   *   Project node.
-   *
-   * @return bool
-   *   Check if the project is accepting applications.
-   *
-   * @throws \Exception
-   */
-  private function isProjectWithinApplicationPeriod(Project $node) {
-
+    return $project->id();
   }
 
   /**
    * Check if project apartments already set open for applications.
    *
-   * @param Drupal\asu_content\Entity\Project $node
+   * @param Drupal\asu_content\Entity\Project $project
    *   Project node.
    *
    * @return bool
@@ -127,8 +112,8 @@ class ProjectUpdater {
    *
    * @throws \Exception
    */
-  private function isProjectSetOpenForApplications(Project $node): bool {
-    $apartments = $node->getApartmentEntities();
+  private function isProjectSetOpenForApplications(Project $project): bool {
+    $apartments = $project->getApartmentEntities();
     if (!$apartment = reset($apartments)) {
       throw new \Exception('Project has no apartments.');
     }
@@ -139,24 +124,9 @@ class ProjectUpdater {
   }
 
   /**
-   * Check if application end date is in the past.
-   *
-   * @param Drupal\asu_content\Entity\Project $node
-   *   Project node.
-   *
-   * @return bool
-   *   Has application time ended.
-   *
-   * @throws \Exception
-   */
-  private function applicationTimeOver(Project $node): bool {
-
-  }
-
-  /**
    * Check if project's apartments already been updated.
    *
-   * @param Drupal\asu_content\Entity\Project $node
+   * @param Drupal\asu_content\Entity\Project $project
    *   Project node.
    *
    * @return bool
@@ -164,8 +134,8 @@ class ProjectUpdater {
    *
    * @throws \Exception
    */
-  private function isProjectSetReserved(Project $node) {
-    $apartments = $node->field_apartments->referencedEntities();
+  private function isProjectSetReserved(Project $project) {
+    $apartments = $project->field_apartments->referencedEntities();
     if (!$apartment = reset($apartments)) {
       throw new \Exception('Project has no apartments.');
     }

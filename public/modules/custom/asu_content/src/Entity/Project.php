@@ -1,12 +1,16 @@
 <?php
+
 namespace Drupal\asu_content\Entity;
 
 use Drupal\node\Entity\Node;
 
+/**
+ * Class for node's project bundle.
+ */
 class Project extends Node {
 
   /**
-   * Get apartment entities
+   * Get apartment entities.
    *
    * @return mixed
    *   Array of apartment nodes.
@@ -19,12 +23,12 @@ class Project extends Node {
    * Check if application period is in future, ongoing or finished.
    *
    * @param string $period
-   *   'before' to check if application period is in future
-   * , 'now' to check if application period is ongoing
-   *   'after' if application period is in the past.
+   *   'Before' to check if application period is in future
+   *   'Now' to check if application period is ongoing
+   *   'After' if application period is in the past.
    *
    * @return bool
-   *
+   *   Is application period.
    */
   public function isApplicationPeriod(string $period = 'now') {
     if (!$this->field_application_start_time->value ||
@@ -59,7 +63,8 @@ class Project extends Node {
   /**
    * Get the application url for this project.
    *
-   * @return void
+   * @return string
+   *   Application url.
    */
   public function getApplicationUrl($apartmentId = NULL): string {
     $baseurl = \Drupal::request()->getSchemeAndHttpHost();
