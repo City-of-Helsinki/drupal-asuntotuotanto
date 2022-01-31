@@ -48,7 +48,7 @@
         "drupal/helfi_hauki": "^1.0",
         "drupal/helfi_platform_config": "^2.0",
         "drupal/helfi_tpr": "^1.0",
-        "drupal/helfi_tunnistamo": "^1.0",
+        "drupal/helfi_tunnistamo": "^2.0",
         "drupal/honeypot": "^2.0",
         "drupal/inline_entity_form": "^1.0@RC",
         "drupal/jquery_ui_touch_punch": "^1.0",
@@ -161,6 +161,9 @@
             },
             "drupal/user_bundle": {
                 "Custom patch prevents install from dying when trying to edit nonexisting admin configuration file.": "./patches/remove_editing_admin_configuration.patch"
+            },
+            "drupal/helfi_tunnistamo": {
+                "Temp patch which allows testing on dev/test environment": "patches/tunnistamo.patch"
             }
         }
     },
