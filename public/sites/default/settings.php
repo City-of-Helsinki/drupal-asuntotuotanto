@@ -43,9 +43,10 @@ if (isset($_SERVER['WODBY_APP_NAME'])) {
   // The include won't be added automatically if it's already there.
   include '/var/www/conf/wodby.settings.php';
 }
+$config['openid_connect.client.tunnistamo']['settings']['client_id'] = getenv('TUNNISTAMO_CLIENT_ID');
+$config['openid_connect.client.tunnistamo']['settings']['client_secret'] = getenv('TUNNISTAMO_CLIENT_SECRET');
+$config['openid_connect.client.tunnistamo']['settings']['is_production'] = FALSE;
 
-$config['openid_connect.settings.tunnistamo']['settings']['client_id'] = getenv('TUNNISTAMO_CLIENT_ID');
-$config['openid_connect.settings.tunnistamo']['settings']['client_secret'] = getenv('TUNNISTAMO_CLIENT_SECRET');
 // Drupal route(s).
 $routes = (getenv('DRUPAL_ROUTES')) ? explode(',', getenv('DRUPAL_ROUTES')) : [];
 
@@ -135,10 +136,6 @@ if ($env = getenv('APP_ENV')) {
     $config['search_api.server.asuntotuotanto']['backend_config']['host'] = getenv('ASU_ELASTICSEARCH_ADDRESS') ? str_replace(['https://', ':443'], '', getenv('ASU_ELASTICSEARCH_ADDRESS')) : '';
     $config['search_api.server.asuntotuotanto']['backend_config']['port'] = '443';
 
-    // Authentication
-    $config['openid_connect.client.tunnistamo']['settings']['client_id'] = "asuntotuotanto-ui-$env";
-    $config['openid_connect.client.tunnistamo']['settings']['client_secret'] = '';
-    $config['openid_connect.client.tunnistamo']['settings']['is_production'] = FALSE;
   }
 
   if ($env === 'dev') {
