@@ -96,7 +96,8 @@ function asu_create_backend_user(UserInterface $account) {
       $account->save();
     }
     catch (\Exception $e) {
-      \Drupal::logger('asu_user')->critical('Exception while creating backend user:' . $e->getMessage());
+      \Drupal::logger('asu_user')
+        ->critical('Exception while creating backend user:' . $e->getMessage());
     }
   }
 }

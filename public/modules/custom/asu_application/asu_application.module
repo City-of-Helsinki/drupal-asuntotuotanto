@@ -36,7 +36,7 @@ function asu_application_theme_suggestions_asu_application(array $variables) {
 }
 
 /**
- * Implements hook_form_alter();.
+ * Implements hook_form_alter().
  */
 function asu_application_form_alter(&$form, &$form_state) {
   if (
