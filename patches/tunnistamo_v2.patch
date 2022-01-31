@@ -7,7 +7,7 @@ index 57067c9..1e544ae 100644
     * @var string
     */
 -  public const TESTING_ENVIRONMENT = 'https://api.hel.fi/sso-test';
-+  public const TESTING_ENVIRONMENT = 'https://tunnistamo.test.hel.ninja/openid';
- 
++  public const TESTING_ENVIRONMENT = 'https://tunnistamo.test.hel.ninja';
+
    /**
     * Production environment address.
