@@ -163,7 +163,7 @@
                 "Custom patch prevents install from dying when trying to edit nonexisting admin configuration file.": "./patches/remove_editing_admin_configuration.patch"
             },
             "drupal/helfi_tunnistamo": {
-                "Temp patch which allows testing on dev/test environment": "patches/tunnistamo.patch"
+                "Temp patch which allows testing on dev/test environment": "patches/tunnistamo_v2.patch"
             }
         }
     },
