@@ -97,7 +97,7 @@ if ($env = getenv('APP_ENV')) {
   }
 }
 
-$config['elasticsearch_connector.cluster.asuntotuotanto']['url'] = 'http://elastic:9200';
+
 
 if ($env = getenv('APP_ENV')) {
   $settings['ASU_ELASTICSEARCH_ADDRESS'] = getenv('ASU_ELASTICSEARCH_ADDRESS')  ?? 'http://elastic:9200';
@@ -137,6 +137,7 @@ if ($env = getenv('APP_ENV')) {
     $config['search_api.server.asuntotuotanto']['backend_config']['scheme'] = 'https';
     $config['search_api.server.asuntotuotanto']['backend_config']['host'] = getenv('ASU_ELASTICSEARCH_ADDRESS') ? str_replace(['https://', ':443'], '', getenv('ASU_ELASTICSEARCH_ADDRESS')) : '';
     $config['search_api.server.asuntotuotanto']['backend_config']['port'] = '443';
+    $config['elasticsearch_connector.cluster.asuntotuotanto']['url'] = 'http://elastic:9200';
   }
 
   if ($env === 'dev') {
