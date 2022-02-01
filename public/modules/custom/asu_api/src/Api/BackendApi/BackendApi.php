@@ -6,8 +6,8 @@ use Drupal\asu_api\Api\BackendApi\Request\AuthenticationRequest;
 use Drupal\asu_api\Api\Request;
 use Drupal\asu_api\Api\Response;
 use Drupal\asu_api\Exception\IllegalApplicationException;
-use Drupal\asu_api\Helper\ApplicationHelper;
 use Drupal\asu_api\Helper\AuthenticationHelper;
+use Drupal\asu_api\Helper\RequestHelper;
 use Drupal\Core\TempStore\PrivateTempStore;
 use Drupal\user\UserInterface;
 use GuzzleHttp\Exception\ClientException;
@@ -238,7 +238,7 @@ class BackendApi {
 
     // 400 errors may contain custom error code.
     // @todo Currently api only gives error code on application errors.
-    $message = ApplicationHelper::parseErrorCode($e);
+    $message = RequestHelper::parseErrorCode($e);
     if (is_array($message) && isset($message['code'])) {
       throw new IllegalApplicationException(
         $message,
@@ -264,7 +264,6 @@ class BackendApi {
         get_class($request),
         $e->getMessage()
       ));
-    throw $e;
   }
 
   /**
