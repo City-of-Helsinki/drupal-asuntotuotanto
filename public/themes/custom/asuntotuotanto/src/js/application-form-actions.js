@@ -410,7 +410,7 @@
             originalDropdown.first().closest('tr').find('[id$=-weight]')[0].value = index;
           });
 
-          originalSelectElementTarget[0].change();
+          originalSelectElementTarget.change();
 
           setTimeout(() => {
             if (target.disabled) {
@@ -463,7 +463,7 @@
               originalDropdown.first().closest('tr').find('[id$=-weight]')[0].value = index;
             });
 
-            originalSelectElementTarget[0].change();
+            originalSelectElementTarget.change();
 
             setTimeout(() => {
               if (target.disabled) {
