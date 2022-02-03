@@ -208,6 +208,7 @@ class BackendApi {
       default:
         $this->logError($e, $request);
     }
+    throw $e;
   }
 
   /**
