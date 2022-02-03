@@ -144,7 +144,8 @@
                 "https://www.drupal.org/project/drupal/issues/2925297#comment-13274046": "https://www.drupal.org/files/issues/2019-09-26/core-typed_config_handle_missing_config-2925297-18.patch",
                 "https://www.drupal.org/project/drupal/issues/2466553": "https://www.drupal.org/files/issues/2020-05-14/2466553-75-d91x.patch",
                 "Views attachments are not rendered in the specified order [https://www.drupal.org/project/drupal/issues/2943293]": "https://www.drupal.org/files/issues/2019-05-25/2943293-17.patch",
-                "Fix admin language preference breaking rest api endpoints": "https://www.drupal.org/files/issues/2021-10-22/2706241-59.patch"
+                "Fix admin language preference breaking rest api endpoints": "https://www.drupal.org/files/issues/2021-10-22/2706241-59.patch",
+                "Add remove button and functionality to fields with add-more button": "https://www.drupal.org/files/issues/2021-12-01/1038316-242.patch"
             },
             "drupal/elasticsearch_connector": {
                 "Custom patch based on https://www.drupal.org/files/issues/2020-03-03/8.x-7.x-2977537-13-array-vs-scalar_0.patch": "patches/elasticsearch_connector_indexfactory_v3.patch"
