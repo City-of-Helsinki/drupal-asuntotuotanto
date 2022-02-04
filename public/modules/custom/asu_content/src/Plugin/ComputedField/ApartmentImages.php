@@ -94,7 +94,7 @@ class ApartmentImages extends FieldItemList {
 
         if ($file = File::load($image['target_id'])) {
           $style = ImageStyle::load('3_2_m');
-          $image_url = $style->buildUrl($file->uri->value);
+          $image_url = $style->buildUrl($file->getFileUri());
           $this->list[$delta] = $this->createItem($delta, $image_url);
         }
       }
