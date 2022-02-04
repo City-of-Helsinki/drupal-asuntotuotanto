@@ -227,14 +227,29 @@ function asu_user_form_contact_message_apply_for_free_apartment_form_alter(&$for
 
   // Prefill rest of the field if user data is available.
   $user = \Drupal::currentUser();
-  if (\Drupal::hasService('asu_user.customer')) {
-    $customer = \Drupal::service('asu_user.customer');
-    $fields += [
-      'field_date_of_birth' => $customer->getFieldValue('date_of_birth'),
-      'field_name' => "{$customer->get('first_name')} {$customer->get('last_name')}",
-      'field_phone_number' => $customer->get('phone_number'),
-    ];
+  $config = \Drupal::config('asu_user.external_user_fields')
+    ->get('external_data_map');
+  $values = [];
+  $store = \Drupal::service('tempstore.private')->get('customer');
+
+  try {
+    $date = DrupalDateTime::createFromDateTime(new \DateTime($store->get('date_of_birth') . '06:00:00'));
   }
+  catch(\Exception $e) {
+    $date = '';
+  }
+  $name = '';
+  if ($store->get('first_name') && $store->get('last_name')) {
+    $name = "{$store->get('first_name')} {$store->get('last_name')}";
+  }
+
+  $phone = $store->get('phone_number') ?? '';
+
+  $form['field_date_of_birth']['widget'][0]['value']['#default_value'] = $date;
+
+  $form['field_name']['widget'][0]['value']['#default_value'] = $name;
+  $form['field_phone_number']['widget'][0]['value']['#default_value'] = $phone;
+
 }
 
 /**
