@@ -1,0 +1,14 @@
+uuid: 90355255-01c2-476c-b590-0a9244e0792b
+langcode: fi
+status: true
+dependencies:
+  module:
+    - helfi_tunnistamo
+id: tunnistamo
+label: Tunnistamo
+plugin: tunnistamo
+settings:
+  client_id: just-testing
+  client_secret: my-test-client-secret
+  is_production: 0
+  redirect_url: ''

@@ -182,7 +182,7 @@ final class Filters extends ResourceBase {
    */
   private function getActiveProjectDistricts(): array {
     $indexes = Index::loadMultiple();
-    $index = isset($indexes['apartment']) ? $indexes['apartment'] : reset($indexes);
+    $index = $indexes['apartment'] ?? reset($indexes);
     $query = $index->query();
     $query->range(0, 10000);
     $query->addCondition('_language', ['fi'], 'IN');
@@ -197,7 +197,7 @@ final class Filters extends ResourceBase {
 
     foreach ($resultItems as $resultItem) {
       if (isset($resultItem->getField('project_ownership_type')->getValues()[0])) {
-        $district = isset($resultItem->getField('project_district')->getValues()[0]) ? $resultItem->getField('project_district')->getValues()[0] : '';
+        $district = $resultItem->getField('project_district')->getValues()[0] ?? '';
         if ($district) {
           $projects[strtolower($resultItem->getField('project_ownership_type')->getValues()[0])][] = $district;
         }

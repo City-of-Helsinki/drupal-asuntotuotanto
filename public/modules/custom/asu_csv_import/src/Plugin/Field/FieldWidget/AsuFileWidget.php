@@ -460,7 +460,7 @@ class AsuFileWidget extends WidgetBase implements ContainerFactoryPluginInterfac
       $element['description'] = [
         '#type' => $config->get('description.type'),
         '#title' => t('Description'),
-        '#value' => isset($item['description']) ? $item['description'] : '',
+        '#value' => $item['description'] ?? '',
         '#maxlength' => $config->get('description.length'),
         '#description' => t('The description may be used as the label of the link to the file.'),
       ];
