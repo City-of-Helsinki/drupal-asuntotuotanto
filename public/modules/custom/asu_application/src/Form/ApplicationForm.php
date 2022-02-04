@@ -25,6 +25,9 @@ class ApplicationForm extends ContentEntityForm {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
+    $form_state->setRebuild(TRUE);
+    $form_state->disableCache();
+
     /** @var \Drupal\user\Entity\User $currentUser */
     $currentUser = User::load(\Drupal::currentUser()->id());
     $applicationsUrl = $this->getUserApplicationsUrl();
@@ -373,13 +376,13 @@ class ApplicationForm extends ContentEntityForm {
     /** @var \Drupal\asu_application\Entity\Application $entity */
     $entity = $form_state->getFormObject()->entity;
     $values = $form_state->getUserInput();
+    $form_state->setRebuild(TRUE);
 
     // Delete.
     if (
       strpos($triggerName, 'apartment') !== FALSE &&
       $form_state->getUserInput()['apartment'][$trigger]['id'] === "0"
     ) {
-      $form_state->setRebuild(TRUE);
 
       unset($userInput['apartment'][$trigger]);
       unset($form['apartment']['widget'][$trigger]);
