@@ -31,8 +31,9 @@ class ApartmentWidget extends WidgetBase {
       '#required' => FALSE,
       '#empty_option' => [0 => $this->t('Select apartment')],
       // Apartment_values is set where ever the form is built.
-      '#options' => isset($form['#apartment_values']) ? $form['#apartment_values'] : [],
-      '#default_value' => isset($items->getValue()[$delta]['id']) ? $items->getValue()[$delta]['id'] : 0,
+      '#options' => $form['#apartment_values'] ?? [],
+      '#default_value' => $items->getValue()[$delta]['id'] ?? 0,
+      '#limit_validation_errors' => [],
       '#ajax' => [
         'wrapper' => 'edit-apartment-wrapper',
         'event' => 'change',

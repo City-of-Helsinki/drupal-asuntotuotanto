@@ -25,6 +25,9 @@ class ApplicationForm extends ContentEntityForm {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
+    $form_state->setRebuild(TRUE);
+    $form_state->disableCache();
+
     /** @var \Drupal\user\Entity\User $currentUser */
     $currentUser = User::load(\Drupal::currentUser()->id());
     $applicationsUrl = $this->getUserApplicationsUrl();
@@ -358,14 +361,14 @@ class ApplicationForm extends ContentEntityForm {
   }
 
   /**
-   * Ajax callback function to presave the form.
+   * Ajax callback function to presave when triggered by apartment selection.
    *
    * @param array $form
    *   Form.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   Form state.
    */
-  public function saveApplicationCallback(array &$form, FormStateInterface $form_state) {
+  public function saveApplicationCallback(array &$form, FormStateInterface &$form_state) {
     $triggerName = $form_state->getTriggeringElement()['#name'];
     $trigger = (int) preg_replace('/[^0-9]/', '', $triggerName);
     $userInput = $form_state->getUserInput();
@@ -373,21 +376,35 @@ class ApplicationForm extends ContentEntityForm {
     /** @var \Drupal\asu_application\Entity\Application $entity */
     $entity = $form_state->getFormObject()->entity;
     $values = $form_state->getUserInput();
+    $form_state->setRebuild(TRUE);
 
     // Delete.
     if (
       strpos($triggerName, 'apartment') !== FALSE &&
       $form_state->getUserInput()['apartment'][$trigger]['id'] === "0"
     ) {
+
       unset($userInput['apartment'][$trigger]);
       unset($form['apartment']['widget'][$trigger]);
 
       // Save apartment values to database.
-      $this->updateApartments($form, $entity, $values['apartment']);
-      // Update "has_children" value.
-      $entity->set('has_children', $values['has_children']['value'] ?? 0);
+      $apartments = $this->updateApartments($form, $entity, $values['apartment']);
       $entity->save();
-      return $form['apartment'];
+
+      $response = new AjaxResponse();
+
+      $response->addCommand(
+        new UpdateBuildIdCommand(
+          $form['#build_id_old'],
+          $form['#build_id']
+        ),
+        new ReplaceCommand(
+          '#edit-apartment-wrapper',
+          $form['apartments'],
+        ),
+      );
+
+      return $response;
     }
 
     // Save apartment values to database.
@@ -437,6 +454,7 @@ class ApplicationForm extends ContentEntityForm {
       ];
     }
     $entity->apartment->setValue($apartments);
+    return $sorted;
   }
 
   /**

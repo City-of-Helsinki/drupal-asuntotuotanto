@@ -62,7 +62,7 @@ class CreateUserRequest extends Request {
 
     if ($this->userInformation) {
       foreach ($fieldMap as $field => $information) {
-        $data[$information['external_field']] = isset($this->userInformation[$field]) ? $this->userInformation[$field] : '-';
+        $data[$information['external_field']] = $this->userInformation[$field] ?? '-';
       }
     }
 
