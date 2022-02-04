@@ -235,21 +235,18 @@ function asu_user_form_contact_message_apply_for_free_apartment_form_alter(&$for
   try {
     $date = DrupalDateTime::createFromDateTime(new \DateTime($store->get('date_of_birth') . '06:00:00'));
   }
-  catch(\Exception $e) {
+  catch (\Exception $e) {
     $date = '';
   }
   $name = '';
   if ($store->get('first_name') && $store->get('last_name')) {
     $name = "{$store->get('first_name')} {$store->get('last_name')}";
   }
-
   $phone = $store->get('phone_number') ?? '';
 
   $form['field_date_of_birth']['widget'][0]['value']['#default_value'] = $date;
-
   $form['field_name']['widget'][0]['value']['#default_value'] = $name;
   $form['field_phone_number']['widget'][0]['value']['#default_value'] = $phone;
-
 }
 
 /**
