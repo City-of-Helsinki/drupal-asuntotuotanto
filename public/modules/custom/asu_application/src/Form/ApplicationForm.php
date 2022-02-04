@@ -361,7 +361,7 @@ class ApplicationForm extends ContentEntityForm {
   }
 
   /**
-   * Ajax callback function to presave the form, triggered by apartment selection.
+   * Ajax callback function to presave when triggered by apartment selection.
    *
    * @param array $form
    *   Form.
