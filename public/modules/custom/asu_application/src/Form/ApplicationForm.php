@@ -263,7 +263,12 @@ class ApplicationForm extends ContentEntityForm {
    */
   public function ajaxSaveDraft(array $form, FormStateInterface $form_state) {
     $form_state->setRebuild(TRUE);
-    $this->updateEntityFieldsWithUserInput($form_state);
+    $entity = $form_state->getFormObject()->entity;
+    $values = $form_state->getUserInput();
+    $this->updateApartments($form, $entity, $values['apartment']);
+
+    //$this->updateEntityFieldsWithUserInput($form_state);
+
 
     if ($this->entity->hasField('field_agreement_policy')) {
       $this->entity->set('field_agreement_policy', FALSE);
@@ -271,7 +276,7 @@ class ApplicationForm extends ContentEntityForm {
     if ($this->entity->hasField('field_data_agreement_policy')) {
       $this->entity->set('field_data_agreement_policy', FALSE);
     }
-    $this->entity->save();
+    $entity->save();
 
     $this->messenger()->deleteAll();
     $this->messenger()->addMessage($this->t('The application has been saved as a draft.
@@ -376,7 +381,6 @@ class ApplicationForm extends ContentEntityForm {
     /** @var \Drupal\asu_application\Entity\Application $entity */
     $entity = $form_state->getFormObject()->entity;
     $values = $form_state->getUserInput();
-    $form_state->setRebuild(TRUE);
 
     // Delete.
     if (
@@ -388,7 +392,7 @@ class ApplicationForm extends ContentEntityForm {
       unset($form['apartment']['widget'][$trigger]);
 
       // Save apartment values to database.
-      $apartments = $this->updateApartments($form, $entity, $values['apartment']);
+      $this->updateApartments($form, $entity, $values['apartment']);
       $entity->save();
 
       $response = new AjaxResponse();
