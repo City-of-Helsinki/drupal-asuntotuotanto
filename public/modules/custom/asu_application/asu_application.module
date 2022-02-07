@@ -107,7 +107,7 @@ function template_preprocess_asu_application(array &$variables) {
         'project_main_image_url' => $main_image_file_url ?? NULL,
         'project_district' => $district,
         'is_application_period' => $project->isApplicationPeriod('now'),
-        'is_application_period_over' => $project->isApplicationPeriod('after')
+        'is_application_period_over' => $project->isApplicationPeriod('after'),
       ],
     ];
 
@@ -140,7 +140,7 @@ function template_preprocess_asu_application(array &$variables) {
         'apartments_data' => $apartments_data,
         // 'haso_owner' => $application->get('field_haso_owner')->getValue(),
         'hitas_owner' => '',
-        'is_locked' => $application->field_locked->value
+        'is_locked' => $application->field_locked->value,
       ];
 
       if ($application->hasField('field_right_of_residence_number')) {
@@ -155,7 +155,7 @@ function template_preprocess_asu_application(array &$variables) {
     }
 
     $application_teaser_values['#teaser_values']['application_url'] =
-      $application->isLocked() || !$project->isApplicationPeriod( ) ? "/application/$id" : "/application/$id/edit";
+      $application->isLocked() || !$project->isApplicationPeriod() ? "/application/$id" : "/application/$id/edit";
 
   }
   catch (\Exception $e) {
