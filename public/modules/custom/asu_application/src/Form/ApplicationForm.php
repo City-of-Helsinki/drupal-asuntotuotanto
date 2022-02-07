@@ -181,7 +181,7 @@ class ApplicationForm extends ContentEntityForm {
         '#attributes' => ['class' => ['hds-button--secondary']],
         '#limit_validation_errors' => [],
         '#name' => 'submit-draft',
-        '#submit' => ['::submit_draft'],
+        '#submit' => ['::submitDraft'],
       ];
     }
     return $form;
@@ -209,11 +209,9 @@ class ApplicationForm extends ContentEntityForm {
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   Form state.
    *
-   * @return void
-   *
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
-  public function submit_draft(array &$form, FormStateInterface $form_state) {
+  public function submitDraft(array &$form, FormStateInterface $form_state) {
     $this->doSave($form, $form_state);
     $this->messenger()->addMessage($this->t('The application has been saved as a draft.
      You must submit the application before the application time expires.'));
@@ -239,8 +237,6 @@ class ApplicationForm extends ContentEntityForm {
    *   Form array.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   Form state.
-   *
-   * @return void
    *
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
@@ -272,6 +268,7 @@ class ApplicationForm extends ContentEntityForm {
    *   Form state.
    *
    * @return \Symfony\Component\HttpFoundation\RedirectResponse|void
+   *   Redirect response.
    */
   private function handleApplicationEvent(array $form, FormStateInterface $form_state) {
     $currentUser = User::load(\Drupal::currentUser()->id());
