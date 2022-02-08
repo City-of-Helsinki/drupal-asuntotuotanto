@@ -237,6 +237,8 @@ class ApplicationForm extends ContentEntityForm {
    *   Form array.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   Form state.
+   * @param bool $errors
+   *   Print error to user.
    *
    * @throws \Drupal\Core\Entity\EntityStorageException
    */

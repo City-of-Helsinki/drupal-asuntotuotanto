@@ -125,7 +125,7 @@ class ApplicantFieldItem extends FieldItemBase implements FieldItemInterface {
       'email',
     ];
 
-    foreach($fields as $field) {
+    foreach ($fields as $field) {
       if ($this->{$field} != NULL && $this->{$field} != '') {
         return FALSE;
       }
