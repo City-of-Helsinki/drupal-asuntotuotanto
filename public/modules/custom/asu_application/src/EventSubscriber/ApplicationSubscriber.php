@@ -181,7 +181,7 @@ class ApplicationSubscriber implements EventSubscriberInterface {
       $application->set('field_locked', 1);
       $application->save();
 
-      $this->messenger()->addStatus($this->t('The application has been submitted successfully.
+      $this->messenger()->addStatus(t('The application has been submitted successfully.
      You can no longer edit the application.'));
 
     }
