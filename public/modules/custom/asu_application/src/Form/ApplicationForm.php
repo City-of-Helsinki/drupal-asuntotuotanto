@@ -6,12 +6,12 @@ use Drupal\asu_application\Entity\Application;
 use Drupal\asu_application\Event\ApplicationEvent;
 use Drupal\asu_application\Event\SalesApplicationEvent;
 use Drupal\Core\Ajax\AjaxResponse;
-use Drupal\Core\Ajax\RedirectCommand;
 use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Ajax\UpdateBuildIdCommand;
 use Drupal\Core\Entity\ContentEntityForm;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Messenger\MessengerTrait;
+use Drupal\Core\Url;
 use Drupal\user\Entity\User;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
@@ -34,18 +34,17 @@ class ApplicationForm extends ContentEntityForm {
     $project_id = $this->entity->get('project_id')->value;
     $application_type_id = $this->entity->bundle();
 
+    // User must be logged in.
     if (!$currentUser->isAuthenticated()) {
-      // Anonymous user must login.
-      if (!$currentUser->isAuthenticated()) {
-        \Drupal::messenger()->addMessage($this->t('You must be logged in to fill an application. <a href="/user/login">Log in</a> or <a href="/user/register">create a new account</a>'));
-        $project_type = strtolower($application_type_id);
-        $application_url = "/application/add/$project_type/$project_id";
-        $session = \Drupal::request()->getSession();
-        $session->set('asu_last_application_url', $application_url);
-        return(new RedirectResponse('/user/login', 301));
-      }
+      \Drupal::messenger()->addMessage($this->t('You must be logged in to fill an application. <a href="/user/login">Log in</a> or <a href="/user/register">create a new account</a>'));
+      $project_type = strtolower($application_type_id);
+      $application_url = "/application/add/$project_type/$project_id";
+      $session = \Drupal::request()->getSession();
+      $session->set('asu_last_application_url', $application_url);
+      return(new RedirectResponse('/user/login', 301));
     }
 
+    // Form is filled by customer or salesperson on behalf of the customer.
     if ($currentUser->bundle() == 'customer') {
       $owner_id = $currentUser->id();
       $owner = $currentUser;
@@ -63,7 +62,7 @@ class ApplicationForm extends ContentEntityForm {
         'uid' => $owner_id,
       ]);
 
-    // User must have valid email address to fill more than one application.
+    // User must have valid email address to draft more than one application.
     if (
       $owner->hasField('field_email_is_valid') &&
       $owner->get('field_email_is_valid')->value == 0
@@ -91,15 +90,9 @@ class ApplicationForm extends ContentEntityForm {
     $form['#project_id'] = $project_id;
 
     // Redirect cases.
-    try {
-      if (!$project_data = $this->getApartments($project_id)) {
-        throw new \InvalidArgumentException('Project or apartments for project not found.');
-      }
-    }
-    catch (\Exception $e) {
-      // Project not found.
+    if (!$project_data = $this->getApartments($project_id)) {
       $this->logger('asu_application')->critical('User tried to access nonexistent project of id ' . $project_id);
-      $this->messenger()->addMessage($this->t('Unfortunately the project you are trying to apply for is unavailable. If the problem persists send us a message.'));
+      $this->messenger()->addMessage($this->t('Unfortunately the project you are trying to apply for is unavailable.'));
       return new RedirectResponse($applicationsUrl);
     }
 
@@ -119,6 +112,7 @@ class ApplicationForm extends ContentEntityForm {
       }
     }
 
+    // Hitas and haso has their own application forms.
     if (!$this->isCorrectApplicationFormForProject($application_type_id, $project_data['ownership_type'])) {
       $this->logger('asu_application')->critical('User tried to access ' . $project_data['ownership_type'] . ' application with project id of ' . $project_id . ' using wrong url.');
       $types = [
@@ -177,6 +171,7 @@ class ApplicationForm extends ContentEntityForm {
     $form['#title'] = sprintf('%s %s', $this->t('Application for'), $projectName);
 
     $form['actions']['submit']['#value'] = $this->t('Send application');
+    $form['actions']['submit']['#name'] = 'submit-application';
 
     // Show draft button only for customers.
     if ($currentUser->bundle() == 'customer') {
@@ -184,10 +179,9 @@ class ApplicationForm extends ContentEntityForm {
         '#type' => 'submit',
         '#value' => t('Save as a draft'),
         '#attributes' => ['class' => ['hds-button--secondary']],
-        '#ajax' => [
-          'callback' => '::ajaxSaveDraft',
-          'event' => 'click',
-        ],
+        '#limit_validation_errors' => [],
+        '#name' => 'submit-draft',
+        '#submit' => ['::submitDraft'],
       ];
     }
     return $form;
@@ -196,7 +190,57 @@ class ApplicationForm extends ContentEntityForm {
   /**
    * {@inheritdoc}
    */
+  public function validateForm(array &$form, FormStateInterface $form_state) {
+    $triggerName = $form_state->getTriggeringElement()['#name'];
+    if ($triggerName == 'submit-application') {
+      parent::validateForm($form, $form_state);
+    }
+    if ($triggerName == 'submit-draft') {
+      parent::validateForm($form, $form_state);
+      $form_state->clearErrors();
+    }
+  }
+
+  /**
+   * Submit form without sending it to backend.
+   *
+   * @param array $form
+   *   Form array.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   Form state.
+   *
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   */
+  public function submitDraft(array &$form, FormStateInterface $form_state) {
+    $this->doSave($form, $form_state);
+    $this->messenger()->addMessage($this->t('The application has been saved as a draft.
+     You must submit the application before the application time expires.'));
+    // $form_state->setRedirect(getUserApplicationsUrl());
+    $url = Url::fromUri($this->getUserApplicationsUrl(FALSE));
+    $form_state->setRedirectUrl($url);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function save(array $form, FormStateInterface $form_state) {
+    $this->doSave($form, $form_state);
+    $this->handleApplicationEvent($form, $form_state);
+    $content_entity_id = $this->entity->getEntityType()->id();
+    $form_state->setRedirect("entity.{$content_entity_id}.canonical", [$content_entity_id => $this->entity->id()]);
+  }
+
+  /**
+   * Handle saving the form values.
+   *
+   * @param array $form
+   *   Form array.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   Form state.
+   *
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   */
+  private function doSave(array $form, FormStateInterface $form_state) {
     $values = $form_state->getUserInput();
 
     $this->updateEntityFieldsWithUserInput($form_state);
@@ -213,7 +257,20 @@ class ApplicationForm extends ContentEntityForm {
         }
       }
     }
+  }
 
+  /**
+   * Handle the application event.
+   *
+   * @param array $form
+   *   Form array.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   Form state.
+   *
+   * @return \Symfony\Component\HttpFoundation\RedirectResponse|void
+   *   Redirect response.
+   */
+  private function handleApplicationEvent(array $form, FormStateInterface $form_state) {
     $currentUser = User::load(\Drupal::currentUser()->id());
     if ($currentUser->bundle() == 'sales' || $currentUser->hasPermission('administer')) {
       $eventName = SalesApplicationEvent::EVENT_NAME;
@@ -242,50 +299,8 @@ class ApplicationForm extends ContentEntityForm {
         $form['#apartment_uuids']
       );
     }
-
     \Drupal::service('event_dispatcher')
       ->dispatch($event, $eventName);
-
-    $content_entity_id = $this->entity->getEntityType()->id();
-    $form_state->setRedirect("entity.{$content_entity_id}.canonical", [$content_entity_id => $this->entity->id()]);
-  }
-
-  /**
-   * Save application as draft.
-   *
-   * @param array $form
-   *   Form.
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   Form state.
-   *
-   * @return \Drupal\Core\Ajax\AjaxResponse
-   *   Ajax response.
-   */
-  public function ajaxSaveDraft(array $form, FormStateInterface $form_state) {
-    $form_state->setRebuild(TRUE);
-    $this->updateEntityFieldsWithUserInput($form_state);
-
-    if ($this->entity->hasField('field_agreement_policy')) {
-      $this->entity->set('field_agreement_policy', FALSE);
-    }
-    if ($this->entity->hasField('field_data_agreement_policy')) {
-      $this->entity->set('field_data_agreement_policy', FALSE);
-    }
-    $this->entity->save();
-
-    $this->messenger()->deleteAll();
-    $this->messenger()->addMessage($this->t('The application has been saved as a draft.
-     You must submit the application before the application time expires.'));
-    $url = $this->getUserApplicationsUrl();
-    $response = new AjaxResponse();
-    $response->addCommand(new RedirectCommand($url));
-    $response->addCommand(
-      new UpdateBuildIdCommand(
-        $form['#build_id_old'],
-        $form['#build_id']
-      )
-    );
-    return $response;
   }
 
   /**
@@ -376,7 +391,6 @@ class ApplicationForm extends ContentEntityForm {
     /** @var \Drupal\asu_application\Entity\Application $entity */
     $entity = $form_state->getFormObject()->entity;
     $values = $form_state->getUserInput();
-    $form_state->setRebuild(TRUE);
 
     // Delete.
     if (
@@ -388,7 +402,7 @@ class ApplicationForm extends ContentEntityForm {
       unset($form['apartment']['widget'][$trigger]);
 
       // Save apartment values to database.
-      $apartments = $this->updateApartments($form, $entity, $values['apartment']);
+      $this->updateApartments($form, $entity, $values['apartment']);
       $entity->save();
 
       $response = new AjaxResponse();
@@ -513,8 +527,11 @@ class ApplicationForm extends ContentEntityForm {
   /**
    * Get url to applications page.
    */
-  private function getUserApplicationsUrl(): string {
-    return \Drupal::request()->getSchemeAndHttpHost() . '/user/applications';
+  private function getUserApplicationsUrl($url = TRUE): string {
+    if ($url) {
+      return \Drupal::request()->getSchemeAndHttpHost() . '/user/applications';
+    }
+    return 'internal:/user/applications';
   }
 
   /**
