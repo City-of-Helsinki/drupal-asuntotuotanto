@@ -41,7 +41,7 @@ class ApplicationForm extends ContentEntityForm {
       $application_url = "/application/add/$project_type/$project_id";
       $session = \Drupal::request()->getSession();
       $session->set('asu_last_application_url', $application_url);
-      return(new RedirectResponse('/user/login', 301));
+      return (new RedirectResponse('/user/login', 301));
     }
 
     // Form is filled by customer or salesperson on behalf of the customer.
@@ -142,7 +142,7 @@ class ApplicationForm extends ContentEntityForm {
     if ($this->isApplicationPeriod('after', $startDate, $endDate)) {
       $this->messenger()->addMessage($this->t('The application period has ended. You can still apply for the apartment by contacting the responsible salesperson.'));
       $freeApplicationUrl = \Drupal::request()->getSchemeAndHttpHost() .
-        '/contact/apply_for_free_apartment?title=' . $project_data['project_name'];
+        '/contact/apply_for_free_apartment?project=' . $project_id;
       return new RedirectResponse($freeApplicationUrl);
     }
 
@@ -212,7 +212,7 @@ class ApplicationForm extends ContentEntityForm {
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
   public function submitDraft(array &$form, FormStateInterface $form_state) {
-    $this->doSave($form, $form_state);
+    $this->doSave($form, $form_state, FALSE);
     $this->messenger()->addMessage($this->t('The application has been saved as a draft.
      You must submit the application before the application time expires.'));
     // $form_state->setRedirect(getUserApplicationsUrl());
@@ -237,10 +237,12 @@ class ApplicationForm extends ContentEntityForm {
    *   Form array.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   Form state.
+   * @param bool $errors
+   *   Print error to user.
    *
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
-  private function doSave(array $form, FormStateInterface $form_state) {
+  private function doSave(array $form, FormStateInterface $form_state, $errors = TRUE) {
     $values = $form_state->getUserInput();
 
     $this->updateEntityFieldsWithUserInput($form_state);
@@ -252,7 +254,9 @@ class ApplicationForm extends ContentEntityForm {
     if ($values['applicant'][0]['has_additional_applicant'] === "1") {
       foreach ($values['applicant'][0] as $key => $value) {
         if (!isset($value) || !$value || $value === '') {
-          $this->messenger()->addError($this->t('You must fill all fields for additional applicant before application can be submitted'));
+          if ($errors) {
+            $this->messenger()->addError($this->t('You must fill all fields for additional applicant before application can be submitted'));
+          }
           return;
         }
       }
