@@ -5,7 +5,6 @@ namespace Drupal\asu_rest\Plugin\rest\resource;
 use Drupal\asu_application\Applications;
 use Drupal\asu_rest\UserDto;
 use Drupal\Core\Access\CsrfRequestHeaderAccessCheck;
-use Drupal\Core\Cache\Cache;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\rest\ModifiedResourceResponse;
 use Drupal\rest\Plugin\ResourceBase;
@@ -33,7 +32,7 @@ final class Initialize extends ResourceBase {
   public function get() {
     $response = [];
 
-    // Gets filters cached if possible
+    // Gets filters cached if possible.
     $response['filters'] = $this->getFilters();
 
     $response['static_content'] = $this->getStaticContent();
@@ -223,7 +222,7 @@ final class Initialize extends ResourceBase {
         'for_sale',
         'free_for_reservation',
         'reserved_haso',
-        'reserved'
+        'reserved',
       ],
       'IN'
     );
