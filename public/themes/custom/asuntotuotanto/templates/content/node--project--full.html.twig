@@ -381,7 +381,7 @@
               {% set uri = attachment.uri %}
 
               <li class="project__attachment-item">
-                <a href="{{ uri }}" download="{{ description ?: name }}" class="project__attachment-link">
+                <a href="{{ uri }}" class="project__attachment-link">
                   {% include "@hdbt/misc/icon.twig" with {icon: 'document', label: ''} %}
                   <div class="project__attachment-content">
                     <p class="project__attachment-description">{{ 'Download'|t }}</p>
