@@ -187,17 +187,18 @@ function asu_user_form_contact_message_apply_for_free_apartment_form_alter(&$for
   $error = FALSE;
   if (!$apartment_id && !$project_id) {
     $error = TRUE;
-  } else {
+  }
+  else {
     if ($apartment_id) {
       $apartment = Node::load($apartment_id);
-      if ($apartment->bundle()=='apartment') {
+      if ($apartment->bundle() == 'apartment') {
         $project = $apartment->getProject();
       }
-      if (!$project){
+      if (!$project) {
         $error = TRUE;
       }
     }
-    else if($project_id){
+    elseif ($project_id) {
       $project = Node::load($project_id);
       if ($project->bundle() != 'project') {
         $error = TRUE;
@@ -225,7 +226,7 @@ function asu_user_form_contact_message_apply_for_free_apartment_form_alter(&$for
     }
   }
   else {
-    if (!\Drupal::currentUser()->isAuthenticated()){
+    if (!\Drupal::currentUser()->isAuthenticated()) {
       \Drupal::messenger()->addMessage(t('You must be logged
     in to fill an application'));
       $application_url = "/contact/apply_for_free_apartment?project=$project_id";
@@ -266,7 +267,8 @@ function asu_user_form_contact_message_apply_for_free_apartment_form_alter(&$for
     $form['field_apartment_information']['widget'][0]['value']['#default_value']
       = $apartment->getTitle();
     $form['field_apartment_information']['widget'][0]['value']['#attributes']['readonly'] = 'readonly';
-  } else {
+  }
+  else {
     $form['field_apartment_information']['widget'][0]['value']['#attributes']['readonly'] = 'readonly';
     $form['field_apartment_information']['widget'][0]['value']['#type'] = 'hidden';
 

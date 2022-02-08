@@ -212,7 +212,7 @@ class ApplicationForm extends ContentEntityForm {
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
   public function submitDraft(array &$form, FormStateInterface $form_state) {
-    $this->doSave($form, $form_state);
+    $this->doSave($form, $form_state, FALSE);
     $this->messenger()->addMessage($this->t('The application has been saved as a draft.
      You must submit the application before the application time expires.'));
     // $form_state->setRedirect(getUserApplicationsUrl());
@@ -240,7 +240,7 @@ class ApplicationForm extends ContentEntityForm {
    *
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
-  private function doSave(array $form, FormStateInterface $form_state) {
+  private function doSave(array $form, FormStateInterface $form_state, $errors = TRUE) {
     $values = $form_state->getUserInput();
 
     $this->updateEntityFieldsWithUserInput($form_state);
@@ -252,7 +252,9 @@ class ApplicationForm extends ContentEntityForm {
     if ($values['applicant'][0]['has_additional_applicant'] === "1") {
       foreach ($values['applicant'][0] as $key => $value) {
         if (!isset($value) || !$value || $value === '') {
-          $this->messenger()->addError($this->t('You must fill all fields for additional applicant before application can be submitted'));
+          if ($errors) {
+            $this->messenger()->addError($this->t('You must fill all fields for additional applicant before application can be submitted'));
+          }
           return;
         }
       }

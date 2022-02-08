@@ -73,7 +73,7 @@ class Project extends Node {
       return sprintf('%s/application/add/%s/%s', $baseurl, $apartmentType, $this->id());
     }
     if ($this->isApplicationPeriod('after')) {
-      $queryParameter = $apartmentId ? "?apartment=$apartmentId" : '?project='.$this->id();
+      $queryParameter = $apartmentId ? "?apartment=$apartmentId" : '?project=' . $this->id();
       return sprintf('%s/contact/apply_for_free_apartment%s', $baseurl, $queryParameter);
     }
     return '';
