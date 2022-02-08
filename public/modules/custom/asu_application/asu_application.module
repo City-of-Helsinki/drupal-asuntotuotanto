@@ -10,6 +10,7 @@ use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\node\Entity\Node;
 use Drupal\file\Entity\File;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Implements hook_theme().
@@ -179,7 +180,60 @@ function template_preprocess_asu_application(array &$variables) {
  */
 function asu_user_form_contact_message_apply_for_free_apartment_form_alter(&$form, &$form_state, $form_id) {
   $apartment_id = \Drupal::request()->get('apartment') ?? NULL;
-  $apartment = Node::load($apartment_id);
+  $project_id = \Drupal::request()->get('project') ?? NULL;
+
+  $apartment = NULL;
+  $project = NULL;
+  $error = FALSE;
+  if (!$apartment_id && !$project_id) {
+    $error = TRUE;
+  } else {
+    if ($apartment_id) {
+      $apartment = Node::load($apartment_id);
+      if ($apartment->bundle()=='apartment') {
+        $project = $apartment->getProject();
+      }
+      if (!$project){
+        $error = TRUE;
+      }
+    }
+    else if($project_id){
+      $project = Node::load($project_id);
+      if ($project->bundle() != 'project') {
+        $error = TRUE;
+      }
+    }
+    if (!$project && !$apartment) {
+      $error = TRUE;
+    }
+  }
+
+  if ($error == TRUE) {
+    \Drupal::messenger(t('Problem while opening contact form'));
+    return;
+  }
+
+  if ($apartment) {
+    if (!\Drupal::currentUser()->isAuthenticated()) {
+      $apartment_id = $apartment->id();
+      \Drupal::messenger()->addMessage(t('You must be logged
+    in to fill an application'));
+      $application_url = "/contact/apply_for_free_apartment?apartment=$apartment_id";
+      $session = \Drupal::request()->getSession();
+      $session->set('asu_last_application_url', $application_url);
+      return (new RedirectResponse('/user/login', 301));
+    }
+  }
+  else {
+    if (!\Drupal::currentUser()->isAuthenticated()){
+      \Drupal::messenger()->addMessage(t('You must be logged
+    in to fill an application'));
+      $application_url = "/contact/apply_for_free_apartment?project=$project_id";
+      $session = \Drupal::request()->getSession();
+      $session->set('asu_last_application_url', $application_url);
+      return (new RedirectResponse('/user/login', 301));
+    }
+  }
 
   $form['#contact_form_title'] = $apartment ? $apartment->getTitle() : t('Apply for an apartment');
   $form['#contact_form_text'] = t('Leave your contact information and we will personally contact you regarding this apartment.');
@@ -188,7 +242,6 @@ function asu_user_form_contact_message_apply_for_free_apartment_form_alter(&$for
   $user = \Drupal::currentUser();
   $config = \Drupal::config('asu_user.external_user_fields')
     ->get('external_data_map');
-  $values = [];
   $store = \Drupal::service('tempstore.private')->get('customer');
 
   try {
@@ -208,57 +261,32 @@ function asu_user_form_contact_message_apply_for_free_apartment_form_alter(&$for
   $form['field_phone_number']['widget'][0]['value']['#default_value'] = $phone;
 
   $form['field_contact_person']['widget'][0]['value']['#type'] = 'hidden';
-  if (!$apartment || $apartment->bundle() != 'apartment') {
-    $form['message']['widget'][0]['value']['#default_value'] = \Drupal::request()->get('title') ?? '';
-    return;
-  }
 
-  // // Anonymous user must login.
-  // @todo Redirecting in alter is bad practice.
-  // if (!\Drupal::currentUser()->isAuthenticated()) {
-  // \Drupal::messenger()->addMessage(t('You must be logged
-  // in to fill an application'));
-  // $application_url = "/contact/apply_for_free_apartment?
-  // apartment=$apartment_id";
-  // $session = \Drupal::request()->getSession();
-  // $session->set('asu_last_application_url', $application_url);
-  // (new RedirectResponse('/user/login', 301))->send();
-  // return;
-  // }
-  $parent = \Drupal::entityTypeManager()
-    ->getListBuilder('node')
-    ->getStorage()
-    ->loadByProperties([
-      'type' => 'project',
-      'status' => 1,
-      'field_apartments' => $apartment_id,
-    ]
-    );
-  // Prefill apartment information field with data.
-  $fields = [];
-
-  if (!empty($parent)) {
-    $parentNode = reset($parent);
-
-    $salesEmail = '';
-    if (
-      $parentNode->hasField('field_salesperson') &&
-      $parentNode->field_salesperson->first()
-    ) {
-      $salesEmail = $parentNode->field_salesperson->first()->entity->getEmail();
-    }
-
-    $fields = [
-      'field_apartment_information' => $apartment->getTitle(),
-      'field_contact_person' => $salesEmail,
-    ];
-    foreach ($fields as $formFieldName => $data) {
-      $form[$formFieldName]['widget'][0]['value']['#default_value'] = $data ?? '';
-    }
-    // Set apartment information field readonly.
+  if ($apartment) {
+    $form['field_apartment_information']['widget'][0]['value']['#default_value']
+      = $apartment->getTitle();
+    $form['field_apartment_information']['widget'][0]['value']['#attributes']['readonly'] = 'readonly';
+  } else {
     $form['field_apartment_information']['widget'][0]['value']['#attributes']['readonly'] = 'readonly';
     $form['field_apartment_information']['widget'][0]['value']['#type'] = 'hidden';
+
+    $form['field_apartment_information']['widget'][0]['value']['#default_value']
+      = 'Ei saatavilla';
   }
+
+  if (!$apartment && $project) {
+    $form['message']['widget'][0]['value']['#default_value']
+      = $project->getTitle();
+  }
+
+  $salesEmail = '';
+  if (
+    $project->hasField('field_salesperson') &&
+    $project->field_salesperson->first()
+  ) {
+    $salesEmail = $project->field_salesperson->first()->entity->getEmail();
+  }
+  $form['field_contact_person']['widget'][0]['value']['#default_value'] = $salesEmail ?? '';
 
 }
 
@@ -303,4 +331,5 @@ function asu_application_cron() {
   catch (\Exception $e) {
     \Drupal::logger('asu_application_cron')->critical('Unable to perform application cron operation: ' . $e->getMessage());
   }
+
 }

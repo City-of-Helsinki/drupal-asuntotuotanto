@@ -41,7 +41,7 @@ class ApplicationForm extends ContentEntityForm {
       $application_url = "/application/add/$project_type/$project_id";
       $session = \Drupal::request()->getSession();
       $session->set('asu_last_application_url', $application_url);
-      return(new RedirectResponse('/user/login', 301));
+      return (new RedirectResponse('/user/login', 301));
     }
 
     // Form is filled by customer or salesperson on behalf of the customer.
@@ -142,7 +142,7 @@ class ApplicationForm extends ContentEntityForm {
     if ($this->isApplicationPeriod('after', $startDate, $endDate)) {
       $this->messenger()->addMessage($this->t('The application period has ended. You can still apply for the apartment by contacting the responsible salesperson.'));
       $freeApplicationUrl = \Drupal::request()->getSchemeAndHttpHost() .
-        '/contact/apply_for_free_apartment?title=' . $project_data['project_name'];
+        '/contact/apply_for_free_apartment?project=' . $project_id;
       return new RedirectResponse($freeApplicationUrl);
     }
 
