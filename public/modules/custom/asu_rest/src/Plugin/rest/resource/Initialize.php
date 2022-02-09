@@ -215,6 +215,7 @@ final class Initialize extends ResourceBase {
     $langCode = \Drupal::languageManager()->getCurrentLanguage()->getId();
     $query->addCondition('_language', [$langCode], 'IN');
     $query->addCondition('apartment_published', 'true');
+    $query->addCondition('project_published', 'true');
 
     $query->addCondition(
       'apartment_state_of_sale',
