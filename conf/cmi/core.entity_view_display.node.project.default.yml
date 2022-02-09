@@ -74,7 +74,6 @@ dependencies:
     - datetime
     - file
     - link
-    - slick
     - text
     - user
 id: node.project.default
@@ -252,7 +251,7 @@ content:
     weight: 7
     region: content
   field_images:
-    type: slick_image
+    type: asu_custom_slick_formatter
     label: hidden
     settings:
       caption:
@@ -535,3 +534,4 @@ hidden:
   field_virtual_presentation_url: true
   langcode: true
   search_api_excerpt: true
+  toc_enabled: true
