@@ -26,7 +26,7 @@ class AsuCustomSlickFormatter extends SlickImageFormatter {
     $node = $items->getParent()->getEntity();
     $stack =  [];
 
-    if ($node->bundle == 'apartment') {
+    if ($node->bundle() == 'apartment') {
       $project = $node->getProject();
       // Floorplan must be first in apartment.
       if ($node->hasField('field_floorplan')) {
@@ -36,7 +36,7 @@ class AsuCustomSlickFormatter extends SlickImageFormatter {
       $stack = array_merge($stack, $project->field_shared_apartment_images->getValue());
     }
 
-    if ($node->bundle == 'project') {
+    if ($node->bundle() == 'project') {
       $project = $node;
       $stack = array_merge($stack, $project->field_main_image->getValue());
       $stack = array_merge($stack, $items->getValue());
