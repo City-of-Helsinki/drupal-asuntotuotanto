@@ -8,7 +8,6 @@
 use Drupal\asu_application\Applications;
 use Drupal\Core\Url;
 use Drupal\file\Entity\File;
-use Drupal\node\Entity\Node;
 use Drupal\user\Entity\User;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\paragraphs\Entity\Paragraph;
@@ -200,12 +199,11 @@ function asuntotuotanto_preprocess_views_view_table(&$variables) {
       $result = reset($results);
       /** @var \Drupal\asu_content\Entity\Project $parent */
       $project = $result->_entity->getProject();
-    } else {
-      $results = [];
-      $project = false;
     }
-
-
+    else {
+      $results = [];
+      $project = FALSE;
+    }
 
     $price_title = $project->field_ownership_type->entity->name->value == 'HASO' ? t('Right of occupancy payment') : t('Debt-free sales price');
     $variables['header']['field_debt_free_sales_price']['content'] = $price_title;

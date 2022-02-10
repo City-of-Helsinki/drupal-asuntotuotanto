@@ -2,7 +2,6 @@
 
 namespace Drupal\asu_content\Plugin\Field\FieldFormatter;
 
-use Drupal\node\Entity\Node;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\slick\Plugin\Field\FieldFormatter\SlickImageFormatter;
 
@@ -24,7 +23,7 @@ class AsuCustomSlickFormatter extends SlickImageFormatter {
    */
   public function viewElements(FieldItemListInterface $items, $langcode) {
     $node = $items->getParent()->getEntity();
-    $stack =  [];
+    $stack = [];
 
     if ($node->bundle() == 'apartment') {
       $project = $node->getProject();

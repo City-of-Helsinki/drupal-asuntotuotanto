@@ -79,19 +79,24 @@ class Project extends Node {
     return '';
   }
 
+  /**
+   * Get the amount of applications on any apartment on this project.s.
+   *
+   * @return int[]
+   */
   public function getApartmentApplicationCounts() {
     $applicationStorage = \Drupal::entityTypeManager()
       ->getStorage('asu_application');
 
     $applications = $applicationStorage->loadByProperties([
       'project_id' => $this->id(),
-      'field_locked' => 1
+      'field_locked' => 1,
     ]);
 
     $count = [];
-    foreach($applications as $application){
+    foreach ($applications as $application) {
       $apartmentIds = $application->getApartmentIds();
-      foreach($apartmentIds as $id){
+      foreach ($apartmentIds as $id) {
         $count[$id] = isset($count[$id]) ? $count[$id] + 1 : 1;
       }
     }
