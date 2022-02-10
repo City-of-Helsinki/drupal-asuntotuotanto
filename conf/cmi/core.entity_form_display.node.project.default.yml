@@ -127,6 +127,7 @@ third_party_settings:
         - group_pictures_and_videos
         - group_persons_and_operators
         - group_apartments
+        - group_bill_of_sale
       label: 'Project tabs'
       region: content
       parent_name: ''
@@ -193,7 +194,7 @@ third_party_settings:
       label: Ominaisuudet
       region: content
       parent_name: group_project_tabs
-      weight: 22
+      weight: 20
       format_type: tab
       format_settings:
         classes: ''
@@ -233,7 +234,7 @@ third_party_settings:
       label: Aikataulut
       region: content
       parent_name: group_project_tabs
-      weight: 24
+      weight: 22
       format_type: tab
       format_settings:
         classes: ''
@@ -252,7 +253,7 @@ third_party_settings:
       label: Liitteet
       region: content
       parent_name: group_project_tabs
-      weight: 25
+      weight: 23
       format_type: tab
       format_settings:
         classes: ''
@@ -271,7 +272,7 @@ third_party_settings:
       label: Toimijat
       region: content
       parent_name: group_project_tabs
-      weight: 26
+      weight: 24
       format_type: tab
       format_settings:
         classes: ''
@@ -286,7 +287,7 @@ third_party_settings:
       label: Huoneistot
       region: content
       parent_name: group_project_tabs
-      weight: 27
+      weight: 25
       format_type: tab
       format_settings:
         classes: ''
@@ -302,10 +303,41 @@ third_party_settings:
       label: Asuinalue
       region: content
       parent_name: group_project_tabs
-      weight: 23
+      weight: 21
       format_type: tab
       format_settings:
         classes: ''
+        id: ''
+        formatter: closed
+        description: ''
+        required_fields: true
+    group_bill_of_sale:
+      children:
+        - field_business_id
+        - field_location_block
+        - field_property_id
+        - field_transfer_restriction
+        - field_article_of_association
+        - field_material_selection_later
+        - field_material_selection_date
+        - field_material_selection_desc
+        - field_apartment_completion_start
+        - field_apartment_completion_end
+        - field_depositary
+        - field_repository
+        - field_collateral_type
+        - field_default_collateral
+        - field_building_flaw_attachement
+        - field_construction_permit_claim
+        - field_other_terms
+      label: 'Kauppakirjan tiedot'
+      region: content
+      parent_name: group_project_tabs
+      weight: 26
+      format_type: tab
+      format_settings:
+        classes: ''
+        show_empty_fields: false
         id: ''
         formatter: closed
         description: ''
@@ -345,13 +377,13 @@ content:
     third_party_settings: {  }
   field_apartment_completion_end:
     type: datetime_default
-    weight: 100
+    weight: 99
     region: content
     settings: {  }
     third_party_settings: {  }
   field_apartment_completion_start:
     type: datetime_default
-    weight: 99
+    weight: 98
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -423,7 +455,7 @@ content:
     third_party_settings: {  }
   field_building_flaw_attachement:
     type: boolean_checkbox
-    weight: 105
+    weight: 104
     region: content
     settings:
       display_label: true
@@ -466,7 +498,7 @@ content:
     third_party_settings: {  }
   field_collateral_type:
     type: string_textfield
-    weight: 103
+    weight: 102
     region: content
     settings:
       size: 60
@@ -492,7 +524,7 @@ content:
     third_party_settings: {  }
   field_construction_permit_claim:
     type: datetime_default
-    weight: 106
+    weight: 105
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -548,7 +580,7 @@ content:
     third_party_settings: {  }
   field_default_collateral:
     type: string_textfield
-    weight: 114
+    weight: 103
     region: content
     settings:
       size: 60
@@ -556,7 +588,7 @@ content:
     third_party_settings: {  }
   field_depositary:
     type: string_textfield
-    weight: 101
+    weight: 100
     region: content
     settings:
       size: 60
@@ -721,7 +753,7 @@ content:
     third_party_settings: {  }
   field_other_terms:
     type: string_textarea
-    weight: 107
+    weight: 106
     region: content
     settings:
       rows: 5
@@ -860,7 +892,7 @@ content:
     third_party_settings: {  }
   field_repository:
     type: string_textfield
-    weight: 102
+    weight: 101
     region: content
     settings:
       size: 60
