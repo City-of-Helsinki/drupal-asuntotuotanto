@@ -83,6 +83,7 @@ class Project extends Node {
    * Get the amount of applications on any apartment on this project.s.
    *
    * @return int[]
+   *   Apartment_id => amount of applications.
    */
   public function getApartmentApplicationCounts() {
     $applicationStorage = \Drupal::entityTypeManager()
