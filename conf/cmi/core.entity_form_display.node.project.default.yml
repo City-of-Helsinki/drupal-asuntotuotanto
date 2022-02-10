@@ -156,6 +156,11 @@ third_party_settings:
         - field_project_description
         - field_regular_bank_account
         - field_barred_bank_account
+        - field_site
+        - field_property_number
+        - field_construction_start_date
+        - field_construction_end_date
+        - field_usage_fees
       label: Perustiedot
       region: content
       parent_name: group_project_tabs
@@ -188,7 +193,7 @@ third_party_settings:
       label: Ominaisuudet
       region: content
       parent_name: group_project_tabs
-      weight: 20
+      weight: 22
       format_type: tab
       format_settings:
         classes: ''
@@ -228,7 +233,7 @@ third_party_settings:
       label: Aikataulut
       region: content
       parent_name: group_project_tabs
-      weight: 22
+      weight: 24
       format_type: tab
       format_settings:
         classes: ''
@@ -247,7 +252,7 @@ third_party_settings:
       label: Liitteet
       region: content
       parent_name: group_project_tabs
-      weight: 23
+      weight: 25
       format_type: tab
       format_settings:
         classes: ''
@@ -266,7 +271,7 @@ third_party_settings:
       label: Toimijat
       region: content
       parent_name: group_project_tabs
-      weight: 24
+      weight: 26
       format_type: tab
       format_settings:
         classes: ''
@@ -281,7 +286,7 @@ third_party_settings:
       label: Huoneistot
       region: content
       parent_name: group_project_tabs
-      weight: 26
+      weight: 27
       format_type: tab
       format_settings:
         classes: ''
@@ -297,7 +302,7 @@ third_party_settings:
       label: Asuinalue
       region: content
       parent_name: group_project_tabs
-      weight: 21
+      weight: 23
       format_type: tab
       format_settings:
         classes: ''
@@ -475,7 +480,7 @@ content:
     third_party_settings: {  }
   field_construction_end_date:
     type: datetime_default
-    weight: 88
+    weight: 22
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -499,7 +504,7 @@ content:
     third_party_settings: {  }
   field_construction_start_date:
     type: datetime_default
-    weight: 87
+    weight: 21
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -811,7 +816,7 @@ content:
     third_party_settings: {  }
   field_property_number:
     type: string_textfield
-    weight: 86
+    weight: 20
     region: content
     settings:
       size: 60
@@ -916,8 +921,8 @@ content:
     settings: {  }
     third_party_settings: {  }
   field_site:
-    type: options_select
-    weight: 85
+    type: options_buttons
+    weight: 19
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -971,7 +976,7 @@ content:
     third_party_settings: {  }
   field_usage_fees:
     type: string_textarea
-    weight: 89
+    weight: 23
     region: content
     settings:
       rows: 5
