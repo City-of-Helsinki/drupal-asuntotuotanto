@@ -106,10 +106,9 @@
 .apartment__area-overvink-link {
   @include font-size($fontsize-body-l, 26px);
   font-weight: $font-weight-bold;
-  color: var(--color-black-90);
+  color: var(--color-bus);
   display: inline-block;
   margin-top: $spacing-m;
-  text-decoration: none;
 
   @media screen and (min-width: $breakpoint-l) {
     margin-top: $spacing-l;
