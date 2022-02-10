@@ -1,0 +1,21 @@
+uuid: 0cfc9272-e125-48a9-8dd7-c31d8d85212a
+langcode: fi
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_apartment_completion_end
+    - node.type.project
+  module:
+    - datetime
+id: node.project.field_apartment_completion_end
+field_name: field_apartment_completion_end
+entity_type: node
+bundle: project
+label: 'Asunnon arvioitu valmistumisaika loppuu'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: datetime

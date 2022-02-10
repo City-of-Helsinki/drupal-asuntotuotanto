@@ -5,24 +5,43 @@ dependencies:
   config:
     - field.field.node.project.field_acc_financeofficer
     - field.field.node.project.field_acc_salesperson
+    - field.field.node.project.field_actual_application_end
+    - field.field.node.project.field_apartment_completion_end
+    - field.field.node.project.field_apartment_completion_start
     - field.field.node.project.field_apartment_count
     - field.field.node.project.field_apartments
     - field.field.node.project.field_application_end_time
     - field.field.node.project.field_application_start_time
+    - field.field.node.project.field_article_of_association
     - field.field.node.project.field_attachments_url
     - field.field.node.project.field_barred_bank_account
+    - field.field.node.project.field_building_collateral_releas
+    - field.field.node.project.field_building_flaw_attachement
     - field.field.node.project.field_building_type
+    - field.field.node.project.field_business_id
     - field.field.node.project.field_city
+    - field.field.node.project.field_collateral_amount
+    - field.field.node.project.field_collateral_amount_fixed
+    - field.field.node.project.field_collateral_type
     - field.field.node.project.field_completion_date
+    - field.field.node.project.field_construction_end_date
     - field.field.node.project.field_construction_materials
+    - field.field.node.project.field_construction_permit_claim
+    - field.field.node.project.field_construction_phase_meaning
+    - field.field.node.project.field_construction_start_date
     - field.field.node.project.field_construction_year
     - field.field.node.project.field_constructor
     - field.field.node.project.field_coordinate_lat
     - field.field.node.project.field_coordinate_lon
+    - field.field.node.project.field_customer_document_handover
+    - field.field.node.project.field_default_collateral
+    - field.field.node.project.field_depositary
     - field.field.node.project.field_district
     - field.field.node.project.field_energy_class
     - field.field.node.project.field_estimated_completion
     - field.field.node.project.field_estimated_completion_date
+    - field.field.node.project.field_estimated_handover_end
+    - field.field.node.project.field_estimated_handover_start
     - field.field.node.project.field_has_elevator
     - field.field.node.project.field_has_sauna
     - field.field.node.project.field_heating_options
@@ -31,11 +50,18 @@ dependencies:
     - field.field.node.project.field_housing_manager
     - field.field.node.project.field_images
     - field.field.node.project.field_import_apartments
+    - field.field.node.project.field_location_block
     - field.field.node.project.field_main_image
+    - field.field.node.project.field_management_handover_date
     - field.field.node.project.field_material_choice_dl
+    - field.field.node.project.field_material_selection_date
+    - field.field.node.project.field_material_selection_desc
+    - field.field.node.project.field_material_selection_later
     - field.field.node.project.field_new_development_status
     - field.field.node.project.field_new_housing
+    - field.field.node.project.field_other_terms
     - field.field.node.project.field_ownership_type
+    - field.field.node.project.field_payment_verification
     - field.field.node.project.field_possession_transfer_date
     - field.field.node.project.field_postal_code
     - field.field.node.project.field_pre_marketing_end_time
@@ -45,10 +71,14 @@ dependencies:
     - field.field.node.project.field_project_attachments
     - field.field.node.project.field_project_description
     - field.field.node.project.field_project_manager
+    - field.field.node.project.field_property_id
+    - field.field.node.project.field_property_number
     - field.field.node.project.field_publication_end_time
     - field.field.node.project.field_publication_start_time
     - field.field.node.project.field_realty_id
+    - field.field.node.project.field_recommended_bank
     - field.field.node.project.field_regular_bank_account
+    - field.field.node.project.field_repository
     - field.field.node.project.field_roof_material
     - field.field.node.project.field_salesperson
     - field.field.node.project.field_sanitation
@@ -56,13 +86,17 @@ dependencies:
     - field.field.node.project.field_services_url
     - field.field.node.project.field_shared_apartment_images
     - field.field.node.project.field_shareholder_meeting_date
+    - field.field.node.project.field_site
     - field.field.node.project.field_site_area
     - field.field.node.project.field_site_owner
     - field.field.node.project.field_site_renter
     - field.field.node.project.field_state_of_sale
     - field.field.node.project.field_street_address
     - field.field.node.project.field_tasks
+    - field.field.node.project.field_transfer_restriction
+    - field.field.node.project.field_usage_fees
     - field.field.node.project.field_virtual_presentation_url
+    - field.field.node.project.field_warranty_deposit_releas
     - field.field.node.project.field_zoning_info
     - field.field.node.project.field_zoning_status
     - image.style.3_2_m
@@ -74,6 +108,7 @@ dependencies:
     - datetime
     - file
     - link
+    - options
     - slick
     - text
     - user
@@ -82,6 +117,33 @@ targetEntityType: node
 bundle: project
 mode: default
 content:
+  field_actual_application_end:
+    type: datetime_default
+    label: above
+    settings:
+      timezone_override: ''
+      format_type: medium
+    third_party_settings: {  }
+    weight: 72
+    region: content
+  field_apartment_completion_end:
+    type: datetime_default
+    label: above
+    settings:
+      timezone_override: ''
+      format_type: medium
+    third_party_settings: {  }
+    weight: 60
+    region: content
+  field_apartment_completion_start:
+    type: datetime_default
+    label: above
+    settings:
+      timezone_override: ''
+      format_type: medium
+    third_party_settings: {  }
+    weight: 59
+    region: content
   field_apartment_count:
     type: number_integer
     label: above
@@ -117,6 +179,14 @@ content:
     third_party_settings: {  }
     weight: 20
     region: content
+  field_article_of_association:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 54
+    region: content
   field_attachments_url:
     type: link
     label: above
@@ -137,6 +207,25 @@ content:
     third_party_settings: {  }
     weight: 44
     region: content
+  field_building_collateral_releas:
+    type: datetime_default
+    label: above
+    settings:
+      timezone_override: ''
+      format_type: medium
+    third_party_settings: {  }
+    weight: 79
+    region: content
+  field_building_flaw_attachement:
+    type: boolean
+    label: above
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    weight: 65
+    region: content
   field_building_type:
     type: entity_reference_label
     label: hidden
@@ -144,6 +233,14 @@ content:
       link: false
     third_party_settings: {  }
     weight: 31
+    region: content
+  field_business_id:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 50
     region: content
   field_city:
     type: string
@@ -153,6 +250,44 @@ content:
     third_party_settings: {  }
     weight: 8
     region: content
+  field_collateral_amount:
+    type: number_decimal
+    label: above
+    settings:
+      thousand_separator: ''
+      decimal_separator: .
+      scale: 2
+      prefix_suffix: true
+    third_party_settings: {  }
+    weight: 71
+    region: content
+  field_collateral_amount_fixed:
+    type: boolean
+    label: above
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    weight: 70
+    region: content
+  field_collateral_type:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 63
+    region: content
+  field_construction_end_date:
+    type: datetime_default
+    label: above
+    settings:
+      timezone_override: ''
+      format_type: medium
+    third_party_settings: {  }
+    weight: 48
+    region: content
   field_construction_materials:
     type: entity_reference_label
     label: above
@@ -160,6 +295,31 @@ content:
       link: true
     third_party_settings: {  }
     weight: 24
+    region: content
+  field_construction_permit_claim:
+    type: datetime_default
+    label: above
+    settings:
+      timezone_override: ''
+      format_type: medium
+    third_party_settings: {  }
+    weight: 66
+    region: content
+  field_construction_phase_meaning:
+    type: list_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 58
+    region: content
+  field_construction_start_date:
+    type: datetime_default
+    label: above
+    settings:
+      timezone_override: ''
+      format_type: medium
+    third_party_settings: {  }
+    weight: 47
     region: content
   field_construction_year:
     type: string
@@ -191,6 +351,29 @@ content:
     third_party_settings: {  }
     weight: 23
     region: content
+  field_customer_document_handover:
+    type: basic_string
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 76
+    region: content
+  field_default_collateral:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 74
+    region: content
+  field_depositary:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 61
+    region: content
   field_district:
     type: entity_reference_label
     label: above
@@ -206,6 +389,24 @@ content:
       link: false
     third_party_settings: {  }
     weight: 26
+    region: content
+  field_estimated_handover_end:
+    type: datetime_default
+    label: above
+    settings:
+      timezone_override: ''
+      format_type: medium
+    third_party_settings: {  }
+    weight: 69
+    region: content
+  field_estimated_handover_start:
+    type: datetime_default
+    label: above
+    settings:
+      timezone_override: ''
+      format_type: medium
+    third_party_settings: {  }
+    weight: 68
     region: content
   field_has_elevator:
     type: boolean
@@ -307,6 +508,49 @@ content:
     third_party_settings: {  }
     weight: 41
     region: content
+  field_location_block:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 51
+    region: content
+  field_management_handover_date:
+    type: datetime_default
+    label: above
+    settings:
+      timezone_override: ''
+      format_type: medium
+    third_party_settings: {  }
+    weight: 78
+    region: content
+  field_material_selection_date:
+    type: datetime_default
+    label: above
+    settings:
+      timezone_override: ''
+      format_type: medium
+    third_party_settings: {  }
+    weight: 56
+    region: content
+  field_material_selection_desc:
+    type: basic_string
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 57
+    region: content
+  field_material_selection_later:
+    type: boolean
+    label: above
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    weight: 55
+    region: content
   field_new_development_status:
     type: entity_reference_label
     label: above
@@ -325,6 +569,13 @@ content:
     third_party_settings: {  }
     weight: 11
     region: content
+  field_other_terms:
+    type: basic_string
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 67
+    region: content
   field_ownership_type:
     type: entity_reference_label
     label: hidden
@@ -332,6 +583,13 @@ content:
       link: false
     third_party_settings: {  }
     weight: 29
+    region: content
+  field_payment_verification:
+    type: basic_string
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 75
     region: content
   field_postal_code:
     type: string
@@ -371,6 +629,22 @@ content:
     third_party_settings: {  }
     weight: 38
     region: content
+  field_property_id:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 52
+    region: content
+  field_property_number:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 46
+    region: content
   field_publication_start_time:
     type: datetime_default
     label: above
@@ -388,6 +662,14 @@ content:
     third_party_settings: {  }
     weight: 9
     region: content
+  field_recommended_bank:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 77
+    region: content
   field_regular_bank_account:
     type: string
     label: above
@@ -395,6 +677,14 @@ content:
       link_to_entity: false
     third_party_settings: {  }
     weight: 43
+    region: content
+  field_repository:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 62
     region: content
   field_roof_material:
     type: string
@@ -438,6 +728,13 @@ content:
       target: ''
     third_party_settings: {  }
     weight: 36
+    region: content
+  field_site:
+    type: list_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 45
     region: content
   field_site_area:
     type: number_decimal
@@ -489,6 +786,32 @@ content:
     third_party_settings: {  }
     weight: 33
     region: content
+  field_transfer_restriction:
+    type: boolean
+    label: above
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    weight: 53
+    region: content
+  field_usage_fees:
+    type: basic_string
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 49
+    region: content
+  field_warranty_deposit_releas:
+    type: datetime_default
+    label: above
+    settings:
+      timezone_override: ''
+      format_type: medium
+    third_party_settings: {  }
+    weight: 80
+    region: content
   field_zoning_info:
     type: link
     label: above
@@ -535,3 +858,4 @@ hidden:
   field_virtual_presentation_url: true
   langcode: true
   search_api_excerpt: true
+  toc_enabled: true

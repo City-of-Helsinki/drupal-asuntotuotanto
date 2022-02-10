@@ -1,0 +1,27 @@
+uuid: 5ae2856e-80ba-46dc-a25f-d2330a7cd337
+langcode: fi
+status: true
+dependencies:
+  module:
+    - node
+    - options
+id: node.field_site
+field_name: field_site
+entity_type: node
+type: list_string
+settings:
+  allowed_values:
+    -
+      value: rental
+      label: Vuokra
+    -
+      value: omistus
+      label: Ownership
+  allowed_values_function: ''
+module: options
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

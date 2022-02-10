@@ -1,0 +1,19 @@
+uuid: ff52e67d-a161-4c53-9bc8-1d2b48d8afe6
+langcode: fi
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_repository
+    - node.type.project
+id: node.project.field_repository
+field_name: field_repository
+entity_type: node
+bundle: project
+label: Säilytyspaikka
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

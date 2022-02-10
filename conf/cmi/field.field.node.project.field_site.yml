@@ -1,0 +1,21 @@
+uuid: 02dc180e-cc91-472f-817b-69f04358df64
+langcode: fi
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_site
+    - node.type.project
+  module:
+    - options
+id: node.project.field_site
+field_name: field_site
+entity_type: node
+bundle: project
+label: Tontti
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: list_string

@@ -1,0 +1,18 @@
+uuid: aa411b23-ce38-4a51-a3f7-137aac051a3d
+langcode: fi
+status: true
+dependencies:
+  module:
+    - node
+id: node.field_material_selection_later
+field_name: field_material_selection_later
+entity_type: node
+type: boolean
+settings: {  }
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

@@ -1,0 +1,21 @@
+uuid: 40ab3126-3b2a-485a-8022-ac85f9b1d268
+langcode: fi
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_construction_phase_meaning
+    - node.type.project
+  module:
+    - options
+id: node.project.field_construction_phase_meaning
+field_name: field_construction_phase_meaning
+entity_type: node
+bundle: project
+label: 'Rakennusvaiheella tarkoitetaan'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: list_string
