@@ -1,12 +1,12 @@
-uuid: 8e1d3f3b-26bc-44a0-89d7-4e244fbe0d2c
+uuid: b04be367-e406-402b-b6b9-b37c9374f3cc
 langcode: fi
 status: true
 dependencies:
   module:
     - datetime
     - node
-id: node.field_apartment_completion_end
-field_name: field_apartment_completion_end
+id: node.field_completion_2_start
+field_name: field_completion_2_start
 entity_type: node
 type: datetime
 settings:

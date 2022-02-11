@@ -6,8 +6,6 @@ dependencies:
     - field.field.node.project.field_acc_financeofficer
     - field.field.node.project.field_acc_salesperson
     - field.field.node.project.field_actual_application_end
-    - field.field.node.project.field_apartment_completion_end
-    - field.field.node.project.field_apartment_completion_start
     - field.field.node.project.field_apartment_count
     - field.field.node.project.field_apartments
     - field.field.node.project.field_application_end_time
@@ -23,7 +21,14 @@ dependencies:
     - field.field.node.project.field_collateral_amount
     - field.field.node.project.field_collateral_amount_fixed
     - field.field.node.project.field_collateral_type
+    - field.field.node.project.field_completion_1_start
+    - field.field.node.project.field_completion_2_end
+    - field.field.node.project.field_completion_2_start
+    - field.field.node.project.field_completion_3_start
     - field.field.node.project.field_completion_date
+    - field.field.node.project.field_completion_selection_1
+    - field.field.node.project.field_completion_selection_2
+    - field.field.node.project.field_completion_selection_3
     - field.field.node.project.field_construction_end_date
     - field.field.node.project.field_construction_materials
     - field.field.node.project.field_construction_permit_claim
@@ -125,24 +130,6 @@ content:
       format_type: medium
     third_party_settings: {  }
     weight: 72
-    region: content
-  field_apartment_completion_end:
-    type: datetime_default
-    label: above
-    settings:
-      timezone_override: ''
-      format_type: medium
-    third_party_settings: {  }
-    weight: 60
-    region: content
-  field_apartment_completion_start:
-    type: datetime_default
-    label: above
-    settings:
-      timezone_override: ''
-      format_type: medium
-    third_party_settings: {  }
-    weight: 59
     region: content
   field_apartment_count:
     type: number_integer
@@ -278,6 +265,72 @@ content:
       link_to_entity: false
     third_party_settings: {  }
     weight: 63
+    region: content
+  field_completion_1_start:
+    type: datetime_default
+    label: above
+    settings:
+      timezone_override: ''
+      format_type: medium
+    third_party_settings: {  }
+    weight: 82
+    region: content
+  field_completion_2_end:
+    type: datetime_default
+    label: above
+    settings:
+      timezone_override: ''
+      format_type: medium
+    third_party_settings: {  }
+    weight: 87
+    region: content
+  field_completion_2_start:
+    type: datetime_default
+    label: above
+    settings:
+      timezone_override: ''
+      format_type: medium
+    third_party_settings: {  }
+    weight: 86
+    region: content
+  field_completion_3_start:
+    type: datetime_default
+    label: above
+    settings:
+      timezone_override: ''
+      format_type: medium
+    third_party_settings: {  }
+    weight: 88
+    region: content
+  field_completion_selection_1:
+    type: boolean
+    label: above
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    weight: 81
+    region: content
+  field_completion_selection_2:
+    type: boolean
+    label: above
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    weight: 83
+    region: content
+  field_completion_selection_3:
+    type: boolean
+    label: above
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    weight: 84
     region: content
   field_construction_end_date:
     type: datetime_default

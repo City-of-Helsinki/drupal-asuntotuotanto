@@ -7,8 +7,6 @@ dependencies:
     - field.field.node.project.field_acc_financeofficer
     - field.field.node.project.field_acc_salesperson
     - field.field.node.project.field_actual_application_end
-    - field.field.node.project.field_apartment_completion_end
-    - field.field.node.project.field_apartment_completion_start
     - field.field.node.project.field_apartment_count
     - field.field.node.project.field_apartments
     - field.field.node.project.field_application_end_time
@@ -24,7 +22,14 @@ dependencies:
     - field.field.node.project.field_collateral_amount
     - field.field.node.project.field_collateral_amount_fixed
     - field.field.node.project.field_collateral_type
+    - field.field.node.project.field_completion_1_start
+    - field.field.node.project.field_completion_2_end
+    - field.field.node.project.field_completion_2_start
+    - field.field.node.project.field_completion_3_start
     - field.field.node.project.field_completion_date
+    - field.field.node.project.field_completion_selection_1
+    - field.field.node.project.field_completion_selection_2
+    - field.field.node.project.field_completion_selection_3
     - field.field.node.project.field_construction_end_date
     - field.field.node.project.field_construction_materials
     - field.field.node.project.field_construction_permit_claim
@@ -117,8 +122,6 @@ hidden:
   field_acc_financeofficer: true
   field_acc_salesperson: true
   field_actual_application_end: true
-  field_apartment_completion_end: true
-  field_apartment_completion_start: true
   field_apartment_count: true
   field_apartments: true
   field_application_end_time: true
@@ -134,7 +137,14 @@ hidden:
   field_collateral_amount: true
   field_collateral_amount_fixed: true
   field_collateral_type: true
+  field_completion_1_start: true
+  field_completion_2_end: true
+  field_completion_2_start: true
+  field_completion_3_start: true
   field_completion_date: true
+  field_completion_selection_1: true
+  field_completion_selection_2: true
+  field_completion_selection_3: true
   field_construction_end_date: true
   field_construction_materials: true
   field_construction_permit_claim: true

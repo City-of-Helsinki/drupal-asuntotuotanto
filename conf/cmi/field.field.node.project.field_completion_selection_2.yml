@@ -1,0 +1,23 @@
+uuid: 7c358592-39ba-445f-86bb-d97c2bf9a1c4
+langcode: fi
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_completion_selection_2
+    - node.type.project
+id: node.project.field_completion_selection_2
+field_name: field_completion_selection_2
+entity_type: node
+bundle: project
+label: 'Asunnon arvioitu valmistumisaika 2 valinta'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: Kyllä
+  off_label: Ei
+field_type: boolean
