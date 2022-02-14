@@ -499,7 +499,7 @@ field_settings:
     property_path: 'search_api_reverse_entity_references_node__field_apartments:field_plot_owner'
     type: string
   project_contract_project_id:
-    label: 'Property id'
+    label: 'Project id'
     datasource_id: 'entity:node'
     property_path: 'search_api_reverse_entity_references_node__field_apartments:field_property_id'
     type: string

@@ -10,6 +10,7 @@ dependencies:
     - field.field.node.project.field_apartments
     - field.field.node.project.field_application_end_time
     - field.field.node.project.field_application_start_time
+    - field.field.node.project.field_archived
     - field.field.node.project.field_article_of_association
     - field.field.node.project.field_attachments_url
     - field.field.node.project.field_barred_bank_account
@@ -166,6 +167,16 @@ content:
       format_type: short
     third_party_settings: {  }
     weight: 20
+    region: content
+  field_archived:
+    type: boolean
+    label: above
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    weight: 91
     region: content
   field_article_of_association:
     type: string
@@ -514,7 +525,7 @@ content:
     weight: 7
     region: content
   field_images:
-    type: asu_custom_slick_formatter
+    type: slick_image
     label: hidden
     settings:
       caption:

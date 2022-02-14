@@ -11,6 +11,7 @@ dependencies:
     - field.field.node.project.field_apartments
     - field.field.node.project.field_application_end_time
     - field.field.node.project.field_application_start_time
+    - field.field.node.project.field_archived
     - field.field.node.project.field_article_of_association
     - field.field.node.project.field_attachments_url
     - field.field.node.project.field_barred_bank_account
@@ -127,6 +128,7 @@ hidden:
   field_apartments: true
   field_application_end_time: true
   field_application_start_time: true
+  field_archived: true
   field_article_of_association: true
   field_attachments_url: true
   field_barred_bank_account: true

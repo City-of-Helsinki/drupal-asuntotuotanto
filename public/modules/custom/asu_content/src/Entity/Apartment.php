@@ -73,7 +73,7 @@ class Apartment extends Node {
    * @return bool
    *   Apartment is sold.
    */
-  public function isSold(): boolean {
+  public function isSold(): bool {
     return $this->field_apartment_state_of_sale->target_id === 'sold';
   }
 
