@@ -68,6 +68,7 @@ dependencies:
     - field.field.node.project.field_other_terms
     - field.field.node.project.field_ownership_type
     - field.field.node.project.field_payment_verification
+    - field.field.node.project.field_plot_owner
     - field.field.node.project.field_possession_transfer_date
     - field.field.node.project.field_postal_code
     - field.field.node.project.field_pre_marketing_end_time
@@ -92,7 +93,6 @@ dependencies:
     - field.field.node.project.field_services_url
     - field.field.node.project.field_shared_apartment_images
     - field.field.node.project.field_shareholder_meeting_date
-    - field.field.node.project.field_site
     - field.field.node.project.field_site_area
     - field.field.node.project.field_site_owner
     - field.field.node.project.field_site_renter
@@ -165,7 +165,7 @@ third_party_settings:
         - field_project_description
         - field_regular_bank_account
         - field_barred_bank_account
-        - field_site
+        - field_plot_owner
         - field_property_number
         - field_construction_start_date
         - field_construction_end_date
@@ -497,7 +497,7 @@ content:
     third_party_settings: {  }
   field_building_flaw_attachement:
     type: boolean_checkbox
-    weight: 110
+    weight: 111
     region: content
     settings:
       display_label: true
@@ -540,7 +540,7 @@ content:
     third_party_settings: {  }
   field_collateral_type:
     type: string_textfield
-    weight: 108
+    weight: 109
     region: content
     settings:
       size: 60
@@ -548,25 +548,25 @@ content:
     third_party_settings: {  }
   field_completion_1_start:
     type: datetime_default
-    weight: 100
+    weight: 101
     region: content
     settings: {  }
     third_party_settings: {  }
   field_completion_2_end:
     type: datetime_default
-    weight: 103
+    weight: 104
     region: content
     settings: {  }
     third_party_settings: {  }
   field_completion_2_start:
     type: datetime_default
-    weight: 102
+    weight: 103
     region: content
     settings: {  }
     third_party_settings: {  }
   field_completion_3_start:
     type: datetime_default
-    weight: 105
+    weight: 106
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -578,21 +578,21 @@ content:
     third_party_settings: {  }
   field_completion_selection_1:
     type: boolean_checkbox
-    weight: 99
+    weight: 100
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
   field_completion_selection_2:
     type: boolean_checkbox
-    weight: 101
+    weight: 102
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
   field_completion_selection_3:
     type: boolean_checkbox
-    weight: 104
+    weight: 105
     region: content
     settings:
       display_label: true
@@ -611,7 +611,7 @@ content:
     third_party_settings: {  }
   field_construction_permit_claim:
     type: datetime_default
-    weight: 111
+    weight: 112
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -675,7 +675,7 @@ content:
     third_party_settings: {  }
   field_default_collateral:
     type: string_textfield
-    weight: 109
+    weight: 110
     region: content
     settings:
       size: 60
@@ -683,7 +683,7 @@ content:
     third_party_settings: {  }
   field_depositary:
     type: string_textfield
-    weight: 106
+    weight: 107
     region: content
     settings:
       size: 60
@@ -848,7 +848,7 @@ content:
     third_party_settings: {  }
   field_other_terms:
     type: string_textarea
-    weight: 112
+    weight: 113
     region: content
     settings:
       rows: 5
@@ -867,6 +867,12 @@ content:
     settings:
       rows: 5
       placeholder: ''
+    third_party_settings: {  }
+  field_plot_owner:
+    type: options_select
+    weight: 19
+    region: content
+    settings: {  }
     third_party_settings: {  }
   field_possession_transfer_date:
     type: datetime_default
@@ -987,7 +993,7 @@ content:
     third_party_settings: {  }
   field_repository:
     type: string_textfield
-    weight: 107
+    weight: 108
     region: content
     settings:
       size: 60
@@ -1044,12 +1050,6 @@ content:
   field_shareholder_meeting_date:
     type: datetime_default
     weight: 18
-    region: content
-    settings: {  }
-    third_party_settings: {  }
-  field_site:
-    type: options_buttons
-    weight: 19
     region: content
     settings: {  }
     third_party_settings: {  }

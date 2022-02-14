@@ -393,6 +393,11 @@ field_settings:
     datasource_id: 'entity:node'
     property_path: 'search_api_reverse_entity_references_node__field_apartments:field_article_of_association'
     type: string
+  project_contract_bill_of_sale_terms:
+    label: 'Other terms'
+    datasource_id: 'entity:node'
+    property_path: 'search_api_reverse_entity_references_node__field_apartments:field_contract_other_terms'
+    type: string
   project_contract_building_collateral_release_date:
     label: 'Building collateral release date'
     datasource_id: 'entity:node'
@@ -483,11 +488,6 @@ field_settings:
     datasource_id: 'entity:node'
     property_path: 'search_api_reverse_entity_references_node__field_apartments:field_material_selection_later'
     type: boolean
-  project_contract_bill_of_sale_terms:
-    label: 'Other terms'
-    datasource_id: 'entity:node'
-    property_path: 'search_api_reverse_entity_references_node__field_apartments:field_contract_other_terms'
-    type: string
   project_contract_other_terms:
     label: 'Other terms'
     datasource_id: 'entity:node'
@@ -496,9 +496,9 @@ field_settings:
   project_contract_plot:
     label: Plot
     datasource_id: 'entity:node'
-    property_path: 'search_api_reverse_entity_references_node__field_apartments:field_site'
-    type: asu_enum
-  project_contract_property_id:
+    property_path: 'search_api_reverse_entity_references_node__field_apartments:field_plot_owner'
+    type: string
+  project_contract_project_id:
     label: 'Property id'
     datasource_id: 'entity:node'
     property_path: 'search_api_reverse_entity_references_node__field_apartments:field_property_id'

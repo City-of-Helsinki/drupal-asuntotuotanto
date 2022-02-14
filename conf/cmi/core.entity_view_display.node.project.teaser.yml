@@ -69,6 +69,7 @@ dependencies:
     - field.field.node.project.field_other_terms
     - field.field.node.project.field_ownership_type
     - field.field.node.project.field_payment_verification
+    - field.field.node.project.field_plot_owner
     - field.field.node.project.field_possession_transfer_date
     - field.field.node.project.field_postal_code
     - field.field.node.project.field_pre_marketing_end_time
@@ -93,7 +94,6 @@ dependencies:
     - field.field.node.project.field_services_url
     - field.field.node.project.field_shared_apartment_images
     - field.field.node.project.field_shareholder_meeting_date
-    - field.field.node.project.field_site
     - field.field.node.project.field_site_area
     - field.field.node.project.field_site_owner
     - field.field.node.project.field_site_renter
@@ -185,6 +185,7 @@ hidden:
   field_other_terms: true
   field_ownership_type: true
   field_payment_verification: true
+  field_plot_owner: true
   field_possession_transfer_date: true
   field_postal_code: true
   field_pre_marketing_end_time: true
@@ -209,7 +210,6 @@ hidden:
   field_services_url: true
   field_shared_apartment_images: true
   field_shareholder_meeting_date: true
-  field_site: true
   field_site_area: true
   field_site_owner: true
   field_site_renter: true
