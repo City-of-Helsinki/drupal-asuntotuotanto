@@ -351,7 +351,7 @@ field_settings:
   project_contract_actual_application_end_date:
     label: 'Estimated application start date'
     datasource_id: 'entity:node'
-    property_path: 'search_api_reverse_entity_references_node__field_service_parent_service:field_actual_application_end_date'
+    property_path: 'search_api_reverse_entity_references_node__field_apartments:field_actual_application_end'
     type: object
   project_contract_apartment_completion_selection_1:
     label: 'Apartment completion 1 selection'
@@ -483,10 +483,10 @@ field_settings:
     datasource_id: 'entity:node'
     property_path: 'search_api_reverse_entity_references_node__field_apartments:field_material_selection_later'
     type: boolean
-  project_contract_other_term_2:
+  project_contract_bill_of_sale_terms:
     label: 'Other terms'
     datasource_id: 'entity:node'
-    property_path: 'search_api_reverse_entity_references_node__field_apartments:field_other_terms'
+    property_path: 'search_api_reverse_entity_references_node__field_apartments:field_contract_other_terms'
     type: string
   project_contract_other_terms:
     label: 'Other terms'
@@ -522,7 +522,7 @@ field_settings:
     label: 'Transfer restriction'
     datasource_id: 'entity:node'
     property_path: 'search_api_reverse_entity_references_node__field_apartments:field_transfer_restriction'
-    type: string
+    type: boolean
   project_contract_usage_fees:
     label: 'Usage fees'
     datasource_id: 'entity:node'
