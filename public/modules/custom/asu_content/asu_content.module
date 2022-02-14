@@ -140,8 +140,10 @@ function asu_content_entity_presave(EntityInterface $entity) {
 
     if ($entity->getType() == 'project') {
       /** @var \Drupal\asu_content\Entity\Project $entity */
-      $original = $entity->original;
-      $archivedChanged = ($entity->field_archived->value !== $original->field_archived->value);
+      $archivedChanged = FALSE;
+      if ($original = $entity->original) {
+        $archivedChanged = ($entity->field_archived->value !== $original->field_archived->value);
+      }
 
       // Resetting published & archived statuses since project was still published when archiving.
       if (

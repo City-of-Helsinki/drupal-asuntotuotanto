@@ -315,6 +315,11 @@ field_settings:
     datasource_id: 'entity:node'
     property_path: 'search_api_reverse_entity_references_node__field_apartments:field_application_start_time'
     type: object
+  project_archived:
+    label: Archived
+    datasource_id: 'entity:node'
+    property_path: 'search_api_reverse_entity_references_node__field_apartments:field_archived'
+    type: boolean
   project_attachment_urls:
     label: 'Attachments / URL'
     datasource_id: 'entity:node'
