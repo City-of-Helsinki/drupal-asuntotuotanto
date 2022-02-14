@@ -107,6 +107,7 @@ class Project extends Node {
 
   /**
    * Can project be archived.
+   * 
    * Project can be archived after all apartments are sold.
    *
    * @return bool
