@@ -37,6 +37,7 @@ dependencies:
     - field.field.node.project.field_construction_start_date
     - field.field.node.project.field_construction_year
     - field.field.node.project.field_constructor
+    - field.field.node.project.field_contract_other_terms
     - field.field.node.project.field_coordinate_lat
     - field.field.node.project.field_coordinate_lon
     - field.field.node.project.field_customer_document_handover
@@ -191,6 +192,7 @@ hidden:
   field_construction_start_date: true
   field_construction_year: true
   field_constructor: true
+  field_contract_other_terms: true
   field_coordinate_lat: true
   field_coordinate_lon: true
   field_customer_document_handover: true

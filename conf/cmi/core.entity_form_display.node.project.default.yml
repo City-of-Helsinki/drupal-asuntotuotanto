@@ -36,6 +36,7 @@ dependencies:
     - field.field.node.project.field_construction_start_date
     - field.field.node.project.field_construction_year
     - field.field.node.project.field_constructor
+    - field.field.node.project.field_contract_other_terms
     - field.field.node.project.field_coordinate_lat
     - field.field.node.project.field_coordinate_lon
     - field.field.node.project.field_customer_document_handover
@@ -363,6 +364,7 @@ third_party_settings:
         - field_collateral_amount
         - field_actual_application_end
         - field_payment_verification
+        - field_contract_other_terms
         - field_customer_document_handover
       label: Asumisoikeussopimus
       region: content
@@ -641,6 +643,14 @@ content:
       size: 60
       placeholder: ''
     third_party_settings: {  }
+  field_contract_other_terms:
+    type: string_textarea
+    weight: 114
+    region: content
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
   field_coordinate_lat:
     type: number
     weight: 74
@@ -657,7 +667,7 @@ content:
     third_party_settings: {  }
   field_customer_document_handover:
     type: string_textarea
-    weight: 114
+    weight: 115
     region: content
     settings:
       rows: 5

@@ -36,6 +36,7 @@ dependencies:
     - field.field.node.project.field_construction_start_date
     - field.field.node.project.field_construction_year
     - field.field.node.project.field_constructor
+    - field.field.node.project.field_contract_other_terms
     - field.field.node.project.field_coordinate_lat
     - field.field.node.project.field_coordinate_lon
     - field.field.node.project.field_customer_document_handover
@@ -381,6 +382,13 @@ content:
       link_to_entity: false
     third_party_settings: {  }
     weight: 10
+    region: content
+  field_contract_other_terms:
+    type: basic_string
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 89
     region: content
   field_coordinate_lat:
     type: number_decimal
