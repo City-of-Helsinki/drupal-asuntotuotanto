@@ -67,7 +67,13 @@ class Apartment extends Node {
     return $project->getApplicationUrl($apartmentId);
   }
 
-  public function isSold(){
+  /**
+   * Is apartment sold.
+   *
+   * @return bool
+   *   Apartment is sold.
+   */
+  public function isSold(): boolean {
     return $this->field_apartment_state_of_sale->target_id === 'sold';
   }
 

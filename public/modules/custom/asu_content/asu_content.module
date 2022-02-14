@@ -109,7 +109,7 @@ function asu_content_entity_presave(EntityInterface $entity) {
   ) {
     if ($entity->getType() == 'apartment') {
       $title = t('Apartment');
-
+      /** @var \Drupal\asu_content\Entity\Apartment $entity */
       if ($entity->field_apartment_address->first()->getValue()['#markup']) {
         $markup = $entity->field_apartment_address->first()->getValue();
         $title = reset($markup);
@@ -137,6 +137,43 @@ function asu_content_entity_presave(EntityInterface $entity) {
         }
       }
     }
+
+    if ($entity->getType() == 'project') {
+      /** @var \Drupal\asu_content\Entity\Project $entity */
+      $original = $entity->original;
+      $archivedChanged = ($entity->field_archived->value !== $original->field_archived->value);
+
+      // Resetting published & archived statuses since project was still published when archiving.
+      if (
+        $archivedChanged &&
+        $entity->field_archived->value == TRUE &&
+        $entity->isPublished()
+      ) {
+        $entity->set('field_archived', FALSE);
+        $entity->setPublished(TRUE);
+        \Drupal::messenger()->addWarning(t('Project was not unpublished when it was set as archived. Resetted published and archived statuses.'));
+      }
+
+      // All apartments are not yet set as sold, cannot set project as archived.
+      if (
+        $archivedChanged &&
+        $entity->field_archived->value == TRUE &&
+        !$entity->isArchievable()
+      ) {
+        $entity->set('field_archived', FALSE);
+        \Drupal::messenger()->addError(t('Project cannot be archived since all the apartments are not sold'));
+      }
+
+      // Success message.
+      if (
+        $archivedChanged &&
+        $entity->field_archived->value == TRUE &&
+        $entity->isArchievable()
+      ) {
+        \Drupal::messenger()->addStatus(t('Project has been set as archived'));
+      }
+    }
+
   }
 }
 
@@ -150,12 +187,10 @@ function asu_content_entity_update($entity) {
     $entity->getType() == 'project' &&
     $entity->hasField('field_apartments')
   ) {
-    $apartments = $entity->field_apartments->getValue();
+    /** Project $entity  */
+    $apartments = $entity->getApartmentEntities();
     foreach ($apartments as $apartment) {
-      $node = Node::load($apartment['target_id']);
-      if ($node->bundle() == 'apartment') {
-        $node->save();
-      }
+      $apartment->save();
     }
   }
 }

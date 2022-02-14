@@ -86,9 +86,9 @@ class Project extends Node {
    * @return bool
    *   Can project be archived.
    */
-  public function isArchievable(){
+  public function isArchievable() {
     /** @var Apartment $apartment */
-    foreach($this->getApartmentEntities() as $apartment) {
+    foreach ($this->getApartmentEntities() as $apartment) {
       if (!$apartment->isSold()) {
         return FALSE;
       }
