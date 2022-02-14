@@ -514,7 +514,7 @@ content:
     weight: 7
     region: content
   field_images:
-    type: slick_image
+    type: asu_custom_slick_formatter
     label: hidden
     settings:
       caption:
