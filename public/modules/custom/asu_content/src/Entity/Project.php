@@ -3,7 +3,6 @@
 namespace Drupal\asu_content\Entity;
 
 use Drupal\node\Entity\Node;
-use phpDocumentor\Reflection\Types\Boolean;
 
 /**
  * Class for node's project bundle.
@@ -107,13 +106,13 @@ class Project extends Node {
 
   /**
    * Can project be archived.
-   * 
+   *
    * Project can be archived after all apartments are sold.
    *
    * @return bool
    *   Can project be archived.
    */
-  public function isArchievable(): bool  {
+  public function isArchievable(): bool {
     /** @var Apartment $apartment */
     foreach ($this->getApartmentEntities() as $apartment) {
       if (!$apartment->isSold()) {
@@ -122,4 +121,5 @@ class Project extends Node {
     }
     return TRUE;
   }
+
 }
