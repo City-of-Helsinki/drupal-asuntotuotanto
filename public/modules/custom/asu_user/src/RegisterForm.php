@@ -158,7 +158,18 @@ class RegisterForm extends TypedRegisterForm {
     if (!$account->hasRole('customer')) {
       $account->addRole('customer');
     }
-    $account->save();
+
+    try {
+      $saved = $account->save();
+    }
+    catch (\Exception $e) {
+      // @todo: Set proper redirect.
+      \Drupal::logger('asu_user')->emergency(t('Customer failed to create an account'));
+    }
+
+    if ($saved === SAVED_NEW) {
+      asu_send_user_email('asu_new_customer_registered', $account);
+    }
 
     $request = new CreateUserRequest($account, $form_state->getUserInput());
     $this->sendToBackend($account, $request);
@@ -188,24 +199,25 @@ class RegisterForm extends TypedRegisterForm {
 
     $user = $form_state->getFormObject()->entity;
 
+    $formValues = $form_state->getValues();
     $user->setPassword($pass);
     $user->enforceIsNew();
-    $user->setEmail($form_state->getUserInput()['mail']);
+    $user->setEmail($formValues['mail']);
 
     $hash = substr(base64_encode(microtime()), 0, 7);
     $user->setUsername(
       sprintf(
         '%s_%s_%s',
-        $form_state->getUserInput()['first_name'],
-        $form_state->getUserInput()['last_name'],
+        $formValues['first_name'],
+        $formValues['last_name'],
         $hash
       )
     );
 
     $user->set('init', 'email');
-    $user->set('langcode', $form_state->getValues()['preferred_langcode']);
-    $user->set('preferred_langcode', $form_state->getValues()['preferred_langcode']);
-    $user->set('preferred_admin_langcode', $form_state->getValues()['preferred_admin_langcode']);
+    $user->set('langcode', $formValues['preferred_langcode']);
+    $user->set('preferred_langcode', $formValues['preferred_langcode']);
+    $user->set('preferred_admin_langcode', $formValues['preferred_admin_langcode']);
     $user->set('timezone', 'Europe/Helsinki');
 
     if ($user->hasField('field_email_is_valid')) {
@@ -215,7 +227,11 @@ class RegisterForm extends TypedRegisterForm {
     $user->addRole('customer');
     $user->activate();
 
+    /** UserInterface $user */
     $user->save();
+    if ($formValues['notify'] == TRUE) {
+      asu_send_user_email('asu_sales_registered_new_customer', $user);
+    }
 
     if ($form_state->getTriggeringElement()['#parents'][0] == 'create_application') {
       $form_state->setRedirect('asu_application.admin_create_application', ['user_id' => $user->id()]);
@@ -255,6 +271,11 @@ class RegisterForm extends TypedRegisterForm {
     }
 
     $account->save();
+
+    $formValues = $form_state->getValues();
+    if ($formValues['notify'] == TRUE) {
+      asu_send_user_email('asu_new_salesperson_registered', $account);
+    }
 
     $phone = '-';
     if ($account->hasField('field_phone_number')) {
