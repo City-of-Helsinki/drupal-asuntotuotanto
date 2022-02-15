@@ -33,6 +33,7 @@ final class FieldTest extends ExistingSiteBase {
       'field_main_image',
       'field_building_type',
       'field_salesperson',
+      'field_archived',
     ];
 
     $project = Node::create([

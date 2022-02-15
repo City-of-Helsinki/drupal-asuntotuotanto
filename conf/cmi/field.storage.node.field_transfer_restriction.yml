@@ -1,0 +1,18 @@
+uuid: e49e1030-7bc7-4b19-a1e5-b1e100f01eaa
+langcode: fi
+status: true
+dependencies:
+  module:
+    - node
+id: node.field_transfer_restriction
+field_name: field_transfer_restriction
+entity_type: node
+type: boolean
+settings: {  }
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

@@ -1,0 +1,19 @@
+uuid: 81caa0be-1189-4663-b1e7-42f88c367e26
+langcode: fi
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_recommended_bank
+    - node.type.project
+id: node.project.field_recommended_bank
+field_name: field_recommended_bank
+entity_type: node
+bundle: project
+label: Rs-pankki
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

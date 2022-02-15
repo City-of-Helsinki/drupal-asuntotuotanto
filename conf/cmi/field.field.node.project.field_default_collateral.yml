@@ -1,0 +1,19 @@
+uuid: d88e55ed-b818-4eb3-8558-df477965fd21
+langcode: fi
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_default_collateral
+    - node.type.project
+id: node.project.field_default_collateral
+field_name: field_default_collateral
+entity_type: node
+bundle: project
+label: 'Suorituskyvyttömyys vakuus'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

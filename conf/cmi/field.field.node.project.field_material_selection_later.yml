@@ -1,0 +1,23 @@
+uuid: d0efab61-678a-4b82-bbc7-078c2850c308
+langcode: fi
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_material_selection_later
+    - node.type.project
+id: node.project.field_material_selection_later
+field_name: field_material_selection_later
+entity_type: node
+bundle: project
+label: 'Materiaalivalinnat täsmennetään myöhemmin'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: Kyllä
+  off_label: Ei
+field_type: boolean

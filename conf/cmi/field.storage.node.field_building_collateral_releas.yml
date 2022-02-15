@@ -1,0 +1,20 @@
+uuid: 79dc4e62-2aa2-4a10-a1d4-de1289f142e5
+langcode: fi
+status: true
+dependencies:
+  module:
+    - datetime
+    - node
+id: node.field_building_collateral_releas
+field_name: field_building_collateral_releas
+entity_type: node
+type: datetime
+settings:
+  datetime_type: date
+module: datetime
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

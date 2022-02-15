@@ -1,0 +1,21 @@
+uuid: 8e30e6a4-9337-4dfe-b67c-50260dcb05e1
+langcode: fi
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_estimated_handover_end
+    - node.type.project
+  module:
+    - datetime
+id: node.project.field_estimated_handover_end
+field_name: field_estimated_handover_end
+entity_type: node
+bundle: project
+label: 'Tilojen arvioitu luovutusajankohta loppu'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: datetime

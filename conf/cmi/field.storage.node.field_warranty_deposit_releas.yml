@@ -1,0 +1,20 @@
+uuid: c3e935d6-49e3-42c0-bade-278762d86392
+langcode: fi
+status: true
+dependencies:
+  module:
+    - datetime
+    - node
+id: node.field_warranty_deposit_releas
+field_name: field_warranty_deposit_releas
+entity_type: node
+type: datetime
+settings:
+  datetime_type: date
+module: datetime
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false
