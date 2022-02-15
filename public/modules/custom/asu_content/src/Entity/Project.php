@@ -30,7 +30,7 @@ class Project extends Node {
    * @return bool
    *   Is application period.
    */
-  public function isApplicationPeriod(string $period = 'now') {
+  public function isApplicationPeriod(string $period = 'now'): bool {
     if (!$this->field_application_start_time->value ||
         !$this->field_application_end_time->value) {
       return FALSE;
@@ -80,12 +80,12 @@ class Project extends Node {
   }
 
   /**
-   * Get the amount of applications on any apartment on this project.s.
+   * Get the amount of applications on any apartment on this project.
    *
    * @return int[]
    *   Apartment_id => amount of applications.
    */
-  public function getApartmentApplicationCounts() {
+  public function getApartmentApplicationCounts(): array {
     $applicationStorage = \Drupal::entityTypeManager()
       ->getStorage('asu_application');
 
@@ -102,6 +102,24 @@ class Project extends Node {
       }
     }
     return $count;
+  }
+
+  /**
+   * Can project be archived.
+   *
+   * Project can be archived after all apartments are sold.
+   *
+   * @return bool
+   *   Can project be archived.
+   */
+  public function isArchievable(): bool {
+    /** @var Apartment $apartment */
+    foreach ($this->getApartmentEntities() as $apartment) {
+      if (!$apartment->isSold()) {
+        return FALSE;
+      }
+    }
+    return TRUE;
   }
 
 }

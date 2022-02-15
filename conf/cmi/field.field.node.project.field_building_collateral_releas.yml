@@ -1,0 +1,21 @@
+uuid: ecd9cbf6-f44f-4abf-b618-f22633673104
+langcode: fi
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_building_collateral_releas
+    - node.type.project
+  module:
+    - datetime
+id: node.project.field_building_collateral_releas
+field_name: field_building_collateral_releas
+entity_type: node
+bundle: project
+label: 'Hallitus vapauttanut rakentamisvaiheen vakuuden'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: datetime

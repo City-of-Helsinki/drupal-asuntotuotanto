@@ -29,7 +29,7 @@ final class IndexingTest extends ExistingSiteBase {
     $indexes = $server->getIndexes();
     $this->assertNotEmpty($indexes, 'We have at least one index');
 
-    /** @var \Drupal\elasticsearch_connector\Entity\Index $index */
+    /** @var \Drupal\search_api\Entity\Index $index */
     $index = reset($indexes);
     $index->clear();
     $client = $this->container->get('http_client');

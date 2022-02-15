@@ -1,0 +1,27 @@
+uuid: 9bcb18fb-a76b-463b-86f6-2a468a7c62f7
+langcode: fi
+status: true
+dependencies:
+  module:
+    - node
+    - options
+id: node.field_plot_owner
+field_name: field_plot_owner
+entity_type: node
+type: list_string
+settings:
+  allowed_values:
+    -
+      value: ownership
+      label: Omistus
+    -
+      value: rental
+      label: Vuokra
+  allowed_values_function: ''
+module: options
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

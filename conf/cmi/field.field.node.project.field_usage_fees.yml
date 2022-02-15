@@ -1,0 +1,19 @@
+uuid: 31c60305-5891-47d6-b27b-cdef6f1f865c
+langcode: fi
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_usage_fees
+    - node.type.project
+id: node.project.field_usage_fees
+field_name: field_usage_fees
+entity_type: node
+bundle: project
+label: Käyttökorvaukset
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string_long
