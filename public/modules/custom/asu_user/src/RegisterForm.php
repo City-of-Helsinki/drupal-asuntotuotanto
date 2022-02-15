@@ -163,7 +163,7 @@ class RegisterForm extends TypedRegisterForm {
       $saved = $account->save();
     }
     catch (\Exception $e) {
-      // @todo: Set proper redirect.
+      // @todo Set proper redirect.
       \Drupal::logger('asu_user')->emergency(t('Customer failed to create an account'));
     }
 
@@ -226,8 +226,7 @@ class RegisterForm extends TypedRegisterForm {
 
     $user->addRole('customer');
     $user->activate();
-
-    /** UserInterface $user */
+    
     $user->save();
     if ($formValues['notify'] == TRUE) {
       asu_send_user_email('asu_sales_registered_new_customer', $user);
