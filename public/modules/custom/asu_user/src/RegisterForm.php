@@ -226,7 +226,7 @@ class RegisterForm extends TypedRegisterForm {
 
     $user->addRole('customer');
     $user->activate();
-    
+
     $user->save();
     if ($formValues['notify'] == TRUE) {
       asu_send_user_email('asu_sales_registered_new_customer', $user);
