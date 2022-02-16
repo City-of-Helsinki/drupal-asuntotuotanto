@@ -164,7 +164,8 @@ function asu_content_entity_presave(EntityInterface $entity) {
         !$entity->isArchievable()
       ) {
         $entity->set('field_archived', FALSE);
-        \Drupal::messenger()->addError(t('Project cannot be archived since all the apartments are not sold'));
+        $entity->setPublished(TRUE);
+        \Drupal::messenger()->addWarning(t('Project cannot be archived since all the apartments are not sold'));
       }
 
       // Success message.
@@ -246,6 +247,8 @@ function asu_content_node_insert(Node $node) {
 
 /**
  * Implements hook_cron().
+ *
+ * Update projects/apartments automatically based on dates set on project.
  */
 function asu_content_cron() {
   $properties = [
