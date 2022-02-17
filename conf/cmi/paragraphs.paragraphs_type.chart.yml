@@ -1,0 +1,17 @@
+uuid: 25507cf0-2c42-4ef8-b29b-09f9702d4169
+langcode: en
+status: true
+dependencies:
+  module:
+    - paragraphs_library
+third_party_settings:
+  paragraphs_library:
+    allow_library_conversion: true
+_core:
+  default_config_hash: Y3YB77frfRg61q6wyiwlydBQeAkhme2vM_Y-iRj8pug
+id: chart
+label: Chart
+icon_uuid: null
+icon_default: null
+description: 'With Chart paragraph content producer can add an embedded chart from https://app.powerbi.com.'
+behavior_plugins: {  }

@@ -32,7 +32,7 @@ dependencies:
 _core:
   default_config_hash: vrZv05Y6x-5ZH874GNgfIMO8AetqjY7vB0pzfvXDtUY
 id: content_producer
-label: Sisällöntuottaja
+label: 'Content producer'
 weight: 3
 is_admin: null
 permissions:
@@ -111,3 +111,19 @@ permissions:
   - 'view scheduled content'
   - 'view the administration theme'
   - 'view unpublished paragraphs'
+  - 'administer paragraphs library'
+  - 'create paragraph library item'
+  - 'edit any file media'
+  - 'edit any image media'
+  - 'edit any landing_page content'
+  - 'edit any page content'
+  - 'edit any remote_video media'
+  - 'edit any soundcloud media'
+  - 'edit paragraph library item'
+  - 'set landing_page published on date'
+  - 'set page published on date'
+  - 'use text format full_html'
+  - 'use text format minimal'
+  - 'view any unpublished content'
+  - 'use text format full_html'
+  - 'use text format minimal'
