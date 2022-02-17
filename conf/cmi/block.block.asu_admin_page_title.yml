@@ -8,13 +8,13 @@ _core:
   default_config_hash: HLQY2xgby8K3vN_98hiOSasOhm9pdCsH234-s0duJ8Q
 id: asu_admin_page_title
 theme: asu_admin
-region: header
+region: content
 weight: -30
 provider: null
 plugin: page_title_block
 settings:
   id: page_title_block
-  label: 'Sivun otsikko'
+  label: 'Page title'
   label_display: '0'
   provider: core
 visibility: {  }

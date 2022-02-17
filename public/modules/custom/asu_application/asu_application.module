@@ -293,7 +293,9 @@ function asu_user_form_contact_message_apply_for_free_apartment_form_alter(&$for
 }
 
 /**
- * Cron for asu application.
+ * Implements hook_cron().
+ *
+ * Delete application drafts for projects which application tima has ended.
  */
 function asu_application_cron() {
   // Handle drafted applications.
@@ -303,6 +305,7 @@ function asu_application_cron() {
     $after = (new DrupalDateTime('-31 days'))
       ->format(DateTimeItemInterface::DATETIME_STORAGE_FORMAT);
 
+    // @todo Optimize query with join.
     $projects = \Drupal::entityQuery('node')
       ->condition('type', 'project', '=')
       ->condition('field_application_end_time', [$after, $before], 'BETWEEN')

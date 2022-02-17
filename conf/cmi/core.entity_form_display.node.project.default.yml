@@ -150,6 +150,7 @@ third_party_settings:
       children:
         - langcode
         - title
+        - field_archived
         - field_housing_company
         - field_ownership_type
         - field_state_of_sale
@@ -432,7 +433,7 @@ content:
     third_party_settings: {  }
   field_apartment_count:
     type: number
-    weight: 13
+    weight: 14
     region: content
     settings:
       placeholder: ''
@@ -468,7 +469,7 @@ content:
     third_party_settings: {  }
   field_archived:
     type: boolean_checkbox
-    weight: 8
+    weight: 3
     region: content
     settings:
       display_label: true
@@ -491,7 +492,7 @@ content:
     third_party_settings: {  }
   field_barred_bank_account:
     type: string_textfield
-    weight: 18
+    weight: 19
     region: content
     settings:
       size: 60
@@ -526,7 +527,7 @@ content:
     third_party_settings: {  }
   field_city:
     type: string_textfield
-    weight: 8
+    weight: 9
     region: content
     settings:
       size: 60
@@ -607,7 +608,7 @@ content:
     third_party_settings: {  }
   field_construction_end_date:
     type: datetime_default
-    weight: 22
+    weight: 23
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -631,13 +632,13 @@ content:
     third_party_settings: {  }
   field_construction_start_date:
     type: datetime_default
-    weight: 21
+    weight: 22
     region: content
     settings: {  }
     third_party_settings: {  }
   field_construction_year:
     type: string_textfield
-    weight: 11
+    weight: 12
     region: content
     settings:
       size: 60
@@ -699,7 +700,7 @@ content:
     third_party_settings: {  }
   field_district:
     type: options_select
-    weight: 9
+    weight: 10
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -757,13 +758,13 @@ content:
     third_party_settings: {  }
   field_holding_type:
     type: options_buttons
-    weight: 15
+    weight: 16
     region: content
     settings: {  }
     third_party_settings: {  }
   field_housing_company:
     type: string_textfield
-    weight: 3
+    weight: 4
     region: content
     settings:
       size: 60
@@ -843,13 +844,13 @@ content:
     third_party_settings: {  }
   field_new_development_status:
     type: options_buttons
-    weight: 14
+    weight: 15
     region: content
     settings: {  }
     third_party_settings: {  }
   field_new_housing:
     type: boolean_checkbox
-    weight: 12
+    weight: 13
     region: content
     settings:
       display_label: true
@@ -864,7 +865,7 @@ content:
     third_party_settings: {  }
   field_ownership_type:
     type: options_buttons
-    weight: 4
+    weight: 5
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -878,7 +879,7 @@ content:
     third_party_settings: {  }
   field_plot_owner:
     type: options_select
-    weight: 19
+    weight: 20
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -890,7 +891,7 @@ content:
     third_party_settings: {  }
   field_postal_code:
     type: string_textfield
-    weight: 7
+    weight: 8
     region: content
     settings:
       size: 60
@@ -933,7 +934,7 @@ content:
     third_party_settings: {  }
   field_project_description:
     type: text_textarea
-    weight: 16
+    weight: 17
     region: content
     settings:
       rows: 5
@@ -957,7 +958,7 @@ content:
     third_party_settings: {  }
   field_property_number:
     type: string_textfield
-    weight: 20
+    weight: 21
     region: content
     settings:
       size: 60
@@ -977,7 +978,7 @@ content:
     third_party_settings: {  }
   field_realty_id:
     type: string_textfield
-    weight: 10
+    weight: 11
     region: content
     settings:
       size: 60
@@ -993,7 +994,7 @@ content:
     third_party_settings: {  }
   field_regular_bank_account:
     type: string_textfield
-    weight: 17
+    weight: 18
     region: content
     settings:
       size: 60
@@ -1084,13 +1085,13 @@ content:
     third_party_settings: {  }
   field_state_of_sale:
     type: options_select
-    weight: 5
+    weight: 6
     region: content
     settings: {  }
     third_party_settings: {  }
   field_street_address:
     type: string_textfield
-    weight: 6
+    weight: 7
     region: content
     settings:
       size: 60
@@ -1111,7 +1112,7 @@ content:
     third_party_settings: {  }
   field_usage_fees:
     type: string_textarea
-    weight: 23
+    weight: 24
     region: content
     settings:
       rows: 5

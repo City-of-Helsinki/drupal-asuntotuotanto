@@ -35,3 +35,25 @@ function asu_admin_get_icons_path() {
   }
   return $icon_path;
 }
+
+/**
+ * Implements hook_form_alter().
+ */
+function asu_admin_form_alter(&$form) {
+  if ($form['#id'] == 'node-project-edit-form') {
+    asu_admin_apply_form_theme($form);
+  }
+}
+
+/**
+ * Implements hook_apply_form_theme().
+ *
+ * Copy archived button from form to gin header, hide the form button.
+ */
+function asu_admin_apply_form_theme(array &$form) {
+  // Login is handled in asu_content.module.
+  if (isset($form['field_archived'])) {
+    $form['gin_actions']['actions']['field_archived_action'] = $form['field_archived'];
+    $form['field_archived']['widget']['value']['#type'] = 'hidden';
+  }
+}

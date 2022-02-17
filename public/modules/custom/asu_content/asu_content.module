@@ -5,6 +5,7 @@
  * Contains asu_content.module.
  */
 
+use Drupal\Core\Entity\EntityFormInterface;
 use Drupal\Core\Field\FieldFilteredMarkup;
 use Drupal\asu_content\Entity\Apartment;
 use Drupal\asu_content\Entity\Project;
@@ -49,6 +50,24 @@ function asu_content_help($route_name, RouteMatchInterface $route_match) {
 function asu_content_form_node_form_alter(&$form, $form_state) {
   asu_content_hide_node_title($form);
   asu_content_show_computed_fields($form, $form_state);
+  asu_content_project_add_archived_handling($form, $form_state);
+}
+
+/**
+ * Add archived button logic, button widget positioning is handled in theme.
+ */
+function asu_content_project_add_archived_handling(&$form, &$form_state) {
+  // Add javascript to project form.
+  $formObject = $form_state->getFormObject();
+  if ($formObject instanceof EntityFormInterface) {
+    $entity = $formObject->getEntity();
+    if (
+      $entity->getEntityTypeId() === 'node'
+      && in_array($entity->bundle(), ['project'])
+    ) {
+      $form['#attached']['library'][] = 'asu_content/asu_editform';
+    }
+  }
 }
 
 /**
@@ -164,7 +183,8 @@ function asu_content_entity_presave(EntityInterface $entity) {
         !$entity->isArchievable()
       ) {
         $entity->set('field_archived', FALSE);
-        \Drupal::messenger()->addError(t('Project cannot be archived since all the apartments are not sold'));
+        $entity->setPublished(TRUE);
+        \Drupal::messenger()->addWarning(t('Project cannot be archived since all the apartments are not sold'));
       }
 
       // Success message.
@@ -246,6 +266,8 @@ function asu_content_node_insert(Node $node) {
 
 /**
  * Implements hook_cron().
+ *
+ * Update projects/apartments automatically based on dates set on project.
  */
 function asu_content_cron() {
   $properties = [

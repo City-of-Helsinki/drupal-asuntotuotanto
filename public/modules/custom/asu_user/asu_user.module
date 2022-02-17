@@ -32,7 +32,7 @@ function asu_user_user_login(UserInterface $account) {
   asu_create_backend_user($account);
   if ($account->hasRole('customer')) {
     asu_validate_email($account);
-    asu_send_user_password_email($account);
+    asu_send_user_email_verification_reminder($account);
     asu_get_user_external_field_data($account);
     asu_redirect_on_login_by_session($account);
   }
@@ -56,9 +56,14 @@ function asu_validate_email(UserInterface $account) {
 /**
  * Send user an email if email is not validated.
  */
-function asu_send_user_password_email(UserInterface $account) {
+function asu_send_user_email_verification_reminder(UserInterface $account) {
+  // @todo This might change after profiili authentication is done.
   if ($account->field_email_is_valid->value == 0) {
-    asu_send_user_email('asu_email_approval_required', $account);
+    // Prevent sending email verification mail.
+    $sendMail = $account->getLastAccessedTime() != 0 && (time() - $account->getCreatedTime() >= 86400);
+    if ($sendMail) {
+      asu_send_user_email('asu_email_approval_required', $account);
+    }
   }
 }
 

@@ -508,11 +508,6 @@ field_settings:
     datasource_id: 'entity:node'
     property_path: 'search_api_reverse_entity_references_node__field_apartments:field_property_id'
     type: string
-  project_contract_rs_bank:
-    label: 'RS bank'
-    datasource_id: 'entity:node'
-    property_path: 'search_api_reverse_entity_references_node__field_apartments:field_recommended_bank'
-    type: string
   project_contract_repository:
     label: Repository
     datasource_id: 'entity:node'
@@ -522,6 +517,11 @@ field_settings:
     label: 'Right of occupancy payment verification'
     datasource_id: 'entity:node'
     property_path: 'search_api_reverse_entity_references_node__field_apartments:field_payment_verification'
+    type: string
+  project_contract_rs_bank:
+    label: 'RS bank'
+    datasource_id: 'entity:node'
+    property_path: 'search_api_reverse_entity_references_node__field_apartments:field_recommended_bank'
     type: string
   project_contract_transfer_restriction:
     label: 'Transfer restriction'
