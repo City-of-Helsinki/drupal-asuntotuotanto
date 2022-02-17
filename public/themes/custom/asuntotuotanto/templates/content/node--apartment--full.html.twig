@@ -86,7 +86,6 @@
 
 {% set apartment_structure = content.field_apartment_structure.0 %}
 {% set living_area_size_m2 = content.field_living_area.0 %}
-{% set application_url = content.field_application_url.0 %}
 {% set images = content.field_images %}
 {% set floor = content.field_floor.0 %}
 {% set sales_price = content.field_sales_price.0 %}
@@ -123,7 +122,7 @@
 					{% if is_application_period_active %}
 						<p class="sticky-navigation__content-item">
 							{% trans %}
-							Application period is open till
+							Application period is open until
 							{{ application_end_time }}
 							{% endtrans %}
 						</p>
@@ -459,10 +458,10 @@
 							{% set uri = attachment.uri %}
 
 							<li class="apartment__attachment-item">
-								<a href="{{ uri }}" download="{{ description ?: name }}" class="apartment__attachment-link">
+								<a href="{{ uri }}" class="apartment__attachment-link">
 									{% include "@hdbt/misc/icon.twig" with {icon: 'document', label: ''} %}
 									<div class="apartment__attachment-content">
-										<p class="apartment__attachment-description">{{ 'Download'|t }}</p>
+										<p class="apartment__attachment-description">{{ 'Open'|t }}</p>
 										<p class="apartment__attachment-name">
 											<span class="visually-hidden">({{ 'File name'|t }})</span>
 											{{ description ?: name }}

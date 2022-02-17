@@ -1,0 +1,21 @@
+uuid: cb9dba17-5e57-4f3b-9d6a-d1f08732a9ef
+langcode: fi
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_completion_2_start
+    - node.type.project
+  module:
+    - datetime
+id: node.project.field_completion_2_start
+field_name: field_completion_2_start
+entity_type: node
+bundle: project
+label: 'Asunnon arvioitu valmistumisaika 2 alku'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: datetime

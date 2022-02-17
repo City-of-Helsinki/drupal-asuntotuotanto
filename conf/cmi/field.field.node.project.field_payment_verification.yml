@@ -1,0 +1,19 @@
+uuid: 9dc4a91c-2a26-45d2-89bd-e24b90f60523
+langcode: fi
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_payment_verification
+    - node.type.project
+id: node.project.field_payment_verification
+field_name: field_payment_verification
+entity_type: node
+bundle: project
+label: 'Asumisoikeusmaksun tarkistus '
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string_long

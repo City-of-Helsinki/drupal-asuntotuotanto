@@ -1,0 +1,19 @@
+uuid: bad0961e-1f35-4219-a6e4-6c6a84850afd
+langcode: fi
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_location_block
+    - node.type.project
+id: node.project.field_location_block
+field_name: field_location_block
+entity_type: node
+bundle: project
+label: Sijaintikortteli
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

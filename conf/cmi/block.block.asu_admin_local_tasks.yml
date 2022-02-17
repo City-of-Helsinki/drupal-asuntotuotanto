@@ -1,0 +1,20 @@
+uuid: 3bd293ff-3d5d-4379-ba75-381dd009ead7
+langcode: en
+status: true
+dependencies:
+  theme:
+    - asu_admin
+id: asu_admin_local_tasks
+theme: asu_admin
+region: content
+weight: -20
+provider: null
+plugin: local_tasks_block
+settings:
+  id: local_tasks_block
+  label: Tabs
+  label_display: '0'
+  provider: core
+  primary: true
+  secondary: true
+visibility: {  }

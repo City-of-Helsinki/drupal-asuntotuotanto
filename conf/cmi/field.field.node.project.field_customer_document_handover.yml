@@ -1,0 +1,19 @@
+uuid: c67031a3-da41-4d5b-817e-d9ad0b3e756e
+langcode: fi
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_customer_document_handover
+    - node.type.project
+id: node.project.field_customer_document_handover
+field_name: field_customer_document_handover
+entity_type: node
+bundle: project
+label: 'Sopimuksenteossa asiakkaalle luovutettavat avat asiakirjat'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string_long

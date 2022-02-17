@@ -1,0 +1,20 @@
+uuid: 7926c2de-5589-4f74-a5f7-1bfc9b820eb1
+langcode: fi
+status: true
+dependencies:
+  module:
+    - datetime
+    - node
+id: node.field_construction_permit_claim
+field_name: field_construction_permit_claim
+entity_type: node
+type: datetime
+settings:
+  datetime_type: date
+module: datetime
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

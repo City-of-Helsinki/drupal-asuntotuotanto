@@ -25,3 +25,15 @@ status_blocked:
 status_canceled:
   body: "[user:display-name],\r\n\r\nYour account on [site:name] has been canceled.\r\n\r\n--  [site:name] team"
   subject: 'Käyttäjän [user:display-name] tilitiedot [site:name] sivustolla (peruttu)'
+asu_new_customer_registered:
+  body: "Hei, olet rekisteröitynyt [site:name] sivustolle. Huomaathan, että sähköpostiosoite täytyy vahvistaa ennen kuin asuntohakemuksia voi lähettää. Voit vahvistaa sähköpostiosoitteesi napsauttamalla tätä linkkiä tai kopioimalla ja liittämällä sen selaimeesi: [user:one-time-login-url] \r\nTätä linkkiä voidaan käyttää vain kerran sisäänkirjautumiseen. Linkki vanhenee vuorokauden kuluessa - ylläpito"
+  subject: 'Käyttäjätilin luotu [site:name] sivustolla'
+asu_sales_registered_new_customer:
+  body: "Hei. Sinulle on luotu käyttäjätili [site:name] sivustolle. Voit kirjautua tilillesi napsauttamalla tätä linkkiä tai kopioimalla ja liittämällä sen selaimeesi: [user:one-time-login-url].\r\n\r\n Kirjauduttuasi voit muun muassa luoda uusia hakemuksia, tarkastella olemassaolevia hakemuksiasi ja tarkastella hakemuksiesi varaustilannetta.\r\n\r\n"
+  subject: 'Uusi käyttäjätili luotu [site:name] sivustolla'
+asu_new_salesperson_registered:
+  body: "Hei, uusi myyjä-tilisi on luotu [site:name] sivustolla. Voit kirjautua sisään ja vaihtaa salasanasi napsauttamalla tätä linkkiä tai kopioimalla ja liittämällä sen selaimeesi: [user:one-time-login-url].\r\n\r\n"
+  subject: 'Uusi myyjä-tili luotu [site:name] sivustolla'
+asu_email_approval_required:
+  body: "Hei. \r\n\r\nSinun täytyy vahvistaa sähköpostiosoitteesi ennen kuin voit lähettää huoneistohakemuksia [site:name] sivustolla. Voit vahvistaa sähköpostiosoitteesi napsauttamalla tätä linkkiä tai kopioimalla ja liittämällä sen selaimeesi: [user:one-time-login-url].\r\n\r\n"
+  subject: 'Sähköpostiosoitteen vahvistaminen [site:name] sivustolla'

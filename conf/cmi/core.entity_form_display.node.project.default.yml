@@ -5,24 +5,50 @@ dependencies:
   config:
     - field.field.node.project.field_acc_financeofficer
     - field.field.node.project.field_acc_salesperson
+    - field.field.node.project.field_actual_application_end
     - field.field.node.project.field_apartment_count
     - field.field.node.project.field_apartments
     - field.field.node.project.field_application_end_time
     - field.field.node.project.field_application_start_time
+    - field.field.node.project.field_archived
+    - field.field.node.project.field_article_of_association
     - field.field.node.project.field_attachments_url
     - field.field.node.project.field_barred_bank_account
+    - field.field.node.project.field_building_collateral_releas
+    - field.field.node.project.field_building_flaw_attachement
     - field.field.node.project.field_building_type
+    - field.field.node.project.field_business_id
     - field.field.node.project.field_city
+    - field.field.node.project.field_collateral_amount
+    - field.field.node.project.field_collateral_amount_fixed
+    - field.field.node.project.field_collateral_type
+    - field.field.node.project.field_completion_1_start
+    - field.field.node.project.field_completion_2_end
+    - field.field.node.project.field_completion_2_start
+    - field.field.node.project.field_completion_3_start
     - field.field.node.project.field_completion_date
+    - field.field.node.project.field_completion_selection_1
+    - field.field.node.project.field_completion_selection_2
+    - field.field.node.project.field_completion_selection_3
+    - field.field.node.project.field_construction_end_date
     - field.field.node.project.field_construction_materials
+    - field.field.node.project.field_construction_permit_claim
+    - field.field.node.project.field_construction_phase_meaning
+    - field.field.node.project.field_construction_start_date
     - field.field.node.project.field_construction_year
     - field.field.node.project.field_constructor
+    - field.field.node.project.field_contract_other_terms
     - field.field.node.project.field_coordinate_lat
     - field.field.node.project.field_coordinate_lon
+    - field.field.node.project.field_customer_document_handover
+    - field.field.node.project.field_default_collateral
+    - field.field.node.project.field_depositary
     - field.field.node.project.field_district
     - field.field.node.project.field_energy_class
     - field.field.node.project.field_estimated_completion
     - field.field.node.project.field_estimated_completion_date
+    - field.field.node.project.field_estimated_handover_end
+    - field.field.node.project.field_estimated_handover_start
     - field.field.node.project.field_has_elevator
     - field.field.node.project.field_has_sauna
     - field.field.node.project.field_heating_options
@@ -31,11 +57,19 @@ dependencies:
     - field.field.node.project.field_housing_manager
     - field.field.node.project.field_images
     - field.field.node.project.field_import_apartments
+    - field.field.node.project.field_location_block
     - field.field.node.project.field_main_image
+    - field.field.node.project.field_management_handover_date
     - field.field.node.project.field_material_choice_dl
+    - field.field.node.project.field_material_selection_date
+    - field.field.node.project.field_material_selection_desc
+    - field.field.node.project.field_material_selection_later
     - field.field.node.project.field_new_development_status
     - field.field.node.project.field_new_housing
+    - field.field.node.project.field_other_terms
     - field.field.node.project.field_ownership_type
+    - field.field.node.project.field_payment_verification
+    - field.field.node.project.field_plot_owner
     - field.field.node.project.field_possession_transfer_date
     - field.field.node.project.field_postal_code
     - field.field.node.project.field_pre_marketing_end_time
@@ -45,10 +79,14 @@ dependencies:
     - field.field.node.project.field_project_attachments
     - field.field.node.project.field_project_description
     - field.field.node.project.field_project_manager
+    - field.field.node.project.field_property_id
+    - field.field.node.project.field_property_number
     - field.field.node.project.field_publication_end_time
     - field.field.node.project.field_publication_start_time
     - field.field.node.project.field_realty_id
+    - field.field.node.project.field_recommended_bank
     - field.field.node.project.field_regular_bank_account
+    - field.field.node.project.field_repository
     - field.field.node.project.field_roof_material
     - field.field.node.project.field_salesperson
     - field.field.node.project.field_sanitation
@@ -62,7 +100,10 @@ dependencies:
     - field.field.node.project.field_state_of_sale
     - field.field.node.project.field_street_address
     - field.field.node.project.field_tasks
+    - field.field.node.project.field_transfer_restriction
+    - field.field.node.project.field_usage_fees
     - field.field.node.project.field_virtual_presentation_url
+    - field.field.node.project.field_warranty_deposit_releas
     - field.field.node.project.field_zoning_info
     - field.field.node.project.field_zoning_status
     - image.style.thumbnail
@@ -93,6 +134,9 @@ third_party_settings:
         - group_pictures_and_videos
         - group_persons_and_operators
         - group_apartments
+        - group_bill_of_sale
+        - group_occupancy_contract
+        - group_collaterates
       label: 'Project tabs'
       region: content
       parent_name: ''
@@ -106,6 +150,7 @@ third_party_settings:
       children:
         - langcode
         - title
+        - field_archived
         - field_housing_company
         - field_ownership_type
         - field_state_of_sale
@@ -122,6 +167,11 @@ third_party_settings:
         - field_project_description
         - field_regular_bank_account
         - field_barred_bank_account
+        - field_plot_owner
+        - field_property_number
+        - field_construction_start_date
+        - field_construction_end_date
+        - field_usage_fees
       label: Perustiedot
       region: content
       parent_name: group_project_tabs
@@ -247,7 +297,7 @@ third_party_settings:
       label: Huoneistot
       region: content
       parent_name: group_project_tabs
-      weight: 26
+      weight: 25
       format_type: tab
       format_settings:
         classes: ''
@@ -271,6 +321,83 @@ third_party_settings:
         formatter: closed
         description: ''
         required_fields: true
+    group_bill_of_sale:
+      children:
+        - field_business_id
+        - field_location_block
+        - field_property_id
+        - field_transfer_restriction
+        - field_article_of_association
+        - field_material_selection_later
+        - field_material_selection_date
+        - field_material_selection_desc
+        - field_construction_phase_meaning
+        - field_completion_selection_1
+        - field_completion_1_start
+        - field_completion_selection_2
+        - field_completion_2_start
+        - field_completion_2_end
+        - field_completion_selection_3
+        - field_completion_3_start
+        - field_depositary
+        - field_repository
+        - field_collateral_type
+        - field_default_collateral
+        - field_building_flaw_attachement
+        - field_construction_permit_claim
+        - field_other_terms
+      label: 'Kauppakirjan tiedot'
+      region: content
+      parent_name: group_project_tabs
+      weight: 26
+      format_type: tab
+      format_settings:
+        classes: ''
+        show_empty_fields: false
+        id: ''
+        formatter: closed
+        description: ''
+        required_fields: true
+    group_occupancy_contract:
+      children:
+        - field_estimated_handover_start
+        - field_estimated_handover_end
+        - field_collateral_amount_fixed
+        - field_collateral_amount
+        - field_actual_application_end
+        - field_payment_verification
+        - field_contract_other_terms
+        - field_customer_document_handover
+      label: Asumisoikeussopimus
+      region: content
+      parent_name: group_project_tabs
+      weight: 27
+      format_type: tab
+      format_settings:
+        classes: ''
+        show_empty_fields: false
+        id: ''
+        formatter: closed
+        description: ''
+        required_fields: true
+    group_collaterates:
+      children:
+        - field_recommended_bank
+        - field_management_handover_date
+        - field_building_collateral_releas
+        - field_warranty_deposit_releas
+      label: Vakuudet
+      region: content
+      parent_name: group_project_tabs
+      weight: 28
+      format_type: tab
+      format_settings:
+        classes: ''
+        show_empty_fields: false
+        id: ''
+        formatter: closed
+        description: ''
+        required_fields: true
 id: node.project.default
 targetEntityType: node
 bundle: project
@@ -278,7 +405,7 @@ mode: default
 content:
   created:
     type: datetime_timestamp
-    weight: 4
+    weight: 3
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -298,9 +425,15 @@ content:
       size: 60
       placeholder: ''
     third_party_settings: {  }
+  field_actual_application_end:
+    type: datetime_default
+    weight: 112
+    region: content
+    settings: {  }
+    third_party_settings: {  }
   field_apartment_count:
     type: number
-    weight: 13
+    weight: 14
     region: content
     settings:
       placeholder: ''
@@ -334,6 +467,21 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
+  field_archived:
+    type: boolean_checkbox
+    weight: 3
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  field_article_of_association:
+    type: string_textfield
+    weight: 94
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
   field_attachments_url:
     type: link_default
     weight: 24
@@ -344,11 +492,24 @@ content:
     third_party_settings: {  }
   field_barred_bank_account:
     type: string_textfield
-    weight: 18
+    weight: 19
     region: content
     settings:
       size: 60
       placeholder: ''
+    third_party_settings: {  }
+  field_building_collateral_releas:
+    type: datetime_default
+    weight: 119
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_building_flaw_attachement:
+    type: boolean_checkbox
+    weight: 111
+    region: content
+    settings:
+      display_label: true
     third_party_settings: {  }
   field_building_type:
     type: options_select
@@ -356,17 +517,98 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
-  field_city:
+  field_business_id:
     type: string_textfield
-    weight: 8
+    weight: 90
     region: content
     settings:
       size: 60
       placeholder: ''
     third_party_settings: {  }
+  field_city:
+    type: string_textfield
+    weight: 9
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_collateral_amount:
+    type: number
+    weight: 111
+    region: content
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+  field_collateral_amount_fixed:
+    type: boolean_checkbox
+    weight: 110
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  field_collateral_type:
+    type: string_textfield
+    weight: 109
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_completion_1_start:
+    type: datetime_default
+    weight: 101
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_completion_2_end:
+    type: datetime_default
+    weight: 104
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_completion_2_start:
+    type: datetime_default
+    weight: 103
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_completion_3_start:
+    type: datetime_default
+    weight: 106
+    region: content
+    settings: {  }
+    third_party_settings: {  }
   field_completion_date:
     type: datetime_default
     weight: 22
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_completion_selection_1:
+    type: boolean_checkbox
+    weight: 100
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  field_completion_selection_2:
+    type: boolean_checkbox
+    weight: 102
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  field_completion_selection_3:
+    type: boolean_checkbox
+    weight: 105
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  field_construction_end_date:
+    type: datetime_default
+    weight: 23
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -376,9 +618,27 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
+  field_construction_permit_claim:
+    type: datetime_default
+    weight: 112
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_construction_phase_meaning:
+    type: options_select
+    weight: 98
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_construction_start_date:
+    type: datetime_default
+    weight: 22
+    region: content
+    settings: {  }
+    third_party_settings: {  }
   field_construction_year:
     type: string_textfield
-    weight: 11
+    weight: 12
     region: content
     settings:
       size: 60
@@ -390,6 +650,14 @@ content:
     region: content
     settings:
       size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_contract_other_terms:
+    type: string_textarea
+    weight: 114
+    region: content
+    settings:
+      rows: 5
       placeholder: ''
     third_party_settings: {  }
   field_coordinate_lat:
@@ -406,9 +674,33 @@ content:
     settings:
       placeholder: ''
     third_party_settings: {  }
+  field_customer_document_handover:
+    type: string_textarea
+    weight: 115
+    region: content
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+  field_default_collateral:
+    type: string_textfield
+    weight: 110
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_depositary:
+    type: string_textfield
+    weight: 107
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
   field_district:
     type: options_select
-    weight: 9
+    weight: 10
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -429,6 +721,18 @@ content:
   field_estimated_completion_date:
     type: datetime_default
     weight: 21
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_estimated_handover_end:
+    type: datetime_default
+    weight: 109
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_estimated_handover_start:
+    type: datetime_default
+    weight: 108
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -454,13 +758,13 @@ content:
     third_party_settings: {  }
   field_holding_type:
     type: options_buttons
-    weight: 15
+    weight: 16
     region: content
     settings: {  }
     third_party_settings: {  }
   field_housing_company:
     type: string_textfield
-    weight: 3
+    weight: 4
     region: content
     settings:
       size: 60
@@ -489,6 +793,14 @@ content:
     settings:
       progress_indicator: throbber
     third_party_settings: {  }
+  field_location_block:
+    type: string_textfield
+    weight: 91
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
   field_main_image:
     type: image_image
     weight: 25
@@ -497,28 +809,77 @@ content:
       progress_indicator: throbber
       preview_image_style: thumbnail
     third_party_settings: {  }
+  field_management_handover_date:
+    type: datetime_default
+    weight: 118
+    region: content
+    settings: {  }
+    third_party_settings: {  }
   field_material_choice_dl:
     type: datetime_default
     weight: 17
     region: content
     settings: {  }
     third_party_settings: {  }
+  field_material_selection_date:
+    type: datetime_default
+    weight: 96
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_material_selection_desc:
+    type: string_textarea
+    weight: 97
+    region: content
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+  field_material_selection_later:
+    type: boolean_checkbox
+    weight: 95
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
   field_new_development_status:
     type: options_buttons
-    weight: 14
+    weight: 15
     region: content
     settings: {  }
     third_party_settings: {  }
   field_new_housing:
     type: boolean_checkbox
-    weight: 12
+    weight: 13
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
+  field_other_terms:
+    type: string_textarea
+    weight: 113
+    region: content
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
   field_ownership_type:
     type: options_buttons
-    weight: 4
+    weight: 5
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_payment_verification:
+    type: string_textarea
+    weight: 113
+    region: content
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+  field_plot_owner:
+    type: options_select
+    weight: 20
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -530,7 +891,7 @@ content:
     third_party_settings: {  }
   field_postal_code:
     type: string_textfield
-    weight: 7
+    weight: 8
     region: content
     settings:
       size: 60
@@ -573,7 +934,7 @@ content:
     third_party_settings: {  }
   field_project_description:
     type: text_textarea
-    weight: 16
+    weight: 17
     region: content
     settings:
       rows: 5
@@ -582,6 +943,22 @@ content:
   field_project_manager:
     type: string_textfield
     weight: 26
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_property_id:
+    type: string_textfield
+    weight: 92
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_property_number:
+    type: string_textfield
+    weight: 21
     region: content
     settings:
       size: 60
@@ -601,7 +978,15 @@ content:
     third_party_settings: {  }
   field_realty_id:
     type: string_textfield
-    weight: 10
+    weight: 11
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_recommended_bank:
+    type: string_textfield
+    weight: 117
     region: content
     settings:
       size: 60
@@ -609,7 +994,15 @@ content:
     third_party_settings: {  }
   field_regular_bank_account:
     type: string_textfield
-    weight: 17
+    weight: 18
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_repository:
+    type: string_textfield
+    weight: 108
     region: content
     settings:
       size: 60
@@ -692,13 +1085,13 @@ content:
     third_party_settings: {  }
   field_state_of_sale:
     type: options_select
-    weight: 5
+    weight: 6
     region: content
     settings: {  }
     third_party_settings: {  }
   field_street_address:
     type: string_textfield
-    weight: 6
+    weight: 7
     region: content
     settings:
       size: 60
@@ -710,6 +1103,21 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
+  field_transfer_restriction:
+    type: boolean_checkbox
+    weight: 93
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  field_usage_fees:
+    type: string_textarea
+    weight: 24
+    region: content
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
   field_virtual_presentation_url:
     type: link_default
     weight: 29
@@ -717,6 +1125,12 @@ content:
     settings:
       placeholder_url: ''
       placeholder_title: ''
+    third_party_settings: {  }
+  field_warranty_deposit_releas:
+    type: datetime_default
+    weight: 120
+    region: content
+    settings: {  }
     third_party_settings: {  }
   field_zoning_info:
     type: link_default
@@ -743,20 +1157,20 @@ content:
     third_party_settings: {  }
   path:
     type: path
-    weight: 7
+    weight: 6
     region: content
     settings: {  }
     third_party_settings: {  }
   promote:
     type: boolean_checkbox
-    weight: 5
+    weight: 4
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
   publish_on:
     type: datetime_timestamp_no_default
-    weight: 30
+    weight: 11
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -769,7 +1183,7 @@ content:
     third_party_settings: {  }
   sticky:
     type: boolean_checkbox
-    weight: 6
+    weight: 5
     region: content
     settings:
       display_label: true
@@ -783,13 +1197,13 @@ content:
       placeholder: ''
     third_party_settings: {  }
   translation:
-    weight: 3
+    weight: 2
     region: content
     settings: {  }
     third_party_settings: {  }
   uid:
     type: entity_reference_autocomplete
-    weight: 2
+    weight: 1
     region: content
     settings:
       match_operator: CONTAINS
@@ -799,12 +1213,12 @@ content:
     third_party_settings: {  }
   unpublish_on:
     type: datetime_timestamp_no_default
-    weight: 30
+    weight: 12
     region: content
     settings: {  }
     third_party_settings: {  }
   url_redirects:
-    weight: 8
+    weight: 7
     region: content
     settings: {  }
     third_party_settings: {  }

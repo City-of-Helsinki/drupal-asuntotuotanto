@@ -1,0 +1,21 @@
+uuid: 4012816e-854b-4e6d-bacc-0161d51cb233
+langcode: fi
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_plot_owner
+    - node.type.project
+  module:
+    - options
+id: node.project.field_plot_owner
+field_name: field_plot_owner
+entity_type: node
+bundle: project
+label: Tontti
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: list_string

@@ -30,7 +30,7 @@ class Project extends Node {
    * @return bool
    *   Is application period.
    */
-  public function isApplicationPeriod(string $period = 'now') {
+  public function isApplicationPeriod(string $period = 'now'): bool {
     if (!$this->field_application_start_time->value ||
         !$this->field_application_end_time->value) {
       return FALSE;
@@ -73,10 +73,53 @@ class Project extends Node {
       return sprintf('%s/application/add/%s/%s', $baseurl, $apartmentType, $this->id());
     }
     if ($this->isApplicationPeriod('after')) {
-      $queryParameter = $apartmentId ? "?apartment=$apartmentId" : '';
+      $queryParameter = $apartmentId ? "?apartment=$apartmentId" : '?project=' . $this->id();
       return sprintf('%s/contact/apply_for_free_apartment%s', $baseurl, $queryParameter);
     }
     return '';
+  }
+
+  /**
+   * Get the amount of applications on any apartment on this project.
+   *
+   * @return int[]
+   *   Apartment_id => amount of applications.
+   */
+  public function getApartmentApplicationCounts(): array {
+    $applicationStorage = \Drupal::entityTypeManager()
+      ->getStorage('asu_application');
+
+    $applications = $applicationStorage->loadByProperties([
+      'project_id' => $this->id(),
+      'field_locked' => 1,
+    ]);
+
+    $count = [];
+    foreach ($applications as $application) {
+      $apartmentIds = $application->getApartmentIds();
+      foreach ($apartmentIds as $id) {
+        $count[$id] = isset($count[$id]) ? $count[$id] + 1 : 1;
+      }
+    }
+    return $count;
+  }
+
+  /**
+   * Can project be archived.
+   *
+   * Project can be archived after all apartments are sold.
+   *
+   * @return bool
+   *   Can project be archived.
+   */
+  public function isArchievable(): bool {
+    /** @var Apartment $apartment */
+    foreach ($this->getApartmentEntities() as $apartment) {
+      if (!$apartment->isSold()) {
+        return FALSE;
+      }
+    }
+    return TRUE;
   }
 
 }
