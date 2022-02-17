@@ -5,6 +5,7 @@
  * Contains asu_content.module.
  */
 
+use Drupal\Core\Entity\EntityFormInterface;
 use Drupal\Core\Field\FieldFilteredMarkup;
 use Drupal\asu_content\Entity\Apartment;
 use Drupal\asu_content\Entity\Project;
@@ -58,7 +59,7 @@ function asu_content_form_node_form_alter(&$form, $form_state) {
 function asu_content_project_add_archived_handling(&$form, &$form_state) {
   // Add javascript to project form.
   $formObject = $form_state->getFormObject();
-  if ($formObject instanceof \Drupal\Core\Entity\EntityFormInterface) {
+  if ($formObject instanceof EntityFormInterface) {
     $entity = $formObject->getEntity();
     if (
       $entity->getEntityTypeId() === 'node'

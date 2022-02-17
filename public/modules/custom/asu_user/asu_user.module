@@ -59,7 +59,7 @@ function asu_validate_email(UserInterface $account) {
 function asu_send_user_email_verification_reminder(UserInterface $account) {
   // @todo This might change after profiili authentication is done.
   if ($account->field_email_is_valid->value == 0) {
-    // prevent sending email verification mail
+    // Prevent sending email verification mail.
     $sendMail = $account->getLastAccessedTime() != 0 && (time() - $account->getCreatedTime() >= 86400);
     if ($sendMail) {
       asu_send_user_email('asu_email_approval_required', $account);
