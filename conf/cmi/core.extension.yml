@@ -42,6 +42,8 @@ module:
   contact: 0
   contact_emails: 0
   contact_storage: 0
+  content_lock: 0
+  content_lock_timeout: 0
   context: 0
   context_ui: 0
   contextual: 0
@@ -77,6 +79,7 @@ module:
   helfi_api_base: 0
   helfi_azure_fs: 0
   helfi_base_config: 0
+  helfi_charts: 0
   helfi_content: 0
   helfi_gdpr_compliance: 0
   helfi_languages: 0
@@ -115,6 +118,7 @@ module:
   metatag_views: 0
   migrate: 0
   node: 0
+  oembed_providers: 0
   openid_connect: 0
   options: 0
   page_cache: 0
@@ -166,6 +170,7 @@ module:
   paragraphs: 11
   minimal: 1000
   eu_cookie_compliance: 1001
+  role_delegation: 0
 theme:
   stark: 0
   stable9: 0

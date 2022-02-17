@@ -55,11 +55,12 @@ dependencies:
     - taxonomy
     - toolbar
     - view_unpublished
+    - content_lock
 _core:
   default_config_hash: fnOpQQ5r1eprWvQPrJPWRfDqxozQiZnwIdYFPKb0lbM
 id: admin
-label: Ylläpitäjä
-weight: 2
+label: Administrator
+weight: 5
 is_admin: null
 permissions:
   - 'access administration pages'
@@ -232,7 +233,6 @@ permissions:
   - 'view any unpublished apartment content'
   - 'view any unpublished article content'
   - 'view any unpublished content'
-  - 'view any unpublished content'
   - 'view any unpublished landing_page content'
   - 'view any unpublished news content'
   - 'view any unpublished page content'
@@ -247,3 +247,21 @@ permissions:
   - 'view scheduled content'
   - 'view the administration theme'
   - 'view unpublished paragraphs'
+  - 'administer hotjar settings'
+  - 'administer paragraphs library'
+  - 'assign admin role'
+  - 'assign content_producer role'
+  - 'assign editor role'
+  - 'assign read_only role'
+  - 'create paragraph library item'
+  - 'edit paragraph library item'
+  - 'set landing_page published on date'
+  - 'set page published on date'
+  - 'translate configuration'
+  - 'use menu link attributes'
+  - 'use text format full_html'
+  - 'use text format minimal'
+  - 'view media'
+  - 'use text format full_html'
+  - 'use text format minimal'
+  - 'break content lock'
