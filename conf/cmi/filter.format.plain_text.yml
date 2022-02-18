@@ -1,7 +1,10 @@
 uuid: c15ca6a8-672e-4c9c-a688-aff10d9d8622
 langcode: en
 status: true
-dependencies: {  }
+dependencies:
+  module:
+    - helfi_api_base
+    - slick
 _core:
   default_config_hash: NIKBt6kw_uPhNI0qtR2DnRf7mSOgAQdx7Q94SKMjXbQ
 name: 'Plain text'
@@ -27,3 +30,17 @@ filters:
     status: true
     weight: 0
     settings: {  }
+  helfi_link_converter:
+    id: helfi_link_converter
+    provider: helfi_api_base
+    status: true
+    weight: -10
+    settings: {  }
+  slick_filter:
+    id: slick_filter
+    provider: slick
+    status: false
+    weight: 4
+    settings:
+      optionset: default
+      media_switch: ''
