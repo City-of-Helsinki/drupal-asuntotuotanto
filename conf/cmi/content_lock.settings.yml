@@ -1,21 +1,23 @@
 _core:
   default_config_hash: 6Ka3T1c-CIjEUO1Q64NXKksLthkMhj53a6zy4RJBtkc
-verbose: 1
+verbose: 0
 types:
   crop: {  }
   file: {  }
   menu_link_content: {  }
-  node:
-    '*': '*'
-  paragraphs_library_item:
-    '*': '*'
+  node: {  }
+  paragraphs_library_item: {  }
   path_alias: {  }
   redirect: {  }
-  taxonomy_term:
-    '*': '*'
+  taxonomy_term: {  }
   user: {  }
   paragraph: {  }
   media: {  }
+  asu_application: {  }
+  block_content: {  }
+  contact_message: {  }
+  contact_email: {  }
+  search_api_task: {  }
 types_translation_lock: {  }
 types_js_lock: {  }
 form_op_lock:
@@ -51,4 +53,19 @@ form_op_lock:
     values: {  }
   media:
     mode: 0
+    values: {  }
+  asu_application:
+    mode: 0
+    values: {  }
+  block_content:
+    mode: 0
+    values: {  }
+  contact_message:
+    mode: 0
+    values: {  }
+  contact_email:
+    mode: 0
+    values: {  }
+  search_api_task:
+    mode: null
     values: {  }
