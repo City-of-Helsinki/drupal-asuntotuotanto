@@ -6,7 +6,7 @@
   Drupal.behaviors.asuEditForm = {
     attach: function attach() {
       jQuery('.horizontal-tabs-panes [data-drupal-selector="edit-field-archived-wrapper').css('visibility', 'hidden');
-      jQuery(document).ready( function() {
+      jQuery(document).ready(function () {
         document.querySelectorAll('[name="field_archived[value]"]').forEach((archivedStatus) => {
           archivedStatus.addEventListener('click', (event) => {
             const value = event.target.checked;
