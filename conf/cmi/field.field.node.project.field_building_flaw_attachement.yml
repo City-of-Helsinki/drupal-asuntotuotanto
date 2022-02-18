@@ -1,0 +1,23 @@
+uuid: fb5171d1-06d5-459f-8b25-3248aca1ea0f
+langcode: fi
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_building_flaw_attachement
+    - node.type.project
+id: node.project.field_building_flaw_attachement
+field_name: field_building_flaw_attachement
+entity_type: node
+bundle: project
+label: 'Rakentamista koskevien säännösten poikkeamat erillisessä liitteessä'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: Kyllä
+  off_label: Ei
+field_type: boolean

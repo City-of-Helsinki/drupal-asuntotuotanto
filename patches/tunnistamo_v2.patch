@@ -1,0 +1,13 @@
+diff --git a/src/Plugin/OpenIDConnectClient/Tunnistamo.php b/src/Plugin/OpenIDConnectClient/Tunnistamo.php
+index 57067c9..1e544ae 100644
+--- a/src/Plugin/OpenIDConnectClient/Tunnistamo.php
++++ b/src/Plugin/OpenIDConnectClient/Tunnistamo.php
+@@ -26,7 +26,7 @@ final class Tunnistamo extends OpenIDConnectClientBase {
+    *
+    * @var string
+    */
+-  public const TESTING_ENVIRONMENT = 'https://api.hel.fi/sso-test';
++  public const TESTING_ENVIRONMENT = 'https://tunnistamo.test.hel.ninja';
+
+   /**
+    * Production environment address.

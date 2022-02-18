@@ -1,0 +1,36 @@
+uuid: 5fe66aba-cc83-4ede-bbbb-978ca7176ff0
+langcode: fi
+status: true
+dependencies:
+  module:
+    - node
+    - options
+id: node.field_construction_phase_meaning
+field_name: field_construction_phase_meaning
+entity_type: node
+type: list_string
+settings:
+  allowed_values:
+    -
+      value: all
+      label: 'Koko yhtiön ko. rakennusvaihetta'
+    -
+      value: building
+      label: 'Rakennuksittain määräytyvä'
+    -
+      value: stairwell
+      label: 'Porrashuoneittain määräytyvä'
+    -
+      value: building_group
+      label: 'Rakennusryhmittäin määräytyvä'
+    -
+      value: stairwell_group
+      label: 'Porrashuoneryhmittäin määräytyvä'
+  allowed_values_function: ''
+module: options
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

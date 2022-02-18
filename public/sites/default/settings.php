@@ -44,8 +44,9 @@ if (isset($_SERVER['WODBY_APP_NAME'])) {
   include '/var/www/conf/wodby.settings.php';
 }
 
-$config['openid_connect.settings.tunnistamo']['settings']['client_id'] = getenv('TUNNISTAMO_CLIENT_ID');
-$config['openid_connect.settings.tunnistamo']['settings']['client_secret'] = getenv('TUNNISTAMO_CLIENT_SECRET');
+$config['openid_connect.client.tunnistamo']['settings']['client_id'] = getenv('TUNNISTAMO_CLIENT_ID');
+$config['openid_connect.client.tunnistamo']['settings']['client_secret'] = getenv('TUNNISTAMO_CLIENT_SECRET');
+
 // Drupal route(s).
 $routes = (getenv('DRUPAL_ROUTES')) ? explode(',', getenv('DRUPAL_ROUTES')) : [];
 
@@ -97,7 +98,7 @@ if ($env = getenv('APP_ENV')) {
 }
 
 if ($env = getenv('APP_ENV')) {
-  $settings['ASU_ELASTICSEARCH_ADDRESS'] = getenv('ASU_ELASTICSEARCH_ADDRESS');
+  $settings['ASU_ELASTICSEARCH_ADDRESS'] = getenv('ASU_ELASTICSEARCH_ADDRESS')  ?? 'http://elastic:9200';
 
   $settings['ASU_ELASTICSEARCH_USERNAME'] = getenv('ASU_ELASTICSEARCH_USERNAME');
   $settings['ASU_ELASTICSEARCH_PASSWORD'] = getenv('ASU_ELASTICSEARCH_PASSWORD');
@@ -116,7 +117,7 @@ if ($env = getenv('APP_ENV')) {
 
   $settings['ASU_DJANGO_BACKEND_URL'] = getenv('ASU_DJANGO_BACKEND_URL');
 
-  $config['elasticsearch_connector.cluster.asuntotuotanto']['url'] = getenv('ASU_ELASTICSEARCH_ADDRESS');
+  $config['elasticsearch_connector.cluster.asuntotuotanto']['url'] = getenv('ASU_ELASTICSEARCH_ADDRESS') ?? 'http://localhost:9200';
 
   if ($env === 'dev') {
     // Local development environment.
@@ -127,6 +128,10 @@ if ($env = getenv('APP_ENV')) {
     $config['swiftmailer.transport']['smtp_port'] = '1025';
     $config['swiftmailer.transport']['smtp_encryption'] = '0';
 
+    $config['elasticsearch_connector.cluster.asuntotuotanto']['url'] = 'http://elastic:9200';
+  }
+
+  if ($env === 'test') {
     $config['elasticsearch_connector.cluster.asuntotuotanto']['url'] = 'http://elastic:9200';
   }
 

@@ -7,14 +7,32 @@ dependencies:
     - media.type.image
     - media.type.remote_video
     - media.type.soundcloud
+    - node.type.apartment
+    - node.type.article
     - node.type.landing_page
     - node.type.news
     - node.type.page
+    - node.type.project
+    - node.type.service
+    - taxonomy.vocabulary.apartment_state_of_sale
+    - taxonomy.vocabulary.building_types
+    - taxonomy.vocabulary.construction_materials
+    - taxonomy.vocabulary.districts
+    - taxonomy.vocabulary.energy_classes
     - taxonomy.vocabulary.faq_category
     - taxonomy.vocabulary.faq_haso
     - taxonomy.vocabulary.faq_hitas
+    - taxonomy.vocabulary.general_condition
+    - taxonomy.vocabulary.heating_options
+    - taxonomy.vocabulary.holding_type
     - taxonomy.vocabulary.keywords
+    - taxonomy.vocabulary.new_development_status
     - taxonomy.vocabulary.news_category
+    - taxonomy.vocabulary.ownership_type
+    - taxonomy.vocabulary.services
+    - taxonomy.vocabulary.site_owners
+    - taxonomy.vocabulary.states_of_sale
+    - taxonomy.vocabulary.tasks
   module:
     - asu_application
     - block
@@ -27,6 +45,7 @@ dependencies:
     - menu_link_content
     - node
     - paragraphs
+    - paragraphs_type_permissions
     - path
     - pathauto
     - redirect
@@ -36,14 +55,16 @@ dependencies:
     - taxonomy
     - toolbar
     - view_unpublished
+    - content_lock
 _core:
   default_config_hash: fnOpQQ5r1eprWvQPrJPWRfDqxozQiZnwIdYFPKb0lbM
 id: admin
-label: Ylläpitäjä
-weight: 2
+label: Administrator
+weight: 5
 is_admin: null
 permissions:
   - 'access administration pages'
+  - 'access content'
   - 'access content overview'
   - 'access files overview'
   - 'access media overview'
@@ -63,8 +84,11 @@ permissions:
   - 'administer sitemap settings'
   - 'administer url aliases'
   - 'administer users'
+  - 'bypass paragraphs type content access'
   - 'cancel account'
   - 'change own username'
+  - 'create apartment content'
+  - 'create article content'
   - 'create content translations'
   - 'create file media'
   - 'create image media'
@@ -72,14 +96,29 @@ permissions:
   - 'create media'
   - 'create news content'
   - 'create page content'
+  - 'create project content'
   - 'create remote entities'
   - 'create remote_video media'
   - 'create soundcloud media'
+  - 'create terms in apartment_state_of_sale'
+  - 'create terms in building_types'
+  - 'create terms in construction_materials'
+  - 'create terms in districts'
+  - 'create terms in energy_classes'
   - 'create terms in faq_category'
   - 'create terms in faq_haso'
   - 'create terms in faq_hitas'
+  - 'create terms in general_condition'
+  - 'create terms in heating_options'
+  - 'create terms in holding_type'
   - 'create terms in keywords'
+  - 'create terms in new_development_status'
   - 'create terms in news_category'
+  - 'create terms in ownership_type'
+  - 'create terms in services'
+  - 'create terms in site_owners'
+  - 'create terms in states_of_sale'
+  - 'create terms in tasks'
   - 'create url aliases'
   - 'delete all revisions'
   - 'delete any file media'
@@ -102,38 +141,76 @@ permissions:
   - 'delete own soundcloud media'
   - 'delete page revisions'
   - 'delete remote entities'
+  - 'delete terms in apartment_state_of_sale'
+  - 'delete terms in building_types'
+  - 'delete terms in construction_materials'
+  - 'delete terms in districts'
+  - 'delete terms in energy_classes'
   - 'delete terms in faq_category'
   - 'delete terms in faq_haso'
   - 'delete terms in faq_hitas'
+  - 'delete terms in general_condition'
+  - 'delete terms in heating_options'
+  - 'delete terms in holding_type'
   - 'delete terms in keywords'
+  - 'delete terms in new_development_status'
   - 'delete terms in news_category'
+  - 'delete terms in ownership_type'
+  - 'delete terms in services'
+  - 'delete terms in site_owners'
+  - 'delete terms in states_of_sale'
+  - 'delete terms in tasks'
+  - 'edit any apartment content'
+  - 'edit any article content'
   - 'edit any file media'
   - 'edit any image media'
   - 'edit any landing_page content'
   - 'edit any news content'
   - 'edit any page content'
+  - 'edit any project content'
   - 'edit any remote_video media'
   - 'edit any soundcloud media'
+  - 'edit own apartment content'
+  - 'edit own article content'
   - 'edit own file media'
   - 'edit own image media'
   - 'edit own landing_page content'
   - 'edit own news content'
   - 'edit own page content'
+  - 'edit own project content'
   - 'edit own remote_video media'
   - 'edit own soundcloud media'
   - 'edit remote entities'
+  - 'edit terms in apartment_state_of_sale'
+  - 'edit terms in building_types'
+  - 'edit terms in construction_materials'
+  - 'edit terms in districts'
+  - 'edit terms in energy_classes'
   - 'edit terms in faq_category'
   - 'edit terms in faq_haso'
   - 'edit terms in faq_hitas'
+  - 'edit terms in general_condition'
+  - 'edit terms in heating_options'
+  - 'edit terms in holding_type'
   - 'edit terms in keywords'
+  - 'edit terms in new_development_status'
   - 'edit terms in news_category'
+  - 'edit terms in ownership_type'
+  - 'edit terms in services'
+  - 'edit terms in site_owners'
+  - 'edit terms in states_of_sale'
+  - 'edit terms in tasks'
   - 'revert all revisions'
   - 'revert landing_page revisions'
   - 'revert news revisions'
   - 'revert page revisions'
   - 'schedule publishing of nodes'
   - 'translate any entity'
+  - 'translate apartment node'
+  - 'translate article node'
   - 'translate editable entities'
+  - 'translate energy_classes taxonomy_term'
+  - 'translate faq_category taxonomy_term'
   - 'translate faq_haso taxonomy_term'
   - 'translate faq_hitas taxonomy_term'
   - 'translate file media'
@@ -142,16 +219,25 @@ permissions:
   - 'translate keywords taxonomy_term'
   - 'translate landing_page node'
   - 'translate menu_link_content'
+  - 'translate news node'
   - 'translate page node'
+  - 'translate project node'
   - 'translate remote_video media'
+  - 'translate service node'
   - 'translate soundcloud media'
   - 'update any media'
   - 'update content translations'
   - 'update media'
   - 'view all media revisions'
   - 'view all revisions'
+  - 'view any unpublished apartment content'
+  - 'view any unpublished article content'
   - 'view any unpublished content'
-  - 'view any unpublished content'
+  - 'view any unpublished landing_page content'
+  - 'view any unpublished news content'
+  - 'view any unpublished page content'
+  - 'view any unpublished project content'
+  - 'view any unpublished service content'
   - 'view landing_page revisions'
   - 'view news revisions'
   - 'view own unpublished content'
@@ -161,3 +247,21 @@ permissions:
   - 'view scheduled content'
   - 'view the administration theme'
   - 'view unpublished paragraphs'
+  - 'administer hotjar settings'
+  - 'administer paragraphs library'
+  - 'assign admin role'
+  - 'assign content_producer role'
+  - 'assign editor role'
+  - 'assign read_only role'
+  - 'create paragraph library item'
+  - 'edit paragraph library item'
+  - 'set landing_page published on date'
+  - 'set page published on date'
+  - 'translate configuration'
+  - 'use menu link attributes'
+  - 'use text format full_html'
+  - 'use text format minimal'
+  - 'view media'
+  - 'use text format full_html'
+  - 'use text format minimal'
+  - 'break content lock'

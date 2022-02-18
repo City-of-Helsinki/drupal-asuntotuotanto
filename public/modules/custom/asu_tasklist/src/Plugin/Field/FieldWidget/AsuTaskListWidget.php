@@ -38,7 +38,7 @@ class AsuTaskListWidget extends WidgetBase {
       }
     }
 
-    $value = isset($items[$delta]->value) ? $items[$delta]->value : FALSE;
+    $value = $items[$delta]->value ?? FALSE;
     $task_list_values = [];
     if ($value) {
       $task_list_values = unserialize($value);

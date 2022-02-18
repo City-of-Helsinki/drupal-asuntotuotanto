@@ -15,28 +15,53 @@ dependencies:
     - helfi_api_base
     - matomo
     - media
+    - paragraphs_type_permissions
     - rest
     - system
 _core:
   default_config_hash: 83Nuup-6oYkkdAsvg3nrR2pBOgtTXEV1JrzpCCLkYLM
 id: authenticated
-label: 'Sisäänkirjautunut käyttäjä'
+label: 'Authenticated user'
 weight: 1
 is_admin: false
 permissions:
   - 'access content'
-  - 'access content'
   - 'access site-wide contact form'
   - 'create application'
-  - 'display eu cookie compliance popup'
   - 'display eu cookie compliance popup'
   - 'opt-in or out of matomo tracking'
   - 'restful get asu_initialize'
   - 'restful post asu_elasticsearch'
   - 'restful post mailinglist'
-  - 'use text format full_html'
-  - 'use text format full_html'
   - 'view media'
-  - 'view media'
+  - 'view paragraph content accordion'
+  - 'view paragraph content accordion_item'
+  - 'view paragraph content banner'
+  - 'view paragraph content columns'
+  - 'view paragraph content contact_information_with_map'
+  - 'view paragraph content contact_person'
+  - 'view paragraph content contact_persons'
+  - 'view paragraph content content_cards'
+  - 'view paragraph content cta_block'
+  - 'view paragraph content from_library'
+  - 'view paragraph content gallery'
+  - 'view paragraph content gallery_slide'
+  - 'view paragraph content hero'
+  - 'view paragraph content image'
+  - 'view paragraph content latest_news'
+  - 'view paragraph content liftup_with_image'
+  - 'view paragraph content liftup_with_image_and_links'
+  - 'view paragraph content list_of_links'
+  - 'view paragraph content list_of_links_item'
+  - 'view paragraph content news_info_card'
+  - 'view paragraph content remote_video'
+  - 'view paragraph content showcase'
+  - 'view paragraph content showcase_block'
+  - 'view paragraph content stacked_contact_blocks'
+  - 'view paragraph content stacked_text_blocks_with_image'
+  - 'view paragraph content step'
+  - 'view paragraph content steps_list'
+  - 'view paragraph content text'
+  - 'view paragraph content text_block_with_link'
   - 'view remote entities'
-  - 'view remote entities'
+  - 'access toolbar'

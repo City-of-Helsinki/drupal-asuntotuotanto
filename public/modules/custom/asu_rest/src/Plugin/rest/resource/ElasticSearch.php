@@ -59,7 +59,7 @@ class ElasticSearch extends ResourceBase {
     }
 
     $indexes = Index::loadMultiple();
-    $index = isset($indexes['apartment']) ? $indexes['apartment'] : reset($indexes);
+    $index = $indexes['apartment'] ?? reset($indexes);
     $query = $index->query();
 
     $parse_mode = \Drupal::service('plugin.manager.search_api.parse_mode')
@@ -93,7 +93,7 @@ class ElasticSearch extends ResourceBase {
       foreach ($item->getFields() as $key => $field) {
         // Array values as arrays, otherwise the value or empty string.
         $parsed[$key] = in_array($key, $arrays) ? $field->getValues()
-          : (isset($field->getValues()[0]) ? $field->getValues()[0] : '');
+          : ($field->getValues()[0] ?? '');
       }
 
       // $parsed['project_construction_materials'] = [];
@@ -150,13 +150,14 @@ class ElasticSearch extends ResourceBase {
         elseif ($isBool) {
           $baseConditionGroup->addCondition($field, $parameters->get($field), '=');
         }
-
         if (isset($value)) {
           $baseConditionGroup->addCondition($field, $value, 'IN');
         }
-
       }
     }
+
+    $baseConditionGroup->addCondition('project_published', 'true', '=');
+    $baseConditionGroup->addCondition('apartment_published', 'true', '=');
 
     if (empty($parameters->get('project_state_of_sale'))) {
       $baseConditionGroup->addCondition('project_state_of_sale', ['upcoming'], 'NOT IN');

@@ -82,7 +82,7 @@ class Application extends EditorialContentEntityBase implements ContentEntityInt
    *   Has children.
    */
   public function getHasChildren(): bool {
-    return $this->has_children->value;
+    return $this->has_children->value ?? FALSE;
   }
 
   /**
@@ -116,7 +116,7 @@ class Application extends EditorialContentEntityBase implements ContentEntityInt
    *   Array of applicants.
    */
   public function getApplicants(): array {
-    return $this->applicant->getValue();
+    return $this->applicant->getValue() ?? [];
   }
 
   /**

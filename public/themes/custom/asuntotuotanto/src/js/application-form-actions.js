@@ -1,6 +1,36 @@
 (($, Drupal) => {
-  Drupal.behaviors.applicationFormActions = {
-    attach: function attach() {
+      jQuery(document).ajaxStop(() => {
+        // Prevent add new button from staying disabled after ajax.
+        const el = $("[id^=apartment_list_select_]");
+        if (el.length > 0 && el.is(':disabled')) {
+          el.prop('disabled', false);
+        }
+      });
+
+      const lang = drupalSettings.path.currentLanguage;
+      const translation = {
+        "Delete": {
+          "fi": "Poista",
+          "en": "Delete",
+        },
+        "Open": {
+          "fi": "Katso huoneistoa",
+          "en": "Open apartment page",
+        },
+        "Apartment": {
+          "fi": "huoneisto",
+          "en": "apartment",
+        },
+        "Add": {
+          "fi": "Lisää uusi huoneisto",
+          "en": "Add an apartment to the list"
+        },
+        "Updated": {
+          "fi": "Huoneistojen järjestys on päivitetty",
+          "en": "Apartment list order has been updated."
+        }
+      };
+
       const screenReaderInformationBoxElement = document.getElementsByClassName(
         "sr-information-box"
       )[0];
@@ -194,7 +224,7 @@
 
         const apartmentSelectElementLabel = document.createElement("label");
         const apartmentSelectElementLabelText = document.createTextNode(
-          Drupal.t("Apartment")
+          translation["Apartment"][lang]
         );
         apartmentSelectElementLabel.appendChild(
           apartmentSelectElementLabelText
@@ -359,18 +389,28 @@
         if (sibling !== null) {
           sibling.before(parent);
 
-          const originalSelectElementTarget = document.querySelector(
-            `[data-drupal-selector="edit-apartment-${parent.getAttribute(
-              "data-id"
-            )}-id"]`
-          );
+          const apartment = findMatchingApartmentName(target);
+          const originalSelectElementTarget = findMatchingOriginalSelectElementByName(apartment);
 
-          swapOriginalSelectWeights(
-            parent.getAttribute("data-id"),
-            sibling.getAttribute("data-id")
-          );
+          // After updating the new list, update the whole old list.
+          jQuery('#application_form_apartments_list').children('li').each((index, element) => {
+            const id = `#edit-apartment-${index}-weight`
 
-          originalSelectElementTarget.dispatchEvent(new Event("change"));
+            // Find the number of the apartment.
+            const number = jQuery(element)
+              .first()
+              .find('.application-form-apartment__apartment-number')
+              .first()
+              .find('span')
+              .last()[0].textContent;
+            const originalSelectElements = getOriginalSelectedElements()
+            const originalDropdown = originalSelectElements.filter(function(){
+              return jQuery(this).find('option:selected').text().includes(number)
+            });
+            originalDropdown.first().closest('tr').find('[id$=-weight]')[0].value = index;
+          });
+
+          originalSelectElementTarget.change();
 
           setTimeout(() => {
             if (target.disabled) {
@@ -383,7 +423,7 @@
           const information = document.createElement("p");
           information.appendChild(
             document.createTextNode(
-              Drupal.t("Apartment list order has been updated.")
+              translation["Updated"][lang]
             )
           );
           screenReaderInformationBoxElement.append(information);
@@ -402,18 +442,28 @@
           ) {
             sibling.after(parent);
 
-            const originalSelectElementTarget = document.querySelector(
-              `[data-drupal-selector="edit-apartment-${parent.getAttribute(
-                "data-id"
-              )}-id"]`
-            );
+            const apartment = findMatchingApartmentName(target);
+            const originalSelectElementTarget = findMatchingOriginalSelectElementByName(apartment);
 
-            swapOriginalSelectWeights(
-              parent.getAttribute("data-id"),
-              sibling.getAttribute("data-id")
-            );
+            // After updating the new list, update the whole old list.
+            jQuery('#application_form_apartments_list').children('li').each((index, element) => {
+              const id = `#edit-apartment-${index}-weight`
 
-            originalSelectElementTarget.dispatchEvent(new Event("change"));
+              // Find the number of the apartment.
+              const number = jQuery(element)
+                .first()
+                .find('.application-form-apartment__apartment-number')
+                .first()
+                .find('span')
+                .last()[0].textContent;
+              const originalSelectElements = getOriginalSelectedElements()
+              const originalDropdown = originalSelectElements.filter(function(){
+                return jQuery(this).find('option:selected').text().includes(number)
+              });
+              originalDropdown.first().closest('tr').find('[id$=-weight]')[0].value = index;
+            });
+
+            originalSelectElementTarget.change();
 
             setTimeout(() => {
               if (target.disabled) {
@@ -435,39 +485,35 @@
       };
 
       const handleApartmentDeleteButtonClick = (target) => {
+        jQuery('.application-form-apartment__apartment-delete-button').each((index, element) => {
+          jQuery(element).prop("disabled", true );
+        })
+
         const parentLiElement =
           target.parentElement.parentElement.parentElement;
 
-        const originalSelectElements = $(
-          '[data-drupal-selector="edit-apartment"] > table select'
-        );
+        const apartment = findMatchingApartmentName(target)
+        const originalDropdown = findMatchingOriginalSelectElementByName(apartment)
+        const removeButton = originalDropdown.closest('tr').find(':submit')[0];
 
-        const originalSelectElement = originalSelectElements.filter(
-          // eslint-disable-next-line func-names
-          function () {
-            if ($(this).attr("data-drupal-selector").indexOf("-id") >= 0) {
-              if ($(this).children("option:selected").val()) {
-                if (
-                  $(this)
-                    .attr("data-drupal-selector")
-                    .indexOf(parentLiElement.getAttribute("data-id")) >= 0
-                ) {
-                  return $(this);
-                }
-              }
-            }
-
-            return null;
-          }
-        );
-
-        originalSelectElement.val(0);
-        originalSelectElement.change();
+        originalDropdown.val(0);
+        originalDropdown.change()
 
         parentLiElement.innerHTML =
-          "<div class='application-form-apartment-loader-wrapper'><div class='application-form-apartment-loader'></div></div>";
+           "<div class='application-form-apartment-loader-wrapper'><div class='application-form-apartment-loader'></div></div>";
 
-        setTimeout(() => window.location.reload(), 500);
+        console.log(removeButton);
+
+        setTimeout(() => {
+          jQuery(removeButton).trigger('mousedown');
+          parentLiElement.remove();
+          jQuery('.application-form-apartment__apartment-delete-button').each((index, element) => {
+            jQuery(element).prop("disabled", false);
+          })
+        }, 750);
+        //setTimeout(() => appendListItemToApartmentList(true), 500);
+        // setTimeout(() => window.location.reload(), 500);
+        // buildTable()
       };
 
       const handleListItemInnerClicks = ({ target }) => {
@@ -526,7 +572,7 @@
         id,
         withSelectElement = false
       ) => {
-        const {
+        let {
           apartment_number: apartmentNumberValue,
           apartment_structure: apartmentStructureValue,
           apartment_floor: apartmentFloorValue,
@@ -534,6 +580,9 @@
           apartment_sales_price: apartmentSalesPriceValue,
           apartment_debt_free_sales_price: apartmentDebtFreeSalesPriceValue,
         } = values;
+
+        const project_type_element = document.querySelectorAll("[data-drupal-selector='asu-application-haso-form']");
+        const project_type = project_type_element.length > 0 ? "HASO" : "hitas";
 
         const li = createElementWithClasses("li", [
           "application-form__apartments-item",
@@ -577,7 +626,7 @@
 
         const apartmentAddButton = createButtonElement(
           ["application-form-apartment__apartment-add-button"],
-          "Add an apartment to the list"
+          translation["Add"][lang]
         );
 
         apartmentAddButton.addEventListener(
@@ -645,13 +694,23 @@
           apartmentLivingAreaSizeValue
         );
 
+        let firstPriceTitle = ""
+        let secondPriceTitle = ""
+        if (project_type === "HASO") {
+          firstPriceTitle = Drupal.t("Right of occupancy payment");
+          secondPriceTitle = '';
+          apartmentDebtFreeSalesPriceValue = '';
+        } else {
+          firstPriceTitle = Drupal.t("Sales price");
+          secondPriceTitle = Drupal.t("Debt free sales price");
+        }
+
         const formApartmentInformationSalesPrice = createListItemElementWithText(
-          "Sales price",
+          firstPriceTitle,
           apartmentSalesPriceValue
         );
-
         const formApartmentInformationDebtFreeSalesPrice = createListItemElementWithText(
-          "Debt free sales price",
+          secondPriceTitle,
           apartmentDebtFreeSalesPriceValue
         );
 
@@ -668,17 +727,17 @@
 
         const formActionsDeleteButton = createButtonElement(
           ["application-form-apartment__apartment-delete-button"],
-          "Delete"
+          translation['Delete'][lang]
         );
 
         formActionsDeleteButton.setAttribute(
           "aria-label",
-          `Delete, aparment ${apartmentNumberValue}`
+          `${translation['Delete'][lang]}, ${translation['Apartment'][lang]} ${apartmentNumberValue}`
         );
 
         const formActionsLink = document.createElement("a");
         const formActionsLinkText = document.createTextNode(
-          Drupal.t("Open apartment page")
+          translation["Open"][lang]
         );
         formActionsLink.appendChild(formActionsLinkText);
         formActionsLink.setAttribute(
@@ -687,7 +746,7 @@
         );
         formActionsLink.setAttribute(
           "aria-label",
-          `Open apartment page, aparment ${apartmentNumberValue}`
+          `${translation["Open"][lang]}, ${translation["Apartment"][lang]} ${apartmentNumberValue}`
         );
 
         formActions.append(formActionsDeleteButton, formActionsLink);
@@ -709,13 +768,42 @@
         return li;
       };
 
+      const emptyTable = () => {
+        jQuery('#application_form_apartments_list').children().not(':last').remove();
+      }
+
       const appendListItemToApartmentList = () => {
         applicationFormApartmentListElement.append(
           createApartmentListItem({}, null, true)
         );
       };
 
-      window.onload = () => {
+      const getOriginalSelectedElements = () => {
+        return $(
+          '[data-drupal-selector="edit-apartment"] > table select'
+        );
+      }
+
+      const findMatchingApartmentName = (target) => {
+        return jQuery(target.parentElement.parentElement.parentElement)
+          .first()
+          .find('.application-form-apartment__apartment-number')
+          .first()
+          .find('span')
+          .last()[0].textContent;
+      }
+
+      const findMatchingOriginalSelectElementByName = (apartment) => {
+        const originalSelectElements = $(
+          '[data-drupal-selector="edit-apartment"] > table select'
+        );
+        const originalSelect = originalSelectElements.filter(function(){
+          return jQuery(this).find('option:selected').text().includes(apartment)
+        });
+        return originalSelect.first();
+      }
+
+      const buildTable = () => {
         if (getOriginalSelectElementValues().length > 0) {
           const selectElements = document.querySelectorAll(
             '[data-drupal-selector="edit-apartment"] > table select'
@@ -788,6 +876,11 @@
           });
         }
       };
-    },
-  };
+
+      const rebuildTable = () => {
+        emptyTable();
+        buildTable();
+      }
+
+      window.onload = buildTable;
 })(jQuery, Drupal);

@@ -5,11 +5,28 @@
  * Contains asu_content.module.
  */
 
+use Drupal\Core\Entity\EntityFormInterface;
+use Drupal\Core\Field\FieldFilteredMarkup;
+use Drupal\asu_content\Entity\Apartment;
+use Drupal\asu_content\Entity\Project;
 use Drupal\asu_content\ProjectUpdater;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\node\NodeForm;
 use Drupal\node\Entity\Node;
-use Drupal\search_api\Entity\Index;
+use Drupal\search_api\Entity\Server;
+
+/**
+ * Implements hook_entity_bundle_info_alter().
+ */
+function asu_content_entity_bundle_info_alter(array &$bundles): void {
+  if (isset($bundles['node']['project'])) {
+    $bundles['node']['project']['class'] = Project::class;
+  }
+  if (isset($bundles['node']['apartment'])) {
+    $bundles['node']['apartment']['class'] = Apartment::class;
+  }
+}
 
 /**
  * Implements hook_help().
@@ -29,19 +46,34 @@ function asu_content_help($route_name, RouteMatchInterface $route_match) {
 
 /**
  * Implements hook_form_BASE_FORM_ID_alter().
- *
- * {@inheritdoc}
  */
-function asu_content_form_alter(&$form, $form_state) {
-  asu_content_hide_node_title($form, $form_state);
+function asu_content_form_node_form_alter(&$form, $form_state) {
+  asu_content_hide_node_title($form);
+  asu_content_show_computed_fields($form, $form_state);
+  asu_content_project_add_archived_handling($form, $form_state);
+}
+
+/**
+ * Add archived button logic, button widget positioning is handled in theme.
+ */
+function asu_content_project_add_archived_handling(&$form, &$form_state) {
+  // Add javascript to project form.
+  $formObject = $form_state->getFormObject();
+  if ($formObject instanceof EntityFormInterface) {
+    $entity = $formObject->getEntity();
+    if (
+      $entity->getEntityTypeId() === 'node'
+      && in_array($entity->bundle(), ['project'])
+    ) {
+      $form['#attached']['library'][] = 'asu_content/asu_editform';
+    }
+  }
 }
 
 /**
  * Hide node title from specified node forms.
- *
- * {@inheritDoc}
  */
-function asu_content_hide_node_title(&$form, $form_state) {
+function asu_content_hide_node_title(&$form) {
   $forms_to_hide_title_from = [
     'node_apartment_edit_form',
     'node_apartment_form',
@@ -57,6 +89,37 @@ function asu_content_hide_node_title(&$form, $form_state) {
 }
 
 /**
+ * Show computed field on apartment node.
+ */
+function asu_content_show_computed_fields(&$form, $form_state) {
+  if ($form_state->getFormObject() instanceof NodeForm) {
+    $entity = $form_state->getFormObject()->getEntity();
+    if ($entity->isNew()) {
+      return;
+    }
+    if (
+      $entity->hasField('field_living_area') &&
+      $entity->hasField('field_debt_free_sales_price')
+    ) {
+      if (
+        !$entity->field_living_area->value ||
+        !$entity->field_debt_free_sales_price
+      ) {
+        return;
+      }
+
+      $price = $entity->field_debt_free_sales_price->value;
+      $living_area = $entity->field_living_area->value;
+
+      if ($price && $price != 0 && $living_area && $living_area != 0) {
+        $value = number_format((float) $price / $living_area, 2, '.', '');
+        $form['field_debt_free_sales_price']['widget'][0]['value']['#description'] = FieldFilteredMarkup::create($value . ' €/m²');
+      }
+    }
+  }
+}
+
+/**
  * Implements hook_entity_presave().
  */
 function asu_content_entity_presave(EntityInterface $entity) {
@@ -66,7 +129,7 @@ function asu_content_entity_presave(EntityInterface $entity) {
   ) {
     if ($entity->getType() == 'apartment') {
       $title = t('Apartment');
-
+      /** @var \Drupal\asu_content\Entity\Apartment $entity */
       if ($entity->field_apartment_address->first()->getValue()['#markup']) {
         $markup = $entity->field_apartment_address->first()->getValue();
         $title = reset($markup);
@@ -79,12 +142,13 @@ function asu_content_entity_presave(EntityInterface $entity) {
 
       $entity->setTitle($title);
 
-      // When sold, unpublish apartment.
-      // Unpublishing removes apartment from elasticsearch.
+      // When sold, unpublish apartments.
       if ($entity->isPublished()) {
-        // Get the id of sold state.
         if ($entity->field_apartment_state_of_sale->target_id == 'sold') {
           $entity->setUnpublished();
+          $entity->set('field_publish_on_oikotie', 0);
+          $entity->set('field_publish_on_etuovi', 0);
+
           \Drupal::messenger()->addMessage(
             t("Apartment @title was sold and is now unpublished.",
               ['@title' => $entity->title->value]
@@ -93,11 +157,53 @@ function asu_content_entity_presave(EntityInterface $entity) {
         }
       }
     }
+
+    if ($entity->getType() == 'project') {
+      /** @var \Drupal\asu_content\Entity\Project $entity */
+      $archivedChanged = FALSE;
+      if ($original = $entity->original) {
+        $archivedChanged = ($entity->field_archived->value !== $original->field_archived->value);
+      }
+
+      // Resetting published & archived statuses since project was still published when archiving.
+      if (
+        $archivedChanged &&
+        $entity->field_archived->value == TRUE &&
+        $entity->isPublished()
+      ) {
+        $entity->set('field_archived', FALSE);
+        $entity->setPublished(TRUE);
+        \Drupal::messenger()->addWarning(t('Project was not unpublished when it was set as archived. Resetted published and archived statuses.'));
+      }
+
+      // All apartments are not yet set as sold, cannot set project as archived.
+      if (
+        $archivedChanged &&
+        $entity->field_archived->value == TRUE &&
+        !$entity->isArchievable()
+      ) {
+        $entity->set('field_archived', FALSE);
+        $entity->setPublished(TRUE);
+        \Drupal::messenger()->addWarning(t('Project cannot be archived since all the apartments are not sold'));
+      }
+
+      // Success message.
+      if (
+        $archivedChanged &&
+        $entity->field_archived->value == TRUE &&
+        $entity->isArchievable()
+      ) {
+        \Drupal::messenger()->addStatus(t('Project has been set as archived'));
+      }
+    }
+
   }
 }
 
 /**
  * Implements hook_entity_update().
+ *
+ * Makes sure to update referred apartments after project node save.
  */
 function asu_content_entity_update($entity) {
   if (
@@ -106,27 +212,19 @@ function asu_content_entity_update($entity) {
     $entity->getType() == 'project' &&
     $entity->hasField('field_apartments')
   ) {
-    $apartments = $entity->field_apartments->getValue();
-    foreach ($apartments as $apartment) {
-      $node = Node::load($apartment['target_id']);
-      if ($node->bundle() == 'apartment') {
-        $node->save();
-      }
-    }
-  }
+    $servers = Server::loadMultiple();
+    /** @var \Drupal\search_api\Entity\Server $server */
+    $server = reset($servers);
+    $indexes = $server->getIndexes();
+    /** @var Drupal\search_api\Entity\Index $index */
+    $index = reset($indexes);
 
-  // @todo Remove when cron is running.
-  // Index instantly on testing environment.
-  if (
-    method_exists($entity, 'getType') &&
-    $entity->getType() == 'project' &&
-    getenv('APP_ENV') == 'testing'
-  ) {
-    $indexes = Index::loadMultiple();
-    foreach ($indexes as $index) {
-      $index->reindex();
-      $index->indexItems();
+    $ids = [];
+    // @todo Translations.
+    foreach ($entity->getApartmentEntities() as $apartment) {
+      $ids[] = "{$apartment->id()}:fi";
     }
+    $index->trackItemsUpdated('entity:node', $ids);
   }
 }
 
@@ -159,8 +257,7 @@ function asu_content_node_insert(Node $node) {
       ]);
       $apartment->save();
 
-      $node->get('field_apartments');
-      $node->field_apartments->setValue([$apartment]);
+      $node->get('field_apartments')->setValue([$apartment]);
       $node->save();
     }
   }
@@ -169,6 +266,8 @@ function asu_content_node_insert(Node $node) {
 
 /**
  * Implements hook_cron().
+ *
+ * Update projects/apartments automatically based on dates set on project.
  */
 function asu_content_cron() {
   $properties = [
@@ -176,7 +275,6 @@ function asu_content_cron() {
     'status' => 1,
   ];
 
-  // Get the nodes.
   $nodes = \Drupal::entityTypeManager()
     ->getStorage('node')
     ->loadByProperties($properties);
@@ -193,6 +291,4 @@ function asu_content_cron() {
       // @todo Logging.
     }
   }
-  // @todo Logging.
-  // Log updated ids
 }

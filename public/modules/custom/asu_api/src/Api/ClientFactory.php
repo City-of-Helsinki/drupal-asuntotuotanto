@@ -23,7 +23,7 @@ class ClientFactory {
   public static function create(string $baseUrlVariable, array $options = []): Client {
     $options['headers']['Content-Type'] = 'application/json';
     $options['base_url'] = getenv($baseUrlVariable);
-    $options['timeout'] = 5;
+    $options['timeout'] = 20;
     return new Client($options);
   }
 

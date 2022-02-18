@@ -4,6 +4,8 @@ status: true
 dependencies:
   config:
     - asu_application.application_type.hitas
+    - field.field.asu_application.hitas.field_agreement_policy
+    - field.field.asu_application.hitas.field_data_agreement_policy
     - field.field.asu_application.hitas.field_hitas_owner
     - field.field.asu_application.hitas.field_personal_id
   module:
@@ -13,6 +15,20 @@ targetEntityType: asu_application
 bundle: hitas
 mode: default
 content:
+  field_agreement_policy:
+    type: boolean_checkbox
+    weight: 28
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  field_data_agreement_policy:
+    type: boolean_checkbox
+    weight: 29
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
   field_hitas_owner:
     type: boolean_checkbox
     weight: 27

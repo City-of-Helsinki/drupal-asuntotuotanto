@@ -52,7 +52,6 @@ final class Filters extends ResourceBase {
       $items = [];
 
       if ($taxonomy_name == 'districts') {
-
         // Get all unique districts separately for both ownership types.
         $activeProjectDistricts = $this->getActiveProjectDistricts();
 
@@ -64,15 +63,12 @@ final class Filters extends ResourceBase {
         ];
         $responseData[strtolower('project_district_hitas')] = $index_hitas;
 
-        $vocabulary_name = $vocabularies[$terms[0]->bundle()]->get('name');
         $index_haso = [
-          'label' => $vocabulary_name,
+          'label' => t('Districts'),
           'items' => $activeProjectDistricts['haso'],
           'suffix' => NULL,
         ];
-
         $responseData[strtolower('project_district_haso')] = $index_haso;
-
       }
       else {
         foreach ($terms as $term) {
@@ -186,7 +182,7 @@ final class Filters extends ResourceBase {
    */
   private function getActiveProjectDistricts(): array {
     $indexes = Index::loadMultiple();
-    $index = isset($indexes['apartment']) ? $indexes['apartment'] : reset($indexes);
+    $index = $indexes['apartment'] ?? reset($indexes);
     $query = $index->query();
     $query->range(0, 10000);
     $query->addCondition('_language', ['fi'], 'IN');
@@ -201,7 +197,7 @@ final class Filters extends ResourceBase {
 
     foreach ($resultItems as $resultItem) {
       if (isset($resultItem->getField('project_ownership_type')->getValues()[0])) {
-        $district = isset($resultItem->getField('project_district')->getValues()[0]) ? $resultItem->getField('project_district')->getValues()[0] : '';
+        $district = $resultItem->getField('project_district')->getValues()[0] ?? '';
         if ($district) {
           $projects[strtolower($resultItem->getField('project_ownership_type')->getValues()[0])][] = $district;
         }

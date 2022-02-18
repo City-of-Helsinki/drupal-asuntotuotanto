@@ -69,9 +69,16 @@
               {% set date = content['#teaser_values'].application_end_time|date("d.m.Y") %}
               {% set time = content['#teaser_values'].application_end_time|date("H.i") %}
               {% include "@hdbt/misc/icon.twig" with {icon: 'clock', label: ''} %}
-              {% trans %}
-                The application period is open until {{ time }} on {{ date }}
-              {% endtrans %}
+
+              {% if content['#teaser_values'].is_application_period_over %}
+                {% trans %}
+                  The application has ended {{ time }} on {{ date }}
+                {% endtrans %}
+              {% else %}
+                {% trans %}
+                  The application period is open until {{ time }} on {{ date }}
+                {% endtrans %}
+              {% endif %}
             </li>
           </ul>
         </div>
@@ -235,19 +242,37 @@
               {% set date = content['#teaser_values'].application_end_time|date("d.m.Y") %}
               {% set time = content['#teaser_values'].application_end_time|date("H.i") %}
               {% include "@hdbt/misc/icon.twig" with {icon: 'clock', label: ''} %}
-              {% trans %}
-                The application period is open until {{ time }} on {{ date }}
-              {% endtrans %}
+              {% if content['#teaser_values'].is_application_period_over %}
+                {% trans %}
+                  The application has ended {{ time }} on {{ date }}
+                {% endtrans %}
+              {% else %}
+                {% trans %}
+                  The application period is open until {{ time }} on {{ date }}
+                {% endtrans %}
+              {% endif %}
             </li>
           </ul>
         </div>
+        {% if content['#teaser_values'].is_application_period %}
+          {% set app_link_text = 'Edit application' %}
         <div class="application__actions">
           {% include "@asuntotuotanto/button/button.html.twig" with {
-            label: 'Edit application'|t,
+            label: app_link_text|t,
             href: content['#teaser_values'].application_url,
             type: 'primary'
           } %}
         </div>
+        {% else %}
+          {% set app_link_text = 'View application' %}
+          <div class="application__actions">
+            {% include "@asuntotuotanto/button/button.html.twig" with {
+              label: app_link_text|t,
+              href: content['#teaser_values'].application_url,
+              type: 'primary'
+            } %}
+          </div>
+        {% endif %}
       </div>
     </article>
 
@@ -371,6 +396,7 @@
           </span>
           {{ content['#teaser_values'].project_name }}
         </h1>
+        {% if content['#teaser_values'].is_locked %}
         <div class="application-form__input-elements">
           <div class="application-form__application-information">
             <p class="application-form__application-information-tooltip">
@@ -390,6 +416,7 @@
             </p>
           </div>
         </div>
+        {% endif %}
       </div>
       <div class="application-form__content">
         <section class="application-form__section">

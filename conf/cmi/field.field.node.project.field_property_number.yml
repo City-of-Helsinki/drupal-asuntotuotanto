@@ -1,0 +1,19 @@
+uuid: b4fcd155-214c-4518-9c8f-1c2cc4f60698
+langcode: fi
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_property_number
+    - node.type.project
+id: node.project.field_property_number
+field_name: field_property_number
+entity_type: node
+bundle: project
+label: Kohdenumero
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

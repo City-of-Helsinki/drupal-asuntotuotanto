@@ -131,7 +131,7 @@ class SalespersonApplicationForm extends FormBase {
    */
   private function getProjects() {
     $indexes = Index::loadMultiple();
-    $index = isset($indexes['apartment']) ? $indexes['apartment'] : reset($indexes);
+    $index = $indexes['apartment'] ?? reset($indexes);
     $query = $index->query();
 
     $parse_mode = \Drupal::service('plugin.manager.search_api.parse_mode')

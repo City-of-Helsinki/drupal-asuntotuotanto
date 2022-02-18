@@ -114,22 +114,23 @@ class ApplicantFieldItem extends FieldItemBase implements FieldItemInterface {
    * {@inheritdoc}
    */
   public function isEmpty() {
-    return $this->first_name === NULL ||
-           $this->first_name === '' &&
-           $this->last_name === NULL ||
-           $this->last_name === '' &&
-           $this->date_of_birth === NULL ||
-           $this->date_of_birth === '' &&
-           $this->personal_id === NULL ||
-           $this->personal_id === '' &&
-           $this->street_address === NULL ||
-           $this->street_address === '' &&
-           $this->city === NULL ||
-           $this->city === '' &&
-           $this->phone === NULL ||
-           $this->phone === '' &&
-           $this->email === NULL ||
-           $this->email === '';
+    $fields = [
+      'first_name',
+      'last_name',
+      'date_of_birth',
+      'personal_id',
+      'street_address',
+      'city',
+      'phone',
+      'email',
+    ];
+
+    foreach ($fields as $field) {
+      if ($this->{$field} != NULL && $this->{$field} != '') {
+        return FALSE;
+      }
+    }
+    return TRUE;
   }
 
 }

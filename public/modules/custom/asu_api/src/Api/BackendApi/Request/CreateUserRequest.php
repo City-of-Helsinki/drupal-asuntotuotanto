@@ -62,7 +62,7 @@ class CreateUserRequest extends Request {
 
     if ($this->userInformation) {
       foreach ($fieldMap as $field => $information) {
-        $data[$information['external_field']] = isset($this->userInformation[$field]) ? $this->userInformation[$field] : '';
+        $data[$information['external_field']] = $this->userInformation[$field] ?? '-';
       }
     }
 
@@ -75,7 +75,7 @@ class CreateUserRequest extends Request {
         $data['date_of_birth'] = ApplicationHelper::formatDate($this->userInformation['date_of_birth']);
       }
       catch (\Exception $e) {
-        $data['date_of_birth'] = '-';
+        $data['date_of_birth'] = (new \DateTime())->format('Y-m-d');
       }
     }
 

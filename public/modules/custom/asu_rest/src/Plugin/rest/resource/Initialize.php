@@ -32,17 +32,8 @@ final class Initialize extends ResourceBase {
   public function get() {
     $response = [];
 
-    $filters = [];
-    if ($cache = \Drupal::cache()
-      ->get('asu_initialize_filters')) {
-      $filters = $cache->data;
-    }
-    else {
-      $filters = $this->getFilters();
-      \Drupal::cache()
-        ->set('asu_initialize_filters', $filters, (time() + 60 * 60));
-    }
-    $response['filters'] = $filters;
+    // Gets filters cached if possible.
+    $response['filters'] = $this->getFilters();
 
     $response['static_content'] = $this->getStaticContent();
     $response['apartment_application_status'] = $this->getApartmentApplicationStatus();
@@ -116,9 +107,23 @@ final class Initialize extends ResourceBase {
    * Get the static content.
    */
   private function getStaticContent(): array {
-    // @todo Followed projects.
     $uid = \Drupal::currentUser()->id();
-    $config = \Drupal::config('asu_rest.static_content')->get('static_content');
+    $contents = \Drupal::config('asu_rest.static_content')->get('static_content');
+    $urls = \Drupal::config('asu_rest.static_content')->get('static_urls');
+
+    $config = [];
+    foreach ($contents as $key => $content) {
+      // phpcs:ignore
+      $config[$key] = (string) t($content);
+    }
+
+    $langCode = \Drupal::languageManager()->getCurrentLanguage()->getId();
+    $urls = array_map(function ($string) use ($langCode) {
+      return str_replace('@lang', $langCode, $string);
+    }, $urls);
+
+    $config = array_merge($config, $urls);
+
     $config['followed_projects_page_url'] = "/user/$uid/followed_projects";
     return $config;
   }
@@ -127,16 +132,20 @@ final class Initialize extends ResourceBase {
    * Get all values used in React filter bar.
    */
   protected function getFilters() {
-    $responseData = [];
+    if ($cache = \Drupal::cache()
+      ->get('asu_initialize_filters')) {
+      return $cache->data;
+    }
 
+    $responseData = [];
     $districts = $this->getDistrictsByProjectOwnershipType();
     $responseData['project_district_hitas'] = [
-      'label' => 'Districts',
+      'label' => (string) $this->t('Districts'),
       'items' => $districts['hitas'],
       'suffix' => NULL,
     ];
     $responseData['project_district_haso'] = [
-      'label' => 'Districts',
+      'label' => (string) $this->t('Districts'),
       'items' => $districts['haso'],
       'suffix' => NULL,
     ];
@@ -182,6 +191,9 @@ final class Initialize extends ResourceBase {
       'suffix' => '€',
     ];
 
+    \Drupal::cache()
+      ->set('asu_initialize_filters', $responseData, (time() + 60 * 60));
+
     return $responseData;
   }
 
@@ -196,13 +208,32 @@ final class Initialize extends ResourceBase {
    */
   protected function getDistrictsByProjectOwnershipType() {
     $indexes = Index::loadMultiple();
-    $index = isset($indexes['apartment']) ? $indexes['apartment'] : reset($indexes);
+    $index = $indexes['apartment'] ?? reset($indexes);
     $query = $index->query();
     $query->range(0, 10000);
-    $query->addCondition('_language', ['fi'], 'IN');
+
+    $langCode = \Drupal::languageManager()->getCurrentLanguage()->getId();
+    $query->addCondition('_language', [$langCode], 'IN');
+    $query->addCondition('apartment_published', 'true');
+    $query->addCondition('project_published', 'true');
+
+    $query->addCondition(
+      'apartment_state_of_sale',
+      [
+        'open_for_applications',
+        'for_sale',
+        'free_for_reservation',
+        'reserved_haso',
+        'reserved',
+      ],
+      'IN'
+    );
+
     $query->addCondition('project_state_of_sale', ['upcoming'], 'NOT IN');
     $query->addCondition('project_ownership_type', ['hitas', 'haso'], 'IN');
-    $resultItems = $query->execute()->getResultItems();
+
+    $resultItems = $query->execute()
+      ->getResultItems();
 
     $projects = [
       'hitas' => [],
@@ -211,9 +242,16 @@ final class Initialize extends ResourceBase {
 
     foreach ($resultItems as $resultItem) {
       if (isset($resultItem->getField('project_ownership_type')->getValues()[0])) {
-        $district = isset($resultItem->getField('project_district')->getValues()[0]) ? $resultItem->getField('project_district')->getValues()[0] : '';
+        $district = $resultItem->getField('project_district')->getValues()[0] ?? '';
         if ($district) {
-          $projects[strtolower($resultItem->getField('project_ownership_type')->getValues()[0])][] = $district;
+          $address = $resultItem->getField('apartment_address')->getValues()[0];
+          if (!$address) {
+            continue;
+          }
+          $ownership = $resultItem->getField('project_ownership_type')->getValues()[0];
+          if (!in_array($district, $projects[strtolower($ownership)])) {
+            $projects[strtolower($ownership)][] = $district;
+          }
         }
       }
     }

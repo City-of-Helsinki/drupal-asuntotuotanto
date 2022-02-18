@@ -1,7 +1,16 @@
 uuid: ffeffee6-4e93-4630-ad16-19ec06aac128
 langcode: en
 status: true
-dependencies: {  }
+dependencies:
+  module:
+    - contact_storage
+third_party_settings:
+  contact_storage:
+    submit_text: 'Lähetä viesti'
+    show_preview: false
+    disabled_form_message: 'This contact form has been disabled.'
+    maximum_submissions_user: 0
+    page_autoreply_format: plain_text
 id: apply_for_free_apartment
 label: 'Apply for free apartment'
 recipients:

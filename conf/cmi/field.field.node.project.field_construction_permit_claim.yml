@@ -1,0 +1,21 @@
+uuid: 2914892f-066a-4028-ba34-8c689d57025b
+langcode: fi
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_construction_permit_claim
+    - node.type.project
+  module:
+    - datetime
+id: node.project.field_construction_permit_claim
+field_name: field_construction_permit_claim
+entity_type: node
+bundle: project
+label: 'Rakennuslupa haettu'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: datetime

@@ -18,20 +18,17 @@ dependencies:
 _core:
   default_config_hash: EDyVdaROG6pYzyEct43c01Wq4gpATszrk-qR6gqnQ84
 id: anonymous
-label: 'Anonyymi käyttäjä'
+label: 'Anonymous user'
 weight: 0
 is_admin: false
 permissions:
   - 'access content'
-  - 'access content'
   - 'access site-wide contact form'
   - 'create application'
-  - 'display eu cookie compliance popup'
   - 'display eu cookie compliance popup'
   - 'restful get asu_initialize'
   - 'restful post asu_elasticsearch'
   - 'restful post mailinglist'
-  - 'view media'
   - 'view media'
   - 'view paragraph content accordion'
   - 'view paragraph content accordion_item'
@@ -62,5 +59,4 @@ permissions:
   - 'view paragraph content steps_list'
   - 'view paragraph content text'
   - 'view paragraph content text_block_with_link'
-  - 'view remote entities'
   - 'view remote entities'

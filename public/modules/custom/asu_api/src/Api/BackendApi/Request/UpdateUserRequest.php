@@ -72,6 +72,7 @@ class UpdateUserRequest extends Request {
     $data['id'] = $this->user->uuid();
     $data['email'] = $this->user->getEmail();
     $data['contact_language'] = $this->user->getPreferredLangcode();
+    $data['is_salesperson'] = $this->user->bundle() == 'sales' ? TRUE : FALSE;
 
     return $data;
   }

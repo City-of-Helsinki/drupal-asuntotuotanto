@@ -32,7 +32,7 @@ function asu_user_user_login(UserInterface $account) {
   asu_create_backend_user($account);
   if ($account->hasRole('customer')) {
     asu_validate_email($account);
-    asu_send_user_password_email($account);
+    asu_send_user_email_verification_reminder($account);
     asu_get_user_external_field_data($account);
     asu_redirect_on_login_by_session($account);
   }
@@ -56,9 +56,14 @@ function asu_validate_email(UserInterface $account) {
 /**
  * Send user an email if email is not validated.
  */
-function asu_send_user_password_email(UserInterface $account) {
+function asu_send_user_email_verification_reminder(UserInterface $account) {
+  // @todo This might change after profiili authentication is done.
   if ($account->field_email_is_valid->value == 0) {
-    _user_mail_notify('password_reset', $account);
+    // Prevent sending email verification mail.
+    $sendMail = $account->getLastAccessedTime() != 0 && (time() - $account->getCreatedTime() >= 86400);
+    if ($sendMail) {
+      asu_send_user_email('asu_email_approval_required', $account);
+    }
   }
 }
 
@@ -87,20 +92,17 @@ function asu_create_backend_user(UserInterface $account) {
         $values[$value['external_field']] = $store->get($field) ?? '-';
       }
 
-      if ($type == 'salesperson') {
-        $values['address'] = '-';
-        $values['date_of_birth'] = (new \DateTime())->format('Y-m-d');
-      }
-
       $createUser = new CreateUserRequest($account, $values, $type);
       /** @var \Drupal\asu_api\Api\BackendApi\Response\CreateUserResponse $response */
       $response = $backendApi->send($createUser);
+
       $account->field_backend_profile = $response->getProfileId();
       $account->field_backend_password = $response->getPassword();
       $account->save();
     }
     catch (\Exception $e) {
-      \Drupal::logger('asu_user')->critical('Exception while creating backend user:' . $e->getMessage());
+      \Drupal::logger('asu_user')
+        ->critical('Exception while creating backend user:' . $e->getMessage());
     }
   }
 }
@@ -317,4 +319,33 @@ function asu_user_entity_operation(EntityInterface $entity) {
     ];
     return $operations;
   }
+}
+
+/**
+ * Customized from Drupal _user_mail_notify function.
+ *
+ * @param string $op
+ *   Which mail to send.
+ * @param \Drupal\user\Entity\UserInterface $user
+ *   Who to send the mail.
+ *
+ * @return mixed
+ *   Check _user_mail_notify function.
+ */
+function asu_send_user_email(string $op, UserInterface $account) {
+  $params['account'] = $account;
+  $langcode = $account->getPreferredLangcode() ?? 'fi';
+  // Get the custom site notification email to use as the from email address
+  // if it has been set.
+  $site_mail = \Drupal::config('system.site')->get('mail_notification');
+  // If the custom site notification email has not been set, we use the site
+  // default for this.
+  if (empty($site_mail)) {
+    $site_mail = \Drupal::config('system.site')->get('mail');
+  }
+  if (empty($site_mail)) {
+    $site_mail = ini_get('sendmail_from');
+  }
+  $mail = \Drupal::service('plugin.manager.mail')->mail('user', $op, $account->getEmail(), $langcode, $params, $site_mail);
+  return empty($mail) ? NULL : $mail['result'];
 }
