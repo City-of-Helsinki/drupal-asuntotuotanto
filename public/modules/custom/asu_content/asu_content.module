@@ -172,7 +172,7 @@ function asu_content_entity_presave(EntityInterface $entity) {
         $entity->isPublished()
       ) {
         $entity->set('field_archived', FALSE);
-        $entity->setPublished(TRUE);
+        $entity->setPublished();
         \Drupal::messenger()->addWarning(t('Project was not unpublished when it was set as archived. Resetted published and archived statuses.'));
       }
 
@@ -212,6 +212,7 @@ function asu_content_entity_update($entity) {
     $entity->getType() == 'project' &&
     $entity->hasField('field_apartments')
   ) {
+    // Set index to be updated.
     $servers = Server::loadMultiple();
     /** @var \Drupal\search_api\Entity\Server $server */
     $server = reset($servers);

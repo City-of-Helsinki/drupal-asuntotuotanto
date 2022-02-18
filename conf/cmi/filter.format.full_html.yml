@@ -4,8 +4,10 @@ status: true
 dependencies:
   module:
     - editor
+    - helfi_api_base
     - linkit
     - media
+    - slick
     - token_filter
 _core:
   default_config_hash: FwYOHigOrEWexVh7QFCenw0Hq_w6-dt72xYe2KUjYo4
@@ -94,3 +96,17 @@ filters:
     status: false
     weight: -40
     settings: {  }
+  helfi_link_converter:
+    id: helfi_link_converter
+    provider: helfi_api_base
+    status: true
+    weight: -10
+    settings: {  }
+  slick_filter:
+    id: slick_filter
+    provider: slick
+    status: false
+    weight: 4
+    settings:
+      optionset: default
+      media_switch: ''

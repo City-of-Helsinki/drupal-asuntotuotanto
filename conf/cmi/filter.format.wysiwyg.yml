@@ -3,7 +3,8 @@ langcode: en
 status: true
 dependencies:
   module:
-    - media
+    - helfi_api_base
+    - slick
 name: Wysiwyg
 format: wysiwyg
 weight: 0
@@ -36,12 +37,17 @@ filters:
     status: true
     weight: 10
     settings: {  }
-  media_embed:
-    id: media_embed
-    provider: media
+  helfi_link_converter:
+    id: helfi_link_converter
+    provider: helfi_api_base
+    status: true
+    weight: -10
+    settings: {  }
+  slick_filter:
+    id: slick_filter
+    provider: slick
     status: false
-    weight: 100
+    weight: 4
     settings:
-      default_view_mode: default
-      allowed_view_modes: {  }
-      allowed_media_types: {  }
+      optionset: default
+      media_switch: ''
