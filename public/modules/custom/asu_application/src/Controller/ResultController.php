@@ -3,11 +3,13 @@
 namespace Drupal\asu_application\Controller;
 
 use Drupal\asu_api\Api\BackendApi\Request\ApplicationLotteryResult;
+use Drupal\asu_api\Api\BackendApi\Request\TriggerProjectLotteryRequest;
 use Drupal\asu_application\Entity\Application;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\node\Entity\Node;
 use Drupal\user\Entity\User;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * List controller.
@@ -30,16 +32,19 @@ class ResultController extends ControllerBase {
       }
 
       try {
-        $request = new ApplicationLotteryResult($user->uuid(), $project->uuid());
+        $request = new ApplicationLotteryResult($project->uuid());
         $request->setSender($user);
-
-        /** @var \Drupal\asu_api\Api\BackendApi\Request\ApplicationLotteryResultResponse $response */
+        /** @var \Drupal\asu_api\Api\BackendApi\Request\ApplicationLotteryResultResponse $responseContent */
         $responseContent = $backendApi
           ->send($request)
           ->getContent();
       }
-      catch (Exception $e) {
+      catch (\Exception $e) {
         $this->getLogger('asu_api')->critical('Exception when customer tried to access his application results: ' . $e->getMessage());
+        return new AjaxResponse(400, []);
+      }
+
+      if (empty($responseContent)) {
         return new AjaxResponse(400, []);
       }
 
@@ -58,6 +63,25 @@ class ResultController extends ControllerBase {
       return new AjaxResponse($results);
     }
     return new AjaxResponse([], 400);
+  }
+
+
+  public function startLottery(string $project_uuid) {
+    $user = User::load(\Drupal::currentUser()->id());
+    if ($user->bundle() != 'sales') {
+      return new Response('fallssseee');
+    }
+    try {
+      $backendApi = \Drupal::service('asu_api.backendapi');
+      $request = new TriggerProjectLotteryRequest($project_uuid);
+      $request->setSender($user);
+      $content = $backendApi->send($request);
+
+    }
+    catch(\Exception $e) {
+      return new Response('FAILED');
+    }
+
   }
 
 }

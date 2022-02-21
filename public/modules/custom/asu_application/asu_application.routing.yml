@@ -14,3 +14,12 @@ asu_application.application_results:
   requirements:
     _access: 'TRUE'
     #_csrf_token: 'TRUE'
+
+asu_application.lottery_start:
+  path: '/lottery/start/{project_uuid}'
+  defaults:
+    _controller: '\Drupal\asu_application\Controller\ResultController::startLottery'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+    #_csrf_token: 'TRUE'

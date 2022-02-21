@@ -81,6 +81,10 @@ class BackendApi {
         $options['headers']['Authorization'] = sprintf("Bearer %s", $token);
       }
       else {
+        // This can happen if happens if you
+        // haven't set user for the request $request->setSender($user)
+        // Or user cannot authenticate in backend
+
         throw new \InvalidArgumentException('Cannot authenticate request sender.');
       }
     }
