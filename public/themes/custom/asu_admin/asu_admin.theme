@@ -54,6 +54,5 @@ function asu_admin_apply_form_theme(array &$form) {
   // Login is handled in asu_content.module.
   if (isset($form['field_archived'])) {
     $form['gin_actions']['actions']['field_archived_action'] = $form['field_archived'];
-    $form['field_archived']['widget']['value']['#type'] = 'hidden';
   }
 }
