@@ -19,6 +19,10 @@ class Apartment extends Node {
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
   public function getProject(): ?Project {
+    if ($this->isNew()) {
+      return NULL;
+    }
+
     $nodes = \Drupal::entityTypeManager()
       ->getStorage('node')
       ->loadByProperties([
@@ -29,6 +33,20 @@ class Apartment extends Node {
       return NULL;
     }
     return reset($nodes);
+  }
+
+  /**
+   * Create title (full address) for apartment.
+   *
+   * @result string
+   *   Project address and apartment number combined.
+   */
+  public function createTitle(): string {
+    $apartmentNumber = $this->field_apartment_number->value;
+    $project = $this->getProject();
+    return isset($project) ?
+      "{$project->field_street_address->value} {$apartmentNumber}" : $apartmentNumber;
+
   }
 
   /**
