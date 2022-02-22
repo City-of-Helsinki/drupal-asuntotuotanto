@@ -119,6 +119,7 @@ function template_preprocess_asu_application(array &$variables) {
         'project_district' => $district,
         'is_application_period' => $project->isApplicationPeriod('now'),
         'is_application_period_over' => $project->isApplicationPeriod('after'),
+        'application_apartments' => $apartmentData,
       ],
     ];
 

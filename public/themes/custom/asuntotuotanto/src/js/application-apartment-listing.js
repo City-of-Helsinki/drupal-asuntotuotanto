@@ -115,7 +115,7 @@
           success: function(results) {
             // Update elements
             if (results && results.length) {
-              Array.from(results[0]).forEach(function(apartment_result, index, array) {
+              Array.from(results).forEach(function(apartment_result, index, array) {
                 let apartment_class = '.application-apartment-' + apartment_result.apartment_id;
                 Array.from(jQuery('.lottery-result' + apartment_class)).forEach(function(result_row) {
                   jQuery(result_row).find('.result').first().html(apartment_result.position);
@@ -126,7 +126,7 @@
             }
             cb();
           },
-          failed: function(result){
+          failed: function(results){
             cb();
           },
         });

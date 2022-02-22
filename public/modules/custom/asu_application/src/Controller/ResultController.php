@@ -31,6 +31,12 @@ class ResultController extends ControllerBase {
         return new AjaxResponse([], 401);
       }
 
+      $cid = 'asu_application_result_' . $user->id() . '_' . $applicationId;
+
+      if ($cached = \Drupal::cache()->get($cid)) {
+        return new AjaxResponse(json_decode($cached->data, TRUE, 200));
+      }
+
       try {
         $request = new ApplicationLotteryResult($project->uuid());
         $request->setSender($user);
@@ -57,9 +63,13 @@ class ResultController extends ControllerBase {
           'apartment' => $apartment->field_apartment_number->value,
           'position' => $result['lottery_position'],
           'current_position' => $result['queue_position'],
-          'status' => t($result['status']),
+          'status' => $result['state'],
+          // 'status' => t($result['state'])
         ];
       }
+
+      \Drupal::cache()->set($cid, json_encode($results), (time() + 60 * 60));
+
       return new AjaxResponse($results);
     }
     return new AjaxResponse([], 400);
