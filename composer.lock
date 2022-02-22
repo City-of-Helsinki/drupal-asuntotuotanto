@@ -5134,16 +5134,16 @@
         },
         {
             "name": "drupal/helfi_api_base",
-            "version": "2.0.0",
+            "version": "2.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/City-of-Helsinki/drupal-module-helfi-api-base.git",
-                "reference": "a2883e1b2f4f6b4d5cf5119718b60bbfaaa21ef4"
+                "reference": "e5fe367bdfacfad5914b380f970e102324aa3a5b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/City-of-Helsinki/drupal-module-helfi-api-base/zipball/a2883e1b2f4f6b4d5cf5119718b60bbfaaa21ef4",
-                "reference": "a2883e1b2f4f6b4d5cf5119718b60bbfaaa21ef4",
+                "url": "https://api.github.com/repos/City-of-Helsinki/drupal-module-helfi-api-base/zipball/e5fe367bdfacfad5914b380f970e102324aa3a5b",
+                "reference": "e5fe367bdfacfad5914b380f970e102324aa3a5b",
                 "shasum": ""
             },
             "require": {
@@ -5160,10 +5160,10 @@
             ],
             "description": "Helfi - API Base",
             "support": {
-                "source": "https://github.com/City-of-Helsinki/drupal-module-helfi-api-base/tree/2.0.0",
+                "source": "https://github.com/City-of-Helsinki/drupal-module-helfi-api-base/tree/2.0.1",
                 "issues": "https://github.com/City-of-Helsinki/drupal-module-helfi-api-base/issues"
             },
-            "time": "2022-02-01T11:24:38+00:00"
+            "time": "2022-02-18T10:03:55+00:00"
         },
         {
             "name": "drupal/helfi_azure_fs",
@@ -5301,16 +5301,16 @@
         },
         {
             "name": "drupal/helfi_platform_config",
-            "version": "2.4.12",
+            "version": "2.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/City-of-Helsinki/drupal-helfi-platform-config.git",
-                "reference": "15752838bd0f1e9c025b95baa1e73868df94f55e"
+                "reference": "b1d3854a85bcb0ec01b4a910cd93c243d9da0856"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/City-of-Helsinki/drupal-helfi-platform-config/zipball/15752838bd0f1e9c025b95baa1e73868df94f55e",
-                "reference": "15752838bd0f1e9c025b95baa1e73868df94f55e",
+                "url": "https://api.github.com/repos/City-of-Helsinki/drupal-helfi-platform-config/zipball/b1d3854a85bcb0ec01b4a910cd93c243d9da0856",
+                "reference": "b1d3854a85bcb0ec01b4a910cd93c243d9da0856",
                 "shasum": ""
             },
             "require": {
@@ -5394,9 +5394,6 @@
                     },
                     "drupal/field_group": {
                         "[#UHF-3268] Support for field group translations": "https://www.drupal.org/files/issues/2021-11-22/field_group_fix-translations_label_description-3111107-31.patch"
-                    },
-                    "drupal/publication_date": {
-                        "Patch to fix Bubbleable metadata deprecation notice. (https://www.drupal.org/node/3220692)": "https://www.drupal.org/files/issues/2021-11-04/publication_date-3220692.patch"
                     }
                 }
             },
@@ -5405,10 +5402,10 @@
             ],
             "description": "HELfi platform config",
             "support": {
-                "source": "https://github.com/City-of-Helsinki/drupal-helfi-platform-config/tree/2.4.12",
+                "source": "https://github.com/City-of-Helsinki/drupal-helfi-platform-config/tree/2.5.0",
                 "issues": "https://github.com/City-of-Helsinki/drupal-helfi-platform-config/issues"
             },
-            "time": "2022-02-17T07:58:51+00:00"
+            "time": "2022-02-18T10:00:22+00:00"
         },
         {
             "name": "drupal/helfi_tpr",
@@ -6975,17 +6972,17 @@
         },
         {
             "name": "drupal/publication_date",
-            "version": "2.0.0-beta3",
+            "version": "2.0.0-beta4",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/publication_date.git",
-                "reference": "8.x-2.0-beta3"
+                "reference": "8.x-2.0-beta4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/publication_date-8.x-2.0-beta3.zip",
-                "reference": "8.x-2.0-beta3",
-                "shasum": "e1deac7f77d3b57b93f4f70661b97f70b3e22216"
+                "url": "https://ftp.drupal.org/files/projects/publication_date-8.x-2.0-beta4.zip",
+                "reference": "8.x-2.0-beta4",
+                "shasum": "155c4491200c95c1f2b58e4534996f93f459b951"
             },
             "require": {
                 "drupal/core": "^8 || ^9"
@@ -6993,8 +6990,8 @@
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "8.x-2.0-beta3",
-                    "datestamp": "1629791784",
+                    "version": "8.x-2.0-beta4",
+                    "datestamp": "1645141218",
                     "security-coverage": {
                         "status": "not-covered",
                         "message": "Beta releases are not covered by Drupal security advisories."
