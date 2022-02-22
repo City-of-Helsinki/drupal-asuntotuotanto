@@ -111,7 +111,14 @@ function asu_csv_import_process($form, FormStateInterface &$form_state) {
     \Drupal::messenger()->addError("Error while creating apartments: " . $e->getMessage());
   }
 
+  $street_address = $form_state->getUserInput()['field_street_address'][0]['value'] ?? '';
+
   foreach ($nodes['create'] as $node) {
+    $apartment_number = $node->field_apartment_number->value ?? '';
+    $address = "{$street_address} {$apartment_number}";
+    $address = empty(trim($address)) ? $apartment_number : trim($address);
+
+    $node->set('title', $address);
     $node->save();
     $project_apartments_field->appendItem($node->id());
   }

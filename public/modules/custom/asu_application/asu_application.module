@@ -67,24 +67,32 @@ function asu_application_form_alter(&$form, &$form_state) {
  * Implements hook_preprocess_form().
  */
 function template_preprocess_asu_application(array &$variables) {
-
   $application = $variables['elements']['#asu_application'];
   $variables['view_mode'] = $variables['elements']['#view_mode'];
   $id = $application->id->value;
-
   $projectId = $application->getProjectId();
   try {
-    $projects = \Drupal::entityTypeManager()
+    /** @var \Drupal\asu_content\Entity\Project $project */
+    $project = \Drupal::entityTypeManager()
       ->getStorage('node')
-      ->loadByProperties(['type' => 'project', 'nid' => $projectId]);
+      ->load($projectId);
 
-    if (empty($projects)) {
-      return [];
+    $apartments = \Drupal::entityTypeManager()
+      ->getStorage('node')
+      ->loadMultiple($application->getApartmentIds());
+
+    $apartmentData = [];
+    foreach ($apartments as $apartment) {
+      $apartmentData[$apartment->id()] = [
+        'id' => $apartment->id(),
+        'uuid' => $apartment->uuid(),
+        'number' => $apartment->field_apartment_number->value,
+        'structure' => $apartment->field_apartment_structure->value,
+      ];
     }
 
     $main_image_file_url = NULL;
-    /** @var \Drupal\asu_content\Entity\Project $project */
-    $project = $projects[$projectId];
+
     if ($project->field_main_image->target_id) {
       $main_image_file = File::load($project->field_main_image->target_id) ?? NULL;
 
@@ -99,6 +107,8 @@ function template_preprocess_asu_application(array &$variables) {
 
     $application_teaser_values = [
       '#teaser_values' => [
+        'application_id' => $application->id->value,
+        'project_uuid' => $project->uuid(),
         'language' => \Drupal::languageManager()->getCurrentLanguage()->getId(),
         'project_name' => $project->field_housing_company->value,
         'project_address' => $project->field_street_address->value,
@@ -109,6 +119,7 @@ function template_preprocess_asu_application(array &$variables) {
         'project_district' => $district,
         'is_application_period' => $project->isApplicationPeriod('now'),
         'is_application_period_over' => $project->isApplicationPeriod('after'),
+        'application_apartments' => $apartmentData,
       ],
     ];
 
@@ -155,9 +166,10 @@ function template_preprocess_asu_application(array &$variables) {
       $application_teaser_values['application'] = $application_fields;
     }
 
+    $application_teaser_values['#teaser_values']['application_id'] = $id;
+
     $application_teaser_values['#teaser_values']['application_url'] =
       $application->isLocked() || !$project->isApplicationPeriod() ? "/application/$id" : "/application/$id/edit";
-
   }
   catch (\Exception $e) {
     \Drupal::logger('asu_application')->critical(
@@ -295,10 +307,9 @@ function asu_user_form_contact_message_apply_for_free_apartment_form_alter(&$for
 /**
  * Implements hook_cron().
  *
- * Delete application drafts for projects which application tima has ended.
+ * Delete application drafts for projects which application time has ended.
  */
 function asu_application_cron() {
-  // Handle drafted applications.
   try {
     $before = (new DrupalDateTime('-29 days'))
       ->format(DateTimeItemInterface::DATETIME_STORAGE_FORMAT);
