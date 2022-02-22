@@ -74,22 +74,27 @@ class ResultController extends ControllerBase {
   }
 
   /**
+   * Start lottery functionality.
    *
+   * @param string $project_uuid
+   *   Uuid of the project.
+   *
+   * @return \Symfony\Component\HttpFoundation\Response|void
+   *   Result response.
    */
   public function startLottery(string $project_uuid) {
     $user = User::load(\Drupal::currentUser()->id());
     if ($user->bundle() != 'sales') {
-      return new Response('fallssseee');
+      return new Response([], 404);
     }
     try {
       $backendApi = \Drupal::service('asu_api.backendapi');
       $request = new TriggerProjectLotteryRequest($project_uuid);
       $request->setSender($user);
       $backendApi->send($request);
-
     }
     catch (\Exception $e) {
-      return new Response('FAILED');
+      return new Response('problem with request.', 400);
     }
 
   }
