@@ -6,20 +6,31 @@ use Drupal\asu_api\Api\Response;
 use Drupal\asu_api\Exception\RequestException;
 use Psr\Http\Message\ResponseInterface;
 
+/**
+ * Trigger response class.
+ */
 class TriggerProjectLotteryResponse extends Response {
 
   private array $content;
 
+  /**
+   * {@inheritDoc}
+   */
   public function __construct(array $content) {
     $this->content = $content;
   }
 
-  public function getRequestContent(){
+  /**
+   * {@inheritDoc}
+   */
+  public function getRequestContent() {
     return $this->content;
   }
 
-  public static function createFromHttpResponse(ResponseInterface $response): self
-  {
+  /**
+   * {@inheritDoc}
+   */
+  public static function createFromHttpResponse(ResponseInterface $response): self {
     if (!self::requestOk($response)) {
       throw new RequestException('Bad status code: ' . $response->getStatusCode());
     }

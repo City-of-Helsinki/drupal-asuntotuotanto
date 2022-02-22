@@ -6,7 +6,6 @@ use Drupal\asu_api\Api\BackendApi\Response\ApplicationLotteryResultResponse;
 use Drupal\asu_api\Api\Request;
 use Psr\Http\Message\ResponseInterface;
 
-
 /**
  * A request to create an application.
  */

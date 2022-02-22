@@ -32,7 +32,6 @@ class ResultController extends ControllerBase {
       }
 
       $cid = 'asu_application_result_' . $user->id() . '_' . $applicationId;
-
       if ($cached = \Drupal::cache()->get($cid)) {
         return new AjaxResponse(json_decode($cached->data, TRUE, 200));
       }
@@ -47,11 +46,11 @@ class ResultController extends ControllerBase {
       }
       catch (\Exception $e) {
         $this->getLogger('asu_api')->critical('Exception when customer tried to access his application results: ' . $e->getMessage());
-        return new AjaxResponse(400, []);
+        return new AjaxResponse([], 400);
       }
 
       if (empty($responseContent)) {
-        return new AjaxResponse(400, []);
+        return new AjaxResponse([], 400);
       }
 
       $results = [];
@@ -69,13 +68,14 @@ class ResultController extends ControllerBase {
       }
 
       \Drupal::cache()->set($cid, json_encode($results), (time() + 60 * 60));
-
       return new AjaxResponse($results);
     }
     return new AjaxResponse([], 400);
   }
 
-
+  /**
+   *
+   */
   public function startLottery(string $project_uuid) {
     $user = User::load(\Drupal::currentUser()->id());
     if ($user->bundle() != 'sales') {
@@ -85,10 +85,10 @@ class ResultController extends ControllerBase {
       $backendApi = \Drupal::service('asu_api.backendapi');
       $request = new TriggerProjectLotteryRequest($project_uuid);
       $request->setSender($user);
-      $content = $backendApi->send($request);
+      $backendApi->send($request);
 
     }
-    catch(\Exception $e) {
+    catch (\Exception $e) {
       return new Response('FAILED');
     }
 

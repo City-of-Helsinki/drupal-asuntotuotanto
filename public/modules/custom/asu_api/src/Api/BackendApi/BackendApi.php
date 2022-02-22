@@ -83,8 +83,7 @@ class BackendApi {
       else {
         // This can happen if happens if you
         // haven't set user for the request $request->setSender($user)
-        // Or user cannot authenticate in backend
-
+        // Or user cannot authenticate in backend.
         throw new \InvalidArgumentException('Cannot authenticate request sender.');
       }
     }
