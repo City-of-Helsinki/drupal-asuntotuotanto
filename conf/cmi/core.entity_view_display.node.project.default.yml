@@ -116,7 +116,6 @@ dependencies:
     - file
     - link
     - options
-    - slick
     - text
     - user
 id: node.project.default
@@ -525,7 +524,7 @@ content:
     weight: 7
     region: content
   field_images:
-    type: slick_image
+    type: asu_custom_slick_formatter
     label: hidden
     settings:
       caption:
@@ -577,6 +576,9 @@ content:
       use_theme_field: false
       preserve_keys: false
       visible_items: null
+      lazy: ''
+      loading: lazy
+      preload: false
     third_party_settings: {  }
     weight: 41
     region: content
