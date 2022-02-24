@@ -101,6 +101,7 @@ dependencies:
     - field.field.node.project.field_street_address
     - field.field.node.project.field_tasks
     - field.field.node.project.field_transfer_restriction
+    - field.field.node.project.field_upcoming_description
     - field.field.node.project.field_usage_fees
     - field.field.node.project.field_virtual_presentation_url
     - field.field.node.project.field_warranty_deposit_releas
@@ -158,13 +159,14 @@ third_party_settings:
         - field_postal_code
         - field_city
         - field_district
+        - field_upcoming_description
+        - field_project_description
         - field_realty_id
         - field_construction_year
         - field_new_housing
         - field_apartment_count
         - field_new_development_status
         - field_holding_type
-        - field_project_description
         - field_regular_bank_account
         - field_barred_bank_account
         - field_plot_owner
@@ -433,7 +435,7 @@ content:
     third_party_settings: {  }
   field_apartment_count:
     type: number
-    weight: 14
+    weight: 16
     region: content
     settings:
       placeholder: ''
@@ -492,7 +494,7 @@ content:
     third_party_settings: {  }
   field_barred_bank_account:
     type: string_textfield
-    weight: 19
+    weight: 20
     region: content
     settings:
       size: 60
@@ -608,7 +610,7 @@ content:
     third_party_settings: {  }
   field_construction_end_date:
     type: datetime_default
-    weight: 23
+    weight: 24
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -632,13 +634,13 @@ content:
     third_party_settings: {  }
   field_construction_start_date:
     type: datetime_default
-    weight: 22
+    weight: 23
     region: content
     settings: {  }
     third_party_settings: {  }
   field_construction_year:
     type: string_textfield
-    weight: 12
+    weight: 14
     region: content
     settings:
       size: 60
@@ -758,7 +760,7 @@ content:
     third_party_settings: {  }
   field_holding_type:
     type: options_buttons
-    weight: 16
+    weight: 18
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -844,13 +846,13 @@ content:
     third_party_settings: {  }
   field_new_development_status:
     type: options_buttons
-    weight: 15
+    weight: 17
     region: content
     settings: {  }
     third_party_settings: {  }
   field_new_housing:
     type: boolean_checkbox
-    weight: 13
+    weight: 15
     region: content
     settings:
       display_label: true
@@ -879,7 +881,7 @@ content:
     third_party_settings: {  }
   field_plot_owner:
     type: options_select
-    weight: 20
+    weight: 21
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -934,7 +936,7 @@ content:
     third_party_settings: {  }
   field_project_description:
     type: text_textarea
-    weight: 17
+    weight: 12
     region: content
     settings:
       rows: 5
@@ -958,7 +960,7 @@ content:
     third_party_settings: {  }
   field_property_number:
     type: string_textfield
-    weight: 21
+    weight: 22
     region: content
     settings:
       size: 60
@@ -978,7 +980,7 @@ content:
     third_party_settings: {  }
   field_realty_id:
     type: string_textfield
-    weight: 11
+    weight: 13
     region: content
     settings:
       size: 60
@@ -994,7 +996,7 @@ content:
     third_party_settings: {  }
   field_regular_bank_account:
     type: string_textfield
-    weight: 18
+    weight: 19
     region: content
     settings:
       size: 60
@@ -1110,9 +1112,17 @@ content:
     settings:
       display_label: true
     third_party_settings: {  }
+  field_upcoming_description:
+    type: string_textarea
+    weight: 11
+    region: content
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
   field_usage_fees:
     type: string_textarea
-    weight: 24
+    weight: 25
     region: content
     settings:
       rows: 5
