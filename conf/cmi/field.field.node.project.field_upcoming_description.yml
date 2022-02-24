@@ -1,0 +1,19 @@
+uuid: 2b148084-bd27-46c9-a8dd-c2f2932e88e2
+langcode: fi
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_upcoming_description
+    - node.type.project
+id: node.project.field_upcoming_description
+field_name: field_upcoming_description
+entity_type: node
+bundle: project
+label: 'Tulevan kohteen lyhyt kuvaus'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string_long
