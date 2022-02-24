@@ -4,7 +4,7 @@ always_save_userinfo: false
 connect_existing_users: false
 override_registration_settings: true
 end_session_enabled: true
-user_login_display: hidden
+user_login_display: above
 redirect_login: user
 redirect_logout: ''
 userinfo_mappings:
@@ -12,7 +12,8 @@ userinfo_mappings:
 role_mappings:
   supervisor: {  }
   salesperson: {  }
-  admin: {  }
+  read_only: {  }
   content_producer: {  }
   customer: {  }
-  read_only: {  }
+  editor: {  }
+  admin: {  }
