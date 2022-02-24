@@ -40,7 +40,9 @@
 %}
 <div{{attributes.addClass(classes)}}>
   {{ title_prefix }}
-  {{ title }}
+  {% trans %}
+    {{ title }}
+  {% endtrans %}
   {{ title_suffix }}
 
   <div class="views__hero">
