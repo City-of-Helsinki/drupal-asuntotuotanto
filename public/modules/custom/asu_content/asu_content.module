@@ -281,7 +281,7 @@ function asu_content_node_insert(Node $node) {
         'type' => 'apartment',
         'title' => '',
         'field_apartment_number' => 'A0',
-        'status' => 0,
+        'status' => 1,
       ]);
       $apartment->save();
 

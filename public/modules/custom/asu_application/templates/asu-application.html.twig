@@ -92,15 +92,15 @@
       </div>
     </article>
 
-    <div class="application__lottery application__lottery--show" id="application__lottery--show--submitted">
-      <a data-loaded="0" data-application="{{ app_id }}" class="asu-results application__lottery-link application__lottery-link--show" id="application__lottery-link--show--submitted">
+    <div class="ajax-progress-throbber application__lottery application__lottery--show" data-application="{{ app_id }}">
+      <a data-loaded="0" class="asu-results application__lottery-link application__lottery-link--show application__lottery-link--show--submitted" id="result-{{ app_id }}">
         {% trans %}
           Show apartment listing
         {% endtrans %}
       </a>
     </div>
 
-    <ul class="application__apartments application__apartments--mobile project__apartments-list is-hidden application__lottery-results" id="application__lottery-results--submitted" aria-hidden="true">
+    <ul class="application__apartments application__apartments--mobile project__apartments-list is-hidden application__lottery-results-submitted" data-application="{{ app_id }}" aria-hidden="true">
       {# Single lottery result (mobile) #}
 
       {% for key, apartment in content['#teaser_values'].application_apartments %}
@@ -159,7 +159,7 @@
       {% endfor %}
     </ul>
 
-    <table class="application__apartments application__apartments--desktop is-hidden application__lottery-results" id="application__lottery-results--submitted" aria-hidden="true">
+    <table class="application__apartments application__apartments--desktop is-hidden application__lottery-results-submitted" data-application="{{ app_id }}" aria-hidden="true">
       <thead>
         <tr>
           <th>{% trans %}Applied for apartment{% endtrans %}</th>
@@ -175,13 +175,13 @@
             <td>{{ apartment.number }} <span>{{ apartment.structure }}</span></td>
             <td class="result">-</td>
             <td class="current-position">-</td>
-            <td status="status">-</td>
+            <td class="status">-</td>
           </tr>
         {% endfor %}
       </tbody>
     </table>
 
-    <div class="application__lottery application__lottery--hide is-hidden" id="application__lottery--hide--submitted">
+    <div class="application__lottery application__lottery--hide is-hidden" data-application="{{ app_id }}" id="application__lottery--hide--submitted">
       <a class="application__lottery-link application__lottery-link--hide" id="application__lottery-link--hide--submitted">
         {% trans %}
           Hide apartment listing
@@ -276,15 +276,15 @@
       </div>
     </article>
 
-    <div class="application__lottery application__lottery--show" id="application__lottery--show--draft">
-      <a data-loaded="0" data-application="{{ app_id }}" class="{# asu-results #} application__lottery-link application__lottery-link--show" id="application__lottery-link--show--draft">
+    <div class="application__lottery application__lottery--show application__lottery--show--draft" id="draft-{{ app_id }}" data-application="{{ app_id }}">
+      <a data-loaded="0" class="application__lottery-link application__lottery-link--show application__lottery--show--submitted" id="application__lottery-link--show--draft">
         {% trans %}
           Show apartment listing
         {% endtrans %}
       </a>
     </div>
 
-    <ul class="application__apartments application__apartments--mobile project__apartments-list is-hidden application__lottery-results" id="application__lottery-results--draft" aria-hidden="true">
+    <ul class="application__apartments application__apartments--mobile project__apartments-list is-hidden application__lottery-results" data-application="{{ app_id }}" aria-hidden="true">
       {# Single lottery result (mobile) #}
 
       {% for key, apartment in content['#teaser_values'].application_apartments %}
@@ -343,7 +343,7 @@
       {% endfor %}
     </ul>
 
-    <table class="application__apartments application__apartments--desktop is-hidden application__lottery-results" id="application__lottery-results--draft" aria-hidden="true">
+    <table class="application__apartments application__apartments--desktop is-hidden application__lottery-results-draft" data-application="{{ app_id }}" aria-hidden="true">
       <thead>
         <tr>
           <th>{% trans %}Applied for apartment{% endtrans %}</th>
@@ -365,8 +365,8 @@
       </tbody>
     </table>
 
-    <div class="application__lottery application__lottery--hide is-hidden" id="application__lottery--hide--draft">
-      <a class="application__lottery-link application__lottery-link--hide" id="application__lottery-link--hide--draft">
+    <div class="application__lottery application__lottery--hide application__lottery--hide--draft is-hidden" data-application="{{ app_id }}">
+      <a class="application__lottery-link application__lottery-link--hide--draft" id="application__lottery-link--hide--draft">
         {% trans %}
           Hide apartment listing
         {% endtrans %}

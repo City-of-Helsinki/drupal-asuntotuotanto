@@ -62,8 +62,8 @@ class ResultController extends ControllerBase {
           'apartment' => $apartment->field_apartment_number->value,
           'position' => $result['lottery_position'],
           'current_position' => $result['queue_position'],
-          'status' => $result['state'],
-          // 'status' => t($result['state'])
+          // phpcs:ignore
+          'status' => t($result['state']),
         ];
       }
 

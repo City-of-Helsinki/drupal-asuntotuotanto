@@ -9,30 +9,27 @@ dependencies:
   module:
     - asu_application
     - contact
-    - eu_cookie_compliance
     - helfi_api_base
     - matomo
     - media
     - paragraphs_type_permissions
     - rest
     - system
-    - toolbar
 _core:
   default_config_hash: 83Nuup-6oYkkdAsvg3nrR2pBOgtTXEV1JrzpCCLkYLM
 id: authenticated
 label: 'Sisäänkirjautunut käyttäjä'
-weight: 1
+weight: -9
 is_admin: false
 permissions:
   - 'access content'
   - 'access site-wide contact form'
-  - 'access toolbar'
   - 'create application'
-  - 'display eu cookie compliance popup'
   - 'opt-in or out of matomo tracking'
   - 'restful get asu_initialize'
   - 'restful post asu_elasticsearch'
   - 'restful post mailinglist'
+  - 'view application'
   - 'view media'
   - 'view paragraph content accordion'
   - 'view paragraph content accordion_item'
