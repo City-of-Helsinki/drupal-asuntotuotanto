@@ -37,7 +37,7 @@
                 $(event.target).parent().addClass('is-hidden');
                 $(`#application__lottery--hide--submitted[data-application="${id}"]`).removeClass('is-hidden');
               });
-            
+
           }
           else {
             $(event.target).removeClass('throbber');
