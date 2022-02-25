@@ -3,7 +3,6 @@ langcode: en
 status: true
 dependencies:
   config:
-    - filter.format.full_html
     - rest.resource.asu_elasticsearch
     - rest.resource.asu_initialize
     - rest.resource.mailinglist
@@ -11,22 +10,23 @@ dependencies:
     - asu_application
     - contact
     - eu_cookie_compliance
-    - filter
     - helfi_api_base
     - matomo
     - media
     - paragraphs_type_permissions
     - rest
     - system
+    - toolbar
 _core:
   default_config_hash: 83Nuup-6oYkkdAsvg3nrR2pBOgtTXEV1JrzpCCLkYLM
 id: authenticated
-label: 'Authenticated user'
+label: 'Sisäänkirjautunut käyttäjä'
 weight: 1
 is_admin: false
 permissions:
   - 'access content'
   - 'access site-wide contact form'
+  - 'access toolbar'
   - 'create application'
   - 'display eu cookie compliance popup'
   - 'opt-in or out of matomo tracking'
@@ -64,4 +64,3 @@ permissions:
   - 'view paragraph content text'
   - 'view paragraph content text_block_with_link'
   - 'view remote entities'
-  - 'access toolbar'

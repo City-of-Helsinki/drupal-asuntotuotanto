@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - filter.format.full_html
     - media.type.file
     - media.type.image
     - media.type.remote_video
@@ -36,30 +37,35 @@ dependencies:
   module:
     - asu_application
     - block
+    - config_translation
+    - content_lock
     - content_translation
     - eu_cookie_compliance
     - file
+    - filter
     - helfi_api_base
     - locale
     - media
+    - menu_link_attributes
     - menu_link_content
     - node
     - paragraphs
+    - paragraphs_library
     - paragraphs_type_permissions
     - path
     - pathauto
     - redirect
+    - role_delegation
     - scheduler
     - simple_sitemap
     - system
     - taxonomy
     - toolbar
     - view_unpublished
-    - content_lock
 _core:
   default_config_hash: fnOpQQ5r1eprWvQPrJPWRfDqxozQiZnwIdYFPKb0lbM
 id: admin
-label: Administrator
+label: Pääkäyttäjä
 weight: 5
 is_admin: null
 permissions:
@@ -75,15 +81,24 @@ permissions:
   - 'access user profiles'
   - 'administer applications'
   - 'administer blocks'
+  - 'administer content translation'
   - 'administer eu cookie compliance categories'
   - 'administer eu cookie compliance popup'
+  - 'administer hotjar settings'
   - 'administer menu'
   - 'administer nodes'
+  - 'administer paragraphs library'
   - 'administer pathauto'
   - 'administer redirects'
   - 'administer sitemap settings'
+  - 'administer taxonomy'
   - 'administer url aliases'
   - 'administer users'
+  - 'assign admin role'
+  - 'assign content_producer role'
+  - 'assign editor role'
+  - 'assign read_only role'
+  - 'break content lock'
   - 'bypass paragraphs type content access'
   - 'cancel account'
   - 'change own username'
@@ -96,6 +111,7 @@ permissions:
   - 'create media'
   - 'create news content'
   - 'create page content'
+  - 'create paragraph library item'
   - 'create project content'
   - 'create remote entities'
   - 'create remote_video media'
@@ -169,6 +185,7 @@ permissions:
   - 'edit any page content'
   - 'edit any project content'
   - 'edit any remote_video media'
+  - 'edit any service content'
   - 'edit any soundcloud media'
   - 'edit own apartment content'
   - 'edit own article content'
@@ -179,7 +196,9 @@ permissions:
   - 'edit own page content'
   - 'edit own project content'
   - 'edit own remote_video media'
+  - 'edit own service content'
   - 'edit own soundcloud media'
+  - 'edit paragraph library item'
   - 'edit remote entities'
   - 'edit terms in apartment_state_of_sale'
   - 'edit terms in building_types'
@@ -205,29 +224,48 @@ permissions:
   - 'revert news revisions'
   - 'revert page revisions'
   - 'schedule publishing of nodes'
+  - 'set landing_page published on date'
+  - 'set page published on date'
   - 'translate any entity'
   - 'translate apartment node'
+  - 'translate apartment_state_of_sale taxonomy_term'
   - 'translate article node'
+  - 'translate building_types taxonomy_term'
+  - 'translate configuration'
+  - 'translate construction_materials taxonomy_term'
   - 'translate editable entities'
   - 'translate energy_classes taxonomy_term'
   - 'translate faq_category taxonomy_term'
   - 'translate faq_haso taxonomy_term'
   - 'translate faq_hitas taxonomy_term'
   - 'translate file media'
+  - 'translate general_condition taxonomy_term'
+  - 'translate heating_options taxonomy_term'
+  - 'translate holding_type taxonomy_term'
   - 'translate image media'
   - 'translate interface'
   - 'translate keywords taxonomy_term'
   - 'translate landing_page node'
   - 'translate menu_link_content'
+  - 'translate new_development_status taxonomy_term'
   - 'translate news node'
+  - 'translate ownership_type taxonomy_term'
   - 'translate page node'
   - 'translate project node'
   - 'translate remote_video media'
   - 'translate service node'
+  - 'translate services taxonomy_term'
+  - 'translate site_owners taxonomy_term'
   - 'translate soundcloud media'
+  - 'translate tasks taxonomy_term'
   - 'update any media'
   - 'update content translations'
   - 'update media'
+  - 'use menu link attributes'
+  - 'use text format full_html'
+  - 'use text format full_html'
+  - 'use text format minimal'
+  - 'use text format minimal'
   - 'view all media revisions'
   - 'view all revisions'
   - 'view any unpublished apartment content'
@@ -239,6 +277,7 @@ permissions:
   - 'view any unpublished project content'
   - 'view any unpublished service content'
   - 'view landing_page revisions'
+  - 'view media'
   - 'view news revisions'
   - 'view own unpublished content'
   - 'view own unpublished media'
@@ -247,21 +286,3 @@ permissions:
   - 'view scheduled content'
   - 'view the administration theme'
   - 'view unpublished paragraphs'
-  - 'administer hotjar settings'
-  - 'administer paragraphs library'
-  - 'assign admin role'
-  - 'assign content_producer role'
-  - 'assign editor role'
-  - 'assign read_only role'
-  - 'create paragraph library item'
-  - 'edit paragraph library item'
-  - 'set landing_page published on date'
-  - 'set page published on date'
-  - 'translate configuration'
-  - 'use menu link attributes'
-  - 'use text format full_html'
-  - 'use text format minimal'
-  - 'view media'
-  - 'use text format full_html'
-  - 'use text format minimal'
-  - 'break content lock'
