@@ -1,110 +1,69 @@
 (($, Drupal) => {
   Drupal.behaviors.applicationApartmentListing = {
     attach: function attach() {
-      // Variables for Drafted Applications
-      const applicationLotteryDivShow = document.querySelector(
-        "#application__lottery--show--draft"
-      );
-      const applicationLotteryDivHide = document.querySelector(
-        "#application__lottery--hide--draft"
-      );
-      const applicationLotteryLinkShow = document.querySelector(
-        "#application__lottery-link--show--draft"
-      );
-      const applicationLotteryLinkHide = document.querySelector(
-        "#application__lottery-link--hide--draft"
-      );
-      const applicationLotteryResults = document.querySelectorAll(
-        "#application__lottery-results--draft"
-      );
-
-      // Variables for Submitted Applications
-      const applicationLotteryDivShowSubmitted = document.querySelector(
-        "#application__lottery--show--submitted"
-      );
-      const applicationLotteryDivHideSubmitted = document.querySelector(
-        "#application__lottery--hide--submitted"
-      );
-      const applicationLotteryLinkShowSubmitted = document.querySelector(
-        "#application__lottery-link--show--submitted"
-      );
-      const applicationLotteryLinkHideSubmitted = document.querySelector(
-        "#application__lottery-link--hide--submitted"
-      );
-      const applicationLotteryResultsSubmitted = document.querySelectorAll(
-        "#application__lottery-results--submitted"
-      );
-
-      if (applicationLotteryLinkShow !== null) {
-        // Functionality for Drafted Applications
-        applicationLotteryLinkShow.addEventListener("click", () => {
-          // Show lottery results (or: Array.from(applicationLotteryResults)...)
-          [...applicationLotteryResults].forEach((el) =>
-            el.classList.remove("is-hidden")
-          );
-
-          // Hide 'Show apartment listing'
-          applicationLotteryDivShow.classList.add("is-hidden");
-
-          // Show 'Hide apartment listing'
-          applicationLotteryDivHide.classList.remove("is-hidden");
+      // For drafts.
+      let openDraftResultsLinks = document.querySelectorAll('.application__lottery--show--draft');
+      openDraftResultsLinks.forEach(element => {
+        element.addEventListener('click', event=> {
+          const id = $(event.target).parent().data('application')
+          const elements = document.querySelectorAll(`[data-application="${id}"]`)
+          elements.forEach(element=>$(element).removeClass('is-hidden'));
+          $(event.target).parent().addClass('is-hidden');
         });
-      }
+      })
+      let closeDraftResultsLinks = document.querySelectorAll('.application__lottery--hide--draft  > a');
+      closeDraftResultsLinks.forEach(el => el.addEventListener('click', (event) => {
+        const id = $(event.target).parent().data('application')
+        const elementsToHide = document.querySelectorAll(`[data-application="${id}"]`);
+        elementsToHide.forEach(element=>$(element).addClass('is-hidden'));
+        $(event.target).parent().addClass('is-hidden');
+        $(`.application__lottery--show--draft[data-application="${id}"]`).removeClass('is-hidden');
+      }));
 
-      if (applicationLotteryLinkHide !== null) {
-        applicationLotteryLinkHide.addEventListener("click", () => {
-          // Hide lottery results
-          [...applicationLotteryResults].forEach((el) =>
-            el.classList.add("is-hidden")
-          );
+      // For submitted applications.
+      let openResultsLinks = document.querySelectorAll('.application__lottery-link--show--submitted');
+      openResultsLinks.forEach(element=>{
+        element.addEventListener("click", (event) => {
+          let id = $(event.target).parent().data('application');
+          $(event.target).addClass('throbber');
 
-          // Show 'Show apartment listing'
-          applicationLotteryDivShow.classList.remove("is-hidden");
+          // Check if we have already loaded the data.
+          if ($(event.target).data('loaded') != 1) {
+            getApartmentResults(event,
+              () => {
+                const elements = document.querySelectorAll(`[data-application="${id}"]`);
+                elements.forEach(el=>$(el).removeClass('is-hidden'))
+                $(event.target).removeClass('throbber');
+                $(event.target).parent().addClass('is-hidden');
+                $(`#application__lottery--hide--submitted[data-application="${id}"]`).removeClass('is-hidden');
+              });
 
-          // Hide 'Hide apartment listing'
-          applicationLotteryDivHide.classList.add("is-hidden");
+          }
+          else {
+            $(event.target).removeClass('throbber');
+            $(event.target).parent().addClass('is-hidden');
+            $(`.application__lottery-results-submitted[data-application="${id}"]`).removeClass('is-hidden');
+            $(`#application__lottery--hide--submitted[data-application="${id}"]`).removeClass('is-hidden');
+          }
         });
-      }
+      })
 
-      if (applicationLotteryLinkShowSubmitted !== null) {
-        // Functionality for Submitted Applications
-        applicationLotteryLinkShowSubmitted.addEventListener("click", (event) => {
-          // Show lottery results (or: Array.from(applicationLotteryResults)...)
-          [...applicationLotteryResultsSubmitted].forEach((el) => {
-              getApartmentResults(event, function(){ el.classList.remove("is-hidden"); });
-            });
-
-          // Hide 'Show apartment listing'
-          applicationLotteryDivShowSubmitted.classList.add("is-hidden");
-          // Show 'Hide apartment listing'
-          applicationLotteryDivHideSubmitted.classList.remove("is-hidden");
-          event.stopPropagation()
+      let hideButtonLinks = document.querySelectorAll('.application__lottery-link--hide');
+      hideButtonLinks.forEach(element=>{
+        // hide functionality on all hide buttons
+        element.addEventListener("click", (event) => {
+          let id = $(event.target).parent().data('application');
+          $(`.application__lottery-results-submitted[data-application="${id}"]`).addClass('is-hidden');
+          $(`.application__lottery--show[data-application="${id}"]`).removeClass('is-hidden');
+          $(event.target).parent().addClass('is-hidden');
         });
-      }
+      })
 
-      if (applicationLotteryLinkHideSubmitted !== null) {
-        applicationLotteryLinkHideSubmitted.addEventListener("click", (event) => {
-          // Hide lottery results
-          [...applicationLotteryResultsSubmitted].forEach((el) => el.classList.add("is-hidden"));
-
-          // Show 'Show apartment listing'
-          applicationLotteryDivShowSubmitted.classList.remove("is-hidden");
-
-          // Hide 'Hide apartment listing'
-          applicationLotteryDivHideSubmitted.classList.add("is-hidden");
-        });
-      }
-
-      const getApartmentResults = (event, cb) => {
+      const getApartmentResults = (event, callback) => {
         const element = jQuery(event.target)
 
-        if (element.data('loaded') == 1) {
-          cb();
-          return;
-        }
         element.data('loaded', 1);
-        const id = element.data('application');
-
+        const id = element.parent().data('application');
         jQuery.ajax({
           url: "application/results",
           method : 'POST',
@@ -124,13 +83,15 @@
                 });
               });
             }
-            cb();
+            callback();
           },
           failed: function(results){
-            cb();
+            callback();
           },
+          complete: function() {
+            callback();
+          }
         });
-
       };
     },
   };
