@@ -92,7 +92,7 @@ display:
       access:
         type: perm
         options:
-          perm: 'access content'
+          perm: 'view application'
       cache:
         type: none
         options: {  }
@@ -501,7 +501,9 @@ display:
         fields: false
       display_description: ''
       display_extenders:
-        metatag_display_extender: {  }
+        metatag_display_extender:
+          metatags: {  }
+          tokenize: false
       path: user/applications
     cache_metadata:
       max-age: -1

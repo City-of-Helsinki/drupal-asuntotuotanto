@@ -6,6 +6,6 @@ administer applications:
   title: 'Administer applications'
   restrict access: true
 
-#send application:
-  #title: 'Send application'
-  #restrict access: true
+view application:
+  title: 'View application'
+  restrict access: true

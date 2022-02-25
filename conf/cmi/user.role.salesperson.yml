@@ -6,6 +6,7 @@ dependencies:
     - media.type.file
     - media.type.image
     - media.type.remote_video
+    - media.type.soundcloud
     - node.type.apartment
     - node.type.article
     - node.type.landing_page
@@ -43,19 +44,23 @@ dependencies:
     - paragraphs
     - paragraphs_type_permissions
     - path
+    - redirect
+    - role_delegation
     - system
     - taxonomy
     - toolbar
     - view_unpublished
 id: salesperson
 label: Salesperson
-weight: -6
+weight: -3
 is_admin: null
 permissions:
+  - 'access administration pages'
   - 'access content'
   - 'access content overview'
   - 'access files overview'
   - 'access media overview'
+  - 'access site in maintenance mode'
   - 'access taxonomy overview'
   - 'access toolbar'
   - 'access user profiles'
@@ -63,10 +68,14 @@ permissions:
   - 'administer applications'
   - 'administer menu'
   - 'administer nodes'
+  - 'administer redirects'
   - 'administer url aliases'
   - 'administer users'
+  - 'assign customer role'
+  - 'assign salesperson role'
   - 'bypass node access'
   - 'bypass paragraphs type content access'
+  - 'cancel account'
   - 'change own username'
   - 'create apartment content'
   - 'create application'
@@ -224,6 +233,7 @@ permissions:
   - 'edit terms in site_owners'
   - 'edit terms in states_of_sale'
   - 'edit terms in tasks'
+  - 'translate any entity'
   - 'translate apartment node'
   - 'translate apartment_state_of_sale taxonomy_term'
   - 'translate article node'
@@ -234,9 +244,11 @@ permissions:
   - 'translate faq_category taxonomy_term'
   - 'translate faq_haso taxonomy_term'
   - 'translate faq_hitas taxonomy_term'
+  - 'translate file media'
   - 'translate general_condition taxonomy_term'
   - 'translate heating_options taxonomy_term'
   - 'translate holding_type taxonomy_term'
+  - 'translate image media'
   - 'translate interface'
   - 'translate keywords taxonomy_term'
   - 'translate landing_page node'
@@ -246,9 +258,11 @@ permissions:
   - 'translate ownership_type taxonomy_term'
   - 'translate page node'
   - 'translate project node'
+  - 'translate remote_video media'
   - 'translate service node'
   - 'translate services taxonomy_term'
   - 'translate site_owners taxonomy_term'
+  - 'translate soundcloud media'
   - 'translate tasks taxonomy_term'
   - 'update any media'
   - 'update content translations'
@@ -282,6 +296,7 @@ permissions:
   - 'update paragraph content steps_list'
   - 'update paragraph content text'
   - 'update paragraph content text_block_with_link'
+  - 'view all revisions'
   - 'view any unpublished apartment content'
   - 'view any unpublished article content'
   - 'view any unpublished content'
@@ -289,6 +304,7 @@ permissions:
   - 'view any unpublished news content'
   - 'view any unpublished page content'
   - 'view any unpublished project content'
+  - 'view any unpublished service content'
   - 'view media'
   - 'view own unpublished content'
   - 'view own unpublished media'

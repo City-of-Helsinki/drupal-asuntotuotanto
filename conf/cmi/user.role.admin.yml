@@ -66,7 +66,7 @@ _core:
   default_config_hash: fnOpQQ5r1eprWvQPrJPWRfDqxozQiZnwIdYFPKb0lbM
 id: admin
 label: Pääkäyttäjä
-weight: 5
+weight: -2
 is_admin: null
 permissions:
   - 'access administration pages'
@@ -96,8 +96,10 @@ permissions:
   - 'administer users'
   - 'assign admin role'
   - 'assign content_producer role'
+  - 'assign customer role'
   - 'assign editor role'
   - 'assign read_only role'
+  - 'assign salesperson role'
   - 'break content lock'
   - 'bypass paragraphs type content access'
   - 'cancel account'

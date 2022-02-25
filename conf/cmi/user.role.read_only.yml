@@ -8,7 +8,7 @@ dependencies:
     - view_unpublished
 id: read_only
 label: Lukija
-weight: 2
+weight: -6
 is_admin: null
 permissions:
   - 'access toolbar'
