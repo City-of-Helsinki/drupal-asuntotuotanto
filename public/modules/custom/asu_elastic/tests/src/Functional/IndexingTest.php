@@ -103,6 +103,7 @@ final class IndexingTest extends ExistingSiteBase {
     return [
       'type' => 'apartment',
       'title' => 'actual apartment title',
+      'field_apartment_number' => 'A1',
       'body' => 'This is the description of the apartment',
       'field_showing_times' => [$d->format('Y-m-d H:i:s')],
     ];
@@ -125,6 +126,7 @@ final class IndexingTest extends ExistingSiteBase {
       'type' => 'project',
       'title' => 'Uusi projekti',
       'body' => 'This is the description of the project',
+      'field_street_address' => 'Testaajankatu 3',
       'field_housing_company' => 'Taloyhtiö Yritys Oy',
       'field_construction materials' => [$construction_material],
       'field_heating_options' => [$heating_option],

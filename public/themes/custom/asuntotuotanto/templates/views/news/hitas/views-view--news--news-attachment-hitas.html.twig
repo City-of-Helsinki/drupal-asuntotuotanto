@@ -43,7 +43,9 @@
 %}
 <div{{attributes.addClass(classes)}}>
   {{ title_prefix }}
-  {{ title }}
+  {% trans %}
+    {{ title }}
+  {% endtrans %}
   {{ title_suffix }}
 
   {% if header %}

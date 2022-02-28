@@ -128,19 +128,23 @@ function asu_content_entity_presave(EntityInterface $entity) {
     method_exists($entity, 'getType')
   ) {
     if ($entity->getType() == 'apartment') {
-      $title = t('Apartment');
-      /** @var \Drupal\asu_content\Entity\Apartment $entity */
-      if ($entity->field_apartment_address->first()->getValue()['#markup']) {
-        $markup = $entity->field_apartment_address->first()->getValue();
-        $title = reset($markup);
-      }
-      elseif (empty($entity->getTitle())) {
-        $title = !empty($entity->field_apartment_number->value)
-          ? $entity->field_apartment_number->value
-          : $title;
-      }
 
-      $entity->setTitle($title);
+      // Apartment title is generated using project information.
+      if (!$entity->isNew()) {
+        $title = $entity->getTitle() ?? t('Apartment');
+        /** @var \Drupal\asu_content\Entity\Apartment $entity */
+
+        if ($entity->field_apartment_address->first()->getValue()['#markup']) {
+          $markup = $entity->field_apartment_address->first()->getValue();
+          $title = reset($markup);
+        }
+        elseif (empty($entity->getTitle())) {
+          $title = !empty($entity->field_apartment_number->value)
+            ? $entity->field_apartment_number->value
+            : $title;
+        }
+        $entity->setTitle($title);
+      }
 
       // When sold, unpublish apartments.
       if ($entity->isPublished()) {
@@ -159,12 +163,27 @@ function asu_content_entity_presave(EntityInterface $entity) {
     }
 
     if ($entity->getType() == 'project') {
-      /** @var \Drupal\asu_content\Entity\Project $entity */
+
+      // If project address changes, must apartment address change as well.
       $archivedChanged = FALSE;
+      $addressChanged = FALSE;
+      $housingCompanyChanged = FALSE;
       if ($original = $entity->original) {
         $archivedChanged = ($entity->field_archived->value !== $original->field_archived->value);
+        $addressChanged = ($entity->field_street_address->value !== $original->field_street_address->value);
+        $housingCompanyChanged = ($entity->field_housing_company->value !== $original->field_housing_company->value);
+
+        if ($addressChanged || $housingCompanyChanged) {
+          /** @var \Drupal\asu_content\Entity\Apartment $apartment */
+          foreach ($entity->getApartmentEntities() as $apartment) {
+            $address = "{$entity->field_street_address->value} {$apartment->field_apartment_number->value}";
+            $apartment->set('title', $address);
+            $apartment->save();
+          }
+        }
       }
 
+      // Handle archived value
       // Resetting published & archived statuses since project was still published when archiving.
       if (
         $archivedChanged &&
@@ -206,6 +225,14 @@ function asu_content_entity_presave(EntityInterface $entity) {
  * Makes sure to update referred apartments after project node save.
  */
 function asu_content_entity_update($entity) {
+
+  if (
+    $entity instanceof EntityInterface &&
+    method_exists($entity, 'getType') &&
+    $entity->getType() == 'apartment'
+  ) {
+  }
+
   if (
     $entity instanceof EntityInterface &&
     method_exists($entity, 'getType') &&
@@ -254,7 +281,7 @@ function asu_content_node_insert(Node $node) {
         'type' => 'apartment',
         'title' => '',
         'field_apartment_number' => 'A0',
-        'status' => 0,
+        'status' => 1,
       ]);
       $apartment->save();
 

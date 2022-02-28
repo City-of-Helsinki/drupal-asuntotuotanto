@@ -101,6 +101,7 @@ dependencies:
     - field.field.node.project.field_street_address
     - field.field.node.project.field_tasks
     - field.field.node.project.field_transfer_restriction
+    - field.field.node.project.field_upcoming_description
     - field.field.node.project.field_usage_fees
     - field.field.node.project.field_virtual_presentation_url
     - field.field.node.project.field_warranty_deposit_releas
@@ -116,7 +117,6 @@ dependencies:
     - file
     - link
     - options
-    - slick
     - text
     - user
 id: node.project.default
@@ -525,7 +525,7 @@ content:
     weight: 7
     region: content
   field_images:
-    type: slick_image
+    type: asu_custom_slick_formatter
     label: hidden
     settings:
       caption:
@@ -577,6 +577,9 @@ content:
       use_theme_field: false
       preserve_keys: false
       visible_items: null
+      lazy: ''
+      loading: lazy
+      preload: false
     third_party_settings: {  }
     weight: 41
     region: content
@@ -867,6 +870,13 @@ content:
       format_custom_true: ''
     third_party_settings: {  }
     weight: 53
+    region: content
+  field_upcoming_description:
+    type: basic_string
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 92
     region: content
   field_usage_fees:
     type: basic_string
