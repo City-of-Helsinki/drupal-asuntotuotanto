@@ -8,8 +8,8 @@ id: tunnistamo
 label: Tunnistamo
 plugin: tunnistamo
 settings:
-  client_id: test-id
-  client_secret: my-test-client-secret
+  client_id: ''
+  client_secret: ''
   is_production: 0
   redirect_url: ''
   auto_login: 0
