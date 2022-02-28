@@ -27,14 +27,83 @@ function asu_user_entity_type_alter(array &$entity_types) {
 
 /**
  * Implements hook_openid_connect_userinfo_save().
+ *
+ * After user has authenticated in profiili.
+ * New backend profile is created based on that data.
  */
 function asu_user_openid_connect_userinfo_save(UserInterface $account, array $context) {
-  dump($context['user_data']);
-  dump($context['userinfo']);
-  die();
+  /*
+  $context['user_data'] = [
+  "iss" => Issuer url
+  "sub" => The remote user identifier
+  "aud" => "asuntotuotanto-ui-dev"
+  "exp" => 12345 (int)
+  "iat" => 12345 (int)
+  "auth_time" => 12345 (int)
+  "at_hash" => "ABC123" (string)
+  "email" => (string/email)
+  "email_verified" => false (bool)
+  "name" => "given_name family_name" (string)
+  "given_name" => "Abcd" (string)
+  "family_name" => "Efghij" (string)
+  "nickname" => "Abcf" (string)
+  "ad_groups" => [] (array)
+  "azp" => "asuntotuotanto-ui-dev"
+  "sid" => "" (uuid)
+  "amr" => "heltunnistussuomifi"
+  "loa" => "substantial"
+  ]
+  $context['userinfo'] = [
+  "sub" => //The remote user identifier ^
+  "email" => (string/email)
+  "email_verified" => false (bool)
+  "name" => "given_name family_name"
+  "given_name" => "Abcd" (string)
+  "family_name" => "Efghij" (string)
+  "nickname" => "Abcf" (string)
+  "ad_groups" => [] (array)
+  ]
+   */
 
   if ($context['is_new']) {
+    try {
+      /** @var \Drupal\asu_api\Api\BackendApi\BackendApi $backend */
+      $backend = \Drupal::service('asu_backendapi');
+
+      // Array keys must match "external_data_map" configuration file external field names.
+      $userInformation = [
+        'first_name' => $context['userinfo']['given_name'],
+        'last_name' => $context['userinfo']['family_name'],
+        'phone_number' => '-',
+        'street_address' => '-',
+        'postal_code' => '00000',
+        'city' => '-',
+        'date_of_birth' => (new \Datetime())->format('Y-m-d'),
+      ];
+
+      $request = new CreateUserRequest($account, $userInformation);
+      $response = $backend->send($request);
+
+    }
+    catch (\Exception $e) {
+      \Drupal::logger('asu_user')
+        ->emergency(
+          'Unable to create backend account for customer: ' . $e->getMessage()
+        );
+      \Drupal::messenger()->addWarning(t('Something went wrong while creating new account'));
+      return;
+    }
+
+    // @todo What todo.
+    // Profiili returns email_verified value.
+    // Should we just use that and make the process properly.
+    // Or just hope that everyone has valid email in profiili.
+    $helsinkiProfiiliUid = $context['userinfo']['sub'];
     $account->type = 'customer';
+    $account->set('field_hel_profiili_uid', $helsinkiProfiiliUid);
+    $account->set('field_email_is_valid', 1);
+    $account->set('field_backend_profile', $response->getProfileId());
+    $account->set('field_backend_password', $response->getPassword());
   }
 }
 
