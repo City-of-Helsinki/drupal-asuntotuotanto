@@ -1,0 +1,19 @@
+uuid: e5604135-a7fc-4d8d-97b0-0047357613ba
+langcode: fi
+status: true
+dependencies:
+  config:
+    - field.storage.user.field_hel_profiili_uid
+    - user_bundle.user_type.user
+id: user.user.field_hel_profiili_uid
+field_name: field_hel_profiili_uid
+entity_type: user
+bundle: user
+label: hel_profiili_uid
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

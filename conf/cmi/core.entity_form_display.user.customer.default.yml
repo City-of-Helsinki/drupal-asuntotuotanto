@@ -5,7 +5,6 @@ dependencies:
   config:
     - field.field.user.customer.field_backend_password
     - field.field.user.customer.field_backend_profile
-    - field.field.user.customer.field_backend_profile_id
     - field.field.user.customer.field_email_is_valid
     - user_bundle.user_type.customer
 id: user.customer.default
@@ -22,7 +21,6 @@ hidden:
   contact: true
   field_backend_password: true
   field_backend_profile: true
-  field_backend_profile_id: true
   field_email_is_valid: true
   langcode: true
   language: true

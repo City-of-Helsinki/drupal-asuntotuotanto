@@ -7,8 +7,8 @@ dependencies:
     - field.field.user.user.field_backend_password
     - field.field.user.user.field_backend_profile
     - field.field.user.user.field_email_is_valid
-  module:
-    - user
+    - field.field.user.user.field_hel_profiili_uid
+    - user_bundle.user_type.user
 id: user.user.register
 targetEntityType: user
 bundle: user
@@ -24,6 +24,11 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
+  matomo:
+    weight: 3
+    region: content
+    settings: {  }
+    third_party_settings: {  }
   translation:
     weight: 12
     region: content
@@ -34,6 +39,7 @@ hidden:
   field_backend_profile: true
   field_backend_profile_id: true
   field_email_is_valid: true
+  field_hel_profiili_uid: true
   langcode: true
   language: true
   path: true
