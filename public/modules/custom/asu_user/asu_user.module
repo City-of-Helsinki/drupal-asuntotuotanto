@@ -26,6 +26,19 @@ function asu_user_entity_type_alter(array &$entity_types) {
 }
 
 /**
+ * Implements hook_openid_connect_userinfo_save().
+ */
+function asu_user_openid_connect_userinfo_save(UserInterface $account, array $context) {
+  dump($context['user_data']);
+  dump($context['userinfo']);
+  die();
+
+  if ($context['is_new']) {
+    $account->type = 'customer';
+  }
+}
+
+/**
  * Implements hook_user_login().
  */
 function asu_user_user_login(UserInterface $account) {

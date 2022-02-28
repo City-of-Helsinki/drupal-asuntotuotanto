@@ -1,19 +1,19 @@
 _core:
   default_config_hash: YpBA3MmDuJpZ9SM3DE4kR0lTY89bf2y3g0sS7s3TQ4k
 always_save_userinfo: false
-connect_existing_users: false
+connect_existing_users: true
 override_registration_settings: true
 end_session_enabled: true
-user_login_display: above
+user_login_display: hidden
 redirect_login: user
 redirect_logout: ''
 userinfo_mappings:
   timezone: zoneinfo
 role_mappings:
+  customer: {  }
   supervisor: {  }
-  salesperson: {  }
   read_only: {  }
   content_producer: {  }
-  customer: {  }
   editor: {  }
+  salesperson: {  }
   admin: {  }
