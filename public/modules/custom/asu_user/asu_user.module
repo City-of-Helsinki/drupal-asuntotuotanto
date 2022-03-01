@@ -91,7 +91,7 @@ function asu_user_openid_connect_userinfo_save(UserInterface $account, array $co
         ->emergency(
           'Unable to create backend account for customer: ' . $e->getMessage()
         );
-      \Drupal::messenger()->addWarning(t('Something went wrong while creating new account'));
+      // \Drupal::messenger()->addWarning(t('Something went wrong while creating new account'));
       return;
     }
 
@@ -108,7 +108,9 @@ function asu_user_openid_connect_userinfo_save(UserInterface $account, array $co
     $account->set('langcode', 'fi');
     $account->set('preferred_langcode', 'fi');
     $account->set('preferred_admin_langcode', 'fi');
+    \Drupal::messenger()->addMessage(t('Thank you for registering. Please update your user information before proceeding.'));
   }
+
 }
 
 /**
