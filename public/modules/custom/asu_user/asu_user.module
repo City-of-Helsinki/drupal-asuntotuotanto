@@ -34,24 +34,24 @@ function asu_user_entity_type_alter(array &$entity_types) {
 function asu_user_openid_connect_userinfo_save(UserInterface $account, array $context) {
   /*
   $context['user_data'] = [
-  "iss" => Issuer url
-  "sub" => The remote user identifier
-  "aud" => "asuntotuotanto-ui-dev"
-  "exp" => 12345 (int)
-  "iat" => 12345 (int)
-  "auth_time" => 12345 (int)
-  "at_hash" => "ABC123" (string)
-  "email" => (string/email)
+  "iss"       => Issuer url
+  "sub"       => The remote user identifier
+  "aud"       => "asuntotuotanto-ui-dev"
+  "exp"       => (int)
+  "iat"       => (int)
+  "auth_time" => (int)
+  "at_hash"   => (string)
+  "email"     => (string/email)
   "email_verified" => false (bool)
-  "name" => "given_name family_name" (string)
-  "given_name" => "Abcd" (string)
+  "name"      => "given_name family_name" (string)
+  "given_name"=> "Abcd" (string)
   "family_name" => "Efghij" (string)
-  "nickname" => "Abcf" (string)
+  "nickname"  => "Abcf" (string)
   "ad_groups" => [] (array)
-  "azp" => "asuntotuotanto-ui-dev"
-  "sid" => "" (uuid)
-  "amr" => "heltunnistussuomifi"
-  "loa" => "substantial"
+  "azp"       => "asuntotuotanto-ui-dev"
+  "sid"       => "" (uuid)
+  "amr"       => "heltunnistussuomifi"
+  "loa"       => "substantial"
   ]
   $context['userinfo'] = [
   "sub" => //The remote user identifier ^
@@ -66,16 +66,17 @@ function asu_user_openid_connect_userinfo_save(UserInterface $account, array $co
    */
 
   if ($context['is_new']) {
+
+    $account->set('type', 'customer');
     try {
       /** @var \Drupal\asu_api\Api\BackendApi\BackendApi $backend */
       $backend = \Drupal::service('asu_backendapi');
 
-      // Array keys must match "external_data_map" configuration file external field names.
       $userInformation = [
         'first_name' => $context['userinfo']['given_name'],
         'last_name' => $context['userinfo']['family_name'],
-        'phone_number' => '-',
-        'street_address' => '-',
+        'phone_number' => '00000',
+        'address' => '-',
         'postal_code' => '00000',
         'city' => '-',
         'date_of_birth' => (new \Datetime())->format('Y-m-d'),
@@ -99,11 +100,14 @@ function asu_user_openid_connect_userinfo_save(UserInterface $account, array $co
     // Should we just use that and make the process properly.
     // Or just hope that everyone has valid email in profiili.
     $helsinkiProfiiliUid = $context['userinfo']['sub'];
-    $account->type = 'customer';
+
     $account->set('field_hel_profiili_uid', $helsinkiProfiiliUid);
     $account->set('field_email_is_valid', 1);
     $account->set('field_backend_profile', $response->getProfileId());
     $account->set('field_backend_password', $response->getPassword());
+    $account->set('langcode', 'fi');
+    $account->set('preferred_langcode', 'fi');
+    $account->set('preferred_admin_langcode', 'fi');
   }
 }
 
