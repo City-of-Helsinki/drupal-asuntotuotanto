@@ -154,6 +154,8 @@ if ($env = getenv('APP_ENV')) {
     $config['search_api.server.asuntotuotanto']['backend_config']['host'] = getenv('ASU_ELASTICSEARCH_ADDRESS') ? str_replace(['https://', ':443'], '', getenv('ASU_ELASTICSEARCH_ADDRESS')) : '';
     $config['search_api.server.asuntotuotanto']['backend_config']['port'] = '443';
 
+    $config['raven.settings']['environment'] = 'development';
+
   }
 
   // Testing environment.
@@ -175,6 +177,7 @@ if ($env = getenv('APP_ENV')) {
     $config['search_api.server.asuntotuotanto']['backend_config']['host'] = getenv('ASU_ELASTICSEARCH_ADDRESS') ? str_replace(['https://', ':443'], '', getenv('ASU_ELASTICSEARCH_ADDRESS')) : '';
     $config['search_api.server.asuntotuotanto']['backend_config']['port'] = '443';
 
+    $config['raven.settings']['environment'] = 'testing';
   }
 
   // Staging environment.
@@ -195,6 +198,8 @@ if ($env = getenv('APP_ENV')) {
     $config['search_api.server.asuntotuotanto']['backend_config']['scheme'] = 'https';
     $config['search_api.server.asuntotuotanto']['backend_config']['host'] = getenv('ASU_ELASTICSEARCH_ADDRESS') ? str_replace(['https://', ':443'], '', getenv('ASU_ELASTICSEARCH_ADDRESS')) : '';
     $config['search_api.server.asuntotuotanto']['backend_config']['port'] = '443';
+
+    $config['raven.settings']['environment'] = 'staging';
   }
 
   // Production environment.
@@ -215,5 +220,7 @@ if ($env = getenv('APP_ENV')) {
     $config['search_api.server.asuntotuotanto']['backend_config']['scheme'] = 'https';
     $config['search_api.server.asuntotuotanto']['backend_config']['host'] = getenv('ASU_ELASTICSEARCH_ADDRESS') ? str_replace(['https://', ':443'], '', getenv('ASU_ELASTICSEARCH_ADDRESS')) : '';
     $config['search_api.server.asuntotuotanto']['backend_config']['port'] = '443';
+
+    $config['raven.settings']['environment'] = 'production';
   }
 }
