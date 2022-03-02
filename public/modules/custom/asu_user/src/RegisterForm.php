@@ -163,7 +163,7 @@ class RegisterForm extends TypedRegisterForm {
       $saved = $account->save();
     }
     catch (\Exception $e) {
-      \Drupal::logger('asu_user')->emergency(t('Customer failed to create an account: ' . $e->getMessage()));
+      \Drupal::logger('asu_user')->emergency('Customer failed to create an account: ' . $e->getMessage());
     }
 
     if ($saved === SAVED_NEW) {
