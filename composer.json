@@ -63,6 +63,7 @@
         "drupal/paragraphs_asymmetric_translation_widgets": "^1.0@beta",
         "drupal/pathauto": "^1.8",
         "drupal/rabbit_hole": "^1.0@beta",
+        "drupal/raven": "^3.2",
         "drupal/redirect": "^1.6",
         "drupal/registration_role": "^1.1",
         "drupal/restui": "^1.19",
