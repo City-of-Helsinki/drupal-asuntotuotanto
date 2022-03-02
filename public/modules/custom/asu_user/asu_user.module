@@ -42,7 +42,7 @@ function asu_user_user_login(UserInterface $account) {
  * Implements hook_openid_connect_userinfo_save().
  *
  * After user has authenticated in profiili.
- * New backend profile is created based on that data.
+ * New backend profile is also created based on that data.
  */
 function asu_user_openid_connect_userinfo_save(UserInterface $account, array $context) {
   $helsinkiProfiiliUid = $context['userinfo']['sub'];
@@ -92,7 +92,7 @@ function asu_validate_email(UserInterface $account) {
  */
 function asu_send_user_email_verification_reminder(UserInterface $account) {
   if ($account->field_email_is_valid->value == 0) {
-    // Prevent sending email verification mail.
+    // Prevent sending email verification mail if necessary.
     $sendMail = $account->getLastAccessedTime() != 0 && (time() - $account->getCreatedTime() >= 86400);
     if ($sendMail) {
       asu_send_user_email('asu_email_approval_required', $account);
@@ -223,13 +223,13 @@ function asu_user_form_user_customer_form_alter(&$form, FormStateInterface &$for
  * Update user data to backend.
  */
 function user_edit_submit(array $form, FormStateInterface &$form_state) {
-  /** @var \Drupal\asu_api\Api\BackendApi\BackendApi $bakendApi */
-  $backendApi = \Drupal::service('asu_api.backendapi');
   $user = User::load(\Drupal::currentUser()->id());
-
   if (!$user->hasRole('customer')) {
     return;
   }
+
+  /** @var \Drupal\asu_api\Api\BackendApi\BackendApi $bakendApi */
+  $backendApi = \Drupal::service('asu_api.backendapi');
 
   try {
     $updateRequest = new UpdateUserRequest(
