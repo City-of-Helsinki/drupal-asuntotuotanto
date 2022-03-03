@@ -3,7 +3,6 @@
 namespace Drupal\asu_content;
 
 use Drupal\asu_content\Entity\Project;
-use Psr\Log\LoggerInterface;
 
 /**
  * Class ProjectUpdater.
@@ -11,58 +10,35 @@ use Psr\Log\LoggerInterface;
  * Update nodes based on the datetimes.
  */
 class ProjectUpdater {
-
-  private const APPLICATION_START = 'field_application_start_time';
-  private const APPLICATION_END = 'field_application_end_time';
   private const APARTMENT_APPLICATION_TARGET_STATE = 'open_for_applications';
-  private const APARTMENT_RESERVED_TARGET_STATE = 'reserved';
-  private const APARTMENT_RESERVED_HASO_TARGET_STATE = 'reserved_haso';
 
   /**
-   * Logger.
+   * Update projects & project's apartments to for sale state.
    *
-   * @var \Psr\Log\LoggerInterface
+   * @param \Drupal\asu_content\Entity\Project $project
+   *   Project node to update.
+   *
+   * @throws \Drupal\Core\Entity\EntityStorageException
    */
-  private LoggerInterface $logger;
-
-  /**
-   * Constructor.
-   */
-  public function __construct(LoggerInterface $logger) {
-    $this->logger = $logger;
+  public function updateProjectStateToForSale(Project $project) {
+    $this->updateApartmentsOpenForApplication($project);
+    $project->set('field_state_of_sale', 'for_sale');
+    $project->save();
   }
 
   /**
-   * Update Apartments's state of sale based on Project's schedule.
+   * Update projects & project's apartments to reserved state.
    *
-   * @param Drupal\asu_content\Entity\Project $project
-   *   Project node.
+   * @param \Drupal\asu_content\Entity\Project $project
+   *   Project node to update.
    *
-   * @return int|mixed|string|null
-   *   Project id.
-   *
-   * @throws \Exception
+   * @throws \Drupal\Core\Entity\EntityStorageException
    */
-  public function updateApartmentStateByApplicationTime(Project $project) {
-    if (!isset($project->{self::APPLICATION_START})) {
-      $message = 'Application start time field is required';
-      throw new \InvalidArgumentException($message);
-    }
-
-    if (!isset($project->{self::APPLICATION_END})) {
-      $message = 'Application end time field is required';
-      throw new \InvalidArgumentException($message);
-    }
-
-    if ($project->isApplicationPeriod() &&
-      !$this->isProjectSetOpenForApplications($project)) {
-      return $this->updateApartmentsOpenForApplication($project);
-    }
-
-    if ($project->isApplicationPeriod('after') &&
-        !$this->isProjectSetReserved($project)) {
-      return $this->updateApartmentsReserved($project);
-    }
+  public function updateProjectStateToReserved(Project $project) {
+    $reserved = $project->getOwnershipType() == 'haso' ? 'reserved_haso' : 'reserved';
+    $this->updateApartmentsReserved($project, $reserved);
+    $project->set('field_state_of_sale', 'processing');
+    $project->save();
   }
 
   /**
@@ -86,64 +62,21 @@ class ProjectUpdater {
   /**
    * Update project apartments to new state after application period.
    *
-   * @param Drupal\asu_content\Entity\Project $project
+   * @param \Drupal\asu_content\Entity\Project $project
    *   Project node.
+   * @param string $reserved
+   *   Reserved state.
    *
    * @return int|mixed|string|null
    *   Project id.
    */
-  private function updateApartmentsReserved(Project $project) {
+  private function updateApartmentsReserved(Project $project, string $reserved) {
     $apartments = $project->getApartmentEntities();
     foreach ($apartments as $apartment) {
-      $apartment->field_apartment_state_of_sale = self::APARTMENT_RESERVED_TARGET_STATE;
+      $apartment->field_apartment_state_of_sale = $reserved;
       $apartment->save();
     }
     return $project->id();
-  }
-
-  /**
-   * Check if project apartments already set open for applications.
-   *
-   * @param Drupal\asu_content\Entity\Project $project
-   *   Project node.
-   *
-   * @return bool
-   *   Has projects apartments already set as open to applications.
-   *
-   * @throws \Exception
-   */
-  private function isProjectSetOpenForApplications(Project $project): bool {
-    $apartments = $project->getApartmentEntities();
-    if (!$apartment = reset($apartments)) {
-      throw new \Exception('Project has no apartments.');
-    }
-    if ($apartment->field_apartment_state_of_sale->target_id === self::APARTMENT_APPLICATION_TARGET_STATE) {
-      return TRUE;
-    }
-    return FALSE;
-  }
-
-  /**
-   * Check if project's apartments already been updated.
-   *
-   * @param Drupal\asu_content\Entity\Project $project
-   *   Project node.
-   *
-   * @return bool
-   *   Has project been updated.
-   *
-   * @throws \Exception
-   */
-  private function isProjectSetReserved(Project $project) {
-    $apartments = $project->field_apartments->referencedEntities();
-    if (!$apartment = reset($apartments)) {
-      throw new \Exception('Project has no apartments.');
-    }
-    if ($apartment->field_apartment_state_of_sale->target_id === self::APARTMENT_RESERVED_TARGET_STATE ||
-       $apartment->field_apartment_state_of_sale->target_id === self::APARTMENT_RESERVED_HASO_TARGET_STATE) {
-      return TRUE;
-    }
-    return FALSE;
   }
 
 }
