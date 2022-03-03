@@ -109,7 +109,6 @@ final class ContentTest extends ExistingSiteBase {
       'type' => 'project',
       'status' => TRUE,
       'title' => 'Uusi projekti',
-      'field_ownership_type' => '',
       'body' => 'This is the description of the project',
       'field_street_address' => 'Testaajankatu 3',
       'field_housing_company' => 'Taloyhtiö Yritys Oy',
