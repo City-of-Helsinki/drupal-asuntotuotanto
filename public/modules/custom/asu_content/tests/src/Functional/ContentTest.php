@@ -18,7 +18,7 @@ use weitzman\DrupalTestTraits\ExistingSiteBase;
 final class ContentTest extends ExistingSiteBase {
 
   /**
-   * Test the automated state change from pre-marketing to applicable.
+   * Test the automated state changes from pre-marketing to applicable to reserved.
    */
   public function testApplicationStateChanges() {
     $apartmentData = $this->apartmentData('apartment_for_sale');
@@ -48,17 +48,25 @@ final class ContentTest extends ExistingSiteBase {
 
     // Assert state when application end time is in the past.
     $this->assertEquals($newProject->field_state_of_sale->target_id, 'processing', 'Project should be processing');
-    $this->assertEquals(in_array($newApartment->field_apartment_state_of_sale->target_id, ['reserved', 'reserved_haso']), 'Apartment should be reserved');
+    $this->assertTrue(
+      in_array($newApartment->field_apartment_state_of_sale->target_id,
+          ['reserved', 'reserved_haso']
+        ),
+      'Apartment should be reserved'
+    );
 
   }
 
   /**
    * Get apartment data.
    *
+   * @param string $stateOfSale
+   *   Apartment state of sale.
+   *
    * @return array
    *   Values for createnode function.
    */
-  private function apartmentData($stateOfSale) {
+  private function apartmentData(string $stateOfSale) {
     $d = new \DateTime();
 
     return [
@@ -77,11 +85,13 @@ final class ContentTest extends ExistingSiteBase {
    *
    * @param \Drupal\node\NodeInterface $apartment
    *   The content entity.
+   * @param string $stateOfSale
+   *   State of sale for the new project.
    *
    * @return array
    *   Values for createnode function.
    */
-  private function projectData(NodeInterface $apartment, $stateOfSale) {
+  private function projectData(NodeInterface $apartment, string $stateOfSale) {
     $heating_option = $this->createTerm(Vocabulary::load('heating_options'), ['Maalämpö']);
     $construction_material = $this->createTerm(Vocabulary::load('construction_materials'), ['Puu']);
 
@@ -98,7 +108,7 @@ final class ContentTest extends ExistingSiteBase {
       'field_apartments' => [$apartment->ID()],
       'field_application_start_time' => (new \DateTime('yesterday'))->format('Y-m-d H:i:s'),
       'field_application_end_time' => (new \DateTime('tomorrow'))->format('Y-m-d H:i:s'),
-      'field_apartment_state_of_sale' => 'pre_marketing',
+      'field_apartment_state_of_sale' => $stateOfSale,
     ];
   }
 
