@@ -18,7 +18,7 @@ use weitzman\DrupalTestTraits\ExistingSiteBase;
 final class ContentTest extends ExistingSiteBase {
 
   /**
-   * Test the automated state changes from pre-marketing to applicable to reserved.
+   * Automated state changes from pre-marketing to applicable to reserved.
    */
   public function testApplicationStateChanges() {
     $apartmentData = $this->apartmentData('apartment_for_sale');
