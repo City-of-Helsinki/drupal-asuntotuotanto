@@ -7,7 +7,6 @@ namespace Drupal\Tests\asu_content\Functional;
 use Drupal\asu_content\ProjectUpdater;
 use Drupal\node\Entity\Node;
 use Drupal\node\NodeInterface;
-use Drupal\taxonomy\Entity\Vocabulary;
 use weitzman\DrupalTestTraits\ExistingSiteBase;
 
 /**
@@ -26,8 +25,6 @@ final class ContentTest extends ExistingSiteBase {
     $projectData = $this->projectData($apartment, 'pre_marketing');
     $project = $this->createNode($projectData);
 
-    // $newProject = Node::load($project->id());
-    // $newApartment = Node::load($apartment->id());
     // This is done by cron.
     $projectUpdater = new ProjectUpdater();
     $projectUpdater->updateProjectStateToForSale($project);
@@ -108,8 +105,8 @@ final class ContentTest extends ExistingSiteBase {
    *   Values for createnode function.
    */
   private function projectData(NodeInterface $apartment, string $stateOfSale) {
-    $heating_option = $this->createTerm(Vocabulary::load('heating_options'), ['Maalämpö']);
-    $construction_material = $this->createTerm(Vocabulary::load('construction_materials'), ['Puu']);
+    // $heating_option = $this->createTerm(Vocabulary::load('heating_options'), ['Maalämpö']);
+    // $construction_material = $this->createTerm(Vocabulary::load('construction_materials'), ['Puu']);
 
     return [
       'type' => 'project',
@@ -119,8 +116,8 @@ final class ContentTest extends ExistingSiteBase {
       'body' => 'This is the description of the project',
       'field_street_address' => 'Testaajankatu 3',
       'field_housing_company' => 'Taloyhtiö Yritys Oy',
-      'field_construction materials' => [$construction_material],
-      'field_heating_options' => [$heating_option],
+      // 'field_construction materials' => [$construction_material],
+      // 'field_heating_options' => [$heating_option],
       'field_apartments' => [$apartment->ID()],
       'field_application_start_time' => (new \DateTime('yesterday'))->format('Y-m-d H:i:s'),
       'field_application_end_time' => (new \DateTime('tomorrow'))->format('Y-m-d H:i:s'),
