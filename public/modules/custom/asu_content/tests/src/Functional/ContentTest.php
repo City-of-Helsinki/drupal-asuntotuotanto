@@ -40,7 +40,7 @@ final class ContentTest extends ExistingSiteBase {
     );
     $this->assertEquals(
       $newApartment->field_apartment_state_of_sale->target_id,
-      'open_for_application',
+      'open_for_applications',
       'should be open for application'
     );
 
