@@ -26,3 +26,14 @@ Computed fields won't be visible in SearchApi's index UI by default.
 #### Apartment Custom SlickImageFormatter
 
 Field field_images has been set to use the custom slick formatter. It will combine floorplan_image with field_images in order to show them in slick carousel correctly.
+
+## Cron
+
+Projects & apartments are automatically updated based on the project's application time information
+- When project's field_application_start_time < NOW:
+  - Project's state of sale is set to "for_sale"
+  - Project's apartment entities are updated to have state of sale equal to "open_for_applications"
+
+- When projects field_application_end_time < NOW:
+  - Project's state of sale is set to "reserved"
+  - Project's apartment entities are updated to have state of sale equal to "reserved" or "reserved_haso"

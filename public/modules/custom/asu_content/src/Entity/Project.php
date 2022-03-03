@@ -61,6 +61,16 @@ class Project extends Node {
   }
 
   /**
+   * Get ownership type entity reference as string.
+   *
+   * @return string
+   */
+  public function getOwnershipType():string {
+    $type = $this->field_ownership_type->referencedEntities()[0]->getName() ?? '';
+    return strtolower($type);
+  }
+
+  /**
    * Get the application url for this project.
    *
    * @return string
