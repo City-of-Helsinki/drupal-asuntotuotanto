@@ -64,6 +64,7 @@ class Project extends Node {
    * Get ownership type entity reference as string.
    *
    * @return string
+   *   Hitas or haso.
    */
   public function getOwnershipType():string {
     $type = $this->field_ownership_type->referencedEntities()[0]->getName() ?? '';

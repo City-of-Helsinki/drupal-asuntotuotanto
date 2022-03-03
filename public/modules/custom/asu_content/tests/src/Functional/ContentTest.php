@@ -36,22 +36,38 @@ final class ContentTest extends ExistingSiteBase {
     $newApartment = Node::load($apartment->id());
 
     // Assert state change.
-    $this->assertEquals($newProject->field_state_of_sale->target_id, 'for_sale', 'should be open for sale');
-    $this->assertEquals($newApartment->field_apartment_state_of_sale->target_id, 'open_for_application', 'should be open for application');
+    $this->assertEquals(
+      $newProject->field_state_of_sale->target_id,
+      'for_sale',
+      'Should be open for sale'
+    );
+    $this->assertEquals(
+      $newApartment->field_apartment_state_of_sale->target_id,
+      'open_for_application',
+      'should be open for application'
+    );
 
     // Update application end time to be in the past.
-    $newProject->set('field_application_end_time', (new \DateTime('yesterday'))->format('Y-m-d H:i:s'));
+    $newProject->set(
+      'field_application_end_time',
+      (new \DateTime('yesterday'))->format('Y-m-d H:i:s')
+    );
     $newProject->save();
 
     $newProject = Node::load($newProject->id());
     $projectUpdater->updateProjectStateToReserved($newProject);
 
     // Assert state when application end time is in the past.
-    $this->assertEquals($newProject->field_state_of_sale->target_id, 'processing', 'Project should be processing');
+    $this->assertEquals(
+      $newProject->field_state_of_sale->target_id,
+      'processing',
+      'Project should be processing'
+    );
     $this->assertTrue(
-      in_array($newApartment->field_apartment_state_of_sale->target_id,
-          ['reserved', 'reserved_haso']
-        ),
+      in_array(
+        $newApartment->field_apartment_state_of_sale->target_id,
+        ['reserved', 'reserved_haso']
+      ),
       'Apartment should be reserved'
     );
 

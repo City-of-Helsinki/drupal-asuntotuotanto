@@ -62,13 +62,15 @@ class ProjectUpdater {
   /**
    * Update project apartments to new state after application period.
    *
-   * @param Drupal\asu_content\Entity\Project $project
+   * @param \Drupal\asu_content\Entity\Project $project
    *   Project node.
+   * @param string $reserved
+   *   Reserved state.
    *
    * @return int|mixed|string|null
    *   Project id.
    */
-  private function updateApartmentsReserved(Project $project, $reserved) {
+  private function updateApartmentsReserved(Project $project, string $reserved) {
     $apartments = $project->getApartmentEntities();
     foreach ($apartments as $apartment) {
       $apartment->field_apartment_state_of_sale = $reserved;
