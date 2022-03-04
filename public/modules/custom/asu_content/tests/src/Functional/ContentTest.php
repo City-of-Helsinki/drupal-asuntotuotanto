@@ -36,12 +36,14 @@ final class ContentTest extends ExistingSiteBase {
     $this->assertEquals(
       $newProject->field_state_of_sale->target_id,
       'for_sale',
-      'Should be open for sale'
+      'During application period,
+       project should be open for sale'
     );
     $this->assertEquals(
       $newApartment->field_apartment_state_of_sale->target_id,
       'open_for_applications',
-      'should be open for application'
+      'During application period,
+      apartment should be open for application'
     );
 
     // Update application end time to be in the past.
@@ -58,14 +60,15 @@ final class ContentTest extends ExistingSiteBase {
     $this->assertEquals(
       $newProject->field_state_of_sale->target_id,
       'processing',
-      'Project should be processing'
+      'After the application period, project should be processing'
     );
     $this->assertTrue(
       in_array(
         $newApartment->field_apartment_state_of_sale->target_id,
-        ['reserved', 'reserved_haso']
+        ['reserved', 'reserved_haso', 'free_for_reservations']
       ),
-      'Apartment should be reserved'
+      'After the application period,
+      apartment should be reserved or free for reservations'
     );
 
   }

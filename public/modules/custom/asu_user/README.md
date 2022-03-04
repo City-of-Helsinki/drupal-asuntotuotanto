@@ -56,3 +56,13 @@ User bundles are enabled with user bundle contrib module. All users should be in
   - Email validation is not required from the customer.
 - Customer may receive email about the new user account. Customer can also login to the account if they know the credentials.
 
+
+### Customer login
+
+- Customer logs in to Drupal
+- After succesful login the user is automatically authenticated to backend api
+  - Token is fetched and set to user's session
+  - User data held in backend is also fetched and shown to on user account / edit pages.
+- A backend profile is created if customer for some reason doesn't have backend profile.
+  - (= if user doesn't have the credentials saved for the user)
+- If customer's email has not been verified, a verification email is sent. Customer is informed about this.

@@ -222,7 +222,7 @@ final class Initialize extends ResourceBase {
       [
         'open_for_applications',
         'for_sale',
-        'free_for_reservation',
+        'free_for_reservations',
         'reserved_haso',
         'reserved',
       ],
