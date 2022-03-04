@@ -258,6 +258,24 @@ function user_edit_submit(array $form, FormStateInterface &$form_state) {
 }
 
 /**
+ * Implements hook_form_alter().
+ *
+ * Add openid_connect button to login form.
+ */
+function asu_user_form_user_login_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  $openid_form = \Drupal::formBuilder()->getForm('Drupal\openid_connect\Form\OpenIDConnectLoginForm');
+  $openid_form['#attributes']['class'] = ['user-form', 'user-form--login'];
+  $openid_form['#prefix'] = sprintf(
+    '<div class="user-form user-form--login user-form__section"><h2>
+      %s?
+    </h2></div>',
+    t('Are you a new user')
+  );
+
+  $form['#prefix'] = \Drupal::service('renderer')->render($openid_form);
+}
+
+/**
  * Implements hook_entity_base_field_info().
  *
  * Create computed fields dynamically for user entity.
