@@ -326,7 +326,7 @@ function asu_content_cron() {
 
   $query->condition('type', 'project')
     ->condition('status', 1)
-    ->condition('field_state_of_sale', 'for_sale',)
+    ->condition('field_state_of_sale', 'for_sale')
     ->condition('field_application_end_time', $now, '<');
   $projectsToUpdateReserved = $query->execute();
 

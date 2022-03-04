@@ -36,7 +36,8 @@ class ProjectUpdater {
    */
   public function updateProjectStateToReserved(Project $project) {
     $reserved = $project->getOwnershipType() == 'haso' ? 'reserved_haso' : 'reserved';
-    $this->updateApartmentsReserved($project, $reserved);
+    $applications = $project->getApartmentApplicationCounts();
+    $this->updateApartmentsReserved($project, $reserved, $applications);
     $project->set('field_state_of_sale', 'processing');
     $project->save();
   }
@@ -65,15 +66,24 @@ class ProjectUpdater {
    * @param \Drupal\asu_content\Entity\Project $project
    *   Project node.
    * @param string $reserved
-   *   Reserved state.
+   *   Reserved state (different for hitas and haso).
+   * @param array $applicationCounts
+   *   Array of applications for the apartments.
    *
    * @return int|mixed|string|null
    *   Project id.
    */
-  private function updateApartmentsReserved(Project $project, string $reserved) {
+  private function updateApartmentsReserved(Project $project, string $reserved, array $applicationCounts) {
     $apartments = $project->getApartmentEntities();
+    /** @var \Drupal\asu_content\Entity\Apartment $apartment */
     foreach ($apartments as $apartment) {
-      $apartment->field_apartment_state_of_sale = $reserved;
+      // If no applications, the apartment must be free for reservation.
+      if (!isset($applicationCounts[$apartment->id()])) {
+        $apartment->field_apartment_state_of_sale = 'free_for_reservations';
+      }
+      else {
+        $apartment->field_apartment_state_of_sale = $reserved;
+      }
       $apartment->save();
     }
     return $project->id();
