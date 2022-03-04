@@ -6,6 +6,7 @@ dependencies:
     - field.field.user.user.field_backend_password
     - field.field.user.user.field_backend_profile
     - field.field.user.user.field_email_is_valid
+    - field.field.user.user.field_hel_profiili_uid
     - user_bundle.user_type.user
 id: user.user.default
 targetEntityType: user
@@ -35,6 +36,14 @@ content:
       link_to_entity: false
     third_party_settings: {  }
     weight: -5
+    region: content
+  field_hel_profiili_uid:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 1
     region: content
   first_name:
     type: string

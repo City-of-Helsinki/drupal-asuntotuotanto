@@ -5,6 +5,7 @@
  * Contains asu_content.module.
  */
 
+use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Entity\EntityFormInterface;
 use Drupal\Core\Field\FieldFilteredMarkup;
 use Drupal\asu_content\Entity\Apartment;
@@ -279,7 +280,7 @@ function asu_content_node_insert(Node $node) {
     if ($node->field_apartments->isEmpty()) {
       $apartment = Node::create([
         'type' => 'apartment',
-        'title' => '',
+        'title' => 'placeholder',
         'field_apartment_number' => 'A0',
         'status' => 1,
       ]);
@@ -298,25 +299,46 @@ function asu_content_node_insert(Node $node) {
  * Update projects/apartments automatically based on dates set on project.
  */
 function asu_content_cron() {
-  $properties = [
-    'type' => 'project',
-    'status' => 1,
-  ];
+  $entity = \Drupal::entityTypeManager()->getStorage('node');
+  $query = $entity->getQuery();
+  $now = DrupalDateTime::createFromTimestamp(time());
+  $projectUpdater = new ProjectUpdater();
 
-  $nodes = \Drupal::entityTypeManager()
-    ->getStorage('node')
-    ->loadByProperties($properties);
+  $query->condition('type', 'project')
+    ->condition('status', 1)
+    ->condition('field_state_of_sale', 'for_sale', '<>')
+    ->condition('field_application_start_time', $now, '<')
+    ->condition('field_application_end_time', $now, '>');
+  $projectsToUpdateForSale = $query->execute();
 
-  $logger = Drupal::logger('asu_cron');
-  $projectUpdater = new ProjectUpdater($logger);
-  $updated = [];
-  foreach ($nodes as $node) {
+  if (!empty($projectsToUpdateForSale)) {
     try {
-      $updated[] = $projectUpdater->updateApartmentStateByApplicationTime($node);
+      $projects = Node::loadMultiple($projectsToUpdateForSale);
+      foreach ($projects as $project) {
+        $projectUpdater->updateProjectStateToForSale($project);
+      }
     }
     catch (\Exception $e) {
-      // The time is most likely not set.
-      // @todo Logging.
+      \Drupal::logger('asu_cron')->emergency('Unable to update projects to "For sale" state: ' . $e->getMessage());
+    }
+    $projects = NULL;
+  }
+
+  $query->condition('type', 'project')
+    ->condition('status', 1)
+    ->condition('field_state_of_sale', 'for_sale',)
+    ->condition('field_application_end_time', $now, '<');
+  $projectsToUpdateReserved = $query->execute();
+
+  if ($projectsToUpdateReserved) {
+    try {
+      $projects = Node::loadMultiple($projectsToUpdateReserved);
+      foreach ($projects as $project) {
+        $projectUpdater->updateProjectStateToReserved($project);
+      }
+    }
+    catch (\Exception $e) {
+      \Drupal::logger('asu_cron')->emergency('Unable to update projects to "Reserved" state: ' . $e->getMessage());
     }
   }
 }

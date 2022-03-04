@@ -39,6 +39,40 @@ function asu_user_user_login(UserInterface $account) {
 }
 
 /**
+ * Implements hook_openid_connect_userinfo_save().
+ *
+ * After user has authenticated in profiili.
+ * New backend profile is also created based on that data.
+ */
+function asu_user_openid_connect_userinfo_save(UserInterface $account, array $context) {
+  $helsinkiProfiiliUid = $context['userinfo']['sub'];
+  $emailVerified = $context['userinfo']['email_verified'] ? 1 : 0;
+
+  if ($context['is_new']) {
+    $session = \Drupal::request()->getSession();
+    $session->set('first_name', $context['userinfo']['given_name']);
+    $session->set('last_name', $context['userinfo']['family_name']);
+
+    $account->set('type', 'customer');
+    $account->set('field_hel_profiili_uid', $helsinkiProfiiliUid);
+    $account->set('field_email_is_valid', $emailVerified);
+    $account->set('langcode', 'fi');
+    $account->set('preferred_langcode', 'fi');
+    $account->set('preferred_admin_langcode', 'fi');
+    \Drupal::messenger()->addMessage(t('Thank you for registering. Please update your user information before proceeding.'));
+  }
+  else {
+    $oldEmail = $account->getEmail();
+    $newEmail = $context['userinfo']['email'];
+    if ($oldEmail !== $newEmail) {
+      $account->setEmail($newEmail);
+      $account->set('field_email_is_valid', $emailVerified);
+      \Drupal::messenger()->addMessage(t('Your email address has changed. You must verify your new email address before proceeding.'));
+    }
+  }
+}
+
+/**
  * Set email valid if user uses emailed login link.
  */
 function asu_validate_email(UserInterface $account) {
@@ -54,12 +88,11 @@ function asu_validate_email(UserInterface $account) {
 }
 
 /**
- * Send user an email if email is not validated.
+ * Send user an email if email has not been validated by user.
  */
 function asu_send_user_email_verification_reminder(UserInterface $account) {
-  // @todo This might change after profiili authentication is done.
   if ($account->field_email_is_valid->value == 0) {
-    // Prevent sending email verification mail.
+    // Prevent sending email verification mail if necessary.
     $sendMail = $account->getLastAccessedTime() != 0 && (time() - $account->getCreatedTime() >= 86400);
     if ($sendMail) {
       asu_send_user_email('asu_email_approval_required', $account);
@@ -68,7 +101,7 @@ function asu_send_user_email_verification_reminder(UserInterface $account) {
 }
 
 /**
- * Send created user to backend.
+ * Make sure user has an existing account in backend.
  */
 function asu_create_backend_user(UserInterface $account) {
   if ($account->hasPermission('administer')) {
@@ -79,7 +112,6 @@ function asu_create_backend_user(UserInterface $account) {
     /** @var Drupal\asu_api\Api\BackendApi\BackendApi $backendApi */
     $backendApi = \Drupal::service('asu_api.backendapi');
 
-    \Drupal::logger('asu_user')->critical('User should already have backend profile created.');
     try {
       $userBundle = User::load($account->id())->bundle();
       $type = $userBundle == 'sales' ? 'salesperson' : 'customer';
@@ -87,9 +119,19 @@ function asu_create_backend_user(UserInterface $account) {
         ->get('external_data_map');
 
       $values = [];
+
+      // If user was created by openid_connect, get user name.
+      $session = \Drupal::request()->getSession();
+      if ($session->has('first_name') && $session->has('last_name')) {
+        $values['first_name'] = $session->get('first_name');
+        $values['last_name'] = $session->get('last_name');
+      }
+
       $store = \Drupal::service('tempstore.private')->get('customer');
       foreach ($config as $field => $value) {
-        $values[$value['external_field']] = $store->get($field) ?? '-';
+        if (!isset($values[$value['external_field']])) {
+          $values[$value['external_field']] = $store->get($field) ?? '-';
+        }
       }
 
       $createUser = new CreateUserRequest($account, $values, $type);
@@ -124,6 +166,7 @@ function asu_get_user_external_field_data(UserInterface $account) {
     return;
   }
 
+  // Workaround around issue caused by cache.
   if (!$profileId = $account->field_backend_profile->value) {
     $profileId = asu_get_user_profile_id($account);
     $account->set('field_backend_profile', $profileId);
@@ -176,18 +219,24 @@ function asu_user_form_user_customer_form_alter(&$form, FormStateInterface &$for
 
 /**
  * Additional submit handler for user_form.
+ *
+ * Update user data to backend.
  */
 function user_edit_submit(array $form, FormStateInterface &$form_state) {
-  /** @var \Drupal\asu_api\Api\BackendApi\BackendApi $bakendApi */
-  $backendApi = \Drupal::service('asu_api.backendapi');
   $user = User::load(\Drupal::currentUser()->id());
-
   if (!$user->hasRole('customer')) {
     return;
   }
 
+  /** @var \Drupal\asu_api\Api\BackendApi\BackendApi $bakendApi */
+  $backendApi = \Drupal::service('asu_api.backendapi');
+
   try {
-    $updateRequest = new UpdateUserRequest($user, $form_state, \Drupal::config('asu_user.external_user_fields')->get('external_data_map'));
+    $updateRequest = new UpdateUserRequest(
+      $user,
+      $form_state,
+      \Drupal::config('asu_user.external_user_fields')->get('external_data_map')
+    );
     $updateRequest->setSender($user);
 
     /** @var \Drupal\asu_api\Api\BackendApi\Response\UpdateUserResponse $updateUserResponse */
@@ -304,6 +353,8 @@ function asu_session_check_application_url(): ?RedirectResponse {
 
 /**
  * Implements hook_entity_operation().
+ *
+ * Add actions to users list for customers.
  */
 function asu_user_entity_operation(EntityInterface $entity) {
   // Add action urls to user entity.

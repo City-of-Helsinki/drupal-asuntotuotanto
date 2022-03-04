@@ -8,7 +8,7 @@ use Drupal\user\UserInterface;
 use Psr\Http\Message\ResponseInterface;
 
 /**
- * Request user information from backend.
+ * Get user information from backend.
  */
 class UserRequest extends Request {
   protected const METHOD = 'GET';
