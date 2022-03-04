@@ -36,4 +36,6 @@ Projects & apartments are automatically updated based on the project's applicati
 
 - When projects field_application_end_time < NOW:
   - Project's state of sale is set to "reserved"
-  - Project's apartment entities are updated to have state of sale equal to "reserved" or "reserved_haso"
+  - Project's apartment entities are updated to have state of sale equal to:
+    - "reserved" or "reserved_haso" if apartment has applications
+    - "free_for_reservations" if apartment has no applications

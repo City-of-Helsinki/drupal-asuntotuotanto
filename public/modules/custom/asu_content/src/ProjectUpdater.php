@@ -77,7 +77,7 @@ class ProjectUpdater {
     $apartments = $project->getApartmentEntities();
     /** @var \Drupal\asu_content\Entity\Apartment $apartment */
     foreach ($apartments as $apartment) {
-      // If apartment has no applications, the application must be free for reservation.
+      // If no applications, the apartment must be free for reservation.
       if (!isset($applicationCounts[$apartment->id()])) {
         $apartment->field_apartment_state_of_sale = 'free_for_reservations';
       }
