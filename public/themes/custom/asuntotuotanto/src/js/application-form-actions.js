@@ -397,17 +397,22 @@
             const id = `#edit-apartment-${index}-weight`
 
             // Find the number of the apartment.
-            const number = jQuery(element)
+            const numberElement = jQuery(element)
               .first()
               .find('.application-form-apartment__apartment-number')
-              .first()
-              .find('span')
-              .last()[0].textContent;
-            const originalSelectElements = getOriginalSelectedElements()
-            const originalDropdown = originalSelectElements.filter(function(){
-              return jQuery(this).find('option:selected').text().includes(number)
-            });
-            originalDropdown.first().closest('tr').find('[id$=-weight]')[0].value = index;
+              .first()[0]
+
+            if (numberElement != undefined) {
+              const number = $(numberElement)
+                .find('span')
+                .last()[0].textContent;
+              const originalSelectElements = getOriginalSelectedElements()
+              const originalDropdown = originalSelectElements.filter(function(){
+                return jQuery(this).find('option:selected').text().includes(number)
+              });
+              // Find data-drupal-selector attribute with value ending "-weight"
+              originalDropdown.first().closest('tr').find('[data-drupal-selector$=-weight]')[0].value = index;
+            }
           });
 
           originalSelectElementTarget.change();
@@ -450,17 +455,22 @@
               const id = `#edit-apartment-${index}-weight`
 
               // Find the number of the apartment.
-              const number = jQuery(element)
+              const numberElement = jQuery(element)
                 .first()
                 .find('.application-form-apartment__apartment-number')
-                .first()
-                .find('span')
-                .last()[0].textContent;
-              const originalSelectElements = getOriginalSelectedElements()
-              const originalDropdown = originalSelectElements.filter(function(){
-                return jQuery(this).find('option:selected').text().includes(number)
-              });
-              originalDropdown.first().closest('tr').find('[id$=-weight]')[0].value = index;
+                .first()[0]
+
+              if (numberElement != undefined) {
+                const number = $(numberElement)
+                  .find('span')
+                  .last()[0].textContent;
+                const originalSelectElements = getOriginalSelectedElements()
+                const originalDropdown = originalSelectElements.filter(function(){
+                  return jQuery(this).find('option:selected').text().includes(number)
+                });
+                // Find data-drupal-selector attribute with value ending "-weight"
+                originalDropdown.first().closest('tr').find('[data-drupal-selector$=-weight]')[0].value = index;
+              }
             });
 
             originalSelectElementTarget.change();
