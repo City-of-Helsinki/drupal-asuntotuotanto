@@ -262,6 +262,18 @@
             {% endtrans %}
           </h2>
           <div class="project__project-description">{{ project_description|raw }}</div>
+          {% if sales_name %}
+          <div class="project__project_description">
+              <div class="project__project-description">
+                {% trans %}
+                Contact
+                {% endtrans %}: {#  {{ sales_name }} #}
+                {% if sales_email %}
+                  <a href="mailto:{{ sales_email }}">{{ sales_email }}</a>
+                {% endif %}
+              </div>
+          </div>
+          {% endif %}
         </div>
       {% endif %}
       <div class="project__details">
