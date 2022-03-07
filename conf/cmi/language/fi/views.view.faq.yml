@@ -1,6 +1,27 @@
-label: UKK
 display:
   faq_page_haso:
-    display_title: 'UKK sivu - Haso'
+    display_options:
+      filters:
+        field_faq_category_target_id:
+          group_info:
+            description: ''
+      menu:
+        title: 'Usein kysytyt kysymykset'
   faq_page_hitas:
-    display_title: 'UKK sivu - Hitas'
+    display_options:
+      menu:
+        title: 'Usein kysytyt kysymykset'
+  default:
+    display_options:
+      exposed_form:
+        options:
+          submit_button: Lisää
+          reset_button_label: Palauta
+          exposed_sorts_label: Järjestä
+          sort_asc_label: Nouseva
+          sort_desc_label: Laskeva
+          text_input_required: 'Valitse suodatin ja paina Lisää nähdäksesi tulokset'
+      filters:
+        field_faq_category_target_id:
+          group_info:
+            description: ''
