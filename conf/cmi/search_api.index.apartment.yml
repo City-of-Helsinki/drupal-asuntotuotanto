@@ -817,11 +817,11 @@ field_settings:
   room_count:
     label: 'Number of rooms'
     datasource_id: 'entity:node'
-    property_path: field_room_count
-    type: integer
+    property_path: field_apartment_structure
+    type: asu_number
     dependencies:
       config:
-        - field.storage.node.field_room_count
+        - field.storage.node.field_apartment_structure
   sales_price:
     label: 'Sales price'
     datasource_id: 'entity:node'
