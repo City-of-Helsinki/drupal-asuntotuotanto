@@ -372,6 +372,13 @@ function asuntotuotanto_preprocess_node(&$variables) {
       $project = $node;
       $project_type = $project->field_ownership_type->entity->name->value;
 
+      if (!$project->field_salesperson->isEmpty()) {
+        $salesperson = $project->field_salesperson->first()->entity;
+        $variables['sales_phone'] = $salesperson->field_phone_number->value;
+        $variables['sales_email'] = $salesperson->getEmail();
+        $variables['sales_name'] = $salesperson->field_full_name->value;
+      }
+
       $apartments = $project->getApartmentEntities();
       foreach ($apartments as $apartment) {
 
@@ -539,6 +546,14 @@ function asuntotuotanto_preprocess_node(&$variables) {
       $project = $apartment->getProject();
 
       if ($project) {
+
+        if (!$project->field_salesperson->isEmpty()) {
+          $salesperson = $project->field_salesperson->first()->entity;
+          $variables['sales_phone'] = $salesperson->field_phone_number->value;
+          $variables['sales_email'] = $salesperson->getEmail();
+          $variables['sales_name'] = $salesperson->field_full_name->value;
+        }
+
         $is_application_period_active = $project->isApplicationPeriod();
         $is_application_period_in_the_past = FALSE;
         $application_start_time_timestamp = NULL;
