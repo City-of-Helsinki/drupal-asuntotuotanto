@@ -294,6 +294,16 @@
 						{% endtrans %}
 					</h2>
 					<div class="apartment__project-description">{{ project_description|raw }}</div>
+          {% if sales_email %}
+          <div class="apartment__project-description">
+            {% trans %}
+            Contact
+            {% endtrans %}: {#  {{ sales_name }} #}
+            {% if sales_email %}
+              <a href="mailto:{{ sales_email }}">{{ sales_email }}</a>
+            {% endif %}
+          </div>
+          {% endif %}
 				</div>
 			{% endif %}
 			<div class="apartment__details">
@@ -375,16 +385,6 @@
 							</p>
 						</li>
 					{% endif %}
-          {#
-          {% if (sales_price|render == '0,00€' or sales_price|render == null) and (debt_free_sales_price|render == '0,00€' or debt_free_sales_price|render == null) and right_of_occupancy_payment|render and right_of_occupancy_payment|render != '0,00€' and right_of_occupancy_payment|render != null %}
-						<li class="apartment__details-item">
-							<p>
-								<span>{% trans %}Right of occupancy payment{% endtrans %}</span>
-								<span>{{ right_of_occupancy_payment }}</span>
-							</p>
-						</li>
-					{% endif %}
-          #}
           {% if right_of_occupancy_payment|render and right_of_occupancy_payment|render != '0,00€' and right_of_occupancy_payment|render != null %}
 						<li class="apartment__details-item">
 							<p>

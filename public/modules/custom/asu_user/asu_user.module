@@ -212,6 +212,10 @@ function asu_user_form_user_customer_form_alter(&$form, FormStateInterface &$for
         '#title' => $field_data['title'],
         '#default_value' => $store->get($field),
       ];
+      if ($field_data['type'] == 'date') {
+        // Prevent notice.
+        $form['basic_information'][$field]['#attributes']['type'] = 'date';
+      }
     }
     $form['actions']['submit']['#submit'][] = 'user_edit_submit';
   }
