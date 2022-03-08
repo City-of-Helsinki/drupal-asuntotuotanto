@@ -3,8 +3,6 @@
 namespace Drupal\asu_api\Api\BackendApi\Request;
 
 use Drupal\asu_api\Api\BackendApi\Response\SalesCreateApplicationResponse;
-use Drupal\asu_application\Entity\Application;
-use Drupal\user\UserInterface;
 use Psr\Http\Message\ResponseInterface;
 
 /**
