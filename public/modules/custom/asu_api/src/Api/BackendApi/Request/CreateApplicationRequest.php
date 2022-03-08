@@ -21,14 +21,14 @@ class CreateApplicationRequest extends Request {
    *
    * @var Drupal\asu_application\Entity\Application
    */
-  private Application $application;
+  protected Application $application;
 
   /**
    * Project data.
    *
    * @var array
    */
-  private array $projectData;
+  protected array $projectData;
 
   /**
    * Constructor.
@@ -44,10 +44,7 @@ class CreateApplicationRequest extends Request {
   }
 
   /**
-   * Data to array.
-   *
-   * @return array
-   *   Array which is sent to API.
+   * {@inheritdoc}
    */
   public function toArray(): array {
     $values = [
@@ -63,6 +60,14 @@ class CreateApplicationRequest extends Request {
 
     if ($this->application->hasField('field_right_of_residence_number')) {
       $values['right_of_residence'] = $this->application->field_right_of_residence_number->value;
+    }
+
+    if ($this->application->hasField('aso_changer')) {
+      $values['is_aso_changer'] = $this->application->field_aso_changer->value ?? FALSE;
+    }
+
+    if ($this->application->hasField('hitas_owner')) {
+      $values['is_hitas_owner'] = $this->application->field_aso_changer->value ?? FALSE;
     }
 
     return $values;
