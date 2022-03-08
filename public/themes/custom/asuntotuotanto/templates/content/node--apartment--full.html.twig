@@ -295,13 +295,13 @@
 					</h2>
 					<div class="apartment__project-description">{{ project_description|raw }}</div>
           {% if sales_email %}
-          <div class="apartment__project-description">
-            {% trans %}
-            Contact
-            {% endtrans %}: {#  {{ sales_name }} #}
-            {% if sales_email %}
+          <div class="project-contact">
+              <span class="is-highlighted">
+                {% trans %}
+                Contact
+                {% endtrans %}
+              </span>
               <a href="mailto:{{ sales_email }}">{{ sales_email }}</a>
-            {% endif %}
           </div>
           {% endif %}
 				</div>
