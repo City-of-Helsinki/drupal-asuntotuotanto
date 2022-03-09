@@ -112,11 +112,15 @@
       if (currentWindowWidth > 992) {
         mobileNavigationToggleButtonElement.setAttribute("aria-hidden", true);
         desktopNavigationElement.setAttribute("aria-hidden", false);
-        userToolsNavigationElement.setAttribute("aria-hidden", false);
+        if (userToolsNavigationElement) {
+          userToolsNavigationElement.setAttribute("aria-hidden", false);
+        }
       } else {
         mobileNavigationToggleButtonElement.setAttribute("aria-hidden", false);
         desktopNavigationElement.setAttribute("aria-hidden", true);
-        userToolsNavigationElement.setAttribute("aria-hidden", true);
+        if (userToolsNavigationElement) {
+          userToolsNavigationElement.setAttribute("aria-hidden", true);
+        }
       }
 
       window.addEventListener("resize", () => {
@@ -125,7 +129,9 @@
         if (currentWindowWidth > 992) {
           mobileNavigationToggleButtonElement.setAttribute("aria-hidden", true);
           desktopNavigationElement.setAttribute("aria-hidden", false);
-          userToolsNavigationElement.setAttribute("aria-hidden", false);
+          if (userToolsNavigationElement) {
+            userToolsNavigationElement.setAttribute("aria-hidden", false);
+          }
           handleMobileNavigationClose();
         } else {
           mobileNavigationToggleButtonElement.setAttribute(
@@ -133,7 +139,9 @@
             false
           );
           desktopNavigationElement.setAttribute("aria-hidden", true);
-          userToolsNavigationElement.setAttribute("aria-hidden", true);
+          if (userToolsNavigationElement) {
+            userToolsNavigationElement.setAttribute("aria-hidden", true);
+          }
         }
       });
 
