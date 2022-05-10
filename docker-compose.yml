@@ -28,7 +28,6 @@ services:
       DRUPAL_VARNISH_PORT: 6081
       REDIS_HOST: redis
       ASU_ASUNTOTUOTANTO_URL: "https://asuntotuotanto.docker.so"
-      ASU_DJANGO_BACKEND_URL: "https://asuntotuotanto-django-test.agw.arodevtest.hel.fi"
     networks:
       - internal
       - stonehenge-network
