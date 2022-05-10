@@ -1,4 +1,3 @@
-label: Kontaktmeddelanden
 display:
   default:
     display_title: Förvald
@@ -12,37 +11,42 @@ display:
           sort_desc_label: Desc
       pager:
         options:
+          tags:
+            previous: ‹‹
+            next: ››
+            first: '« Första'
+            last: 'Sista »'
           expose:
             items_per_page_label: 'Inlägg per sida'
             items_per_page_options_all_label: '- Alla -'
             offset_label: Kompensera
-          tags:
-            previous: '‹ previous'
-            next: 'next ›'
-            first: '« first'
-            last: 'last »'
       fields:
-        message_bulk_form:
-          action_title: 'Med urval'
-        subject:
-          label: Ämne
+        node_bulk_form:
+          action_title: Åtgärd
+        title:
+          label: Titel
+          separator: ', '
+        type:
+          label: Innehållstyp
           separator: ', '
         name:
           separator: ', '
-        contact_form_label:
-          label: Kontaktformulär
-        created:
-          label: Skapad
         operations:
           label: Funktioner
       filters:
-        contact_form:
+        status:
           expose:
-            label: Kontaktformulär
-      title: Kontaktmeddelanden
+            label: 'Status för publicering'
+          group_info:
+            label: 'Status för publicering'
+            group_items:
+              1:
+                title: Publicerad
+        type:
+          expose:
+            label: Innehållstyp
+        title:
+          expose:
+            label: Titel
   page_1:
     display_title: Sida
-    display_options:
-      menu:
-        title: Lista
-        description: Kontaktmeddelanden

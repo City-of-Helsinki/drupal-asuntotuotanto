@@ -8,8 +8,8 @@ dependencies:
     - asu_admin
 id: asu_admin_branding
 theme: asu_admin
-region: header
-weight: -4
+region: breadcrumb
+weight: -5
 provider: null
 plugin: system_branding_block
 settings:

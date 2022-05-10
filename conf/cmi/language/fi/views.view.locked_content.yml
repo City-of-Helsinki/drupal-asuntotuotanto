@@ -1,11 +1,11 @@
-label: 'Uudelleenkäytettävät lohkot'
+label: 'Locked content'
 display:
   default:
     display_title: Oletus
     display_options:
       exposed_form:
         options:
-          submit_button: Suodata
+          submit_button: Käytä
           reset_button_label: Reset
           exposed_sorts_label: 'Sort by'
           sort_asc_label: Asc
@@ -15,40 +15,50 @@ display:
           tags:
             previous: '‹ Edellinen'
             next: 'Seuraava ›'
+            first: '« Ensimmäinen'
+            last: 'Viimeinen »'
           expose:
             items_per_page_label: 'Merkintöjä sivua kohti'
             items_per_page_options_all_label: '- Kaikki -'
             offset_label: Offset
       fields:
-        label:
+        node_bulk_form:
+          label: 'Solmujen bulkkitoimintojen lomake'
+          action_title: Toiminto
+        title:
           label: Otsikko
           separator: ', '
         type:
-          label: Tyyppi
+          label: Sisältötyyppi
           separator: ', '
-        paragraphs__target_id:
-          label: Lohkot
-          separator: ', '
-        langcode:
-          label: Kieli
-          separator: ', '
-        id:
-          label: ID
-          separator: ', '
-        changed:
-          label: Muuttunut
+        timestamp:
+          label: 'Lukituksen ajankohta'
+        name:
+          label: 'Lukituksen tekijä'
           separator: ', '
         operations:
           label: Toimenpiteet
       filters:
-        label:
+        status:
           expose:
-            label: Otsikko
+            label: Julkaisutila
           group_info:
-            label: Otsikko
+            label: Julkaisutila
+            group_items:
+              1:
+                title: Julkaistu
         type:
           expose:
-            label: Tyyppi
-      title: 'Uudelleenkäytettävät lohkot'
+            label: Sisältötyyppi
+        title:
+          expose:
+            label: Otsikko
+      title: 'Locked content'
+      empty:
+        area_text_custom:
+          content: 'Lukittua sisältöä ei ole.'
   page_1:
     display_title: Sivu
+    display_options:
+      menu:
+        title: 'Locked content'
