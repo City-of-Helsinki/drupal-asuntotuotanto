@@ -22,7 +22,6 @@ dependencies:
     - field.storage.node.field_right_of_occupancy_deposit
     - field.storage.node.field_living_area
     - field.storage.node.field_maintenance_fee
-    - field.storage.node.field_room_count
     - field.storage.node.field_other_fees
     - field.storage.node.field_parking_fee
     - field.storage.node.field_parking_fee_explanation
@@ -684,6 +683,11 @@ field_settings:
     datasource_id: 'entity:node'
     property_path: 'search_api_reverse_entity_references_node__field_apartments:field_premarketing_start_time'
     type: object
+  project_property_id:
+    label: 'Property id'
+    datasource_id: 'entity:node'
+    property_path: 'search_api_reverse_entity_references_node__field_apartments:field_property_id'
+    type: string
   project_publication_end_time:
     label: 'Publication end time'
     datasource_id: 'entity:node'
