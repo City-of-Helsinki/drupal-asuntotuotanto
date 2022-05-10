@@ -6,7 +6,7 @@ endif
 DRUPAL_POST_INSTALL_TARGETS := drush-deploy drush-locale-update drush-uli
 
 OC_LOGIN_TOKEN ?= $(shell bash -c 'read -s -p "You must obtain an API token by visiting https://oauth-openshift.apps.arodevtest.hel.fi/oauth/token/request (Token):" token; echo $$token')
-SYNC_TARGETS := oc-login oc-sync
+# SYNC_TARGETS := oc-login oc-sync
 
 PHONY += oc-login
 oc-login:
