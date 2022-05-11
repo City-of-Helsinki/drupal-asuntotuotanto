@@ -126,7 +126,7 @@ class Application extends EditorialContentEntityBase implements ContentEntityInt
    *   Does the application have additional applicants.
    */
   public function hasAdditionalApplicant(): bool {
-    return $this->applicant->isEmpty() ? FALSE : TRUE;
+    return !$this->applicant->isEmpty();
   }
 
   /**
@@ -136,7 +136,25 @@ class Application extends EditorialContentEntityBase implements ContentEntityInt
    *   Application has been sent.
    */
   public function isLocked(): bool {
-    return $this->field_locked->value ? TRUE : FALSE;
+    return (bool)$this->field_locked->value;
+  }
+
+  /**
+   * Has there been an error while sending api request to backend.
+   *
+   * @return bool
+   */
+  public function hasError(): bool {
+    return (bool)$this->error->value;
+  }
+
+  /**
+   * Get error message.
+   *
+   * @return string
+   */
+  public function getError(): string {
+    return $this->error->value;
   }
 
   /**
