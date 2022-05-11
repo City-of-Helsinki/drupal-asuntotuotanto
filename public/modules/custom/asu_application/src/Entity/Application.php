@@ -232,11 +232,16 @@ class Application extends EditorialContentEntityBase implements ContentEntityInt
       ->setDefaultValue(0)
       ->setReadOnly(TRUE);
 
+    $fields['error'] = BaseFieldDefinition::create('string')
+      ->setLabel(t('Error'))
+      ->setDefaultValue('');
+
     return $fields;
   }
 
   /**
-   * {@inheritDoc}
+   * If salesperson creates application on behalf of customer.
+   * Get the user id query parameter.
    */
   public static function preCreate(EntityStorageInterface $storage, array &$values) {
     parent::preCreate($storage, $values);
