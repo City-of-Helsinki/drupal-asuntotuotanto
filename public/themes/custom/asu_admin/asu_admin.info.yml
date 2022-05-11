@@ -4,3 +4,17 @@ description: 'Admin theme for Asuntotuotanto'
 package: Other
 core_version_requirement: ^8 || ^9
 base theme: hdbt_admin
+
+# Regions
+regions:
+  header: 'Header'
+  pre_content: 'Pre-content'
+  breadcrumb: Breadcrumb
+  highlighted: Highlighted
+  help: Help
+  content: Content
+  page_top: 'Page top'
+  page_bottom: 'Page bottom'
+  sidebar_first: 'First sidebar'
+regions_hidden:
+  - sidebar_first

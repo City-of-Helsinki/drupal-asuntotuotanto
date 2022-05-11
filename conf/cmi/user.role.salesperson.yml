@@ -38,6 +38,7 @@ dependencies:
   module:
     - asu_application
     - content_translation
+    - editoria11y
     - file
     - filter
     - locale
@@ -311,6 +312,7 @@ permissions:
   - 'view any unpublished page content'
   - 'view any unpublished project content'
   - 'view any unpublished service content'
+  - 'view editoria11y checker'
   - 'view media'
   - 'view own unpublished content'
   - 'view own unpublished media'

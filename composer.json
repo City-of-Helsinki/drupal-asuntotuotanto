@@ -96,7 +96,14 @@
     },
     "config": {
         "optimize-autoloader": true,
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true,
+            "composer/installers": true,
+            "cweagans/composer-patches": true,
+            "drupal/core-composer-scaffold": true,
+            "zaporylie/composer-drupal-optimizations": true
+        }
     },
     "extra": {
         "composer-exit-on-patch-failure": true,
@@ -166,9 +173,6 @@
             },
             "drupal/helfi_tunnistamo": {
                 "Temp patch which allows testing on dev/test environment": "patches/tunnistamo_v2.patch"
-            },
-            "drupal/allowed_formats": {
-                "Fixes bad update hook": "patches/allowed_formats_update_hook.patch"
             }
         }
     },

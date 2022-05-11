@@ -36,3 +36,5 @@ translation_set: false
 cache: false
 page_title_hierarchy: false
 page_title_hierarchy_exclude_home: true
+disable_tracking: false
+status_codes_disabled: {  }

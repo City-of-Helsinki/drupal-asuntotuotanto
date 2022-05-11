@@ -15,6 +15,7 @@ dependencies:
     - taxonomy.vocabulary.keywords
   module:
     - content_translation
+    - editoria11y
     - file
     - filter
     - helfi_api_base
@@ -128,6 +129,7 @@ permissions:
   - 'view all media revisions'
   - 'view all revisions'
   - 'view any unpublished content'
+  - 'view editoria11y checker'
   - 'view landing_page revisions'
   - 'view own unpublished content'
   - 'view own unpublished media'
