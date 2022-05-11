@@ -46,7 +46,7 @@
         "drupal/helfi_ahjo": "^1.0",
         "drupal/helfi_azure_fs": "^1.0",
         "drupal/helfi_hauki": "^1.0",
-        "drupal/helfi_platform_config": "^2.0",
+        "drupal/helfi_platform_config": "^2.8",
         "drupal/helfi_tpr": "^1.0",
         "drupal/helfi_tunnistamo": "^2.0",
         "drupal/honeypot": "^2.0",
@@ -173,6 +173,9 @@
             },
             "drupal/helfi_tunnistamo": {
                 "Temp patch which allows testing on dev/test environment": "patches/tunnistamo_v2.patch"
+            },
+            "drupal/helfi_platform_config": {
+                "Install tried to add fields that already exists": "patches/platform_config_install.patch"
             }
         }
     },
