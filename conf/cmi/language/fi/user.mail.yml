@@ -1,30 +1,3 @@
-cancel_confirm:
-  body: "[user:display-name],\r\n\r\nA request to cancel your account has been made at [site:name].\r\n\r\nYou may now cancel your account on [site:url-brief] by clicking this link or copying and pasting it into your browser:\r\n\r\n[user:cancel-url]\r\n\r\nNOTE: The cancellation of your account is not reversible.\r\n\r\nThis link expires in one day and nothing will happen if it is not used.\r\n\r\n--  [site:name] team"
-  subject: 'Tilin peruutuspyyntö käyttäjälle [user:display-name], [site:name] sivustolla'
-password_reset:
-  body: "[user:display-name], Tilisi salasanan vaihtamista koskeva pyyntö on tehty  [site:name] sivustolla. Voit nyt kirjautua sisään napsauttamalla tätä linkkiä tai kopioimalla ja liittämällä sen selaimeesi: [user:one-time-login-url] \r\nTätä linkkiä voidaan käyttää vain kerran sisäänkirjautumiseen ja se johtaa  sivulle jossa voit asettaa uuden salasanan. Linkki vanhenee yhden päivän kuluttua, eikä mitään tapahdu, jos sitä ei käytetä.\r\n[site:name] ylläpito"
-  subject: 'Korvaavat kirjautumistiedot [user:display-name] käyttäjälle [site:name] sivustolla'
-register_admin_created:
-  body: "[user:display-name], sinulle on luotu tili [site:name] sivustolle. Voit nyt kirjautua sisään napsauttamalla tätä linkkiä tai kopioimalla ja liittämällä sen selaimeesi: [user:one-time-login-url] \r\nTätä linkkiä voidaan käyttää vain kerran sisäänkirjautumiseen ja se johtaa  sivulle jossa voit asettaa uuden salasanan. Kun olet asettanut salasanan, voit kirjautua sen avulla osoitteessa [site:login-url]. \r\nKäyttäjätunnuksesi: [user:name]\r\n[site:name] ylläpito"
-  subject: 'Ylläpitäjä loi sinulle tilin sivustolla [site:name]'
-register_no_approval_required:
-  body: "[user:display-name], olet rekisteröitynyt [site:name] sivustolle.  Voit nyt kirjautua sisään napsauttamalla tätä linkkiä tai kopioimalla ja liittämällä sen selaimeesi: [user:one-time-login-url] \r\nTätä linkkiä voidaan käyttää vain kerran sisäänkirjautumiseen ja se johtaa  sivulle jossa voit asettaa uuden salasanan. Kun olet asettanut salasanan, voit kirjautua sen avulla osoitteessa [site:login-url]. \r\nKäyttäjätunnuksesi: [user:name]\r\n[site:name] ylläpito"
-  subject: '[user:display-name] käyttäjätilin tiedot [site:name] sivustolla'
-register_pending_approval:
-  body: "[user:display-name], olet rekisteröitynyt [site:name] sivustolle. Tunnuksesi odottaa parhaillaan hyväksyntää. Kun se on hyväksytty, saat uuden sähköpostin, joka sisältää tietoja kirjautumisesta, salasanan asettamisesta ja muista yksityiskohdista.\r\n[site:name] ylläpito"
-  subject: "\r\n[user:display-name] käyttäjätilin tiedot [site:name] sivustolla (odottaa hyväksyntää)"
-register_pending_approval_admin:
-  body: '[user:display-name] on rekisteröinyt käyttäjätunnuksen. [user:edit-url]'
-  subject: "\r\n[user:display-name] käyttäjätilin tiedot [site:name] sivustolla (odottaa hyväksyntää)"
-status_activated:
-  body: "[user:display-name],\r\n\r\nYour account at [site:name] has been activated.\r\n\r\nYou may now log in by clicking this link or copying and pasting it into your browser:\r\n\r\n[user:one-time-login-url]\r\n\r\nThis link can only be used once to log in and will lead you to a page where you can set your password.\r\n\r\nAfter setting your password, you will be able to log in at [site:login-url] in the future using:\r\n\r\nusername: [user:account-name]\r\npassword: Your password\r\n\r\n--  [site:name] team"
-  subject: 'Käyttäjän [user:display-name] tilitiedot [site:name] sivustolla (hyväksytty)'
-status_blocked:
-  body: "[user:display-name],\r\n\r\nYour account on [site:name] has been blocked.\r\n\r\n--  [site:name] team"
-  subject: 'Käyttäjän [user:display-name] tilitiedot [site:name] sivustolla (estetty)'
-status_canceled:
-  body: "[user:display-name],\r\n\r\nYour account on [site:name] has been canceled.\r\n\r\n--  [site:name] team"
-  subject: 'Käyttäjän [user:display-name] tilitiedot [site:name] sivustolla (peruttu)'
 asu_new_customer_registered:
   body: "Hei, olet rekisteröitynyt [site:name] sivustolle. Huomaathan, että sähköpostiosoite täytyy vahvistaa ennen kuin asuntohakemuksia voi lähettää. Voit vahvistaa sähköpostiosoitteesi napsauttamalla tätä linkkiä tai kopioimalla ja liittämällä sen selaimeesi: [user:one-time-login-url] \r\nTätä linkkiä voidaan käyttää vain kerran sisäänkirjautumiseen. Linkki vanhenee vuorokauden kuluessa - ylläpito"
   subject: 'Käyttäjätilin luotu [site:name] sivustolla'
@@ -37,3 +10,30 @@ asu_new_salesperson_registered:
 asu_email_approval_required:
   body: "Hei. \r\n\r\nSinun täytyy vahvistaa sähköpostiosoitteesi ennen kuin voit lähettää huoneistohakemuksia [site:name] sivustolla. Voit vahvistaa sähköpostiosoitteesi napsauttamalla tätä linkkiä tai kopioimalla ja liittämällä sen selaimeesi: [user:one-time-login-url].\r\n\r\n"
   subject: 'Sähköpostiosoitteen vahvistaminen [site:name] sivustolla'
+cancel_confirm:
+  subject: 'Tilin peruutuspyyntö käyttäjälle [user:display-name], [site:name] sivustolla'
+  body: "[user:display-name],\r\n\r\nA request to cancel your account has been made at [site:name].\r\n\r\nYou may now cancel your account on [site:url-brief] by clicking this link or copying and pasting it into your browser:\r\n\r\n[user:cancel-url]\r\n\r\nNOTE: The cancellation of your account is not reversible.\r\n\r\nThis link expires in one day and nothing will happen if it is not used.\r\n\r\n--  [site:name] team"
+password_reset:
+  subject: 'Korvaavat kirjautumistiedot [user:display-name] käyttäjälle [site:name] sivustolla'
+  body: "[user:display-name], Tilisi salasanan vaihtamista koskeva pyyntö on tehty  [site:name] sivustolla. Voit nyt kirjautua sisään napsauttamalla tätä linkkiä tai kopioimalla ja liittämällä sen selaimeesi: [user:one-time-login-url] \r\nTätä linkkiä voidaan käyttää vain kerran sisäänkirjautumiseen ja se johtaa  sivulle jossa voit asettaa uuden salasanan. Linkki vanhenee yhden päivän kuluttua, eikä mitään tapahdu, jos sitä ei käytetä.\r\n[site:name] ylläpito"
+register_admin_created:
+  subject: 'Ylläpitäjä loi sinulle tilin sivustolla [site:name]'
+  body: "[user:display-name], sinulle on luotu tili [site:name] sivustolle. Voit nyt kirjautua sisään napsauttamalla tätä linkkiä tai kopioimalla ja liittämällä sen selaimeesi: [user:one-time-login-url] \r\nTätä linkkiä voidaan käyttää vain kerran sisäänkirjautumiseen ja se johtaa  sivulle jossa voit asettaa uuden salasanan. Kun olet asettanut salasanan, voit kirjautua sen avulla osoitteessa [site:login-url]. \r\nKäyttäjätunnuksesi: [user:name]\r\n[site:name] ylläpito"
+register_no_approval_required:
+  subject: '[user:display-name] käyttäjätilin tiedot [site:name] sivustolla'
+  body: "[user:display-name], olet rekisteröitynyt [site:name] sivustolle.  Voit nyt kirjautua sisään napsauttamalla tätä linkkiä tai kopioimalla ja liittämällä sen selaimeesi: [user:one-time-login-url] \r\nTätä linkkiä voidaan käyttää vain kerran sisäänkirjautumiseen ja se johtaa  sivulle jossa voit asettaa uuden salasanan. Kun olet asettanut salasanan, voit kirjautua sen avulla osoitteessa [site:login-url]. \r\nKäyttäjätunnuksesi: [user:name]\r\n[site:name] ylläpito"
+register_pending_approval:
+  subject: "\r\n[user:display-name] käyttäjätilin tiedot [site:name] sivustolla (odottaa hyväksyntää)"
+  body: "[user:display-name], olet rekisteröitynyt [site:name] sivustolle. Tunnuksesi odottaa parhaillaan hyväksyntää. Kun se on hyväksytty, saat uuden sähköpostin, joka sisältää tietoja kirjautumisesta, salasanan asettamisesta ja muista yksityiskohdista.\r\n[site:name] ylläpito"
+register_pending_approval_admin:
+  subject: "\r\n[user:display-name] käyttäjätilin tiedot [site:name] sivustolla (odottaa hyväksyntää)"
+  body: '[user:display-name] on rekisteröinyt käyttäjätunnuksen. [user:edit-url]'
+status_activated:
+  subject: 'Käyttäjän [user:display-name] tilitiedot [site:name] sivustolla (hyväksytty)'
+  body: "[user:display-name],\r\n\r\nYour account at [site:name] has been activated.\r\n\r\nYou may now log in by clicking this link or copying and pasting it into your browser:\r\n\r\n[user:one-time-login-url]\r\n\r\nThis link can only be used once to log in and will lead you to a page where you can set your password.\r\n\r\nAfter setting your password, you will be able to log in at [site:login-url] in the future using:\r\n\r\nusername: [user:account-name]\r\npassword: Your password\r\n\r\n--  [site:name] team"
+status_blocked:
+  subject: 'Käyttäjän [user:display-name] tilitiedot [site:name] sivustolla (estetty)'
+  body: "[user:display-name],\r\n\r\nYour account on [site:name] has been blocked.\r\n\r\n--  [site:name] team"
+status_canceled:
+  subject: 'Käyttäjän [user:display-name] tilitiedot [site:name] sivustolla (peruttu)'
+  body: "[user:display-name],\r\n\r\nYour account on [site:name] has been canceled.\r\n\r\n--  [site:name] team"

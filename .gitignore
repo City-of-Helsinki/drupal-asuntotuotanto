@@ -1,42 +1,27 @@
 # Ignore project files that should not be in version control
-cghooks.lock
-drush/contrib/
-files
-files_private
+drush/sites/
+drush/Commands/*
 node_modules
-public/robots.txt
 public/core
+public/libraries
 public/modules/contrib
 public/themes/contrib
-public/profiles/config_installer
-public/profiles/contrib
-public/libraries
 public/sites/default/files
-public/sites/simpletest
-tools/init-tools-status
 vendor
-web/
-
-drush/sites/.checksums
-.phpunit.result.cache
-
-*.sql
-
-# Ingore files that are only for the current local environment
-public/sites/default/local.settings.php
-public/sites/default/local.services.yml
+helfi-test-automation-python/
+public/sites/simpletest/
 
 # Ignore the folder created by PhpStorm
 .idea/*
+public/sites/default/local.settings.php
 
-# Ignore themes with own git repositories
-public/themes/custom/hdbt*
-# Ignore modules with own repositories
-public/modules/custom/helfi_*
+*.sql
+*.env.local
 
 # Ignore OSX generated files
-.DS_Store
 ._*
+.DS_Store
 
 !*.gitkeep
 !*.keepme
+.phpunit.*

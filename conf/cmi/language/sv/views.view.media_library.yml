@@ -1,27 +1,42 @@
+label: Mediakirjasto
 description: 'Hitta och hantera media.'
 display:
   default:
     display_title: Huvud
     display_options:
-      exposed_form:
-        options:
-          submit_button: 'Tillämpa filter'
-          reset_button_label: Återställ
-          exposed_sorts_label: 'Sortera efter'
-          sort_asc_label: Stigande
-          sort_desc_label: Fallande
+      title: Media
+      fields:
+        media_bulk_form:
+          action_title: Åtgärd
       pager:
         options:
+          tags:
+            next: ››
+            previous: ‹‹
           expose:
             items_per_page_label: 'Inlägg per sida'
             items_per_page_options_all_label: '- Alla -'
             offset_label: Kompensera
-          tags:
-            previous: ‹‹
-            next: ››
-      fields:
-        media_bulk_form:
-          action_title: Åtgärd
+      exposed_form:
+        options:
+          submit_button: 'Tillämpa filter'
+          reset_button_label: Reset
+          exposed_sorts_label: 'Sort by'
+          sort_asc_label: Asc
+          sort_desc_label: Desc
+      empty:
+        area_text_custom:
+          content: 'Ingen media tillgänglig.'
+      sorts:
+        created:
+          expose:
+            label: 'Nyaste först'
+        name:
+          expose:
+            label: 'Namn (A-Z)'
+        name_1:
+          expose:
+            label: 'Namn (Z-A)'
       filters:
         status:
           expose:
@@ -44,20 +59,6 @@ display:
         langcode:
           expose:
             label: Språk
-      sorts:
-        created:
-          expose:
-            label: 'Nyaste först'
-        name:
-          expose:
-            label: 'Namn (A-Z)'
-        name_1:
-          expose:
-            label: 'Namn (Z-A)'
-      title: Media
-      empty:
-        area_text_custom:
-          content: 'Ingen media tillgänglig.'
   page:
     display_title: Sida
     display_options:
@@ -79,14 +80,14 @@ display:
   widget:
     display_title: Widget
     display_options:
-      filters:
-        name:
-          expose:
-            label: Namn
       arguments:
         bundle:
           exception:
             title: Alla
+      filters:
+        name:
+          expose:
+            label: Namn
       header:
         display_link_grid:
           label: Rutnät
@@ -104,14 +105,14 @@ display:
           label: Författare
         changed:
           label: Uppdaterad
-      filters:
-        name:
-          expose:
-            label: Namn
       arguments:
         bundle:
           exception:
             title: Alla
+      filters:
+        name:
+          expose:
+            label: Namn
       header:
         display_link_grid:
           label: Rutnät
