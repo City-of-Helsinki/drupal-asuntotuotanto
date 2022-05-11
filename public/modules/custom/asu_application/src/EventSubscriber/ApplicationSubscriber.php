@@ -107,6 +107,7 @@ class ApplicationSubscriber implements EventSubscriberInterface {
       $this->backendApi->send($request);
 
       $application->set('field_locked', 1);
+      $application->set('error', NULL);
       $application->save();
 
       $this->logger->notice(
@@ -133,7 +134,7 @@ class ApplicationSubscriber implements EventSubscriberInterface {
           $e->getMessage()
         );
         $message = 'Undefined exception while sending application';
-        $this->messenger()->addError(t('Unfortunately we were unable to handle your application.');
+        $this->messenger()->addError(t('Unfortunately we were unable to handle your application.'));
       }
 
       $application->set('error', $message);
@@ -187,6 +188,7 @@ class ApplicationSubscriber implements EventSubscriberInterface {
       );
 
       $application->set('field_locked', 1);
+      $application->set('error', NULL);
       $application->save();
 
       $this->messenger()->addStatus(t('The application has been submitted successfully.
