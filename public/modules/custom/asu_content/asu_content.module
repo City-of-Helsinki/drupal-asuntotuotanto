@@ -280,7 +280,7 @@ function asu_content_node_insert(Node $node) {
     if ($node->field_apartments->isEmpty()) {
       $apartment = Node::create([
         'type' => 'apartment',
-        'title' => 'placeholder',
+        'title' => 'A0',
         'field_apartment_number' => 'A0',
         'status' => 1,
       ]);
