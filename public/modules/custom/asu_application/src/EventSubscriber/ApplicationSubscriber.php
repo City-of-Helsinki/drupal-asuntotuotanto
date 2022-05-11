@@ -132,8 +132,12 @@ class ApplicationSubscriber implements EventSubscriberInterface {
           ': ' .
           $e->getMessage()
         );
-        $this->messenger()->addError(t('Unfortunately we were unable to handle your application.'));
+        $message = 'Undefined exception while sending application';
+        $this->messenger()->addError(t('Unfortunately we were unable to handle your application.');
       }
+
+      $application->set('error', $message);
+      $application->save();
 
     }
     catch (\Exception $e) {
@@ -142,6 +146,10 @@ class ApplicationSubscriber implements EventSubscriberInterface {
         $application->id(),
         $e->getMessage()
       ));
+
+      $application->set('error', 'Undefined exception while sending application');
+      $application->save();
+
       $this->messenger()->addError(t('Unfortunately we were unable to handle your application.'));
       $this->queue->createItem($application->id());
     }
@@ -203,14 +211,17 @@ class ApplicationSubscriber implements EventSubscriberInterface {
         $this->messenger()->addError($message);
       }
       else {
-        $this->logger->critical(
-          'Unable to resolve error code from response message: ' . $e->getMessage()
+        $this->logger->critical(sprintf(
+          'Unable to resolve error code from response message: Code: % - %',
+          $code,
+          $e->getMessage()
+          )
         );
-        $this->messenger()->addError(
-          'Illegal application error while creating application. ' . $e->getMessage()
-        );
+        $message = "Illegal application error while creating application. Unable to resolve error code.";
+        $this->messenger()->addError($message);
       }
-
+      $application->set('error', $message);
+      $application->save();
     }
     catch (\Exception $e) {
       $this->logger->critical(sprintf(
@@ -218,8 +229,13 @@ class ApplicationSubscriber implements EventSubscriberInterface {
         $application->id(),
         $e->getMessage()
       ));
+
+      $message = 'Unexpected exception while sending application. ';
+      $application->set('error', $message);
+      $application->save();
+
       $this->messenger()->addError(
-        'Illegal application error while creating application. ' . $e->getMessage()
+        $message . $e->getMessage()
       );
       $this->queue->createItem($application->id());
     }
