@@ -1,0 +1,287 @@
+.user-form {
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: $spacing-triple;
+
+  &.user-form--login,
+  &.user-form--password {
+    max-width: 330px;
+
+    .hds-button {
+      width: 100%;
+    }
+  }
+
+  &.user-form--register {
+    max-width: 545px;
+
+    .hds-button {
+      width: 100%;
+
+      @media screen and (min-width: $breakpoint-m) {
+        width: auto;
+      }
+
+      + .hds-button {
+        margin-top: $spacing-half-and-half;
+
+        @media screen and (min-width: $breakpoint-m) {
+          margin-left: $spacing;
+          margin-top: 0;
+        }
+      }
+    }
+  }
+
+  &.user-form--contact {
+    max-width: 545px;
+
+    .hds-button {
+      width: 100%;
+
+      @media screen and (min-width: $breakpoint-m) {
+        width: auto;
+      }
+
+      + .hds-button {
+        margin-top: $spacing-half-and-half;
+
+        @media screen and (min-width: $breakpoint-m) {
+          margin-left: $spacing;
+          margin-top: 0;
+        }
+      }
+    }
+  }
+
+  .form-actions {
+    margin-top: $spacing-and-half;
+  }
+
+  .hds-text-input + p {
+    margin: 0 0 $spacing;
+  }
+}
+
+.user-form__section {
+  > h1 {
+   font-size: $fontsize-heading-l;
+line-height: $lineheight-m;
+    font-weight: $font-weight-bold;
+    color: var(--color-black-90);
+    margin: 0 0 $spacing-double;
+
+    + p {
+     font-size: $fontsize-body-l;
+line-height: $lineheight-xl; // Was 27px.
+      margin: 0 0 $spacing-and-half;
+      color: var(--color-black-90);
+    }
+  }
+
+  > h2 {
+    font-size: $fontsize-heading-s;
+line-height: $lineheight-l;
+    font-weight: $font-weight-bold;
+    color: var(--color-black-90);
+    margin: 0 0 $spacing-and-half;
+    text-align: center;
+
+    + p {
+     font-size: $fontsize-body-l;
+line-height: $lineheight-xl; // Was 27px.
+      margin: 0 0 $spacing-and-half;
+      color: var(--color-black-90);
+    }
+  }
+
+  .user-form--login &,
+  .user-form--password & {
+    &:first-of-type {
+      padding-bottom: $spacing-triple;
+      margin-bottom: $spacing-double;
+      border-bottom: 1px solid var(--color-black-20);
+    }
+  }
+
+  .user-form--register & {
+    &:first-of-type {
+      margin-bottom: $spacing-triple;
+    }
+
+    > h2 {
+     font-size: $fontsize-heading-m;
+line-height: $lineheight-m;
+      font-weight: $font-weight-bold;
+      color: var(--color-black-90);
+      margin: 0 0 12px;
+      text-align: left;
+    }
+  }
+}
+
+.user-form__required-message {
+  font-size: $fontsize-body-s;
+line-height: $lineheight-l; // Was 26px.
+  font-weight: $font-weight-regular;
+  background-color: var(--color-info-light);
+  box-shadow: inset 8px 0 0 0 var(--color-info);
+  align-items: center;
+  display: inline-flex;
+  padding: $spacing-half-and-half $spacing;
+  margin: 0 0 $spacing-double;
+
+  svg {
+    margin-right: $spacing-quarter;
+    color: var(--color-info);
+  }
+}
+
+.user-form__actions {
+  margin-top: $spacing;
+  display: flex;
+  justify-content: center;
+
+  a {
+    font-size: $fontsize-body-s;
+line-height: $lineheight-l; // Was 26px.
+    font-weight: $font-weight-medium;
+    color: var(--color-bus);
+  }
+
+  .user-form--register & {
+    border-top: 1px solid var(--color-black-20);
+    margin-top: $spacing-double;
+    padding-top: $spacing-and-half;
+    justify-content: flex-start;
+  }
+}
+
+.user-form__submit {
+  margin-top: $spacing-triple;
+
+  .user-form--edit & {
+    margin-top: 0;
+  }
+}
+
+.user-form--edit {
+  .hds-button {
+    width: 100%;
+
+    @media screen and (min-width: $breakpoint-m) {
+      width: auto;
+    }
+
+    + .hds-button {
+      margin-top: $spacing-half-and-half;
+
+      @media screen and (min-width: $breakpoint-m) {
+        margin-left: $spacing;
+        margin-top: 0;
+      }
+    }
+  }
+}
+
+// Register and user edit form custom styles.
+.user-form--register,
+.user-profile--edit {
+  .form-item-pass {
+    .password-parent,
+    .confirm-parent {
+      flex-direction: column;
+    }
+
+    .password-confirm-message {
+      font-size: 12px;
+      font-weight: $font-weight-regular;
+      color: var(--color-black-60);
+      margin-top: $spacing-half-and-half;
+      display: inline-block !important;
+      visibility: visible !important;
+
+      > span {
+        font-weight: $font-weight-bold;
+        color: var(--color-black-90);
+      }
+    }
+
+    .password-strength {
+      margin-top: 12px;
+
+      .password-strength__meter {
+        border: 1px solid var(--color-black-40);
+        background-color: var(--color-black-10);
+        border-radius: 9999px;
+        overflow: hidden;
+        height: .5rem;
+        margin: 0;
+      }
+
+      .password-strength__indicator {
+        background-color: var(--color-brick);
+      }
+
+      .password-strength__title {
+        font-size: 12px;
+        font-weight: $font-weight-regular;
+        color: var(--color-black-60);
+        margin-top: $spacing-half-and-half;
+        display: inline-block;
+      }
+
+      .password-strength__text {
+        font-weight: $font-weight-bold;
+        color: var(--color-black-90);
+      }
+    }
+
+    .password-suggestions {
+      font-size: $fontsize-heading-xs;
+line-height: $lineheight-m; // Was 22px.
+      font-weight: $font-weight-bold;
+      background-color: var(--color-info-light);
+      margin-top: $spacing-and-half;
+      box-shadow: inset 8px 0 0 0 var(--color-info);
+      padding: $spacing $spacing-double $spacing-double;
+
+      ul {
+        font-size: $fontsize-body-s;
+line-height: $lineheight-l; // Was 26px.
+        font-weight: $font-weight-regular;
+        list-style: none;
+        padding: 0;
+        margin: $spacing 0 0;
+        list-style-position: inside;
+
+        li {
+          &::before {
+            content: "-";
+            text-indent: -5px;
+            margin-right: $spacing-quarter;
+          }
+        }
+      }
+    }
+  }
+
+  .form-item-gdpr-warning {
+   font-size: $fontsize-body-m;
+line-height: $lineheight-l; // Was 24px.
+    margin-top: $spacing-double;
+    flex-direction: column;
+    align-items: baseline;
+    display: flex;
+
+    .description {
+      margin-top: $spacing-quarter;
+      padding-left: $spacing-double;
+
+      a {
+        font-weight: $font-weight-bold;
+        color: var(--color-bus);
+      }
+    }
+  }
+}

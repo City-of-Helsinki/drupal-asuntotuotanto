@@ -1,0 +1,108 @@
+.page-footer {
+  margin-top: $spacing-triple;
+
+  @media screen and (min-width: $breakpoint-xs) {
+    margin-top: $spacing-quadruple;
+  }
+}
+
+.page-footer__container {
+  padding: 0 $spacing;
+
+  @media screen and (min-width: $breakpoint-xs) {
+    padding: 0 $spacing-double;
+  }
+}
+
+.page-footer__item {
+  &.page-footer__item--top {
+    padding-bottom: $spacing-and-half;
+    border-bottom: 1px solid var(--color-black-20);
+
+    @media screen and (min-width: $breakpoint-l) {
+      padding-bottom: $spacing-double;
+    }
+  }
+
+  &.page-footer__item--middle {
+    padding-bottom: $spacing-and-half;
+    padding-top: $spacing-and-half;
+    border-bottom: 1px solid var(--color-black-20);
+
+    @media screen and (min-width: $breakpoint-l) {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+  }
+
+  &.page-footer__item--bottom {
+    padding-bottom: $spacing-and-half;
+    padding-top: $spacing-and-half;
+
+    @media screen and (min-width: $breakpoint-l) {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+  }
+}
+
+.page-footer__content {
+  background-color: var(--color-black-5);
+}
+
+.page-footer__copyright {
+  font-size: $fontsize-body-s;
+line-height: $lineheight-l; // Was 26px.
+  font-weight: $font-weight-regular;
+  align-items: center;
+  color: var(--color-black-90);
+  display: flex;
+  justify-content: center;
+  margin: 0 0 $spacing-half-and-half 0;
+
+  @media screen and (min-width: $breakpoint-l) {
+    margin: 0;
+  }
+
+  span {
+    &:first-of-type {
+      &:after {
+        content: "•";
+        padding-left: 2px;
+        padding-right: $spacing-quarter;
+      }
+    }
+  }
+}
+
+.page-footer__social-media-links {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  list-style: none;
+  margin: 0 0 12px 0;
+  padding: 0;
+
+  @media screen and (min-width: $breakpoint-l) {
+    justify-content: flex-start;
+    margin-bottom: 0;
+  }
+}
+
+.page-footer__social-media-links-item {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  & + & {
+    margin-left: 12px;
+  }
+}
+
+.page-footer__social-media-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}

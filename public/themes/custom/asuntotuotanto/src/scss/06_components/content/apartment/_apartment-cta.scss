@@ -1,0 +1,114 @@
+.apartment__cta {
+  margin-top: 128px;
+
+  @media screen and (min-width: $breakpoint-l) {
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: $spacing-sextuple;
+    max-width: $container-width-xl;
+    padding: 0 $spacing;
+    position: relative;
+    width: 100%;
+  }
+}
+
+.apartment__cta-image {
+  margin: 0 auto;
+  max-width: $container-width-m;
+
+  @media screen and (min-width: $breakpoint-s) and (max-width: $breakpoint-m - 1px) {
+    padding: 0 $spacing;
+  }
+
+  @media screen and (min-width: $breakpoint-m) {
+    padding: 0 $spacing;
+    max-width: $container-width-l;
+  }
+
+  @media screen and (min-width: $breakpoint-l) {
+    margin: 0;
+    order: 2;
+    padding: 0;
+    margin-left: auto;
+    max-width: 75%;
+  }
+
+  &--missing {
+    aspect-ratio: 3 / 2;
+    background-color: var(--color-silver-medium-light);
+    width: 100%;
+  }
+
+  img {
+    width: 100%;
+  }
+}
+
+.apartment__cta-content-wrapper {
+  margin: -#{$spacing-quadruple} auto 0;
+  padding: 0 $spacing;
+  position: relative;
+  width: 100%;
+
+  @media screen and (min-width: $breakpoint-s) and (max-width: $breakpoint-l - 1px) {
+    max-width: $container-width-s;
+  }
+
+  @media screen and (min-width: $breakpoint-l) {
+    margin: 0;
+    max-width: 460px;
+    order: 1;
+    padding: 0;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+}
+
+.apartment__cta-content {
+  background-color: var(--color-engel);
+  padding: $spacing-double $spacing-and-half;
+  width: 100%;
+
+  @media screen and (min-width: $breakpoint-m) {
+    padding: $spacing-double $spacing-triple;
+  }
+
+  @media screen and (min-width: $breakpoint-l) {
+    align-items: baseline;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 400px;
+    padding: $spacing-double $spacing-quadruple 56px $spacing-triple;
+  }
+
+  > h2 {
+   font-size: $fontsize-heading-m;
+line-height: $lineheight-m;
+    font-weight: $font-weight-bold;
+    color: var(--color-black-90);
+    margin-bottom: $spacing-double;
+    margin-top: 0;
+
+    @media screen and (min-width: $breakpoint-m) {
+     font-size: $fontsize-heading-l;
+line-height: $lineheight-m;
+      padding-right: $spacing
+    }
+  }
+
+  .hds-button.hds-button--secondary {
+    border-color: var(--color-black-90);
+    color: var(--color-black-90);
+
+    @media screen and (max-width: $breakpoint-l - 1px) {
+      width: 100%;
+    }
+
+    &:hover,
+    &:focus {
+      background-color: transparent;
+    }
+  }
+}
