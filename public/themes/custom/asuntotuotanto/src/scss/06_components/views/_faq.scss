@@ -1,0 +1,221 @@
+.faq {
+  .form-actions {
+    @media screen and (min-width: $breakpoint-m) {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+
+  .bef-checkboxes {
+    align-items: baseline;
+    display: flex;
+    flex-wrap: wrap;
+
+    @media screen and (min-width: $breakpoint-m) {
+      justify-content: center;
+    }
+
+    .hds-checkbox {
+      margin-top: 0;
+      margin-right: $spacing-half-and-half;
+    }
+
+    .hds-checkbox__input {
+      &:checked {
+        &::before {
+          background-color: transparent;
+          mask-image: none;
+        }
+
+        & + .hds-checkbox__label {
+          background-color: var(--color-black-90);
+          color: var(--color-white);
+        }
+      }
+
+      &:hover {
+        & + .hds-checkbox__label {
+          background-color: var(--color-black-90);
+          color: var(--color-white);
+        }
+      }
+
+      &:focus {
+        & + .hds-checkbox__label {
+          box-shadow: 0 0 0 3px var(--color-coat-of-arms);
+        }
+      }
+    }
+
+    .hds-checkbox__label {
+     font-size: $fontsize-body-m;
+line-height: $lineheight-l; // Was 24px.
+      font-weight: $font-weight-medium;
+      border: 2px solid var(--color-black-90);
+      padding: $spacing-quarter $spacing;
+      color: var(--color-black-90);
+
+      &::before {
+        content: none;
+      }
+
+      &::after {
+        content: none;
+      }
+    }
+  }
+}
+
+.faq__hero {
+  overflow: hidden;
+  margin: 0 #{-$spacing-double};
+  padding: $spacing-triple $spacing-half-and-half 0;
+
+  @media screen and (min-width: $breakpoint-m) {
+    padding-top: $spacing-quadruple;
+    justify-content: space-between;
+    flex-direction: column;
+    display: flex;
+    min-height: 446px;
+  }
+
+  .faq--hitas & {
+    background-color: var(--color-engel);
+  }
+
+  .faq--haso & {
+    background-color: #80c8a2;
+  }
+
+  .hds-koros {
+    transform: scale(2);
+    display: block;
+    margin-top: $spacing-quadruple;
+  }
+}
+
+.faq__title {
+ font-size: $fontsize-heading-l;
+line-height: $lineheight-m;
+  font-weight: $font-weight-bold;
+  margin: 0 0 $spacing-double;
+
+  > span {
+    font-size: $fontsize-heading-xs;
+line-height: $lineheight-xl; // Was 27px.
+    font-weight: $font-weight-regular;
+    display: block;
+
+    @media screen and (min-width: $breakpoint-m) {
+      font-size: $fontsize-heading-s;
+line-height: $lineheight-xl; // Was 30px.
+      text-align: center;
+    }
+  }
+
+  @media screen and (min-width: $breakpoint-m) {
+   font-size: $fontsize-heading-xl;
+line-height: $lineheight-m;
+    font-weight: $font-weight-bold;
+    text-align: center;
+    margin: 0 0 $spacing-double;
+  }
+}
+
+.faq-reset-button {
+  padding-left: 0;
+
+  .hds-icon {
+    margin-left: 0 !important;
+  }
+}
+
+.faq__content {
+  margin: 0 #{-$spacing-double};
+  padding: 0 $spacing-half-and-half;
+
+  > .container {
+    padding-top: 0;
+  }
+}
+
+// FAQ Listing
+
+.faq-listing {
+  list-style: none;
+  padding: 0;
+  margin: 0 auto;
+  max-width: 795px;
+}
+
+.faq-teaser {
+  border-bottom: 1px solid var(--color-black-90);
+  padding: $spacing-and-half 0;
+
+  @media screen and (min-width: $breakpoint-l) {
+    padding: $spacing-triple 0;
+  }
+}
+
+.faq-teaser__button {
+  font-size: $fontsize-heading-s;
+line-height: $lineheight-l;
+  font-weight: $font-weight-bold;
+  align-items: center;
+  justify-content: space-between;
+  display: flex;
+  background-color: transparent;
+  margin: 0;
+  text-align: left;
+  padding: 0;
+  border: 0;
+  width: 100%;
+
+  @media screen and (min-width: $breakpoint-l) {
+   font-size: $fontsize-heading-m;
+line-height: $lineheight-m;
+  }
+
+  > span {
+    margin-right: $spacing-double;
+    pointer-events: none;
+  }
+
+  > svg {
+    pointer-events: none;
+
+    @media screen and (min-width: $breakpoint-l) {
+      height: 32px;
+      width: 32px;
+    }
+  }
+
+  &[aria-expanded="true"] {
+    & > svg {
+      transform: rotate(180deg);
+    }
+  }
+
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.faq-teaser__description {
+  margin-top: $spacing;
+
+  @media screen and (min-width: $breakpoint-l) {
+    margin-top: $spacing-double;
+  }
+
+  p {
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+
+  &[aria-hidden="true"] {
+    display: none;
+  }
+}

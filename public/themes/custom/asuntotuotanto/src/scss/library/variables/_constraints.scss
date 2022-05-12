@@ -1,9 +1,0 @@
-@import "~hds-design-tokens/lib/spacing/all.scss";
-@import "~hds-design-tokens/lib/breakpoint/container-width.scss";
-
-$spacing-5-xl: 4.5rem; // 72px
-$spacing-6-xl: 5rem; // 80px
-$spacing-7-xl: 5.5rem; // 88px
-$spacing-8-xl: 6rem; // 96px
-
-$content-area-wrapper-width-max: calc(#{$container-width-xl} + #{$spacing-4-xl});

@@ -1,0 +1,300 @@
+.page--application-form {
+  background-color: #fafafa;
+  a {
+    color: var(--color-bus);
+  }
+}
+
+.application-form {
+  [data-drupal-selector="edit-apartment-wrapper"] {
+    height: 0;
+    visibility: hidden;
+    width: 0;
+  }
+}
+
+.application-form__back-link {
+ font-size: $fontsize-body-m;
+line-height: $lineheight-l; // Was 26px.
+  font-weight: $font-weight-bold;
+  margin: $spacing-triple 0;
+  align-items: center;
+  display: inline-flex;
+  text-decoration: none;
+
+  &:before {
+    background-image: url("../icons/angle-left.svg");
+    background-size: 100%;
+    content: "";
+    display: inline-block;
+    height: 24px;
+    width: 24px;
+  }
+}
+
+.application-form__header {
+  > h1 {
+   font-size: $fontsize-heading-m;
+line-height: $lineheight-m;
+    font-weight: $font-weight-bold;
+    margin: 0 0 $spacing-and-half;
+
+    span {
+     font-size: $fontsize-body-m;
+line-height: $lineheight-l; // Was 24px.
+      font-weight: $font-weight-regular;
+      margin: 0 0 $spacing-half-and-half;
+      display: block;
+    }
+
+    + p {
+     font-size: $fontsize-body-m;
+line-height: $lineheight-l; // Was 24px.
+      font-weight: $font-weight-regular;
+      margin: 0 0 $spacing-half-and-half;
+
+      + a {
+       font-size: $fontsize-body-m;
+line-height: $lineheight-l; // Was 24px.
+        font-weight: $font-weight-medium;
+        color: var(--color-bus);
+      }
+    }
+  }
+}
+
+.application-form__content {
+  margin-top: $spacing-double;
+}
+
+.application-form__section {
+  padding: $spacing-triple 0;
+  border-bottom: 1px solid var(--color-black-20);
+
+  > h2 {
+   font-size: $fontsize-heading-m;
+line-height: $lineheight-s;
+    font-weight: $font-weight-bold;
+    margin: 0 0 $spacing;
+
+    + p {
+     font-size: $fontsize-body-m;
+line-height: $lineheight-l; // Was 24px.
+      font-weight: $font-weight-regular;
+      margin: 0 0 $spacing;
+    }
+  }
+
+  > h3 {
+   font-size: $fontsize-heading-xxs;
+line-height: $lineheight-l;
+    font-weight: $font-weight-bold;
+    margin: 0 0 $spacing-half-and-half;
+
+    + p {
+     font-size: $fontsize-body-m;
+line-height: $lineheight-l; // Was 24px.
+      font-weight: $font-weight-regular;
+      margin: 0 0 $spacing-and-half;
+    }
+
+    &:last-of-type {
+      + p {
+        margin: 0;
+      }
+    }
+  }
+
+  &:first-of-type {
+    background-color: var(--color-white);
+    margin-left: -#{$spacing-double};
+    margin-right: -#{$spacing-double};
+    padding-left: $spacing-double;
+    padding-right: $spacing-double;
+    border-bottom: 0;
+
+    @media screen and (min-width: $breakpoint-xl) {
+      margin-left: -#{$spacing-triple};
+      margin-right: -#{$spacing-triple};
+      padding-left: $spacing-triple;
+      padding-right: $spacing-triple;
+    }
+  }
+
+  .field--widget-boolean-checkbox {
+    > .form-item {
+      flex-direction: column;
+
+      &:last-of-type {
+        margin-bottom: 0;
+      }
+    }
+
+    .description {
+     font-size: $fontsize-body-m;
+line-height: $lineheight-l; // Was 24px.
+      margin-top: $spacing-quarter;
+    }
+  }
+
+  .form-item-field-personal-id-0-value,
+  .form-item-field-right-of-residence-number-0-value {
+    @media screen and (min-width: $breakpoint-m) {
+      max-width: 550px;
+    }
+  }
+}
+
+.application-form__input-elements {
+  .form-item-applicant-0-has-additional-applicant {
+    margin-top: $spacing-and-half;
+  }
+
+  .form-item {
+    @media screen and (min-width: $breakpoint-m) {
+      max-width: 550px;
+    }
+  }
+
+  .application-form__application-information {
+    margin: $spacing-and-half 0;
+  }
+
+  .application-form__application-information-tooltip {
+    font-size: $fontsize-body-s;
+line-height: $lineheight-l; // Was 26px.
+    background-color: var(--color-info-light);
+    box-shadow: inset 8px 0 0 0 var(--color-info);
+    align-items: center;
+    display: inline-flex;
+    padding: $spacing-half-and-half $spacing;
+    margin: 0;
+
+    &:before {
+      background-image: url("../icons/info-circle-fill.svg");
+      background-position: right;
+      background-size: 24px;
+      content: "";
+      display: inline-block;
+      height: 24px;
+      width: 24px;
+      margin-right: $spacing-half-and-half;
+    }
+  }
+}
+
+.application-form__actions {
+  padding-top: 40px;
+}
+
+.application-form__apartments {
+  @media screen and (min-width: $breakpoint-l) {
+    margin-top: $spacing-and-half;
+  }
+
+  > h2 {
+    font-size: $fontsize-heading-s;
+line-height: $lineheight-l;
+    font-weight: $font-weight-bold;
+    margin: 0 0 $spacing-half-and-half;
+
+    + p {
+     font-size: $fontsize-body-m;
+line-height: $lineheight-l; // Was 24px.
+      font-weight: $font-weight-regular;
+      margin: 0 0 $spacing-and-half;
+    }
+  }
+}
+
+.application-form__apartments-list-header {
+  display: flex;
+  margin: 0;
+  padding: 0 0 $spacing;
+  list-style: none;
+
+  @media screen and (max-width: $breakpoint-xl - 1px) {
+    display: none;
+    visibility: hidden;
+  }
+
+  li {
+    &:first-child {
+      min-width: 135px;
+    }
+
+    &:nth-child(2) {
+      // min-width: 152px;
+      min-width: 170px;
+    }
+
+    &:nth-child(3) {
+      min-width: 90px;
+    }
+
+    &:nth-child(4) {
+      min-width: 124px;
+    }
+
+    &:nth-child(5) {
+      min-width: 142px;
+    }
+  }
+
+  p {
+   font-size: $fontsize-body-m;
+line-height: $lineheight-l; // Was 24px.
+    margin: 0;
+  }
+}
+
+.application-form__apartments-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: apartment-list-counter;
+
+  & > li {
+    counter-increment: apartment-list-counter;
+    position: relative;
+
+    .application-form-apartment__list-position {
+      &:before {
+        content: counter(apartment-list-counter) ".";
+       font-size: $fontsize-heading-m;
+line-height: $lineheight-m;
+        font-weight: $font-weight-bold;
+
+        @media screen and (min-width: $breakpoint-xl) {
+          font-size: $fontsize-heading-s;
+line-height: $lineheight-l;
+        }
+      }
+    }
+  }
+}
+
+.application-form-apartment__list-span {
+  margin-left: $spacing-and-half;
+}
+
+.application-form-apartment {
+  border-top: none;
+  border-bottom: 1px solid var(--color-black-20);
+}
+
+.application-form__apartments-list-header {
+  border-bottom: 1px solid var(--color-black-20);
+}
+
+.application-form__personal-id {
+  display: flex;
+  align-items: center;
+
+  > p {
+   font-size: $fontsize-body-m;
+line-height: $lineheight-l; // Was 24px.
+    font-weight: $font-weight-regular;
+    margin: 0 $spacing-half-and-half 0 0;
+  }
+}

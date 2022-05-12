@@ -1,0 +1,21 @@
+.application-status-message {
+  background-color: var(--color-black-5);
+  text-align: center;
+  padding: $spacing $spacing-double;
+
+  h2 {
+    font-size: $fontsize-heading-s;
+line-height: $lineheight-l;
+    font-weight: $font-weight-bold;
+    margin: 0 0 $spacing-quarter;
+    text-align: center
+  }
+
+  p {
+    font-size: $fontsize-body-s;
+line-height: $lineheight-m;
+    font-weight: $font-weight-regular;
+    margin: 0;
+    text-align: center;
+  }
+}
