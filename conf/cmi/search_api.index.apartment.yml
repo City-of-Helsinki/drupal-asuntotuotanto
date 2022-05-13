@@ -557,6 +557,11 @@ field_settings:
     datasource_id: 'entity:node'
     property_path: 'search_api_reverse_entity_references_node__field_apartments:field_district'
     type: object
+  project_documents_delivered:
+    label: 'Documents delivered'
+    datasource_id: 'entity:node'
+    property_path: 'search_api_reverse_entity_references_node__field_apartments:field_documents_delivered'
+    type: text
   project_energy_class:
     label: 'Energy class'
     datasource_id: 'entity:node'
