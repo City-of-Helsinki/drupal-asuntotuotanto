@@ -105,3 +105,13 @@ line-height: $lineheight-xl; // Was 27px.
     margin-top: $spacing-and-half;
   }
 }
+
+article.application .application__content .warning {
+  color: red;
+  width: 32px;
+  height: 32px;
+}
+
+li+li {
+  margin-top: 0px;
+}

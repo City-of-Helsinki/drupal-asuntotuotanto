@@ -136,22 +136,24 @@ class Application extends EditorialContentEntityBase implements ContentEntityInt
    *   Application has been sent.
    */
   public function isLocked(): bool {
-    return (bool)$this->field_locked->value;
+    return (bool) $this->field_locked->value;
   }
 
   /**
    * Has there been an error while sending api request to backend.
    *
    * @return bool
+   *   Application has error.
    */
   public function hasError(): bool {
-    return (bool)$this->error->value;
+    return (bool) $this->error->value;
   }
 
   /**
    * Get error message.
    *
    * @return string
+   *   Error text.
    */
   public function getError(): string {
     return $this->error->value;
@@ -258,8 +260,12 @@ class Application extends EditorialContentEntityBase implements ContentEntityInt
   }
 
   /**
-   * If salesperson creates application on behalf of customer.
-   * Get the user id query parameter.
+   * If sales creates application for customer, use user_id query parameter.
+   *
+   * @param EntityStorageInterface $storage
+   * @param array $values
+   *
+   * @throws \Exception
    */
   public static function preCreate(EntityStorageInterface $storage, array &$values) {
     parent::preCreate($storage, $values);
