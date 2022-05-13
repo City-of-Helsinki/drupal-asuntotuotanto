@@ -262,8 +262,10 @@ class Application extends EditorialContentEntityBase implements ContentEntityInt
   /**
    * If sales creates application for customer, use user_id query parameter.
    *
-   * @param EntityStorageInterface $storage
+   * @param Drupal\Core\Entity\EntityStorageInterface $storage
+   *   Entity storage interface.
    * @param array $values
+   *   Entity values.
    *
    * @throws \Exception
    */
