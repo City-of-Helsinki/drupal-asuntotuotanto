@@ -49,12 +49,13 @@ global-styling:
   version: 1.x
   css:
     theme:
+      dist/css/asuntotuotanto-icons.css: { }
       dist/css/styles.min.css: {}
 
 global-scripting:
   version: 1.x
   js:
-    dist/js/bundle.min.js: {}
+    dist/js/common.min.js: {}
   dependencies:
     - core/drupal
     - core/jquery

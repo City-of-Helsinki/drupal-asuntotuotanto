@@ -532,13 +532,10 @@ content:
         title: '0'
         alt: '0'
       optionset: default
-      icon: ''
       layout: ''
       view_mode: ''
       cache: 0
-      current_view_mode: default
       skin: ''
-      fx: ''
       style: ''
       background: false
       box_caption: ''
@@ -550,10 +547,6 @@ content:
       media_switch: ''
       ratio: ''
       thumbnail_style: ''
-      _uri: ''
-      breakpoints: {  }
-      sizes: ''
-      grid_header: ''
       grid: null
       grid_medium: null
       grid_small: null

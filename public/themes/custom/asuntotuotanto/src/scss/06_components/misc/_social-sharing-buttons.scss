@@ -1,0 +1,42 @@
+.social-sharing-buttons {
+  h2 {
+    font-size: $fontsize-heading-xs;
+line-height: $lineheight-m; // Was 22px.
+    color: var(--color-black-90);
+    font-weight: $font-weight-bold;
+    margin: 0 0 $spacing;
+
+    @media screen and (min-width: $breakpoint-l) {
+      font-size: $fontsize-heading-s;
+line-height: $lineheight-l;
+    }
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  li {
+    &:not(:first-of-type) {
+      margin-top: $spacing-half-and-half;
+    }
+  }
+
+  a {
+    font-size: $fontsize-body-m;
+line-height: $lineheight-l;
+    align-items: center;
+    color: var(--color-black-90);
+    display: inline-flex;
+    font-weight: $font-weight-regular;
+    text-decoration: none;
+
+    > svg {
+      height: 30px;
+      margin-right: $spacing-half-and-half;
+      width: 30px;
+    }
+  }
+}

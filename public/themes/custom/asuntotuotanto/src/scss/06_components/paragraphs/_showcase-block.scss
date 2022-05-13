@@ -1,0 +1,207 @@
+.showcase-block {
+  margin-top: $spacing-triple;
+  overflow: hidden;
+  position: relative;
+  margin-left: -$spacing-double;
+  margin-right: -$spacing-double;
+
+  @media screen and (min-width: $breakpoint-l) {
+    margin-top: $spacing-quadruple;
+  }
+
+  .hds-koros {
+    color: var(--color-black-5);
+    transform: scale(2);
+    display: block;
+    padding-top: 18px;
+  }
+}
+
+.showcase-block__title {
+ font-size: $fontsize-heading-m;
+line-height: $lineheight-m;
+  margin: 0 0 $spacing-triple;
+  font-weight: $font-weight-bold;
+  text-align: center;
+
+  @media screen and (min-width: $breakpoint-l) {
+   font-size: $fontsize-heading-l;
+line-height: $lineheight-m;
+    margin: 0 0 $spacing-quadruple;
+  }
+}
+
+.showcase-block__content {
+  background-color: var(--color-black-5);
+  padding: $spacing-double $spacing-double $spacing-quadruple;
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+
+  @media screen and (min-width: $breakpoint-l) {
+    padding: $spacing-double $spacing-double $spacing-quadruple;
+  }
+}
+
+.showcase-block__showcases {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+
+  @media screen and (min-width: $breakpoint-m) {
+    display: flex;
+  }
+
+  &.showcases-count--2 {
+    @media screen and (min-width: $breakpoint-m) {
+      justify-content: space-between;
+    }
+  }
+
+  &.showcases-count--3 {
+    @media screen and (min-width: $breakpoint-m) and (max-width: $breakpoint-l - 1px) {
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    @media screen and (min-width: $breakpoint-l) {
+      justify-content: space-between;
+    }
+  }
+
+  &.showcases-count--4 {
+    @media screen and (min-width: $breakpoint-m) and (max-width: $breakpoint-l - 1px) {
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+
+    @media screen and (min-width: $breakpoint-l) {
+      justify-content: space-between;
+    }
+  }
+}
+
+.showcase {
+  width: 100%;
+  align-items: center;
+  flex-flow: column;
+  display: flex;
+  text-align: center;
+
+  .showcases-count--2 & {
+    &:last-child {
+      margin-top: $spacing-double;
+
+      @media screen and (min-width: $breakpoint-m) {
+        margin-top: 0;
+      }
+    }
+
+    @media screen and (min-width: $breakpoint-m) {
+      max-width: calc(50% - #{$spacing-double});
+      width: 100%;
+    }
+  }
+
+  .showcases-count--3 & {
+    margin-bottom: $spacing-double;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    &:nth-child(1) {
+      @media screen and (min-width: $breakpoint-m) and (max-width: $breakpoint-l - 1px) {
+        padding-right: $spacing;
+      }
+    }
+
+    &:nth-child(2) {
+      @media screen and (min-width: $breakpoint-m) and (max-width: $breakpoint-l - 1px) {
+        padding-left: $spacing;
+      }
+    }
+
+    @media screen and (min-width: $breakpoint-m) and (max-width: $breakpoint-l - 1px) {
+      max-width: calc(50% - #{$spacing-double});
+      width: 100%;
+    }
+
+    @media screen and (min-width: $breakpoint-l) {
+      max-width: calc(33% - #{$spacing-double});
+      width: 100%;
+      margin-bottom: 0;
+    }
+  }
+
+  .showcases-count--4 & {
+    margin-top: $spacing-double;
+
+    &:first-child {
+      margin-top: 0;
+    }
+
+    &:nth-child(2) {
+      @media screen and (min-width: $breakpoint-m) {
+        margin-top: 0;
+      }
+    }
+
+    @media screen and (min-width: $breakpoint-m) and (max-width: $breakpoint-l - 1px) {
+      max-width: calc(50% - #{$spacing});
+      width: 100%;
+    }
+
+    @media screen and (min-width: $breakpoint-l) {
+      max-width: calc(25% - #{$spacing-double});
+      width: 100%;
+      margin-top: 0;
+    }
+  }
+}
+
+.showcase__image {
+  margin: 0 0 $spacing;
+  width: 64px;
+
+  img {
+    width: 100%;
+    height: auto;
+  }
+}
+
+.showcase__description {
+  max-width: 334px; // According to design.
+
+  p {
+   font-size: $fontsize-body-m;
+line-height: $lineheight-l; // Was 24px.
+    font-weight: $font-weight-regular;
+
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+}
+
+.showcase-block__links {
+  margin-top: $spacing-triple;
+  flex-flow: column;
+  display: flex;
+  text-align: center;
+  align-items: center;
+
+  @media screen and (min-width: $breakpoint-l) {
+    margin-top: $spacing-quadruple;
+  }
+
+  a {
+   font-size: $fontsize-body-m;
+line-height: $lineheight-l; // Was 26px.
+    font-weight: $font-weight-bold;
+
+    &:not(:first-child) {
+      margin-top: $spacing-half-and-half;
+    }
+  }
+}
