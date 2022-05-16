@@ -84,7 +84,7 @@ class CreateApplicationRequest extends Request {
     foreach ($this->application->getApartments()->getValue() as $key => $value) {
       if (isset($value['id'])) {
         $apartments[$key] = [
-          'priority' => $key+1,
+          'priority' => $key + 1,
           'identifier' => $this->projectData['apartment_uuids'][$value['id']],
         ];
       }
