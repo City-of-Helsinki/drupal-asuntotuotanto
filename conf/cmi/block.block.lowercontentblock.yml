@@ -11,7 +11,7 @@ _core:
 id: lowercontentblock
 theme: asuntotuotanto
 region: after_content
-weight: -6
+weight: -8
 provider: null
 plugin: lower_content_block
 settings:

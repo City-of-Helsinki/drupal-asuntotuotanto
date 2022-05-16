@@ -8,3 +8,8 @@ disagree_button_label: 'Ei kiitos'
 withdraw_tab_button_label: Tietosuoja-asetukset
 save_preferences_button_label: 'Hyväksy valitut evästeet'
 accept_all_categories_button_label: 'Hyväksy kaikki evästeet'
+popup_agreed:
+  value: "<h2>Kiitos että hyväksyit evästeet</h2>\r\n\r\n<p>Voit sulkea tämän viestin tai lukea lisää evästeistä.</p>\r\n"
+withdraw_message:
+  value: "<h2>Hel.fi käyttää evästeitä</h2>\r\n\r\n<p>Olet antanut hyväksynnän evästeiden asettamiseksi.</p>\r\n"
+withdraw_action_button_label: 'Peruuta hyväksyntä'

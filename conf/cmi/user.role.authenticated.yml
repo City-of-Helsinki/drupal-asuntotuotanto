@@ -9,6 +9,7 @@ dependencies:
   module:
     - asu_application
     - contact
+    - eu_cookie_compliance
     - helfi_api_base
     - matomo
     - media
@@ -25,6 +26,7 @@ permissions:
   - 'access content'
   - 'access site-wide contact form'
   - 'create application'
+  - 'display eu cookie compliance popup'
   - 'opt-in or out of matomo tracking'
   - 'restful get asu_initialize'
   - 'restful post asu_elasticsearch'

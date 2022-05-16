@@ -6,13 +6,13 @@ dependencies:
     - eu_cookie_compliance
     - system
   theme:
-    - hdbt
+    - asuntotuotanto
 _core:
   default_config_hash: Ofp5Nv8E3DryORBw9DXtbN860LdYomjt-klGkC0fCHs
 id: eucookiecomplianceblock
-theme: hdbt
+theme: asuntotuotanto
 region: after_content
-weight: -10
+weight: -7
 provider: null
 plugin: eu_cookie_compliance_block
 settings:
