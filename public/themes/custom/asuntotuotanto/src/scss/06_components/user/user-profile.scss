@@ -106,10 +106,19 @@ line-height: $lineheight-xl; // Was 27px.
   }
 }
 
-article.application .application__content .warning {
+.application__misc-information {
+  @extend .application__date-information;
+  max-width: 80%;
+  li {
+    margin-top: 10px !important;
+  }
+}
+
+article.application .application__misc-information .warning {
   color: red;
-  width: 32px;
+  min-width: 32px;
   height: 32px;
+  margin-right: 5px;
 }
 
 li+li {
