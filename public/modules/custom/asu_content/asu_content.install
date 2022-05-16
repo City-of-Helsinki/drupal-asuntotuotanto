@@ -1,5 +1,7 @@
 <?php
 
+use Symfony\Component\Yaml\Yaml;
+
 /**
  * @file
  * Module.install.
@@ -9,29 +11,106 @@
  * Add taxonomy terms to News category vocabularity automatically.
  */
 function asu_content_update_9001() {
-  /*
-  $vocabularity = 'news_category';
+}
 
-  $term_common = Term::create([
-  'name' => 'Common',
-  'vid' => $vocabularity,
-  'uuid' => 'a4cd9585-84aa-4a1b-ae53-6976cc08f4a4',
-  ]);
+/**
+ * Manually update asu admin blocks to support Gin region format.
+ */
+function asu_content_update_9002() {
+  $theme_handler = Drupal::service('theme_handler');
+  $config_factory = \Drupal::configFactory();
+  $config_location = dirname(__FILE__) . '/config/install/';
 
-  $term_haso = Term::create([
-  'name' => 'HASO',
-  'vid' => $vocabularity,
-  'uuid' => '72d1416b-cf66-4820-b4cd-060098c18d6f',
-  ]);
+  // Install configurations if asu_admin theme exists.
+  if ($theme_handler->themeExists('asu_admin')) {
+    $asu_admin_page_title = $config_factory->getEditable('block.block.asu_admin_page_title');
+    $asu_admin_page_title_data = $asu_admin_page_title->getRawData();
+    if (!empty($asu_admin_page_title_data)) {
+      $asu_admin_page_title_data['region'] = 'header';
+      $asu_admin_page_title_data['weight'] = -7;
+      $asu_admin_page_title->setData($asu_admin_page_title_data)->save(TRUE);
+    }
 
-  $term_hitas = Term::create([
-  'name' => 'HITAS',
-  'vid' => $vocabularity,
-  'uuid' => 'daab6bb3-6810-456f-9922-1e70878024eb',
-  ]);
+    $asu_admin_branding = $config_factory->getEditable('block.block.asu_admin_branding');
+    $asu_admin_branding_data = $asu_admin_branding->getRawData();
+    if (!empty($asu_admin_branding_data)) {
+      $asu_admin_branding_data['region'] = 'breadcrumb';
+      $asu_admin_branding_data['weight'] = -5;
+      $asu_admin_branding->setData($asu_admin_branding_data)->save(TRUE);
+    }
 
-  $term_common->save();
-  $term_haso->save();
-  $term_hitas->save();
-   */
+    $asu_admin_breadcrumbs = $config_factory->getEditable('block.block.asu_admin_breadcrumbs');
+    $asu_admin_breadcrumbs_data = $asu_admin_breadcrumbs->getRawData();
+    if (!empty($asu_admin_breadcrumbs_data)) {
+      $asu_admin_breadcrumbs_data['region'] = 'breadcrumb';
+      $asu_admin_breadcrumbs_data['weight'] = -4;
+      $asu_admin_breadcrumbs->setData($asu_admin_breadcrumbs_data)->save(TRUE);
+    }
+
+    $asu_admin_language_switcher = $config_factory->getEditable('block.block.language_switcher_admin');
+    $asu_admin_language_switcher_data = $asu_admin_language_switcher->getRawData();
+    if (!empty($asu_admin_language_switcher_data)) {
+      $asu_admin_language_switcher_data['weight'] = -6;
+      $asu_admin_language_switcher->setData($asu_admin_language_switcher_data)->save(TRUE);
+    }
+
+    $asu_admin_local_tasks = $config_factory->getEditable('block.block.asu_admin_local_tasks');
+    $asu_admin_local_tasks_data = $asu_admin_local_tasks->getRawData();
+    if (!empty($asu_admin_local_tasks_data)) {
+      $asu_admin_local_tasks->delete();
+    }
+
+    $configurations = [
+      'block.block.asu_admin_primary_local_tasks',
+      'block.block.asu_admin_secondary_local_tasks',
+      'block.block.asu_admin_content'
+    ];
+
+    foreach ($configurations as $config_name) {
+      $filepath = "{$config_location}{$config_name}.yml";
+      if (file_exists($filepath)) {
+        $data = Yaml::parse(file_get_contents($filepath));
+        if (is_array($data)) {
+          $config_factory->getEditable($config_name)->setData($data)->save(TRUE);
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Set field max length 3 chars
+ */
+function asu_content_update_9003(): void {
+  // Prepare relevant variables.
+  $entity_type = 'node';
+  $field_name = 'field_property_number';
+  $field_length = 3;
+
+  \Drupal::database()->truncate("{$entity_type}__{$field_name}")->execute();
+  \Drupal::database()->truncate("{$entity_type}_revision__{$field_name}")->execute();
+
+  // Update database schema.
+  $database = \Drupal::database();
+  // Resize the main field data table.
+  $database->query("ALTER TABLE {$entity_type}__{$field_name} MODIFY {$field_name}_value VARCHAR({$field_length})");
+  // Resize the revision field data table (if revisions are enabled).
+  $database->query("ALTER TABLE {$entity_type}_revision__{$field_name} MODIFY {$field_name}_value VARCHAR({$field_length})");
+
+  // Update storage schema.
+  $storage_key = $entity_type . '.field_schema_data.' . $field_name;
+  $storage_schema = \Drupal::keyValue('entity.storage_schema.sql');
+  $field_schema = $storage_schema->get($storage_key);
+  $field_schema[$entity_type . '__' . $field_name]['fields'][$field_name . '_value']['length'] = $field_length;
+  $field_schema[$entity_type . '_revision__' . $field_name]['fields'][$field_name . '_value']['length'] = $field_length;
+  $storage_schema->set($storage_key, $field_schema);
+
+  // Update field configuration.
+  $config = \Drupal::configFactory()
+    ->getEditable("field.storage.{$entity_type}.{$field_name}");
+  $config->set('settings.max_length', $field_length);
+  $config->save(TRUE);
+
+  // Update field storage configuration.
+  \Drupal\field\Entity\FieldStorageConfig::loadByName($entity_type, $field_name)->save();
 }

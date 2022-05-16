@@ -3,8 +3,15 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.paragraph.remote_video.field_iframe_title
     - field.field.paragraph.remote_video.field_remote_video
+    - field.field.paragraph.remote_video.field_remote_video_description
+    - field.field.paragraph.remote_video.field_remote_video_title
+    - field.field.paragraph.remote_video.field_remote_video_video_desc
+    - field.field.paragraph.remote_video.field_remote_video_video_title
     - paragraphs.paragraphs_type.remote_video
+  module:
+    - text
 _core:
   default_config_hash: gmvd3NpBqlZGO-d_PTKw53sTWYa01VHkHeH0-D1GGLI
 id: paragraph.remote_video.default
@@ -19,7 +26,42 @@ content:
       view_mode: default
       link: false
     third_party_settings: {  }
+    weight: 2
+    region: content
+  field_remote_video_description:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_remote_video_title:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
     weight: 0
     region: content
+  field_remote_video_video_desc:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 4
+    region: content
+  field_remote_video_video_title:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 3
+    region: content
 hidden:
+  field_iframe_title: true
+  field_remote_video_description: true
+  field_remote_video_title: true
+  field_remote_video_video_desc: true
+  field_remote_video_video_title: true
   search_api_excerpt: true

@@ -3,22 +3,7 @@ display:
   default:
     display_title: Isäntä
     display_options:
-      exposed_form:
-        options:
-          submit_button: Käytä
-          reset_button_label: Palauta
-          exposed_sorts_label: Lajittele
-          sort_asc_label: Nousevasti
-          sort_desc_label: Laskevasti
-      pager:
-        options:
-          tags:
-            previous: '‹ Edellinen'
-            next: 'Seuraava ›'
-          expose:
-            items_per_page_label: 'Merkintöjä sivua kohti'
-            items_per_page_options_all_label: '- Kaikki -'
-            offset_label: Offset
+      title: 'Kustomoitujen lohkojen kirjasto'
       fields:
         info:
           label: 'Lohkon kuvaus'
@@ -30,6 +15,22 @@ display:
           label: Päivitetty
         operations:
           label: Toimenpiteet
+      pager:
+        options:
+          tags:
+            next: 'Seuraava ›'
+            previous: '‹ Edellinen'
+          expose:
+            items_per_page_label: 'Merkintöjä sivua kohti'
+            items_per_page_options_all_label: '- Kaikki -'
+            offset_label: Offset
+      exposed_form:
+        options:
+          submit_button: Käytä
+          reset_button_label: Reset
+          exposed_sorts_label: 'Sort by'
+          sort_asc_label: Asc
+          sort_desc_label: Desc
       filters:
         info:
           expose:
@@ -37,7 +38,6 @@ display:
         type:
           expose:
             label: 'Lohkon tyyppi'
-      title: 'Kustomoitujen lohkojen kirjasto'
   page_1:
     display_title: Sivu
     display_options:

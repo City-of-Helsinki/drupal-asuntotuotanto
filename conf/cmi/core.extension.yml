@@ -56,6 +56,7 @@ module:
   dynamic_page_cache: 0
   easy_breadcrumb: 0
   editor: 0
+  editoria11y: 0
   elasticsearch_connector: 0
   email_registration: 0
   entity: 0
@@ -65,6 +66,7 @@ module:
   field_group: 0
   field_ui: 0
   file: 0
+  filelog: 0
   filter: 0
   flysystem: 0
   flysystem_azure: 0
@@ -105,6 +107,7 @@ module:
   matomo: 0
   matomo_reports: 0
   media: 0
+  media_entity_file_replace: 0
   media_entity_soundcloud: 0
   media_library: 0
   menu_block: 0
@@ -146,9 +149,9 @@ module:
   slick: 0
   social_media: 0
   swiftmailer: 0
-  syslog: 0
   system: 0
   taxonomy: 0
+  telephone: 0
   text: 0
   token: 0
   token_filter: 0
@@ -162,6 +165,8 @@ module:
   user_bundle: 0
   user_registrationpassword: 0
   view_unpublished: 0
+  views_bulk_edit: 0
+  views_bulk_operations: 0
   views_infinite_scroll: 0
   views_ui: 0
   yearonly: 0

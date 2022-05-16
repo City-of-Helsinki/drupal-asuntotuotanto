@@ -117,9 +117,10 @@ function template_preprocess_asu_application(array &$variables) {
         'application_end_time' => $project->field_application_end_time->value,
         'project_main_image_url' => $main_image_file_url ?? NULL,
         'project_district' => $district,
-        'is_application_period' => $project->isApplicationPeriod('now'),
+        'is_application_period' => $project->isApplicationPeriod(),
         'is_application_period_over' => $project->isApplicationPeriod('after'),
         'application_apartments' => $apartmentData,
+        'error' => $application->hasError() ? $application->getError() : FALSE,
       ],
     ];
 

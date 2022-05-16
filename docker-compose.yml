@@ -1,7 +1,6 @@
 version: '3.7'
 
 services:
-
   app:
     hostname: "${DRUPAL_HOSTNAME}"
     container_name: "${COMPOSE_PROJECT_NAME}-app"
@@ -11,16 +10,24 @@ services:
       - ssh:/tmp/druid_ssh-agent:ro
     environment:
       APP_ENV: "${APP_ENV:-dev}"
-      DRUPAL_ROUTES: "https://varnish-${DRUPAL_HOSTNAME}"
+      DRUPAL_ROUTES: "https://varnish-${DRUPAL_HOSTNAME},https://helfi-proxy.docker.so,http://${COMPOSE_PROJECT_NAME}-varnish"
+      STAGE_FILE_PROXY_ORIGIN: "${STAGE_FILE_PROXY_ORIGIN}"
+      STAGE_FILE_PROXY_ORIGIN_DIR: "${STAGE_FILE_PROXY_ORIGIN_DIR}"
       DRUSH_OPTIONS_URI: "https://${DRUPAL_HOSTNAME}"
-      #XDEBUG_ENABLE: "true"
-      #XDEBUG_CONFIG: "remote_port=9001 remote_host=host.docker.internal remote_connect_back=0"
+      # XDEBUG_ENABLE: "true"
+      # DOCKERHOST: host.docker.internal
+      # XDEBUG_CONFIG: "remote_port=9001 remote_host=host.docker.internal remote_connect_back=0"
+
+      # permission issues.
       DTT_BASE_URL: "http://app:8080"
       SIMPLETEST_BASE_URL: "http://app:8080"
       SIMPLETEST_DB: "mysql://drupal:drupal@db:3306/drupal"
       DRUPAL_REVERSE_PROXY_ADDRESS: "https://asuntotuotanto.docker.so"
+      BROWSERTEST_OUTPUT_BASE_URL: "https://${DRUPAL_HOSTNAME}"
+      DRUPAL_VARNISH_HOST: "${COMPOSE_PROJECT_NAME}-varnish"
+      DRUPAL_VARNISH_PORT: 6081
+      REDIS_HOST: redis
       ASU_ASUNTOTUOTANTO_URL: "https://asuntotuotanto.docker.so"
-      ASU_DJANGO_BACKEND_URL: "https://asuntotuotanto-django-test.agw.arodevtest.hel.fi"
     networks:
       - internal
       - stonehenge-network
@@ -31,10 +38,13 @@ services:
       - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-app.tls=true"
       - "traefik.http.services.${COMPOSE_PROJECT_NAME}-app.loadbalancer.server.port=8080"
       - "traefik.docker.network=stonehenge-network"
+    #extra_hosts:
+      #- "host.docker.internal:host-gateway"
+      #- "${DRUPAL_HOSTNAME}:host-gateway"
 
   db:
     container_name: "${COMPOSE_PROJECT_NAME}-db"
-    image: druidfi/db:mysql5.7-drupal
+    image: druidfi/mariadb:10.6-drupal
     volumes:
       - db_data:/var/lib/mysql
     ports:
@@ -62,6 +72,29 @@ services:
     networks:
       - internal
       - stonehenge-network
+  #redis:
+    #container_name: "${COMPOSE_PROJECT_NAME}-redis"
+    #image: redis:6-alpine
+    #networks:
+      #- internal
+#  varnish:
+#    container_name: "${COMPOSE_PROJECT_NAME}-varnish"
+#    image: druidfi/varnish:6-drupal
+#    environment:
+#      VARNISH_BACKEND_HOST: "${COMPOSE_PROJECT_NAME}-app"
+#    depends_on:
+#      - app
+#    networks:
+#      - internal
+#      - stonehenge-network
+#    labels:
+#      - "traefik.enable=true"
+#      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-varnish.entrypoints=https"
+#      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-varnish.rule=Host(`varnish-${DRUPAL_HOSTNAME}`)"
+#      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-varnish.tls=true"
+#      - "traefik.http.services.${COMPOSE_PROJECT_NAME}-varnish.loadbalancer.server.port=6081"
+#      - "traefik.docker.network=stonehenge-network"
+
 
 networks:
   internal:

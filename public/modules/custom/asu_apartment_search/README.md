@@ -10,7 +10,7 @@ Run `composer install`. This will install asuntomyynti-react package from City o
 
 ## How to update
 
-Update the Asuntomyynti React package by updating the composer file at the root of the project.
+Update the Asuntomyynti React package by updating the composer file **at the root of the project**.
 You can manually adjust the package version to the latest. Remember to update lock file as well.
 For the lastest version see: https://github.com/City-of-Helsinki/asuntomyynti-react/releases.
 After updating the package running `composer install` will create you the built react application.

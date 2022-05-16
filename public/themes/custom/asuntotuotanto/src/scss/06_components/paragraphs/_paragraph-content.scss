@@ -1,0 +1,7 @@
+.paragraph-content {
+  margin-top: $spacing-triple;
+
+  @media screen and (min-width: $breakpoint-l) {
+    margin-top: $spacing-quadruple;
+  }
+}

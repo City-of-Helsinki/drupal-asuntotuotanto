@@ -45,6 +45,7 @@ dependencies:
     - field.field.node.project.field_default_collateral
     - field.field.node.project.field_depositary
     - field.field.node.project.field_district
+    - field.field.node.project.field_documents_delivered
     - field.field.node.project.field_energy_class
     - field.field.node.project.field_estimated_completion
     - field.field.node.project.field_estimated_completion_date
@@ -163,6 +164,7 @@ hidden:
   field_default_collateral: true
   field_depositary: true
   field_district: true
+  field_documents_delivered: true
   field_energy_class: true
   field_estimated_completion: true
   field_estimated_completion_date: true

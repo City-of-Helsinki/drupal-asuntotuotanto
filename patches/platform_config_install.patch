@@ -1,0 +1,30 @@
+diff --git a/helfi_features/helfi_content/helfi_content.install b/helfi_features/helfi_content/helfi_content.install
+index 796b59e..40c60c1 100644
+--- a/helfi_features/helfi_content/helfi_content.install
++++ b/helfi_features/helfi_content/helfi_content.install
+@@ -527,19 +527,19 @@ function helfi_content_update_9023() {
+  * Add contact card listing paragraph to all content areas on standard page.
+  */
+ function helfi_content_update_9024() {
+-  if (!Drupal::moduleHandler()->moduleExists('helfi_contact_cards')) {
++  // if (!Drupal::moduleHandler()->moduleExists('helfi_contact_cards')) {
+     //Install Helfi contact cards module
+-    Drupal::service('module_installer')->install(['helfi_contact_cards']);
++  //  Drupal::service('module_installer')->install(['helfi_contact_cards']);
+ 
+     /** @var \Drupal\update_helper\Updater $updateHelper */
+-    $updateHelper = \Drupal::service('update_helper.updater');
++  //  $updateHelper = \Drupal::service('update_helper.updater');
+ 
+     // Execute configuration update definitions with logging of success.
+-    $updateHelper->executeUpdate('helfi_content', 'helfi_content_update_9024');
++  //  $updateHelper->executeUpdate('helfi_content', 'helfi_content_update_9024');
+ 
+     // Output logged messages to related channel of update execution.
+-    return $updateHelper->logger()->output();
+-  }
++  //  return $updateHelper->logger()->output();
++  // }
+ }
+ 
+ 

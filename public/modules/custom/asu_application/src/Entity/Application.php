@@ -126,7 +126,7 @@ class Application extends EditorialContentEntityBase implements ContentEntityInt
    *   Does the application have additional applicants.
    */
   public function hasAdditionalApplicant(): bool {
-    return $this->applicant->isEmpty() ? FALSE : TRUE;
+    return !$this->applicant->isEmpty();
   }
 
   /**
@@ -136,7 +136,27 @@ class Application extends EditorialContentEntityBase implements ContentEntityInt
    *   Application has been sent.
    */
   public function isLocked(): bool {
-    return $this->field_locked->value ? TRUE : FALSE;
+    return (bool) $this->field_locked->value;
+  }
+
+  /**
+   * Has there been an error while sending api request to backend.
+   *
+   * @return bool
+   *   Application has error.
+   */
+  public function hasError(): bool {
+    return (bool) $this->error->value;
+  }
+
+  /**
+   * Get error message.
+   *
+   * @return string
+   *   Error text.
+   */
+  public function getError(): string {
+    return $this->error->value;
   }
 
   /**
@@ -232,11 +252,22 @@ class Application extends EditorialContentEntityBase implements ContentEntityInt
       ->setDefaultValue(0)
       ->setReadOnly(TRUE);
 
+    $fields['error'] = BaseFieldDefinition::create('string')
+      ->setLabel(t('Error'))
+      ->setDefaultValue('');
+
     return $fields;
   }
 
   /**
-   * {@inheritDoc}
+   * If sales creates application for customer, use user_id query parameter.
+   *
+   * @param Drupal\Core\Entity\EntityStorageInterface $storage
+   *   Entity storage interface.
+   * @param array $values
+   *   Entity values.
+   *
+   * @throws \Exception
    */
   public static function preCreate(EntityStorageInterface $storage, array &$values) {
     parent::preCreate($storage, $values);

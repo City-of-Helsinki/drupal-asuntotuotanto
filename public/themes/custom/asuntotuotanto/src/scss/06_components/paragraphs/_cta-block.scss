@@ -1,0 +1,22 @@
+.cta-block {
+  margin-top: $spacing-triple;
+  padding: $spacing-triple 0;
+  position: relative;
+  align-items: center;
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+
+  @media screen and (min-width: $breakpoint-l) {
+    margin-top: $spacing-quadruple;
+    padding: $spacing-double 0;
+  }
+}
+
+.cta-block__title {
+ font-size: $fontsize-heading-m;
+line-height: $lineheight-m;
+  font-weight: $font-weight-bold;
+  margin: 0 0 $spacing-and-half;
+  text-align: center;
+}

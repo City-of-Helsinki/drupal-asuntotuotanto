@@ -15,26 +15,30 @@ display:
         status:
           label: Status
           settings:
-            format_custom_true: Publicerad
             format_custom_false: 'Ej publicerad'
+            format_custom_true: Publicerad
         changed:
           label: Uppdaterad
         operations:
           label: Funktioner
-      exposed_form:
-        options:
-          submit_button: Filtrera
-          reset_button_label: Återställ
-          exposed_sorts_label: 'Sortera efter'
-          sort_asc_label: Stigande
-          sort_desc_label: Fallande
+      title: Innehåll
       pager:
         options:
           tags:
-            previous: '‹ Föregående'
             next: 'Nästa ›'
+            previous: '‹ Föregående'
             first: '« Första'
             last: 'Sista »'
+      exposed_form:
+        options:
+          submit_button: Filter
+          reset_button_label: Reset
+          exposed_sorts_label: 'Sort by'
+          sort_asc_label: Asc
+          sort_desc_label: Desc
+      empty:
+        area_text_custom:
+          content: 'Inget innehåll tillgängligt.'
       filters:
         title:
           expose:
@@ -55,18 +59,14 @@ display:
         langcode:
           expose:
             label: Språk
-      title: Innehåll
-      empty:
-        area_text_custom:
-          content: 'Inget innehåll tillgängligt.'
     display_title: Huvud
   page_1:
+    display_title: Sida
     display_options:
       menu:
         title: Innehåll
       tab_options:
         title: Innehåll
         description: 'Hitta och hantera innehåll'
-    display_title: Sida
 label: Innehåll
 description: 'Hitta och hantera innehåll.'
