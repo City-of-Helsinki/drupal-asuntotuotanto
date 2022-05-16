@@ -63,11 +63,11 @@ class CreateApplicationRequest extends Request {
     }
 
     if ($this->application->hasField('aso_changer')) {
-      $values['is_aso_changer'] = $this->application->field_aso_changer->value ?? FALSE;
+      $values['is_right_of_occupancy_housing_changer'] = $this->application->field_aso_changer->value ?? FALSE;
     }
 
     if ($this->application->hasField('hitas_owner')) {
-      $values['is_hitas_owner'] = $this->application->field_aso_changer->value ?? FALSE;
+      $values['has_hitas_ownership'] = $this->application->field_aso_changer->value ?? FALSE;
     }
 
     return $values;
@@ -79,7 +79,7 @@ class CreateApplicationRequest extends Request {
    * @return array
    *   Array of apartments.
    */
-  private function getApartments() {
+  protected function getApartments(): array {
     $apartments = [];
     foreach ($this->application->getApartments()->getValue() as $key => $value) {
       if (isset($value['id'])) {
@@ -98,10 +98,10 @@ class CreateApplicationRequest extends Request {
   /**
    * Get additional applicant.
    *
-   * @return array|object
+   * @return object
    *   Applicant information.
    */
-  private function getApplicant() {
+  protected function getApplicant(): ?object {
     if (!$this->application->hasAdditionalApplicant()) {
       return NULL;
     }
