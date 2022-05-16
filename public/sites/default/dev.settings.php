@@ -46,7 +46,7 @@ $settings['container_yamls'][] = DRUPAL_ROOT . '/sites/development.services.yml'
 
 //  $settings['skip_permissions_hardening'] = TRUE;
 
-#$config['system.performance']['css']['preprocess'] = 0;
+# $config['system.performance']['css']['preprocess'] = 0;
 $config['system.performance']['js']['preprocess'] = 0;
 
 /**

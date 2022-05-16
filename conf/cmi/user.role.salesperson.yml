@@ -39,6 +39,7 @@ dependencies:
     - asu_application
     - content_translation
     - editoria11y
+    - eu_cookie_compliance
     - file
     - filter
     - locale
@@ -202,6 +203,7 @@ permissions:
   - 'delete terms in site_owners'
   - 'delete terms in states_of_sale'
   - 'delete terms in tasks'
+  - 'display eu cookie compliance popup'
   - 'edit any apartment content'
   - 'edit any article content'
   - 'edit any file media'
