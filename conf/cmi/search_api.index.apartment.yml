@@ -693,6 +693,11 @@ field_settings:
     datasource_id: 'entity:node'
     property_path: 'search_api_reverse_entity_references_node__field_apartments:field_property_id'
     type: string
+  project_property_number:
+    label: 'Property number'
+    datasource_id: 'entity:node'
+    property_path: 'search_api_reverse_entity_references_node__field_apartments:field_property_number'
+    type: string
   project_publication_end_time:
     label: 'Publication end time'
     datasource_id: 'entity:node'
