@@ -56,6 +56,8 @@ class CreateApplicationRequest extends Request {
       'right_of_residence' => NULL,
       'project_id' => $this->projectData['uuid'],
       'apartments' => $this->getApartments(),
+      'is_right_of_occupancy_housing_changer' => FALSE,
+      'has_hitas_ownership' => FALSE,
     ];
 
     if ($this->application->hasField('field_right_of_residence_number')) {
@@ -69,7 +71,6 @@ class CreateApplicationRequest extends Request {
     if ($this->application->hasField('hitas_owner')) {
       $values['has_hitas_ownership'] = $this->application->field_aso_changer->value ?? FALSE;
     }
-
     return $values;
   }
 
