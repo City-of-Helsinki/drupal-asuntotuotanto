@@ -69,7 +69,7 @@ abstract class Request {
    * Gets the request data.
    *
    * @return array
-   *   The request.
+   *   The data to send with the request.
    */
   public function toArray(): array {
     return [];
