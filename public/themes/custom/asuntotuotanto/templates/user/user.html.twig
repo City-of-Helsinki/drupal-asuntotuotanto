@@ -32,6 +32,17 @@
   'wrapper--mw-1200'
 ] %}
 
+{% set link_attributes = {
+  'class': [
+    'hds-button',
+    'hds-button--secondary',
+  ]
+} %}
+{% set link_title %}
+  <span class="hel-icon asuntotuotanto-icon asuntotuotanto-icon--pen-line " aria-hidden="true"></span>
+  <span class="hds-button__label">{{ 'Edit'|t }}</span>
+{% endset %}
+
 <article{{ attributes.addClass(classes) }}>
   <div class="user-profile__header">
     <h1 class="user-profile__heading">{{ 'Personal information'|t }}</h1>
@@ -83,15 +94,7 @@
         value: 'password',
       } %}
     </div>
-    {% include '@asuntotuotanto/button/button.html.twig' with {
-        type: 'secondary',
-        disabled: false,
-        label: 'Edit'|t,
-        href: path('entity.user.canonical', {'user': user.id}) ~ '/edit',
-        icon_first: true,
-        icon_first_type: 'pen-line'
-      }
-    %}
+    {{ link(link_title, 'internal:' ~ path('entity.user.edit_form', {'user': user.id}), link_attributes) }}
   </section>
   <section class="user-profile__section">
     <h2>
@@ -104,15 +107,6 @@
         The information below is required for housing applications. This information will be pre-filled in the applications you make.
       {% endtrans %}
     </p>
-    {% include '@asuntotuotanto/button/button.html.twig' with {
-        type: 'secondary',
-        disabled: false,
-        label: 'Edit'|t,
-        href: path('entity.user.canonical', {'user': user.id}) ~ '/edit',
-        icon_first: true,
-        icon_first_type: 'pen-line'
-      }
-    %}
     <div class="user-profile__user-information">
       {% include "@asuntotuotanto/user/disabled-input.html.twig" with {
         id: 'first_name',

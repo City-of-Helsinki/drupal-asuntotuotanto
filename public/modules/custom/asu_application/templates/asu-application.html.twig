@@ -81,6 +81,15 @@
               {% endif %}
             </li>
           </ul>
+          <ul class="application__misc-information">
+            <li>
+              {% if content['#teaser_values'].error %}
+                {% include "@hdbt/misc/icon.twig" with {icon: 'info-circle-fill', label: '', class: 'warning'} %}
+                {{ content['#teaser_values'].error }}
+              {% endif %}
+            </li>
+          </ul>
+
         </div>
         <div class="application__actions">
           {% include "@asuntotuotanto/button/button.html.twig" with {
@@ -250,6 +259,14 @@
                 {% trans %}
                   The application period is open until {{ time }} on {{ date }}
                 {% endtrans %}
+              {% endif %}
+            </li>
+          </ul>
+          <ul class="application__misc-information">
+            <li>
+              {% if content['#teaser_values'].error %}
+                {% include "@hdbt/misc/icon.twig" with {icon: 'info-circle-fill', label: '', class: 'warning'} %}
+                {{ content['#teaser_values'].error }}
               {% endif %}
             </li>
           </ul>

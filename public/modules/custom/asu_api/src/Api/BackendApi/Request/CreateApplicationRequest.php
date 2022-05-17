@@ -21,14 +21,14 @@ class CreateApplicationRequest extends Request {
    *
    * @var Drupal\asu_application\Entity\Application
    */
-  private Application $application;
+  protected Application $application;
 
   /**
    * Project data.
    *
    * @var array
    */
-  private array $projectData;
+  protected array $projectData;
 
   /**
    * Constructor.
@@ -44,10 +44,7 @@ class CreateApplicationRequest extends Request {
   }
 
   /**
-   * Data to array.
-   *
-   * @return array
-   *   Array which is sent to API.
+   * {@inheritdoc}
    */
   public function toArray(): array {
     $values = [
@@ -59,12 +56,21 @@ class CreateApplicationRequest extends Request {
       'right_of_residence' => NULL,
       'project_id' => $this->projectData['uuid'],
       'apartments' => $this->getApartments(),
+      'is_right_of_occupancy_housing_changer' => FALSE,
+      'has_hitas_ownership' => FALSE,
     ];
 
     if ($this->application->hasField('field_right_of_residence_number')) {
       $values['right_of_residence'] = $this->application->field_right_of_residence_number->value;
     }
 
+    if ($this->application->hasField('aso_changer')) {
+      $values['is_right_of_occupancy_housing_changer'] = $this->application->field_aso_changer->value ?? FALSE;
+    }
+
+    if ($this->application->hasField('hitas_owner')) {
+      $values['has_hitas_ownership'] = $this->application->field_aso_changer->value ?? FALSE;
+    }
     return $values;
   }
 
@@ -74,12 +80,12 @@ class CreateApplicationRequest extends Request {
    * @return array
    *   Array of apartments.
    */
-  private function getApartments() {
+  protected function getApartments(): array {
     $apartments = [];
     foreach ($this->application->getApartments()->getValue() as $key => $value) {
       if (isset($value['id'])) {
         $apartments[$key] = [
-          'priority' => $key,
+          'priority' => $key + 1,
           'identifier' => $this->projectData['apartment_uuids'][$value['id']],
         ];
       }
@@ -93,10 +99,10 @@ class CreateApplicationRequest extends Request {
   /**
    * Get additional applicant.
    *
-   * @return array|object
+   * @return object
    *   Applicant information.
    */
-  private function getApplicant() {
+  protected function getApplicant(): ?object {
     if (!$this->application->hasAdditionalApplicant()) {
       return NULL;
     }

@@ -44,6 +44,7 @@ dependencies:
     - field.field.node.project.field_default_collateral
     - field.field.node.project.field_depositary
     - field.field.node.project.field_district
+    - field.field.node.project.field_documents_delivered
     - field.field.node.project.field_energy_class
     - field.field.node.project.field_estimated_completion
     - field.field.node.project.field_estimated_completion_date
@@ -131,7 +132,7 @@ content:
       timezone_override: ''
       format_type: medium
     third_party_settings: {  }
-    weight: 72
+    weight: 68
     region: content
   field_apartment_count:
     type: number_integer
@@ -176,7 +177,7 @@ content:
       format_custom_false: ''
       format_custom_true: ''
     third_party_settings: {  }
-    weight: 91
+    weight: 85
     region: content
   field_article_of_association:
     type: string
@@ -184,7 +185,7 @@ content:
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    weight: 54
+    weight: 53
     region: content
   field_attachments_url:
     type: link
@@ -213,7 +214,7 @@ content:
       timezone_override: ''
       format_type: medium
     third_party_settings: {  }
-    weight: 79
+    weight: 74
     region: content
   field_building_flaw_attachement:
     type: boolean
@@ -223,7 +224,7 @@ content:
       format_custom_false: ''
       format_custom_true: ''
     third_party_settings: {  }
-    weight: 65
+    weight: 61
     region: content
   field_building_type:
     type: entity_reference_label
@@ -239,7 +240,7 @@ content:
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    weight: 50
+    weight: 49
     region: content
   field_city:
     type: string
@@ -258,7 +259,7 @@ content:
       scale: 2
       prefix_suffix: true
     third_party_settings: {  }
-    weight: 71
+    weight: 67
     region: content
   field_collateral_amount_fixed:
     type: boolean
@@ -268,7 +269,7 @@ content:
       format_custom_false: ''
       format_custom_true: ''
     third_party_settings: {  }
-    weight: 70
+    weight: 66
     region: content
   field_collateral_type:
     type: string
@@ -276,7 +277,7 @@ content:
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    weight: 63
+    weight: 60
     region: content
   field_completion_1_start:
     type: datetime_default
@@ -285,7 +286,7 @@ content:
       timezone_override: ''
       format_type: medium
     third_party_settings: {  }
-    weight: 82
+    weight: 77
     region: content
   field_completion_2_end:
     type: datetime_default
@@ -294,7 +295,7 @@ content:
       timezone_override: ''
       format_type: medium
     third_party_settings: {  }
-    weight: 87
+    weight: 81
     region: content
   field_completion_2_start:
     type: datetime_default
@@ -303,7 +304,7 @@ content:
       timezone_override: ''
       format_type: medium
     third_party_settings: {  }
-    weight: 86
+    weight: 80
     region: content
   field_completion_3_start:
     type: datetime_default
@@ -312,7 +313,7 @@ content:
       timezone_override: ''
       format_type: medium
     third_party_settings: {  }
-    weight: 88
+    weight: 82
     region: content
   field_completion_selection_1:
     type: boolean
@@ -322,7 +323,7 @@ content:
       format_custom_false: ''
       format_custom_true: ''
     third_party_settings: {  }
-    weight: 81
+    weight: 76
     region: content
   field_completion_selection_2:
     type: boolean
@@ -332,7 +333,7 @@ content:
       format_custom_false: ''
       format_custom_true: ''
     third_party_settings: {  }
-    weight: 83
+    weight: 78
     region: content
   field_completion_selection_3:
     type: boolean
@@ -342,7 +343,7 @@ content:
       format_custom_false: ''
       format_custom_true: ''
     third_party_settings: {  }
-    weight: 84
+    weight: 79
     region: content
   field_construction_end_date:
     type: datetime_default
@@ -351,7 +352,7 @@ content:
       timezone_override: ''
       format_type: medium
     third_party_settings: {  }
-    weight: 48
+    weight: 47
     region: content
   field_construction_materials:
     type: entity_reference_label
@@ -368,14 +369,14 @@ content:
       timezone_override: ''
       format_type: medium
     third_party_settings: {  }
-    weight: 66
+    weight: 62
     region: content
   field_construction_phase_meaning:
     type: list_default
     label: above
     settings: {  }
     third_party_settings: {  }
-    weight: 58
+    weight: 57
     region: content
   field_construction_start_date:
     type: datetime_default
@@ -384,7 +385,7 @@ content:
       timezone_override: ''
       format_type: medium
     third_party_settings: {  }
-    weight: 47
+    weight: 46
     region: content
   field_construction_year:
     type: string
@@ -399,7 +400,7 @@ content:
     label: above
     settings: {  }
     third_party_settings: {  }
-    weight: 89
+    weight: 83
     region: content
   field_coordinate_lat:
     type: number_decimal
@@ -428,7 +429,7 @@ content:
     label: above
     settings: {  }
     third_party_settings: {  }
-    weight: 76
+    weight: 71
     region: content
   field_default_collateral:
     type: string
@@ -436,7 +437,7 @@ content:
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    weight: 74
+    weight: 69
     region: content
   field_depositary:
     type: string
@@ -444,7 +445,7 @@ content:
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    weight: 61
+    weight: 58
     region: content
   field_district:
     type: entity_reference_label
@@ -453,6 +454,13 @@ content:
       link: false
     third_party_settings: {  }
     weight: 30
+    region: content
+  field_documents_delivered:
+    type: basic_string
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 87
     region: content
   field_energy_class:
     type: entity_reference_label
@@ -469,7 +477,7 @@ content:
       timezone_override: ''
       format_type: medium
     third_party_settings: {  }
-    weight: 69
+    weight: 65
     region: content
   field_estimated_handover_start:
     type: datetime_default
@@ -478,7 +486,7 @@ content:
       timezone_override: ''
       format_type: medium
     third_party_settings: {  }
-    weight: 68
+    weight: 64
     region: content
   field_has_elevator:
     type: boolean
@@ -532,13 +540,10 @@ content:
         title: '0'
         alt: '0'
       optionset: default
-      icon: ''
       layout: ''
       view_mode: ''
       cache: 0
-      current_view_mode: default
       skin: ''
-      fx: ''
       style: ''
       background: false
       box_caption: ''
@@ -550,10 +555,6 @@ content:
       media_switch: ''
       ratio: ''
       thumbnail_style: ''
-      _uri: ''
-      breakpoints: {  }
-      sizes: ''
-      grid_header: ''
       grid: null
       grid_medium: null
       grid_small: null
@@ -589,7 +590,7 @@ content:
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    weight: 51
+    weight: 50
     region: content
   field_management_handover_date:
     type: datetime_default
@@ -598,7 +599,7 @@ content:
       timezone_override: ''
       format_type: medium
     third_party_settings: {  }
-    weight: 78
+    weight: 73
     region: content
   field_material_selection_date:
     type: datetime_default
@@ -607,14 +608,14 @@ content:
       timezone_override: ''
       format_type: medium
     third_party_settings: {  }
-    weight: 56
+    weight: 55
     region: content
   field_material_selection_desc:
     type: basic_string
     label: above
     settings: {  }
     third_party_settings: {  }
-    weight: 57
+    weight: 56
     region: content
   field_material_selection_later:
     type: boolean
@@ -624,7 +625,7 @@ content:
       format_custom_false: ''
       format_custom_true: ''
     third_party_settings: {  }
-    weight: 55
+    weight: 54
     region: content
   field_new_development_status:
     type: entity_reference_label
@@ -649,7 +650,7 @@ content:
     label: above
     settings: {  }
     third_party_settings: {  }
-    weight: 67
+    weight: 63
     region: content
   field_ownership_type:
     type: entity_reference_label
@@ -664,14 +665,14 @@ content:
     label: above
     settings: {  }
     third_party_settings: {  }
-    weight: 75
+    weight: 70
     region: content
   field_plot_owner:
     type: list_default
     label: above
     settings: {  }
     third_party_settings: {  }
-    weight: 90
+    weight: 84
     region: content
   field_postal_code:
     type: string
@@ -717,7 +718,7 @@ content:
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    weight: 52
+    weight: 51
     region: content
   field_property_number:
     type: string
@@ -725,7 +726,7 @@ content:
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    weight: 46
+    weight: 45
     region: content
   field_publication_start_time:
     type: datetime_default
@@ -750,7 +751,7 @@ content:
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    weight: 77
+    weight: 72
     region: content
   field_regular_bank_account:
     type: string
@@ -766,7 +767,7 @@ content:
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    weight: 62
+    weight: 59
     region: content
   field_roof_material:
     type: string
@@ -869,21 +870,21 @@ content:
       format_custom_false: ''
       format_custom_true: ''
     third_party_settings: {  }
-    weight: 53
+    weight: 52
     region: content
   field_upcoming_description:
     type: basic_string
     label: above
     settings: {  }
     third_party_settings: {  }
-    weight: 92
+    weight: 86
     region: content
   field_usage_fees:
     type: basic_string
     label: above
     settings: {  }
     third_party_settings: {  }
-    weight: 49
+    weight: 48
     region: content
   field_warranty_deposit_releas:
     type: datetime_default
@@ -892,7 +893,7 @@ content:
       timezone_override: ''
       format_type: medium
     third_party_settings: {  }
-    weight: 80
+    weight: 75
     region: content
   field_zoning_info:
     type: link

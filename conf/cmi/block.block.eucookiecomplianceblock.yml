@@ -3,17 +3,16 @@ langcode: en
 status: true
 dependencies:
   module:
-    - ctools
     - eu_cookie_compliance
     - system
   theme:
-    - hdbt
+    - asuntotuotanto
 _core:
   default_config_hash: Ofp5Nv8E3DryORBw9DXtbN860LdYomjt-klGkC0fCHs
 id: eucookiecomplianceblock
-theme: hdbt
+theme: asuntotuotanto
 region: after_content
-weight: -5
+weight: -7
 provider: null
 plugin: eu_cookie_compliance_block
 settings:
@@ -26,14 +25,7 @@ settings:
       value: ''
       format: full_html
 visibility:
-  'entity_bundle:node':
-    id: 'entity_bundle:node'
-    negate: false
-    context_mapping:
-      node: '@node.node_route_context:node'
-    bundles:
-      page: page
   request_path:
     id: request_path
     negate: false
-    pages: /node/1
+    pages: /cookie-information-and-settings

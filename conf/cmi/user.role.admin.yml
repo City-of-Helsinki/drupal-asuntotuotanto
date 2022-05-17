@@ -180,6 +180,7 @@ permissions:
   - 'delete terms in site_owners'
   - 'delete terms in states_of_sale'
   - 'delete terms in tasks'
+  - 'display eu cookie compliance popup'
   - 'edit any apartment content'
   - 'edit any article content'
   - 'edit any file media'

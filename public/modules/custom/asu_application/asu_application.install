@@ -1,0 +1,16 @@
+<?php
+
+/**
+ * Installs application error field.
+ */
+function asu_application_update_9001() : void {
+  $fields['error'] = \Drupal\Core\Field\BaseFieldDefinition::create('string')
+    ->setLabel(new \Drupal\Core\StringTranslation\TranslatableMarkup('Error'))
+    ->setTranslatable(TRUE)
+    ->setDefaultValue('');
+
+  foreach ($fields as $name => $field) {
+    \Drupal::entityDefinitionUpdateManager()
+      ->installFieldStorageDefinition($name, 'asu_application', 'asu_application', $field);
+  }
+}

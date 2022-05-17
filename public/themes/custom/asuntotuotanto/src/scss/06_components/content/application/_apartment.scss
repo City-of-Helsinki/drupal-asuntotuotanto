@@ -1,0 +1,412 @@
+@-webkit-keyframes spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.application-form-apartment {
+  border-top: 1px solid var(--color-black-20);
+  padding: $spacing;
+
+  @media screen and (min-width: $breakpoint-xl) {
+    display: flex;
+    align-items: center;
+    padding: $spacing-and-half 0;
+  }
+
+  .hds-select-element {
+    width: 100%;
+  }
+}
+
+.application-form-apartment-loader-wrapper {
+  border-top: 1px solid var(--color-black-20);
+  height: 89px;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+}
+
+.application-form-apartment-loader {
+  border: 6px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 6px solid var(--color-bus);
+  width: 40px;
+  height: 40px;
+  animation: spin 1.5s linear infinite;
+  margin: 0 auto;
+}
+
+.application-form-apartment__header {
+  display: flex;
+  align-items: center;
+  margin-bottom: $spacing;
+
+  @media screen and (min-width: $breakpoint-xl) {
+    margin-bottom: 0;
+    order: 3;
+    margin-right: $spacing-double;
+    // min-width: 120px;
+    min-width: 140px;
+  }
+
+  .application-form__apartments-item--with-select & {
+    @media screen and (min-width: $breakpoint-xl) {
+      width: 300px;
+      margin-right: 0;
+    }
+  }
+}
+
+.application-form-apartment__list-position {
+ font-size: $fontsize-heading-m;
+line-height: $lineheight-m;
+  font-weight: $font-weight-bold;
+  margin: 0 $spacing 0 0;
+  position: relative;
+
+  @media screen and (min-width: $breakpoint-xl) {
+    font-size: $fontsize-heading-s;
+line-height: $lineheight-l;
+  }
+
+  &.is-mobile {
+    @media screen and (min-width: $breakpoint-xl) {
+      display: none;
+      visibility: hidden;
+    }
+  }
+
+  &.is-desktop {
+    display: inline-block;
+    order: 1;
+    margin: 0 0 0 0;
+    min-width: 20px;
+
+    @media screen and (max-width: $breakpoint-xl - 1px) {
+      display: none;
+      visibility: hidden;
+    }
+  }
+}
+
+.application-form-apartment__apartment-add-button {
+  text-decoration: underline;
+  font-weight: $font-weight-medium;
+  color: var(--color-bus);
+  border: 0;
+  margin: 0;
+  padding: 0;
+  background-color: transparent;
+
+  span {
+    pointer-events: none;
+  }
+
+  &:hover {
+    cursor: pointer;
+  }
+
+  &:disabled {
+    color: $color-black-40;
+    cursor: default;
+    text-decoration: none;
+  }
+}
+
+.application-form-apartment__apartment-add-actions-wrapper {
+  width: 100%;
+}
+
+.application-form-apartment__apartment-number {
+ font-size: $fontsize-heading-m;
+line-height: $lineheight-m;
+  font-weight: $font-weight-bold;
+  margin: 0 12px 0 0;
+
+  @media screen and (min-width: $breakpoint-xl) {
+    font-size: $fontsize-heading-s;
+line-height: $lineheight-l;
+    margin: 0 $spacing-and-half 0 0;
+  }
+}
+
+.application-form-apartment__apartment-structure {
+ font-size: $fontsize-body-l;
+line-height: $lineheight-xl; // Was 27px.
+  margin: 0;
+}
+
+.application-form-apartment__list-position-actions {
+  display: grid;
+  grid-gap: 12px;
+  margin-bottom: $spacing;
+
+  @media screen and (min-width: $breakpoint-s) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media screen and (min-width: $breakpoint-xl) {
+    margin-bottom: 0;
+    order: 2;
+    grid-gap: $spacing-half-and-half;
+    margin-left: 12px;
+    margin-right: $spacing-triple;
+  }
+
+  .application-form__apartments-item--with-select & {
+    @media screen and (max-width: $breakpoint-xl - 1px) {
+      display: none;
+      visibility: hidden;
+    }
+  }
+
+  button {
+   font-size: $fontsize-body-m;
+line-height: $lineheight-l; // Was 24px.
+    align-items: center;
+    background-color: transparent;
+    border: 2px solid var(--color-black-90);
+    display: inline-flex;
+    font-weight: $font-weight-medium;
+    margin: 0;
+    padding: $spacing-half-and-half 12px;
+    justify-content: center;
+
+    @media screen and (min-width: $breakpoint-xl) {
+      border: 0;
+      padding: 0;
+    }
+
+    &:hover:not([disabled]) {
+      cursor: pointer;
+      text-decoration: underline;
+    }
+
+    &:focus:not([disabled]) {
+      outline: 1px solid auto;
+      text-decoration: underline;
+    }
+
+    &:before {
+      background-size: 100%;
+      content: "";
+      display: inline-block;
+      height: 24px;
+      margin-right: $spacing-half-and-half;
+      width: 24px;
+      pointer-events: none;
+
+      @media screen and (min-width: $breakpoint-xl) {
+        margin-right: 0;
+      }
+    }
+
+    &:first-child {
+      &:before {
+        background-image: url("../icons/arrow-up.svg");
+      }
+    }
+
+    &:nth-child(2) {
+      &:before {
+        background-image: url("../icons/arrow-down.svg");
+      }
+    }
+
+    &[disabled] {
+      color: var(--color-black-50);
+      border-color: var(--color-black-50);
+
+      &::before {
+        opacity: 0.5;
+      }
+    }
+
+    span {
+      pointer-events: none;
+
+      @media screen and (min-width: $breakpoint-xl) {
+        position: absolute !important;
+        overflow: hidden;
+        clip: rect(1px, 1px, 1px, 1px);
+        width: 1px;
+        height: 1px;
+        word-wrap: normal;
+      }
+    }
+  }
+}
+
+.application-form-apartment__information {
+  list-style: none;
+  margin: 0 0 $spacing;
+  padding: 0;
+
+  @media screen and (min-width: $breakpoint-xl) {
+    margin: 0;
+    order: 3;
+    display: flex;
+  }
+
+  li {
+   font-size: $fontsize-body-m;
+line-height: $lineheight-l; // Was 24px.
+
+    @media screen and (min-width: $breakpoint-xl) {
+     font-size: $fontsize-body-l;
+line-height: $lineheight-xl; // Was 27px.
+    }
+
+    &:not(:first-child) {
+      margin-top: $spacing-half-and-half;
+
+      @media screen and (min-width: $breakpoint-xl) {
+        margin-top: 0;
+        margin-left: $spacing-triple;
+      }
+    }
+
+    span {
+      &:first-of-type {
+        display: inline-block;
+        width: 160px;
+
+        @media screen and (min-width: $breakpoint-xl) {
+          position: absolute !important;
+          overflow: hidden;
+          clip: rect(1px, 1px, 1px, 1px);
+          width: 1px;
+          height: 1px;
+          word-wrap: normal;
+        }
+      }
+    }
+
+    &:nth-child(1) {
+      @media screen and (min-width: $breakpoint-xl) {
+        min-width: 42px;
+      }
+    }
+
+    &:nth-child(2) {
+      @media screen and (min-width: $breakpoint-xl) {
+        min-width: 75px;
+      }
+    }
+
+    &:nth-child(3) {
+      @media screen and (min-width: $breakpoint-xl) {
+        min-width: 95px;
+      }
+    }
+
+    &:nth-child(4) {
+      @media screen and (min-width: $breakpoint-xl) {
+        min-width: 95px;
+      }
+    }
+  }
+}
+
+.application-form-apartment__actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  @media screen and (min-width: $breakpoint-s) {
+    align-items: baseline;
+    justify-content: space-between;
+    flex-direction: row;
+  }
+
+  @media screen and (min-width: $breakpoint-xl) {
+    margin-left: auto;
+    order: 4;
+  }
+
+  button {
+   font-size: $fontsize-body-m;
+line-height: $lineheight-l; // Was 24px.
+    align-items: center;
+    background-color: transparent;
+    border: 0;
+    display: inline-flex;
+    font-weight: $font-weight-medium;
+    margin: 0 0 12px;
+    padding: $spacing-half-and-half 12px;
+    justify-content: flex-start;
+
+    &:hover:not([disabled]) {
+      cursor: pointer;
+      text-decoration: underline;
+    }
+
+    &:focus:not([disabled]) {
+      outline: 1px solid auto;
+      text-decoration: underline;
+    }
+
+    &:after {
+      background-image: url("../icons/trash.svg");
+      background-size: 100%;
+      content: "";
+      display: inline-block;
+      height: 24px;
+      margin-left: $spacing-half-and-half;
+      width: 24px;
+    }
+
+    @media screen and (min-width: $breakpoint-s) {
+      margin: 0;
+    }
+
+    span {
+      pointer-events: none;
+    }
+  }
+
+  a {
+   font-size: $fontsize-body-m;
+line-height: $lineheight-l; // Was 24px.
+    align-items: center;
+    background-color: transparent;
+    color: var(--color-bus);
+    display: inline-flex;
+    font-weight: $font-weight-medium;
+    justify-content: center;
+    margin: 0;
+    padding: $spacing-half-and-half 12px;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+
+    &:focus {
+      text-decoration: underline;
+    }
+
+    &:after {
+      background-image: url("../icons/angle-right--blue.svg");
+      background-size: 100%;
+      content: "";
+      display: inline-block;
+      height: 24px;
+      margin-left: $spacing-half-and-half;
+      width: 24px;
+    }
+  }
+}

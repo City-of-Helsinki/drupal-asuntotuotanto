@@ -1,7 +1,7 @@
 _core:
   default_config_hash: P6YjZQN0wv2MHVDNRVc46Plx_OiZFESe-I78R-ovdVQ
-from-morelink: 'https://google.fi'
-popup-morelink: /gdpr-compliance/policy
+from-morelink: /cookie-information-and-settings
+popup-morelink: /cookie-information-and-settings
 popup-text-cookies: ''
 popup-text-analytics: ''
 popup-btn-agree: ''
@@ -9,14 +9,18 @@ popup-btn-findmore: ''
 user-register: 1
 user-login: 0
 contact_message-mode: null
-contact_message-bundles: null
+contact_message-bundles:
+  apply_for_free_apartment: 0
+  personal: 0
 node-mode: disable
 node-bundles:
+  apartment: 0
   article: 0
   landing_page: 0
+  news: 0
   page: 0
+  project: 0
   service: 0
-  unit: 0
 webform-mode: null
 webform-bundles: null
 popup-guests: 0

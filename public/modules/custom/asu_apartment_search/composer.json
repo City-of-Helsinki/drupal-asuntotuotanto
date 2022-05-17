@@ -5,14 +5,14 @@
     "homepage": "https://www.hel.fi/asuntotuotanto",
     "minimum-stability": "dev",
     "require": {
-        "city-of-helsinki/asuntomyynti-react": "1.0.0"
+        "city-of-helsinki/asuntomyynti-react": "1.1.0"
     },
     "repositories": [
         {
             "type": "package",
             "package": {
                 "name": "city-of-helsinki/asuntomyynti-react",
-                "version": "1.0.0",
+                "version": "1.1.0",
                 "source": {
                     "url": "https://github.com/City-of-Helsinki/asuntomyynti-react",
                     "type": "git",

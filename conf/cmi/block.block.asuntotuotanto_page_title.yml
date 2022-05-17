@@ -3,8 +3,7 @@ langcode: en
 status: true
 dependencies:
   module:
-    - context
-    - ctools
+    - node
     - system
   theme:
     - asuntotuotanto
@@ -22,14 +21,6 @@ settings:
   label_display: '0'
   provider: core
 visibility:
-  view_inclusion:
-    id: view_inclusion
-    negate: false
-    view_inclusion: {  }
-  request_path_exclusion:
-    id: request_path_exclusion
-    negate: true
-    pages: ''
   'entity_bundle:node':
     id: 'entity_bundle:node'
     negate: true

@@ -1,0 +1,123 @@
+.news-teaser {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: baseline;
+
+  &.news-teaser--prominent {
+    @media screen and (min-width: $breakpoint-l) {
+      display: flex;
+      flex-direction: row;
+      align-items: stretch;
+    }
+  }
+}
+
+.news-teaser__image {
+  picture {
+    display: flex;
+
+    @media screen and (min-width: $breakpoint-l) {
+      height: 100%;
+    }
+  }
+
+  img {
+    width: 100%;
+
+    @media screen and (min-width: $breakpoint-l) {
+      object-fit: cover;
+      height: 100%;
+    }
+  }
+
+  .news-teaser--prominent & {
+    @media screen and (min-width: $breakpoint-l) {
+      width: 45%;
+    }
+  }
+}
+
+.news-teaser__content {
+  .news-teaser--prominent & {
+    border-left: 1px solid rgba(0, 0, 0, .25);
+    border-right: 1px solid rgba(0, 0, 0, .25);
+    border-bottom: 1px solid rgba(0, 0, 0, .25);
+    padding: $spacing $spacing-double;
+
+    @media screen and (min-width: $breakpoint-l) {
+      border-left: 0;
+      border-top: 1px solid rgba(0, 0, 0, .25);
+      padding: $spacing-quadruple;
+      width: 55%;
+    }
+  }
+}
+
+.news-teaser__publish-date {
+  font-size: $fontsize-body-s;
+line-height: $lineheight-l; // Was 26px.
+  font-weight: $font-weight-regular;
+  margin: $spacing 0 $spacing-quarter;
+  color: var(--color-black-90);
+
+  .news-teaser--prominent & {
+    margin-top: 0;
+
+    @media screen and (min-width: $breakpoint-l) {
+      margin-bottom: $spacing-half-and-half;
+    }
+  }
+}
+
+.news-teaser__label {
+  font-size: $fontsize-heading-xs;
+line-height: $lineheight-m; // Was 22px.
+  font-weight: $font-weight-bold;
+  margin: 0 0 $spacing;
+  color: var(--color-black-90);
+
+  a {
+    text-decoration: none;
+  }
+
+  .news-teaser--prominent & {
+    @media screen and (min-width: $breakpoint-l) {
+     font-size: $fontsize-heading-m;
+line-height: $lineheight-m;
+    }
+  }
+}
+
+.news-teaser__summary {
+ font-size: $fontsize-body-m;
+line-height: $lineheight-l; // Was 24px.
+  margin-bottom: $spacing;
+
+  .news-teaser--prominent & {
+    @media screen and (min-width: $breakpoint-l) {
+      margin-bottom: $spacing-double;
+    }
+  }
+}
+
+.news-teaser__more-link {
+ font-size: $fontsize-body-m;
+line-height: $lineheight-l; // Was 26px.
+  font-weight: $font-weight-bold;
+  color: var(--color-black-90);
+  text-decoration: none;
+  align-items: center;
+  display: inline-flex;
+  margin-top: auto;
+
+  &:before {
+    background-image: url('../icons/angle-right.svg');
+    background-position: right;
+    background-size: 24px;
+    content: "";
+    display: inline-block;
+    height: 24px;
+    width: 16px;
+  }
+}
