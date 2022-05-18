@@ -92,8 +92,7 @@ function template_preprocess_asu_application(array &$variables) {
     }
 
     $main_image_file_url = NULL;
-
-    if ($project->field_main_image->target_id) {
+    if ($project->field_main_image && $project->field_main_image->target_id) {
       $main_image_file = File::load($project->field_main_image->target_id) ?? NULL;
 
       if ($main_image_file) {
@@ -101,9 +100,12 @@ function template_preprocess_asu_application(array &$variables) {
       }
     }
 
-    $district = $project->field_district->first() ?
-      $project->field_district->first()->entity->getName() :
-      '';
+    $district = '';
+    if ($project->field_district) {
+      $district = $project->field_district->first() ?
+        $project->field_district->first()->entity->getName() :
+        '';
+    }
 
     $application_teaser_values = [
       '#teaser_values' => [
