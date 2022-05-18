@@ -197,7 +197,7 @@ function asuntotuotanto_preprocess_views_view_table(&$variables) {
 
     if ($results) {
       $result = reset($results);
-      /** @var \Drupal\asu_content\Entity\Project $parent */
+      /** @var \Drupal\asu_content\Entity\Project $project */
       $project = $result->_entity->getProject();
     }
     else {
@@ -216,6 +216,15 @@ function asuntotuotanto_preprocess_views_view_table(&$variables) {
       $applicationCountEnum = Applications::resolveApplicationCountEnum((int) $applicationCount);
       $variables['rows'][$key]['application_status'] = get_apartment_application_status($applicationCountEnum);
 
+      $reserved_or_sold = FALSE;
+      if ($apartment->isSold() || $apartment->isReserved() || $apartment->isFree()) {
+        $reserved_or_sold = $apartment->isReserved() ? 'Reserved' : 'Vacant';
+        // Sold apartment is not listed so this is not necessary.
+        if ($apartment->isSold()) {
+          $reserved_or_sold = 'Sold';
+        }
+      }
+
       if (!$project) {
         continue;
       }
@@ -226,6 +235,9 @@ function asuntotuotanto_preprocess_views_view_table(&$variables) {
       $variables['rows'][$key]['is_application_period_active'] = $is_application_period_active;
       $variables['rows'][$key]['application_url'] = $application_url;
       $variables['rows'][$key]['apartment_number'] = $apartment->field_apartment_number->value;
+      $variables['rows'][$key]['reserved_or_sold'] = $reserved_or_sold;
+      $variables['rows'][$key]['application_url'] = $project->getApplicationUrl();
+      $variables['rows'][$key]['application_url_title'] = $apartment->getApplicationUrlTitle();
     }
 
     usort($variables['rows'], function ($a, $b) {
@@ -543,6 +555,7 @@ function asuntotuotanto_preprocess_node(&$variables) {
         $variables['cta_image'] = load_responsive_image_style($cta_image_file_target_id, 'image__3_2');
       }
 
+      /** @var \Drupal\asu_content\Entity\Project $project */
       $project = $apartment->getProject();
 
       if ($project) {
@@ -555,22 +568,18 @@ function asuntotuotanto_preprocess_node(&$variables) {
         }
 
         $is_application_period_active = $project->isApplicationPeriod();
-        $is_application_period_in_the_past = FALSE;
-        $application_start_time_timestamp = NULL;
-        $application_end_time_timestamp = NULL;
+        $is_application_period_in_the_past = $project->isApplicationPeriod('after');
 
         if (
           $project->hasField('field_application_start_time') &&
           $application_start_time_value = $project->get('field_application_start_time'
           )->value) {
-          $application_start_time_timestamp = format_date_to_unix_timestamp($application_start_time_value);
           $application_start = (new \DateTime($application_start_time_value))->format('d.m.Y H:i');
         }
         if (
           $project->hasField('field_application_end_time') &&
           $application_end_time_value = $project->get('field_application_end_time')->value
         ) {
-          $application_end_time_timestamp = format_date_to_unix_timestamp($application_end_time_value);
           $application_end = (new \DateTime($application_end_time_value))->format('d.m.Y H:i');
         }
 
