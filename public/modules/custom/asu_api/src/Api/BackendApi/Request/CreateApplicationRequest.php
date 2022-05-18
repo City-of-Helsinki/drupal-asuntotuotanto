@@ -69,7 +69,7 @@ class CreateApplicationRequest extends Request {
     }
 
     if ($this->application->hasField('hitas_owner')) {
-      $values['has_hitas_ownership'] = $this->application->field_aso_changer->value ?? FALSE;
+      $values['has_hitas_ownership'] = $this->application->field_hitas_owner->value ?? FALSE;
     }
     return $values;
   }
