@@ -53,11 +53,6 @@ class SalesCreateApplicationRequest extends Request {
     /** @var \Drupal\user\UserInterface $owner */
     $owner = $this->application->getOwner();
 
-    $applicant = $this->getApplicant();
-    if (!$applicant) {
-      $applicant = NULL;
-    }
-
     $values = [
       // Profile id is the customer profile uuid.
       'profile' => $owner->uuid(),
@@ -65,12 +60,12 @@ class SalesCreateApplicationRequest extends Request {
       'application_type' => $this->application->bundle(),
       'ssn_suffix' => $this->application->field_personal_id->value,
       'has_children' => $this->application->getHasChildren(),
-      'additional_applicant' => $applicant,
-      'project_id' => $this->projectData['uuid'],
+      'additional_applicant' => $this->getApplicant(),
       'right_of_residence' => NULL,
+      'project_id' => $this->projectData['uuid'],
       'apartments' => $this->getApartments(),
-      'has_hitas_ownership' => FALSE,
       'is_right_of_occupancy_housing_changer' => FALSE,
+      'has_hitas_ownership' => FALSE,
     ];
 
     if ($this->application->hasField('field_right_of_residence_number')) {
@@ -118,7 +113,7 @@ class SalesCreateApplicationRequest extends Request {
    */
   private function getApplicant() {
     if (!$this->application->hasAdditionalApplicant()) {
-      return [];
+      return NULL;
     }
     $applicant = $this->application->getApplicants()[0];
     return [
