@@ -59,17 +59,18 @@ class SalesCreateApplicationRequest extends Request {
     }
 
     $values = [
-       // Profile id is the customer profile uuid.
+      // Profile id is the customer profile uuid.
       'profile' => $owner->uuid(),
       'application_uuid' => $this->application->uuid(),
       'application_type' => $this->application->bundle(),
       'ssn_suffix' => $this->application->field_personal_id->value,
       'has_children' => $this->application->getHasChildren(),
       'additional_applicant' => $applicant,
-      'right_of_residence' => $this->application
-        ->field_right_of_residence_number->value,
       'project_id' => $this->projectData['uuid'],
+      'right_of_residence' => NULL,
       'apartments' => $this->getApartments(),
+      'has_hitas_ownership' => FALSE,
+      'is_right_of_occupancy_housing_changer' => FALSE,
     ];
 
     if ($this->application->hasField('field_right_of_residence_number')) {
