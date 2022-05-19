@@ -238,6 +238,7 @@ function asuntotuotanto_preprocess_views_view_table(&$variables) {
       $variables['rows'][$key]['reserved_or_sold'] = $reserved_or_sold;
       $variables['rows'][$key]['application_url'] = $project->getApplicationUrl();
       $variables['rows'][$key]['application_url_title'] = $apartment->getApplicationUrlTitle();
+      $variables['rows'][$key]['is_free'] = $apartment->isFree();
     }
 
     usort($variables['rows'], function ($a, $b) {

@@ -117,7 +117,8 @@ class Apartment extends Node {
    *   Apartment is reserved.
    */
   public function isReserved(): bool {
-    return $this->field_apartment_state_of_sale->target_id === 'reserved';
+    $states = ['reserved', 'reserved_haso'];
+    return in_array($this->field_apartment_state_of_sale->target_id, $states);
   }
 
   /**

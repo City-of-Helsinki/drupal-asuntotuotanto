@@ -63,6 +63,7 @@
       {% set reserved_or_sold = row.reserved_or_sold %}
       {% set application_url = row.application_url %}
       {% set application_url_title = row.application_url_title %}
+      {% set is_free = row.is_free %}
 
       <li class="project__apartments-item">
         <button
@@ -142,7 +143,7 @@
             }
           %}
 
-          {% if is_application_period_active %}
+          {% if (is_application_period_active or is_free) %}
             {% include '@asuntotuotanto/button/button.html.twig' with {
               type: 'primary',
               disabled: false,
@@ -243,6 +244,7 @@
         {% set reserved_or_sold = row.reserved_or_sold %}
         {% set application_url = row.application_url %}
         {% set application_url_title = row.application_url_title %}
+        {% set is_free = row.is_free %}
 
         <tr{{ row.attributes }}>
           <td>
@@ -281,10 +283,10 @@
               aria_label: 'Learn more'|t ~ ', ' ~ 'apartment'|t ~ ' ' ~ apartment_number
               }
             %}
-            {# if free for reservation... #}
-            {% if is_application_period_active %}
+
+            {% if (is_application_period_active or is_free) %}
               {% include '@asuntotuotanto/button/button.html.twig' with {
-                type: 'secondary',
+                type: 'primary',
                 disabled: false,
                 size: 'small',
                 label: application_url_title|t,
