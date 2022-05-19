@@ -86,6 +86,27 @@ class Apartment extends Node {
   }
 
   /**
+   * Reserve or create application.
+   *
+   * @return string
+   *   Label for the link or button.
+   */
+  public function getApplicationUrlTitle() {
+    $states = [
+      'open_for_applications' => 'Create application',
+      'free_for_reservations' => 'Reserve',
+      'reserved' => 'Reserve',
+    ];
+    if (
+      $this->field_apartment_state_of_sale->target_id &&
+      in_array($this->field_apartment_state_of_sale->target_id, array_keys($states))
+    ) {
+      return $states[$this->field_apartment_state_of_sale->target_id];
+    }
+    return 'Create application';
+  }
+
+  /**
    * Is apartment sold.
    *
    * @return bool
@@ -93,6 +114,27 @@ class Apartment extends Node {
    */
   public function isSold(): bool {
     return $this->field_apartment_state_of_sale->target_id === 'sold';
+  }
+
+  /**
+   * Is apartment reserved.
+   *
+   * @return bool
+   *   Apartment is reserved.
+   */
+  public function isReserved(): bool {
+    $states = ['reserved', 'reserved_haso'];
+    return in_array($this->field_apartment_state_of_sale->target_id, $states);
+  }
+
+  /**
+   * Is apartment free.
+   *
+   * @return bool
+   *   Apartment is free.
+   */
+  public function isFree(): bool {
+    return $this->field_apartment_state_of_sale->target_id === 'free_for_reservations';
   }
 
 }

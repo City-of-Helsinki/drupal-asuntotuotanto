@@ -38,7 +38,7 @@ class ProjectUpdater {
     $reserved = $project->getOwnershipType() == 'haso' ? 'reserved_haso' : 'reserved';
     $applications = $project->getApartmentApplicationCounts();
     $this->updateApartmentsReserved($project, $reserved, $applications);
-    $project->set('field_state_of_sale', 'processing');
+    $project->field_state_of_sale = 'processing';
     $project->save();
   }
 

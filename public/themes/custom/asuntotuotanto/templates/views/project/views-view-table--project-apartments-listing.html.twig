@@ -60,7 +60,10 @@
 
       {% set application_status = row.application_status %}
       {% set is_application_period_active = row.is_application_period_active %}
+      {% set reserved_or_sold = row.reserved_or_sold %}
       {% set application_url = row.application_url %}
+      {% set application_url_title = row.application_url_title %}
+      {% set is_free = row.is_free %}
 
       <li class="project__apartments-item">
         <button
@@ -120,7 +123,13 @@
                 </span>
                 <span>
                   <span aria-hidden="true" class="project__apartment-application-status project__apartment-application-status--{{ application_status.status|trim }}"></span>
-                  {{ application_status.label }}
+                  {% if reserved_or_sold %}
+                    {% trans %}
+                      {{ reserved_or_sold }}
+                    {% endtrans %}
+                  {% else %}
+                    {{ application_status.label }}
+                  {% endif %}
                 </span>
               </p>
             </li>
@@ -133,11 +142,12 @@
             aria_label: 'Learn more'|t ~ ', ' ~ 'apartment'|t ~ ' ' ~ apartment_number
             }
           %}
-          {% if is_application_period_active %}
+
+          {% if (is_application_period_active or is_free) %}
             {% include '@asuntotuotanto/button/button.html.twig' with {
               type: 'primary',
               disabled: false,
-              label: 'Create an application'|t,
+              label: application_url_title|t,
               href: application_url,
               aria_label: 'Create an application'|t ~ ', ' ~ 'apartment'|t ~ ' ' ~ apartment_number
               }
@@ -231,7 +241,10 @@
 
         {% set application_status = row.application_status %}
         {% set is_application_period_active = row.is_application_period_active %}
+        {% set reserved_or_sold = row.reserved_or_sold %}
         {% set application_url = row.application_url %}
+        {% set application_url_title = row.application_url_title %}
+        {% set is_free = row.is_free %}
 
         <tr{{ row.attributes }}>
           <td>
@@ -249,8 +262,15 @@
           </td>
           <td>
             <span>
-              <span aria-hidden="true" class="project__apartment-application-status project__apartment-application-status--{{ application_status.status|trim }}"></span>
-              {{ application_status.label }}
+
+              {% if reserved_or_sold %}
+                {% trans %}
+                  {{ reserved_or_sold }}
+                {% endtrans %}
+              {% else %}
+                <span aria-hidden="true" class="project__apartment-application-status project__apartment-application-status--{{ application_status.status|trim }}"></span>
+                {{ application_status.label }}
+              {% endif %}
             </span>
           </td>
           <td>
@@ -263,12 +283,13 @@
               aria_label: 'Learn more'|t ~ ', ' ~ 'apartment'|t ~ ' ' ~ apartment_number
               }
             %}
-            {% if is_application_period_active %}
+
+            {% if (is_application_period_active or is_free) %}
               {% include '@asuntotuotanto/button/button.html.twig' with {
-                type: 'secondary',
+                type: 'primary',
                 disabled: false,
                 size: 'small',
-                label: 'Create an application'|t,
+                label: application_url_title|t,
                 href: application_url,
                 aria_label: 'Create an application'|t ~ ', ' ~ 'apartment'|t ~ ' ' ~ apartment_number
                 }
