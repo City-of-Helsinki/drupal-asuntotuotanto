@@ -11,7 +11,6 @@ dependencies:
     - contact
     - eu_cookie_compliance
     - helfi_api_base
-    - matomo
     - media
     - paragraphs_type_permissions
     - rest
@@ -27,7 +26,6 @@ permissions:
   - 'access site-wide contact form'
   - 'create application'
   - 'display eu cookie compliance popup'
-  - 'opt-in or out of matomo tracking'
   - 'restful get asu_initialize'
   - 'restful post asu_elasticsearch'
   - 'restful post mailinglist'
