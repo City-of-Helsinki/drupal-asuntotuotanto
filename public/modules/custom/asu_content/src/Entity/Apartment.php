@@ -85,6 +85,12 @@ class Apartment extends Node {
     return $project->getApplicationUrl($apartmentId);
   }
 
+  /**
+   * Reserve or create application.
+   *
+   * @return string
+   *   Label for the link or button.
+   */
   public function getApplicationUrlTitle() {
     $states = [
       'open_for_applications' => 'Create application',
