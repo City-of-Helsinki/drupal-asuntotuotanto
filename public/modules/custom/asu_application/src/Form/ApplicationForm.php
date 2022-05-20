@@ -168,6 +168,10 @@ class ApplicationForm extends ContentEntityForm {
 
     $form = parent::buildForm($form, $form_state);
 
+    if (isset($form['field_personal_id'])) {
+      $form['field_personal_id']['widget'][0]['value']['#placeholder'] = '-XXXY';
+    }
+
     $form['#title'] = sprintf('%s %s', $this->t('Application for'), $projectName);
 
     $form['actions']['submit']['#value'] = $this->t('Send application');
