@@ -87,16 +87,16 @@ class UserMigrationService extends AsuMigrationBase
       // Create backend user for the user.
       if (!$error && $user) {
         try {
-          /*
+          
           $request = new CreateUserRequest($user, $externalFields);
           /** @var CreateUserResponse $response */
-          /*
+
           $response = $this->backendApi->send($request);
 
           $user->field_backend_profile = $response->getProfileId();
           $user->field_backend_password = $response->getPassword();
           $user->save();
-          */
+
           continue;
         }
         catch(\Exception $e) {
