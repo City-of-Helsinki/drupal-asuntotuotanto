@@ -92,6 +92,7 @@ class RegisterForm extends TypedRegisterForm {
     }
     // @codingStandardsIgnoreEnd
 
+    // Show "create application for new customer" button for sales.
     if (
       \Drupal::currentUser()->isAuthenticated() &&
       in_array('salesperson', \Drupal::currentUser()->getRoles(TRUE)) ||
@@ -161,30 +162,30 @@ class RegisterForm extends TypedRegisterForm {
 
     try {
       $saved = $account->save();
+
+      if ($saved === SAVED_NEW) {
+        asu_send_user_email('asu_new_customer_registered', $account);
+      }
+
+      $request = new CreateUserRequest($account, $form_state->getUserInput());
+      $this->sendToBackend($account, $request);
+
+      $form_state->set('user', $account);
+      $form_state->setValue('uid', $account->id());
+      $this->logger('user')->notice('New user: %name %email.',
+        [
+          '%name' => $form_state->getValue('name'),
+          '%email' => '<' . $form_state->getValue('mail') . '>',
+          'type' => $account->toLink($this->t('Edit'), 'edit-form')
+            ->toString(),
+        ]);
+      // Add plain text password into user account to generate mail tokens.
+      $account->password = $pass;
+      user_login_finalize($account);
     }
     catch (\Exception $e) {
       \Drupal::logger('asu_user')->emergency('Customer failed to create an account: ' . $e->getMessage());
     }
-
-    if ($saved === SAVED_NEW) {
-      asu_send_user_email('asu_new_customer_registered', $account);
-    }
-
-    $request = new CreateUserRequest($account, $form_state->getUserInput());
-    $this->sendToBackend($account, $request);
-
-    $form_state->set('user', $account);
-    $form_state->setValue('uid', $account->id());
-    $this->logger('user')->notice('New user: %name %email.',
-      [
-        '%name' => $form_state->getValue('name'),
-        '%email' => '<' . $form_state->getValue('mail') . '>',
-        'type' => $account->toLink($this->t('Edit'), 'edit-form')
-          ->toString(),
-      ]);
-    // Add plain text password into user account to generate mail tokens.
-    $account->password = $pass;
-    user_login_finalize($account);
   }
 
   /**

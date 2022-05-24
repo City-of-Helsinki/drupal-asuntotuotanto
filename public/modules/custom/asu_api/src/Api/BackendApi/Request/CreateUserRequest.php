@@ -24,7 +24,7 @@ class CreateUserRequest extends Request {
   private UserInterface $user;
 
   /**
-   * User information.
+   * Array of fields mentioned in external data map config file.
    *
    * @var array
    */
