@@ -1,0 +1,15 @@
+services:
+  asu_migration.migration_base:
+    abstract: true
+    arguments: ['@asu_migration.uuid_service', '@asu_api.backendapi']
+  asu_migration.user_migration_service:
+    class: Drupal\asu_migration\UserMigrationService
+    parent: asu_migration.migration_base
+    arguments: ['/tmp/migrations/users.csv', '00000000-0000-0000-0000-000000000000']
+  asu_migration.uuid_service:
+    class: Drupal\asu_migration\UuidService
+  asu_migration.commands:
+    class: Drupal\asu_migration\Commands\MigrateUserCsvCommand
+    arguments: ['@asu_migration.user_migration_service']
+    tags:
+      - { name: drush.command }
