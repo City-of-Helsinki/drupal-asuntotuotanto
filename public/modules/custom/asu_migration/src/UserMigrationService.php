@@ -4,16 +4,12 @@ namespace Drupal\asu_migration;
 
 use Drupal\asu_api\Api\BackendApi\BackendApi;
 use Drupal\asu_api\Api\BackendApi\Request\CreateUserRequest;
-use Drupal\asu_api\Api\BackendApi\Response\CreateUserResponse;
-use Drupal\asu_migration\UuidService;
-use Drupal\asu_migration\AsuMigrationBase;
 use Drupal\user\Entity\User;
 
 /**
  * Migration service for user.
  */
-class UserMigrationService extends AsuMigrationBase
-{
+class UserMigrationService extends AsuMigrationBase {
 
   private array $drupalUserFields;
 
@@ -22,8 +18,7 @@ class UserMigrationService extends AsuMigrationBase
   /**
    * Constructor.
    */
-  public function __construct(UuidService $uuidService, BackendApi $backendApi, private string $filePath, private string $uuidNamespace)
-  {
+  public function __construct(UuidService $uuidService, BackendApi $backendApi, private string $filePath, private string $uuidNamespace) {
     parent::__construct($uuidService, $backendApi);
     $this->externalFields = \Drupal::config('asu_user.external_user_fields')
       ->get('external_data_map');
@@ -31,13 +26,15 @@ class UserMigrationService extends AsuMigrationBase
     $this->externalFields['street_address'] = $this->externalFields['address'];
 
     $this->drupalUserFields = [
-      'email', 'first_name', 'last_name'
+      'email', 'first_name', 'last_name',
     ];
 
   }
 
-  public function migrate(): array
-  {
+  /**
+   *
+   */
+  public function migrate(): array {
     if (!file_exists($this->filePath)) {
       return ['User file is missing!'];
     }
@@ -58,7 +55,7 @@ class UserMigrationService extends AsuMigrationBase
       try {
         $this->validateUserFields($values);
       }
-      catch(\Exception $e) {
+      catch (\Exception $e) {
         $error = TRUE;
         $errors[$values['id']] = $e->getMessage();
         continue;
@@ -75,11 +72,11 @@ class UserMigrationService extends AsuMigrationBase
           'type' => 'customer',
           'langcode', 'fi',
           'preferred_langcode', 'fi',
-          'preferred_admin_langcode', 'fi'
+          'preferred_admin_langcode', 'fi',
         ]);
         $user->save();
       }
-      catch(\Exception $e) {
+      catch (\Exception $e) {
         $error = TRUE;
         $exception = $e->getMessage();
       }
@@ -87,9 +84,9 @@ class UserMigrationService extends AsuMigrationBase
       // Create backend user for the user.
       if (!$error && $user) {
         try {
-          
+
           $request = new CreateUserRequest($user, $externalFields);
-          /** @var CreateUserResponse $response */
+          /** @var \Drupal\asu_api\Api\BackendApi\Response\CreateUserResponse $response */
 
           $response = $this->backendApi->send($request);
 
@@ -99,8 +96,8 @@ class UserMigrationService extends AsuMigrationBase
 
           continue;
         }
-        catch(\Exception $e) {
-          $error = true;
+        catch (\Exception $e) {
+          $error = TRUE;
           $exception = $e->getMessage();
         }
       }
@@ -111,8 +108,11 @@ class UserMigrationService extends AsuMigrationBase
     return $errors;
   }
 
+  /**
+   *
+   */
   private function validateUserFields(array $values) {
-    foreach($this->drupalUserFields as $fieldName) {
+    foreach ($this->drupalUserFields as $fieldName) {
       if (empty($values[$fieldName])) {
         throw new \Exception("Required field not found for user: $fieldName");
       }
@@ -127,7 +127,7 @@ class UserMigrationService extends AsuMigrationBase
    */
   private function mapExternalFields(array $values): array {
     $data = [];
-    foreach($this->externalFields as $field => $information) {
+    foreach ($this->externalFields as $field => $information) {
       $data[$information['external_field']] = $values[$field] ?? '-';
     }
     return $data;

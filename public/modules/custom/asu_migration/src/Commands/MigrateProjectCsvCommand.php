@@ -2,7 +2,7 @@
 
 namespace Drupal\asu_migration\Commands;
 
-use Drupal\asu_migration\UserMigrationService;
+use Drupal\asu_migration\ProjectMigrationService;
 use Drush\Commands\DrushCommands;
 
 /**
@@ -13,14 +13,14 @@ class MigrateUserCsvCommand extends DrushCommands {
   /**
    * Construct.
    */
-  public function __construct(private UserMigrationService $migration) {
+  public function __construct(private ProjectMigrationService $migration) {
     parent::__construct();
   }
 
   /**
    * Drush command that migrates users from file.
    *
-   * @command asu:user-migration
+   * @command asu:project-migration
    */
   public function migrateUsers() {
     $errors = $this->migration->migrate();

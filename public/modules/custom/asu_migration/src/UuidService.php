@@ -2,15 +2,24 @@
 
 namespace Drupal\asu_migration;
 
+/**
+ *
+ */
 class UuidService {
-  function createUuid_v5($name_space, $string): string {
-    $n_hex = str_replace(array('-','{','}'), '', $name_space); // Getting hexadecimal components of namespace
-    $binray_str = ''; // Binary value string
-    //Namespace UUID to bits conversion
-    for($i = 0; $i < strlen($n_hex); $i+=2) {
-      $binray_str .= chr(hexdec($n_hex[$i].$n_hex[$i+1]));
+
+  /**
+   *
+   */
+  public function createUuid_v5($name_space, $string): string {
+    // Getting hexadecimal components of namespace.
+    $n_hex = str_replace(['-', '{', '}'], '', $name_space);
+    // Binary value string.
+    $binray_str = '';
+    // Namespace UUID to bits conversion.
+    for ($i = 0; $i < strlen($n_hex); $i += 2) {
+      $binray_str .= chr(hexdec($n_hex[$i] . $n_hex[$i + 1]));
     }
-    //hash value
+    // Hash value.
     $hashing = sha1($binray_str . $string);
 
     return sprintf('%08s-%04s-%04x-%04x-%12s',
@@ -27,6 +36,5 @@ class UuidService {
       substr($hashing, 20, 12)
     );
   }
+
 }
-
-
