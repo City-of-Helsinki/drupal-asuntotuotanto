@@ -11,8 +11,18 @@ use Drupal\user\Entity\User;
  */
 class UserMigrationService extends AsuMigrationBase {
 
+  /**
+   * User fields array.
+   *
+   * @var string[]
+   */
   private array $drupalUserFields;
 
+  /**
+   * Fields only saved to backend.
+   *
+   * @var array|mixed|null
+   */
   private array $externalFields;
 
   /**
@@ -32,7 +42,10 @@ class UserMigrationService extends AsuMigrationBase {
   }
 
   /**
+   * Handle migration.
    *
+   * @return array
+   *   Array of errors.
    */
   public function migrate(): array {
     if (!file_exists($this->filePath)) {
@@ -109,7 +122,12 @@ class UserMigrationService extends AsuMigrationBase {
   }
 
   /**
+   * Make sure all required fields are present.
    *
+   * @param array $values
+   *   Array of fields and values.
+   *
+   * @throws \Exception
    */
   private function validateUserFields(array $values) {
     foreach ($this->drupalUserFields as $fieldName) {
@@ -120,8 +138,11 @@ class UserMigrationService extends AsuMigrationBase {
   }
 
   /**
+   * Map external fields to array.
+   *
    * @param array $values
    *   Csv data.
+   * 
    * @return array
    *   Array with csv data mapped for api request.
    */

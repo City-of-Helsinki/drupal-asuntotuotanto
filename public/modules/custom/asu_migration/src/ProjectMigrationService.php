@@ -11,8 +11,18 @@ use Drupal\node\Entity\Node;
  */
 class ProjectMigrationService extends AsuMigrationBase {
 
+  /**
+   * Apartments csv file.
+   *
+   * @var resource
+   */
   private $file2;
 
+  /**
+   * Term storage.
+   *
+   * @var EntityStorageInterface
+   */
   private EntityStorageInterface $termStorage;
 
   /**
