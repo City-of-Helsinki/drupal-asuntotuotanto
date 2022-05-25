@@ -27,8 +27,12 @@ class ProjectMigrationService extends AsuMigrationBase {
     private string $apartmentUuidNamespace,
   ) {
     parent::__construct($uuidService, $backendApi);
-    $this->entityStorage = \Drupal::entityTypeManager()
+    $this->termStorage = \Drupal::entityTypeManager()
       ->getStorage('taxonomy_term');
+
+    $this->configTermStorage = \Drupal::entityTypeManager()
+      ->getStorage('config_terms_term');
+
   }
 
   /**
@@ -45,11 +49,12 @@ class ProjectMigrationService extends AsuMigrationBase {
 
     $this->file = fopen($this->projectFilePath, 'r');
     $this->file2 = fopen($this->apartmentFilePath, 'r');
-    $projects = $this->migrateProjects();
+
+    $errors = $this->migrateProjects();
 
     fclose($this->file2);
 
-    return [];
+    return $errors;
   }
 
   /**
@@ -58,15 +63,24 @@ class ProjectMigrationService extends AsuMigrationBase {
   private function migrateProjects(): array {
     $errors = [];
     $headers = [];
+    $apartmentHeaders = [];
 
     foreach ($this->rows() as $row) {
       if (empty($headers)) {
         $headers = $row;
         continue;
       }
+      $apartments = [];
+
+      if (empty($row)) {
+        continue;
+      }
+
       $values = array_combine($headers, $row);
 
-      $holdingTypes = $this->termStorage->loadByProperties(['name' => $values['project_housing_company']]);
+      $holdingType = $values['project_holding_type'] == 'RIGHT_OF_RESIDENCE_APARTMENT' ? 'Right of residence apartment' : 'condominium';
+
+      $holdingTypes = $this->termStorage->loadByProperties(['name' => $holdingType]);
       $holdingType = reset($holdingTypes);
 
       $districts = $this->termStorage->loadByProperties(['name' => $values['project_district']]);
@@ -75,18 +89,18 @@ class ProjectMigrationService extends AsuMigrationBase {
       $siteOwners = $this->termStorage->loadByProperties(['name' => $values['project_site_owner']]);
       $siteOwner = reset($siteOwners);
 
-      $ownershipTypes = $this->termStorage->loadByProperties(['name' => $values['project_site_owner']]);
+      $ownership = $values['project_ownership_type'] == 'Haso' ? 'HASO' : 'hitas';
+      $ownershipTypes = $this->termStorage->loadByProperties(['name' => $ownership]);
       $ownershipType = reset($ownershipTypes);
 
-      $premarketing = (new \DateTime($values['project_premarketing_start_time']))->format('Y-m-d');
-      $completion = (new \DateTime($values['project_estimated_completion_date']))->format('Y-m-d');
+      $premarketing = \DateTime::createFromFormat('m/d/Y', $values['project_premarketing_start_time'])->format('Y-m-d 12:00:00');
+      $completion = \DateTime::createFromFormat('m/d/Y', $values['project_estimated_completion_date'])->format('Y-m-d 12:00:00');
 
       $currentProjectId = $values['Taulun avainkenttä (KohdeID)'];
       $project = Node::create([
         'type' => 'project',
         'uuid' => $this->uuidService->createUuid_v5($this->projectUuidNamespace, $currentProjectId),
         'field_housing_company' => $values['project_housing_company'],
-        'field_holding_type' => [$holdingType], // enum -> text
         'field_street_address' => $values['project_street_address'],
         'field_postal_code' => $values['project_postal_code'],
         'field_city' => $values['project_city'],
@@ -95,80 +109,178 @@ class ProjectMigrationService extends AsuMigrationBase {
         'field_apartment_count' => $values['project_apartment_count'],
         'field_premarketing_start_time' => $premarketing,
         'field_estimated_completion_date' => $completion,
-        'field_state_of_sale' => ''
+        'field_state_of_sale' => '',
         'status' => 0,
-        'field_archived' => 1
+        'field_archived' => 1,
+        'author' => 1,
       ]);
+
+      $project->field_holding_type->entity = $holdingType;
       $project->field_ownership_type->entity = $ownershipType;
       $project->field_district->entity = $district;
       $project->field_site_owner->entity = $siteOwner;
-      $status = $project->save();
 
-      $apartments = [];
-      if ($status === 1) {
-        // $project->id;
+      if ($project) {
+        if (feof($this->file2)) {
+          rewind($this->file2);
+        }
 
-        $apartmentHeaders = [];
-        $terms = [];
+        $saleStates = [];
         $apartments = [];
-
-        foreach($this->migrateProjectApartments() as $apartmentRow){
+        $apartmentHeaders = NULL;
+        foreach($this->migrateProjectApartments() as $apartmentRow) {
           if (empty($apartmentHeaders)) {
-            $this->apartmentHeaders = $apartmentRow;
+            $apartmentHeaders = $apartmentRow;
+            continue;
           }
-          $apartmentValues = array_combine($headers, $apartmentRow);
+          if (!is_array($apartmentRow)) {
+            continue;
+          }
+          $apartmentValues = array_combine($apartmentHeaders, $apartmentRow);
 
           if ($apartmentValues['Vierasavain Project-tauluun (KohdeID)'] !== $currentProjectId) {
             continue;
           }
 
-          $shares = explode(' - ', $apartmentValues['housing_shares']);
+          $apartmentStateOfSale = $apartmentValues['apartment_state_of_sale'];
+          if (!in_array($apartmentStateOfSale, $saleStates)) {
+            $saleStates[] = $apartmentStateOfSale;
+          }
 
-          $ownership_type = $this->termStorage->loadByProperties($apartmentValues['project_ownership_type']);
-          $state_of_sale = $this->termStorage->loadByProperties();
+          $currentApartmentId = $apartmentValues['Taulun avainkenttä (apartment uuid)'];
+
+          $shares = explode('-', $apartmentValues['housing_shares']);
 
           $apartment = Node::create([
             'type' => 'apartment',
-            'status' => 0,
-            'uuid' => $this->uuidService->createUuid_v5($this->apartmentUuidNamespace, $apartmentValues['Taulun avainkenttä (apartment uuid)']),
-            'title' => $apartmentValues['project_housing_company'],
-            'field_ownership_type' => $apartmentValues['project_ownership_type'], //
-            'field_state_of_sale' => $apartmentValues['apartment_state_of_sale'], //
+            'status' => $this->apartmentStatusResolver($apartmentStateOfSale),
+            'uuid' => $this->uuidService->createUuid_v5($this->apartmentUuidNamespace, $currentApartmentId),
+            'title' => $apartmentValues['project_housing_company'] . ' ' . $apartmentValues['apartment_number'],
+            'field_state_of_sale' => $apartmentValues['apartment_state_of_sale'],
             'field_apartment_number' => $apartmentValues['apartment_number'],
-            'field_stock_start_number' => (int)$shares[0],
-            'field_stock_end_number' => (int)$shares[1],
-            'field_living_area' => $apartmentValues['living_area'],
+            'field_stock_start_number' => isset($shares[0]) ? (int)$shares[0] : 0,
+            'field_stock_end_number' => isset($shares[1]) ? (int)$shares[1] : 0,
+            'field_living_area' => floatval($apartmentValues['living_area']),
             'field_floor' => $apartmentValues['floor'],
             'field_apartment_structure' => $apartmentValues['apartment_structure'],
-            'field_sales_price' => $apartmentValues['sales_price'],
-            'field_debt_free_sales_price' => $apartmentValues['debt_free_sales_price'],
-            'field_loan_share' => $apartmentValues['loan_share'],
-            'field_price_m2' => $apartmentValues['price_m2'],
-            'field_housing_company_fee' => $apartmentValues['housing_company_fee'],
-            'field_financing_fee' => $apartmentValues['financing_fee'],
-            'field_financing_fee_m2' => $apartmentValues['financing_fee_m2'],
-            'field_maintenance_fee' => $apartmentValues['maintenance_fee'],
-            'field_maintenance_fee_m2' => $apartmentValues['maintenance_fee_m2'],
-            'field_right_of_occupancy_fee' => $apartmentValues['right_of_occupancy_fee'],
-            'field_right_of_occupancy_deposit' => $apartmentValues['right_of_occupancy_deposit'],
-            'field_right_of_occupancy_payment' => $apartmentValues['right_of_occupancy_payment'],
+            'field_sales_price' => floatval($apartmentValues['sales_price']) ?? 0,
+            'field_debt_free_sales_price' => floatval($apartmentValues['debt_free_sales_price']) ?? 0,
+            'field_loan_share' => floatval($apartmentValues['loan_share']) ?? 0,
+            'field_price_m2' => floatval($apartmentValues['price_m2']) ?? 0,
+            'field_housing_company_fee' => floatval($apartmentValues['housing_company_fee']) ?? 0,
+            'field_financing_fee' => floatval($apartmentValues['financing_fee']) ?? 0 ,
+            'field_financing_fee_m2' => floatval($apartmentValues['financing_fee_m2']) ?? 0,
+            'field_maintenance_fee' => floatval($apartmentValues['maintenance_fee']) ?? 0,
+            'field_maintenance_fee_m2' => floatval($apartmentValues['maintenance_fee_m2']) ?? 0,
+            'field_right_of_occupancy_fee' => floatval($apartmentValues['right_of_occupancy_fee']) ?? 0,
+            'field_right_of_occupancy_deposit' =>floatval( $apartmentValues['right_of_occupancy_deposit']) ?? 0,
           ]);
+
+          try {
+            $apartment->save();
+            $apartments[] = $apartment;
+          }
+          catch(\Exception $e){
+            $errors[] = "Error with the apartment $currentApartmentId of project $currentProjectId: " . $e->getMessage();
+          }
 
         }
 
+        $project->field_apartments = $apartments;
+        foreach ($this->projectStateResolver($saleStates) as $field => $value) {
+          $project->{$field} = $value;
+        }
+
+        try {
+          $project->save();
+        }
+        catch(\Exception $e){
+          $errors[] = "Error with the project $currentProjectId " . $e->getMessage();
+        }
       }
+
     }
+    return $errors;
   }
 
-  /**z
+  /**
    * Migrate apartments.
    */
   private function migrateProjectApartments() {
-    if () {
-
+    while (!feof($this->file2)) {
+      $row = fgetcsv($this->file2, 4096);
+      yield $row;
     }
   }
 
 
+  /**
+   * Project status, archived and state of sale depends on apartments.
+   *
+   * @param array $salesStates
+   * @return array
+   */
+  private function projectStateResolver(array $salesStates) {
+    if (in_array('APARTMENT_FOR_SALE', $salesStates)) {
+      return  [
+        'status' => 1,
+        'field_archived' => 0,
+        'field_state_of_sale' => 'upcoming',
+      ];
+    }
+
+    if (in_array('OPEN_FOR_APPLICATIONS', $salesStates)) {
+      return [
+        'status' => 1,
+        'field_archived' => 0,
+        'field_state_of_sale' => 'for_sale',
+      ];
+    }
+
+    if (in_array('FREE_FOR_RESERVATIONS', $salesStates)) {
+      return [
+        'status' => 1,
+        'field_archived' => 0,
+        'field_state_of_sale' => 'for_sale',
+      ];
+    }
+
+    if (in_array('RESERVED', $salesStates)) {
+      return [
+        'status' => 1,
+        'field_archived' => 0,
+        'field_state_of_sale' => 'processing',
+      ];
+    }
+
+    if (in_array('RESERVED_HASO', $salesStates)) {
+      return [
+        'status' => 1,
+        'field_archived' => 0,
+        'field_state_of_sale' => 'processing',
+      ];
+    }
+
+    if (in_array('SOLD', $salesStates)) {
+      return [
+        'status' => 0,
+        'field_archived' => 1,
+        'field_state_of_sale' => 'ready',
+      ];
+    }
+  }
+
+  /**
+   * Apartment status depends on sale-state.
+   *
+   * @param string $saleState
+   * @return int
+   */
+  private function apartmentStatusResolver(string $saleState) {
+    if ($saleState === 'SOLD') {
+      return 0;
+    }
+    return 1;
+  }
 
 }

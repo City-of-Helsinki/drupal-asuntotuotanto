@@ -8,7 +8,7 @@ use Drush\Commands\DrushCommands;
 /**
  * A drush command file.
  */
-class MigrateUserCsvCommand extends DrushCommands {
+class MigrateProjectCsvCommand extends DrushCommands {
 
   /**
    * Construct.
@@ -18,11 +18,11 @@ class MigrateUserCsvCommand extends DrushCommands {
   }
 
   /**
-   * Drush command that migrates users from file.
+   * Drush command that migrates projects from file.
    *
    * @command asu:project-migration
    */
-  public function migrateUsers() {
+  public function migrateProjects() {
     $errors = $this->migration->migrate();
     foreach ($errors as $key => $error) {
       $this->output()->writeln("$key: $error");

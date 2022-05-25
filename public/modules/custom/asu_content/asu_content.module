@@ -52,6 +52,7 @@ function asu_content_form_node_form_alter(&$form, $form_state) {
   asu_content_hide_node_title($form);
   asu_content_show_computed_fields($form, $form_state);
   asu_content_project_add_archived_handling($form, $form_state);
+
 }
 
 /**
