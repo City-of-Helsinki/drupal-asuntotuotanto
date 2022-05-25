@@ -10,15 +10,15 @@ class UuidService {
   /**
    * Create uuid from string.
    *
-   * @param $name_space
+   * @param string $name_space
    *   Namespace for uuid.
-   * @param $string
+   * @param string $string
    *   String to user for uuid generation.
    *
    * @return string
    *   Uuid
    */
-  public function createUuid_v5($name_space, $string): string {
+  public function createUuid_v5(string $name_space, string $string): string {
     // Getting hexadecimal components of namespace.
     $n_hex = str_replace(['-', '{', '}'], '', $name_space);
     // Binary value string.

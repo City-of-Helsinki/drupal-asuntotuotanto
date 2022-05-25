@@ -5,7 +5,7 @@ namespace Drupal\asu_migration;
 use Drupal\asu_api\Api\BackendApi\BackendApi;
 
 /**
- *
+ * Migration base.
  */
 abstract class AsuMigrationBase {
 
@@ -14,11 +14,10 @@ abstract class AsuMigrationBase {
   /**
    * Construct.
    *
-   * @param UuidService $uuidService
+   * @param Drupal\asu_migration\UuidService $uuidService
    *   Create uuid from string.
-   * @param BackendApi $backendApi
+   * @param Drupal\asu_api\Api\BackendApi\BackendApi $backendApi
    *   Send data to backend.
-   *
    */
   public function __construct(
     protected UuidService $uuidService,

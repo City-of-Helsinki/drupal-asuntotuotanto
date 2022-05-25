@@ -21,7 +21,7 @@ class ProjectMigrationService extends AsuMigrationBase {
   /**
    * Term storage.
    *
-   * @var EntityStorageInterface
+   * @var Drupal\Core\Entity\EntityStorageInterface
    */
   private EntityStorageInterface $termStorage;
 

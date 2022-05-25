@@ -83,9 +83,9 @@ class UserMigrationService extends AsuMigrationBase {
           'first_name' => $values['first_name'],
           'last_name' => $values['last_name'],
           'type' => 'customer',
-          'langcode', 'fi',
-          'preferred_langcode', 'fi',
-          'preferred_admin_langcode', 'fi',
+          'langcode' => 'fi',
+          'preferred_langcode' => 'fi',
+          'preferred_admin_langcode' => 'fi',
         ]);
         $user->save();
       }
@@ -142,7 +142,7 @@ class UserMigrationService extends AsuMigrationBase {
    *
    * @param array $values
    *   Csv data.
-   * 
+   *
    * @return array
    *   Array with csv data mapped for api request.
    */
