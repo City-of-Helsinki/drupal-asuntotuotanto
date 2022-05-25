@@ -32,7 +32,9 @@ class AsuCustomSlickFormatter extends SlickImageFormatter {
         $stack = array_merge($stack, $node->field_floorplan->getValue());
       }
       $stack = array_merge($stack, $items->getValue());
-      $stack = array_merge($stack, $project->field_shared_apartment_images->getValue());
+      if ($project->field_shared_apartment_images) {
+        $stack = array_merge($stack, $project->field_shared_apartment_images->getValue());
+      }
     }
 
     if ($node->bundle() == 'project') {
