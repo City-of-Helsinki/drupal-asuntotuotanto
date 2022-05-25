@@ -29,10 +29,6 @@ class ProjectMigrationService extends AsuMigrationBase {
     parent::__construct($uuidService, $backendApi);
     $this->termStorage = \Drupal::entityTypeManager()
       ->getStorage('taxonomy_term');
-
-    $this->configTermStorage = \Drupal::entityTypeManager()
-      ->getStorage('config_terms_term');
-
   }
 
   /**
@@ -63,14 +59,12 @@ class ProjectMigrationService extends AsuMigrationBase {
   private function migrateProjects(): array {
     $errors = [];
     $headers = [];
-    $apartmentHeaders = [];
 
     foreach ($this->rows() as $row) {
       if (empty($headers)) {
         $headers = $row;
         continue;
       }
-      $apartments = [];
 
       if (empty($row)) {
         continue;
@@ -128,7 +122,7 @@ class ProjectMigrationService extends AsuMigrationBase {
         $saleStates = [];
         $apartments = [];
         $apartmentHeaders = NULL;
-        foreach($this->migrateProjectApartments() as $apartmentRow) {
+        foreach ($this->migrateProjectApartments() as $apartmentRow) {
           if (empty($apartmentHeaders)) {
             $apartmentHeaders = $apartmentRow;
             continue;
@@ -158,8 +152,8 @@ class ProjectMigrationService extends AsuMigrationBase {
             'title' => $apartmentValues['project_housing_company'] . ' ' . $apartmentValues['apartment_number'],
             'field_state_of_sale' => $apartmentValues['apartment_state_of_sale'],
             'field_apartment_number' => $apartmentValues['apartment_number'],
-            'field_stock_start_number' => isset($shares[0]) ? (int)$shares[0] : 0,
-            'field_stock_end_number' => isset($shares[1]) ? (int)$shares[1] : 0,
+            'field_stock_start_number' => isset($shares[0]) ? (int) $shares[0] : 0,
+            'field_stock_end_number' => isset($shares[1]) ? (int) $shares[1] : 0,
             'field_living_area' => floatval($apartmentValues['living_area']),
             'field_floor' => $apartmentValues['floor'],
             'field_apartment_structure' => $apartmentValues['apartment_structure'],
@@ -173,14 +167,14 @@ class ProjectMigrationService extends AsuMigrationBase {
             'field_maintenance_fee' => floatval($apartmentValues['maintenance_fee']) ?? 0,
             'field_maintenance_fee_m2' => floatval($apartmentValues['maintenance_fee_m2']) ?? 0,
             'field_right_of_occupancy_fee' => floatval($apartmentValues['right_of_occupancy_fee']) ?? 0,
-            'field_right_of_occupancy_deposit' =>floatval( $apartmentValues['right_of_occupancy_deposit']) ?? 0,
+            'field_right_of_occupancy_deposit' => floatval($apartmentValues['right_of_occupancy_deposit']) ?? 0,
           ]);
 
           try {
             $apartment->save();
             $apartments[] = $apartment;
           }
-          catch(\Exception $e){
+          catch (\Exception $e) {
             $errors[] = "Error with the apartment $currentApartmentId of project $currentProjectId: " . $e->getMessage();
           }
 
@@ -194,7 +188,7 @@ class ProjectMigrationService extends AsuMigrationBase {
         try {
           $project->save();
         }
-        catch(\Exception $e){
+        catch (\Exception $e) {
           $errors[] = "Error with the project $currentProjectId " . $e->getMessage();
         }
       }
@@ -213,16 +207,18 @@ class ProjectMigrationService extends AsuMigrationBase {
     }
   }
 
-
   /**
    * Project status, archived and state of sale depends on apartments.
    *
    * @param array $salesStates
+   *   All states found for project's apartments.
+   *
    * @return array
+   *   Array of states.
    */
   private function projectStateResolver(array $salesStates) {
     if (in_array('APARTMENT_FOR_SALE', $salesStates)) {
-      return  [
+      return [
         'status' => 1,
         'field_archived' => 0,
         'field_state_of_sale' => 'upcoming',
@@ -274,7 +270,10 @@ class ProjectMigrationService extends AsuMigrationBase {
    * Apartment status depends on sale-state.
    *
    * @param string $saleState
+   *   State of sale.
+   *
    * @return int
+   *   True or false.
    */
   private function apartmentStatusResolver(string $saleState) {
     if ($saleState === 'SOLD') {
