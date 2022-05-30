@@ -80,6 +80,10 @@ class ProjectMigrationService extends AsuMigrationBase {
         continue;
       }
 
+      if (count($row) != count($headers)) {
+        continue;
+      }
+
       $values = array_combine($headers, $row);
 
       $holdingType = $values['project_holding_type'] == 'RIGHT_OF_RESIDENCE_APARTMENT' ? 'Right of residence apartment' : 'condominium';
@@ -97,8 +101,8 @@ class ProjectMigrationService extends AsuMigrationBase {
       $ownershipTypes = $this->termStorage->loadByProperties(['name' => $ownership]);
       $ownershipType = reset($ownershipTypes);
 
-      $premarketing = \DateTime::createFromFormat('m/d/Y', $values['project_premarketing_start_time'])->format('Y-m-d 12:00:00');
-      $completion = \DateTime::createFromFormat('m/d/Y', $values['project_estimated_completion_date'])->format('Y-m-d 12:00:00');
+      $premarketing = \DateTime::createFromFormat('d/m/Y', $values['project_premarketing_start_time'])->format('Y-m-d\T12:00:00');
+      $completion = \DateTime::createFromFormat('d/m/Y', $values['project_estimated_completion_date'])->format('Y-m-d');
 
       $currentProjectId = $values['Taulun avainkenttä (KohdeID)'];
       $project = Node::create([
@@ -113,9 +117,9 @@ class ProjectMigrationService extends AsuMigrationBase {
         'field_apartment_count' => $values['project_apartment_count'],
         'field_premarketing_start_time' => $premarketing,
         'field_estimated_completion_date' => $completion,
-        'field_state_of_sale' => '',
-        'status' => 0,
-        'field_archived' => 1,
+        'field_state_of_sale' => '', // This is updated later.
+        'status' => 0, // This is updated later.
+        'field_archived' => 1, // This is updated later.
         'author' => 1,
       ]);
 
@@ -160,24 +164,24 @@ class ProjectMigrationService extends AsuMigrationBase {
             'status' => $this->apartmentStatusResolver($apartmentStateOfSale),
             'uuid' => $this->uuidService->createUuid_v5($this->apartmentUuidNamespace, $currentApartmentId),
             'title' => $apartmentValues['project_housing_company'] . ' ' . $apartmentValues['apartment_number'],
-            'field_state_of_sale' => $apartmentValues['apartment_state_of_sale'],
+            'field_apartment_state_of_sale' => strtolower($apartmentStateOfSale),
             'field_apartment_number' => $apartmentValues['apartment_number'],
             'field_stock_start_number' => isset($shares[0]) ? (int) $shares[0] : 0,
             'field_stock_end_number' => isset($shares[1]) ? (int) $shares[1] : 0,
             'field_living_area' => floatval($apartmentValues['living_area']),
             'field_floor' => $apartmentValues['floor'],
             'field_apartment_structure' => $apartmentValues['apartment_structure'],
-            'field_sales_price' => floatval($apartmentValues['sales_price']) ?? 0,
-            'field_debt_free_sales_price' => floatval($apartmentValues['debt_free_sales_price']) ?? 0,
-            'field_loan_share' => floatval($apartmentValues['loan_share']) ?? 0,
-            'field_price_m2' => floatval($apartmentValues['price_m2']) ?? 0,
-            'field_housing_company_fee' => floatval($apartmentValues['housing_company_fee']) ?? 0,
-            'field_financing_fee' => floatval($apartmentValues['financing_fee']) ?? 0 ,
-            'field_financing_fee_m2' => floatval($apartmentValues['financing_fee_m2']) ?? 0,
-            'field_maintenance_fee' => floatval($apartmentValues['maintenance_fee']) ?? 0,
-            'field_maintenance_fee_m2' => floatval($apartmentValues['maintenance_fee_m2']) ?? 0,
-            'field_right_of_occupancy_fee' => floatval($apartmentValues['right_of_occupancy_fee']) ?? 0,
-            'field_right_of_occupancy_deposit' => floatval($apartmentValues['right_of_occupancy_deposit']) ?? 0,
+            'field_sales_price' => $apartmentValues['sales_price'] ? floatval(str_replace(',', '', $apartmentValues['sales_price'])) : 0,
+            'field_debt_free_sales_price' => $apartmentValues['debt_free_sales_price'] ? floatval(str_replace(',', '', $apartmentValues['debt_free_sales_price'])) : 0,
+            'field_loan_share' => $apartmentValues['loan_share'] ? floatval(str_replace(',', '', $apartmentValues['loan_share'])) : 0,
+            'field_price_m2' => $apartmentValues['price_m2'] ? floatval(str_replace(',', '', $apartmentValues['price_m2'])) : 0,
+            'field_housing_company_fee' => $apartmentValues['housing_company_fee'] ? floatval(str_replace(',', '', $apartmentValues['housing_company_fee'])) : 0,
+            'field_financing_fee' => $apartmentValues['financing_fee'] ? floatval(str_replace(',', '', $apartmentValues['financing_fee'])) : 0,
+            'field_financing_fee_m2' => $apartmentValues['financing_fee_m2'] ? floatval(str_replace(',', '', $apartmentValues['financing_fee_m2'])) : 0,
+            'field_maintenance_fee' => $apartmentValues['maintenance_fee'] ? floatval(str_replace(',', '', $apartmentValues['maintenance_fee'])) : 0,
+            'field_maintenance_fee_m2' => $apartmentValues['maintenance_fee_m2'] ? floatval(str_replace(',', '', $apartmentValues['maintenance_fee_m2'])) : 0,
+            'field_right_of_occupancy_fee' => $apartmentValues['right_of_occupancy_fee'] ? floatval(str_replace(',', '', $apartmentValues['right_of_occupancy_fee'])) : 0,
+            'field_right_of_occupancy_deposit' =>  $apartmentValues['right_of_occupancy_deposit'] ? floatval(str_replace(',', '', $apartmentValues['right_of_occupancy_deposit'])) : 0,
           ]);
 
           try {

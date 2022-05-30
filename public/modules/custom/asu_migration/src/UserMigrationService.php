@@ -60,6 +60,14 @@ class UserMigrationService extends AsuMigrationBase {
         $headers = $row;
         continue;
       }
+
+      if (empty($row)) {
+        continue;
+      }
+      if (count($row) != count($headers)) {
+        continue;
+      }
+
       $values = array_combine($headers, $row);
 
       $error = FALSE;
@@ -77,15 +85,16 @@ class UserMigrationService extends AsuMigrationBase {
       $externalFields = $this->mapExternalFields($values);
 
       try {
+        $hash = substr(base64_encode(microtime()), 0, 6);
         $user = User::create([
           'uuid' => $this->uuidService->createUuid_v5($this->uuidNamespace, $values['id']),
           'mail' => $values['email'],
-          'first_name' => $values['first_name'],
-          'last_name' => $values['last_name'],
+          'name' => "{$values['first_name']}_{$values['last_name']}_$hash",
           'type' => 'customer',
           'langcode' => 'fi',
           'preferred_langcode' => 'fi',
           'preferred_admin_langcode' => 'fi',
+          'status' => 1
         ]);
         $user->save();
       }
@@ -97,10 +106,9 @@ class UserMigrationService extends AsuMigrationBase {
       // Create backend user for the user.
       if (!$error && $user) {
         try {
-
+          $externalFields['address'] = $externalFields['street_address'];
           $request = new CreateUserRequest($user, $externalFields);
           /** @var \Drupal\asu_api\Api\BackendApi\Response\CreateUserResponse $response */
-
           $response = $this->backendApi->send($request);
 
           $user->field_backend_profile = $response->getProfileId();
