@@ -3,7 +3,6 @@
 namespace Drupal\asu_rest\Plugin\rest\resource;
 
 use Drupal\asu_application\Applications;
-use Drupal\asu_application\Entity\Application;
 use Drupal\asu_rest\UserDto;
 use Drupal\Core\Access\CsrfRequestHeaderAccessCheck;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
@@ -36,12 +35,16 @@ final class Initialize extends ResourceBase {
     // Gets filters cached if possible.
     $response['filters'] = $this->getFilters();
 
-    //if (!$applicationCache = \Drupal::cache()->get('application_statuses')) {
-      $response['apartment_application_status'] = $this->getApartmentApplicationStatus();
-    //} else {
-      //$response['apartment_application_status'] = $applicationCache;
-    //}
-
+    if ($applicationCache = \Drupal::cache()
+      ->get('application_statuses')) {
+      $response['apartment_application_status'] = $applicationCache->data;
+    }
+    else {
+      $statuses = $this->getApartmentApplicationStatus();
+      $response['apartment_application_status'] = $statuses;
+      \Drupal::cache()
+        ->set('application_statuses', $statuses, (time() + (60 * 10)));
+    }
 
     $response['static_content'] = $this->getStaticContent();
 
@@ -111,13 +114,13 @@ final class Initialize extends ResourceBase {
     $projects = \Drupal::entityTypeManager()
       ->getStorage('node')
       ->loadByProperties([
-        'type' =>'project',
+        'type' => 'project',
         'status' => 1,
         'field_archived' => 0,
       ]);
 
     $projectIds = [];
-    foreach($projects as $project) {
+    foreach ($projects as $project) {
       if (in_array($project->field_state_of_sale->target_id, $states)) {
         $projectIds[$project->id()] = $project->field_state_of_sale->target_id;
       }
@@ -126,7 +129,7 @@ final class Initialize extends ResourceBase {
     $idString = implode(',', array_keys($projectIds));
 
     $apartmentIds = \Drupal::database()
-      ->query('select entity_id, field_apartments_target_id from node__field_apartments where entity_id in ('.$idString.')')
+      ->query('select entity_id, field_apartments_target_id from node__field_apartments where entity_id in (' . $idString . ')')
       ->fetchAllAssoc('field_apartments_target_id');
 
     $applicationCountByApartment = \Drupal::database()
@@ -136,16 +139,17 @@ final class Initialize extends ResourceBase {
     $return = [];
     foreach ($apartmentIds as $key => $result) {
       if (in_array($projectIds[$apartmentIds[$key]->entity_id], $reservedStates)) {
-        // has applications
+        // Has applications.
         if (isset($applicationCountByApartment[$key])) {
-          $return[$key] = t('Reserved');
-        } else {
-          $return[$key] = t('Vacant');
+          $return[$key] = 'RESERVED';
+        }
+        else {
+          $return[$key] = 'VACANT';
         }
         continue;
       }
       if (isset($applicationCountByApartment)) {
-        $count = isset($applicationCountByApartment[$key]) ? ((array)($applicationCountByApartment[$key]))['count(*)'] : 0;
+        $count = isset($applicationCountByApartment[$key]) ? ((array) ($applicationCountByApartment[$key]))['count(*)'] : 0;
         $return[$key] = Applications::resolveApplicationCountEnum($count);
       }
     }

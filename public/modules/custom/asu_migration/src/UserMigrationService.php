@@ -94,7 +94,7 @@ class UserMigrationService extends AsuMigrationBase {
           'langcode' => 'fi',
           'preferred_langcode' => 'fi',
           'preferred_admin_langcode' => 'fi',
-          'status' => 1
+          'status' => 1,
         ]);
         $user->save();
       }
