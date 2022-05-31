@@ -117,9 +117,9 @@ class ProjectMigrationService extends AsuMigrationBase {
         'field_apartment_count' => $values['project_apartment_count'],
         'field_premarketing_start_time' => $premarketing,
         'field_estimated_completion_date' => $completion,
-        'field_state_of_sale' => '', // This is updated later.
-        'status' => 0, // This is updated later.
-        'field_archived' => 1, // This is updated later.
+        'field_state_of_sale' => '',
+        'status' => 0,
+        'field_archived' => 1,
         'author' => 1,
       ]);
 
@@ -180,6 +180,7 @@ class ProjectMigrationService extends AsuMigrationBase {
             'field_financing_fee_m2' => $apartmentValues['financing_fee_m2'] ? floatval(str_replace(',', '', $apartmentValues['financing_fee_m2'])) : 0,
             'field_maintenance_fee' => $apartmentValues['maintenance_fee'] ? floatval(str_replace(',', '', $apartmentValues['maintenance_fee'])) : 0,
             'field_maintenance_fee_m2' => $apartmentValues['maintenance_fee_m2'] ? floatval(str_replace(',', '', $apartmentValues['maintenance_fee_m2'])) : 0,
+            'field_right_of_occupancy_payment' => $apartmentValues['right_of_occupancy_payment'] ? floatval(str_replace(',', '', $apartmentValues['right_of_occupancy_payment'])) : 0,
             'field_right_of_occupancy_fee' => $apartmentValues['right_of_occupancy_fee'] ? floatval(str_replace(',', '', $apartmentValues['right_of_occupancy_fee'])) : 0,
             'field_right_of_occupancy_deposit' =>  $apartmentValues['right_of_occupancy_deposit'] ? floatval(str_replace(',', '', $apartmentValues['right_of_occupancy_deposit'])) : 0,
           ]);
