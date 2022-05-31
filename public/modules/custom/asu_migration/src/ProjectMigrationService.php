@@ -107,7 +107,7 @@ class ProjectMigrationService extends AsuMigrationBase {
       $currentProjectId = $values['Taulun avainkenttä (KohdeID)'];
       $project = Node::create([
         'type' => 'project',
-        'uuid' => $this->uuidService->createUuid_v5($this->projectUuidNamespace, $currentProjectId),
+        'uuid' => $this->uuidService->createUuidV5($this->projectUuidNamespace, $currentProjectId),
         'field_housing_company' => $values['project_housing_company'],
         'field_street_address' => $values['project_street_address'],
         'field_postal_code' => $values['project_postal_code'],
@@ -162,7 +162,7 @@ class ProjectMigrationService extends AsuMigrationBase {
           $apartment = Node::create([
             'type' => 'apartment',
             'status' => $this->apartmentStatusResolver($apartmentStateOfSale),
-            'uuid' => $this->uuidService->createUuid_v5($this->apartmentUuidNamespace, $currentApartmentId),
+            'uuid' => $this->uuidService->createUuidV5($this->apartmentUuidNamespace, $currentApartmentId),
             'title' => $apartmentValues['project_housing_company'] . ' ' . $apartmentValues['apartment_number'],
             'field_apartment_state_of_sale' => strtolower($apartmentStateOfSale),
             'field_apartment_number' => $apartmentValues['apartment_number'],
@@ -182,7 +182,7 @@ class ProjectMigrationService extends AsuMigrationBase {
             'field_maintenance_fee_m2' => $apartmentValues['maintenance_fee_m2'] ? floatval(str_replace(',', '', $apartmentValues['maintenance_fee_m2'])) : 0,
             'field_right_of_occupancy_payment' => $apartmentValues['right_of_occupancy_payment'] ? floatval(str_replace(',', '', $apartmentValues['right_of_occupancy_payment'])) : 0,
             'field_right_of_occupancy_fee' => $apartmentValues['right_of_occupancy_fee'] ? floatval(str_replace(',', '', $apartmentValues['right_of_occupancy_fee'])) : 0,
-            'field_right_of_occupancy_deposit' =>  $apartmentValues['right_of_occupancy_deposit'] ? floatval(str_replace(',', '', $apartmentValues['right_of_occupancy_deposit'])) : 0,
+            'field_right_of_occupancy_deposit' => $apartmentValues['right_of_occupancy_deposit'] ? floatval(str_replace(',', '', $apartmentValues['right_of_occupancy_deposit'])) : 0,
           ]);
 
           try {

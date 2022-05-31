@@ -87,14 +87,14 @@ class UserMigrationService extends AsuMigrationBase {
       try {
         $hash = substr(base64_encode(microtime()), 0, 6);
         $user = User::create([
-          'uuid' => $this->uuidService->createUuid_v5($this->uuidNamespace, $values['id']),
+          'uuid' => $this->uuidService->createUuidV5($this->uuidNamespace, $values['id']),
           'mail' => $values['email'],
           'name' => "{$values['first_name']}_{$values['last_name']}_$hash",
           'type' => 'customer',
           'langcode' => 'fi',
           'preferred_langcode' => 'fi',
           'preferred_admin_langcode' => 'fi',
-          'status' => 1
+          'status' => 1,
         ]);
         $user->save();
       }

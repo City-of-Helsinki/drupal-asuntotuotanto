@@ -9,6 +9,11 @@ use Drupal\asu_api\Api\BackendApi\BackendApi;
  */
 abstract class AsuMigrationBase {
 
+  /**
+   * File resource.
+   *
+   * @var resource.
+   */
   protected $file;
 
   /**

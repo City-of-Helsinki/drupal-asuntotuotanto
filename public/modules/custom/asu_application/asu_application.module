@@ -45,13 +45,17 @@ function asu_application_form_alter(&$form, &$form_state) {
     $form['#form_id'] === 'asu_application_haso_form'
   ) {
     if (isset($form['field_data_agreement_policy'])) {
+      $hitas = 'https://www.hel.fi/static/liitteet-2019/Kaupunginkanslia/Rekisteriselosteet/Kymp/Helsingin%20kaupungin%20Asuntotuotannon%20Hitas-asuntojen%20hakijarekisteri.pdf';
+      $haso = 'https://www.hel.fi/static/liitteet-2019/Kaupunginkanslia/Rekisteriselosteet/Kymp/Asumisoikeusasuntojen%20hakijarekisteri.pdf';
+      $link = $form['#form_id'] === 'asu_application_hitas_form' ? $hitas : $haso;
+
       $form['field_data_agreement_policy']['widget']['value']['#title'] =
         t(
-          'I have read <a href="@register">Registry policy</a>
-            and city\'s <a href="@privacy">Privacy Statement</a>',
+          'I have read <a target="_blank" href="@register">Registry policy</a>
+            and city\'s  <a target="_blank" href="@privacy">Privacy Statement</a>',
           [
-            '@register' => '/rekisteriseloste',
-            '@privacy' => '/tietosuojaperiaate',
+            '@register' => 'https://www.hel.fi/helsinki/fi/kaupunki-ja-hallinto/tietoa-helsingista/tietosuoja/',
+            '@privacy' => $link,
           ]
         );
     }

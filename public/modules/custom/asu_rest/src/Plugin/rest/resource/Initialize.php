@@ -35,8 +35,19 @@ final class Initialize extends ResourceBase {
     // Gets filters cached if possible.
     $response['filters'] = $this->getFilters();
 
+    if ($applicationCache = \Drupal::cache()
+      ->get('application_statuses')) {
+      $response['apartment_application_status'] = $applicationCache->data;
+    }
+    else {
+      $statuses = $this->getApartmentApplicationStatus();
+      $response['apartment_application_status'] = $statuses;
+      \Drupal::cache()
+        ->set('application_statuses', $statuses, (time() + (60 * 10)));
+    }
+
     $response['static_content'] = $this->getStaticContent();
-    $response['apartment_application_status'] = $this->getApartmentApplicationStatus();
+
     $response['token'] = \Drupal::service('csrf_token')->get(CsrfRequestHeaderAccessCheck::TOKEN_KEY);
     $response['user'] = [
       'user_id' => 0,
@@ -98,8 +109,52 @@ final class Initialize extends ResourceBase {
    *   Array of application statuses by apartment.
    */
   private function getApartmentApplicationStatus(): array {
-    return Applications::create()
-      ->getApartmentApplicationStatuses();
+    $states = ['processing', 'ready', 'for_sale'];
+    $reservedStates = ['processing', 'ready'];
+    $projects = \Drupal::entityTypeManager()
+      ->getStorage('node')
+      ->loadByProperties([
+        'type' => 'project',
+        'status' => 1,
+        'field_archived' => 0,
+      ]);
+
+    $projectIds = [];
+    foreach ($projects as $project) {
+      if (in_array($project->field_state_of_sale->target_id, $states)) {
+        $projectIds[$project->id()] = $project->field_state_of_sale->target_id;
+      }
+    }
+
+    $idString = implode(',', array_keys($projectIds));
+
+    $apartmentIds = \Drupal::database()
+      ->query('select entity_id, field_apartments_target_id from node__field_apartments where entity_id in (' . $idString . ')')
+      ->fetchAllAssoc('field_apartments_target_id');
+
+    $applicationCountByApartment = \Drupal::database()
+      ->query('select apartment_id, count(*) from asu_application__apartment group by apartment_id')
+      ->fetchAllAssoc('apartment_id');
+
+    $return = [];
+    foreach ($apartmentIds as $key => $result) {
+      if (in_array($projectIds[$apartmentIds[$key]->entity_id], $reservedStates)) {
+        // Has applications.
+        if (isset($applicationCountByApartment[$key])) {
+          $return[$key] = 'RESERVED';
+        }
+        else {
+          $return[$key] = 'VACANT';
+        }
+        continue;
+      }
+      if (isset($applicationCountByApartment)) {
+        $count = isset($applicationCountByApartment[$key]) ? ((array) ($applicationCountByApartment[$key]))['count(*)'] : 0;
+        $return[$key] = Applications::resolveApplicationCountEnum($count);
+      }
+    }
+
+    return $return;
 
   }
 
