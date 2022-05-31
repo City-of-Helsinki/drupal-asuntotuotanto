@@ -18,7 +18,7 @@ class UuidService {
    * @return string
    *   Uuid
    */
-  public function createUuid_v5(string $name_space, string $string): string {
+  public function createUuidV5(string $name_space, string $string): string {
     // Getting hexadecimal components of namespace.
     $n_hex = str_replace(['-', '{', '}'], '', $name_space);
     // Binary value string.

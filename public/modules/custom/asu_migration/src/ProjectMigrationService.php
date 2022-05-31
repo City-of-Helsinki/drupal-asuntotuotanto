@@ -107,7 +107,7 @@ class ProjectMigrationService extends AsuMigrationBase {
       $currentProjectId = $values['Taulun avainkenttä (KohdeID)'];
       $project = Node::create([
         'type' => 'project',
-        'uuid' => $this->uuidService->createUuid_v5($this->projectUuidNamespace, $currentProjectId),
+        'uuid' => $this->uuidService->createUuidV5($this->projectUuidNamespace, $currentProjectId),
         'field_housing_company' => $values['project_housing_company'],
         'field_street_address' => $values['project_street_address'],
         'field_postal_code' => $values['project_postal_code'],
@@ -162,7 +162,7 @@ class ProjectMigrationService extends AsuMigrationBase {
           $apartment = Node::create([
             'type' => 'apartment',
             'status' => $this->apartmentStatusResolver($apartmentStateOfSale),
-            'uuid' => $this->uuidService->createUuid_v5($this->apartmentUuidNamespace, $currentApartmentId),
+            'uuid' => $this->uuidService->createUuidV5($this->apartmentUuidNamespace, $currentApartmentId),
             'title' => $apartmentValues['project_housing_company'] . ' ' . $apartmentValues['apartment_number'],
             'field_apartment_state_of_sale' => strtolower($apartmentStateOfSale),
             'field_apartment_number' => $apartmentValues['apartment_number'],
