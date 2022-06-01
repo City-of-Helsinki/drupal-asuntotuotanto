@@ -23,8 +23,8 @@ class ApplicationSubscriber implements EventSubscriberInterface {
    */
   public static function getSubscribedEvents() {
     $events = [];
-    $events[ApplicationEvent::EVENT_NAME][] =
-      ['sendApplicationCreatedEmailToCustomer', 20];
+    //$events[ApplicationEvent::EVENT_NAME][] =
+      //['sendApplicationCreatedEmailToCustomer', 20];
     return $events;
   }
 
