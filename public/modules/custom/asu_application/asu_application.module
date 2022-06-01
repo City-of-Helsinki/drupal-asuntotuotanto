@@ -111,6 +111,18 @@ function template_preprocess_asu_application(array &$variables) {
         '';
     }
 
+    if (
+      $project->hasField('field_application_end_time') &&
+      $application_end_time_value = $project->get('field_application_end_time')->value
+    ) {
+      $date_formatter = \Drupal::service('date.formatter');
+      $application_end = $date_formatter->format(
+        $project->get('field_application_end_time')->date->getTimestamp(),
+        'custom',
+        'd.m.Y H:i'
+      );
+    }
+
     $application_teaser_values = [
       '#teaser_values' => [
         'application_id' => $application->id->value,
@@ -120,7 +132,7 @@ function template_preprocess_asu_application(array &$variables) {
         'project_address' => $project->field_street_address->value,
         'project_ownership_type' => $project->field_ownership_type->first()->entity->getName(),
         'project_estimated_completion' => $project->field_estimated_completion->value,
-        'application_end_time' => $project->field_application_end_time->value,
+        'application_end_time' => $application_end,
         'project_main_image_url' => $main_image_file_url ?? NULL,
         'project_district' => $district,
         'is_application_period' => $project->isApplicationPeriod(),
