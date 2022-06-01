@@ -12,7 +12,7 @@ abstract class AsuMigrationBase {
   /**
    * File resource.
    *
-   * @var resource.
+   * @var resource
    */
   protected $file;
 
