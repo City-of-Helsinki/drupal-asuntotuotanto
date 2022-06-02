@@ -1,0 +1,76 @@
+_core:
+  default_config_hash: oDGEkhP0h5rXXqlDplxeBDre0goLigOJupHKMDMwcqM
+login_menu_item_title: 'Samli logini'
+logout_menu_item_title: 'Samli logoutti'
+login_redirect_url: ''
+logout_redirect_url: ''
+error_redirect_url: ''
+error_throw: false
+local_login_saml_error: false
+logout_different_user: true
+drupal_login_roles:
+  customer: customer
+  salesperson: salesperson
+  admin: admin
+  authenticated: '0'
+  supervisor: '0'
+  read_only: '0'
+  content_producer: '0'
+  editor: '0'
+sp_entity_id: 'https://asuntotuotanto.docker.so/saml/metadata'
+sp_name_id_format: 'urn:oasis:names:tc:SAML:2.0:nameid-format:transient'
+sp_x509_certificate: 'file:/app/conf/certs/sp.crt'
+sp_new_certificate: ''
+sp_private_key: 'file:/app/conf/certs/sp.key'
+metadata_valid_secs: 60
+metadata_cache_http: false
+idp_entity_id: 'https://idp-asuntotuotanto.docker.so/simplesaml/shib13/idp/metadata.php'
+idp_single_sign_on_service: 'https://idp-asuntotuotanto.docker.so/simplesaml/saml2/idp/SSOService.php'
+idp_single_log_out_service: 'https://idp-asuntotuotanto.docker.so/simplesaml/saml2/idp/SingleLogoutService.php'
+idp_change_password_service: ''
+idp_certs:
+  - MIIF7TCCA9WgAwIBAgIJAPiU8pz7aLEGMA0GCSqGSIb3DQEBBQUAMIGMMQswCQYDVQQGEwJGSTEfMB0GA1UECgwWVW5pdmVyc2l0eSBvZiBIZWxzaW5raTESMBAGA1UECwwJSVQgQ2VudGVyMRowGAYDVQQDDBFsb2dpbi5oZWxzaW5raS5maTEsMCoGCSqGSIb3DQEJARYdYXRrLWF1dGVudGlrb2ludGlAaGVsc2lua2kuZmkwHhcNMTcxMDEyMTUwNDQ1WhcNMjAxMDExMTUwNDQ1WjCBjDELMAkGA1UEBhMCRkkxHzAdBgNVBAoMFlVuaXZlcnNpdHkgb2YgSGVsc2lua2kxEjAQBgNVBAsMCUlUIENlbnRlcjEaMBgGA1UEAwwRbG9naW4uaGVsc2lua2kuZmkxLDAqBgkqhkiG9w0BCQEWHWF0ay1hdXRlbnRpa29pbnRpQGhlbHNpbmtpLmZpMIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAxF1qK+8DvYbqiIPsuYccIDzonJoMxSh1SAQcmhem30Vt9NhmpZNeaY2xPKxfoi3tdLQAavGjFPmqLrO/lQGGhasWKJqwLDFLQTx62DpYkTZpti9QzWItfQoAL+Q59n55rwNeMmEia0l7jQqmqv4Otsoym3T9896yeCs8rfYffpACAXKonOnELjMJFnv/k7VoUz8Dk5VN14cSj7Osyc0fhICA1dpx1FoKeXpfnWEd4VX9EPy0fA4dVzZZ+3FBrgcfntSL573HI0DqGG0m4xYbvmjMz17cgFhUxBSwPfeAFNVmss6XbyheWQbJ33QiFgRstX34yM8fKgs69PZ0dMXN/0QJbFz7LI0CdTSnC+OvRat9Ys7DVobQeznNIUHh005LBebOal+EYW2FNzwp/02q8g9xtAdzdSSsSRN+Xc/LbiRKPE/ZxAYUWphzYGo1XejYgxZvp2LRAuah/ZPuGFH3efquMT1AZd4MPOtSQdALmU4j5zX2dBdM0Dd26r92Jyr4kl1hZOffcPbtwSLQr3IX0J0QomgVNdfHsS6tGO+eiouss3q15f0phlfDRnt7e63praEa2XQMd2VsV1uvocCpcGYnEeWkbu3EcRmCSt1DKTiG9juGB9IWEPBdZdOL6WiHBixVZtb8QPiaHwgo4T/BJqFEgcjaSVl7g1LYhIEd3/sCAwEAAaNQME4wHQYDVR0OBBYEFN2e3YZ5yXW+YVgKvBbkX/U338SJMB8GA1UdIwQYMBaAFN2e3YZ5yXW+YVgKvBbkX/U338SJMAwGA1UdEwQFMAMBAf8wDQYJKoZIhvcNAQEFBQADggIBAEg6k7msxt0fEh8rLoUyHsXH0BgJmBq7hmhvPqvnLp0/rwKD++kNWyIn3dc4/1SCpCvFzV0YfqJw5FkYEQIDfxynp6aUUHtVXyZ17zT2U+3PvW4+ExWGuWm1BviCzwaEFNzdYH1Yko7MZrXCIwqAZbgu0P3JLizBR9dB4lvZ3rqzdjqjW+yfPt8kvukzH/7VM/lLNs+2YNYh7O/kbI4ZCJYhWs1bDiEhNcnt9h9zKT1aDRFgb/Cuu1ePCZPxMdY4Ujxn8j6dC54JaKPAmyExYiEIY2SyNDcFQulMkDBmJCXHq1AfVkRB4YGHQw+yoG3cN5C28z4bsgTC0VjjnT552+nmWycyrZMNq46vwWjnyNs8ZY4MZXcVYfli7gGFLxRPi3Gnz5fzPm+sl+a6OaB54F2swdNDyIcufUxAhDVX0kxY/YwLSmCjLKsZenrOkYUxk+qEBUgaSdUc9y0QczGI7IBtFzvNdDNXEQGPhewEuXw+znS4k3tRj+vRsE/szdcwuvb145pVXF89roeqoNFpe0fzOwdtf+MRPC3B1wn97g+X6W3eUpoKxyA1+yc3EGNS6zj/EHV8uRdqkjnbZ7HpsO78pEiRizYnR90eomKd8QLKuyOuZ44GlpjqjjYzSRnB6GiL29oTNZiTrcQNR1KoAK46rtsRef5VvgeCAhhvnrQA
+  - MIIDXTCCAkWgAwIBAgIJALmVVuDWu4NYMA0GCSqGSIb3DQEBCwUAMEUxCzAJBgNVBAYTAkFVMRMwEQYDVQQIDApTb21lLVN0YXRlMSEwHwYDVQQKDBhJbnRlcm5ldCBXaWRnaXRzIFB0eSBMdGQwHhcNMTYxMjMxMTQzNDQ3WhcNNDgwNjI1MTQzNDQ3WjBFMQswCQYDVQQGEwJBVTETMBEGA1UECAwKU29tZS1TdGF0ZTEhMB8GA1UECgwYSW50ZXJuZXQgV2lkZ2l0cyBQdHkgTHRkMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzUCFozgNb1h1M0jzNRSCjhOBnR+uVbVpaWfXYIR+AhWDdEe5ryY+CgavOg8bfLybyzFdehlYdDRgkedEB/GjG8aJw06l0qF4jDOAw0kEygWCu2mcH7XOxRt+YAH3TVHa/Hu1W3WjzkobqqqLQ8gkKWWM27fOgAZ6GieaJBN6VBSMMcPey3HWLBmc+TYJmv1dbaO2jHhKh8pfKw0W12VM8P1PIO8gv4Phu/uuJYieBWKixBEyy0lHjyixYFCR12xdh4CA47q958ZRGnnDUGFVE1QhgRacJCOZ9bd5t9mr8KLaVBYTCJo5ERE8jymab5dPqe5qKfJsCZiqWglbjUo9twIDAQABo1AwTjAdBgNVHQ4EFgQUxpuwcs/CYQOyui+r1G+3KxBNhxkwHwYDVR0jBBgwFoAUxpuwcs/CYQOyui+r1G+3KxBNhxkwDAYDVR0TBAUwAwEB/zANBgkqhkiG9w0BAQsFAAOCAQEAAiWUKs/2x/viNCKi3Y6blEuCtAGhzOOZ9EjrvJ8+COH3Rag3tVBWrcBZ3/uhhPq5gy9lqw4OkvEws99/5jFsX1FJ6MKBgqfuy7yh5s1YfM0ANHYczMmYpZeAcQf2CGAaVfwTTfSlzNLsF2lW/ly7yapFzlYSJLGoVE+OHEu8g5SlNACUEfkXw+5Eghh+KzlIN7R6Q7r2ixWNFBC/jWf7NKUfJyX8qIG5md1YUeT6GBW9Bm2/1/RiO24JTaYlfLdKK9TYb8sG5B+OLab2DImG99CJ25RkAcSobWNF5zD0O6lgOo3cEdB/ksCq3hmtlC/DlLZ/D8CJ+7VuZnS1rR2naQ==
+idp_cert_encryption: ''
+unique_id_attribute: uid
+map_users: true
+map_users_name: false
+map_users_mail: false
+map_users_roles:
+  customer: customer
+  supervisor: '0'
+  read_only: '0'
+  content_producer: '0'
+  editor: '0'
+  salesperson: '0'
+  admin: '0'
+create_users: true
+sync_name: false
+sync_mail: false
+user_name_attribute: eduPersonPrincipalName
+user_mail_attribute: mail
+request_set_name_id_policy: true
+strict: false
+security_metadata_sign: false
+security_authn_requests_sign: false
+security_logout_requests_sign: false
+security_logout_responses_sign: false
+security_nameid_encrypt: false
+security_signature_algorithm: 'http://www.w3.org/2001/04/xmldsig-more#rsa-sha256'
+security_encryption_algorithm: 'http://www.w3.org/2001/04/xmlenc#aes256-cbc'
+security_messages_sign: false
+security_assertions_signed: true
+security_assertions_encrypt: false
+security_nameid_encrypted: false
+security_want_name_id: false
+security_request_authn_context: true
+security_lowercase_url_encoding: false
+security_logout_reuse_sigs: false
+security_allow_repeat_attribute_name: false
+debug_display_error_details: true
+debug_log_in: true
+debug_log_saml_in: true
+debug_log_saml_out: true
+debug_phpsaml: true
+use_proxy_headers: false
+use_base_url: true

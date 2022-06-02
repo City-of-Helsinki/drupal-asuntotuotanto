@@ -57,6 +57,7 @@ dependencies:
     - pathauto
     - redirect
     - role_delegation
+    - samlauth
     - scheduler
     - simple_sitemap
     - system
@@ -106,6 +107,7 @@ permissions:
   - 'bypass paragraphs type content access'
   - 'cancel account'
   - 'change own username'
+  - 'configure saml'
   - 'create apartment content'
   - 'create article content'
   - 'create content translations'
@@ -291,5 +293,6 @@ permissions:
   - 'view page revisions'
   - 'view remote entities'
   - 'view scheduled content'
+  - 'view sp metadata'
   - 'view the administration theme'
   - 'view unpublished paragraphs'

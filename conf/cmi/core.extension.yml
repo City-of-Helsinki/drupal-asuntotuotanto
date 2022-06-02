@@ -138,6 +138,7 @@ module:
   restui: 0
   role_delegation: 0
   route_condition: 0
+  samlauth: 0
   scheduler: 0
   search_api: 0
   select2: 0

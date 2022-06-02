@@ -9,3 +9,8 @@ services:
   asu_user.customer:
     class: Drupal\asu_user\Customer
     arguments: ['@current_user', '@tempstore.private']
+
+  asu_application.application_subscriber:
+    class: Drupal\asu_user\EventSubscriber\AuthSubscriber
+    tags:
+      - { name: event_subscriber }
