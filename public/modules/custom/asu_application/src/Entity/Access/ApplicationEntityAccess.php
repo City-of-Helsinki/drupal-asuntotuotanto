@@ -18,22 +18,14 @@ class ApplicationEntityAccess extends EntityAccessControlHandler {
    * {@inheritdoc}
    */
   protected function checkAccess(EntityInterface $entity, $operation, AccountInterface $account) {
-    $createPermission = 'create application';
-    $administratePermission = 'administer applications';
     switch ($operation) {
       case 'view':
-        return AccessResult::allowedIf(
-          ($account->id() === $entity->getOwnerId() && $account->hasPermission($createPermission)) ||
-          $account->hasPermission($administratePermission)
-        );
+        return $this->viewOperationHandling($entity, $account);
 
       case 'update':
-        return AccessResult::allowedIf(
-          ($account->id() === $entity->getOwnerId() && $account->hasPermission($createPermission)) ||
-          $account->hasPermission($administratePermission)
-        );
+        return $this->updateOperationAccess($entity, $account);
     }
-    return AccessResult::neutral();
+    return parent::checkAccess($entity, $operation, $account);
   }
 
   /**
@@ -44,6 +36,24 @@ class ApplicationEntityAccess extends EntityAccessControlHandler {
       $account,
       ['create application', 'administer applications'],
       'OR'
+    );
+  }
+
+  private function viewOperationHandling(EntityInterface $entity, AccountInterface $account): AccessResult {
+    $createPermission = 'create application';
+    $administratePermission = 'administer applications';
+    return AccessResult::allowedIf(
+      ($account->id() === $entity->getOwnerId() && $account->hasPermission($createPermission)) ||
+      $account->hasPermission($administratePermission)
+    );
+  }
+
+  private function updateOperationAccess(EntityInterface $entity, AccountInterface $account): AccessResult {
+    $createPermission = 'create application';
+    $administratePermission = 'administer applications';
+    return AccessResult::allowedIf(
+      ($account->id() === $entity->getOwnerId() && $account->hasPermission($createPermission)) ||
+      $account->hasPermission($administratePermission)
     );
   }
 
