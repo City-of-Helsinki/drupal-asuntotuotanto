@@ -98,10 +98,6 @@ class ApplicationSubscriber implements EventSubscriberInterface {
       $request = new CreateApplicationRequest(
         $user,
         $application,
-        [
-          'uuid' => $applicationEvent->getProjectUuid(),
-          'apartment_uuids' => $applicationEvent->getApartmentUuids(),
-        ]
       );
       $request->setSender($user);
       $this->backendApi->send($request);
@@ -174,10 +170,6 @@ class ApplicationSubscriber implements EventSubscriberInterface {
       $request = new SalesCreateApplicationRequest(
         $sender,
         $application,
-        [
-          'uuid' => $applicationEvent->getProjectUuid(),
-          'apartment_uuids' => $applicationEvent->getApartmentUuids(),
-        ]
       );
 
       $request->setSender($sender);

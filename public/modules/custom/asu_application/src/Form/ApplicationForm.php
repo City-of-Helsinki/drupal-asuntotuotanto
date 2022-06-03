@@ -13,7 +13,6 @@ use Drupal\Core\Entity\ContentEntityForm;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Messenger\MessengerTrait;
 use Drupal\Core\Url;
-use Drupal\node\Entity\Node;
 use Drupal\user\Entity\User;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
@@ -211,7 +210,6 @@ class ApplicationForm extends ContentEntityForm {
     $this->doSave($form, $form_state, FALSE);
     $this->messenger()->addMessage($this->t('The application has been saved as a draft.
      You must submit the application before the application time expires.'));
-    // $form_state->setRedirect(getUserApplicationsUrl());
     $url = Url::fromUri($this->getUserApplicationsUrl(FALSE));
     $form_state->setRedirectUrl($url);
   }
@@ -279,7 +277,6 @@ class ApplicationForm extends ContentEntityForm {
         $this->entity->id(),
         $form['#project_name'],
         $form['#project_uuid'],
-        $form['#apartment_uuids']
       );
     }
     else {
@@ -296,7 +293,6 @@ class ApplicationForm extends ContentEntityForm {
         $this->entity->id(),
         $form['#project_name'],
         $form['#project_uuid'],
-        $form['#apartment_uuids']
       );
     }
     \Drupal::service('event_dispatcher')
@@ -355,7 +351,6 @@ class ApplicationForm extends ContentEntityForm {
         }
 
         $apartments[$apartment->id()] = $select_text;
-        $apartmentsUuid[$apartment->id()] = $apartment->uuid();
       }
       ksort($apartments, SORT_NUMERIC);
       \Drupal::cache()->set($cid, $apartments, (time()+60*60));
@@ -368,7 +363,6 @@ class ApplicationForm extends ContentEntityForm {
       'ownership_type' => $type,
       'application_start_date' => $project->field_application_start_time->value,
       'application_end_date' => $project->field_application_end_time->value,
-      'apartment_uuids' => $apartmentsUuid,
     ]);
 
   }

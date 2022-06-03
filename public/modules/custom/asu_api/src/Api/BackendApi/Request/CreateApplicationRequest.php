@@ -5,6 +5,7 @@ namespace Drupal\asu_api\Api\BackendApi\Request;
 use Drupal\asu_api\Api\BackendApi\Response\CreateApplicationResponse;
 use Drupal\asu_api\Api\Request;
 use Drupal\asu_application\Entity\Application;
+use Drupal\node\Entity\Node;
 use Drupal\user\UserInterface;
 use Psr\Http\Message\ResponseInterface;
 
@@ -24,23 +25,14 @@ class CreateApplicationRequest extends Request {
   protected Application $application;
 
   /**
-   * Project data.
-   *
-   * @var array
-   */
-  protected array $projectData;
-
-  /**
    * Constructor.
    */
   public function __construct(
     UserInterface $sender,
     Application $application,
-    array $projectData
   ) {
     $this->sender = $sender;
     $this->application = $application;
-    $this->projectData = $projectData;
   }
 
   /**
@@ -54,7 +46,7 @@ class CreateApplicationRequest extends Request {
       'has_children' => $this->application->getHasChildren(),
       'additional_applicant' => $this->getApplicant(),
       'right_of_residence' => NULL,
-      'project_id' => $this->projectData['uuid'],
+      'project_id' => $this->application->getProjectId(),
       'apartments' => $this->getApartments(),
       'is_right_of_occupancy_housing_changer' => FALSE,
       'has_hitas_ownership' => FALSE,
@@ -84,9 +76,10 @@ class CreateApplicationRequest extends Request {
     $apartments = [];
     foreach ($this->application->getApartments()->getValue() as $key => $value) {
       if (isset($value['id'])) {
+        $apartmentUuid = Node::load($value['id'])->uuid();
         $apartments[$key] = [
           'priority' => $key + 1,
-          'identifier' => $this->projectData['apartment_uuids'][$value['id']],
+          'identifier' => $apartmentUuid
         ];
       }
     }
