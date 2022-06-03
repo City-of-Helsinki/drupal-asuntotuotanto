@@ -291,14 +291,13 @@
           const selectedValueTextArray = originalSelectElementTarget.options[
             originalSelectElementTarget.selectedIndex
           ].text.split(" | ");
-
           const listItemValues = {
             apartment_number: selectedValueTextArray[0],
             apartment_structure: selectedValueTextArray[1],
             apartment_floor: selectedValueTextArray[2],
             apartment_living_area_size: selectedValueTextArray[3],
-            apartment_sales_price: selectedValueTextArray[4],
-            apartment_debt_free_sales_price: selectedValueTextArray[5],
+            apartment_debt_free_sales_price: selectedValueTextArray[4],
+            apartment_sales_price: selectedValueTextArray[5],
           };
 
           // eslint-disable-next-line no-use-before-define
@@ -511,8 +510,6 @@
 
         parentLiElement.innerHTML =
            "<div class='application-form-apartment-loader-wrapper'><div class='application-form-apartment-loader'></div></div>";
-
-        console.log(removeButton);
 
         setTimeout(() => {
           jQuery(removeButton).trigger('mousedown');
@@ -829,14 +826,13 @@
             const selectedValueTextArray = select.options[
               select.selectedIndex
             ].text.split(" | ");
-
             const listItemValues = {
               apartment_number: selectedValueTextArray[0],
               apartment_structure: selectedValueTextArray[1],
               apartment_floor: selectedValueTextArray[2],
               apartment_living_area_size: selectedValueTextArray[3],
-              apartment_sales_price: selectedValueTextArray[4],
-              apartment_debt_free_sales_price: selectedValueTextArray[5],
+              apartment_debt_free_sales_price: selectedValueTextArray[4],
+              apartment_sales_price: selectedValueTextArray[5],
             };
 
             applicationFormApartmentListElement.append(
