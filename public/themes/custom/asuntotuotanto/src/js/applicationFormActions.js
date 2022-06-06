@@ -1,5 +1,12 @@
 (($, Drupal) => {
       jQuery(document).ajaxStop(() => {
+        // Prevent race condition by keeping buttons disabled as long as necessary.
+        const button = $('.application-form-apartment__apartment-add-button');
+        const customApartmentSelect = $('[data-drupal-selector="custom_apartment_select"]');
+        if (button && customApartmentSelect.length == 0) {
+          button.first().attr("disabled", false);
+        }
+        
         // Prevent add new button from staying disabled after ajax.
         const el = $("[id^=apartment_list_select_]");
         if (el.length > 0 && el.is(':disabled')) {
@@ -259,6 +266,13 @@
           "custom_apartment_select"
         );
 
+        if (
+          apartmentSelectElement.id != "apartment_list_select_0" &&
+          $.active != 0
+        ) {
+          apartmentSelectElement.setAttribute("disabled", true);
+        }
+
         const earlierSelectedOptions = [
           ...apartmentSelectElement.options,
         ].filter((option) => selectedApartments.includes(option.value));
@@ -345,7 +359,9 @@
           }
 
           if (apartmentAddButton) {
-            apartmentAddButton.removeAttribute("disabled");
+            if ($.active == 0) {
+              apartmentAddButton.removeAttribute("disabled");
+            }
             apartmentAddButton.focus();
           }
         });
@@ -422,7 +438,7 @@
             } else {
               target.focus();
             }
-          }, 10);
+          }, 50);
 
           const information = document.createElement("p");
           information.appendChild(
@@ -518,9 +534,6 @@
             jQuery(element).prop("disabled", false);
           })
         }, 750);
-        //setTimeout(() => appendListItemToApartmentList(true), 500);
-        // setTimeout(() => window.location.reload(), 500);
-        // buildTable()
       };
 
       const handleListItemInnerClicks = ({ target }) => {
