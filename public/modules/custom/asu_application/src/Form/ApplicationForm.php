@@ -142,7 +142,8 @@ class ApplicationForm extends ContentEntityForm {
       (new RedirectResponse($url . '/edit'))->send();
       return $form;
 
-    } else {
+    }
+    else {
       $form_state->setRebuild(TRUE);
 
       $projectName = $project_data['project_name'];
@@ -153,7 +154,6 @@ class ApplicationForm extends ContentEntityForm {
       $form['#project_name'] = $projectName;
 
       $form['#project_uuid'] = $project_data['project_uuid'];
-      $form['#apartment_uuids'] = $project_data['apartment_uuids'];
 
       $form = parent::buildForm($form, $form_state);
 
@@ -327,7 +327,8 @@ class ApplicationForm extends ContentEntityForm {
 
     if ($apartmentData = \Drupal::cache()->get($cid)) {
       $values['apartments'] = $apartmentData->data;
-    } else {
+    }
+    else {
       $apartments = [];
       foreach ($project->field_apartments as $apartmentReference) {
         $apartment = $apartmentReference->entity;
@@ -337,7 +338,6 @@ class ApplicationForm extends ContentEntityForm {
         $structure = $apartment->field_apartment_structure->value;
         $floor = $apartment->field_floor->value;
         $floor_max = $apartment->field_floor_max->value;
-
 
         if ($type == 'HASO') {
           $price = $apartment->field_right_of_occupancy_payment->value;
@@ -353,7 +353,7 @@ class ApplicationForm extends ContentEntityForm {
         $apartments[$apartment->id()] = $select_text;
       }
       ksort($apartments, SORT_NUMERIC);
-      \Drupal::cache()->set($cid, $apartments, (time()+60*60));
+      \Drupal::cache()->set($cid, $apartments, (time() + 60 * 60));
       $values['apartments'] = $apartments;
     }
 
@@ -459,7 +459,7 @@ class ApplicationForm extends ContentEntityForm {
       ];
     }
     $entity->apartment->setValue($apartments);
-    return $sorted;
+    return $apartments;
   }
 
   /**

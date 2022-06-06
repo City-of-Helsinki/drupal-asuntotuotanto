@@ -79,7 +79,7 @@ class CreateApplicationRequest extends Request {
         $apartmentUuid = Node::load($value['id'])->uuid();
         $apartments[$key] = [
           'priority' => $key + 1,
-          'identifier' => $apartmentUuid
+          'identifier' => $apartmentUuid,
         ];
       }
     }

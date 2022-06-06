@@ -6,7 +6,7 @@
         if (button && customApartmentSelect.length == 0) {
           button.first().attr("disabled", false);
         }
-        
+
         // Prevent add new button from staying disabled after ajax.
         const el = $("[id^=apartment_list_select_]");
         if (el.length > 0 && el.is(':disabled')) {

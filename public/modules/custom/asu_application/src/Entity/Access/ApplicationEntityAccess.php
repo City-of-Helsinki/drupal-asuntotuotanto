@@ -39,6 +39,9 @@ class ApplicationEntityAccess extends EntityAccessControlHandler {
     );
   }
 
+  /**
+   * {@inheritdoc}
+   */
   private function viewOperationHandling(EntityInterface $entity, AccountInterface $account): AccessResult {
     $createPermission = 'create application';
     $administratePermission = 'administer applications';
@@ -48,6 +51,9 @@ class ApplicationEntityAccess extends EntityAccessControlHandler {
     );
   }
 
+  /**
+   * {@inheritdoc}
+   */
   private function updateOperationAccess(EntityInterface $entity, AccountInterface $account): AccessResult {
     $createPermission = 'create application';
     $administratePermission = 'administer applications';
