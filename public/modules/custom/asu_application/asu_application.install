@@ -14,3 +14,33 @@ function asu_application_update_9001() : void {
       ->installFieldStorageDefinition($name, 'asu_application', 'asu_application', $field);
   }
 }
+
+/**
+ * Installs project entity reference field to application
+ */
+function asu_application_update_9002() : void {
+  $fields['project'] = \Drupal\Core\Field\BaseFieldDefinition::create('entity_reference')
+    ->setLabel(new \Drupal\Core\StringTranslation\TranslatableMarkup('Project'))
+    ->setSettings([
+      'target_type' => 'node',
+      'handler_settings' => [
+        'target_bundles' => ['project'],
+      ],
+    ]);
+
+  foreach ($fields as $name => $field) {
+    \Drupal::entityDefinitionUpdateManager()
+      ->installFieldStorageDefinition($name, 'asu_application', 'asu_application', $field);
+  }
+}
+
+/**
+ * Update all applications' project entity reference field value.
+ */
+function asu_application_update_9003() : void {
+  $applications = Drupal\asu_application\Entity\Application::loadMultiple();
+  foreach($applications as $application) {
+    $application->project->target_id = $application->getProjectId();
+    $application->save();
+  }
+}

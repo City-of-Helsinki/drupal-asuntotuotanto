@@ -8,7 +8,7 @@ use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
- * Form which allows bulk adding images to apartments.
+ * Allow salesperson to create an application on behalf of customer.
  */
 class SalespersonApplicationForm extends FormBase {
 
@@ -23,7 +23,6 @@ class SalespersonApplicationForm extends FormBase {
    * {@inheritDoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state, string $user_id = NULL, string $project_id = NULL) {
-
     if ($user_id) {
       $user = User::load($user_id);
       try {

@@ -12,8 +12,7 @@ asu_application.application_results:
     _controller: '\Drupal\asu_application\Controller\ResultController::getResults'
   methods: [POST]
   requirements:
-    _access: 'TRUE'
-    #_csrf_token: 'TRUE'
+    _permission: 'create application'
 
 asu_application.lottery_start:
   path: '/lottery/start/{project_uuid}'
@@ -21,5 +20,4 @@ asu_application.lottery_start:
     _controller: '\Drupal\asu_application\Controller\ResultController::startLottery'
   methods: [GET]
   requirements:
-    _access: 'TRUE'
-    #_csrf_token: 'TRUE'
+    _permission: 'administer applications'
