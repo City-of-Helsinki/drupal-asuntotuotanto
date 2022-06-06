@@ -209,7 +209,7 @@ class Application extends EditorialContentEntityBase implements ContentEntityInt
 
     $fields['project'] = BaseFieldDefinition::create('entity_reference')
       ->setLabel(t('Project'))
-      ->setDescription(t('The user ID of the node author.'))
+      ->setDescription(t('The project'))
       ->setSettings([
         'target_type' => 'node',
         'handler_settings' => [
