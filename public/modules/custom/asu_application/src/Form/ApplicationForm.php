@@ -26,7 +26,8 @@ class ApplicationForm extends ContentEntityForm {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $project = $this->entity->project->getEntity();
+    $projectReference = $this->entity->project->first();
+    $project = $projectReference->entity;
     $project_id = $project->id();
     $application_type_id = $this->entity->bundle();
 
