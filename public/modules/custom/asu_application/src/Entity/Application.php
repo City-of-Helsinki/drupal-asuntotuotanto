@@ -301,6 +301,7 @@ class Application extends EditorialContentEntityBase implements ContentEntityInt
     $values += [
       'uid' => $user_id,
       'project_id' => $project_id,
+      'project' => $project_id
     ];
 
   }

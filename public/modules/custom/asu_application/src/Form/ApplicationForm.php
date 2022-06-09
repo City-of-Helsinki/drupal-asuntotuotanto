@@ -13,6 +13,7 @@ use Drupal\Core\Entity\ContentEntityForm;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Messenger\MessengerTrait;
 use Drupal\Core\Url;
+use Drupal\node\Entity\Node;
 use Drupal\user\Entity\User;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
@@ -26,8 +27,17 @@ class ApplicationForm extends ContentEntityForm {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
+    $form_state->setRebuild(TRUE);
+    $form_state->disableCache();
+
     $projectReference = $this->entity->project->first();
     $project = $projectReference->entity;
+
+    if (!$project) {
+      $project_id = $this->entity->get('project_id')->value;
+      $project = Node::load($project_id);
+    }
+
     $project_id = $project->id();
     $application_type_id = $this->entity->bundle();
 

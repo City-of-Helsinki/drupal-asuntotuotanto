@@ -44,3 +44,14 @@ function asu_application_update_9003() : void {
     $application->save();
   }
 }
+
+/**
+ * Update all applications' project entity reference field value.
+ */
+function asu_application_update_9004() : void {
+  $applications = Drupal\asu_application\Entity\Application::loadMultiple();
+  foreach($applications as $application) {
+    $application->project->target_id = $application->getProjectId();
+    $application->save();
+  }
+}
