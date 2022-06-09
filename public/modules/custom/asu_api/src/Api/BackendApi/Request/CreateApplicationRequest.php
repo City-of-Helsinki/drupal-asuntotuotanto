@@ -25,14 +25,23 @@ class CreateApplicationRequest extends Request {
   protected Application $application;
 
   /**
+   * Project uuid.
+   *
+   * @var string
+   */
+  private string $projectUuid;
+
+  /**
    * Constructor.
    */
   public function __construct(
     UserInterface $sender,
     Application $application,
+    string $projectUuid
   ) {
     $this->sender = $sender;
     $this->application = $application;
+    $this->projectUuid = $projectUuid;
   }
 
   /**
@@ -46,7 +55,7 @@ class CreateApplicationRequest extends Request {
       'has_children' => $this->application->getHasChildren(),
       'additional_applicant' => $this->getApplicant(),
       'right_of_residence' => NULL,
-      'project_id' => $this->application->getProjectId(),
+      'project_id' => $this->projectUuid,
       'apartments' => $this->getApartments(),
       'is_right_of_occupancy_housing_changer' => FALSE,
       'has_hitas_ownership' => FALSE,
