@@ -150,12 +150,10 @@ final class Initialize extends ResourceBase {
       }
       if (isset($applicationCountByApartment)) {
         $count = isset($applicationCountByApartment[$key]) ? ((array) ($applicationCountByApartment[$key]))['count(*)'] : 0;
-        $return[$key] = Applications::resolveApplicationCountEnum($count);
+        $return[$result->entity_id][$key] = Applications::resolveApplicationCountEnum($count);
       }
     }
-
     return $return;
-
   }
 
   /**
