@@ -141,10 +141,10 @@ final class Initialize extends ResourceBase {
       if (in_array($projectIds[$apartmentIds[$key]->entity_id], $reservedStates)) {
         // Has applications.
         if (isset($applicationCountByApartment[$key])) {
-          $return[$key] = 'RESERVED';
+          $return[$result->entity_id][$key] = 'RESERVED';
         }
         else {
-          $return[$key] = 'VACANT';
+          $return[$result->entity_id][$key] = 'VACANT';
         }
         continue;
       }
