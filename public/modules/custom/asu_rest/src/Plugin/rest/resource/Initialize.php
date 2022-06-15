@@ -133,23 +133,24 @@ final class Initialize extends ResourceBase {
       ->fetchAllAssoc('field_apartments_target_id');
 
     $applicationCountByApartment = \Drupal::database()
-      ->query('select apartment_id, count(*) from asu_application__apartment group by apartment_id')
+      ->query('select apt.apartment_id, state.field_apartment_state_of_sale_target_id as `state`, count(apt.apartment_id) as `count`
+        from asu_application__apartment as apt
+        left join node__field_apartment_state_of_sale as state on apt.apartment_id = state.entity_id
+        group by apt.apartment_id
+        ')
       ->fetchAllAssoc('apartment_id');
 
     $return = [];
     foreach ($apartmentIds as $key => $result) {
       if (in_array($projectIds[$apartmentIds[$key]->entity_id], $reservedStates)) {
-        // Has applications.
-        if (isset($applicationCountByApartment[$key])) {
-          $return[$result->entity_id][$key] = 'RESERVED';
+        if ($applicationCountByApartment[$key]->state == null) {
+          continue;
         }
-        else {
-          $return[$result->entity_id][$key] = 'VACANT';
-        }
+        $return[$result->entity_id][$key] = $applicationCountByApartment[$key]->state ?? 'LOW';
         continue;
       }
       if (isset($applicationCountByApartment)) {
-        $count = isset($applicationCountByApartment[$key]) ? ((array) ($applicationCountByApartment[$key]))['count(*)'] : 0;
+        $count = isset($applicationCountByApartment[$key]) ? $applicationCountByApartment[$key]->count : 0;
         $return[$result->entity_id][$key] = Applications::resolveApplicationCountEnum($count);
       }
     }
