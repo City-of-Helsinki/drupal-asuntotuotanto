@@ -146,7 +146,7 @@ final class Initialize extends ResourceBase {
         if ($applicationCountByApartment[$key]->state == null) {
           continue;
         }
-        $return[$result->entity_id][$key] = $applicationCountByApartment[$key]->state ?? 'LOW';
+        $return[$result->entity_id][$key] = strtoupper($applicationCountByApartment[$key]->state);
         continue;
       }
       if (isset($applicationCountByApartment)) {
