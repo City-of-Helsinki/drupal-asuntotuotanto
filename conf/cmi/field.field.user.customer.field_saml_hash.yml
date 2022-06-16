@@ -1,0 +1,19 @@
+uuid: 2501031b-feee-408f-bd7c-0b9f6229d4a5
+langcode: fi
+status: true
+dependencies:
+  config:
+    - field.storage.user.field_saml_hash
+    - user_bundle.user_type.customer
+id: user.customer.field_saml_hash
+field_name: field_saml_hash
+entity_type: user
+bundle: customer
+label: 'Saml hash'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

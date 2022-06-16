@@ -10,13 +10,13 @@ local_login_saml_error: false
 logout_different_user: true
 drupal_login_roles:
   customer: customer
-  salesperson: salesperson
-  admin: admin
   authenticated: '0'
   supervisor: '0'
   read_only: '0'
   content_producer: '0'
   editor: '0'
+  salesperson: '0'
+  admin: '0'
 sp_entity_id: 'https://asuntotuotanto.docker.so/saml/metadata'
 sp_name_id_format: 'urn:oasis:names:tc:SAML:2.0:nameid-format:transient'
 sp_x509_certificate: 'file:/app/conf/certs/sp.crt'
@@ -44,7 +44,7 @@ map_users_roles:
   editor: '0'
   salesperson: '0'
   admin: '0'
-create_users: true
+create_users: false
 sync_name: false
 sync_mail: false
 user_name_attribute: eduPersonPrincipalName

@@ -7,6 +7,7 @@ dependencies:
     - field.field.user.user.field_backend_profile
     - field.field.user.user.field_email_is_valid
     - field.field.user.user.field_hel_profiili_uid
+    - field.field.user.user.field_saml_hash
     - user_bundle.user_type.user
 id: user.user.default
 targetEntityType: user
@@ -26,6 +27,14 @@ content:
   field_hel_profiili_uid:
     type: string_textfield
     weight: 5
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_saml_hash:
+    type: string_textfield
+    weight: 6
     region: content
     settings:
       size: 60

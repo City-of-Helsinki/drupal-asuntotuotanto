@@ -1,0 +1,21 @@
+uuid: 2a83527e-daf0-4e28-ba15-befc49a0913d
+langcode: fi
+status: true
+dependencies:
+  module:
+    - user
+id: user.field_saml_hash
+field_name: field_saml_hash
+entity_type: user
+type: string
+settings:
+  max_length: 255
+  case_sensitive: false
+  is_ascii: false
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false
