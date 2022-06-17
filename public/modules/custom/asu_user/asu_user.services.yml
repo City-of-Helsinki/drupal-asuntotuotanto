@@ -9,13 +9,12 @@ services:
   asu_user.customer:
     class: Drupal\asu_user\Customer
     arguments: ['@current_user', '@tempstore.private']
-  asu_application.application_subscriber:
-    class: Drupal\asu_user\EventSubscriber\AuthSubscriber
-    arguments: [ '@config.factory' ]
-    tags:
-      - { name: event_subscriber }
-  samlauth.asu_user:
-    class: Drupal\asu_user\SamlService
+  asu_user.auth:
+    class: Drupal\asu_user\AuthService
     arguments: [ '@externalauth.externalauth', '@externalauth.authmap', '@config.factory', '@entity_type.manager', '@logger.channel.samlauth', '@event_dispatcher', '@request_stack', '@tempstore.private', '@flood', '@current_user', '@messenger', '@string_translation' ]
     calls:
       - [ setKeyRepository, [ '@?key.repository' ] ]
+  asu_user.route_subscriber:
+    class: Drupal\asu_user\Routing\RouteSubscriber
+    tags:
+      - { name: event_subscriber }
