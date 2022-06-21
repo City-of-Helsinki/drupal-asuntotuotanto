@@ -17,7 +17,7 @@ class RouteSubscriber extends RouteSubscriberBase {
     // Change samlauth acs to custom acs'.
     if ($route = $collection->get('samlauth.saml_controller_acs')) {
       $route->setDefaults(
-        ['_controller' => '\Drupal\asu_user\Controller\AsuController::acs']
+        ['_controller' => '\Drupal\asu_user\Controller\AuthController::acs']
       );
     }
 

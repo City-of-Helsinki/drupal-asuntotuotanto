@@ -118,7 +118,7 @@ class AuthController extends SamlController {
       $container->get('renderer'),
       $container->get('token'),
       $container->get('messenger'),
-      $container->get('logger.channel.samlauth')
+      $container->get('logger.channel.asu_user')
     );
   }
 

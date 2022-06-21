@@ -1,4 +1,7 @@
 services:
+  logger.channel.asu_user:
+    parent: logger.channel_base
+    arguments: [ 'asu_user' ]
   asu_user.delete_test_users:
     class: Drupal\asu_user\DeleteTestUsers
     arguments: ['@entity_type.manager']
@@ -11,7 +14,7 @@ services:
     arguments: ['@current_user', '@tempstore.private']
   asu_user.auth:
     class: Drupal\asu_user\AuthService
-    arguments: [ '@externalauth.externalauth', '@externalauth.authmap', '@config.factory', '@entity_type.manager', '@logger.channel.samlauth', '@event_dispatcher', '@request_stack', '@tempstore.private', '@flood', '@current_user', '@messenger', '@string_translation' ]
+    arguments: [ '@externalauth.externalauth', '@externalauth.authmap', '@config.factory', '@entity_type.manager', '@logger.channel.asu_user', '@event_dispatcher', '@request_stack', '@tempstore.private', '@flood', '@current_user', '@messenger', '@string_translation' ]
     calls:
       - [ setKeyRepository, [ '@?key.repository' ] ]
   asu_user.route_subscriber:
