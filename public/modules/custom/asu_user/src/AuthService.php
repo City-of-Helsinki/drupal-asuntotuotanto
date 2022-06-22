@@ -10,7 +10,6 @@ use Drupal\samlauth\SamlService;
 use Drupal\samlauth\UserVisibleException;
 use Drupal\user\Entity\User;
 
-
 /**
  * Governs communication between the SAML toolkit and the IdP / login behavior.
  *
@@ -215,10 +214,11 @@ class AuthService extends SamlService {
   }
 
   /**
-   * Crypt string
+   * Crypt string.
    *
-   * @param $hash
-   * @return string
+   * @param string $hash
+   *
+   * @return string $hash
    */
   protected function hashPid($hash) {
     $hash_key = getenv('ASU_HASH_KEY');
