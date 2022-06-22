@@ -218,6 +218,7 @@ class AuthService extends SamlService {
    *
    * @param string $string
    *   String what is going to be crypted.
+   * 
    * @return string
    *   Crypted string.
    */
