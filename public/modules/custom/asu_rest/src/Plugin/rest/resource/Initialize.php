@@ -143,7 +143,7 @@ final class Initialize extends ResourceBase {
     $return = [];
     foreach ($apartmentIds as $key => $result) {
       if (in_array($projectIds[$apartmentIds[$key]->entity_id], $reservedStates)) {
-        if ($applicationCountByApartment[$key]->state == null) {
+        if ($applicationCountByApartment[$key]->state == NULL) {
           continue;
         }
         $return[$result->entity_id][$key] = strtoupper($applicationCountByApartment[$key]->state);
