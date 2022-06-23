@@ -232,6 +232,9 @@ function asu_user_form_user_customer_form_alter(&$form, FormStateInterface &$for
     if ($is_valid != 1) {
       $form['#prefix'] = '<a href="' . $base_url . '/auth/login" class="auth-account">' . t('Account authentication') . '</a>';
     }
+    else {
+      $form['#prefix'] = t('Account is identified');
+    }
   }
 }
 
