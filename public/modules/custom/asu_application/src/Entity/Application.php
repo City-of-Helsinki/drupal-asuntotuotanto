@@ -207,6 +207,16 @@ class Application extends EditorialContentEntityBase implements ContentEntityInt
       ->setDescription(t('The id of the project'))
       ->setReadOnly(TRUE);
 
+    $fields['project'] = BaseFieldDefinition::create('entity_reference')
+      ->setLabel(t('Project'))
+      ->setDescription(t('The project'))
+      ->setSettings([
+        'target_type' => 'node',
+        'handler_settings' => [
+          'target_bundles' => ['project'],
+        ],
+      ]);
+
     $fields['apartment'] = BaseFieldDefinition::create('asu_apartment')
       ->setCardinality(-1)
       ->setReadOnly(FALSE)
@@ -291,6 +301,7 @@ class Application extends EditorialContentEntityBase implements ContentEntityInt
     $values += [
       'uid' => $user_id,
       'project_id' => $project_id,
+      'project' => $project_id,
     ];
 
   }

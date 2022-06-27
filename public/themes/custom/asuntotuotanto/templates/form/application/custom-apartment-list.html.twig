@@ -10,7 +10,7 @@
   </h2>
   <p>
     {% trans %}
-      You can apply for up to 5 apartments. Arrange the apartments in the order you want.
+      You can apply for up to 5 apartments. Order the apartments in order of precedence.
     {% endtrans %}
   </p>
   <ul class="application-form__apartments-list-header">
@@ -18,7 +18,7 @@
     <li><p>{% trans %}Apartment{% endtrans %}</p></li>
     <li><p>{% trans %}Floor{% endtrans %}</p></li>
     <li><p>{% trans %}Living area size{% endtrans %}</p></li>
-    <li><p>{{ price_title | trans }}</p></li>
+    <li style="padding-right:5px;"><p>{{ price_title | trans }}</p></li>
     <li><p>{{ second_price_title | trans }}</p></li>
   </ul>
   <ol class="application-form__apartments-list" id="application_form_apartments_list" aria-label="{{ 'Ordered list of selected apartments'|t }}">

@@ -276,7 +276,6 @@
         </div>
         {% else %}
           {% set app_link_text = 'View the application' %}
-
           <div class="application__actions" data-application="{{ app_id }}">
             <div>
               {% include "@asuntotuotanto/button/button.html.twig" with {
@@ -285,27 +284,19 @@
                 type: 'primary'
               } %}
             </div>
-            <div class="application--action">
-              <a class="hds-button hds-button--secondary application__lottery-link--toggle" data-application="{{ app_id }}">
-                <span class="hds-button__label" data-application="{{ app_id }}">
-                  {% trans %}
-                    Show lottery results
-                  {% endtrans %}
-                </span>
-              </a>
-            </div>
           </div>
         {% endif %}
       </div>
     </article>
-
+    {#
     <div class="application__lottery application__lottery--show application__lottery--show--draft" id="draft-{{ app_id }}" data-application="{{ app_id }}">
       <a data-loaded="0" class="application__lottery-link application__lottery-link--show application__lottery--show--submitted" id="application__lottery-link--show--draft">
         {% trans %}
-          Show lottery results
+          Show selected apartments
         {% endtrans %}
       </a>
     </div>
+    #}
 
     <ul class="application__apartments application__apartments--mobile project__apartments-list is-hidden application__lottery-results" data-application="{{ app_id }}" aria-hidden="true">
       {# Single lottery result (mobile) #}
