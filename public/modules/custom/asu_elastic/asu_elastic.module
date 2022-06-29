@@ -10,6 +10,7 @@
  */
 function asu_content_elasticsearch_connector_supported_data_types_alter(array &$data_types) {
   $data_types = [
+    'asu_date_time',
     'cent',
     'computed_array_decimal',
     'computed_array_string',
