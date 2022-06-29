@@ -2,9 +2,6 @@
 
 namespace Drupal\asu_elastic\Plugin\search_api\data_type;
 
-use Drupal\Core\Datetime\DateFormatterInterface;
-use Drupal\Core\Datetime\DrupalDateTime;
-use Drupal\Core\Datetime\Entity\DateFormat;
 use Drupal\search_api\DataType\DataTypePluginBase;
 
 /**
@@ -27,10 +24,30 @@ class AsuDateTime extends DataTypePluginBase {
       return '';
     }
 
-    /** @var DateFormatterInterface $date_formatter */
+    if (is_array($value)) {
+      $dates = [];
+
+      foreach ($value as $date) {
+        $dates[] = $this->convertDatetime($date);
+      }
+
+      $newvalue = $dates;
+    }
+    else {
+      $newvalue = $this-> convertDatetime($value);
+    }
+
+    return $newvalue;
+  }
+
+  /**
+   * Covert datetime.
+   */
+  private function convertDatetime($value) {
+    /** @var Drupal\Core\Datetime\DateFormatterInterface $date_formatter */
     $date_formatter = \Drupal::service('date.formatter');
     $date = $date_formatter->format(
-      strtotime($value.' UTC'),
+      strtotime ($value.' UTC'),
       'custom',
       'Y-m-d\TH:i:s',
       'Europe/Helsinki',
