@@ -45,7 +45,8 @@ if (getenv('APP_ENV') === 'dev') {
   $config['samlauth.authentication']['sp_private_key'] = 'file:/app/conf/certs/sp.key';
   $config['samlauth.authentication']['sp_x509_certificate'] = 'file:/app/conf/certs/sp.crt';
 
-  $config['samlauth.authentication']['idp_entity_id'] = 'https://idp-asuntotuotanto.docker.so/simplesaml/shib13/idp/metadata.php';
-  $config['samlauth.authentication']['idp_single_sign_on_service'] = 'https://nginx-asuntotuotanto-test.agw.arodevtest.hel.fi/simplesaml/saml2/idp/SSOService.php';
-  $config['samlauth.authentication']['idp_single_log_out_service'] = 'https://nginx-asuntotuotanto-test.agw.arodevtest.hel.fi/simplesaml/saml2/idp/SingleLogoutService.php';
+  // Test metadata: https://tunnistus.suomi.fi/static/metadata/idp-metadata-tunnistaminen.xml
+  $config['samlauth.authentication']['idp_entity_id'] = 'https://uusi.tunnistus.fi/idp1';
+  $config['samlauth.authentication']['idp_single_sign_on_service'] = 'https://tunnistaminen.suomi.fi/idp/profile/SAML2/Redirect/SLO';
+  $config['samlauth.authentication']['idp_single_log_out_service'] = 'https://tunnistaminen.suomi.fi/idp/profile/SAML2/Redirect/SSO';
 }
