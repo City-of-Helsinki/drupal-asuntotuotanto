@@ -216,6 +216,9 @@ function asu_content_entity_presave(EntityInterface $entity) {
       ) {
         \Drupal::messenger()->addStatus(t('Project has been set as archived'));
       }
+
+      $apartment_count = count($entity->getApartmentEntities());
+      $entity->set('field_apartment_count', $apartment_count);
     }
 
   }
@@ -250,7 +253,7 @@ function asu_content_entity_update($entity) {
     $index = reset($indexes);
 
     $ids = [];
-    // @todo Translations.
+
     foreach ($entity->getApartmentEntities() as $apartment) {
       $ids[] = "{$apartment->id()}:fi";
     }
