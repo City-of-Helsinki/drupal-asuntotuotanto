@@ -39,13 +39,6 @@ class SalesApplicationEvent extends Event {
   private string $projectUuid;
 
   /**
-   * Selected apartments.
-   *
-   * @var array
-   */
-  private array $apartmentUuids;
-
-  /**
    * {@inheritdoc}
    */
   public function __construct(
@@ -53,12 +46,11 @@ class SalesApplicationEvent extends Event {
     string $applicationId,
     string $projectName,
     string $projectUuid,
-    array $apartmentUuids) {
+  ) {
     $this->senderId = $senderId;
     $this->applicationId = $applicationId;
     $this->projectName = $projectName;
     $this->projectUuid = $projectUuid;
-    $this->apartmentUuids = $apartmentUuids;
   }
 
   /**
@@ -90,13 +82,6 @@ class SalesApplicationEvent extends Event {
    */
   public function getProjectUuid(): string {
     return $this->projectUuid;
-  }
-
-  /**
-   * Get selected apartments' uuids.
-   */
-  public function getApartmentUuids(): array {
-    return $this->apartmentUuids;
   }
 
 }
