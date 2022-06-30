@@ -308,12 +308,12 @@ field_settings:
     label: 'Application end time'
     datasource_id: 'entity:node'
     property_path: 'search_api_reverse_entity_references_node__field_apartments:field_application_end_time'
-    type: object
+    type: asu_date_time
   project_application_start_time:
     label: 'Application start time'
     datasource_id: 'entity:node'
     property_path: 'search_api_reverse_entity_references_node__field_apartments:field_application_start_time'
-    type: object
+    type: asu_date_time
   project_archived:
     label: Archived
     datasource_id: 'entity:node'
@@ -702,12 +702,12 @@ field_settings:
     label: 'Publication end time'
     datasource_id: 'entity:node'
     property_path: 'search_api_reverse_entity_references_node__field_apartments:field_publication_end_time'
-    type: object
+    type: asu_date_time
   project_publication_start_time:
     label: 'Publication start time'
     datasource_id: 'entity:node'
     property_path: 'search_api_reverse_entity_references_node__field_apartments:field_publication_start_time'
-    type: object
+    type: asu_date_time
   project_published:
     label: 'Project status'
     datasource_id: 'entity:node'
@@ -864,7 +864,7 @@ field_settings:
     label: 'Showing time'
     datasource_id: 'entity:node'
     property_path: field_showing_time
-    type: object
+    type: asu_date_time
     dependencies:
       config:
         - field.storage.node.field_showing_time
