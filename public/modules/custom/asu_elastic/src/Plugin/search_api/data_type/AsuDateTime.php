@@ -47,7 +47,7 @@ class AsuDateTime extends DataTypePluginBase {
     /** @var Drupal\Core\Datetime\DateFormatterInterface $date_formatter */
     $date_formatter = \Drupal::service('date.formatter');
     $date = $date_formatter->format(
-      strtotime ($value . ' UTC'),
+      strtotime($value . ' UTC'),
       'custom',
       'Y-m-d\TH:i:s',
       'Europe/Helsinki',
