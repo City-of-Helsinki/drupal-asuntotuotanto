@@ -16,6 +16,7 @@ module:
   asu_editorial: 0
   asu_elastic: 0
   asu_mailer: 0
+  asu_migration: 0
   asu_rest: 0
   asu_tasklist: 0
   asu_translation: 0
@@ -118,6 +119,7 @@ module:
   metatag_twitter_cards: 0
   metatag_views: 0
   migrate: 0
+  mysql: 0
   node: 0
   oembed_providers: 0
   openid_connect: 0
