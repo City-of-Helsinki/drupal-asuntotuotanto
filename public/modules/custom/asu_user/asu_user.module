@@ -31,8 +31,8 @@ function asu_user_entity_type_alter(array &$entity_types) {
 function asu_user_user_login(UserInterface $account) {
   asu_create_backend_user($account);
   if ($account->hasRole('customer')) {
-    asu_validate_email($account);
-    asu_send_user_email_verification_reminder($account);
+    //asu_validate_email($account);
+    //asu_send_user_email_verification_reminder($account);
     asu_get_user_external_field_data($account);
     asu_redirect_on_login_by_session($account);
   }
@@ -203,6 +203,8 @@ function asu_get_user_external_field_data(UserInterface $account) {
  */
 function asu_user_form_user_customer_form_alter(&$form, FormStateInterface &$form_state) {
   if (in_array('customer', \Drupal::currentUser()->getRoles())) {
+    global $base_url;
+
     $fieldMap = \Drupal::config('asu_user.external_user_fields')->get('external_data_map');
     $store = \Drupal::service('tempstore.private')->get('customer');
     // If a field value is missing, fetch user information.
@@ -218,6 +220,21 @@ function asu_user_form_user_customer_form_alter(&$form, FormStateInterface &$for
       }
     }
     $form['actions']['submit']['#submit'][] = 'user_edit_submit';
+
+    $account = User::load(\Drupal::currentUser()->id());
+    if ($account->hasField('field_email_is_valid') && !$account->get('field_email_is_valid')->isEmpty()) {
+      $is_valid = (int) $account->get('field_email_is_valid')->getValue()['value'];
+    }
+    else {
+      $is_valid = 0;
+    }
+
+    if ($is_valid != 1) {
+      $form['#prefix'] = '<a href="' . $base_url . '/auth/login" class="auth-account">' . t('Account authentication') . '</a>';
+    }
+    else {
+      $form['#prefix'] = t('Account is identified');
+    }
   }
 }
 

@@ -4,3 +4,7 @@ description: 'ASU - USER provides user specific functionalities'
 core: 8.x
 core_version_requirement: ^8 || ^9
 package: 'ASU'
+
+dependencies:
+  - samlauth:samlauth
+  - externalauth:externalauth

@@ -398,4 +398,7 @@ if ($env = getenv('APP_ENV')) {
 
     $config['raven.settings']['environment'] = 'production';
   }
+
+  // Saml Authentication.
+  include 'saml.settings.php';
 }
