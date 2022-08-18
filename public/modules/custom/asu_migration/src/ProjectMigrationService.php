@@ -53,8 +53,8 @@ class ProjectMigrationService extends AsuMigrationBase {
       return ['Apartment file is missing!'];
     }
 
-    $this->file = fopen('/app/public/modules/custom/asu_migration/project.csv', 'r');
-
+    $this->file = fopen($this->projectFilePath, 'r');
+    
     $this->file2 = fopen($this->apartmentFilePath, 'r');
 
     $errors = $this->migrateProjects();
