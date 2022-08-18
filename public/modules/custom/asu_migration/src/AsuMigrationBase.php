@@ -40,7 +40,7 @@ abstract class AsuMigrationBase {
    */
   protected function rows(): iterable {
     while (!feof($this->file)) {
-      $row = fgetcsv($this->file, 4096);
+      $row = fgetcsv($this->file, 4096, ';');
       yield $row;
     }
     fclose($this->file);
