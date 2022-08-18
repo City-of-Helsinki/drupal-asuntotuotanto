@@ -54,7 +54,7 @@ class ProjectMigrationService extends AsuMigrationBase {
     }
 
     $this->file = fopen($this->projectFilePath, 'r');
-    
+
     $this->file2 = fopen($this->apartmentFilePath, 'r');
 
     $errors = $this->migrateProjects();

@@ -48,7 +48,7 @@ class UserMigrationService extends AsuMigrationBase {
    *   Array of errors.
    */
   public function migrate(): array {
-   if (!file_exists($this->filePath)) {
+    if (!file_exists($this->filePath)) {
       return ['User file is missing!'];
     }
 
@@ -85,12 +85,12 @@ class UserMigrationService extends AsuMigrationBase {
 
       $externalFields = $this->mapExternalFields($values);
 
-      // @todo: What to do with email?
+      // @todo What to do with email.
       try {
         $hash = substr(base64_encode(microtime()), 0, 6);
         $user = User::create([
           'uuid' => $this->uuidService->createUuidV5($this->uuidNamespace, $values['id']),
-          'mail' => $values['email'] ?? $values['id']. '_emailmissing@asuntotuotanto.com',
+          'mail' => $values['email'] ?? $values['id'] . '_emailmissing@asuntotuotanto.com',
           'name' => "{$values['first_name']}_{$values['last_name']}_$hash",
           'type' => 'customer',
           'langcode' => 'fi',
