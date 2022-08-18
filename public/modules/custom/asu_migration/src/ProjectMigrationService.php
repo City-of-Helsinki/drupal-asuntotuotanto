@@ -54,6 +54,7 @@ class ProjectMigrationService extends AsuMigrationBase {
     }
 
     $this->file = fopen($this->projectFilePath, 'r');
+
     $this->file2 = fopen($this->apartmentFilePath, 'r');
 
     $errors = $this->migrateProjects();
@@ -101,8 +102,15 @@ class ProjectMigrationService extends AsuMigrationBase {
       $ownershipTypes = $this->termStorage->loadByProperties(['name' => $ownership]);
       $ownershipType = reset($ownershipTypes);
 
-      $premarketing = \DateTime::createFromFormat('d/m/Y', $values['project_premarketing_start_time'])->format('Y-m-d\T12:00:00');
-      $completion = \DateTime::createFromFormat('d/m/Y', $values['project_estimated_completion_date'])->format('Y-m-d');
+      $premarketing = NULL;
+      if (isset($values['project_premarketing_start_time']) && !empty($values['project_premarketing_start_time'])) {
+        $premarketing = (\DateTime::createFromFormat('d.m.Y H:i:s', $values['project_premarketing_start_time']))->format('Y-m-d\T12:00:00');
+      }
+
+      $completion = NULL;
+      if (isset($values['project_estimated_completion_date']) && !empty($values['project_estimated_completion_date'])) {
+        $completion = (\DateTime::createFromFormat('d.m.Y H:i:s', $values['project_estimated_completion_date']))->format('Y-m-d');
+      }
 
       $currentProjectId = $values['Taulun avainkenttä (KohdeID)'];
       $project = Node::create([
@@ -217,7 +225,7 @@ class ProjectMigrationService extends AsuMigrationBase {
    */
   private function migrateProjectApartments() {
     while (!feof($this->file2)) {
-      $row = fgetcsv($this->file2, 4096);
+      $row = fgetcsv($this->file2, 4096, ';');
       yield $row;
     }
   }

@@ -31,8 +31,8 @@ function asu_user_entity_type_alter(array &$entity_types) {
 function asu_user_user_login(UserInterface $account) {
   asu_create_backend_user($account);
   if ($account->hasRole('customer')) {
-    //asu_validate_email($account);
-    //asu_send_user_email_verification_reminder($account);
+    // asu_validate_email($account);
+    // asu_send_user_email_verification_reminder($account);
     asu_get_user_external_field_data($account);
     asu_redirect_on_login_by_session($account);
   }
