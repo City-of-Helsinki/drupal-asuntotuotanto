@@ -33,7 +33,7 @@ $config['samlauth.authentication']['security_lowercase_url_encoding'] = FALSE;
 $config['samlauth.authentication']['security_signature_algorithm'] = 'http://www.w3.org/2001/04/xmldsig-more#rsa-sha256';
 $config['samlauth.authentication']['security_encryption_algorithm'] = 'http://www.w3.org/2001/04/xmlenc#aes256-cbc';
 
-if (getenv('APP_ENV') === 'dev') {
+//if (getenv('APP_ENV') === 'testing') {
   $config['samlauth.authentication']['debug_display_error_details'] = TRUE;
   $config['samlauth.authentication']['debug_log_in'] = TRUE;
   $config['samlauth.authentication']['debug_log_saml_in'] = TRUE;
@@ -42,11 +42,11 @@ if (getenv('APP_ENV') === 'dev') {
 
   // Use local IdP container. Remember to uncomment "idp" service from docker-compose.yml
   $config['samlauth.authentication']['sp_entity_id'] = 'https://nginx-asuntotuotanto-test.agw.arodevtest.hel.fi/saml/metadata';
-  $config['samlauth.authentication']['sp_private_key'] = 'file:/app/conf/certs/sp.key';
-  $config['samlauth.authentication']['sp_x509_certificate'] = 'file:/app/conf/certs/sp.crt';
+  $config['samlauth.authentication']['sp_private_key'] = getenv('ASU_SAML_SP');
+  $config['samlauth.authentication']['sp_x509_certificate'] = getenv('ASU_SAML_CERT');
 
   // Test metadata: https://tunnistus.suomi.fi/static/metadata/idp-metadata-tunnistaminen.xml
   $config['samlauth.authentication']['idp_entity_id'] = 'https://uusi.tunnistus.fi/idp1';
   $config['samlauth.authentication']['idp_single_sign_on_service'] = 'https://tunnistaminen.suomi.fi/idp/profile/SAML2/Redirect/SLO';
   $config['samlauth.authentication']['idp_single_log_out_service'] = 'https://tunnistaminen.suomi.fi/idp/profile/SAML2/Redirect/SSO';
-}
+//}
