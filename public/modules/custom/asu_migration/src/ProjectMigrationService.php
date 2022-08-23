@@ -90,13 +90,28 @@ class ProjectMigrationService extends AsuMigrationBase {
 
       $holdingType = $values['project_holding_type'] == 'RIGHT_OF_RESIDENCE_APARTMENT' ? 'Right of residence apartment' : 'condominium';
 
-      $holdingTypes = $this->termStorage->loadByProperties(['name' => $holdingType, 'vid' => 'holding_type']);
+      $holdingTypes = $this->termStorage->loadByProperties(
+        [
+          'name' => $holdingType,
+          'vid' => 'holding_type',
+        ]
+      );
       $holdingType = $this->getTerm($holdingTypes, $holdingType, 'holding_type');
 
-      $districts = $this->termStorage->loadByProperties(['name' => $values['project_district'], 'vid' => 'districts']);
+      $districts = $this->termStorage->loadByProperties(
+        [
+          'name' => $values['project_district'],
+          'vid' => 'districts',
+        ]
+      );
       $district = $this->getTerm($districts, $values['project_district'], 'districts');
 
-      $siteOwners = $this->termStorage->loadByProperties(['name' => $values['project_site_owner'], 'vid' => 'site_owners']);
+      $siteOwners = $this->termStorage->loadByProperties(
+        [
+          'name' => $values['project_site_owner'],
+          'vid' => 'site_owners',
+        ]
+      );
       $siteOwner = $this->getTerm($siteOwners, $values['project_site_owner'], 'site_owners');
 
       $ownership = $values['project_ownership_type'] == 'Haso' ? 'HASO' : 'hitas';
@@ -310,8 +325,11 @@ class ProjectMigrationService extends AsuMigrationBase {
    * Create terms.
    *
    * @param array $terms
+   *   Terms.
    * @param string $term
+   *   Term name value.
    * @param string $vid
+   *   Term vid value.
    */
   private function getTerm(array $terms, string $term, string $vid) {
     if (!empty($terms)) {
