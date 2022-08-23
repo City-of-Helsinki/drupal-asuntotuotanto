@@ -5,6 +5,7 @@ namespace Drupal\asu_migration;
 use Drupal\asu_api\Api\BackendApi\BackendApi;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\node\Entity\Node;
+use Drupal\taxonomy\Entity\Term;
 
 /**
  * Migration service for projects and apartments.
@@ -89,18 +90,38 @@ class ProjectMigrationService extends AsuMigrationBase {
 
       $holdingType = $values['project_holding_type'] == 'RIGHT_OF_RESIDENCE_APARTMENT' ? 'Right of residence apartment' : 'condominium';
 
-      $holdingTypes = $this->termStorage->loadByProperties(['name' => $holdingType]);
-      $holdingType = reset($holdingTypes);
+      $holdingTypes = $this->termStorage->loadByProperties(
+        [
+          'name' => $holdingType,
+          'vid' => 'holding_type',
+        ]
+      );
+      $holdingType = $this->getTerm($holdingTypes, $holdingType, 'holding_type');
 
-      $districts = $this->termStorage->loadByProperties(['name' => $values['project_district']]);
-      $district = reset($districts);
+      $districts = $this->termStorage->loadByProperties(
+        [
+          'name' => $values['project_district'],
+          'vid' => 'districts',
+        ]
+      );
+      $district = $this->getTerm($districts, $values['project_district'], 'districts');
 
-      $siteOwners = $this->termStorage->loadByProperties(['name' => $values['project_site_owner']]);
-      $siteOwner = reset($siteOwners);
+      $siteOwners = $this->termStorage->loadByProperties(
+        [
+          'name' => $values['project_site_owner'],
+          'vid' => 'site_owners',
+        ]
+      );
+      $siteOwner = $this->getTerm($siteOwners, $values['project_site_owner'], 'site_owners');
 
       $ownership = $values['project_ownership_type'] == 'Haso' ? 'HASO' : 'hitas';
-      $ownershipTypes = $this->termStorage->loadByProperties(['name' => $ownership]);
-      $ownershipType = reset($ownershipTypes);
+      $ownershipTypes = $this->termStorage->loadByProperties(
+        [
+          'name' => $ownership,
+          'vid' => 'ownership_type',
+        ]
+      );
+      $ownershipType = $this->getTerm($ownershipTypes, $ownership, 'ownership_type');
 
       $premarketing = NULL;
       if (isset($values['project_premarketing_start_time']) && !empty($values['project_premarketing_start_time'])) {
@@ -303,6 +324,30 @@ class ProjectMigrationService extends AsuMigrationBase {
       return 0;
     }
     return 1;
+  }
+
+  /**
+   * Create terms.
+   *
+   * @param array $terms
+   *   Terms.
+   * @param string $term
+   *   Term name value.
+   * @param string $vid
+   *   Term vid value.
+   */
+  private function getTerm(array $terms, string $term, string $vid) {
+    if (!empty($terms)) {
+      return reset($terms);
+    }
+
+    $new_term = Term::create([
+      'name' => $term,
+      'vid' => $vid,
+    ]);
+    $new_term->save();
+
+    return $new_term;
   }
 
 }
