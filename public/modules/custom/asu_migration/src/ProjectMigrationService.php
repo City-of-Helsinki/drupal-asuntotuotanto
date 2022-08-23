@@ -115,7 +115,12 @@ class ProjectMigrationService extends AsuMigrationBase {
       $siteOwner = $this->getTerm($siteOwners, $values['project_site_owner'], 'site_owners');
 
       $ownership = $values['project_ownership_type'] == 'Haso' ? 'HASO' : 'hitas';
-      $ownershipTypes = $this->termStorage->loadByProperties(['name' => $ownership, 'vid' => 'ownership_type']);
+      $ownershipTypes = $this->termStorage->loadByProperties(
+        [
+          'name' => $ownership,
+          'vid' => 'ownership_type',
+        ]
+      );
       $ownershipType = $this->getTerm($ownershipTypes, $ownership, 'ownership_type');
 
       $premarketing = NULL;
