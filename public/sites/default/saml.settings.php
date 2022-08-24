@@ -33,7 +33,7 @@ $config['samlauth.authentication']['security_lowercase_url_encoding'] = FALSE;
 $config['samlauth.authentication']['security_signature_algorithm'] = 'http://www.w3.org/2001/04/xmldsig-more#rsa-sha256';
 $config['samlauth.authentication']['security_encryption_algorithm'] = 'http://www.w3.org/2001/04/xmlenc#aes256-cbc';
 
-if (getenv('APP_ENV') === 'testing') {
+//if (getenv('APP_ENV') === 'testing') {
   // https://palveluhallinta.suomi.fi/fi/sivut/tunnistus/kayttoonotto/asiakastestiymparisto
 
   $config['samlauth.authentication']['debug_display_error_details'] = TRUE;
@@ -51,4 +51,4 @@ if (getenv('APP_ENV') === 'testing') {
   $config['samlauth.authentication']['idp_entity_id'] = 'https://uusi.tunnistus.fi/idp1';
   $config['samlauth.authentication']['idp_single_sign_on_service'] = 'https://testi.apro.tunnistus.fi/idp/profile/SAML2/POST/SSO';
   $config['samlauth.authentication']['idp_single_log_out_service'] = 'https://testi.apro.tunnistus.fi/idp/profile/SAML2/POST/SLO';
-}
+//}
