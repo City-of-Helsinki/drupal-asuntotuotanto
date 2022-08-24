@@ -78,6 +78,10 @@ class UserMigrationService extends AsuMigrationBase {
         $values['phone_number'] = '__NULL__';
       }
 
+      if (isset($values['email']) && empty($values['email'])) {
+        $values['email'] = '';
+      }
+
       try {
         // $this->validateUserFields($values);
       }
