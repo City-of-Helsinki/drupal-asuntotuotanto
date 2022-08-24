@@ -159,7 +159,8 @@
                 "https://www.drupal.org/project/drupal/issues/3098307": "https://www.drupal.org/files/issues/2022-07-01/sql_mode_fullgroupby_issue-3098307-15.patch"
             },
             "drupal/elasticsearch_connector": {
-                "Custom patch based on https://www.drupal.org/files/issues/2020-03-03/8.x-7.x-2977537-13-array-vs-scalar_0.patch": "patches/elasticsearch_connector_indexfactory_v3.patch"
+                "Custom patch based on https://www.drupal.org/files/issues/2020-03-03/8.x-7.x-2977537-13-array-vs-scalar_0.patch": "patches/elasticsearch_connector_indexfactory_v3.patch",
+                "https://www.drupal.org/project/elasticsearch_connector/issues/2850749": "https://www.drupal.org/files/issues/2021-12-01/cannot-load-cluster-exception-2850749-10.patch"
             },
             "drupal/field_group": {
                 "Custom patch to add classes for each horizontal tab": "patches/field_group_horizontal_tabs_classes.patch"
