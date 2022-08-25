@@ -55,7 +55,7 @@ class CreateUserRequest extends Request {
 
     $data = [
       'id' => $this->user->uuid(),
-      'email' => $this->user->getEmail(),
+      'email' => $this->user->getEmail() ?? '',
       'contact_language' => $this->user->getPreferredLangcode(),
       'is_salesperson' => FALSE,
     ];
