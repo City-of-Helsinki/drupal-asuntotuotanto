@@ -79,7 +79,7 @@ class UserMigrationService extends AsuMigrationBase {
       }
 
       if (isset($values['email']) && empty($values['email'])) {
-        $values['email'] = '';
+        $values['email'] = $values['id'] . '_emailmissing@asuntotuotanto.com';
       }
 
       try {
@@ -98,7 +98,7 @@ class UserMigrationService extends AsuMigrationBase {
         $hash = substr(base64_encode(microtime()), 0, 6);
         $user = User::create([
           'uuid' => $this->uuidService->createUuidV5($this->uuidNamespace, $values['id']),
-          'mail' => $values['email'] ?? $values['id'] . '_emailmissing@asuntotuotanto.com',
+          'mail' => $values['email'],
           'name' => "{$values['first_name']}_{$values['last_name']}_$hash",
           'type' => 'customer',
           'langcode' => 'fi',
