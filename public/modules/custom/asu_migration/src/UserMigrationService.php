@@ -79,7 +79,7 @@ class UserMigrationService extends AsuMigrationBase {
       }
 
       if (isset($values['email']) && empty($values['email'])) {
-        $values['email'] = $values['id'] . '_emailmissing@asuntotuotanto.com';
+        $values['email'] = '';
       }
 
       try {
