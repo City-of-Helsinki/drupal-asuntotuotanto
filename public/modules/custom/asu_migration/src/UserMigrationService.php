@@ -78,8 +78,9 @@ class UserMigrationService extends AsuMigrationBase {
         $values['phone_number'] = '__NULL__';
       }
 
-      if (isset($values['email']) && empty($values['email'])) {
-        $values['email'] = '';
+      if ((isset($values['email']) && empty($values['email']))
+        || !\Drupal::service('email.validator')->isValid($values['email'])) {
+        $values['email'] = $values['id'] . '_emailmissing@asuntotuotanto.com';
       }
 
       try {
