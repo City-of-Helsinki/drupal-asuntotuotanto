@@ -75,7 +75,14 @@ class CreateUserRequest extends Request {
         $data['date_of_birth'] = ApplicationHelper::formatDate($this->userInformation['date_of_birth']);
       }
       catch (\Exception $e) {
-        $data['date_of_birth'] = (new \DateTime())->format('Y-m-d');
+        $data['date_of_birth'] = '1900-01-01';
+      }
+    }
+
+    $null_to_string = ['city', 'phone_number', 'postal_code', 'street_address'];
+    foreach ($data as $field => $item) {
+      if (in_array($field, $null_to_string) && empty($item)) {
+        $data[$field] = '';
       }
     }
 
