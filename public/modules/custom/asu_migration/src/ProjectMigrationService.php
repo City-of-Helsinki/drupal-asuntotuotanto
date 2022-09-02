@@ -350,10 +350,11 @@ class ProjectMigrationService extends AsuMigrationBase {
   }
 
   /**
-   * Custom Handle float
+   * Custom Handle float.
    *
    * @param string $value
    *   float value.
+   *
    * @return float|int
    *   handled value.
    */
