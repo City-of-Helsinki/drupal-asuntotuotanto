@@ -200,18 +200,18 @@ class ProjectMigrationService extends AsuMigrationBase {
             'field_living_area' => floatval($apartmentValues['living_area']),
             'field_floor' => $apartmentValues['floor'],
             'field_apartment_structure' => $apartmentValues['apartment_structure'],
-            'field_sales_price' => $apartmentValues['sales_price'] ? floatval(str_replace(',', '', $apartmentValues['sales_price'])) : 0,
-            'field_debt_free_sales_price' => $apartmentValues['debt_free_sales_price'] ? floatval(str_replace(',', '', $apartmentValues['debt_free_sales_price'])) : 0,
-            'field_loan_share' => $apartmentValues['loan_share'] ? floatval(str_replace(',', '', $apartmentValues['loan_share'])) : 0,
-            'field_price_m2' => $apartmentValues['price_m2'] ? floatval(str_replace(',', '', $apartmentValues['price_m2'])) : 0,
-            'field_housing_company_fee' => $apartmentValues['housing_company_fee'] ? floatval(str_replace(',', '', $apartmentValues['housing_company_fee'])) : 0,
-            'field_financing_fee' => $apartmentValues['financing_fee'] ? floatval(str_replace(',', '', $apartmentValues['financing_fee'])) : 0,
-            'field_financing_fee_m2' => $apartmentValues['financing_fee_m2'] ? floatval(str_replace(',', '', $apartmentValues['financing_fee_m2'])) : 0,
-            'field_maintenance_fee' => $apartmentValues['maintenance_fee'] ? floatval(str_replace(',', '', $apartmentValues['maintenance_fee'])) : 0,
-            'field_maintenance_fee_m2' => $apartmentValues['maintenance_fee_m2'] ? floatval(str_replace(',', '', $apartmentValues['maintenance_fee_m2'])) : 0,
-            'field_right_of_occupancy_payment' => $apartmentValues['right_of_occupancy_payment'] ? floatval(str_replace(',', '', $apartmentValues['right_of_occupancy_payment'])) : 0,
-            'field_right_of_occupancy_fee' => $apartmentValues['right_of_occupancy_fee'] ? floatval(str_replace(',', '', $apartmentValues['right_of_occupancy_fee'])) : 0,
-            'field_right_of_occupancy_deposit' => $apartmentValues['right_of_occupancy_deposit'] ? floatval(str_replace(',', '', $apartmentValues['right_of_occupancy_deposit'])) : 0,
+            'field_sales_price' => $this->handleFloat($apartmentValues['sales_price']),
+            'field_debt_free_sales_price' => $this->handleFloat($apartmentValues['debt_free_sales_price']),
+            'field_loan_share' => $this->handleFloat($apartmentValues['loan_share']),
+            'field_price_m2' => $this->handleFloat($apartmentValues['price_m2']),
+            'field_housing_company_fee' => $this->handleFloat($apartmentValues['housing_company_fee']),
+            'field_financing_fee' => $this->handleFloat($apartmentValues['financing_fee']),
+            'field_financing_fee_m2' => $this->handleFloat($apartmentValues['financing_fee_m2']),
+            'field_maintenance_fee' => $this->handleFloat($apartmentValues['maintenance_fee']),
+            'field_maintenance_fee_m2' => $this->handleFloat($apartmentValues['maintenance_fee_m2']),
+            'field_right_of_occupancy_payment' => $this->handleFloat($apartmentValues['right_of_occupancy_payment']),
+            'field_right_of_occupancy_fee' => $this->handleFloat($apartmentValues['right_of_occupancy_fee']),
+            'field_right_of_occupancy_deposit' => $this->handleFloat($apartmentValues['right_of_occupancy_deposit']),
           ]);
 
           try {
@@ -221,7 +221,6 @@ class ProjectMigrationService extends AsuMigrationBase {
           catch (\Exception $e) {
             $errors[] = "Error with the apartment $currentApartmentId of project $currentProjectId: " . $e->getMessage();
           }
-
         }
 
         $project->field_apartments = $apartments;
@@ -348,6 +347,22 @@ class ProjectMigrationService extends AsuMigrationBase {
     $new_term->save();
 
     return $new_term;
+  }
+
+  /**
+   * Custom Handle float
+   *
+   * @param string $value
+   *   float value.
+   * @return float|int
+   *   handled value.
+   */
+  private function handleFloat(string $value) {
+    if (!$value) {
+      return 0;
+    }
+
+    return floatval(str_replace(',', '.', $value));
   }
 
 }
