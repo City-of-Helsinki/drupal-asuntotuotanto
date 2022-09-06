@@ -155,6 +155,7 @@ function asu_create_backend_user(UserInterface $account) {
 function asu_redirect_on_login_by_session() {
   if ($response = asu_session_check_application_url()) {
     $response->send();
+    exit;
   }
 }
 
