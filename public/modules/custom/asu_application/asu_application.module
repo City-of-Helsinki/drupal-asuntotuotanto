@@ -251,9 +251,8 @@ function asu_user_form_contact_message_apply_for_free_apartment_form_alter(&$for
       \Drupal::messenger()->addMessage(t('You must be logged
     in to fill an application'));
       $application_url = "/contact/apply_for_free_apartment?apartment=$apartment_id";
-      $session = \Drupal::request()->getSession();
-      $session->set('asu_last_application_url', $application_url);
-      return (new RedirectResponse('/user/login', 301));
+      $redirect = '/user/login?destination=' . $application_url;
+      return (new RedirectResponse($redirect, 301));
     }
   }
   else {
@@ -261,9 +260,8 @@ function asu_user_form_contact_message_apply_for_free_apartment_form_alter(&$for
       \Drupal::messenger()->addMessage(t('You must be logged
     in to fill an application'));
       $application_url = "/contact/apply_for_free_apartment?project=$project_id";
-      $session = \Drupal::request()->getSession();
-      $session->set('asu_last_application_url', $application_url);
-      return (new RedirectResponse('/user/login', 301));
+      $redirect = '/user/login?destination=' . $application_url;
+      return (new RedirectResponse($redirect, 301));
     }
   }
 

@@ -34,7 +34,6 @@ function asu_user_user_login(UserInterface $account) {
     // asu_validate_email($account);
     // asu_send_user_email_verification_reminder($account);
     asu_get_user_external_field_data($account);
-    asu_redirect_on_login_by_session($account);
   }
 }
 
@@ -146,16 +145,6 @@ function asu_create_backend_user(UserInterface $account) {
       \Drupal::logger('asu_user')
         ->critical('Exception while creating backend user:' . $e->getMessage());
     }
-  }
-}
-
-/**
- * If user has asu_last_application_url set, redirect to application form.
- */
-function asu_redirect_on_login_by_session() {
-  if ($response = asu_session_check_application_url()) {
-    $response->send();
-    exit;
   }
 }
 
@@ -359,18 +348,6 @@ function asu_get_user_profile_id(&$account) {
     }
   }
   return $profileId;
-}
-
-/**
- * Check if redirect is needed after login or register.
- */
-function asu_session_check_application_url(): ?RedirectResponse {
-  $session = \Drupal::request()->getSession();
-  if ($url = $session->get('asu_last_application_url')) {
-    $session->remove('asu_last_application_url');
-    return new RedirectResponse(\Drupal::request()->getSchemeAndHttpHost() . $url, 301);
-  }
-  return NULL;
 }
 
 /**

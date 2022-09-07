@@ -49,9 +49,8 @@ class ApplicationForm extends ContentEntityForm {
     // Redirect cases.
     if ($currentUser->isAnonymous()) {
       $current_path = \Drupal::service('path.current')->getPath();
-      $session = \Drupal::request()->getSession();
-      $session->set('asu_last_application_url', $current_path);
-      return (new RedirectResponse('/user/login', 301));
+      $redirect = '/user/login?destination=' . $current_path;
+      return (new RedirectResponse($redirect, 301));
     }
 
     if (!$project_data = $this->getApartments($project)) {
@@ -78,27 +77,6 @@ class ApplicationForm extends ContentEntityForm {
         ->loadByProperties([
           'uid' => $owner_id,
         ]);
-
-      // User must have valid email address to draft more than one application.
-      /*
-      if (
-        $owner->hasField('field_email_is_valid') &&
-        $owner->get('field_email_is_valid')->value == 0
-      ) {
-        $application = reset($applications);
-
-        if (
-          !empty($applications) && $this->entity->isNew() ||
-          $application && $application->id() != $this->entity->id()
-        ) {
-          $this->messenger()->addMessage($this->t('You cannot fill more than one
-        application until you have confirmed your email address.
-        To confirm your email you must click the link that has been sent to your email address.'));
-          $response = (new RedirectResponse($applicationsUrl, 301))->send();
-          return $response;
-        }
-      }
-      */
 
       if ($this->entity->hasField('field_locked') && $this->entity->field_locked->value == 1) {
         $this->messenger()->addMessage($this->t('You have already applied for this project.'));
