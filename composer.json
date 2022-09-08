@@ -32,7 +32,6 @@
         "drupal/context": "^4.0@beta",
         "drupal/core-composer-scaffold": "^9.0",
         "drupal/core-recommended": "^9.0",
-        "drupal/delete_all": "^2.0",
         "drupal/elasticsearch_connector": "^7.0@alpha",
         "drupal/email_registration": "^1.1",
         "drupal/entity": "^1.2",
