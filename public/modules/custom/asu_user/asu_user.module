@@ -16,7 +16,6 @@ use Drupal\user\Entity\User;
 use Drupal\user\UserInterface;
 use Drupal\asu_api\Api\BackendApi\Request\UserRequest;
 use Drupal\asu_api\Api\BackendApi\Request\CreateUserRequest;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Implements hook_entity_type_alter().
@@ -193,8 +192,6 @@ function asu_get_user_external_field_data(UserInterface $account) {
  */
 function asu_user_form_user_customer_form_alter(&$form, FormStateInterface &$form_state) {
   if (in_array('customer', \Drupal::currentUser()->getRoles())) {
-    global $base_url;
-
     $fieldMap = \Drupal::config('asu_user.external_user_fields')->get('external_data_map');
     $store = \Drupal::service('tempstore.private')->get('customer');
     // If a field value is missing, fetch user information.
@@ -210,21 +207,6 @@ function asu_user_form_user_customer_form_alter(&$form, FormStateInterface &$for
       }
     }
     $form['actions']['submit']['#submit'][] = 'user_edit_submit';
-
-    $account = User::load(\Drupal::currentUser()->id());
-    if ($account->hasField('field_email_is_valid') && !$account->get('field_email_is_valid')->isEmpty()) {
-      $is_valid = (int) $account->get('field_email_is_valid')->getValue()['value'];
-    }
-    else {
-      $is_valid = 0;
-    }
-
-    if ($is_valid != 1) {
-      $form['#prefix'] = '<a href="' . $base_url . '/auth/login" class="auth-account">' . t('Account authentication') . '</a>';
-    }
-    else {
-      $form['#prefix'] = t('Account is identified');
-    }
   }
 }
 
