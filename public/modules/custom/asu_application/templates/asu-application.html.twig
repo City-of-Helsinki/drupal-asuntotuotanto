@@ -567,7 +567,7 @@
             </div>
           {% endif %}
         </section>
-        {% if content.application.right_of_residence_number.0.value %}
+        {% if content.application.field_right_of_residence_number.0.value %}
         <section class="application-form__section">
           <h2>
             {% trans %}
@@ -577,7 +577,7 @@
           <div class="field--type-string field--name-field-personal-id field--widget-string-textfield js-form-wrapper form-wrapper">
             <div class="js-form-item form-item js-form-type-textfield form-item-field-personal-id-0-value js-form-item-field-personal-id-0-value hds-text-input">
               <div class="hds-text-input__input-wrapper">
-                <input readonly class="js-text-full text-full form-text required hds-text-input__input" type="text" value="{{ content.application.right_of_residence_number.0.value }}" size="60" aria-label="{% trans %} Residence number is {% endtrans %} {{ content.application.right_of_residence_number.0.value }}">
+                <input readonly class="js-text-full text-full form-text required hds-text-input__input" type="text" value="{{ content.application.field_right_of_residence_number.0.value }}" size="60" aria-label="{% trans %} Residence number is {% endtrans %} {{ content.application.right_of_residence_number.0.value }}">
               </div>
             </div>
           </div>
