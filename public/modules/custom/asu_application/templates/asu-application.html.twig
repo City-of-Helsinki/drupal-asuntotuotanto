@@ -567,26 +567,6 @@
             </div>
           {% endif %}
         </section>
-        <section class="application-form__section">
-          <h2>
-            {% trans %}
-              Applicants Social Security Number
-            {% endtrans %}
-          </h2>
-          {# <p>
-            {% trans %}
-              Last 4 characters of your ID.
-            {% endtrans %}
-          </p> #}
-          <div class="field--type-string field--name-field-personal-id field--widget-string-textfield js-form-wrapper form-wrapper">
-            <div class="js-form-item form-item js-form-type-textfield form-item-field-personal-id-0-value js-form-item-field-personal-id-0-value hds-text-input">
-              <label for="edit-field-personal-id-0-value" class="js-form-required form-required hds-text-input__label">{% trans %}Personal id{% endtrans %}</label>
-              <div class="hds-text-input__input-wrapper">
-                <input readonly class="js-text-full text-full form-text required hds-text-input__input" type="text" value="{{ content.application.personal_id.0.value }}" size="60" maxlength="5" aria-label="{% trans %} The beginning of social security number {% endtrans %} {{ content.application.personal_id.0.value }}">
-              </div>
-            </div>
-          </div>
-        </section>
         {% if content.application.right_of_residence_number.0.value %}
         <section class="application-form__section">
           <h2>
