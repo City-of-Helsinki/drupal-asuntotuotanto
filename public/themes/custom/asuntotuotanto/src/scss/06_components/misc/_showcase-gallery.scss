@@ -17,6 +17,18 @@
     }
   }
 
+  .showcase-gallery__label {
+    background-color: var(--color-alert);
+    padding: 5px;
+    position: absolute;
+    z-index: 99;
+    display:none;
+  }
+
+  &:hover .showcase-gallery__label {
+    display:block;
+  }
+
   .slick-arrow {
     align-items: center;
     background-color: transparent;
@@ -78,7 +90,7 @@
   .slide__content {
     cursor: pointer;
     position: relative;
-
+    /*
     &::after {
       content: "Click on image for fullscreen";
       position: absolute;
@@ -96,7 +108,7 @@
         opacity: 0;
       }
     }
-
+    */
     &:hover::after,
     &:active::after {
       opacity: 1;
