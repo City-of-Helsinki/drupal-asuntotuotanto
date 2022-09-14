@@ -18,10 +18,10 @@ $config['samlauth.authentication']['sp_name_id_format'] = 'urn:oasis:names:tc:SA
 
 $config['samlauth.authentication']['unique_id_attribute'] = 'nationalIdentificationNumber';
 
-$config['samlauth.authentication']['security_authn_requests_sign'] = FALSE;
+$config['samlauth.authentication']['security_authn_requests_sign'] = TRUE;
 $config['samlauth.authentication']['security_logout_requests_sign'] = FALSE;
 $config['samlauth.authentication']['security_logout_responses_sign'] = FALSE;
-$config['samlauth.authentication']['security_metadata_sign'] = FALSE;
+$config['samlauth.authentication']['security_metadata_sign'] = TRUE;
 $config['samlauth.authentication']['security_messages_sign'] = FALSE;
 $config['samlauth.authentication']['security_assertions_encrypt'] = FALSE;
 $config['samlauth.authentication']['security_assertions_signed'] = TRUE;
