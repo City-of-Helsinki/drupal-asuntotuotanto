@@ -54,7 +54,7 @@ function asu_application_form_alter(&$form, &$form_state) {
           'I have read <a target="_blank" href="@register">Registry policy</a>
             and city\'s  <a target="_blank" href="@privacy">Privacy Statement</a>',
           [
-            '@register' => 'https://www.hel.fi/helsinki/fi/kaupunki-ja-hallinto/tietoa-helsingista/tietosuoja/',
+            '@register' => 'https://www.hel.fi/helsinki/fi/kaupunki-ja-hallinto/tietoa-helsingista/tietosuoja',
             '@privacy' => $link,
           ]
         );
