@@ -43,7 +43,7 @@ class ApplicationEntityAccess extends EntityAccessControlHandler {
    * {@inheritdoc}
    */
   private function viewOperationHandling(EntityInterface $entity, AccountInterface $account): AccessResult {
-    $createPermission = 'create application';
+    $createPermission = 'view application';
     $administratePermission = 'administer applications';
     return AccessResult::allowedIf(
       ($account->id() === $entity->getOwnerId() && $account->hasPermission($createPermission)) ||

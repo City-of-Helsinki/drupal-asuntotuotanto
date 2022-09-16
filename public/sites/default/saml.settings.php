@@ -48,7 +48,8 @@ $config['samlauth.authentication']['security_encryption_algorithm'] = 'http://ww
   $config['samlauth.authentication']['sp_private_key'] = getenv('ASU_SAML_SP');
   $config['samlauth.authentication']['sp_x509_certificate'] = getenv('ASU_SAML_CERT');
 
-  // Test metadata: https://tunnistus.suomi.fi/static/metadata/idp-metadata-tunnistaminen.xml
+  // Metadata: https://tunnistus.suomi.fi/static/metadata/idp-metadata-tunnistaminen.xml
+  // Test metadata https://testi.apro.tunnistus.fi/static/metadata/idp-metadata.xml
   $config['samlauth.authentication']['idp_entity_id'] = 'https://uusi.tunnistus.fi/idp1';
   $config['samlauth.authentication']['idp_single_sign_on_service'] = 'https://testi.apro.tunnistus.fi/idp/profile/SAML2/Redirect/SSO';
   $config['samlauth.authentication']['idp_single_log_out_service'] = 'https://testi.apro.tunnistus.fi/idp/profile/SAML2/Redirect/SLO';

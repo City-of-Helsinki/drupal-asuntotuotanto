@@ -773,7 +773,11 @@ function asuntotuotanto_preprocess_pager(&$variables) {
  *
  */
 function asuntotuotanto_preprocess_user(&$variables) {
-  if (User::load(\drupal::currentUser()->id())->bundle() == 'customer') {
+  global $base_url;
+
+  $account = User::load(\Drupal::currentUser()->id());
+
+  if ($account->bundle() == 'customer') {
     $fields = \Drupal::config('asu_user.external_user_fields')
       ->get('external_data_map');
     $store = \Drupal::service('tempstore.private')
@@ -781,6 +785,20 @@ function asuntotuotanto_preprocess_user(&$variables) {
     foreach ($fields as $field_name => $field) {
       $variables['content'][$field_name] = $store->get($field_name);
     }
+  }
+
+  if ($account->hasField('field_email_is_valid') && !$account->get('field_email_is_valid')->isEmpty()) {
+    $is_valid = (int) $account->get('field_email_is_valid')->getValue()['value'];
+  }
+  else {
+    $is_valid = 0;
+  }
+
+  if ($is_valid != 1) {
+    $variables['user_valid'] = '<a href="' . $base_url . '/auth/login" class="hds-button hds-button--primary hds-button--small">' . t('Account authentication') . '</a>';
+  }
+  else {
+    $variables['user_valid'] = t('Account is identified');
   }
 }
 

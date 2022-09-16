@@ -47,6 +47,12 @@ class ApplicationForm extends ContentEntityForm {
 
     $form['#project_id'] = $project_id;
     // Redirect cases.
+    if ($currentUser->isAnonymous()) {
+      $current_path = \Drupal::service('path.current')->getPath();
+      $redirect = '/user/login?destination=' . $current_path;
+      return (new RedirectResponse($redirect, 301));
+    }
+
     if (!$project_data = $this->getApartments($project)) {
       $this->logger('asu_application')->critical('User tried to access nonexistent project of id ' . $project_id);
       $this->messenger()->addMessage($this->t('Unfortunately the project you are trying to apply for is unavailable.'));
@@ -71,25 +77,6 @@ class ApplicationForm extends ContentEntityForm {
         ->loadByProperties([
           'uid' => $owner_id,
         ]);
-
-      // User must have valid email address to draft more than one application.
-      if (
-        $owner->hasField('field_email_is_valid') &&
-        $owner->get('field_email_is_valid')->value == 0
-      ) {
-        $application = reset($applications);
-
-        if (
-          !empty($applications) && $this->entity->isNew() ||
-          $application && $application->id() != $this->entity->id()
-        ) {
-          $this->messenger()->addMessage($this->t('You cannot fill more than one
-        application until you have confirmed your email address.
-        To confirm your email you must click the link that has been sent to your email address.'));
-          $response = (new RedirectResponse($applicationsUrl, 301))->send();
-          return $response;
-        }
-      }
 
       if ($this->entity->hasField('field_locked') && $this->entity->field_locked->value == 1) {
         $this->messenger()->addMessage($this->t('You have already applied for this project.'));
