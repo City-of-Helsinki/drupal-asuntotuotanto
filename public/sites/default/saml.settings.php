@@ -46,7 +46,7 @@ $config['samlauth.authentication']['security_encryption_algorithm'] = 'http://ww
   // Use local IdP container. Remember to uncomment "idp" service from docker-compose.yml
   $config['samlauth.authentication']['sp_entity_id'] = 'https://nginx-asuntotuotanto-test.agw.arodevtest.hel.fi/saml/metadata/';
   $config['samlauth.authentication']['sp_private_key'] = getenv('ASU_SAML_SP');
-  $config['samlauth.authentication']['sp_x509_certificate'][] = getenv('ASU_SAML_CERT');
+  $config['samlauth.authentication']['sp_x509_certificate'] = getenv('ASU_SAML_CERT');
 
   // Test metadata: https://tunnistus.suomi.fi/static/metadata/idp-metadata-tunnistaminen.xml
   $config['samlauth.authentication']['idp_entity_id'] = 'https://uusi.tunnistus.fi/idp1';
