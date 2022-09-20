@@ -1,0 +1,68 @@
+<?php
+
+/**
+ * @file
+ * Contains asu_api.module.
+ */
+
+use Drupal\asu_api\Api\BackendApi\Request\GetApartmentStatusRequest;
+use Symfony\Component\HttpFoundation\Response;
+use Drupal\node\NodeInterface;
+
+/**
+ * Implements hook_cron().
+ *
+ * Update projects/apartments automatically based on dates set on project.
+ */
+function asu_api_cron() {
+  $cacheId = 'mymodule:asu_api_apartmentstatus';
+xdebug_break();
+  try {
+    /** @var \Drupal\asu_api\Api\BackendApi\BackendApi $api */
+    $api = \Drupal::service('asu_api.backendapi');
+    $request = new GetApartmentStatusRequest();
+    /** @var \Drupal\asu_api\Api\BackendApi\Response\GetApartmentStatusResponse $response */
+    $response = $api->send($request);
+    $apartments = $response->getContent();
+  }
+  catch (\Exception $e) {
+    return new Response('problem with request.', 400);
+  }
+
+  // API gets results.
+  if (!empty($apartments)) {
+    // Get cached results.
+    if (!$cache = \Drupal::cache()->get($cacheId)) {
+      // Compare cache vs data.
+      $results = array_diff($apartments, $cache->data);
+    }
+    else {
+      // No cache use API data.
+      $results = $apartments;
+    }
+
+    // If results.
+    if ($results) {
+      // Loop results.
+      foreach ($results as $apartment) {
+        // Get Node by uuid.
+        $node = \Drupal::entityTypeManager()
+          ->getStorage('node')
+          ->loadByProperties([
+            'uuid' => $apartment
+          ]);
+
+        // If node exists.
+        if ($node = reset($node) && $node instanceof NodeInterface) {
+          // Update node apartment state of sale to sold.
+          $node->set('field_apartment_state_of_sale', 'sold');
+          // Save node.
+          $node->save();
+        }
+      }
+
+      // Set results to cache.
+      \Drupal::cache()->set($cacheId, $apartments, time() + 7200);
+    }
+  }
+}

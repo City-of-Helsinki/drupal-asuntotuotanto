@@ -81,6 +81,7 @@ class BackendApi {
         $options['headers']['Authorization'] = sprintf("Bearer %s", $token);
       }
       else {
+        // todo päivitä kommentti, ei pidä enää kauaa paikkansa.
         // This can happen if you
         // haven't set user for the request $request->setSender($user)
         // Or user cannot authenticate in backend.
@@ -128,9 +129,18 @@ class BackendApi {
    *
    * @throws \GuzzleHttp\Exception\GuzzleException
    */
-  private function handleAuthentication(UserInterface $account): ?string {
-    $token = $this->store->get('asu_api_token');
-    if (!$token || !AuthenticationHelper::isTokenAlive($token)) {
+  private function handleAuthentication(UserInterface $account = NULL): ?string {
+    //Todo: $account parametrista ei pakollinen
+    if ($account) {
+      $token = $this->store->get('asu_api_token');
+    }
+    else {
+      //Todo: hae avain env variableista.
+      $token = getenv('DRUPAL-AUTH-TOKEN');
+    }
+
+    // todo testaa että toimii.
+    if ($account && (!$token || !AuthenticationHelper::isTokenAlive($token))) {
       try {
         $authenticationResponse = $this->authenticate($account);
         $this->store->set('asu_api_token', $authenticationResponse->getToken());
