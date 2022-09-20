@@ -37,15 +37,16 @@ $config['samlauth.authentication']['security_encryption_algorithm'] = 'http://ww
 //if (getenv('APP_ENV') === 'testing') {
   // https://palveluhallinta.suomi.fi/fi/sivut/tunnistus/kayttoonotto/asiakastestiymparisto
 
-  $config['samlauth.authentication']['debug_display_error_details'] = TRUE;
-  $config['samlauth.authentication']['debug_log_in'] = TRUE;
-  $config['samlauth.authentication']['debug_log_saml_in'] = TRUE;
-  $config['samlauth.authentication']['debug_log_saml_out'] = TRUE;
-  $config['samlauth.authentication']['debug_phpsaml'] = TRUE;
+  $config['samlauth.authentication']['debug_display_error_details'] = FALSE;
+  $config['samlauth.authentication']['debug_log_in'] = FALSE;
+  $config['samlauth.authentication']['debug_log_saml_in'] = FALSE;
+  $config['samlauth.authentication']['debug_log_saml_out'] = FALSE;
+  $config['samlauth.authentication']['debug_phpsaml'] = FALSE;
 
-  // Login fail.
+  // redirects fail.
+  $config['samlauth.authentication']['login_redirect_url'] = '/user';
   $config['samlauth.authentication']['error_redirect_url'] = '/user';
-  $config['samlauth.authentication']['error_throw'] = TRUE;
+  $config['samlauth.authentication']['error_throw'] = FALSE;
 
   // Use local IdP container. Remember to uncomment "idp" service from docker-compose.yml
   $config['samlauth.authentication']['sp_entity_id'] = 'https://nginx-asuntotuotanto-test.agw.arodevtest.hel.fi/saml/metadata/';
