@@ -11,6 +11,11 @@ use Psr\Http\Message\ResponseInterface;
  */
 class GetApartmentStatusResponse extends Response {
 
+  /**
+   * Result of the request.
+   *
+   * @var array
+   */
   private array $content;
 
   /**

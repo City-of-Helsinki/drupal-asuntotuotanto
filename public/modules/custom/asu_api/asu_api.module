@@ -16,7 +16,7 @@ use Drupal\node\NodeInterface;
  */
 function asu_api_cron() {
   $cacheId = 'mymodule:asu_api_apartmentstatus';
-xdebug_break();
+
   try {
     /** @var \Drupal\asu_api\Api\BackendApi\BackendApi $api */
     $api = \Drupal::service('asu_api.backendapi');
@@ -49,7 +49,7 @@ xdebug_break();
         $node = \Drupal::entityTypeManager()
           ->getStorage('node')
           ->loadByProperties([
-            'uuid' => $apartment
+            'uuid' => $apartment,
           ]);
 
         // If node exists.
