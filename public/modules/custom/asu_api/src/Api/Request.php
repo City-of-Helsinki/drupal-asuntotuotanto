@@ -59,12 +59,6 @@ abstract class Request {
    * Get the user sending the request.
    */
   public function getSender(): ?UserInterface {
-    /*
-    If (!$this->sender && $this->requiresAuthentication()) {
-    throw new \InvalidArgumentException
-    ('Authenticated request requires the sender to be set.');
-    }
-     */
     return $this->sender;
   }
 

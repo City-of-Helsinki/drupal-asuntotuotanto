@@ -81,10 +81,7 @@ class BackendApi {
         $options['headers']['Authorization'] = sprintf("Bearer %s", $token);
       }
       else {
-        // @todo Update comment matching current code.
-        // This can happen if you
-        // haven't set user for the request $request->setSender($user)
-        // Or user cannot authenticate in backend.
+        // If sender authenticate fails shows error.
         throw new \InvalidArgumentException('Cannot authenticate request sender.');
       }
     }
@@ -137,7 +134,6 @@ class BackendApi {
       $token = getenv('DRUPAL-AUTH-TOKEN');
     }
 
-    // @todo Check that everything still works.
     if ($account && (!$token || !AuthenticationHelper::isTokenAlive($token))) {
       try {
         $authenticationResponse = $this->authenticate($account);

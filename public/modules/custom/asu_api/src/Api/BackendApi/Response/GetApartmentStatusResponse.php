@@ -34,7 +34,7 @@ class GetApartmentStatusResponse extends Response {
    * @return string
    *   Profile id in authentication request.
    */
-  public function getContent(): string {
+  public function getContent(): array {
     return $this->content;
   }
 
