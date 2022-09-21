@@ -15,6 +15,9 @@ class GetApartmentStatusRequest extends Request {
   protected const PATH = '/v1/sales/sold_apartment_status/';
   protected const AUTHENTICATED = TRUE;
 
+  /**
+   * {@inheritDoc}
+   */
   public function __construct() {
     $this->sender = NULL;
   }
