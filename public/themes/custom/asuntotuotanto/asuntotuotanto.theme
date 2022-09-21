@@ -788,7 +788,7 @@ function asuntotuotanto_preprocess_user(&$variables) {
   }
 
   if ($account->hasField('field_email_is_valid') && !$account->get('field_email_is_valid')->isEmpty()) {
-    $is_valid = (int) $account->get('field_email_is_valid')->getValue()['value'];
+    $is_valid = (int) $account->get('field_email_is_valid')->getValue()[0]['value'];
   }
   else {
     $is_valid = 0;
