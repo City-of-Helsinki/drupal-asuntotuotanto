@@ -71,14 +71,20 @@ class AuthService extends SamlService {
       $this->processLoginResponse();
     }
     catch (\Exception $acs_exception) {
-    }
-    if (!isset($acs_exception)) {
-      $unique_id = $this->getAttributeByConfig('unique_id_attribute');
-      $unique_id = $this->hashPid($unique_id);
+      $this->messenger->addWarning($this->t('You have canceled authentication process', [
+        '%other_user' => $this->currentUser->getAccountName(),
+      ]));
 
-      if ($unique_id) {
-        $account = $this->externalAuth->load($unique_id, 'samlauth') ?: NULL;
-      }
+      $this->flood->register('samlauth.failed_login_ip', $flood_config->get('ip_window'));
+      // throw $acs_exception;
+      return FALSE;
+    }
+
+    $unique_id = $this->getAttributeByConfig('unique_id_attribute');
+    $unique_id = $this->hashPid($unique_id);
+
+    if ($unique_id) {
+      $account = $this->externalAuth->load($unique_id, 'samlauth') ?: NULL;
     }
 
     $logout_different_user = $config->get('logout_different_user');
@@ -91,7 +97,7 @@ class AuthService extends SamlService {
         // user out and presents the "Reset password" form with a login button.
         // 'drush uli' links, at least on D7, display an info message "please
         // reset your password" because they land on the user edit form.)
-        return !isset($acs_exception);
+        return TRUE;
       }
       if (!$logout_different_user) {
         // Message similar to when a user/reset link is followed.
@@ -102,22 +108,10 @@ class AuthService extends SamlService {
           // want to make people log out from all their logged-in sites.
           ':logout' => Url::fromRoute('user.logout')->toString(),
         ]));
-        return !isset($acs_exception);
-      }
-      // If the SAML response indicates (/ if the processing generated) an
-      // error, we don't want to log the current user out but we want to
-      // clearly indicate that someone else is still logged in.
-      if (isset($acs_exception)) {
-        $this->messenger->addWarning($this->t('Another user (%other_user) is already logged into the site on this computer. You tried to log in through an external authentication provider, which failed, so the user is still logged in.', [
-          '%other_user' => $this->currentUser->getAccountName(),
-        ]));
+        return TRUE;
       }
     }
 
-    if (isset($acs_exception)) {
-      $this->flood->register('samlauth.failed_login_ip', $flood_config->get('ip_window'));
-      throw $acs_exception;
-    }
     if (!$unique_id) {
       throw new \RuntimeException('Configured unique ID is not present in SAML response.');
     }
