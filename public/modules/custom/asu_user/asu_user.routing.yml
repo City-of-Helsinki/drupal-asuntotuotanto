@@ -50,6 +50,7 @@ asu_user.saml_login:
     _title: 'SAML login'
   requirements:
     _user_is_logged_in: 'TRUE'
+    _custom_valid_check: 'TRUE'
   options:
     no_cache: TRUE
     default_url_options:

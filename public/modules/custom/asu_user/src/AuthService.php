@@ -76,7 +76,7 @@ class AuthService extends SamlService {
       ]));
 
       $this->flood->register('samlauth.failed_login_ip', $flood_config->get('ip_window'));
-      // throw $acs_exception;
+
       return FALSE;
     }
 
