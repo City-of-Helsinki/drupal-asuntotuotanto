@@ -1,0 +1,29 @@
+uuid: e38156b2-142e-40e3-9d14-3731e1fc3837
+langcode: fi
+status: true
+dependencies:
+  module:
+    - asu_api
+title: 'Default cron handler'
+id: asu_api_cron
+weight: 0
+module: asu_api
+callback: asu_api_cron
+scheduler:
+  id: simple
+  configuration:
+    rules:
+      - '*/30+@ * * * *'
+launcher:
+  id: serial
+  configuration:
+    timeouts:
+      lock_timeout: 3600
+    launcher:
+      thread: 0
+logger:
+  id: database
+  configuration:
+    method: '3'
+    expire: 1209600
+    retain: 1000

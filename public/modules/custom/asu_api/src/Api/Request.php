@@ -16,9 +16,9 @@ abstract class Request {
   /**
    * The user that will be sender of the request.
    *
-   * @var Drupal\user\UserInterface
+   * @var Drupal\user\UserInterface|null
    */
-  protected UserInterface $sender;
+  protected ?UserInterface $sender;
 
   /**
    * Gets the HTTP method.
@@ -58,10 +58,7 @@ abstract class Request {
   /**
    * Get the user sending the request.
    */
-  public function getSender(): UserInterface {
-    if (!$this->sender && $this->requiresAuthentication()) {
-      throw new \InvalidArgumentException('Authenticated request requires the sender to be set.');
-    }
+  public function getSender(): ?UserInterface {
     return $this->sender;
   }
 

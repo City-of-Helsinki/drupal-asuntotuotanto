@@ -10,9 +10,17 @@ use Drupal\asu_api\Api\Request;
  * A request to create new backend user.
  */
 class GetApartmentStatusRequest extends Request {
+
   protected const METHOD = 'GET';
-  protected const PATH = '/v1/sales/sold_apartment_status';
-  protected const AUTHENTICATED = FALSE;
+  protected const PATH = '/v1/sales/sold_apartments/';
+  protected const AUTHENTICATED = TRUE;
+
+  /**
+   * {@inheritDoc}
+   */
+  public function __construct() {
+    $this->sender = NULL;
+  }
 
   /**
    * Data to array.

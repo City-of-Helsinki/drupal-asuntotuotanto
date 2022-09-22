@@ -81,9 +81,7 @@ class BackendApi {
         $options['headers']['Authorization'] = sprintf("Bearer %s", $token);
       }
       else {
-        // This can happen if you
-        // haven't set user for the request $request->setSender($user)
-        // Or user cannot authenticate in backend.
+        // If sender authenticate fails shows error.
         throw new \InvalidArgumentException('Cannot authenticate request sender.');
       }
     }
@@ -128,9 +126,15 @@ class BackendApi {
    *
    * @throws \GuzzleHttp\Exception\GuzzleException
    */
-  private function handleAuthentication(UserInterface $account): ?string {
-    $token = $this->store->get('asu_api_token');
-    if (!$token || !AuthenticationHelper::isTokenAlive($token)) {
+  private function handleAuthentication(UserInterface $account = NULL): ?string {
+    if ($account) {
+      $token = $this->store->get('asu_api_token');
+    }
+    else {
+      $token = getenv('DRUPAL-AUTH-TOKEN');
+    }
+
+    if ($account && (!$token || !AuthenticationHelper::isTokenAlive($token))) {
       try {
         $authenticationResponse = $this->authenticate($account);
         $this->store->set('asu_api_token', $authenticationResponse->getToken());
