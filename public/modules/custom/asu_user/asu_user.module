@@ -211,6 +211,13 @@ function asu_user_form_user_customer_form_alter(&$form, FormStateInterface &$for
 }
 
 /**
+ * Implements hook_form_formid_alter().
+ */
+function asu_user_form_user_user_form_alter(&$form, FormStateInterface &$form_state) {
+  $form['field_saml_hash']['#access'] = FALSE;
+}
+
+/**
  * Additional submit handler for user_form.
  *
  * Update user data to backend.
