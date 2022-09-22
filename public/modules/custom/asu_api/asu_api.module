@@ -7,6 +7,7 @@
 
 use Drupal\asu_api\Api\BackendApi\Request\GetApartmentStatusRequest;
 use Symfony\Component\HttpFoundation\Response;
+use Drupal\node\Entity\Node;
 
 /**
  * Implements hook_cron().
@@ -38,10 +39,12 @@ function asu_api_cron() {
     $apartments = $query->execute();
 
     foreach ($apartments as $apartment) {
+      // Load node object by nid.
+      $node = Node::load($apartment);
       // Update node apartment state of sale to sold.
-      $apartment->set('field_apartment_state_of_sale', 'sold');
+      $node->set('field_apartment_state_of_sale', 'sold');
       // Save node.
-      $apartment->save();
+      $node->save();
     }
   }
 }
