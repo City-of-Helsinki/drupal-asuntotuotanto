@@ -152,7 +152,9 @@ class AuthService extends SamlService {
     $config = $this->configFactory->get('samlauth.authentication');
     $first_saml_login = FALSE;
 
-    var_dump($this->getAttributes());
+    var_dump(
+      $this->getAttributes()
+    );
     exit;
 
     if (!$account) {
