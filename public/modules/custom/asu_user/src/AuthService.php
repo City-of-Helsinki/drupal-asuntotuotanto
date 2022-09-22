@@ -152,11 +152,6 @@ class AuthService extends SamlService {
     $config = $this->configFactory->get('samlauth.authentication');
     $first_saml_login = FALSE;
 
-    var_dump(
-      $this->getAttributes()
-    );
-    exit;
-
     if (!$account) {
       // Check that current user and loaded user match.
       if ($this->currentUser->isAuthenticated()) {
