@@ -3,12 +3,10 @@
 namespace Drupal\asu_user;
 
 use Drupal\Core\Session\AccountInterface;
-use Drupal\Core\Url;
 use Symfony\Component\HttpKernel\Exception\TooManyRequestsHttpException;
 use Drupal\Component\Utility\Crypt;
 use Drupal\samlauth\SamlService;
 use Drupal\samlauth\UserVisibleException;
-use Drupal\user\Entity\User;
 
 /**
  * Governs communication between the SAML toolkit and the IdP / login behavior.
@@ -83,39 +81,15 @@ class AuthService extends SamlService {
     $unique_id = $this->getAttributeByConfig('unique_id_attribute');
     $unique_id = $this->hashPid($unique_id);
 
-    if ($unique_id) {
-      $account = $this->externalAuth->load($unique_id, 'samlauth') ?: NULL;
-    }
-
-    $logout_different_user = $config->get('logout_different_user');
-    if ($this->currentUser->isAuthenticated()) {
-      // Either redirect or log out so that we can log a different user in.
-      // 'Redirecting' is done by the caller - so we can just return from here.
-      if (isset($account) && $account->id() === $this->currentUser->id()) {
-        // Noting that we were already logged in probably isn't useful. (Core's
-        // user/reset link isn't a good case to compare: it always logs the
-        // user out and presents the "Reset password" form with a login button.
-        // 'drush uli' links, at least on D7, display an info message "please
-        // reset your password" because they land on the user edit form.)
-        return TRUE;
-      }
-      if (!$logout_different_user) {
-        // Message similar to when a user/reset link is followed.
-        $this->messenger->addWarning($this->t('Another user (%other_user) is already logged into the site on this computer, but you tried to log in as user %login_user through an external authentication provider. Please <a href=":logout">log out</a> and try again.', [
-          '%other_user' => $this->currentUser->getAccountName(),
-          '%login_user' => $account ? $account->getAccountName() : '?',
-          // Point to /user/logout rather than /saml/logout because we don't
-          // want to make people log out from all their logged-in sites.
-          ':logout' => Url::fromRoute('user.logout')->toString(),
-        ]));
-        return TRUE;
-      }
-    }
-
     if (!$unique_id) {
-      throw new \RuntimeException('Configured unique ID is not present in SAML response.');
+      $this->messenger->addError(
+        $this->t('Authentication has has failed. ID is not present in SAML response.')
+      );
+
+      return FALSE;
     }
 
+    $account = $this->externalAuth->load($unique_id, 'samlauth') ?: NULL;
     $this->doLogin($unique_id, $account);
 
     // Remember SAML session values that may be necessary for logout.
@@ -153,42 +127,61 @@ class AuthService extends SamlService {
     $first_saml_login = FALSE;
 
     if (!$account) {
-      // Check that current user and loaded user match.
-      if ($this->currentUser->isAuthenticated()) {
-        // Load current user object.
-        $user = User::load(\Drupal::currentUser()->id());
-        // Get unique attribute.
-        $pid = $this->getAttributeByConfig('unique_id_attribute');
-        // Crypt unique attribute.
-        $pid = $this->hashPid($pid);
-        // Search user by hash.
-        $query = $this->entityTypeManager->getStorage('user')->getQuery();
-        $query->condition('field_saml_hash', $pid);
-        $results = $query->execute();
-        $count = count($results);
-        // Get user is valid value.
-        $is_valid = (int) $user->get('field_email_is_valid')->getValue()['value'];
+      if ($config->get('create_users')) {
+        $attributes = $this->getAttributes();
+        $name = reset($attributes['displayName']);
+        $mail = reset($attributes['mail']) ?? NULL;
 
-        // If user not validate.
-        if ($is_valid == 0 && $count == 0) {
-          // Set valid value.
-          $user->set('field_email_is_valid', 1);
-          // Set unique value.
-          $user->set('field_saml_hash', $pid);
-          // Save values to user.
-          $user->save();
-          // Use loaded user to account.
-          $account = $user;
-          // Link authentication.
-          $this->linkExistingAccount($unique_id, $account);
-          $first_saml_login = TRUE;
+        $account_data = [
+          'mail' => $mail,
+          'name' => $name,
+          'type' => 'customer',
+          'langcode' => 'fi',
+          'field_email_is_valid' => 1,
+          'field_saml_hash' => $unique_id,
+        ];
+
+        $account = $this->externalAuth->register($unique_id, 'samlauth', $account_data);
+        $this->externalAuth->userLoginFinalize($account, $unique_id, 'samlauth');
+
+        $pid = $this->getAttributeByConfig('unique_id_attribute');
+        $lastname = reset($attributes['sn']) ?? NULL;
+        $first_name = reset($attributes['firstName']) ?? NULL;
+        $divider = substr($pid, 6, 1);
+        $dividers = ['18' => '+', '19' => '-', '20' => 'A'];
+        $century = array_search($divider, $dividers);
+        $year = $century . substr($pid, 4, 2);
+        $day = substr($pid, 0, 2);
+        $month = substr($pid, 2, 2);
+        $birth_day = sprintf('%s.%s.%s', $day, $month, $year);
+        /*
+        $store = \Drupal::service('tempstore.private')
+        ->get('customer');
+        $store->set('first_name', $first_name);
+        $store->set('last_name', $lastname);
+        $store->set('date_of_birth', $birth_day);
+
+        $request = new CreateUserRequest($account, [
+        'first_name' => $first_name,
+        'last_name' => $lastname,
+        'date_of_birth' => $birth_day
+        ]);
+
+        try {
+        $response = $this->backendApi->send($request);
+        $account->field_backend_profile = $response->getProfileId();
+        $account->field_backend_password = $response->getPassword();
+        $account->save();
         }
-        else {
-          throw new UserVisibleException('Account is already authenticated.');
+        catch (\Exception $e) {
+        \Drupal::logger('asu_backend_api')->emergency(
+        'Exception while creating user to backend: ' . $e->getMessage()
+        );
         }
+         */
       }
       else {
-        throw new UserVisibleException('You need to be login in to the site first.');
+        throw new UserVisibleException('No existing user account matches the SAML ID provided. This authentication service is not configured to create new accounts.');
       }
     }
 

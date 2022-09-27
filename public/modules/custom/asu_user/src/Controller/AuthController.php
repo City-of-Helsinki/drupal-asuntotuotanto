@@ -135,8 +135,9 @@ class AuthController extends SamlController {
   public function login() {
     $function = function () {
       global $base_url;
+      $config = $this->configFactory->get('samlauth.authentication');
+      $return_to = $config->get('login_redirect_url') ?? $base_url . '/user';
 
-      $return_to = $base_url . '/user';
       return $this->saml->login($return_to);
     };
     // This response redirects to an external URL in all/common cases. We count
@@ -145,42 +146,22 @@ class AuthController extends SamlController {
   }
 
   /**
-   * Gets a redirect response and modifies it a bit.
-   *
-   * Split off from getTrustedRedirectResponse() because that's in a trait.
-   *
-   * @param callable $callable
-   *   Callable.
-   * @param string $while
-   *   Description of when we're doing this, for error logging.
-   * @param string $redirect_route_on_exception
-   *   Drupal route name to redirect to on exception.
+   * Redirect to.
    */
-  protected function getShortenedRedirectResponse(callable $callable, $while, $redirect_route_on_exception) {
-    $response = $this->getTrustedRedirectResponse($callable, $while, $redirect_route_on_exception);
-    // Symfony RedirectResponses set a HTML document as content, which is going
-    // to be ugly with our long URLs. Almost noone sees this content for a
-    // HTTP redirect, but still: overwrite it with a similar HTML document that
-    // doesn't include the URL parameter blurb in the rendered parts.
-    $url = $response->getTargetUrl();
-    $pos = strpos($url, '?');
-    $shortened_url = $pos ? substr($url, 0, $pos) : $url;
-    // Almost literal copy from RedirectResponse::setTargetUrl():
-    $response->setContent(
-      sprintf('<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8" />
-        <meta http-equiv="refresh" content="0;url=%1$s" />
+  public function return() {
+    if (\Drupal::currentUser()->isAnonymous()) {
+      $route_name = 'user.login';
+      $route_parameters = [];
 
-        <title>Redirecting to %2$s</title>
-    </head>
-    <body>
-        Redirecting to <a href="%1$s">%2$s</a>.
-    </body>
-</html>', htmlspecialchars($url, ENT_QUOTES, 'UTF-8'), $shortened_url));
+      return $this->redirect($route_name, $route_parameters);
+    }
 
-    return $response;
+    $route_name = 'entity.user.edit_form';
+    $route_parameters = [
+      'user' => \Drupal::currentUser()->id(),
+    ];
+
+    return $this->redirect($route_name, $route_parameters);
   }
 
 }
