@@ -27,6 +27,16 @@ class RouteSubscriber extends RouteSubscriberBase {
         [$route->setRequirement('_access', 'FALSE')]
       );
     }
+
+    // Override user register redirect.
+    if ($route = $collection->get('user.register')) {
+      $route->setDefaults(
+        [
+          '_controller' => '\Drupal\asu_user\Controller\AuthController::login',
+        ]
+      );
+      $route->setOption('no_cache', TRUE);
+    }
   }
 
 }

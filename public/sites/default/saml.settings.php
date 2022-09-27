@@ -44,10 +44,13 @@ $config['samlauth.authentication']['security_encryption_algorithm'] = 'http://ww
   $config['samlauth.authentication']['debug_phpsaml'] = FALSE;
 
   // redirects fail.
-  $config['samlauth.authentication']['login_redirect_url'] = '/user';
-  $config['samlauth.authentication']['error_redirect_url'] = '/user';
+  $config['samlauth.authentication']['login_redirect_url'] = '/auth/return';
+  $config['samlauth.authentication']['error_redirect_url'] = '/user/login';
   $config['samlauth.authentication']['error_throw'] = FALSE;
   $config['samlauth.authentication']['logout_different_user'] = FALSE;
+  $config['samlauth.authentication']['create_users'] = TRUE;
+  $config['samlauth.authentication']['user_name_attribute'] = 'displayName';
+  $config['samlauth.authentication']['user_mail_attribute'] = 'mail';
 
   // Use local IdP container. Remember to uncomment "idp" service from docker-compose.yml
   $config['samlauth.authentication']['sp_entity_id'] = 'https://nginx-asuntotuotanto-test.agw.arodevtest.hel.fi/saml/metadata/';
