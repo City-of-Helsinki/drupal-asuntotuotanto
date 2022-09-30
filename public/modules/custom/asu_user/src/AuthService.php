@@ -7,6 +7,7 @@ use Symfony\Component\HttpKernel\Exception\TooManyRequestsHttpException;
 use Drupal\Component\Utility\Crypt;
 use Drupal\samlauth\SamlService;
 use Drupal\samlauth\UserVisibleException;
+use Drupal\asu_api\Api\BackendApi\Request\CreateUserRequest;
 
 /**
  * Governs communication between the SAML toolkit and the IdP / login behavior.
@@ -130,14 +131,14 @@ class AuthService extends SamlService {
       if ($config->get('create_users')) {
         $attributes = $this->getAttributes();
         $name = reset($attributes['displayName']);
-        $mail = reset($attributes['mail']) ?? NULL;
+        $mail = (isset($attributes['mail'])) ? reset($attributes['mail']) : NULL;
 
         $account_data = [
           'mail' => $mail,
           'name' => $name,
           'type' => 'customer',
           'langcode' => 'fi',
-          'field_email_is_valid' => 1,
+          'field_email_is_valid' => 0,
           'field_saml_hash' => $unique_id,
         ];
 
@@ -154,31 +155,39 @@ class AuthService extends SamlService {
         $day = substr($pid, 0, 2);
         $month = substr($pid, 2, 2);
         $birth_day = sprintf('%s.%s.%s', $day, $month, $year);
-        /*
+
         $store = \Drupal::service('tempstore.private')
-        ->get('customer');
+          ->get('customer');
         $store->set('first_name', $first_name);
         $store->set('last_name', $lastname);
         $store->set('date_of_birth', $birth_day);
 
-        $request = new CreateUserRequest($account, [
-        'first_name' => $first_name,
-        'last_name' => $lastname,
-        'date_of_birth' => $birth_day
-        ]);
+        $accountData = [
+          'first_name' => $first_name,
+          'last_name' => $lastname,
+          'date_of_birth' => $birth_day,
+          // 'pid' => $pid
+        ];
+
+        $request = new CreateUserRequest(
+          $account,
+          $accountData,
+          'customer'
+        );
 
         try {
-        $response = $this->backendApi->send($request);
-        $account->field_backend_profile = $response->getProfileId();
-        $account->field_backend_password = $response->getPassword();
-        $account->save();
+          /** @var \Drupal\asu_api\Api\BackendApi\BackendApi $backendApi */
+          $backendApi = \Drupal::service('asu_api.backendapi');
+          $response = $backendApi->send($request);
+          $account->field_backend_profile = $response->getProfileId();
+          $account->field_backend_password = $response->getPassword();
+          $account->save();
         }
         catch (\Exception $e) {
-        \Drupal::logger('asu_backend_api')->emergency(
-        'Exception while creating user to backend: ' . $e->getMessage()
-        );
+          \Drupal::logger('asu_backend_api')->emergency(
+          'Exception while creating user to backend: ' . $e->getMessage()
+          );
         }
-         */
       }
       else {
         throw new UserVisibleException('No existing user account matches the SAML ID provided. This authentication service is not configured to create new accounts.');
