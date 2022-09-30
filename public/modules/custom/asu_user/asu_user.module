@@ -160,6 +160,7 @@ function asu_user_form_user_customer_form_alter(&$form, FormStateInterface &$for
   }
 
   $form['field_saml_hash']['#access'] = FALSE;
+  $form['basic_information']['pid']['#access'] = FALSE;
 }
 
 /**
