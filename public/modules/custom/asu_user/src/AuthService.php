@@ -166,7 +166,7 @@ class AuthService extends SamlService {
           'first_name' => $first_name,
           'last_name' => $lastname,
           'date_of_birth' => $birth_day,
-          // 'pid' => $pid
+          'personal_identification_number' => $pid
         ];
 
         $request = new CreateUserRequest(
