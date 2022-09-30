@@ -28,7 +28,6 @@ function asu_user_entity_type_alter(array &$entity_types) {
  * Implements hook_user_login().
  */
 function asu_user_user_login(UserInterface $account) {
-  asu_create_backend_user($account);
   if ($account->hasRole('customer')) {
     // asu_validate_email($account);
     // asu_send_user_email_verification_reminder($account);
@@ -94,55 +93,6 @@ function asu_send_user_email_verification_reminder(UserInterface $account) {
     $sendMail = $account->getLastAccessedTime() != 0 && (time() - $account->getCreatedTime() >= 86400);
     if ($sendMail) {
       asu_send_user_email('asu_email_approval_required', $account);
-    }
-  }
-}
-
-/**
- * Make sure user has an existing account in backend.
- */
-function asu_create_backend_user(UserInterface $account) {
-  if ($account->hasPermission('administer')) {
-    return;
-  }
-
-  if (!$profileId = $account->get('field_backend_profile')->value) {
-    /** @var Drupal\asu_api\Api\BackendApi\BackendApi $backendApi */
-    $backendApi = \Drupal::service('asu_api.backendapi');
-
-    try {
-      $userBundle = User::load($account->id())->bundle();
-      $type = $userBundle == 'sales' ? 'salesperson' : 'customer';
-      $config = \Drupal::config('asu_user.external_user_fields')
-        ->get('external_data_map');
-
-      $values = [];
-
-      // If user was created by openid_connect, get user name.
-      $session = \Drupal::request()->getSession();
-      if ($session->has('first_name') && $session->has('last_name')) {
-        $values['first_name'] = $session->get('first_name');
-        $values['last_name'] = $session->get('last_name');
-      }
-
-      $store = \Drupal::service('tempstore.private')->get('customer');
-      foreach ($config as $field => $value) {
-        if (!isset($values[$value['external_field']])) {
-          $values[$value['external_field']] = $store->get($field) ?? '-';
-        }
-      }
-
-      $createUser = new CreateUserRequest($account, $values, $type);
-      /** @var \Drupal\asu_api\Api\BackendApi\Response\CreateUserResponse $response */
-      $response = $backendApi->send($createUser);
-
-      $account->field_backend_profile = $response->getProfileId();
-      $account->field_backend_password = $response->getPassword();
-      $account->save();
-    }
-    catch (\Exception $e) {
-      \Drupal::logger('asu_user')
-        ->critical('Exception while creating backend user:' . $e->getMessage());
     }
   }
 }
