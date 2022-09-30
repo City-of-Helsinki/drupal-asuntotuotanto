@@ -27,3 +27,7 @@ external_data_map:
     title: 'Date of birth'
     type: date
     external_field: date_of_birth
+  pid:
+    title: 'PID'
+    type: textfield
+    external_field: personal_identification_number
