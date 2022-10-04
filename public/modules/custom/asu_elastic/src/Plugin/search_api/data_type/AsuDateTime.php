@@ -49,7 +49,7 @@ class AsuDateTime extends DataTypePluginBase {
     $date = $date_formatter->format(
       strtotime($value . ' UTC'),
       'custom',
-      'Y-m-d\TH:i:s',
+      'Y-m-d\TH:i:sO',
       'Europe/Helsinki',
     );
 
