@@ -49,7 +49,7 @@ function asu_api_cron() {
     // Get apartment status from $apartment_states.
     $state = strtolower($apartment_states[$uuid]);
     // Update node apartment state of sale to sold.
-    $node->set('field_apartment_state_of_sale', $state);
+    $node->field_apartment_state_of_sale->target_id = $state;
     // Save node.
     $node->save();
   }
