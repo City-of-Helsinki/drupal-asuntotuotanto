@@ -12,7 +12,7 @@ use Drupal\asu_api\Api\Request;
 class GetApartmentStatusRequest extends Request {
 
   protected const METHOD = 'GET';
-  protected const PATH = '/v1/sales/sold_apartments/';
+  protected const PATH = '/v1/sales/apartment_states/';
   protected const AUTHENTICATED = TRUE;
 
   /**

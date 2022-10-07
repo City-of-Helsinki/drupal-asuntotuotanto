@@ -21,9 +21,9 @@ function asu_api_cron() {
     $request = new GetApartmentStatusRequest();
     /** @var \Drupal\asu_api\Api\BackendApi\Response\GetApartmentStatusResponse $response */
     $response = $api->send($request);
-    $apartment_uuids = $response->getContent();
+    $apartment_states = $response->getContent();
 
-    if (empty($apartment_uuids)) {
+    if (empty($apartment_states)) {
       return;
     }
   }
@@ -31,19 +31,25 @@ function asu_api_cron() {
     return new Response('problem with request.', 400);
   }
 
+  // Get apartment uuids.
+  $apartment_uuids = array_keys($apartment_states);
+
   // Get all aparments which state is not sold.
   $query = \Drupal::entityTypeManager()->getStorage('node')->getQuery();
   $query->condition('status', 1)
     ->condition('type', 'apartment')
-    ->condition('field_apartment_state_of_sale', 'sold', '!=')
     ->condition('uuid', $apartment_uuids, 'IN');
   $apartments = $query->execute();
 
   foreach ($apartments as $apartment) {
     // Load node object by nid.
     $node = Node::load($apartment);
+    // Node get uuid.
+    $uuid = $node->uuid();
+    // Get apartment status from $apartment_states.
+    $state = strtolower($apartment_states[$uuid]);
     // Update node apartment state of sale to sold.
-    $node->set('field_apartment_state_of_sale', 'sold');
+    $node->field_apartment_state_of_sale->target_id = $state;
     // Save node.
     $node->save();
   }
