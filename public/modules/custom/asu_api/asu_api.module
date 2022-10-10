@@ -52,5 +52,9 @@ function asu_api_cron() {
     $node->field_apartment_state_of_sale->target_id = $state;
     // Save node.
     $node->save();
+    // Set logger message.
+    \Drupal::logger('asu_api')->info(
+      'Apartment id ' . $node->id() . ' status is updated to ' . $state
+    );
   }
 }
