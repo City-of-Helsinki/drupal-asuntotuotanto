@@ -37,8 +37,8 @@ use Drupal\user\EntityOwnerTrait;
  *     "access" = "Drupal\asu_application\Entity\Access\ApplicationEntityAccess",
  *     "views_data" = "Drupal\views\EntityViewsData",
  *     "form" = {
- *       "default" = "Drupal\asu_application\Form\ApplicationForm",
- *       "add" = "Drupal\asu_application\Form\ApplicationForm",
+ *       "default" = "Drupal\asu_application\Form\AskoApplicationForm",
+ *       "add" = "Drupal\asu_application\Form\AskoApplicationForm",
  *       "delete" = "Drupal\Core\Entity\ContentEntityDeleteForm",
  *     },
  *     "route_provider" = {
@@ -110,12 +110,25 @@ class Application extends EditorialContentEntityBase implements ContentEntityInt
   }
 
   /**
+   * Get main applicants.
+   *
+   * @return array
+   *   Array of main applicants.
+   */
+  public function getMainApplicant(): ?array {
+    if ($this->hasField('main_applicant'))  {
+      return $this->main_applicant->getValue() ?? [];
+    }
+    return NULL;
+  }
+
+  /**
    * Get additional applicants.
    *
    * @return array
    *   Array of applicants.
    */
-  public function getApplicants(): array {
+  public function getApplicant(): array {
     return $this->applicant->getValue() ?? [];
   }
 
@@ -231,6 +244,16 @@ class Application extends EditorialContentEntityBase implements ContentEntityInt
         'settings' => [],
       ]);
 
+    $fields['main_applicant'] = BaseFieldDefinition::create('asu_main_applicant')
+      ->setLabel(t('Basic information'))
+      ->setDescription(t('Basic information of the people who are applying'))
+      ->setCardinality(1)
+      ->setDisplayOptions('form', [
+        'type' => 'asu_main_applicant',
+        'weight' => 5,
+        'settings' => [],
+      ]);
+
     $fields['applicant'] = BaseFieldDefinition::create('asu_applicant')
       ->setLabel(t('Applicants'))
       ->setDescription(t('Basic information of the people who are part of the application'))
@@ -280,6 +303,7 @@ class Application extends EditorialContentEntityBase implements ContentEntityInt
    * @throws \Exception
    */
   public static function preCreate(EntityStorageInterface $storage, array &$values) {
+    // @todo muista jotain. ei saa ajaa jos asko.
     parent::preCreate($storage, $values);
 
     $parameters = \Drupal::routeMatch()->getParameters();

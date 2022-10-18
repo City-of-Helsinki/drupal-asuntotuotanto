@@ -291,6 +291,7 @@ class ApplicationForm extends ContentEntityForm {
         $this->entity->id(),
         $form['#project_name'],
         $form['#project_uuid'],
+        $this->entity
       );
     }
     \Drupal::service('event_dispatcher')
