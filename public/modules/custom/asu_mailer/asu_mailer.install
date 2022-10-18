@@ -34,3 +34,10 @@ Viesti: [contact_message:message]',
   $email = ContactEmail::create($values);
   $email->save();
 }
+
+/**
+ * Enable asu_application module.
+ */
+function asu_mailer_update_8203() {
+  \Drupal::service('module_installer')->install(['asu_application']);
+}

@@ -55,10 +55,3 @@ function asu_application_update_9004() : void {
     $application->save();
   }
 }
-
-/**
- * Enable asu_mailer module.
- */
-function asu_application_update_9205() {
-  \Drupal::service('module_installer')->install(['asu_mailer']);
-}
