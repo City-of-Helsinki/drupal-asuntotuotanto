@@ -141,10 +141,9 @@ class AskoApplicationForm extends ContentEntityForm {
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   Form state.
    *
-   * @return \Symfony\Component\HttpFoundation\RedirectResponse|void
-   *   Redirect response.
+   * @return void
    */
-  private function handleApplicationEvent(array $form, FormStateInterface $form_state) {
+  private function handleApplicationEvent(array $form, FormStateInterface $form_state): void {
     $eventName = ApplicationEvent::EVENT_NAME;
     $event = new ApplicationEvent(
       $this->entity->id(),
