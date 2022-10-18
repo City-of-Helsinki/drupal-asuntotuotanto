@@ -140,8 +140,6 @@ class AskoApplicationForm extends ContentEntityForm {
    *   Form array.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   Form state.
-   *
-   * @return void
    */
   private function handleApplicationEvent(array $form, FormStateInterface $form_state): void {
     $eventName = ApplicationEvent::EVENT_NAME;
