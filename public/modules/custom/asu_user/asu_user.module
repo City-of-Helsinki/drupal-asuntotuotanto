@@ -15,7 +15,6 @@ use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\user\Entity\User;
 use Drupal\user\UserInterface;
 use Drupal\asu_api\Api\BackendApi\Request\UserRequest;
-use Drupal\asu_api\Api\BackendApi\Request\CreateUserRequest;
 
 /**
  * Implements hook_entity_type_alter().

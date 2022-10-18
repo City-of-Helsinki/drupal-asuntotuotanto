@@ -116,7 +116,7 @@ class Application extends EditorialContentEntityBase implements ContentEntityInt
    *   Array of main applicants.
    */
   public function getMainApplicant(): ?array {
-    if ($this->hasField('main_applicant'))  {
+    if ($this->hasField('main_applicant')) {
       return $this->main_applicant->getValue() ?? [];
     }
     return NULL;

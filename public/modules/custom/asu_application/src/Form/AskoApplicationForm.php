@@ -2,10 +2,8 @@
 
 namespace Drupal\asu_application\Form;
 
-use Drupal\asu_api\Api\AskoApi\AskoApi;
 use Drupal\asu_application\Entity\Application;
 use Drupal\asu_application\Event\ApplicationEvent;
-use Drupal\asu_application\Event\SalesApplicationEvent;
 use Drupal\asu_content\Entity\Project;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\ReplaceCommand;
@@ -13,9 +11,7 @@ use Drupal\Core\Ajax\UpdateBuildIdCommand;
 use Drupal\Core\Entity\ContentEntityForm;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Messenger\MessengerTrait;
-use Drupal\Core\Url;
 use Drupal\node\Entity\Node;
-use Drupal\user\Entity\User;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**

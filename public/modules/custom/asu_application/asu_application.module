@@ -10,7 +10,6 @@ use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\node\Entity\Node;
 use Drupal\file\Entity\File;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Implements hook_theme().

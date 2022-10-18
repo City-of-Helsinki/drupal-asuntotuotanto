@@ -70,10 +70,10 @@ class ApplicationSubscriber implements EventSubscriberInterface {
     /*
     $events[ApplicationEvent::EVENT_NAME][] = ['sendApplicationToBackend', 5];
     $events[SalesApplicationEvent::EVENT_NAME][] = [
-      'salesSendApplicationToBackend',
-      10,
+    'salesSendApplicationToBackend',
+    10,
     ];
-    */
+     */
     return $events;
   }
 
@@ -93,9 +93,9 @@ class ApplicationSubscriber implements EventSubscriberInterface {
     /** @var \Drupal\asu_application\Entity\Application $application */
     /*
     $application = \Drupal::entityTypeManager()
-      ->getStorage($entity_type)
-      ->load($entity_id);
-    */
+    ->getStorage($entity_type)
+    ->load($entity_id);
+     */
     $application = $applicationEvent->getApplication();
 
     $project = Node::load($application->project_id->value);
