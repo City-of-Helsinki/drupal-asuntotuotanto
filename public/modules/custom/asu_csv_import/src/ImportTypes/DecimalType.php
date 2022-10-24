@@ -64,7 +64,7 @@ class DecimalType extends ImportType {
       return TRUE;
     }
     else {
-      $input = str_replace(' ',  '', $input);
+      $input = str_replace(' ', '', $input);
       if (!empty($input) && !is_numeric($input)) {
         return FALSE;
       }
