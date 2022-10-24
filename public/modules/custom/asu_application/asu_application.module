@@ -10,7 +10,6 @@ use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\node\Entity\Node;
 use Drupal\file\Entity\File;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Implements hook_theme().
@@ -245,80 +244,8 @@ function asu_user_form_contact_message_apply_for_free_apartment_form_alter(&$for
     return;
   }
 
-  if ($apartment) {
-    if (!\Drupal::currentUser()->isAuthenticated()) {
-      $apartment_id = $apartment->id();
-      \Drupal::messenger()->addMessage(t('You must be logged
-    in to fill an application'));
-      $application_url = "/contact/apply_for_free_apartment?apartment=$apartment_id";
-      $redirect = '/user/login?destination=' . $application_url;
-      return (new RedirectResponse($redirect, 301));
-    }
-  }
-  else {
-    if (!\Drupal::currentUser()->isAuthenticated()) {
-      \Drupal::messenger()->addMessage(t('You must be logged
-    in to fill an application'));
-      $application_url = "/contact/apply_for_free_apartment?project=$project_id";
-      $redirect = '/user/login?destination=' . $application_url;
-      return (new RedirectResponse($redirect, 301));
-    }
-  }
-
   $form['#contact_form_title'] = $apartment ? $apartment->getTitle() : t('Apply for an apartment');
   $form['#contact_form_text'] = t('Leave your contact information and we will personally contact you regarding this apartment.');
-
-  // Prefill rest of the field if user data is available.
-  $user = \Drupal::currentUser();
-  $config = \Drupal::config('asu_user.external_user_fields')
-    ->get('external_data_map');
-  $store = \Drupal::service('tempstore.private')->get('customer');
-
-  try {
-    $date = DrupalDateTime::createFromDateTime(new \DateTime($store->get('date_of_birth') . '06:00:00'));
-  }
-  catch (\Exception $e) {
-    $date = '';
-  }
-  $name = '';
-  if ($store->get('first_name') && $store->get('last_name')) {
-    $name = "{$store->get('first_name')} {$store->get('last_name')}";
-  }
-  $phone = $store->get('phone_number') ?? '';
-
-  $form['field_date_of_birth']['widget'][0]['value']['#default_value'] = $date;
-  $form['field_name']['widget'][0]['value']['#default_value'] = $name;
-  $form['field_phone_number']['widget'][0]['value']['#default_value'] = $phone;
-
-  $form['field_contact_person']['widget'][0]['value']['#type'] = 'hidden';
-
-  if ($apartment) {
-    $form['field_apartment_information']['widget'][0]['value']['#default_value']
-      = $apartment->getTitle();
-    $form['field_apartment_information']['widget'][0]['value']['#attributes']['readonly'] = 'readonly';
-  }
-  else {
-    $form['field_apartment_information']['widget'][0]['value']['#attributes']['readonly'] = 'readonly';
-    $form['field_apartment_information']['widget'][0]['value']['#type'] = 'hidden';
-
-    $form['field_apartment_information']['widget'][0]['value']['#default_value']
-      = 'Ei saatavilla';
-  }
-
-  if (!$apartment && $project) {
-    $form['message']['widget'][0]['value']['#default_value']
-      = $project->getTitle();
-  }
-
-  $salesEmail = '';
-  if (
-    $project->hasField('field_salesperson') &&
-    $project->field_salesperson->first()
-  ) {
-    $salesEmail = $project->field_salesperson->first()->entity->getEmail();
-  }
-  $form['field_contact_person']['widget'][0]['value']['#default_value'] = $salesEmail ?? '';
-
 }
 
 /**

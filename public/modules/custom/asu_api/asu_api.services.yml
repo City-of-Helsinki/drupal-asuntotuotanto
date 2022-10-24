@@ -1,5 +1,7 @@
 parameters:
   asu_api.backend.base_url_variable: 'ASU_DJANGO_BACKEND_URL'
+  asu_api.asko.hitas_address_variable: 'ASU_ASKO_HASO_ADDRESS'
+  asu_api.asko.haso_address_variable: 'ASU_ASKO_HITAS_ADDRESS'
 
 services:
   asu_api.backend_client:
@@ -14,3 +16,6 @@ services:
     arguments: ['@asu_api.backend_client', '@logger.channel.asu_api']
   asu_api.error_code_service:
     class: Drupal\asu_api\ErrorCodeService
+  asu_api.askoapi:
+    class: Drupal\asu_api\Api\AskoApi\AskoApi
+    arguments: ['%asu_api.asko.hitas_address_variable%', '%asu_api.asko.haso_address_variable%']
