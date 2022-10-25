@@ -21,6 +21,10 @@ function asu_mailer_mail(string $key, array &$message, array $params) {
     case 'application_user_confirmation':
       send_application_confirmation($message, $params);
       break;
+
+    case 'apply_for_free_apartment':
+      send_apply_for_free_apartment($message, $params);
+      break;
   }
 }
 
@@ -61,6 +65,20 @@ function send_asko_hitas_mail(array &$message, array $params) {
  *   Parameters variable.
  */
 function send_application_confirmation(array &$message, array $params) {
+  $message['from'] = \Drupal::config('system.site')->get('mail');
+  $message['subject'] = $params['subject'];
+  $message['body'][] = $params['message'];
+}
+
+/**
+ * Send confirmation mail to user after application has been created.
+ *
+ * @param array $message
+ *   Message variable.
+ * @param array $params
+ *   Parameters variable.
+ */
+function send_apply_for_free_apartment(array &$message, array $params) {
   $message['from'] = \Drupal::config('system.site')->get('mail');
   $message['subject'] = $params['subject'];
   $message['body'][] = $params['message'];
