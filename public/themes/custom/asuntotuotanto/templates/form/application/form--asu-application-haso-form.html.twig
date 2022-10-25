@@ -21,7 +21,7 @@
 <form{{ attributes|without('class') }} {{ create_attribute({'class': classes}) }}>
   {{ link(
     'Go back to applications'|t,
-    "internal:/user/applications",
+    element['#project_url'],
     { 'class':['application-form__back-link']} )
   }}
   <div class="application-form__header">
@@ -103,11 +103,6 @@
       </article>
       {% include "@asuntotuotanto/form/application/custom-apartment-list.html.twig" %}
       {{ element.apartment }}
-    </section>
-    <section class="application-form__section">
-      <div class="application-form__input-elements">
-        {{ element.main_applicant }}
-      </div>
     </section>
     <section class="application-form__section">
       <h3>
