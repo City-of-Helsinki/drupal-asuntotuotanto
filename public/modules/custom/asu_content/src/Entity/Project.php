@@ -137,6 +137,12 @@ class Project extends Node {
     return TRUE;
   }
 
+  /**
+   * Get project sales person information.
+   *
+   * @return array
+   *   User interface.
+   */
   public function getSalesPerson(): ?UserInterface {
     $user_field = $this->get('field_salesperson');
     if ($user_field->isEmpty()) {

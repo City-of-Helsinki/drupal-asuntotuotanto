@@ -121,16 +121,16 @@ class ReservedApartmentContactForm extends FormBase {
    * @param $values
    * @return array|string
    */
-  private function convertMessage($values): string  {
+  private function convertMessage($values): string {
     $message_values = [
       'Name' => $values['field_name'],
       'Apartment information' => $values['field_apartment_information'],
       'Phone' => $values['field_phone'],
       'Date of birth' => $values['field_date_of_birth'],
-      'Message' => $values['field_message']
+      'Message' => $values['field_message'],
     ];
 
-    $body = 'Käyttäjä täytti hakemuslomakkeen vapaaseen huoneistoon: <br>';
+    $body = "Käyttäjä täytti hakemuslomakkeen vapaaseen huoneistoon: \r\n";
 
     foreach ($message_values as $key => $value) {
       $body .= "$key: $value" . PHP_EOL;
