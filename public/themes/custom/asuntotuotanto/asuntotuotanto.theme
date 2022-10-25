@@ -786,20 +786,6 @@ function asuntotuotanto_preprocess_user(&$variables) {
       $variables['content'][$field_name] = $store->get($field_name);
     }
   }
-
-  if ($account->hasField('field_email_is_valid') && !$account->get('field_email_is_valid')->isEmpty()) {
-    $is_valid = (int) $account->get('field_email_is_valid')->getValue()[0]['value'];
-  }
-  else {
-    $is_valid = 0;
-  }
-
-  if ($is_valid != 1) {
-    $variables['user_valid'] = '<a href="' . $base_url . '/auth/login" class="hds-button hds-button--primary hds-button--small">' . t('Account authentication') . '</a>';
-  }
-  else {
-    $variables['user_valid'] = t('Account is identified');
-  }
 }
 
 /**

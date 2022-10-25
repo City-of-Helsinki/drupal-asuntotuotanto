@@ -48,8 +48,7 @@ asu_user.saml_login:
   defaults:
     _controller: '\Drupal\asu_user\Controller\AuthController::login'
     _title: 'SAML login'
-  requirements:
-    _user_is_logged_in: 'FALSE'
+  _access: FALSE
   options:
     no_cache: TRUE
     default_url_options:
@@ -59,8 +58,7 @@ asu_user.saml_return:
   path: '/auth/return'
   defaults:
     _controller: '\Drupal\asu_user\Controller\AuthController::return'
-  requirements:
-    _permission: 'access content'
+  _access: FALSE
   options:
     no_cache: TRUE
     default_url_options:
