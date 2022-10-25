@@ -118,8 +118,12 @@ class ReservedApartmentContactForm extends FormBase {
   }
 
   /**
-   * @param $values
-   * @return array|string
+   * Convert form values to email message.
+   *
+   * @param array $values
+   *  Form values.
+   * @return string
+   *   Email body.
    */
   private function convertMessage($values): string {
     $message_values = [
