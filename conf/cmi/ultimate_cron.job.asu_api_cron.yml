@@ -1,6 +1,6 @@
 uuid: e38156b2-142e-40e3-9d14-3731e1fc3837
 langcode: fi
-status: true
+status: false
 dependencies:
   module:
     - asu_api
