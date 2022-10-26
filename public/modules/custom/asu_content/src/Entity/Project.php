@@ -4,6 +4,7 @@ namespace Drupal\asu_content\Entity;
 
 use Drupal\node\Entity\Node;
 use Drupal\user\UserInterface;
+use http\Client\Curl\User;
 
 /**
  * Class for node's project bundle.
@@ -140,8 +141,8 @@ class Project extends Node {
   /**
    * Get project sales person information.
    *
-   * @return array
-   *   User interface.
+   * @return User
+   *   Userinterface.
    */
   public function getSalesPerson(): ?UserInterface {
     $user_field = $this->get('field_salesperson');

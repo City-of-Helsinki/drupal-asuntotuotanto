@@ -7,7 +7,7 @@ use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
- * Allow salesperson to create an application on behalf of customer.
+ * Reserved apartment contact form.
  */
 class ReservedApartmentContactForm extends FormBase {
 

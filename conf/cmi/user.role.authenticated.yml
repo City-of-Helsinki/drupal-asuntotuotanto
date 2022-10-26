@@ -8,7 +8,6 @@ dependencies:
     - rest.resource.mailinglist
   module:
     - asu_application
-    - contact
     - eu_cookie_compliance
     - helfi_api_base
     - media
@@ -23,7 +22,6 @@ weight: -9
 is_admin: false
 permissions:
   - 'access content'
-  - 'access site-wide contact form'
   - 'create application'
   - 'display eu cookie compliance popup'
   - 'restful get asu_initialize'
