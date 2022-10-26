@@ -11,6 +11,7 @@ use Drupal\Core\Ajax\UpdateBuildIdCommand;
 use Drupal\Core\Entity\ContentEntityForm;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Messenger\MessengerTrait;
+use Drupal\Core\Url;
 use Drupal\node\Entity\Node;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
@@ -42,6 +43,7 @@ class AskoApplicationForm extends ContentEntityForm {
     $applicationsUrl = '<front>';
 
     $form['#project_id'] = $project_id;
+    $form['#project_url'] = Url::fromUri('internal:/node/' . $project_id);
 
     if (!$project_data = $this->getApartments($project)) {
       $this->logger('asu_application')->critical('User tried to access nonexistent project of id ' . $project_id);

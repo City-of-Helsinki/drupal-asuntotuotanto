@@ -20,8 +20,8 @@
 
 <form{{ attributes|without('class') }} {{ create_attribute({'class': classes}) }}>
   {{ link(
-    'Go back to applications'|t,
-    "internal:/user/applications",
+    'Go back to projects'|t,
+    element['#project_url'],
     { 'class':['application-form__back-link']} )
   }}
   <div class="application-form__header">
