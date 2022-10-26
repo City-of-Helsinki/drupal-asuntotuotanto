@@ -28,7 +28,7 @@ class ApartmentWidget extends WidgetBase {
       '#type' => 'select',
       '#cardinality' => -1,
       '#title' => $this->t('Apartment'),
-      '#required' => FALSE,
+      '#required' => TRUE,
       '#empty_option' => [0 => $this->t('Select apartment')],
       // Apartment_values is set where ever the form is built.
       '#options' => $form['#apartment_values'] ?? [],

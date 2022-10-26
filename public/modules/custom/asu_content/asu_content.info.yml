@@ -8,3 +8,5 @@ libraries:
   - asu_editform
 dependencies:
   - computed_field_plugin
+'interface translation project': asu_content
+'interface translation server pattern': modules/custom/asu_content/translations/%language.po

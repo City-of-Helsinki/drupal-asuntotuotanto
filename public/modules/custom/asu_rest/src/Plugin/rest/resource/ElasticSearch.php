@@ -159,6 +159,7 @@ class ElasticSearch extends ResourceBase {
     $baseConditionGroup->addCondition('project_published', 'true', '=');
     $baseConditionGroup->addCondition('apartment_published', 'true', '=');
 
+    // If no project state of sale is set, return all except upcoming.
     if (empty($parameters->get('project_state_of_sale'))) {
       $baseConditionGroup->addCondition('project_state_of_sale', ['upcoming'], 'NOT IN');
     }

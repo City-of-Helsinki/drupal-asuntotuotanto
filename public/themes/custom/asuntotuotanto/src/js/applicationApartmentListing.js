@@ -1,19 +1,20 @@
 (($, Drupal) => {
   Drupal.behaviors.applicationApartmentListing = {
     attach: function attach() {
+
       // For drafts.
       let openDraftResultsLinks = document.querySelectorAll('.application__lottery--show--draft');
       openDraftResultsLinks.forEach(element => {
-        element.addEventListener('click', event=> {
-          const id = $(event.target).parent().data('application')
-          const elements = document.querySelectorAll(`[data-application="${id}"]`)
+        element.addEventListener('click', event => {
+          const id = $(event.target).parent().data('application');
+          const elements = document.querySelectorAll(`[data-application="${id}"]`);
           elements.forEach(element=>$(element).removeClass('is-hidden'));
           $(event.target).parent().addClass('is-hidden');
         });
       })
-      let closeDraftResultsLinks = document.querySelectorAll('.application__lottery--hide--draft  > a');
+      let closeDraftResultsLinks = document.querySelectorAll('.application__lottery--hide--draft > a');
       closeDraftResultsLinks.forEach(el => el.addEventListener('click', (event) => {
-        const id = $(event.target).parent().data('application')
+        const id = $(event.target).parent().data('application');
         const elementsToHide = document.querySelectorAll(`[data-application="${id}"]`);
         elementsToHide.forEach(element=>$(element).addClass('is-hidden'));
         $(event.target).parent().addClass('is-hidden');
@@ -78,7 +79,6 @@
                 let apartment_class = '.application-apartment-' + apartment_result.apartment_id;
                 Array.from(jQuery('.lottery-result' + apartment_class)).forEach(function(result_row) {
                   jQuery(result_row).find('.result').first().html(apartment_result.position);
-                  jQuery(result_row).find('.current-position').first().html(apartment_result.current_position);
                   jQuery(result_row).find('.status').first().html(apartment_result.status);
                 });
               });
@@ -93,6 +93,17 @@
           }
         });
       };
+
+      let toggle = document.querySelectorAll('.application__lottery-link--toggle');
+      toggle.forEach(element => {
+        element.addEventListener('click', event => {
+          let id = $(event.target).data('application');
+          $('#result-'+id).each(function(element){
+            this.click();
+          });
+        })
+      });
+
     },
   };
 })(jQuery, Drupal);

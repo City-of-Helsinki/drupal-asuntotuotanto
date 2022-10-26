@@ -1,0 +1,28 @@
+label: 'Kohteen huoneistolistaus'
+display:
+  default:
+    display_options:
+      fields:
+        field_apartment_number:
+          label: Huoneisto
+        field_floor:
+          label: Kerros
+        field_living_area:
+          label: 'Huoneiston koko'
+        field_debt_free_sales_price:
+          label: 'Velaton hinta'
+      exposed_form:
+        options:
+          submit_button: Lisää
+          reset_button_label: Palauta
+          exposed_sorts_label: Lajittele
+          sort_asc_label: Nouseva
+          sort_desc_label: Laskeva
+      arguments:
+        nid:
+          exception:
+            title: Kaikki
+  project_apartments_listing_block:
+    display_title: 'Kohteen huoneistojen listaus'
+    display_options:
+      block_description: 'Kohteen huoneistojen listaus'

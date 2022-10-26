@@ -8,6 +8,7 @@ dependencies:
     - field.field.user.user.field_backend_profile
     - field.field.user.user.field_email_is_valid
     - field.field.user.user.field_hel_profiili_uid
+    - field.field.user.user.field_saml_hash
     - user_bundle.user_type.user
 id: user.user.register
 targetEntityType: user
@@ -40,6 +41,7 @@ hidden:
   field_backend_profile_id: true
   field_email_is_valid: true
   field_hel_profiili_uid: true
+  field_saml_hash: true
   langcode: true
   language: true
   path: true

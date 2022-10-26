@@ -202,4 +202,15 @@ class ApartmentContentCreateController extends ControllerBase {
     return $file_data;
   }
 
+  /**
+   * Update project and apartment fields values.
+   */
+  public function emptypage() {
+    $build = [
+      '#markup' => "",
+    ];
+
+    return $build;
+  }
+
 }

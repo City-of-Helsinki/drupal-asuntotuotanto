@@ -20,8 +20,8 @@
 
 <form{{ attributes|without('class') }} {{ create_attribute({'class': classes}) }}>
   {{ link(
-    'Go back to applications'|t,
-    "internal:/user/applications",
+    'Go back to projects'|t,
+    element['#project_url'],
     { 'class':['application-form__back-link']} )
   }}
   <div class="application-form__header">
@@ -105,6 +105,11 @@
       {{ element.apartment }}
     </section>
     <section class="application-form__section">
+      <div class="application-form__input-elements">
+        {{ element.main_applicant }}
+      </div>
+    </section>
+    <section class="application-form__section">
       <h3>
         {% trans %}
           Draw
@@ -112,7 +117,7 @@
       </h3>
       <p>
         {% trans %}
-          Once we have drawn the apartments, we will notify you of your investment in the queue by email.
+          Once we have drawn the apartments, you can find your position from the account page.
         {% endtrans %}
       </p>
       <h3>
@@ -134,7 +139,7 @@
       </h2>
       <p>
         {% trans %}
-          Enter your ID's last 4 characters.
+          Enter your ID's last 5 characters.
         {% endtrans %}
       </p>
       <div class="application-form__personal-id">

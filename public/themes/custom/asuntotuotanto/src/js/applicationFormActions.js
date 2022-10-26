@@ -1,5 +1,12 @@
 (($, Drupal) => {
       jQuery(document).ajaxStop(() => {
+        // Prevent race condition by keeping buttons disabled as long as necessary.
+        const button = $('.application-form-apartment__apartment-add-button');
+        const customApartmentSelect = $('[data-drupal-selector="custom_apartment_select"]');
+        if (button && customApartmentSelect.length == 0) {
+          button.first().attr("disabled", false);
+        }
+
         // Prevent add new button from staying disabled after ajax.
         const el = $("[id^=apartment_list_select_]");
         if (el.length > 0 && el.is(':disabled')) {
@@ -259,6 +266,13 @@
           "custom_apartment_select"
         );
 
+        if (
+          apartmentSelectElement.id != "apartment_list_select_0" &&
+          $.active != 0
+        ) {
+          apartmentSelectElement.setAttribute("disabled", true);
+        }
+
         const earlierSelectedOptions = [
           ...apartmentSelectElement.options,
         ].filter((option) => selectedApartments.includes(option.value));
@@ -291,14 +305,13 @@
           const selectedValueTextArray = originalSelectElementTarget.options[
             originalSelectElementTarget.selectedIndex
           ].text.split(" | ");
-
           const listItemValues = {
             apartment_number: selectedValueTextArray[0],
             apartment_structure: selectedValueTextArray[1],
             apartment_floor: selectedValueTextArray[2],
             apartment_living_area_size: selectedValueTextArray[3],
-            apartment_sales_price: selectedValueTextArray[4],
-            apartment_debt_free_sales_price: selectedValueTextArray[5],
+            apartment_debt_free_sales_price: selectedValueTextArray[4],
+            apartment_sales_price: selectedValueTextArray[5],
           };
 
           // eslint-disable-next-line no-use-before-define
@@ -346,7 +359,9 @@
           }
 
           if (apartmentAddButton) {
-            apartmentAddButton.removeAttribute("disabled");
+            if ($.active == 0) {
+              apartmentAddButton.removeAttribute("disabled");
+            }
             apartmentAddButton.focus();
           }
         });
@@ -423,7 +438,7 @@
             } else {
               target.focus();
             }
-          }, 10);
+          }, 50);
 
           const information = document.createElement("p");
           information.appendChild(
@@ -512,8 +527,6 @@
         parentLiElement.innerHTML =
            "<div class='application-form-apartment-loader-wrapper'><div class='application-form-apartment-loader'></div></div>";
 
-        console.log(removeButton);
-
         setTimeout(() => {
           jQuery(removeButton).trigger('mousedown');
           parentLiElement.remove();
@@ -521,9 +534,6 @@
             jQuery(element).prop("disabled", false);
           })
         }, 750);
-        //setTimeout(() => appendListItemToApartmentList(true), 500);
-        // setTimeout(() => window.location.reload(), 500);
-        // buildTable()
       };
 
       const handleListItemInnerClicks = ({ target }) => {
@@ -829,14 +839,13 @@
             const selectedValueTextArray = select.options[
               select.selectedIndex
             ].text.split(" | ");
-
             const listItemValues = {
               apartment_number: selectedValueTextArray[0],
               apartment_structure: selectedValueTextArray[1],
               apartment_floor: selectedValueTextArray[2],
               apartment_living_area_size: selectedValueTextArray[3],
-              apartment_sales_price: selectedValueTextArray[4],
-              apartment_debt_free_sales_price: selectedValueTextArray[5],
+              apartment_debt_free_sales_price: selectedValueTextArray[4],
+              apartment_sales_price: selectedValueTextArray[5],
             };
 
             applicationFormApartmentListElement.append(

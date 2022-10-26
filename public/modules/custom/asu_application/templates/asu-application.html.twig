@@ -18,7 +18,7 @@
 
 {% if content['#teaser_values'].application_url %}
   {% if view_mode == 'submitted_teaser' %}
-    <article{{ attributes.addClass(classes) }}>
+    <article{{ attributes.addClass(classes) }} data-application="{{ app_id }}">
       <figure class="application__image">
         <img src="{{ content['#teaser_values'].project_main_image_url }}" alt="{{ 'Image of the project'|t }}">
       </figure>
@@ -66,17 +66,15 @@
               {{ content['#teaser_values'].project_estimated_completion }}
             </li>
             <li>
-              {% set date = content['#teaser_values'].application_end_time|date("d.m.Y") %}
-              {% set time = content['#teaser_values'].application_end_time|date("H.i") %}
               {% include "@hdbt/misc/icon.twig" with {icon: 'clock', label: ''} %}
 
               {% if content['#teaser_values'].is_application_period_over %}
                 {% trans %}
-                  The application has ended {{ time }} on {{ date }}
+                  The application has ended {{ content['#teaser_values'].application_end_time }}
                 {% endtrans %}
               {% else %}
                 {% trans %}
-                  The application period is open until {{ time }} on {{ date }}
+                  The application period is open until {{ content['#teaser_values'].application_end_time }}
                 {% endtrans %}
               {% endif %}
             </li>
@@ -92,11 +90,22 @@
 
         </div>
         <div class="application__actions">
+          <div>
           {% include "@asuntotuotanto/button/button.html.twig" with {
-            label: 'Open application'|t,
+            label: 'Open the application'|t,
             href: content['#teaser_values'].application_url,
-            type: 'secondary'
+            type: 'primary'
           } %}
+          </div>
+          <div class="application--action">
+            <a class="hds-button hds-button--secondary application__lottery-link--toggle" data-application="{{ app_id }}">
+              <span class="hds-button__label" data-application="{{ app_id }}">
+                {% trans %}
+                  Show lottery results
+                {% endtrans %}
+              </span>
+            </a>
+          </div>
         </div>
       </div>
     </article>
@@ -104,7 +113,7 @@
     <div class="ajax-progress-throbber application__lottery application__lottery--show" data-application="{{ app_id }}">
       <a data-loaded="0" class="asu-results application__lottery-link application__lottery-link--show application__lottery-link--show--submitted" id="result-{{ app_id }}">
         {% trans %}
-          Show apartment listing
+          Show lottery results
         {% endtrans %}
       </a>
     </div>
@@ -142,18 +151,6 @@
                 <p>
                 <span>
                   {% trans %}
-                    Current ranking
-                  {% endtrans %}
-                </span>
-                <span class="current-position">
-                  -
-                </span>
-                </p>
-              </li>
-              <li class="project__apartments-item-details-item">
-                <p>
-                <span>
-                  {% trans %}
                     Booking status
                   {% endtrans %}
                 </span>
@@ -173,7 +170,6 @@
         <tr>
           <th>{% trans %}Applied for apartment{% endtrans %}</th>
           <th>{% trans %}Result of draw{% endtrans %}</th>
-          <th>{% trans %}Current ranking{% endtrans %}</th>
           <th>{% trans %}Booking status{% endtrans %}</th>
         </tr>
       </thead>
@@ -183,7 +179,6 @@
           <tr loaded="0" class="lottery-result lottery-result--desktop application-apartment-{{ key }}">
             <td>{{ apartment.number }} <span>{{ apartment.structure }}</span></td>
             <td class="result">-</td>
-            <td class="current-position">-</td>
             <td class="status">-</td>
           </tr>
         {% endfor %}
@@ -193,14 +188,14 @@
     <div class="application__lottery application__lottery--hide is-hidden" data-application="{{ app_id }}" id="application__lottery--hide--submitted">
       <a class="application__lottery-link application__lottery-link--hide" id="application__lottery-link--hide--submitted">
         {% trans %}
-          Hide apartment listing
+          Hide lottery results
         {% endtrans %}
       </a>
     </div>
   {% endif %}
 
   {% if view_mode == 'draft_teaser' %}
-    <article{{ attributes.addClass(classes) }}>
+    <article{{ attributes.addClass(classes) }} data-application="{{ app_id }}">
       <figure class="application__image">
         <img src="{{ content['#teaser_values'].project_main_image_url }}" alt="{{ 'Image of the project'|t }}">
       </figure>
@@ -248,16 +243,15 @@
               {{ content['#teaser_values'].project_estimated_completion }}
             </li>
             <li>
-              {% set date = content['#teaser_values'].application_end_time|date("d.m.Y") %}
-              {% set time = content['#teaser_values'].application_end_time|date("H.i") %}
+
               {% include "@hdbt/misc/icon.twig" with {icon: 'clock', label: ''} %}
               {% if content['#teaser_values'].is_application_period_over %}
                 {% trans %}
-                  The application has ended {{ time }} on {{ date }}
+                  The application has ended {{ content['#teaser_values'].application_end_time }}
                 {% endtrans %}
               {% else %}
                 {% trans %}
-                  The application period is open until {{ time }} on {{ date }}
+                  The application period is open until {{ content['#teaser_values'].application_end_time }}
                 {% endtrans %}
               {% endif %}
             </li>
@@ -281,25 +275,28 @@
           } %}
         </div>
         {% else %}
-          {% set app_link_text = 'View application' %}
-          <div class="application__actions">
-            {% include "@asuntotuotanto/button/button.html.twig" with {
-              label: app_link_text|t,
-              href: content['#teaser_values'].application_url,
-              type: 'primary'
-            } %}
+          {% set app_link_text = 'View the application' %}
+          <div class="application__actions" data-application="{{ app_id }}">
+            <div>
+              {% include "@asuntotuotanto/button/button.html.twig" with {
+                label: app_link_text|t,
+                href: content['#teaser_values'].application_url,
+                type: 'primary'
+              } %}
+            </div>
           </div>
         {% endif %}
       </div>
     </article>
-
+    {#
     <div class="application__lottery application__lottery--show application__lottery--show--draft" id="draft-{{ app_id }}" data-application="{{ app_id }}">
       <a data-loaded="0" class="application__lottery-link application__lottery-link--show application__lottery--show--submitted" id="application__lottery-link--show--draft">
         {% trans %}
-          Show apartment listing
+          Show selected apartments
         {% endtrans %}
       </a>
     </div>
+    #}
 
     <ul class="application__apartments application__apartments--mobile project__apartments-list is-hidden application__lottery-results" data-application="{{ app_id }}" aria-hidden="true">
       {# Single lottery result (mobile) #}
@@ -334,18 +331,6 @@
                 <p>
                 <span>
                   {% trans %}
-                    Current ranking
-                  {% endtrans %}
-                </span>
-                <span class="current-position">
-                  -
-                </span>
-                </p>
-              </li>
-              <li class="project__apartments-item-details-item">
-                <p>
-                <span>
-                  {% trans %}
                     Booking status
                   {% endtrans %}
                 </span>
@@ -365,7 +350,6 @@
         <tr>
           <th>{% trans %}Applied for apartment{% endtrans %}</th>
           <th>{% trans %}Result of draw{% endtrans %}</th>
-          <th>{% trans %}Current ranking{% endtrans %}</th>
           <th>{% trans %}Booking status{% endtrans %}</th>
         </tr>
       </thead>
@@ -375,7 +359,6 @@
           <tr class="lottery-result lottery-result--desktop application-apartment-{{ key }}">
             <td>{{ apartment.number }} <span>{{ apartment.structure }}</span></td>
             <td class="result">-</td>
-            <td class="current-position">-</td>
             <td clas="status">-</td>
           </tr>
         {% endfor %}
@@ -385,7 +368,7 @@
     <div class="application__lottery application__lottery--hide application__lottery--hide--draft is-hidden" data-application="{{ app_id }}">
       <a class="application__lottery-link application__lottery-link--hide--draft" id="application__lottery-link--hide--draft">
         {% trans %}
-          Hide apartment listing
+          Hide results
         {% endtrans %}
       </a>
     </div>
@@ -584,27 +567,7 @@
             </div>
           {% endif %}
         </section>
-        <section class="application-form__section">
-          <h2>
-            {% trans %}
-              Applicants Social Security Number
-            {% endtrans %}
-          </h2>
-          {# <p>
-            {% trans %}
-              Last 4 characters of your ID.
-            {% endtrans %}
-          </p> #}
-          <div class="field--type-string field--name-field-personal-id field--widget-string-textfield js-form-wrapper form-wrapper">
-            <div class="js-form-item form-item js-form-type-textfield form-item-field-personal-id-0-value js-form-item-field-personal-id-0-value hds-text-input">
-              <label for="edit-field-personal-id-0-value" class="js-form-required form-required hds-text-input__label">{% trans %}Personal id{% endtrans %}</label>
-              <div class="hds-text-input__input-wrapper">
-                <input readonly class="js-text-full text-full form-text required hds-text-input__input" type="text" value="{{ content.application.personal_id.0.value }}" size="60" maxlength="5" aria-label="{% trans %} The beginning of social security number {% endtrans %} {{ content.application.personal_id.0.value }}">
-              </div>
-            </div>
-          </div>
-        </section>
-        {% if content.application.right_of_residence_number.0.value %}
+        {% if content.application.field_right_of_residence_number.0.value %}
         <section class="application-form__section">
           <h2>
             {% trans %}
@@ -614,7 +577,7 @@
           <div class="field--type-string field--name-field-personal-id field--widget-string-textfield js-form-wrapper form-wrapper">
             <div class="js-form-item form-item js-form-type-textfield form-item-field-personal-id-0-value js-form-item-field-personal-id-0-value hds-text-input">
               <div class="hds-text-input__input-wrapper">
-                <input readonly class="js-text-full text-full form-text required hds-text-input__input" type="text" value="{{ content.application.right_of_residence_number.0.value }}" size="60" aria-label="{% trans %} Residence number is {% endtrans %} {{ content.application.right_of_residence_number.0.value }}">
+                <input readonly class="js-text-full text-full form-text required hds-text-input__input" type="text" value="{{ content.application.field_right_of_residence_number.0.value }}" size="60" aria-label="{% trans %} Residence number is {% endtrans %} {{ content.application.right_of_residence_number.0.value }}">
               </div>
             </div>
           </div>

@@ -11,6 +11,7 @@ use Drupal\asu_application\Event\SalesApplicationEvent;
 use Drupal\Core\Messenger\MessengerTrait;
 use Drupal\Core\Queue\QueueFactory;
 use Drupal\Core\Queue\QueueInterface;
+use Drupal\node\Entity\Node;
 use Drupal\user\Entity\User;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -66,11 +67,13 @@ class ApplicationSubscriber implements EventSubscriberInterface {
    */
   public static function getSubscribedEvents() {
     $events = [];
+    /*
     $events[ApplicationEvent::EVENT_NAME][] = ['sendApplicationToBackend', 5];
     $events[SalesApplicationEvent::EVENT_NAME][] = [
-      'salesSendApplicationToBackend',
-      10,
+    'salesSendApplicationToBackend',
+    10,
     ];
+     */
     return $events;
   }
 
@@ -88,21 +91,23 @@ class ApplicationSubscriber implements EventSubscriberInterface {
     $entity_id = $applicationEvent->getApplicationId();
 
     /** @var \Drupal\asu_application\Entity\Application $application */
+    /*
     $application = \Drupal::entityTypeManager()
-      ->getStorage($entity_type)
-      ->load($entity_id);
+    ->getStorage($entity_type)
+    ->load($entity_id);
+     */
+    $application = $applicationEvent->getApplication();
 
+    $project = Node::load($application->project_id->value);
     $user = $application->getOwner();
 
     try {
       $request = new CreateApplicationRequest(
         $user,
         $application,
-        [
-          'uuid' => $applicationEvent->getProjectUuid(),
-          'apartment_uuids' => $applicationEvent->getApartmentUuids(),
-        ]
+        $project->uuid(),
       );
+
       $request->setSender($user);
       $this->backendApi->send($request);
 
@@ -170,14 +175,13 @@ class ApplicationSubscriber implements EventSubscriberInterface {
       ->getStorage($entity_type)
       ->load($entity_id);
 
+    $project = Node::load($application->project_id->value);
+
     try {
       $request = new SalesCreateApplicationRequest(
         $sender,
         $application,
-        [
-          'uuid' => $applicationEvent->getProjectUuid(),
-          'apartment_uuids' => $applicationEvent->getApartmentUuids(),
-        ]
+        $project->uuid(),
       );
 
       $request->setSender($sender);

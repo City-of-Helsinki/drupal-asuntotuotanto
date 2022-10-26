@@ -7,7 +7,7 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "require": {
-        "asuntomyynti/react": "^1.1",
+        "asuntomyynti/react": "^1.2",
         "brainmaestro/composer-git-hooks": "^2.8",
         "composer/installers": "^1.9",
         "cweagans/composer-patches": "^1.6.7",
@@ -28,6 +28,7 @@
         "drupal/config_ignore": "^2.3",
         "drupal/config_terms": "^1.4",
         "drupal/contact_emails": "^1.20",
+        "drupal/contact_storage": "1.x-dev@dev",
         "drupal/context": "^4.0@beta",
         "drupal/core-composer-scaffold": "^9.0",
         "drupal/core-recommended": "^9.0",
@@ -35,6 +36,7 @@
         "drupal/email_registration": "^1.1",
         "drupal/entity": "^1.2",
         "drupal/entity_usage": "^2.0@beta",
+        "drupal/externalauth": "^2.0",
         "drupal/field_group": "^3.1",
         "drupal/flysystem_azure": "1.0.x-dev",
         "drupal/gdpr_compliance": "^1.18",
@@ -68,6 +70,7 @@
         "drupal/registration_role": "^1.1",
         "drupal/restui": "^1.19",
         "drupal/route_condition": "^2.0",
+        "drupal/samlauth": "^3.5",
         "drupal/search_api": "^1.19",
         "drupal/slick": "^2.2",
         "drupal/swiftmailer": "^2.0",
@@ -153,10 +156,12 @@
                 "https://www.drupal.org/project/drupal/issues/2466553": "https://www.drupal.org/files/issues/2020-05-14/2466553-75-d91x.patch",
                 "Views attachments are not rendered in the specified order [https://www.drupal.org/project/drupal/issues/2943293]": "https://www.drupal.org/files/issues/2019-05-25/2943293-17.patch",
                 "Fix admin language preference breaking rest api endpoints": "https://www.drupal.org/files/issues/2021-10-22/2706241-59.patch",
-                "Add remove button and functionality to fields with add-more button": "https://www.drupal.org/files/issues/2021-12-01/1038316-242.patch"
+                "Add remove button and functionality to fields with add-more button": "https://www.drupal.org/files/issues/2021-12-01/1038316-242.patch",
+                "https://www.drupal.org/project/drupal/issues/3098307": "https://www.drupal.org/files/issues/2022-07-01/sql_mode_fullgroupby_issue-3098307-15.patch"
             },
             "drupal/elasticsearch_connector": {
-                "Custom patch based on https://www.drupal.org/files/issues/2020-03-03/8.x-7.x-2977537-13-array-vs-scalar_0.patch": "patches/elasticsearch_connector_indexfactory_v3.patch"
+                "Custom patch based on https://www.drupal.org/files/issues/2020-03-03/8.x-7.x-2977537-13-array-vs-scalar_0.patch": "patches/elasticsearch_connector_indexfactory_v3.patch",
+                "https://www.drupal.org/project/elasticsearch_connector/issues/2850749": "https://www.drupal.org/files/issues/2021-12-01/cannot-load-cluster-exception-2850749-10.patch"
             },
             "drupal/field_group": {
                 "Custom patch to add classes for each horizontal tab": "patches/field_group_horizontal_tabs_classes.patch"
@@ -205,9 +210,9 @@
             "type": "package",
             "package": {
                 "name": "asuntomyynti/react",
-                "version": "1.1.1",
+                "version": "1.3.0",
                 "dist": {
-                    "url": "https://github.com/City-of-Helsinki/asuntomyynti-react/releases/download/v1.1.1/asuntomyynti-react-1.1.1.zip",
+                    "url": "https://github.com/City-of-Helsinki/asuntomyynti-react/releases/download/v1.3.0/asuntomyynti-react-1.3.0.zip",
                     "type": "zip"
                 }
             }

@@ -1,0 +1,61 @@
+<?php
+
+/**
+ * @file
+ * Contains asu_api.module.
+ */
+
+use Drupal\asu_api\Api\BackendApi\Request\GetApartmentStatusRequest;
+use Symfony\Component\HttpFoundation\Response;
+use Drupal\node\Entity\Node;
+
+/**
+ * Implements hook_cron().
+ *
+ * Update apartments state of sale sold status.
+ */
+function asu_api_cron() {
+  // @todo Apartment status update not working for some reason.
+  try {
+    /** @var \Drupal\asu_api\Api\BackendApi\BackendApi $api */
+    $api = \Drupal::service('asu_api.backendapi');
+    $request = new GetApartmentStatusRequest();
+    /** @var \Drupal\asu_api\Api\BackendApi\Response\GetApartmentStatusResponse $response */
+    $response = $api->send($request);
+    $apartment_states = $response->getContent();
+
+    if (empty($apartment_states)) {
+      return;
+    }
+  }
+  catch (\Exception $e) {
+    return new Response('problem with request.', 400);
+  }
+
+  // Get apartment uuids.
+  $apartment_uuids = array_keys($apartment_states);
+
+  // Get all aparments which state is not sold.
+  $query = \Drupal::entityTypeManager()->getStorage('node')->getQuery();
+  $query->condition('status', 1)
+    ->condition('type', 'apartment')
+    ->condition('uuid', $apartment_uuids, 'IN');
+  $apartments = $query->execute();
+
+  foreach ($apartments as $apartment) {
+    // Load node object by nid.
+    $node = Node::load($apartment);
+    // Node get uuid.
+    $uuid = $node->uuid();
+    // Get apartment status from $apartment_states.
+    $state = strtolower($apartment_states[$uuid]);
+    // Update node apartment state of sale to sold.
+    $node->field_apartment_state_of_sale->target_id = $state;
+    // Save node.
+    $node->save();
+    // Set logger message.
+    \Drupal::logger('asu_api')->info(
+      'Apartment id ' . $node->id() . ' status is updated to ' . $state
+    );
+  }
+}

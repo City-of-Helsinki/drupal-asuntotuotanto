@@ -43,3 +43,24 @@ asu_user.bulk_edit:
   requirements:
     _role: 'salesperson+administrator'
 
+asu_user.saml_login:
+  path: '/auth/login'
+  defaults:
+    _controller: '\Drupal\asu_user\Controller\AuthController::login'
+    _title: 'SAML login'
+  _access: FALSE
+  options:
+    no_cache: TRUE
+    default_url_options:
+      path_processing: FALSE
+
+asu_user.saml_return:
+  path: '/auth/return'
+  defaults:
+    _controller: '\Drupal\asu_user\Controller\AuthController::return'
+  _access: FALSE
+  options:
+    no_cache: TRUE
+    default_url_options:
+      path_processing: FALSE
+

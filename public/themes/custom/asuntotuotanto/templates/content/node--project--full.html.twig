@@ -169,6 +169,11 @@
   </div>
 
   <div class="project__images wrapper wrapper--mw-1264 showcase-gallery" id="showcase_gallery">
+    <span class="showcase-gallery__label">
+      {% trans %}
+        Click on image for fullscreen
+      {% endtrans %}
+    </span>
     {% if not images|render %}
       <div class="project__images--missing"></div>
     {% endif %}
@@ -224,17 +229,6 @@
         {% endif %}
       </p>
       <p class="project__application-information">
-        {#
-        {% if application_start_time == null and application_end_time == null  %}
-          {% trans %}
-            Application period has not been specified.
-          {% endtrans %}
-        {% else %}
-          {% trans %}
-            The application period for this project starts on {{ application_start_time }} and ends on {{ application_end_time }}.
-          {% endtrans %}
-        {% endif %}
-        #}
         {% if application_start_time != null and application_end_time != null  %}
           {% trans %}
             The application period for this project starts on {{ application_start_time }} and ends on {{ application_end_time }}.

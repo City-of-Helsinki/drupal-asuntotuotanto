@@ -6,6 +6,7 @@ dependencies:
     - field.field.user.customer.field_backend_password
     - field.field.user.customer.field_backend_profile
     - field.field.user.customer.field_email_is_valid
+    - field.field.user.customer.field_saml_hash
     - user_bundle.user_type.customer
 id: user.customer.default
 targetEntityType: user
@@ -16,6 +17,14 @@ content:
     weight: 0
     region: content
     settings: {  }
+    third_party_settings: {  }
+  field_saml_hash:
+    type: string_textfield
+    weight: 2
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
     third_party_settings: {  }
 hidden:
   contact: true

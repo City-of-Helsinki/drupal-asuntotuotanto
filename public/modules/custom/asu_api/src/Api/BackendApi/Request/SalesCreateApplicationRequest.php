@@ -4,6 +4,7 @@ namespace Drupal\asu_api\Api\BackendApi\Request;
 
 use Drupal\asu_api\Api\BackendApi\Response\SalesCreateApplicationResponse;
 use Drupal\asu_application\Entity\Application;
+use Drupal\node\Entity\Node;
 use Drupal\user\UserInterface;
 use Psr\Http\Message\ResponseInterface;
 use Drupal\asu_api\Api\Request;
@@ -24,11 +25,11 @@ class SalesCreateApplicationRequest extends Request {
   private Application $application;
 
   /**
-   * Project data.
+   * Project uuid.
    *
-   * @var array
+   * @var string
    */
-  private array $projectData;
+  private string $projectUuid;
 
   /**
    * Constructor.
@@ -36,11 +37,11 @@ class SalesCreateApplicationRequest extends Request {
   public function __construct(
     UserInterface $sender,
     Application $application,
-    array $projectData
+    string $projectUuid,
   ) {
     $this->sender = $sender;
     $this->application = $application;
-    $this->projectData = $projectData;
+    $this->projectUuid = $projectUuid;
   }
 
   /**
@@ -62,7 +63,7 @@ class SalesCreateApplicationRequest extends Request {
       'has_children' => $this->application->getHasChildren(),
       'additional_applicant' => $this->getApplicant(),
       'right_of_residence' => NULL,
-      'project_id' => $this->projectData['uuid'],
+      'project_id' => $this->projectUuid,
       'apartments' => $this->getApartments(),
       'is_right_of_occupancy_housing_changer' => FALSE,
       'has_hitas_ownership' => FALSE,
@@ -72,12 +73,12 @@ class SalesCreateApplicationRequest extends Request {
       $values['right_of_residence'] = $this->application->field_right_of_residence_number->value;
     }
 
-    if ($this->application->hasField('aso_changer')) {
-      $values['is_right_of_occupancy_housing_changer'] = $this->application->field_aso_changer->value ?? FALSE;
+    if ($this->application->hasField('field_aso_changer')) {
+      $values['is_right_of_occupancy_housing_changer'] = (bool) $this->application->field_aso_changer->value;
     }
 
-    if ($this->application->hasField('hitas_owner')) {
-      $values['has_hitas_ownership'] = $this->application->field_hitas_owner->value ?? FALSE;
+    if ($this->application->hasField('field_hitas_owner')) {
+      $values['has_hitas_ownership'] = (bool) $this->application->field_hitas_owner->value;
     }
 
     return $values;
@@ -93,9 +94,10 @@ class SalesCreateApplicationRequest extends Request {
     $apartments = [];
     foreach ($this->application->getApartments()->getValue() as $key => $value) {
       if (isset($value['id'])) {
+        $apartmentUuid = Node::load($value['id'])->uuid();
         $apartments[$key] = [
           'priority' => $key + 1,
-          'identifier' => $this->projectData['apartment_uuids'][$value['id']],
+          'identifier' => $apartmentUuid,
         ];
       }
     }

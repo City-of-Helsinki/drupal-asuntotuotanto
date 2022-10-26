@@ -1,93 +1,36 @@
-uuid: 4ef37bf4-7a6f-47ee-9e9a-5b5ce4658971
+uuid: 4a20ac4c-acaf-4733-bb7c-90d6b719ce76
 langcode: en
 status: true
 dependencies:
   module:
-    - contact
-    - contact_storage
+    - externalauth
+    - samlauth
     - user
-_core:
-  default_config_hash: FWNZiDPzXA2-_eL-zQOztdT2HVFW5Pp41UQa2_870aM
-id: contact_messages
-label: 'Contact messages'
+id: samlauth_map
+label: 'SAML Authentication Links'
 module: views
-description: 'View and manage messages sent through contact forms.'
+description: ''
 tag: ''
-base_table: contact_message
-base_field: id
+base_table: authmap
+base_field: ''
 display:
   default:
     id: default
-    display_title: Isäntä
+    display_title: Master
     display_plugin: default
     position: 0
     display_options:
-      title: 'Contact messages'
+      title: 'SAML Authentication Links'
       fields:
-        message_bulk_form:
-          id: message_bulk_form
-          table: contact_message
-          field: message_bulk_form
+        authname:
+          id: authname
+          table: authmap
+          field: authname
           relationship: none
           group_type: group
           admin_label: ''
-          entity_type: contact_message
-          plugin_id: message_bulk_form
-          label: ''
-          exclude: false
-          alter:
-            alter_text: false
-            text: ''
-            make_link: false
-            path: ''
-            absolute: false
-            external: false
-            replace_spaces: false
-            path_case: none
-            trim_whitespace: false
-            alt: ''
-            rel: ''
-            link_class: ''
-            prefix: ''
-            suffix: ''
-            target: ''
-            nl2br: false
-            max_length: 0
-            word_boundary: true
-            ellipsis: true
-            more_link: false
-            more_link_text: ''
-            more_link_path: ''
-            strip_tags: false
-            trim: false
-            preserve_tags: ''
-            html: false
-          element_type: ''
-          element_class: ''
-          element_label_type: ''
-          element_label_class: ''
-          element_label_colon: false
-          element_wrapper_type: ''
-          element_wrapper_class: ''
-          element_default_classes: true
-          empty: ''
-          hide_empty: false
-          empty_zero: false
-          hide_alter_empty: true
-          action_title: Valinnalla
-          include_exclude: exclude
-          selected_actions: {  }
-        subject:
-          id: subject
-          table: contact_message
-          field: subject
-          relationship: none
-          group_type: group
-          admin_label: ''
-          entity_type: contact_message
-          entity_field: subject
-          plugin_id: field
-          label: Aihe
+          plugin_id: standard
+          label: 'SAML IdP Unique ID'
           exclude: false
           alter:
             alter_text: false
@@ -128,31 +71,74 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
-          click_sort_column: value
-          type: string
-          settings:
-            link_to_entity: false
-          group_column: value
-          group_columns: {  }
-          group_rows: true
-          delta_limit: 0
-          delta_offset: 0
-          delta_reversed: false
-          delta_first_last: false
-          multi_type: separator
-          separator: ', '
-          field_api_classes: false
+        uid:
+          id: uid
+          table: authmap
+          field: uid
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: numeric
+          label: 'Drupal User ID'
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          set_precision: false
+          precision: 0
+          decimal: .
+          separator: ''
+          format_plural: false
+          format_plural_string: !!binary MQNAY291bnQ=
+          prefix: ''
+          suffix: ''
         name:
           id: name
-          table: contact_message
+          table: users_field_data
           field: name
-          relationship: none
+          relationship: uid
           group_type: group
           admin_label: ''
-          entity_type: contact_message
+          entity_type: user
           entity_field: name
           plugin_id: field
-          label: 'Sender''s name'
+          label: 'Drupal User Name'
           exclude: false
           alter:
             alter_text: false
@@ -194,9 +180,9 @@ display:
           empty_zero: false
           hide_alter_empty: true
           click_sort_column: value
-          type: string
+          type: user_name
           settings:
-            link_to_entity: false
+            link_to_entity: true
           group_column: value
           group_columns: {  }
           group_rows: true
@@ -207,16 +193,15 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-        contact_form_label:
-          id: contact_form_label
-          table: contact_message
-          field: contact_form_label
+        delete:
+          id: delete
+          table: authmap
+          field: delete
           relationship: none
           group_type: group
           admin_label: ''
-          entity_type: contact_message
-          plugin_id: contact_form
-          label: Yhteydenotto
+          plugin_id: samlauth_link_delete
+          label: delete
           exclude: false
           alter:
             alter_text: false
@@ -257,146 +242,41 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
-        created:
-          id: created
-          table: contact_message
-          field: created
-          relationship: none
-          group_type: group
-          admin_label: ''
-          entity_type: contact_message
-          entity_field: created
-          plugin_id: date
-          label: Luotu
-          exclude: false
-          alter:
-            alter_text: false
-            text: ''
-            make_link: false
-            path: ''
-            absolute: false
-            external: false
-            replace_spaces: false
-            path_case: none
-            trim_whitespace: false
-            alt: ''
-            rel: ''
-            link_class: ''
-            prefix: ''
-            suffix: ''
-            target: ''
-            nl2br: false
-            max_length: 0
-            word_boundary: true
-            ellipsis: true
-            more_link: false
-            more_link_text: ''
-            more_link_path: ''
-            strip_tags: false
-            trim: false
-            preserve_tags: ''
-            html: false
-          element_type: ''
-          element_class: ''
-          element_label_type: ''
-          element_label_class: ''
-          element_label_colon: true
-          element_wrapper_type: ''
-          element_wrapper_class: ''
-          element_default_classes: true
-          empty: ''
-          hide_empty: false
-          empty_zero: false
-          hide_alter_empty: true
-          date_format: fallback
-          custom_date_format: ''
-          timezone: ''
-        operations:
-          id: operations
-          table: contact_message
-          field: operations
-          relationship: none
-          group_type: group
-          admin_label: ''
-          entity_type: contact_message
-          plugin_id: entity_operations
-          label: Toimenpiteet
-          exclude: false
-          alter:
-            alter_text: false
-            text: ''
-            make_link: false
-            path: ''
-            absolute: false
-            external: false
-            replace_spaces: false
-            path_case: none
-            trim_whitespace: false
-            alt: ''
-            rel: ''
-            link_class: ''
-            prefix: ''
-            suffix: ''
-            target: ''
-            nl2br: false
-            max_length: 0
-            word_boundary: true
-            ellipsis: true
-            more_link: false
-            more_link_text: ''
-            more_link_path: ''
-            strip_tags: false
-            trim: false
-            preserve_tags: ''
-            html: false
-          element_type: ''
-          element_class: ''
-          element_label_type: ''
-          element_label_class: ''
-          element_label_colon: true
-          element_wrapper_type: ''
-          element_wrapper_class: ''
-          element_default_classes: true
-          empty: ''
-          hide_empty: false
-          empty_zero: false
-          hide_alter_empty: true
-          destination: true
+          text: delete
+          output_url_as_text: false
+          absolute: false
       pager:
-        type: full
+        type: mini
         options:
           offset: 0
-          items_per_page: 20
+          items_per_page: 50
           total_pages: null
           id: 0
           tags:
-            next: 'seuraava ›'
-            previous: '‹ edellinen'
-            first: '« ensimmäinen'
-            last: 'viimeinen »'
+            next: ››
+            previous: ‹‹
           expose:
             items_per_page: false
-            items_per_page_label: 'Merkintöjä sivua kohti'
+            items_per_page_label: 'Items per page'
             items_per_page_options: '5, 10, 25, 50'
             items_per_page_options_all: false
-            items_per_page_options_all_label: '- Kaikki -'
+            items_per_page_options_all_label: '- All -'
             offset: false
             offset_label: Offset
-          quantity: 9
       exposed_form:
         type: basic
         options:
-          submit_button: Käytä
+          submit_button: Apply
           reset_button: false
-          reset_button_label: Palauta
-          exposed_sorts_label: Lajittele
+          reset_button_label: Reset
+          exposed_sorts_label: 'Sort by'
           expose_sort_order: true
-          sort_asc_label: Nousevasti
-          sort_desc_label: Laskevasti
+          sort_asc_label: Asc
+          sort_desc_label: Desc
       access:
         type: perm
         options:
-          perm: 'administer contact forms'
+          perm: 'configure saml'
       cache:
         type: none
         options: {  }
@@ -410,48 +290,32 @@ display:
           admin_label: ''
           plugin_id: text_custom
           empty: true
-          content: 'There is no Contact message yet.'
+          content: 'No links (from SAML Authentication ID to Drupal user)  found.'
           tokenize: false
-      sorts:
-        created:
-          id: created
-          table: contact_message
-          field: created
-          relationship: none
-          group_type: group
-          admin_label: ''
-          entity_type: contact_message
-          entity_field: created
-          plugin_id: date
-          order: DESC
-          expose:
-            label: ''
-            field_identifier: created
-          exposed: false
-          granularity: second
+      sorts: {  }
       arguments: {  }
       filters:
-        contact_form:
-          id: contact_form
-          table: contact_message
-          field: contact_form
+        authname:
+          id: authname
+          table: authmap
+          field: authname
           relationship: none
           group_type: group
           admin_label: ''
-          plugin_id: bundle
-          operator: in
-          value: {  }
+          plugin_id: string
+          operator: starts
+          value: ''
           group: 1
           exposed: true
           expose:
-            operator_id: contact_form_op
-            label: Yhteydenotto
+            operator_id: authname_op
+            label: 'SAML IdP Unique ID'
             description: ''
             use_operator: false
-            operator: contact_form_op
+            operator: authname_op
             operator_limit_selection: false
             operator_list: {  }
-            identifier: form
+            identifier: authname
             required: false
             remember: false
             multiple: false
@@ -459,7 +323,93 @@ display:
               authenticated: authenticated
               anonymous: '0'
               administrator: '0'
+              role3: '0'
+              role4: '0'
+            placeholder: ''
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+        uid:
+          id: uid
+          table: users_field_data
+          field: uid
+          relationship: uid
+          group_type: group
+          admin_label: ''
+          entity_type: user
+          entity_field: uid
+          plugin_id: user_name
+          operator: in
+          value: {  }
+          group: 1
+          exposed: true
+          expose:
+            operator_id: uid_op
+            label: 'Drupal user'
+            description: ''
+            use_operator: false
+            operator: uid_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: uid
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              administrator: '0'
+              role3: '0'
+              role4: '0'
             reduce: false
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+        provider_field:
+          id: provider_field
+          table: authmap
+          field: provider_field
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: string
+          operator: '='
+          value: samlauth
+          group: 1
+          exposed: false
+          expose:
+            operator_id: ''
+            label: ''
+            description: ''
+            use_operator: false
+            operator: ''
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: ''
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+            placeholder: ''
           is_grouped: false
           group_info:
             label: ''
@@ -478,17 +428,49 @@ display:
           grouping: {  }
           row_class: ''
           default_row_class: true
-          columns: {  }
-          default: '-1'
-          info: {  }
+          columns:
+            authname: authname
+            uid: uid
+            name: name
+            delete: delete
+          default: authname
+          info:
+            authname:
+              sortable: true
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            uid:
+              sortable: true
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            name:
+              sortable: true
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            delete:
+              sortable: false
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
           override: true
           sticky: false
           summary: ''
-          empty_table: true
+          empty_table: false
           caption: ''
           description: ''
       row:
-        type: 'entity:contact_message'
+        type: fields
       query:
         type: views_query
         options:
@@ -497,12 +479,22 @@ display:
           distinct: false
           replica: false
           query_tags: {  }
-      relationships: {  }
+      relationships:
+        uid:
+          id: uid
+          table: authmap
+          field: uid
+          relationship: none
+          group_type: group
+          admin_label: 'Linked Drupal user'
+          plugin_id: standard
+          required: false
+      show_admin_links: false
       header: {  }
       footer: {  }
       display_extenders: {  }
     cache_metadata:
-      max-age: 0
+      max-age: -1
       contexts:
         - 'languages:language_content'
         - 'languages:language_interface'
@@ -510,25 +502,25 @@ display:
         - url.query_args
         - user.permissions
       tags: {  }
-      cacheable: false
-  page_1:
-    id: page_1
-    display_title: Sivu
+  page:
+    id: page
+    display_title: Page
     display_plugin: page
     position: 1
     display_options:
       display_extenders: {  }
-      path: admin/structure/contact/messages
+      path: admin/config/people/saml/authmap
       menu:
         type: tab
-        title: Lista
-        description: 'Contact messages'
-        weight: 0
+        title: Links
+        description: ''
+        weight: 7
+        expanded: false
         menu_name: admin
-        parent: contact.form_list
+        parent: samlauth.samlauth_configure_form
         context: '0'
     cache_metadata:
-      max-age: 0
+      max-age: -1
       contexts:
         - 'languages:language_content'
         - 'languages:language_interface'
@@ -536,4 +528,3 @@ display:
         - url.query_args
         - user.permissions
       tags: {  }
-      cacheable: false

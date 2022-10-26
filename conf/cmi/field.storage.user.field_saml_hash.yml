@@ -1,12 +1,12 @@
-uuid: 823b3d56-de5b-4b2d-a447-e347de94592c
-langcode: en
+uuid: 2a83527e-daf0-4e28-ba15-befc49a0913d
+langcode: fi
 status: true
 dependencies:
   module:
-    - contact
-id: contact_message.field_apartment_information
-field_name: field_apartment_information
-entity_type: contact_message
+    - user
+id: user.field_saml_hash
+field_name: field_saml_hash
+entity_type: user
 type: string
 settings:
   max_length: 255

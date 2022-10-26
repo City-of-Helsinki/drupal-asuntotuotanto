@@ -10,7 +10,6 @@ use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\node\Entity\Node;
 use Drupal\file\Entity\File;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Implements hook_theme().
@@ -45,13 +44,17 @@ function asu_application_form_alter(&$form, &$form_state) {
     $form['#form_id'] === 'asu_application_haso_form'
   ) {
     if (isset($form['field_data_agreement_policy'])) {
+      $hitas = 'https://www.hel.fi/static/liitteet-2019/Kaupunginkanslia/Rekisteriselosteet/Kymp/Helsingin%20kaupungin%20Asuntotuotannon%20Hitas-asuntojen%20hakijarekisteri.pdf';
+      $haso = 'https://www.hel.fi/static/liitteet-2019/Kaupunginkanslia/Rekisteriselosteet/Kymp/Asumisoikeusasuntojen%20hakijarekisteri.pdf';
+      $link = $form['#form_id'] === 'asu_application_hitas_form' ? $hitas : $haso;
+
       $form['field_data_agreement_policy']['widget']['value']['#title'] =
         t(
-          'I have read <a href="@register">Registry policy</a>
-            and city\'s <a href="@privacy">Privacy Statement</a>',
+          'I have read <a target="_blank" href="@register">Registry policy</a>
+            and city\'s  <a target="_blank" href="@privacy">Privacy Statement</a>',
           [
-            '@register' => '/rekisteriseloste',
-            '@privacy' => '/tietosuojaperiaate',
+            '@register' => 'https://www.hel.fi/helsinki/fi/kaupunki-ja-hallinto/tietoa-helsingista/tietosuoja',
+            '@privacy' => $link,
           ]
         );
     }
@@ -107,6 +110,18 @@ function template_preprocess_asu_application(array &$variables) {
         '';
     }
 
+    if (
+      $project->hasField('field_application_end_time') &&
+      $application_end_time_value = $project->get('field_application_end_time')->value
+    ) {
+      $date_formatter = \Drupal::service('date.formatter');
+      $application_end = $date_formatter->format(
+        $project->get('field_application_end_time')->date->getTimestamp(),
+        'custom',
+        'd.m.Y H:i'
+      );
+    }
+
     $application_teaser_values = [
       '#teaser_values' => [
         'application_id' => $application->id->value,
@@ -116,7 +131,7 @@ function template_preprocess_asu_application(array &$variables) {
         'project_address' => $project->field_street_address->value,
         'project_ownership_type' => $project->field_ownership_type->first()->entity->getName(),
         'project_estimated_completion' => $project->field_estimated_completion->value,
-        'application_end_time' => $project->field_application_end_time->value,
+        'application_end_time' => $application_end,
         'project_main_image_url' => $main_image_file_url ?? NULL,
         'project_district' => $district,
         'is_application_period' => $project->isApplicationPeriod(),
@@ -229,82 +244,8 @@ function asu_user_form_contact_message_apply_for_free_apartment_form_alter(&$for
     return;
   }
 
-  if ($apartment) {
-    if (!\Drupal::currentUser()->isAuthenticated()) {
-      $apartment_id = $apartment->id();
-      \Drupal::messenger()->addMessage(t('You must be logged
-    in to fill an application'));
-      $application_url = "/contact/apply_for_free_apartment?apartment=$apartment_id";
-      $session = \Drupal::request()->getSession();
-      $session->set('asu_last_application_url', $application_url);
-      return (new RedirectResponse('/user/login', 301));
-    }
-  }
-  else {
-    if (!\Drupal::currentUser()->isAuthenticated()) {
-      \Drupal::messenger()->addMessage(t('You must be logged
-    in to fill an application'));
-      $application_url = "/contact/apply_for_free_apartment?project=$project_id";
-      $session = \Drupal::request()->getSession();
-      $session->set('asu_last_application_url', $application_url);
-      return (new RedirectResponse('/user/login', 301));
-    }
-  }
-
   $form['#contact_form_title'] = $apartment ? $apartment->getTitle() : t('Apply for an apartment');
   $form['#contact_form_text'] = t('Leave your contact information and we will personally contact you regarding this apartment.');
-
-  // Prefill rest of the field if user data is available.
-  $user = \Drupal::currentUser();
-  $config = \Drupal::config('asu_user.external_user_fields')
-    ->get('external_data_map');
-  $store = \Drupal::service('tempstore.private')->get('customer');
-
-  try {
-    $date = DrupalDateTime::createFromDateTime(new \DateTime($store->get('date_of_birth') . '06:00:00'));
-  }
-  catch (\Exception $e) {
-    $date = '';
-  }
-  $name = '';
-  if ($store->get('first_name') && $store->get('last_name')) {
-    $name = "{$store->get('first_name')} {$store->get('last_name')}";
-  }
-  $phone = $store->get('phone_number') ?? '';
-
-  $form['field_date_of_birth']['widget'][0]['value']['#default_value'] = $date;
-  $form['field_name']['widget'][0]['value']['#default_value'] = $name;
-  $form['field_phone_number']['widget'][0]['value']['#default_value'] = $phone;
-
-  $form['field_contact_person']['widget'][0]['value']['#type'] = 'hidden';
-
-  if ($apartment) {
-    $form['field_apartment_information']['widget'][0]['value']['#default_value']
-      = $apartment->getTitle();
-    $form['field_apartment_information']['widget'][0]['value']['#attributes']['readonly'] = 'readonly';
-  }
-  else {
-    $form['field_apartment_information']['widget'][0]['value']['#attributes']['readonly'] = 'readonly';
-    $form['field_apartment_information']['widget'][0]['value']['#type'] = 'hidden';
-
-    $form['field_apartment_information']['widget'][0]['value']['#default_value']
-      = 'Ei saatavilla';
-  }
-
-  if (!$apartment && $project) {
-    $form['message']['widget'][0]['value']['#default_value']
-      = $project->getTitle();
-  }
-
-  $salesEmail = '';
-  if (
-    $project->hasField('field_salesperson') &&
-    $project->field_salesperson->first()
-  ) {
-    $salesEmail = $project->field_salesperson->first()->entity->getEmail();
-  }
-  $form['field_contact_person']['widget'][0]['value']['#default_value'] = $salesEmail ?? '';
-
 }
 
 /**
@@ -351,4 +292,29 @@ function asu_application_cron() {
     \Drupal::logger('asu_application_cron')->critical('Unable to perform application cron operation: ' . $e->getMessage());
   }
 
+}
+
+/**
+ * Implements hook_mail().
+ */
+function asu_application_mail(string $key, array &$message, array $params) {
+  switch ($key) {
+    case 'apply_for_free_apartment':
+      send_apply_for_free_apartment($message, $params);
+      break;
+  }
+}
+
+/**
+ * Send confirmation mail to user after application has been created.
+ *
+ * @param array $message
+ *   Message variable.
+ * @param array $params
+ *   Parameters variable.
+ */
+function send_apply_for_free_apartment(array &$message, array $params) {
+  $message['from'] = \Drupal::config('system.site')->get('mail');
+  $message['subject'] = $params['subject'];
+  $message['body'][] = $params['message'];
 }

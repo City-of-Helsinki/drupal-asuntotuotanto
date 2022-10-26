@@ -5,3 +5,23 @@ asu_content.content_script:
     _title: 'Huoneisto sisältö skripti'
   requirements:
     _permission: 'administer blocks'
+asu_content.healthz:
+  path: '/healthz'
+  defaults:
+    _controller: '\Drupal\asu_content\Controller\ApartmentContentCreateController::emptypage'
+  requirements:
+    _permission: 'access content'
+  options:
+    no_cache: TRUE
+    default_url_options:
+      path_processing: FALSE
+asu_content.readiness:
+  path: '/readiness'
+  defaults:
+    _controller: '\Drupal\asu_content\Controller\ApartmentContentCreateController::emptypage'
+  requirements:
+    _permission: 'access content'
+  options:
+    no_cache: TRUE
+    default_url_options:
+      path_processing: FALSE
