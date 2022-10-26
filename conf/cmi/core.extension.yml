@@ -40,9 +40,6 @@ module:
   config_terms: 0
   config_translation: 0
   config_update: 0
-  contact: 0
-  contact_emails: 0
-  contact_storage: 0
   content_lock: 0
   content_lock_timeout: 0
   context: 0

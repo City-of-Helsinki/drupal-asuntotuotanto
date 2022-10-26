@@ -3,6 +3,7 @@
 namespace Drupal\asu_content\Entity;
 
 use Drupal\node\Entity\Node;
+use Drupal\user\UserInterface;
 
 /**
  * Class for node's project bundle.
@@ -134,6 +135,21 @@ class Project extends Node {
       }
     }
     return TRUE;
+  }
+
+  /**
+   * Get project sales person information.
+   *
+   * @return \Drupal\user\Entity\User
+   *   Userinterface.
+   */
+  public function getSalesPerson(): ?UserInterface {
+    $user_field = $this->get('field_salesperson');
+    if ($user_field->isEmpty()) {
+      return NULL;
+    }
+
+    return $user_field->referencedEntities()[0];
   }
 
 }

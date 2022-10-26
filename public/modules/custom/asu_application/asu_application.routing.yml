@@ -21,3 +21,11 @@ asu_application.lottery_start:
   methods: [GET]
   requirements:
     _permission: 'administer applications'
+
+asu_application.apply_for_free_apartment:
+  path: '/contact/apply_for_free_apartment'
+  defaults:
+    _form: 'Drupal\asu_application\Form\ReservedApartmentContactForm'
+    _title: 'Apply for an apartment'
+  requirements:
+    _permission: 'access content'
