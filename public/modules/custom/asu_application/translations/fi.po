@@ -1,0 +1,2 @@
+msgid "Thank you, Your application has been successfully sent."
+msgstr "Kiitos, Hakemuksesi on onnistuneesti lähetetty."
