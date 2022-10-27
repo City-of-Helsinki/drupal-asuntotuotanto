@@ -76,7 +76,7 @@ class ApplicationSubscriber implements EventSubscriberInterface {
     }
 
     // @todo Remove message when logging is done.
-    \Drupal::messenger()->addMessage('Email successfully sent to As-Ko');
+    \Drupal::messenger()->addMessage(t('Thank you, Your application has been successfully sent.'));
   }
 
   /**
