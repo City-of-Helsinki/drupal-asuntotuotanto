@@ -70,13 +70,13 @@ class ApplicationSubscriber implements EventSubscriberInterface {
 
     if ($result['result'] != TRUE) {
       // Email sending failed.
-      \Drupal::messenger()->addMessage('Asko email sending failed. Most likely due to misconfigured email system.');
+      \Drupal::messenger()->addMessage(t('Email sending failed. Please check the form and try again.'));
       // @todo Add logging.
       return;
     }
 
     // @todo Remove message when logging is done.
-    \Drupal::messenger()->addMessage('Email successfully sent to As-Ko');
+    \Drupal::messenger()->addMessage(t('Thank you, Your application has been successfully sent.'));
   }
 
   /**

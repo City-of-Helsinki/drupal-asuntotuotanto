@@ -1,0 +1,2 @@
+msgid "Email sending failed. Please check the form and try again."
+msgstr "Sähköpostin lähetys epäonnistui. Tarkista lomake ja yritä uudelleen"
