@@ -78,7 +78,7 @@ class ReservedApartmentContactForm extends FormBase {
 
     $form['submit'] = [
       '#type' => 'submit',
-      '#value' => t('Apply'),
+      '#value' => t('Submit'),
     ];
 
     return $form;
