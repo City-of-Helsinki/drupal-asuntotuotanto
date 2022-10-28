@@ -21,6 +21,7 @@ class DecimalType extends ImportType {
    */
   public function __construct($decimal) {
     $value = str_replace(',', '.', $decimal);
+    $value = str_replace(' ', '', $value);
     if ($this->isAllowedValue($value)) {
       $this->value = $value;
     }

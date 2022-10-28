@@ -218,10 +218,10 @@ function asuntotuotanto_preprocess_views_view_table(&$variables) {
 
       $reserved_or_sold = FALSE;
       if ($apartment->isSold() || $apartment->isReserved() || $apartment->isFree()) {
-        $reserved_or_sold = $apartment->isReserved() ? 'Reserved' : 'Vacant';
+        $reserved_or_sold = $apartment->isReserved() ? t('Reserved') : t('Vacant');
         // Sold apartment is not listed so this is not necessary.
         if ($apartment->isSold()) {
-          $reserved_or_sold = 'Sold';
+          $reserved_or_sold = t('Sold');
         }
       }
 
