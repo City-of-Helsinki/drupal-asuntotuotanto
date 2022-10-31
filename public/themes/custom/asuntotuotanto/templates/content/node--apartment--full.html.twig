@@ -213,6 +213,11 @@
 	</div>
 
 	<div class="apartment__images wrapper wrapper--mw-1264 showcase-gallery" id="showcase_gallery">
+    <span class="showcase-gallery__label">
+      {% trans %}
+        Click on image for fullscreen
+      {% endtrans %}
+    </span>
 		{% if not images|render %}
 			<div class="apartment__images--missing"></div>
 		{% endif %}
