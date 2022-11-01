@@ -45,7 +45,7 @@ final class Initialize extends ResourceBase {
       \Drupal::cache()
         ->set('application_statuses', $statuses, (time() + (60 * 10)));
     }
-    
+
     $response['static_content'] = $this->getStaticContent();
 
     $response['token'] = \Drupal::service('csrf_token')->get(CsrfRequestHeaderAccessCheck::TOKEN_KEY);
