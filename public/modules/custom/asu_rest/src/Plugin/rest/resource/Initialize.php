@@ -129,7 +129,12 @@ final class Initialize extends ResourceBase {
     $idString = implode(',', array_keys($projectIds));
 
     $apartmentIds = \Drupal::database()
-      ->query('select entity_id, field_apartments_target_id from node__field_apartments where entity_id in (' . $idString . ')')
+      ->query('
+        select apt.entity_id, apt.field_apartments_target_id, state.field_apartment_state_of_sale_target_id as `state`
+        from node__field_apartments as apt
+        left join node__field_apartment_state_of_sale as state on apt.field_apartments_target_id = state.entity_id
+        where apt.entity_id in (' . $idString . ')
+      ')
       ->fetchAllAssoc('field_apartments_target_id');
 
     $applicationCountByApartment = \Drupal::database()
@@ -144,6 +149,7 @@ final class Initialize extends ResourceBase {
     foreach ($apartmentIds as $key => $result) {
       if (in_array($projectIds[$apartmentIds[$key]->entity_id], $reservedStates)) {
         if (!isset($applicationCountByApartment[$key]) || $applicationCountByApartment[$key]->state == NULL) {
+          $return[$result->entity_id][$key] = strtoupper($apartmentIds[$key]->state);
           continue;
         }
         $return[$result->entity_id][$key] = strtoupper($applicationCountByApartment[$key]->state);
