@@ -41,7 +41,9 @@ function asu_application_theme_suggestions_asu_application(array $variables) {
 function asu_application_form_alter(&$form, &$form_state) {
   if (
     $form['#form_id'] === 'asu_application_hitas_form' ||
-    $form['#form_id'] === 'asu_application_haso_form'
+    $form['#form_id'] === 'asu_application_haso_form' ||
+    $form['#form_id'] === 'asu_application_hitas_add_form' ||
+    $form['#form_id'] === 'asu_application_haso_add_form'
   ) {
     if (isset($form['field_data_agreement_policy'])) {
       $hitas = 'https://www.hel.fi/static/liitteet-2019/Kaupunginkanslia/Rekisteriselosteet/Kymp/Helsingin%20kaupungin%20Asuntotuotannon%20Hitas-asuntojen%20hakijarekisteri.pdf';

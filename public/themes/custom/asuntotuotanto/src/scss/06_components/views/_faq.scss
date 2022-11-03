@@ -160,7 +160,7 @@ line-height: $lineheight-m;
 
 .faq-teaser__button {
   font-size: $fontsize-heading-s;
-line-height: $lineheight-l;
+  line-height: $lineheight-l;
   font-weight: $font-weight-bold;
   align-items: center;
   justify-content: space-between;
@@ -180,6 +180,7 @@ line-height: $lineheight-m;
   > span {
     margin-right: $spacing-double;
     pointer-events: none;
+    background-color: transparent;
   }
 
   > svg {
@@ -191,11 +192,13 @@ line-height: $lineheight-m;
     }
   }
 
-  &[aria-expanded="true"] {
-    & > svg {
-      transform: rotate(180deg);
+    &[aria-expanded="true"] .hel-icon--arrow-down {
+      background-image: url("../icons/arrow-up.svg");
     }
-  }
+
+    &[aria-expanded="false"] .hel-icon--arrow-down {
+      background-image: url("../icons/arrow-down.svg");
+    }
 
   &:hover {
     cursor: pointer;
