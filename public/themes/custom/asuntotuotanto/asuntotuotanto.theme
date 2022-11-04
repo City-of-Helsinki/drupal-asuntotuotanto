@@ -236,7 +236,7 @@ function asuntotuotanto_preprocess_views_view_table(&$variables) {
       $variables['rows'][$key]['application_url'] = $application_url;
       $variables['rows'][$key]['apartment_number'] = $apartment->field_apartment_number->value;
       $variables['rows'][$key]['reserved_or_sold'] = $reserved_or_sold;
-      $variables['rows'][$key]['application_url'] = $project->getApplicationUrl();
+      $variables['rows'][$key]['application_url'] = $project->getApplicationUrl($apartment->field_apartment_number->value);
       $variables['rows'][$key]['application_url_title'] = $apartment->getApplicationUrlTitle();
       $variables['rows'][$key]['is_free'] = $apartment->isFree();
     }
