@@ -83,6 +83,8 @@ class Project extends Node {
    */
   public function getApplicationUrl($apartmentId = NULL): string {
     $baseurl = \Drupal::request()->getSchemeAndHttpHost();
+    $langcode = \Drupal::languageManager()->getCurrentLanguage()->getId();
+    $baseurl = $baseurl . '/' . $langcode;
     if ($this->isApplicationPeriod() || $this->isApplicationPeriod('before')) {
       $apartmentType = strtolower($this->field_ownership_type->referencedEntities()[0]->getName());
       return sprintf('%s/application/add/%s/%s', $baseurl, $apartmentType, $this->id());
