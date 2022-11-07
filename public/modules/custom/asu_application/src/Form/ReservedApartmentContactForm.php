@@ -23,6 +23,7 @@ class ReservedApartmentContactForm extends FormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state, string $user_id = NULL, string $project_id = NULL) {
     $project_id = \Drupal::request()->get('project') ?? NULL;
+    $apartment_id = \Drupal::request()->get('apartment') ?? NULL;
     $project = NULL;
     $contact_person_value = NULL;
 
@@ -36,6 +37,22 @@ class ReservedApartmentContactForm extends FormBase {
 
     $form['#contact_form_title'] = t('Apply for an apartment');
     $form['#contact_form_text'] = t('Leave your contact information and we will personally contact you regarding this apartment.');
+
+    $form['field_project'] = [
+      '#type' => 'textfield',
+      '#title' => t('Project'),
+      '#value' => $project->getTitle(),
+      '#required' => TRUE,
+      '#disabled' => TRUE,
+    ];
+
+    $form['field_apartment_id'] = [
+      '#type' => 'textfield',
+      '#title' => t('Apartment'),
+      '#required' => TRUE,
+      '#value' => $apartment_id,
+      '#disabled' => TRUE,
+    ];
 
     $form['field_name'] = [
       '#type' => 'textfield',
@@ -121,6 +138,8 @@ class ReservedApartmentContactForm extends FormBase {
    */
   private function convertMessage(array $values): string {
     $message_values = [
+      'Project' => $values['field_project'],
+      'Apartment' => $values['field_apartment_id'],
       'Name' => $values['field_name'],
       'Apartment information' => $values['field_apartment_information'],
       'Phone' => $values['field_phone'],
