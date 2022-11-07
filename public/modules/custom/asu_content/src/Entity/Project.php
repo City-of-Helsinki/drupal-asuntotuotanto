@@ -83,12 +83,14 @@ class Project extends Node {
    */
   public function getApplicationUrl($apartmentId = NULL): string {
     $baseurl = \Drupal::request()->getSchemeAndHttpHost();
+    $langcode = \Drupal::languageManager()->getCurrentLanguage()->getId();
+    $baseurl = $baseurl . '/' . $langcode;
     if ($this->isApplicationPeriod() || $this->isApplicationPeriod('before')) {
       $apartmentType = strtolower($this->field_ownership_type->referencedEntities()[0]->getName());
       return sprintf('%s/application/add/%s/%s', $baseurl, $apartmentType, $this->id());
     }
     if ($this->isApplicationPeriod('after')) {
-      $queryParameter = $apartmentId ? "?apartment=$apartmentId" : '?project=' . $this->id();
+      $queryParameter = $apartmentId ? "?apartment=$apartmentId" . '&project=' . $this->id() : '?project=' . $this->id();
       return sprintf('%s/contact/apply_for_free_apartment%s', $baseurl, $queryParameter);
     }
     return '';
