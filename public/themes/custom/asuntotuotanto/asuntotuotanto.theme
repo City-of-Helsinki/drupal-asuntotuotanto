@@ -451,8 +451,8 @@ function asuntotuotanto_preprocess_node(&$variables) {
       if (array_filter($prices)) {
         $prices = array_filter($prices);
         $prices_minmax = [
-          "min" => number_format(min($prices), 1, ',', NULL),
-          "max" => number_format(max($prices), 1, ',', NULL),
+          "min" => number_format(min($prices), 2, ',', NULL),
+          "max" => number_format(max($prices), 2, ',', NULL),
         ];
         $prices_string = $prices_minmax['min'] . " - " . $prices_minmax['max'];
       }

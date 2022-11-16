@@ -11,7 +11,7 @@ entity_type: asu_application
 bundle: haso
 label: 'Personal id'
 description: ''
-required: true
+required: false
 translatable: false
 default_value: {  }
 default_value_callback: ''
