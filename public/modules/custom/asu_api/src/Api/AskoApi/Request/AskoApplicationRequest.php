@@ -9,7 +9,7 @@ use Drupal\asu_application\Entity\Application;
  */
 class AskoApplicationRequest {
 
-  private const YES = 'kylla';
+  private const YES = 'kyllä';
 
   private const NO = 'ei';
 
@@ -47,11 +47,13 @@ class AskoApplicationRequest {
    */
   public function toArray(): array {
     $main_applicant = $this->getMainApplicant();
+    $syntyma_aika = new \DateTime($main_applicant->syntyma_aika);
+
     $data = [
       'etunimi' => $main_applicant->etunimi,
       'sukunimi' => $main_applicant->sukunimi,
-      'syntyma-aika' => $main_applicant->syntyma_aika,
-      'hetuloppu' => $main_applicant->hetuloppu,
+      'syntyma-aika' => $syntyma_aika->format('d.m.Y'),
+      'hetuloppu' => $this->personalIdWithoutDivider($main_applicant->hetuloppu),
       'osoite' => $main_applicant->osoite,
       'postinumero' => $main_applicant->postinumero,
       'postitoimipaikka' => $main_applicant->postitoimipaikka,
@@ -89,7 +91,7 @@ class AskoApplicationRequest {
         $data['postinumero2'] = $applicant['postal_code'];
         $data['postitoimipaikka2'] = $applicant['city'];
         $data['puhelin2'] = $applicant['phone'];
-        $data['email2'] = $applicant['email'];
+        $data['email2'] = $applicant['email']->value;
       }
     }
 
