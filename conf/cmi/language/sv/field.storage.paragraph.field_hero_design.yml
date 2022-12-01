@@ -1,0 +1,10 @@
+settings:
+  allowed_values:
+    -
+      label: 'Utan bild, justerad vänster'
+    -
+      label: 'Bild justerad till höger'
+    -
+      label: 'Bild justerad till vänster'
+    -
+      label: 'Bild justerad ner'

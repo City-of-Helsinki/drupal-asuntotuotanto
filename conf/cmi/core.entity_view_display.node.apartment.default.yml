@@ -254,7 +254,6 @@ content:
       layout: ''
       thumbnail_caption: ''
       cache: 0
-      current_view_mode: default
       background: false
       caption:
         title: '0'
@@ -272,18 +271,15 @@ content:
         variableWidth: '0'
       skin_arrows: ''
       skin_dots: ''
-      fx: ''
-      icon: ''
       view_mode: ''
       box_caption: ''
       box_caption_custom: ''
       box_media_style: ''
       box_style: ''
-      _uri: ''
-      breakpoints: {  }
-      sizes: ''
-      grid_header: ''
       use_theme_field: false
+      lazy: ''
+      loading: lazy
+      preload: false
     third_party_settings: {  }
     weight: 53
     region: content

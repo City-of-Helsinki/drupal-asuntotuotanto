@@ -39,7 +39,6 @@ settings:
       columns: columns
       accordion: accordion
       image: image
-      gallery: gallery
       list_of_links: list_of_links
       content_cards: content_cards
       from_library: from_library
@@ -47,6 +46,7 @@ settings:
       cta_block: cta_block
       steps_list: steps_list
       showcase_block: showcase_block
+      event_list: event_list
     negate: 0
     target_bundles_drag_drop:
       accordion:
@@ -67,12 +67,15 @@ settings:
       cta_block:
         weight: 29
         enabled: true
+      event_list:
+        weight: 30
+        enabled: true
       from_library:
         weight: 21
         enabled: true
       gallery:
         weight: -23
-        enabled: true
+        enabled: false
       gallery_slide:
         weight: -19
         enabled: false
