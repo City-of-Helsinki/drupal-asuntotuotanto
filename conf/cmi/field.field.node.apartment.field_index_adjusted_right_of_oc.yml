@@ -1,0 +1,23 @@
+uuid: 5d8a55e9-52a3-44c8-9155-7c1502448c5c
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_index_adjusted_right_of_oc
+    - node.type.apartment
+id: node.apartment.field_index_adjusted_right_of_oc
+field_name: field_index_adjusted_right_of_oc
+entity_type: node
+bundle: apartment
+label: 'Index adjusted right of occupancy payment'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: null
+  max: null
+  prefix: ''
+  suffix: €
+field_type: decimal

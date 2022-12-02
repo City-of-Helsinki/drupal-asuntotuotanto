@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - field.field.node.apartment.field_additional_information
+    - field.field.node.apartment.field_alteration_work
     - field.field.node.apartment.field_apartment_attachments
     - field.field.node.apartment.field_apartment_number
     - field.field.node.apartment.field_apartment_state_of_sale
@@ -22,6 +23,7 @@ dependencies:
     - field.field.node.apartment.field_has_terrace
     - field.field.node.apartment.field_has_yard
     - field.field.node.apartment.field_images
+    - field.field.node.apartment.field_index_adjusted_right_of_oc
     - field.field.node.apartment.field_kitchen_appliances
     - field.field.node.apartment.field_living_area
     - field.field.node.apartment.field_loan_share
@@ -50,6 +52,7 @@ dependencies:
     - datetime
     - field_group
     - file
+    - hdbt_admin_editorial
     - image
     - link
     - path
@@ -113,11 +116,13 @@ third_party_settings:
         required_fields: true
     group_price_information:
       children:
+        - field_alteration_work
         - field_sales_price
         - field_debt_free_sales_price
         - field_right_of_occupancy_fee
         - field_right_of_occupancy_deposit
         - field_right_of_occupancy_payment
+        - field_index_adjusted_right_of_oc
         - field_loan_share
         - field_financing_fee
         - field_maintenance_fee
@@ -154,6 +159,13 @@ content:
     region: content
     settings:
       rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+  field_alteration_work:
+    type: number
+    weight: 47
+    region: content
+    settings:
       placeholder: ''
     third_party_settings: {  }
   field_apartment_attachments:
@@ -217,7 +229,7 @@ content:
     third_party_settings: {  }
   field_debt_free_sales_price:
     type: number
-    weight: 44
+    weight: 42
     region: content
     settings:
       placeholder: ''
@@ -287,6 +299,13 @@ content:
       progress_indicator: throbber
       preview_image_style: thumbnail
     third_party_settings: {  }
+  field_index_adjusted_right_of_oc:
+    type: number
+    weight: 46
+    region: content
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
   field_kitchen_appliances:
     type: string_textarea
     weight: 17
@@ -355,21 +374,21 @@ content:
     third_party_settings: {  }
   field_right_of_occupancy_deposit:
     type: number
-    weight: 46
+    weight: 44
     region: content
     settings:
       placeholder: ''
     third_party_settings: {  }
   field_right_of_occupancy_fee:
     type: number
-    weight: 45
+    weight: 43
     region: content
     settings:
       placeholder: ''
     third_party_settings: {  }
   field_right_of_occupancy_payment:
     type: number
-    weight: 47
+    weight: 45
     region: content
     settings:
       placeholder: ''
@@ -383,7 +402,7 @@ content:
     third_party_settings: {  }
   field_sales_price:
     type: number
-    weight: 43
+    weight: 41
     region: content
     settings:
       placeholder: ''
@@ -521,4 +540,5 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
-hidden: {  }
+hidden:
+  hide_sidebar_navigation: true

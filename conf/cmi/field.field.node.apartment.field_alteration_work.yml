@@ -1,0 +1,23 @@
+uuid: dab54b54-5912-440b-9845-4bca83caa7a9
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_alteration_work
+    - node.type.apartment
+id: node.apartment.field_alteration_work
+field_name: field_alteration_work
+entity_type: node
+bundle: apartment
+label: 'Alteration work'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: null
+  max: null
+  prefix: ''
+  suffix: €
+field_type: decimal
