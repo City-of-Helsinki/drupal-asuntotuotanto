@@ -159,6 +159,8 @@ function template_preprocess_asu_application(array &$variables) {
           'apartment_sales_price' => $apartment->get('field_sales_price')->getValue(),
           'apartment_debt_free_sales_price' => $apartment->get('field_debt_free_sales_price')->getValue(),
           'apartment_right_of_occupancy_payment' => $apartment->get('field_right_of_occupancy_payment')->getValue(),
+          'apartment_index_adjusted_right_of_oc' => $apartment->get('field_index_adjusted_right_of_oc')->getValue(),
+          'apartment_alteration_work' => $apartment->get('field_alteration_work')->getValue(),
         ];
       }
 

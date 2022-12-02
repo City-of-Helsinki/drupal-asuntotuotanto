@@ -5,6 +5,7 @@ dependencies:
   config:
     - core.entity_view_mode.node.teaser
     - field.field.node.apartment.field_additional_information
+    - field.field.node.apartment.field_alteration_work
     - field.field.node.apartment.field_apartment_attachments
     - field.field.node.apartment.field_apartment_number
     - field.field.node.apartment.field_apartment_state_of_sale
@@ -23,6 +24,7 @@ dependencies:
     - field.field.node.apartment.field_has_terrace
     - field.field.node.apartment.field_has_yard
     - field.field.node.apartment.field_images
+    - field.field.node.apartment.field_index_adjusted_right_of_oc
     - field.field.node.apartment.field_kitchen_appliances
     - field.field.node.apartment.field_living_area
     - field.field.node.apartment.field_loan_share
@@ -68,6 +70,7 @@ hidden:
   field_acc_financeofficer: true
   field_acc_salesperson: true
   field_additional_information: true
+  field_alteration_work: true
   field_apartment_address: true
   field_apartment_attachments: true
   field_apartment_holding_type: true
@@ -104,6 +107,7 @@ hidden:
   field_housing_company_fee: true
   field_housing_manager: true
   field_images: true
+  field_index_adjusted_right_of_oc: true
   field_kitchen_appliances: true
   field_living_area: true
   field_loan_share: true
@@ -140,3 +144,4 @@ hidden:
   multiple_values_field: true
   search_api_excerpt: true
   street_address: true
+  toc_enabled: true

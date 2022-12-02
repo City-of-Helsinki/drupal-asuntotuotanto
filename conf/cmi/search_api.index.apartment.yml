@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - field.storage.node.field_additional_information
+    - field.storage.node.field_alteration_work
     - field.storage.node.field_floor_max
     - field.storage.node.field_apartment_number
     - field.storage.node.field_apartment_state_of_sale
@@ -17,6 +18,7 @@ dependencies:
     - field.storage.node.field_floor
     - field.storage.node.field_floorplan
     - field.storage.node.field_condition
+    - field.storage.node.field_index_adjusted_right_of_oc
     - field.storage.node.field_kitchen_appliances
     - field.storage.node.field_right_of_occupancy_fee
     - field.storage.node.field_right_of_occupancy_deposit
@@ -142,6 +144,22 @@ field_settings:
     dependencies:
       config:
         - field.storage.node.field_debt_free_sales_price
+  field_alteration_work:
+    label: 'Alteration work'
+    datasource_id: 'entity:node'
+    property_path: field_alteration_work
+    type: cent
+    dependencies:
+      config:
+        - field.storage.node.field_alteration_work
+  field_index_adjusted_right_of_oc:
+    label: 'Index adjusted right of occupancy payment'
+    datasource_id: 'entity:node'
+    property_path: field_index_adjusted_right_of_oc
+    type: cent
+    dependencies:
+      config:
+        - field.storage.node.field_index_adjusted_right_of_oc
   financing_fee:
     label: 'Financing fee'
     datasource_id: 'entity:node'
