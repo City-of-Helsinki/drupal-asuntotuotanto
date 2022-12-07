@@ -34,11 +34,13 @@ class ApartmentWidget extends WidgetBase {
       '#options' => $form['#apartment_values'] ?? [],
       '#default_value' => $items->getValue()[$delta]['id'] ?? 0,
       '#limit_validation_errors' => [],
+      /*
       '#ajax' => [
         'wrapper' => 'edit-apartment-wrapper',
         'event' => 'change',
         'callback' => '::saveApplicationCallback',
       ],
+      */
     ];
 
     return $element;
