@@ -383,6 +383,8 @@ function asuntotuotanto_preprocess_node(&$variables) {
       $apartment_sales_prices = [];
       $apartment_debt_free_sales_prices = [];
       $prices = [];
+      $adjusteds = [];
+      $alterations = [];
 
       /** @var \Drupal\asu_content\Entity\Project $project */
       $project = $node;
@@ -406,6 +408,10 @@ function asuntotuotanto_preprocess_node(&$variables) {
         if ($project_type == 'HASO') {
           $price = $apartment->hasField('field_right_of_occupancy_payment') ? $apartment->field_right_of_occupancy_payment->value : 0;
           array_push($prices, $price);
+          $adjusted = $apartment->hasField('field_index_adjusted_right_of_oc') ? $apartment->field_index_adjusted_right_of_oc->value : 0;
+          array_push($adjusteds, $adjusted);
+          $alteration = $apartment->hasField('field_alteration_work') ? $apartment->field_alteration_work->value : 0;
+          array_push($alterations, $alteration);
         }
         array_push($apartment_sales_prices, $apartment_sales_price);
         array_push($apartment_debt_free_sales_prices, $apartment_debt_free_sales_price);
@@ -451,8 +457,8 @@ function asuntotuotanto_preprocess_node(&$variables) {
       if (array_filter($prices)) {
         $prices = array_filter($prices);
         $prices_minmax = [
-          "min" => number_format(min($prices), 1, ',', NULL),
-          "max" => number_format(max($prices), 1, ',', NULL),
+          "min" => number_format(min($prices), 2, ',', NULL),
+          "max" => number_format(max($prices), 2, ',', NULL),
         ];
         $prices_string = $prices_minmax['min'] . " - " . $prices_minmax['max'];
       }

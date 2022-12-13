@@ -16,3 +16,10 @@
     max-width: $content-area-wrapper-width-max;
   }
 }
+
+@media screen and (max-width: $breakpoint-xl) {
+  .wrapper {
+    padding: 0 2rem;
+  }
+}
+

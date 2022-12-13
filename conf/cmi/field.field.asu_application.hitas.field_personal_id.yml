@@ -11,7 +11,7 @@ entity_type: asu_application
 bundle: hitas
 label: 'Personal id'
 description: ''
-required: true
+required: false
 translatable: true
 default_value: {  }
 default_value_callback: ''
