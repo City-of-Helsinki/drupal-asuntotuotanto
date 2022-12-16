@@ -98,6 +98,8 @@ class ReservedApartmentContactForm extends FormBase {
       '#value' => t('Submit'),
     ];
 
+    $form['#cache'] = ['max-age' => 0];
+
     return $form;
   }
 
