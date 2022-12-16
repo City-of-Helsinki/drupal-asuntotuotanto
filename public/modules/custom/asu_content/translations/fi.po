@@ -40466,8 +40466,8 @@ msgstr "Valitse huoneisto"
 msgid "Add additional applicant"
 msgstr "Lisää kanssahakija"
 
-msgid "last 5 characters"
-msgstr "Viimeiset 5 merkkiä"
+msgid "last 4 characters"
+msgstr "Viimeiset 4 merkkiä"
 
 msgid "Save as a draft"
 msgstr "Tallenna luonnoksena"
