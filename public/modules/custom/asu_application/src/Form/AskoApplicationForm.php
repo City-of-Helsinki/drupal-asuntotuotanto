@@ -108,6 +108,10 @@ class AskoApplicationForm extends ContentEntityForm {
     if ($form_state->getValue('apartment')) {
       // Get apartment data.
       $apartments = $form_state->getValue('apartment');
+      // Clear add more.
+      if (isset($apartments['add_more'])) {
+        unset($apartments['add_more']);
+      }
       // Check that apartment has more than 1 value.
       // Check that if first apartment data if 0.
       if (count($apartments) <= 1 && $apartments[0]['id'] == 0) {
