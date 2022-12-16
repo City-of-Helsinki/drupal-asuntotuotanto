@@ -40,7 +40,7 @@ class ApplicationFormUrl extends FieldItemList {
       ];
     }
     return [
-      '#markup' => $apartment->getApplicationUrl($apartment->id()),
+      '#markup' => $apartment->getApplicationUrl($apartment->field_apartment_number->value),
     ];
   }
 
