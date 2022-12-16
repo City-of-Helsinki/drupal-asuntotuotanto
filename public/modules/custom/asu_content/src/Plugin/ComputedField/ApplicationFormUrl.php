@@ -40,7 +40,7 @@ class ApplicationFormUrl extends FieldItemList {
       ];
     }
     // Strip spaces out of a apartment mumber value.
-    $apartment_number = str_replace(' ', '', $apartment->field_apartment_number->value);
+    $apartment_number = trim(str_replace(' ', '', $apartment->field_apartment_number->value));
     return [
       '#markup' => $apartment->getApplicationUrl($apartment_number),
     ];
