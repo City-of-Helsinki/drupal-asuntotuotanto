@@ -5,7 +5,6 @@
  * Contains asu_api.module.
  */
 
-use Drupal\asu_api\Api\BackendApi\Request\GetApartmentStatusRequest;
 use Drupal\asu_api\Api\BackendApi\Request\GetApartmentRevaluationsRequest;
 use Symfony\Component\HttpFoundation\Response;
 use Drupal\node\Entity\Node;
@@ -13,7 +12,8 @@ use Drupal\node\Entity\Node;
 /**
  * Implements hook_cron().
  *
- * Update apartments state of sale sold status.
+ * Update apartments adjusted_right_of_occupancy_payment and
+ * alteration_work_total values.
  */
 function asu_api_cron() {
   $apartment_revaluation = NULL;
@@ -36,15 +36,18 @@ function asu_api_cron() {
 
   if ($apartment_revaluation) {
     foreach($apartment_revaluation as $revaluation) {
-      // Get all aparments which state is not sold.
+      // Get apartment based uuid.
       $query = \Drupal::entityTypeManager()->getStorage('node')->getQuery();
       $query->condition('type', 'apartment')
         ->condition('uuid', $revaluation['apartment_uuid'], '=');
       $apartment = $query->execute();
 
       if ($apartment) {
+        // Load node object.
         $node = Node::load(reset($apartment));
+        // Set adjusted_right_of_occupancy_payment value.
         $node->set('field_index_adjusted_right_of_oc', $revaluation['adjusted_right_of_occupancy_payment']);
+        // Set alteration_work_total value.
         $node->set('field_alteration_work', $revaluation['alteration_work_total']);
         // Save node.
         $node->save();

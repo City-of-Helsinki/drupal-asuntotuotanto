@@ -7,7 +7,7 @@ use Drupal\asu_api\Exception\RequestException;
 use Psr\Http\Message\ResponseInterface;
 
 /**
- * Response for user creation request.
+ * Response for apartment revaluations.
  */
 class GetApartmentRevaluationsResponse extends Response {
 
@@ -29,7 +29,7 @@ class GetApartmentRevaluationsResponse extends Response {
   }
 
   /**
-   * Get profile id returned by create user request.
+   * Get data returned API call.
    *
    * @return string
    *   Profile id in authentication request.
@@ -39,7 +39,7 @@ class GetApartmentRevaluationsResponse extends Response {
   }
 
   /**
-   * Create new user response from http response.
+   * Create response from http response.
    *
    * @param \Psr\Http\Message\ResponseInterface $response
    *   Guzzle response.

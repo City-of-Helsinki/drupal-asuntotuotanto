@@ -7,7 +7,7 @@ use Drupal\asu_api\Api\BackendApi\Response\GetApartmentRevaluationsResponse;
 use Drupal\asu_api\Api\Request;
 
 /**
- * A request to create new backend user.
+ * A request to get apartment revaluations.
  */
 class GetApartmentRevaluationsRequest extends Request {
 
