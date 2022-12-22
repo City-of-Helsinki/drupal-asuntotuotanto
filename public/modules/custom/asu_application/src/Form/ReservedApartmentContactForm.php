@@ -139,14 +139,17 @@ class ReservedApartmentContactForm extends FormBase {
    *   Email body.
    */
   private function convertMessage(array $values): string {
+    $date = new \DateTime($values['field_date_of_birth']);
+
     $message_values = [
-      'Project' => $values['field_project'],
-      'Apartment' => $values['field_apartment_id'],
-      'Name' => $values['field_name'],
-      'Apartment information' => $values['field_apartment_information'],
-      'Phone' => $values['field_phone'],
-      'Date of birth' => $values['field_date_of_birth'],
-      'Message' => $values['field_message'],
+      'Projekti' => $values['field_project'],
+      'Asunto' => $values['field_apartment_id'],
+      'Nimi' => $values['field_name'],
+      'Asunnon tiedot' => $values['field_apartment_information'],
+      'Sähköposti' => $values['field_email'],
+      'Puhelinnumero' => $values['field_phone'],
+      'Syntymäaika' => $date->format('d.m.Y'),
+      'Viesti' => $values['field_message'],
     ];
 
     $body = "Käyttäjä täytti hakemuslomakkeen vapaaseen huoneistoon: \r\n";
