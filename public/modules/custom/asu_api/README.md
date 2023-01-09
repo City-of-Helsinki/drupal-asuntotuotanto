@@ -9,4 +9,4 @@ Api integration for Django backend
 
 ### Testing
 
-Remember add ASU_DJANGO_BACKEND_URL and DRUPAL-AUTH-TOKEN variables on docker-compose.yml file
+Remember add ASU_DJANGO_BACKEND_URL and DRUPAL_AUTH_TOKEN variables on docker-compose.yml file
