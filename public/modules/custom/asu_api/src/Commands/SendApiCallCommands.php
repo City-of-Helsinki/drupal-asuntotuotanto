@@ -4,7 +4,6 @@ namespace Drupal\asu_api\Commands;
 
 use Drush\Commands\DrushCommands;
 use Drupal\asu_api\Api\BackendApi\Request\GetApartmentRevaluationsRequest;
-use Symfony\Component\HttpFoundation\Response;
 
 /**
  * A drush command file.
