@@ -1,0 +1,27 @@
+uuid: 72b28f3f-4bb5-474b-8bab-95ba5bb2f588
+langcode: fi
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_media_bank_file
+    - node.type.media_bank
+  module:
+    - file
+id: node.media_bank.field_media_bank_file
+field_name: field_media_bank_file
+entity_type: node
+bundle: media_bank
+label: 'Media bank file'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:file'
+  handler_settings: {  }
+  file_directory: 'mediabank/[date:custom:Y]-[date:custom:m]'
+  file_extensions: 'txt pdf doc docx xls xlsx ppt pptx png'
+  max_filesize: ''
+  description_field: true
+field_type: file

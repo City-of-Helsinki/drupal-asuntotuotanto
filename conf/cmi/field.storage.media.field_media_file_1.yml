@@ -1,0 +1,23 @@
+uuid: 4b67b089-7005-42cf-b6b2-6f22e8e08b7b
+langcode: fi
+status: true
+dependencies:
+  module:
+    - file
+    - media
+id: media.field_media_file_1
+field_name: field_media_file_1
+entity_type: media
+type: file
+settings:
+  target_type: file
+  display_field: false
+  display_default: false
+  uri_scheme: private
+module: file
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false
