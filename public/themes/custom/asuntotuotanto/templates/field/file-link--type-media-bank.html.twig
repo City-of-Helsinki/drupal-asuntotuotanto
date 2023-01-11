@@ -1,0 +1,33 @@
+{#
+/**
+ * @file
+ * Theme override for a link to a file.
+ *
+ * Available variables:
+ * - attributes: The HTML attributes for the containing element.
+ * - link: A link to the file.
+ * - file_size: The size of the file.
+ *
+ * @see template_preprocess_file_link()
+ */
+#}
+<div class="media_bank__file">
+  <a href="{{ file_link }}" class="project__attachment-link">
+    {% include "@hdbt/misc/icon.twig" with {icon: 'document', label: ''} %}
+    <div class="project__attachment-content">
+      <p class="project__attachment-description">{{ 'Open'|t }}</p>
+      <p class="project__attachment-name">
+        <span class="visually-hidden">({{ 'File name'|t }})</span>
+        {{ file_name }}
+      </p>
+      <p class="project__attachment-type">
+        <span class="visually-hidden">({{ 'File type'|t }})</span>
+        {{ mime_type }}
+      </p>
+      <p class="project__attachment-size">
+        <span class="visually-hidden">({{ 'File size'|t }})</span>
+        {{ file_size }}
+      </p>
+    </div>
+  </a>
+</div>

@@ -1,0 +1,11 @@
+uuid: c1cbf537-39d2-45ac-bdf6-295ea40fcf65
+langcode: fi
+status: true
+dependencies:
+  config:
+    - media.type.media_bank
+id: media.media_bank
+target_entity_type_id: media
+target_bundle: media_bank
+default_langcode: site_default
+language_alterable: false

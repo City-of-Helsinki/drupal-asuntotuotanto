@@ -1,0 +1,10 @@
+uuid: 2fa18881-59bb-4ce0-b8b9-6146a00370a1
+langcode: fi
+status: true
+dependencies:
+  module:
+    - node
+id: node.teaser_media_bank
+label: 'Teaser Media bank'
+targetEntityType: node
+cache: true
