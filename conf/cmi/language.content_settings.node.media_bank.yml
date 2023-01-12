@@ -7,5 +7,5 @@ dependencies:
 id: node.media_bank
 target_entity_type_id: node
 target_bundle: media_bank
-default_langcode: site_default
+default_langcode: fi
 language_alterable: false
