@@ -24,7 +24,7 @@ third_party_settings:
     unpublish_revision: false
 name: 'Media bank'
 type: media_bank
-description: ''
+description: 'Content type for project attachments'
 help: ''
 new_revision: false
 preview_mode: 0
