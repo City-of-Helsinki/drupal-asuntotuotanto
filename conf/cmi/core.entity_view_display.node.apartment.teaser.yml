@@ -34,6 +34,7 @@ dependencies:
     - field.field.node.apartment.field_parking_fee_explanation
     - field.field.node.apartment.field_publish_on_etuovi
     - field.field.node.apartment.field_publish_on_oikotie
+    - field.field.node.apartment.field_release_payment
     - field.field.node.apartment.field_right_of_occupancy_deposit
     - field.field.node.apartment.field_right_of_occupancy_fee
     - field.field.node.apartment.field_right_of_occupancy_payment
@@ -125,6 +126,7 @@ hidden:
   field_publication_end_time: true
   field_publish_on_etuovi: true
   field_publish_on_oikotie: true
+  field_release_payment: true
   field_right_of_occupancy_deposit: true
   field_right_of_occupancy_fee: true
   field_right_of_occupancy_payment: true

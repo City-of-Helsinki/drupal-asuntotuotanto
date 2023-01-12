@@ -1,0 +1,23 @@
+uuid: 745d43d5-10e8-438f-9410-8e45377b189e
+langcode: fi
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_release_payment
+    - node.type.apartment
+id: node.apartment.field_release_payment
+field_name: field_release_payment
+entity_type: node
+bundle: apartment
+label: Luovutushinta
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: null
+  max: null
+  prefix: ''
+  suffix: €
+field_type: decimal
