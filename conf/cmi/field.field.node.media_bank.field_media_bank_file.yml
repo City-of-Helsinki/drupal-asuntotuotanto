@@ -21,7 +21,7 @@ settings:
   handler: 'default:file'
   handler_settings: {  }
   file_directory: 'mediabank/[date:custom:Y]-[date:custom:m]'
-  file_extensions: 'txt pdf doc docx xls xlsx ppt pptx png'
+  file_extensions: 'txt pdf doc docx xls xlsx ppt pptx'
   max_filesize: ''
   description_field: true
 field_type: file
