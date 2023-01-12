@@ -1,0 +1,20 @@
+uuid: 33bd0a78-f53a-46fd-8101-c7eae76984e6
+langcode: fi
+status: true
+dependencies:
+  module:
+    - node
+id: node.field_release_payment
+field_name: field_release_payment
+entity_type: node
+type: decimal
+settings:
+  precision: 10
+  scale: 2
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

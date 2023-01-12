@@ -46,9 +46,11 @@ function asu_api_cron() {
         // Load node object.
         $node = Node::load(reset($apartment));
         // Set adjusted_right_of_occupancy_payment value.
-        $node->set('field_index_adjusted_right_of_oc', $revaluation['adjusted_right_of_occupancy_payment']);
+        $node->set('field_index_adjusted_right_of_oc', $revaluation['right_of_occupancy_payment_adjustment']);
         // Set alteration_work_total value.
         $node->set('field_alteration_work', $revaluation['alteration_work_total']);
+        // Set field_release_payment value.
+        $node->set('field_release_payment', $revaluation['release_payment']);
         // Save node.
         $node->save();
       }

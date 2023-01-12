@@ -33,6 +33,7 @@ dependencies:
     - field.field.node.apartment.field_parking_fee_explanation
     - field.field.node.apartment.field_publish_on_etuovi
     - field.field.node.apartment.field_publish_on_oikotie
+    - field.field.node.apartment.field_release_payment
     - field.field.node.apartment.field_right_of_occupancy_deposit
     - field.field.node.apartment.field_right_of_occupancy_fee
     - field.field.node.apartment.field_right_of_occupancy_payment
@@ -116,13 +117,14 @@ third_party_settings:
         required_fields: true
     group_price_information:
       children:
-        - field_alteration_work
         - field_sales_price
         - field_debt_free_sales_price
+        - field_release_payment
         - field_right_of_occupancy_fee
         - field_right_of_occupancy_deposit
         - field_right_of_occupancy_payment
         - field_index_adjusted_right_of_oc
+        - field_alteration_work
         - field_loan_share
         - field_financing_fee
         - field_maintenance_fee
@@ -163,7 +165,7 @@ content:
     third_party_settings: {  }
   field_alteration_work:
     type: number
-    weight: 47
+    weight: 48
     region: content
     settings:
       placeholder: ''
@@ -236,7 +238,7 @@ content:
     third_party_settings: {  }
   field_financing_fee:
     type: number
-    weight: 49
+    weight: 50
     region: content
     settings:
       placeholder: ''
@@ -301,7 +303,7 @@ content:
     third_party_settings: {  }
   field_index_adjusted_right_of_oc:
     type: number
-    weight: 46
+    weight: 47
     region: content
     settings:
       placeholder: ''
@@ -323,21 +325,21 @@ content:
     third_party_settings: {  }
   field_loan_share:
     type: number
-    weight: 48
+    weight: 49
     region: content
     settings:
       placeholder: ''
     third_party_settings: {  }
   field_maintenance_fee:
     type: number
-    weight: 50
+    weight: 51
     region: content
     settings:
       placeholder: ''
     third_party_settings: {  }
   field_other_fees:
     type: string_textarea
-    weight: 55
+    weight: 56
     region: content
     settings:
       rows: 5
@@ -345,14 +347,14 @@ content:
     third_party_settings: {  }
   field_parking_fee:
     type: number
-    weight: 53
+    weight: 54
     region: content
     settings:
       placeholder: ''
     third_party_settings: {  }
   field_parking_fee_explanation:
     type: string_textarea
-    weight: 54
+    weight: 55
     region: content
     settings:
       rows: 5
@@ -372,23 +374,30 @@ content:
     settings:
       display_label: true
     third_party_settings: {  }
-  field_right_of_occupancy_deposit:
-    type: number
-    weight: 44
-    region: content
-    settings:
-      placeholder: ''
-    third_party_settings: {  }
-  field_right_of_occupancy_fee:
+  field_release_payment:
     type: number
     weight: 43
     region: content
     settings:
       placeholder: ''
     third_party_settings: {  }
-  field_right_of_occupancy_payment:
+  field_right_of_occupancy_deposit:
     type: number
     weight: 45
+    region: content
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+  field_right_of_occupancy_fee:
+    type: number
+    weight: 44
+    region: content
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+  field_right_of_occupancy_payment:
+    type: number
+    weight: 46
     region: content
     settings:
       placeholder: ''
@@ -453,14 +462,14 @@ content:
     third_party_settings: {  }
   field_water_fee:
     type: number
-    weight: 51
+    weight: 52
     region: content
     settings:
       placeholder: ''
     third_party_settings: {  }
   field_water_fee_explanation:
     type: string_textarea
-    weight: 52
+    weight: 53
     region: content
     settings:
       rows: 5
