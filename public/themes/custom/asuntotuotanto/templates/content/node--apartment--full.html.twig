@@ -403,7 +403,7 @@
                 {% if right_of_occupancy_payment|render and right_of_occupancy_payment|render != '0,00€' and right_of_occupancy_payment|render != null %}
                   <li class="apartment__details-item">
                     <p>
-                      <span>{% trans %}Right of occupancy payment{% endtrans %}</span>
+                      <span>{% trans %}Original right of occupancy payment{% endtrans %}</span>
                       <span>{{ right_of_occupancy_payment }}</span>
                     </p>
                   </li>
@@ -426,6 +426,15 @@
                 {% endif %}
               </ul>
             </li>
+          {% else %}
+            {% if right_of_occupancy_payment|render and right_of_occupancy_payment|render != '0,00€' and right_of_occupancy_payment|render != null %}
+              <li class="apartment__details-item">
+                <p>
+                  <span>{% trans %}Right of occupancy payment{% endtrans %}</span>
+                  <span>{{ right_of_occupancy_payment }}</span>
+                </p>
+              </li>
+            {% endif %}
           {% endif %}
           {% if right_of_occupancy_fee|render and right_of_occupancy_fee|render != '0.00€' %}
 						<li class="apartment__details-item">

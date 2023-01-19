@@ -207,6 +207,7 @@ function asuntotuotanto_preprocess_views_view_table(&$variables) {
 
     $price_title = $project->field_ownership_type->entity->name->value == 'HASO' ? t('Right of occupancy payment') : t('Debt-free sales price');
     $variables['header']['field_debt_free_sales_price']['content'] = $price_title;
+    unset($variables['header']['field_release_payment']);
 
     foreach ($results as $key => $row) {
       /** @var \Drupal\asu_content\Entity\Apartment $entity */
