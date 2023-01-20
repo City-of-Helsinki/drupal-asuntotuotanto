@@ -9,7 +9,7 @@ id: node.apartment.field_index_adjusted_right_of_oc
 field_name: field_index_adjusted_right_of_oc
 entity_type: node
 bundle: apartment
-label: 'Index adjusted right of occupancy payment'
+label: 'Index adjustment'
 description: ''
 required: false
 translatable: false
