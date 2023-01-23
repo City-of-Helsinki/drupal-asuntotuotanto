@@ -1,0 +1,37 @@
+uuid: d307faad-b057-4c39-a6be-4f3e14e362b6
+langcode: fi
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.media_bank.body
+    - field.field.node.media_bank.field_media_bank_file
+    - field.field.node.media_bank.field_project
+    - node.type.media_bank
+  module:
+    - text
+    - user
+id: node.media_bank.teaser
+targetEntityType: node
+bundle: media_bank
+mode: teaser
+content:
+  body:
+    type: text_summary_or_trimmed
+    label: hidden
+    settings:
+      trim_length: 600
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  field_media_bank_file: true
+  field_project: true
+  langcode: true
+  search_api_excerpt: true
+  toc_enabled: true

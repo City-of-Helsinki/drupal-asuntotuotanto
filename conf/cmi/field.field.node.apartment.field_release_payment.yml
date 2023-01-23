@@ -1,15 +1,15 @@
-uuid: 5d8a55e9-52a3-44c8-9155-7c1502448c5c
-langcode: en
+uuid: 745d43d5-10e8-438f-9410-8e45377b189e
+langcode: fi
 status: true
 dependencies:
   config:
-    - field.storage.node.field_index_adjusted_right_of_oc
+    - field.storage.node.field_release_payment
     - node.type.apartment
-id: node.apartment.field_index_adjusted_right_of_oc
-field_name: field_index_adjusted_right_of_oc
+id: node.apartment.field_release_payment
+field_name: field_release_payment
 entity_type: node
 bundle: apartment
-label: 'Index adjustment'
+label: Luovutushinta
 description: ''
 required: false
 translatable: false

@@ -1,0 +1,22 @@
+uuid: af7ae153-1c81-42ad-a010-0b16008b4074
+langcode: fi
+status: true
+dependencies:
+  config:
+    - node.type.media_bank
+id: node.media_bank.promote
+field_name: promote
+entity_type: node
+bundle: media_bank
+label: 'Näytetään etusivulla'
+description: ''
+required: false
+translatable: true
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: Käytössä
+  off_label: 'Pois päältä'
+field_type: boolean

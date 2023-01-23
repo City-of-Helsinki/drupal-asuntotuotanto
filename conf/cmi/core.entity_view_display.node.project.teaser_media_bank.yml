@@ -1,0 +1,299 @@
+uuid: 7286f0a3-6750-4bc8-889f-495b0bde4457
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser_media_bank
+    - field.field.node.project.field_acc_financeofficer
+    - field.field.node.project.field_acc_salesperson
+    - field.field.node.project.field_actual_application_end
+    - field.field.node.project.field_apartment_count
+    - field.field.node.project.field_apartments
+    - field.field.node.project.field_application_end_time
+    - field.field.node.project.field_application_start_time
+    - field.field.node.project.field_archived
+    - field.field.node.project.field_article_of_association
+    - field.field.node.project.field_attachments_url
+    - field.field.node.project.field_barred_bank_account
+    - field.field.node.project.field_building_collateral_releas
+    - field.field.node.project.field_building_flaw_attachement
+    - field.field.node.project.field_building_type
+    - field.field.node.project.field_business_id
+    - field.field.node.project.field_city
+    - field.field.node.project.field_collateral_amount
+    - field.field.node.project.field_collateral_amount_fixed
+    - field.field.node.project.field_collateral_type
+    - field.field.node.project.field_completion_1_start
+    - field.field.node.project.field_completion_2_end
+    - field.field.node.project.field_completion_2_start
+    - field.field.node.project.field_completion_3_start
+    - field.field.node.project.field_completion_date
+    - field.field.node.project.field_completion_selection_1
+    - field.field.node.project.field_completion_selection_2
+    - field.field.node.project.field_completion_selection_3
+    - field.field.node.project.field_construction_end_date
+    - field.field.node.project.field_construction_materials
+    - field.field.node.project.field_construction_permit_claim
+    - field.field.node.project.field_construction_phase_meaning
+    - field.field.node.project.field_construction_start_date
+    - field.field.node.project.field_construction_year
+    - field.field.node.project.field_constructor
+    - field.field.node.project.field_contract_other_terms
+    - field.field.node.project.field_coordinate_lat
+    - field.field.node.project.field_coordinate_lon
+    - field.field.node.project.field_customer_document_handover
+    - field.field.node.project.field_default_collateral
+    - field.field.node.project.field_depositary
+    - field.field.node.project.field_district
+    - field.field.node.project.field_documents_delivered
+    - field.field.node.project.field_energy_class
+    - field.field.node.project.field_estimated_completion
+    - field.field.node.project.field_estimated_completion_date
+    - field.field.node.project.field_estimated_handover_end
+    - field.field.node.project.field_estimated_handover_start
+    - field.field.node.project.field_has_elevator
+    - field.field.node.project.field_has_sauna
+    - field.field.node.project.field_heating_options
+    - field.field.node.project.field_holding_type
+    - field.field.node.project.field_housing_company
+    - field.field.node.project.field_housing_manager
+    - field.field.node.project.field_images
+    - field.field.node.project.field_import_apartments
+    - field.field.node.project.field_location_block
+    - field.field.node.project.field_main_image
+    - field.field.node.project.field_management_handover_date
+    - field.field.node.project.field_material_choice_dl
+    - field.field.node.project.field_material_selection_date
+    - field.field.node.project.field_material_selection_desc
+    - field.field.node.project.field_material_selection_later
+    - field.field.node.project.field_new_development_status
+    - field.field.node.project.field_new_housing
+    - field.field.node.project.field_other_terms
+    - field.field.node.project.field_ownership_type
+    - field.field.node.project.field_payment_verification
+    - field.field.node.project.field_plot_owner
+    - field.field.node.project.field_possession_transfer_date
+    - field.field.node.project.field_postal_code
+    - field.field.node.project.field_pre_marketing_end_time
+    - field.field.node.project.field_premarketing_start_time
+    - field.field.node.project.field_project_accessibility
+    - field.field.node.project.field_project_area_description
+    - field.field.node.project.field_project_attachments
+    - field.field.node.project.field_project_description
+    - field.field.node.project.field_project_manager
+    - field.field.node.project.field_property_id
+    - field.field.node.project.field_property_number
+    - field.field.node.project.field_publication_end_time
+    - field.field.node.project.field_publication_start_time
+    - field.field.node.project.field_realty_id
+    - field.field.node.project.field_recommended_bank
+    - field.field.node.project.field_regular_bank_account
+    - field.field.node.project.field_repository
+    - field.field.node.project.field_roof_material
+    - field.field.node.project.field_salesperson
+    - field.field.node.project.field_sanitation
+    - field.field.node.project.field_services
+    - field.field.node.project.field_services_url
+    - field.field.node.project.field_shared_apartment_images
+    - field.field.node.project.field_shareholder_meeting_date
+    - field.field.node.project.field_site_area
+    - field.field.node.project.field_site_owner
+    - field.field.node.project.field_site_renter
+    - field.field.node.project.field_state_of_sale
+    - field.field.node.project.field_street_address
+    - field.field.node.project.field_tasks
+    - field.field.node.project.field_transfer_restriction
+    - field.field.node.project.field_upcoming_description
+    - field.field.node.project.field_usage_fees
+    - field.field.node.project.field_virtual_presentation_url
+    - field.field.node.project.field_warranty_deposit_releas
+    - field.field.node.project.field_zoning_info
+    - field.field.node.project.field_zoning_status
+    - node.type.project
+  module:
+    - asu_content
+    - user
+id: node.project.teaser_media_bank
+targetEntityType: node
+bundle: project
+mode: teaser_media_bank
+content:
+  field_city:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 3
+    region: content
+  field_district:
+    type: entity_reference_label
+    label: hidden
+    settings:
+      link: false
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  field_images:
+    type: asu_custom_slick_formatter
+    label: hidden
+    settings:
+      optionset_thumbnail: ''
+      skin_thumbnail: ''
+      thumbnail_caption: ''
+      thumbnail_effect: ''
+      thumbnail_position: ''
+      optionset: default
+      override: false
+      overridables: {  }
+      skin: ''
+      skin_arrows: ''
+      skin_dots: ''
+      use_theme_field: false
+      cache: 0
+      lazy: ''
+      style: ''
+      layout: ''
+      view_mode: ''
+      background: false
+      box_caption: ''
+      box_caption_custom: ''
+      box_media_style: ''
+      caption: {  }
+      loading: lazy
+      preload: false
+      responsive_image_style: ''
+      box_style: ''
+      image_style: ''
+      media_switch: ''
+      ratio: ''
+      thumbnail_style: ''
+      preserve_keys: false
+      visible_items: 0
+      grid: ''
+      grid_medium: ''
+      grid_small: ''
+    third_party_settings: {  }
+    weight: 4
+    region: content
+  field_postal_code:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_street_address:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 1
+    region: content
+hidden:
+  field_acc_financeofficer: true
+  field_acc_salesperson: true
+  field_actual_application_end: true
+  field_apartment_count: true
+  field_apartments: true
+  field_application_end_time: true
+  field_application_start_time: true
+  field_archived: true
+  field_article_of_association: true
+  field_attachments_url: true
+  field_barred_bank_account: true
+  field_building_collateral_releas: true
+  field_building_flaw_attachement: true
+  field_building_type: true
+  field_business_id: true
+  field_collateral_amount: true
+  field_collateral_amount_fixed: true
+  field_collateral_type: true
+  field_completion_1_start: true
+  field_completion_2_end: true
+  field_completion_2_start: true
+  field_completion_3_start: true
+  field_completion_date: true
+  field_completion_selection_1: true
+  field_completion_selection_2: true
+  field_completion_selection_3: true
+  field_construction_end_date: true
+  field_construction_materials: true
+  field_construction_permit_claim: true
+  field_construction_phase_meaning: true
+  field_construction_start_date: true
+  field_construction_year: true
+  field_constructor: true
+  field_contract_other_terms: true
+  field_coordinate_lat: true
+  field_coordinate_lon: true
+  field_customer_document_handover: true
+  field_default_collateral: true
+  field_depositary: true
+  field_documents_delivered: true
+  field_energy_class: true
+  field_estimated_completion: true
+  field_estimated_completion_date: true
+  field_estimated_handover_end: true
+  field_estimated_handover_start: true
+  field_has_elevator: true
+  field_has_sauna: true
+  field_heating_options: true
+  field_holding_type: true
+  field_housing_company: true
+  field_housing_manager: true
+  field_import_apartments: true
+  field_location_block: true
+  field_main_image: true
+  field_management_handover_date: true
+  field_material_choice_dl: true
+  field_material_selection_date: true
+  field_material_selection_desc: true
+  field_material_selection_later: true
+  field_new_development_status: true
+  field_new_housing: true
+  field_other_terms: true
+  field_ownership_type: true
+  field_payment_verification: true
+  field_plot_owner: true
+  field_possession_transfer_date: true
+  field_pre_marketing_end_time: true
+  field_premarketing_start_time: true
+  field_project_accessibility: true
+  field_project_area_description: true
+  field_project_attachments: true
+  field_project_description: true
+  field_project_manager: true
+  field_property_id: true
+  field_property_number: true
+  field_publication_end_time: true
+  field_publication_start_time: true
+  field_realty_id: true
+  field_recommended_bank: true
+  field_regular_bank_account: true
+  field_repository: true
+  field_roof_material: true
+  field_salesperson: true
+  field_sanitation: true
+  field_services: true
+  field_services_url: true
+  field_shared_apartment_images: true
+  field_shareholder_meeting_date: true
+  field_site_area: true
+  field_site_owner: true
+  field_site_renter: true
+  field_state_of_sale: true
+  field_tasks: true
+  field_transfer_restriction: true
+  field_upcoming_description: true
+  field_usage_fees: true
+  field_virtual_presentation_url: true
+  field_warranty_deposit_releas: true
+  field_zoning_info: true
+  field_zoning_status: true
+  langcode: true
+  links: true
+  search_api_excerpt: true
+  toc_enabled: true

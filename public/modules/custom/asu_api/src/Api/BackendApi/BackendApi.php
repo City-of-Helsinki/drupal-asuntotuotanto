@@ -131,7 +131,7 @@ class BackendApi {
       $token = $this->store->get('asu_api_token');
     }
     else {
-      $token = getenv('DRUPAL-AUTH-TOKEN');
+      $token = getenv('DRUPAL_AUTH_TOKEN');
     }
 
     if ($account && (!$token || !AuthenticationHelper::isTokenAlive($token))) {

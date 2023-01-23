@@ -233,6 +233,10 @@ line-height: $lineheight-m;
   list-style: none;
   padding: 0;
   margin: 0;
+
+  &.sub__details-list {
+    margin: 0.5rem 1rem;
+  }
 }
 
 .apartment__details-item {

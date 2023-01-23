@@ -207,6 +207,7 @@ function asuntotuotanto_preprocess_views_view_table(&$variables) {
 
     $price_title = $project->field_ownership_type->entity->name->value == 'HASO' ? t('Right of occupancy payment') : t('Debt-free sales price');
     $variables['header']['field_debt_free_sales_price']['content'] = $price_title;
+    unset($variables['header']['field_release_payment']);
 
     foreach ($results as $key => $row) {
       /** @var \Drupal\asu_content\Entity\Apartment $entity */
@@ -972,4 +973,34 @@ function asuntotuotanto_preprocess_blazy(&$variables) {
   // dd($variables);
   $variables['image']['#attributes']['data-image'] = file_create_url($variables['image']['#uri']);
   $variables['#attached']['library'][] = 'asuntotuotanto/intense-images';
+}
+
+function asuntotuotanto_theme_suggestions_file_link_alter(&$suggestions, $vars, $hook) {
+  // Get the node type.
+  $node = \Drupal::routeMatch()->getParameter('node');
+  $type = $node->getType();
+  // Create the theme hook suggestion.
+  $suggestions[] = 'file_link__' . 'type_' . $type;
+}
+
+function asuntotuotanto_preprocess_file_link(&$variables) {
+  // File type.
+  $file = $variables['file'];
+  $mime_type = $file->getMimeType();
+  $variables['mime_type'] = t(file_icon_class($mime_type));
+  // File url.
+  /** @var \Drupal\Core\File\FileUrlGeneratorInterface $file_url_generator */
+  $file_url_generator = \Drupal::service('file_url_generator');
+  $url = $file_url_generator
+      ->generate(
+        $file->getFileUri()
+      );
+  $variables['file_link'] = $url;
+  // Use the description as the file name if available.
+  if (empty($variables['description'])) {
+    $variables['file_name'] = $file->getFilename();
+  }
+  else {
+    $variables['file_name'] = $variables['description'];
+  }
 }

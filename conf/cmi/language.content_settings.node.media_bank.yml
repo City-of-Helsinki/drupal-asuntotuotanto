@@ -1,0 +1,11 @@
+uuid: b05570ef-4cb2-4654-8210-170615544cdc
+langcode: fi
+status: true
+dependencies:
+  config:
+    - node.type.media_bank
+id: node.media_bank
+target_entity_type_id: node
+target_bundle: media_bank
+default_langcode: fi
+language_alterable: false

@@ -1,0 +1,22 @@
+uuid: 09930fb5-016a-42c2-af39-7781e89bf3b3
+langcode: fi
+status: true
+dependencies:
+  module:
+    - node
+id: media_bank
+label: 'Media bank'
+type: 'canonical_entities:node'
+pattern: 'mediabank/[random:hash:md5]'
+selection_criteria:
+  7b16d45e-5499-4506-819e-568c9b364b6d:
+    id: 'entity_bundle:node'
+    negate: false
+    uuid: 7b16d45e-5499-4506-819e-568c9b364b6d
+    context_mapping:
+      node: node
+    bundles:
+      media_bank: media_bank
+selection_logic: and
+weight: -5
+relationships: {  }

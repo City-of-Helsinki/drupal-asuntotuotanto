@@ -1,0 +1,48 @@
+uuid: 71705cad-83d9-44cd-bf70-8a54e1bafee0
+langcode: fi
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.full
+    - field.field.node.media_bank.body
+    - field.field.node.media_bank.field_media_bank_file
+    - field.field.node.media_bank.field_project
+    - node.type.media_bank
+  module:
+    - asu_csv_import
+    - text
+    - user
+id: node.media_bank.full
+targetEntityType: node
+bundle: media_bank
+mode: full
+content:
+  body:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_media_bank_file:
+    type: asu_csv_file_formatter
+    label: hidden
+    settings:
+      use_description_as_link_text: true
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_project:
+    type: entity_reference_entity_view
+    label: hidden
+    settings:
+      view_mode: teaser_media_bank
+      link: false
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  langcode: true
+  links: true
+  search_api_excerpt: true
+  toc_enabled: true

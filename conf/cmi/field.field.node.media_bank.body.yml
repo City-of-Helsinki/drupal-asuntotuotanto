@@ -1,0 +1,23 @@
+uuid: 04707fc7-b3e9-43a8-9cb6-736d5fad0d14
+langcode: fi
+status: true
+dependencies:
+  config:
+    - field.storage.node.body
+    - node.type.media_bank
+  module:
+    - text
+id: node.media_bank.body
+field_name: body
+entity_type: node
+bundle: media_bank
+label: Body
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  display_summary: true
+  required_summary: false
+field_type: text_with_summary

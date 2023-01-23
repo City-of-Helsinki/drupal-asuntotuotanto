@@ -229,6 +229,7 @@
         {% set apartment_number = row.columns.field_apartment_number.content.0.field_output['#markup']|striptags|trim %}
         {% set apartment_structure = row.columns.field_apartment_structure.content.0.field_output['#markup']|striptags|trim	 %}
         {% set debt_free_sales_price = row.columns.field_debt_free_sales_price.content.0.field_output['#markup']|striptags|trim %}
+        {% set release_payment_price = row.columns.field_release_payment.content.0.field_output['#markup']|striptags|trim %}
         {% set floor = row.columns.field_floor.content.0.field_output['#markup']|striptags|trim %}
         {% set living_area_size = row.columns.field_living_area.content.0.field_output['#markup']|striptags|trim %}
         {% set nid = row.columns.nid.content.0.field_output['#markup']|striptags|trim %}
@@ -237,6 +238,10 @@
         {% if debt_free_sales_price == null or debt_free_sales_price == '' or debt_free_sales_price == 0 or debt_free_sales_price == '0,00' %}
           {% set debt_free_sales_price = row.columns.field_right_of_occupancy_payment.content.0.field_output['#markup']|striptags|trim %}
           {% set price_title = 'Right of occupancy payment' %}
+        {% endif %}
+
+        {% if release_payment_price is not empty and release_payment_price > 0 %}
+          {% set debt_free_sales_price = release_payment_price %}
         {% endif %}
 
         {% set application_status = row.application_status %}
