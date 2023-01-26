@@ -176,6 +176,9 @@
             },
             "drupal/helfi_tunnistamo": {
                 "Temp patch which allows testing on dev/test environment": "patches/tunnistamo_v2.patch"
+            },
+            "drupal/helfi_platform_config": {
+                "Temporary patch for field description missing storage": "patches/field_description_missing_storage.patch"
             }
         }
     },
