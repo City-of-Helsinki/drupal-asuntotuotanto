@@ -1,11 +1,10 @@
-uuid: null
 langcode: en
 status: true
 dependencies:
   config:
-    - field.field.paragraph.popular_services.field_popular_services_title
     - field.field.paragraph.popular_services.field_service_items
     - paragraphs.paragraphs_type.popular_services
+    - field.field.paragraph.popular_services.field_popular_services_title
   module:
     - entity_reference_revisions
 _core:

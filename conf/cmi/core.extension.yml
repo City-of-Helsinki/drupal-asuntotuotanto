@@ -64,7 +64,6 @@ module:
   field_group: 0
   field_ui: 0
   file: 0
-  filelog: 0
   file_mdm: 0
   filter: 0
   flysystem: 0
