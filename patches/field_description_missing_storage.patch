@@ -1,0 +1,37 @@
+diff --git a/helfi_features/helfi_content/config/install/field.storage.paragraph.field_description.yml b/helfi_features/helfi_content/config/install/field.storage.paragraph.field_description.yml
+new file mode 100755
+index 00000000..b2aadcda
+--- /dev/null
++++ b/helfi_features/helfi_content/config/install/field.storage.paragraph.field_description.yml
+@@ -0,0 +1,19 @@
++uuid: 0b859f32-eea2-4fe3-af84-19904ecf9596
++langcode: en
++status: true
++dependencies:
++  module:
++    - paragraphs
++    - text
++id: paragraph.field_description
++field_name: field_description
++entity_type: paragraph
++type: text_long
++settings: {  }
++module: text
++locked: false
++cardinality: 1
++translatable: true
++indexes: {  }
++persist_with_no_fields: false
++custom_storage: false
+diff --git a/helfi_features/helfi_content/helfi_content.install b/helfi_features/helfi_content/helfi_content.install
+index 25e20210..bb251292 100644
+--- a/helfi_features/helfi_content/helfi_content.install
++++ b/helfi_features/helfi_content/helfi_content.install
+@@ -743,6 +743,7 @@ function helfi_content_update_9032() {
+     'field.storage.paragraph.field_show_phase_numbers' => 'field.field.paragraph.phasing.field_show_phase_numbers',
+     'field.storage.paragraph.field_phasing_item' => 'field.field.paragraph.phasing.field_phasing_item',
+     'field.storage.paragraph.field_phasing_item_title_level' => 'field.field.paragraph.phasing.field_phasing_item_title_level',
++    'field.storage.paragraph.field_description' => '',
+   ];
+ 
+   $globalFields = [
