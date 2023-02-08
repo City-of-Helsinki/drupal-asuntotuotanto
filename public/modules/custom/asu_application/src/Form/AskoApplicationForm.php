@@ -191,9 +191,13 @@ class AskoApplicationForm extends ContentEntityForm {
       $apartments = [];
       foreach ($project->field_apartments as $apartmentReference) {
         $apartment = $apartmentReference->entity;
+        $number = $apartment->field_apartment_number->value;
+
+        if (trim(strtolower($number)) == 'a0') {
+          continue;
+        }
 
         $living_area_size_m2 = number_format($apartment->field_living_area->value, 1, ',', '');
-        $number = $apartment->field_apartment_number->value;
         $structure = $apartment->field_apartment_structure->value;
         $floor = $apartment->field_floor->value;
         $floor_max = $apartment->field_floor_max->value;

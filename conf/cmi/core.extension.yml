@@ -64,7 +64,7 @@ module:
   field_group: 0
   field_ui: 0
   file: 0
-  filelog: 0
+  file_mdm: 0
   filter: 0
   flysystem: 0
   flysystem_azure: 0
@@ -76,11 +76,13 @@ module:
   hdbt_admin_tools: 0
   hdbt_component_library: 0
   hdbt_content: 0
+  health_check: 0
   helfi_api_base: 0
   helfi_azure_fs: 0
   helfi_base_config: 0
   helfi_charts: 0
   helfi_content: 0
+  helfi_events: 0
   helfi_gdpr_compliance: 0
   helfi_languages: 0
   helfi_media: 0
@@ -91,6 +93,7 @@ module:
   image: 0
   image_style_quality: 0
   imagecache_external: 0
+  imagemagick: 0
   inline_entity_form: 0
   jquery_ui: 0
   jquery_ui_datepicker: 0
@@ -146,6 +149,7 @@ module:
   simple_sitemap: 0
   slick: 0
   social_media: 0
+  sophron: 0
   swiftmailer: 0
   system: 0
   taxonomy: 0
