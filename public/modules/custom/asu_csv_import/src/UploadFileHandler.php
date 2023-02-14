@@ -119,7 +119,6 @@ class UploadFileHandler {
     $create_nodes = [];
     $userid = \Drupal::currentUser()->id();
 
-    // @todo Throw exception, delimiter not found.
     $delimiter = $this->getFileDelimiter($file->getFileUri());
 
     if (($handle = fopen($file->getFileUri(), "r")) !== FALSE) {
