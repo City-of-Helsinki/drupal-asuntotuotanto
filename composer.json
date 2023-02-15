@@ -90,8 +90,8 @@
         "drupal/devel": "^4.1",
         "drupal/drupal-extension": "^4.1",
         "phpspec/prophecy-phpunit": "^2",
-        "phpunit/phpunit": "~9.5.10",
-        "weitzman/drupal-test-traits": "^1.5"
+        "phpunit/phpunit": "~9.4.0",
+        "weitzman/drupal-test-traits": "^2.0"
     },
     "conflict": {
         "drupal/drupal": "*"
