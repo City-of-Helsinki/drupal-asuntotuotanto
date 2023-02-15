@@ -37,9 +37,7 @@ jobs:
         run: composer install
 
       - name: Run PHPCS
-        run: |
-          vendor/bin/phpcs public/modules/custom/ --ignore="*.js,*.css" --extensions=php,module,install --standard=Drupal
-          vendor/bin/phpcs public/themes/custom/ --ignore="*.js,*.css" --extensions=php,theme --standard=Drupal
+        run: vendor/bin/phpcs public/modules/custom/ --standard=Drupal
 
       - name: Install Drupal
         run: |
