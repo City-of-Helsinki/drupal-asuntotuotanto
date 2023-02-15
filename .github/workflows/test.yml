@@ -13,30 +13,23 @@ env:
   XDEBUG_MODE: off
 jobs:
   tests:
-    services:
-      db:
-        image: druidfi/db:mysql5.7-drupal
-        ports:
-          - 3306:3306
-
-      elastic:
-        image: docker.elastic.co/elasticsearch/elasticsearch:7.9.2
-        env:
-          discovery.type: single-node
-        options: >-
-          --health-cmd "curl http://localhost:9200/_cluster/health"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 10
-        ports:
-          - 9200:9200
-
     runs-on: ubuntu-latest
     container:
       image: ghcr.io/city-of-helsinki/drupal-php-docker:8.1-alpine
 
+    services:
+      db:
+        image: mariadb:10.9
+        env:
+          MYSQL_USER: drupal
+          MYSQL_PASSWORD: drupal
+          MYSQL_DATABASE: drupal
+          MYSQL_ROOT_PASSWORD: drupal
+        ports:
+          - 3306:3306
+
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 1
 
@@ -44,14 +37,27 @@ jobs:
         run: composer install
 
       - name: Run PHPCS
-        run: vendor/bin/phpcs public/modules/custom/ --standard=Drupal
+        run: |
+          vendor/bin/phpcs public/modules/custom/ --ignore="*.js,*.css" --extensions=php,module,install --standard=Drupal
+          vendor/bin/phpcs public/themes/custom/ --ignore="*.js,*.css" --extensions=php,theme --standard=Drupal
 
       - name: Install Drupal
-        run: php -d sendmail_path=$(which true); vendor/bin/drush --yes -v site-install --existing-config --db-url="$SIMPLETEST_DB"
+        run: |
+          mysql --user=drupal --password=drupal --database=drupal --host=db --port=3306 -A < latest.sql
+          drush cr && drush cim -y
+
+      - name: Start services
+        run: |
+          drush runserver $SIMPLETEST_BASE_URL > /dev/null 2>&1 &
+          chromedriver --port=4444 > /dev/null 2>&1 &
+          # Chromium browser is required to run 'functional-javascript' and
+          # 'existing-site-javascript' tests.
+          chromium-browser --headless --disable-gpu --no-sandbox --remote-debugging-port=9222 &
+
+          # Wait for drush server to start.
+          for i in {1..5}; do RESPONSE_CODE=$(curl -s -o /dev/null -w "%{http_code}" "$SIMPLETEST_BASE_URL" || true); if [ "$RESPONSE_CODE" -gt "301" ] || [ "$RESPONSE_CODE" -lt "200" ]; then sleep 2; fi; done
 
       - name: Run PHPUnit tests
         run: |
-          drush runserver $SIMPLETEST_BASE_URL > /dev/null 2>&1 &
-          sleep 15
-          chromedriver --port=4444 > /dev/null 2>&1 &
-          vendor/bin/phpunit -c $GITHUB_WORKSPACE/phpunit.xml.dist --verbose
+          composer test-php public/modules/custom
+          [ -d "tests/" ] && composer test-php tests/ || echo "No DTT tests found. Ignoring..."
