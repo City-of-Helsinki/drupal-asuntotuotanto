@@ -31,7 +31,7 @@
         "drupal/contact_storage": "1.x-dev@dev",
         "drupal/context": "^4.0@beta",
         "drupal/core-composer-scaffold": "^9.0",
-        "drupal/core-recommended": "^9.0",
+        "drupal/core": "^9.0",
         "drupal/elasticsearch_connector": "7.0.0-alpha3",
         "drupal/email_registration": "^1.1",
         "drupal/entity": "^1.2",
@@ -45,10 +45,8 @@
         "drupal/gin_toolbar": "^1.0@beta",
         "drupal/hdbt": "^2.3",
         "drupal/hdbt_admin": "^1.0",
-        "drupal/helfi_ahjo": "^1.0",
         "drupal/helfi_azure_fs": "^1.0",
-        "drupal/helfi_hauki": "^1.0",
-        "drupal/helfi_platform_config": "dev-UHF-X_drupal_952_patch_fix",
+        "drupal/helfi_platform_config": "^2.0",
         "drupal/helfi_tpr": "^1.0",
         "drupal/helfi_tunnistamo": "^2.0",
         "drupal/honeypot": "^2.0",
@@ -168,14 +166,8 @@
                 "Custom hero addition": "./patches/custom_hero_addition-2.patch",
                 "Column paragraph modification": "./patches/columns_toggle_modification.patch"
             },
-            "drupal/jquery_ui_touch_punch": {
-                "jQuery UI Touch Punch library [https://www.drupal.org/project/jquery_ui_touch_punch/issues/3159222]": "https://www.drupal.org/files/issues/2021-02-26/jquery_ui_touch_punch.patch"
-            },
             "drupal/user_bundle": {
                 "Custom patch prevents install from dying when trying to edit nonexisting admin configuration file.": "./patches/remove_editing_admin_configuration.patch"
-            },
-            "drupal/helfi_tunnistamo": {
-                "Temp patch which allows testing on dev/test environment": "patches/tunnistamo_v2.patch"
             },
             "drupal/helfi_platform_config": {
                 "Temporary patch for field description missing storage": "patches/field_description_missing_storage.patch"
