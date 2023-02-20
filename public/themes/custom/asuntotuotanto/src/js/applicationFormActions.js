@@ -360,7 +360,7 @@
 
           if (apartmentAddButton) {
             if ($.active == 0) {
-              apartmentAddButton.removeAttribute("disabled");
+              //apartmentAddButton.removeAttribute("disabled");
             }
             apartmentAddButton.focus();
           }
@@ -516,8 +516,8 @@
 
         const parentLiElement =
           target.parentElement.parentElement.parentElement;
-
         const apartment = findMatchingApartmentName(target)
+        if (!apartment) return;
         const originalDropdown = findMatchingOriginalSelectElementByName(apartment)
         const removeButton = originalDropdown.closest('tr').find(':submit')[0];
 
@@ -563,8 +563,7 @@
         );
 
         if (
-          getApplicationFormApartmentListElementCount() <= 5 &&
-          getApplicationFormApartmentListElementCount() > 1 &&
+          getApplicationFormApartmentListElementCount() <= 1 &&
           getLastOriginalApartmentSelectElement().value !== "0"
         ) {
           ajaxButton.mousedown();
@@ -581,7 +580,7 @@
         target.remove();
         setFocusToLastSelectElement();
 
-        if (getApplicationFormApartmentListElementCount() < 5) {
+        if (getApplicationFormApartmentListElementCount() < 2) {
           // eslint-disable-next-line no-use-before-define
           appendListItemToApartmentList();
         }
@@ -805,12 +804,12 @@
       }
 
       const findMatchingApartmentName = (target) => {
-        return jQuery(target.parentElement.parentElement.parentElement)
+        return target.parentElement.parentElement.parentElement ? jQuery(target.parentElement.parentElement.parentElement)
           .first()
           .find('.application-form-apartment__apartment-number')
           .first()
           .find('span')
-          .last()[0].textContent;
+          .last()[0].textContent : null;
       }
 
       const findMatchingOriginalSelectElementByName = (apartment) => {
