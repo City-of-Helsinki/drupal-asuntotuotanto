@@ -222,6 +222,7 @@
         }
     ],
     "scripts": {
+        "test-php": "vendor/bin/phpunit -c $PWD/phpunit.xml.dist",
         "copy-commit-message-script": "make copy-commit-message-script",
         "post-install-cmd": [
             "rsync -a vendor/asuntomyynti/react public/modules/custom/asu_apartment_search/assets || true",
