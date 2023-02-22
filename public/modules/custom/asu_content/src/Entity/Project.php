@@ -103,21 +103,20 @@ class Project extends Node {
    *   Apartment_id => amount of applications.
    */
   public function getApartmentApplicationCounts(): array {
-    $applicationStorage = \Drupal::entityTypeManager()
-      ->getStorage('asu_application');
-
-    $applications = $applicationStorage->loadByProperties([
-      'project_id' => $this->id(),
-      'field_locked' => 1,
-    ]);
+    $database = \Drupal::database();
+    $query = $database->select('asu_application', 'a');
+    $query->leftJoin('asu_application__apartment', 'b', 'a.id = b.entity_id');
+    $query->condition('a.project_id', $this->id());
+    $query->condition('a.field_locked', 1);
+    $query->fields('b', ['apartment_id']);
+    $applications = $query->execute()->fetchAll();
 
     $count = [];
     foreach ($applications as $application) {
-      $apartmentIds = $application->getApartmentIds();
-      foreach ($apartmentIds as $id) {
-        $count[$id] = isset($count[$id]) ? $count[$id] + 1 : 1;
-      }
+      $id = $application->apartment_id;
+      $count[$id] = isset($count[$id]) ? $count[$id] + 1 : 1;
     }
+
     return $count;
   }
 
