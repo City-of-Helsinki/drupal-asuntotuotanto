@@ -114,7 +114,7 @@ class Project extends Node {
     $count = [];
     foreach ($applications as $application) {
       $id = $application->apartment_id;
-      $count[$id] = isset($count[$id]) ? $count[$id] + 10 : 10;
+      $count[$id] = isset($count[$id]) ? $count[$id] + 1 : 1;
     }
 
     return $count;
