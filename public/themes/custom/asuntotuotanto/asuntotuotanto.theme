@@ -12,6 +12,7 @@ use Drupal\user\Entity\User;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\paragraphs\Entity\Paragraph;
 
+
 /**
  * Helper function to get the icons path.
  *
@@ -321,6 +322,17 @@ function asuntotuotanto_form_alter(&$form, &$form_state, $form_id) {
     $project_id = $form['#project_id'];
     $application_teaser_values = getProjectApartmentTeaserValues($project_id);
     $form['application_project_information'] = $application_teaser_values;
+
+    if (isset($application_teaser_values['#teaser_values']['application_end_time'])) {
+      $date_formatter = \Drupal::service('date.formatter');
+      $dateTime = $date_formatter->format(
+        strtotime($application_teaser_values['#teaser_values']['application_end_time'] . ' UTC'),
+        'custom',
+        'd.m.Y H:i',
+        'Europe/Helsinki',
+      );
+      $form['application_project_information']['#teaser_values']['application_end_time'] = $dateTime;
+    }
   }
 
   if ($form['#id'] == 'views-exposed-form-faq-faq-page-hitas') {
