@@ -42,8 +42,9 @@ class Apartment extends Node {
    *   Project address and apartment number combined.
    */
   public function createTitle(): string {
-    $apartmentNumber = $this->field_apartment_number->value;
+    $apartmentNumber = $this->field_apartment_number->value ?? '';
     $project = $this->getProject();
+
     return isset($project) ?
       "{$project->field_street_address->value} {$apartmentNumber}" : $apartmentNumber;
 
