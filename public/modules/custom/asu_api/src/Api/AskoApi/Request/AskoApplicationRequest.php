@@ -216,6 +216,9 @@ class AskoApplicationRequest {
    *   Personal id without divider.
    */
   private function personalIdWithoutDivider(string $personalId) {
+    if (strlen($personalId) == 4) {
+      return $personalId;
+    }
     return substr($personalId, 1, 4);
   }
 
