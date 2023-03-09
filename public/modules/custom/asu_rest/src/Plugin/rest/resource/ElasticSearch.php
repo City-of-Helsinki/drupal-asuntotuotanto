@@ -138,6 +138,8 @@ class ElasticSearch extends ResourceBase {
       foreach ($fields as $fieldName) {
         $parsed[$fieldName] = in_array($fieldName, $arrays) ? $itemFields[$fieldName]->getValues()
           : ($itemFields[$fieldName]->getValues()[0] ?? '');
+      }
+
       $apartments[] = $parsed;
     }
 
