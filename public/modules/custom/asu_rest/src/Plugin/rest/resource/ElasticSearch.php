@@ -2,12 +2,15 @@
 
 namespace Drupal\asu_rest\Plugin\rest\resource;
 
+use Drupal\Core\Cache\CacheableJsonResponse;
 use Drupal\rest\ModifiedResourceResponse;
 use Drupal\rest\Plugin\ResourceBase;
+use Drupal\rest\ResourceResponse;
 use Drupal\search_api\Entity\Index;
 use Drupal\search_api\Query\QueryInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
+
 
 /**
  * Provides a resource to get user applications.
@@ -42,7 +45,7 @@ class ElasticSearch extends ResourceBase {
    * @return \Drupal\rest\ModifiedResourceResponse
    *   The HTTP response object.
    */
-  public function post(array $data) : ModifiedResourceResponse {
+  public function post(array $data) : ModifiedResourceResponse | CacheableJsonResponse {
     $parameters = new ParameterBag($data);
 
     $headers = getenv('APP_ENV') == 'testing' ? [
@@ -79,7 +82,7 @@ class ElasticSearch extends ResourceBase {
       return new ModifiedResourceResponse(['message' => 'Apartment query failed.'], 500);
     }
 
-    // @todo Replace with elasticsearch_connector patch solution.
+    // These values must be returned inside array.
     $arrays = [
       'image_urls',
       'project_image_urls',
@@ -88,28 +91,75 @@ class ElasticSearch extends ResourceBase {
     ];
 
     $apartments = [];
-    foreach ($results->getResultItems() as $item) {
+    $fields = [
+      'apartment_number',
+      'apartment_state_of_sale',
+      'apartment_structure',
+      'apartment_published',
+      'application_url',
+      'apartment_address',
+      'application_url',
+      'floor',
+      'floor_max',
+      'nid',
+      'living_area',
+      'url',
+      'nid',
+      'title',
+      'living_area',
+      'loan_share',
+      'maintenance_fee',
+      'price_m2',
+      'project_id',
+      'image_urls',
+      'debt_free_sales_price',
+      'financing_fee',
+      'project_image_urls',
+      'services',
+      'sales_price',
+      'project_state_of_sale',
+      'project_apartment_count',
+      'project_construction_materials',
+      'project_street_address',
+      'project_district',
+      'project_housing_company',
+      'project_main_image_url',
+      'project_ownership_type',
+      'project_housing_company',
+      'project_published',
+      'project_application_end_time',
+      'project_application_start_time',
+      'project_url',
+      'project_uuid',
+      '_language',
+    ];
+    foreach ($results->getResultItems() as $key => $item) {
       $parsed = [];
-      foreach ($item->getFields() as $key => $field) {
+      //$fields = $item->getFields();
+      $itemFields = $item->getFields();
+      foreach ($fields as $fieldName) {
+        $parsed[$fieldName] = in_array($fieldName, $arrays) ? $itemFields[$fieldName]->getValues()
+          : ($itemFields[$fieldName]->getValues()[0] ?? '');
+
+      //foreach ($item->getFields() as $key => $field) {
         // Array values as arrays, otherwise the value or empty string.
-        $parsed[$key] = in_array($key, $arrays) ? $field->getValues()
-          : ($field->getValues()[0] ?? '');
+        //$parsed[$key] = in_array($key, $arrays) ? $field->getValues()
+          //: ($field->getValues()[0] ?? '');
       }
 
       // $parsed['project_construction_materials'] = [];
       $apartments[] = $parsed;
     }
 
-    // @todo Replace with aggregated_field processor.
-    $response = [];
+    $responseArray = [];
     foreach ($apartments as $apartment) {
       if (!$apartment['project_id']) {
         continue;
       }
-      $response[$apartment['project_id']][] = $apartment;
+      $responseArray[$apartment['project_id']][] = $apartment;
     }
 
-    return new ModifiedResourceResponse($response, 200, $headers);
+    return new ModifiedResourceResponse($responseArray, 200, $headers);
   }
 
   /**
