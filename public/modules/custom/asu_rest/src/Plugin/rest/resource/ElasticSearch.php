@@ -45,7 +45,7 @@ class ElasticSearch extends ResourceBase {
    * @return \Drupal\rest\ModifiedResourceResponse
    *   The HTTP response object.
    */
-  public function post(array $data) : ModifiedResourceResponse | CacheableJsonResponse {
+  public function post(array $data) : ModifiedResourceResponse {
     $parameters = new ParameterBag($data);
 
     $headers = getenv('APP_ENV') == 'testing' ? [
