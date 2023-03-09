@@ -4,6 +4,7 @@ namespace Drupal\asu_rest\Plugin\rest\resource;
 
 use Drupal\rest\ModifiedResourceResponse;
 use Drupal\rest\Plugin\ResourceBase;
+use Drupal\rest\ResourceResponse;
 use Drupal\search_api\Entity\Index;
 use Drupal\search_api\Query\QueryInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -42,7 +43,7 @@ class ElasticSearch extends ResourceBase {
    * @return \Drupal\rest\ModifiedResourceResponse
    *   The HTTP response object.
    */
-  public function post(array $data) : ModifiedResourceResponse {
+  public function post(array $data) : ModifiedResourceResponse | ResourceResponse {
     $parameters = new ParameterBag($data);
 
     $headers = getenv('APP_ENV') == 'testing' ? [
@@ -95,30 +96,17 @@ class ElasticSearch extends ResourceBase {
       'apartment_published',
       'application_url',
       'apartment_address',
-      'application_url',
       'floor',
       'floor_max',
-      'nid',
-      'living_area',
-      'url',
-      'nid',
-      'title',
-      'living_area',
-      'loan_share',
       'maintenance_fee',
-      'price_m2',
       'project_id',
       'image_urls',
       'debt_free_sales_price',
       'financing_fee',
       'project_image_urls',
-      'services',
       'sales_price',
       'project_state_of_sale',
       'project_apartment_count',
-      'project_construction_materials',
-      'project_street_address',
-      'project_district',
       'project_housing_company',
       'project_main_image_url',
       'project_ownership_type',
@@ -127,16 +115,15 @@ class ElasticSearch extends ResourceBase {
       'project_application_end_time',
       'project_application_start_time',
       'project_url',
-      'project_uuid',
       '_language',
     ];
+
     foreach ($results->getResultItems() as $key => $item) {
       $parsed = [];
-      $itemFields = $item->getFields();
-
-      foreach ($fields as $fieldName) {
-        $parsed[$fieldName] = in_array($fieldName, $arrays) ? $itemFields[$fieldName]->getValues()
-          : ($itemFields[$fieldName]->getValues()[0] ?? '');
+      foreach ($item->getFields() as $key => $field) {
+        // Array values as arrays, otherwise the value or empty string.
+        $parsed[$key] = in_array($key, $arrays) ? $field->getValues()
+          : ($field->getValues()[0] ?? '');
       }
 
       $apartments[] = $parsed;
@@ -150,7 +137,7 @@ class ElasticSearch extends ResourceBase {
       $responseArray[$apartment['project_id']][] = $apartment;
     }
 
-    return new ModifiedResourceResponse($responseArray, 200, $headers);
+    return new ResourceResponse($responseArray, 200, $headers);
   }
 
   /**
