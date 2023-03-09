@@ -2,7 +2,6 @@
 
 namespace Drupal\asu_rest\Plugin\rest\resource;
 
-use Drupal\Core\Cache\CacheableJsonResponse;
 use Drupal\rest\ModifiedResourceResponse;
 use Drupal\rest\Plugin\ResourceBase;
 use Drupal\rest\ResourceResponse;
@@ -10,7 +9,6 @@ use Drupal\search_api\Entity\Index;
 use Drupal\search_api\Query\QueryInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
-
 
 /**
  * Provides a resource to get user applications.
@@ -135,19 +133,11 @@ class ElasticSearch extends ResourceBase {
     ];
     foreach ($results->getResultItems() as $key => $item) {
       $parsed = [];
-      //$fields = $item->getFields();
       $itemFields = $item->getFields();
+
       foreach ($fields as $fieldName) {
         $parsed[$fieldName] = in_array($fieldName, $arrays) ? $itemFields[$fieldName]->getValues()
           : ($itemFields[$fieldName]->getValues()[0] ?? '');
-
-      //foreach ($item->getFields() as $key => $field) {
-        // Array values as arrays, otherwise the value or empty string.
-        //$parsed[$key] = in_array($key, $arrays) ? $field->getValues()
-          //: ($field->getValues()[0] ?? '');
-      }
-
-      // $parsed['project_construction_materials'] = [];
       $apartments[] = $parsed;
     }
 
