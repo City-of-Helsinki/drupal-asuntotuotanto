@@ -4,7 +4,6 @@ namespace Drupal\asu_rest\Plugin\rest\resource;
 
 use Drupal\rest\ModifiedResourceResponse;
 use Drupal\rest\Plugin\ResourceBase;
-use Drupal\rest\ResourceResponse;
 use Drupal\search_api\Entity\Index;
 use Drupal\search_api\Query\QueryInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
