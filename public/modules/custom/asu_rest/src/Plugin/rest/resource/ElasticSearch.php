@@ -4,6 +4,7 @@ namespace Drupal\asu_rest\Plugin\rest\resource;
 
 use Drupal\rest\ModifiedResourceResponse;
 use Drupal\rest\Plugin\ResourceBase;
+use Drupal\rest\ResourceResponse;
 use Drupal\search_api\Entity\Index;
 use Drupal\search_api\Query\QueryInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -42,7 +43,7 @@ class ElasticSearch extends ResourceBase {
    * @return \Drupal\rest\ModifiedResourceResponse
    *   The HTTP response object.
    */
-  public function post(array $data) : ModifiedResourceResponse {
+  public function post(array $data) : ModifiedResourceResponse | ResourceResponse {
     $parameters = new ParameterBag($data);
 
     $headers = getenv('APP_ENV') == 'testing' ? [
@@ -79,7 +80,7 @@ class ElasticSearch extends ResourceBase {
       return new ModifiedResourceResponse(['message' => 'Apartment query failed.'], 500);
     }
 
-    // @todo Replace with elasticsearch_connector patch solution.
+    // These values must be returned inside array.
     $arrays = [
       'image_urls',
       'project_image_urls',
@@ -88,7 +89,36 @@ class ElasticSearch extends ResourceBase {
     ];
 
     $apartments = [];
-    foreach ($results->getResultItems() as $item) {
+    $fields = [
+      'apartment_number',
+      'apartment_state_of_sale',
+      'apartment_structure',
+      'apartment_published',
+      'application_url',
+      'apartment_address',
+      'floor',
+      'floor_max',
+      'maintenance_fee',
+      'project_id',
+      'image_urls',
+      'debt_free_sales_price',
+      'financing_fee',
+      'project_image_urls',
+      'sales_price',
+      'project_state_of_sale',
+      'project_apartment_count',
+      'project_housing_company',
+      'project_main_image_url',
+      'project_ownership_type',
+      'project_housing_company',
+      'project_published',
+      'project_application_end_time',
+      'project_application_start_time',
+      'project_url',
+      '_language',
+    ];
+
+    foreach ($results->getResultItems() as $key => $item) {
       $parsed = [];
       foreach ($item->getFields() as $key => $field) {
         // Array values as arrays, otherwise the value or empty string.
@@ -96,20 +126,18 @@ class ElasticSearch extends ResourceBase {
           : ($field->getValues()[0] ?? '');
       }
 
-      // $parsed['project_construction_materials'] = [];
       $apartments[] = $parsed;
     }
 
-    // @todo Replace with aggregated_field processor.
-    $response = [];
+    $responseArray = [];
     foreach ($apartments as $apartment) {
       if (!$apartment['project_id']) {
         continue;
       }
-      $response[$apartment['project_id']][] = $apartment;
+      $responseArray[$apartment['project_id']][] = $apartment;
     }
 
-    return new ModifiedResourceResponse($response, 200, $headers);
+    return new ResourceResponse($responseArray, 200, $headers);
   }
 
   /**
