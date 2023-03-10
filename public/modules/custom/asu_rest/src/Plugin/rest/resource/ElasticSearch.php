@@ -71,7 +71,6 @@ class ElasticSearch extends ResourceBase {
     $query->range(0, 10000);
 
     $this->addConditions($query, $parameters);
-
     try {
       $results = $query->execute();
     }
@@ -120,10 +119,11 @@ class ElasticSearch extends ResourceBase {
 
     foreach ($results->getResultItems() as $key => $item) {
       $parsed = [];
-      foreach ($item->getFields() as $key => $field) {
-        // Array values as arrays, otherwise the value or empty string.
-        $parsed[$key] = in_array($key, $arrays) ? $field->getValues()
-          : ($field->getValues()[0] ?? '');
+
+      $itemFields = $item->getFields();
+      foreach ($fields as $fieldName) {
+        $parsed[$fieldName] = in_array($fieldName, $arrays) ? $itemFields[$fieldName]->getValues()
+          : ($itemFields[$fieldName]->getValues()[0] ?? '');
       }
 
       $apartments[] = $parsed;
