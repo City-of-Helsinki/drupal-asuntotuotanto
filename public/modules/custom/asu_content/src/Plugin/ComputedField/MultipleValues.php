@@ -64,12 +64,24 @@ class MultipleValues extends FieldItemList {
       ) {
         $referencing_node = $reference['referring_entity'];
         $field = $referencing_node->field_services;
+        $termIds = [];
+        $distances = [];
 
         if ($field && !$field->isEmpty()) {
           foreach ($field as $delta => $single_service) {
-            if ($service = Term::load($single_service->get('term_id')->getValue())) {
-              $distance = $single_service->get('distance')->getValue();
-              $data = "{$service->getName()} {$distance}m";
+            $termId = $single_service->get('term_id')->getValue();
+            if (!empty($termId) && $termId != '0') {
+              $termIds[$delta] = $termId;
+              $distances[$termId] = $single_service->get('distance')->getValue();
+            }
+          }
+
+          if (!empty($termIds) && count($termIds) > 0) {
+            $terms = Term::loadMultiple($termIds);
+
+            foreach ($terms as $delta => $term) {
+              $distance = $distances[$term->id()];
+              $data = "{$term->getName()} {$distance}m";
               $this->list[$delta] = $this->createItem($delta, $data);
             }
           }

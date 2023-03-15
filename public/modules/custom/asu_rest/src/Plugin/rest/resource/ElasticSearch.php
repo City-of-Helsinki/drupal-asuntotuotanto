@@ -59,82 +59,93 @@ class ElasticSearch extends ResourceBase {
       return new ModifiedResourceResponse(['message' => $message], 500, $headers);
     }
 
-    $indexes = Index::loadMultiple();
-    $index = $indexes['apartment'] ?? reset($indexes);
-    $query = $index->query();
+    $apartment_type = $data['project_ownership_type'];
+    // Setup a cache ID.
+    $cid = 'asu_rest:apartment_list:' . $apartment_type;
 
-    $parse_mode = \Drupal::service('plugin.manager.search_api.parse_mode')
-      ->createInstance('direct');
-    $parse_mode->setConjunction('AND');
-    $query->setParseMode($parse_mode);
-
-    $query->range(0, 10000);
-
-    $this->addConditions($query, $parameters);
-    try {
-      $results = $query->execute();
+    // If a cached entry exists, return it.
+    if ($cached = \Drupal::cache()->get($cid)) {
+      $responseArray = $cached->data;
     }
-    catch (\Exception $e) {
-      $this->logger->critical('Could not fetch apartments for react search component: ' . $e->getMessage());
-      return new ModifiedResourceResponse(['message' => 'Apartment query failed.'], 500);
-    }
+    else {
+      $indexes = Index::loadMultiple();
+      $index = $indexes['apartment'] ?? reset($indexes);
+      $query = $index->query();
 
-    // These values must be returned inside array.
-    $arrays = [
-      'image_urls',
-      'project_image_urls',
-      'services',
-      'project_construction_materials',
-    ];
+      $parse_mode = \Drupal::service('plugin.manager.search_api.parse_mode')
+        ->createInstance('direct');
+      $parse_mode->setConjunction('AND');
+      $query->setParseMode($parse_mode);
 
-    $apartments = [];
-    $fields = [
-      'apartment_number',
-      'apartment_state_of_sale',
-      'apartment_structure',
-      'apartment_published',
-      'application_url',
-      'apartment_address',
-      'floor',
-      'floor_max',
-      'maintenance_fee',
-      'project_id',
-      'image_urls',
-      'debt_free_sales_price',
-      'financing_fee',
-      'project_image_urls',
-      'sales_price',
-      'project_state_of_sale',
-      'project_apartment_count',
-      'project_housing_company',
-      'project_main_image_url',
-      'project_ownership_type',
-      'project_housing_company',
-      'project_published',
-      'project_application_end_time',
-      'project_application_start_time',
-      'project_url',
-      '_language',
-    ];
+      $query->range(0, 1000);
 
-    foreach ($results->getResultItems() as $key => $item) {
-      $parsed = [];
+      $this->addConditions($query, $parameters);
+      try {
+        $results = $query->execute();
+        $resultItems = $results->getResultItems();
+      }
+      catch (\Exception $e) {
+        $this->logger->critical('Could not fetch apartments for react search component: ' . $e->getMessage());
+        return new ModifiedResourceResponse(['message' => 'Apartment query failed.'], 500);
+      }
+      // These values must be returned inside array.
+      $arrays = [
+        'image_urls',
+        'project_image_urls',
+        'services',
+        'project_construction_materials',
+      ];
 
-      $itemFields = $item->getFields();
-      foreach ($fields as $fieldName) {
-        $parsed[$fieldName] = in_array($fieldName, $arrays) ? $itemFields[$fieldName]->getValues()
-          : ($itemFields[$fieldName]->getValues()[0] ?? '');
+      $apartments = [];
+      $fields = [
+        'apartment_number',
+        'apartment_state_of_sale',
+        'apartment_structure',
+        'apartment_published',
+        'application_url',
+        'apartment_address',
+        'floor',
+        'floor_max',
+        'maintenance_fee',
+        'project_id',
+        'image_urls',
+        'debt_free_sales_price',
+        'financing_fee',
+        'project_image_urls',
+        'sales_price',
+        'project_state_of_sale',
+        'project_apartment_count',
+        'project_housing_company',
+        'project_main_image_url',
+        'project_ownership_type',
+        'project_housing_company',
+        'project_published',
+        'project_application_end_time',
+        'project_application_start_time',
+        'project_url',
+        '_language',
+      ];
+
+      foreach ($resultItems as $key => $item) {
+        $parsed = [];
+
+        $itemFields = $item->getFields();
+        foreach ($fields as $fieldName) {
+          $parsed[$fieldName] = in_array($fieldName, $arrays) ? $itemFields[$fieldName]->getValues()
+            : ($itemFields[$fieldName]->getValues()[0] ?? '');
+        }
+
+        $apartments[] = $parsed;
       }
 
-      $apartments[] = $parsed;
-    }
-
-    $responseArray = [];
-    foreach ($apartments as $apartment) {
-      if (!$apartment['project_id']) {
-        continue;
+      $responseArray = [];
+      foreach ($apartments as $apartment) {
+        if (!$apartment['project_id']) {
+          continue;
+        }
+        $responseArray[$apartment['project_id']][] = $apartment;
       }
-      $responseArray[$apartment['project_id']][] = $apartment;
+      \Drupal::cache()->set($cid, $responseArray, strtotime('+1 days'));
     }
 
     return new ResourceResponse($responseArray, 200, $headers);

@@ -230,13 +230,7 @@ function asu_content_entity_presave(EntityInterface $entity) {
  * Makes sure to update referred apartments after project node save.
  */
 function asu_content_entity_update($entity) {
-
-  if (
-    $entity instanceof EntityInterface &&
-    method_exists($entity, 'getType') &&
-    $entity->getType() == 'apartment'
-  ) {
-  }
+  clearListCache($entity);
 
   if (
     $entity instanceof EntityInterface &&
@@ -292,7 +286,15 @@ function asu_content_node_insert(Node $node) {
 
       $node->get('field_apartments')->setValue([$apartment]);
       $node->save();
+      clearListCache($node);
     }
+  }
+
+  if (
+    method_exists($node, 'getType') &&
+    $node->getType() == 'apartment'
+  ) {
+    clearListCache($node);
   }
 
 }
@@ -346,5 +348,32 @@ function asu_content_cron() {
     catch (\Exception $e) {
       \Drupal::logger('asu_cron')->emergency('Unable to update projects to "Reserved" state: ' . $e->getMessage());
     }
+  }
+}
+
+function clearListCache($entity) {
+  if (
+    $entity instanceof Apartment &&
+    method_exists($entity, 'getType') &&
+    $entity->getType() == 'project'
+  ) {
+    if ($project = $entity->getProject()) {
+      clearCache($project);
+    }
+  }
+
+  if (
+    $entity instanceof Project &&
+    method_exists($entity, 'getType') &&
+    $entity->getType() == 'apartment'
+  ) {
+    clearCache($entity);
+  }
+}
+
+function clearCache($project) {
+  if ($project->getOwnershipType()) {
+    $cid = 'asu_rest:apartment_list:' . $project->getOwnershipType();
+    \Drupal::cache()->delete($cid);
   }
 }
