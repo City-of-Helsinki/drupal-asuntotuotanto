@@ -54,10 +54,15 @@ class MultipleValues extends FieldItemList {
    *   Returns the computed value.
    */
   protected function computeValue() {
+    $ids = &drupal_static(__FUNCTION__);
     $current_entity = $this->getEntity();
     $reverse_references = $this->reverseEntities->getReverseReferences($current_entity);
 
     foreach ($reverse_references as $reference) {
+      if (isset($ids[$reference['referring_entity_id']])) {
+        return;
+      }
+
       if (
         !empty($reference) &&
         $reference['referring_entity'] instanceof Node
@@ -93,7 +98,10 @@ class MultipleValues extends FieldItemList {
             }
           }
         }
+
+        $ids[$reference['referring_entity_id']] = $reference['referring_entity_id'];
       }
+
     }
   }
 
