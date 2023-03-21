@@ -109,7 +109,9 @@ dependencies:
     - field.field.node.project.field_warranty_deposit_releas
     - field.field.node.project.field_zoning_info
     - field.field.node.project.field_zoning_status
+    - image.style.3_2_m
     - node.type.project
+    - responsive_image.styles.showcase_gallery
   module:
     - asu_content
     - user
@@ -138,41 +140,51 @@ content:
     type: asu_custom_slick_formatter
     label: hidden
     settings:
+      style: ''
+      loading: ''
+      optionset: default
       optionset_thumbnail: ''
+      skin: ''
       skin_thumbnail: ''
-      thumbnail_caption: ''
+      image_style: 3_2_m
+      responsive_image_style: showcase_gallery
       thumbnail_effect: ''
       thumbnail_position: ''
-      optionset: default
-      override: false
-      overridables: {  }
-      skin: ''
-      skin_arrows: ''
-      skin_dots: ''
-      use_theme_field: false
-      cache: 0
-      lazy: ''
-      style: ''
-      layout: ''
-      view_mode: ''
-      background: false
-      box_caption: ''
-      box_caption_custom: ''
-      box_media_style: ''
-      caption: {  }
-      loading: lazy
-      preload: false
-      responsive_image_style: ''
-      box_style: ''
-      image_style: ''
       media_switch: ''
-      ratio: ''
       thumbnail_style: ''
-      preserve_keys: false
-      visible_items: 0
+      ratio: ''
       grid: ''
       grid_medium: ''
       grid_small: ''
+      visible_items: ''
+      layout: ''
+      thumbnail_caption: ''
+      cache: '0'
+      background: 0
+      caption:
+        title: 0
+        alt: 0
+      preload: 0
+      preserve_keys: 0
+      use_theme_field: 0
+      override: 0
+      overridables:
+        arrows: 0
+        autoplay: 0
+        dots: 0
+        draggable: 0
+        infinite: 0
+        mouseWheel: 0
+        randomize: 0
+        variableWidth: 0
+      skin_arrows: ''
+      skin_dots: ''
+      lazy: ''
+      view_mode: ''
+      box_caption: ''
+      box_caption_custom: ''
+      box_media_style: ''
+      box_style: ''
     third_party_settings: {  }
     weight: 4
     region: content
