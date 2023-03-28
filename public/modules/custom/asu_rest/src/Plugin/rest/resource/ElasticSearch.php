@@ -69,7 +69,7 @@ class ElasticSearch extends ResourceBase {
     }
     else {
       $indexes = Index::loadMultiple();
-      $index = $indexes['apartment'] ?? reset($indexes);
+      $index = $indexes['apartment_listing'] ?? reset($indexes);
       $query = $index->query();
 
       $parse_mode = \Drupal::service('plugin.manager.search_api.parse_mode')
