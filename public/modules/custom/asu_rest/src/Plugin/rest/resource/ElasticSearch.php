@@ -9,6 +9,7 @@ use Drupal\search_api\Entity\Index;
 use Drupal\search_api\Query\QueryInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
+use Drupal\user\Entity\User;
 
 /**
  * Provides a resource to get user applications.
@@ -63,13 +64,19 @@ class ElasticSearch extends ResourceBase {
     // Setup a cache ID.
     $cid = 'asu_rest:apartment_list:' . $apartment_type;
 
+    $account = User::load(\Drupal::currentUser()->id());
+    $debug = FALSE;
+    if ($account->id() == 1) {
+      $debug = TRUE;
+    }
+
     // If a cached entry exists, return it.
-    if ($cached = \Drupal::cache()->get($cid)) {
+    if (!$debug && $cached = \Drupal::cache()->get($cid)) {
       $responseArray = $cached->data;
     }
     else {
       $indexes = Index::loadMultiple();
-      $index = $indexes['apartment'] ?? reset($indexes);
+      $index = $indexes['apartment_listing'] ?? reset($indexes);
       $query = $index->query();
 
       $parse_mode = \Drupal::service('plugin.manager.search_api.parse_mode')
