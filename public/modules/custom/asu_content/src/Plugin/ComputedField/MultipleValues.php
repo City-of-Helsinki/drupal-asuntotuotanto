@@ -54,27 +54,54 @@ class MultipleValues extends FieldItemList {
    *   Returns the computed value.
    */
   protected function computeValue() {
+    $ids = &drupal_static(__FUNCTION__);
     $current_entity = $this->getEntity();
     $reverse_references = $this->reverseEntities->getReverseReferences($current_entity);
 
     foreach ($reverse_references as $reference) {
+      if (isset($ids[$reference['referring_entity_id']])) {
+        return;
+      }
+
       if (
         !empty($reference) &&
         $reference['referring_entity'] instanceof Node
       ) {
         $referencing_node = $reference['referring_entity'];
-        $field = $referencing_node->field_services;
+        $termIds = [];
+        $distances = [];
+        $fieldServices = $referencing_node->field_services->getValue();
+        $fieldServicesValues = array_keys(array_column($fieldServices, 'term_id'), 0);
 
-        if ($field && !$field->isEmpty()) {
-          foreach ($field as $delta => $single_service) {
-            if ($service = Term::load($single_service->get('term_id')->getValue())) {
-              $distance = $single_service->get('distance')->getValue();
-              $data = "{$service->getName()} {$distance}m";
-              $this->list[$delta] = $this->createItem($delta, $data);
+        foreach ($fieldServicesValues as $key) {
+          unset($fieldServices[$key]);
+        }
+
+        if (count($fieldServices) > 0) {
+          $fieldServices = array_values($fieldServices);
+
+          foreach ($fieldServices as $delta => $fieldService) {
+            $termId = $fieldService['term_id'];
+            if (!empty($termId) && $termId != '0') {
+              $termIds[$delta] = $termId;
+              $distances[$termId] = $fieldService['distance'];
+            }
+
+            if (!empty($termIds) && count($termIds) > 0) {
+              $terms = Term::loadMultiple($termIds);
+
+              foreach ($terms as $delta => $term) {
+                $distance = $distances[$term->id()];
+                $data = "{$term->getName()} {$distance}m";
+                $this->list[$delta] = $this->createItem($delta, $data);
+              }
             }
           }
         }
+
+        $ids[$reference['referring_entity_id']] = $reference['referring_entity_id'];
       }
+
     }
   }
 

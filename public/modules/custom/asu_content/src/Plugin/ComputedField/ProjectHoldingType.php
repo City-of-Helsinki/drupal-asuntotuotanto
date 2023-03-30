@@ -57,6 +57,7 @@ class ProjectHoldingType extends FieldItemList {
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
   protected function singleComputeValue() {
+    $ids = &drupal_static(__FUNCTION__);
     $current_entity = $this->getEntity();
     $reverse_references = $this->reverseEntities->getReverseReferences($current_entity);
     $value = FALSE;
@@ -68,14 +69,20 @@ class ProjectHoldingType extends FieldItemList {
       ) {
         $reverse_entity = $reference['referring_entity'];
         $id = $reverse_entity->field_holding_type->target_id;
-        if ($id && $term = Term::load($id)) {
-          if (!$term->field_machine_readable_name ||
+        if (isset($ids[$id])) {
+          $value = $ids[$id];
+        }
+        else {
+          if ($id && $term = Term::load($id)) {
+            if (!$term->field_machine_readable_name ||
               !$value = $term->field_machine_readable_name->value) {
-            $taxonomy_term_trans = \Drupal::service('entity.repository')->getTranslationFromContext($term, 'en');
-            $name = trim($taxonomy_term_trans->getName());
-            $value = strtoupper(
-              str_replace(' ', '_', $name)
-            );
+              $taxonomy_term_trans = \Drupal::service('entity.repository')->getTranslationFromContext($term, 'en');
+              $name = trim($taxonomy_term_trans->getName());
+              $value = strtoupper(
+                str_replace(' ', '_', $name)
+              );
+              $ids[$id] = $value;
+            }
           }
         }
       }

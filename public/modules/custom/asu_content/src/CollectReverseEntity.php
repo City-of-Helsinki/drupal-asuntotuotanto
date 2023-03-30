@@ -132,11 +132,16 @@ class CollectReverseEntity {
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
   protected function getReferrers($referring_entity, $field_name, array $bundles = [NULL]) {
+    $ids = &drupal_static(__FUNCTION__);
     $referring_entities = [];
     $referring_entity_storage = $this->entityTypeManager->getStorage($referring_entity);
 
     foreach ($bundles as $referring_bundle) {
       $result = $this->doGetReferrers($referring_entity_storage, $field_name, $referring_bundle);
+      $id = reset($result);
+      if (isset($ids[$id])) {
+        $referring_entities = $ids[$id];
+      }
       if ($result) {
         foreach ($result as $referrer_id) {
           $node_storage = $this->entityTypeManager->getStorage('node');
@@ -146,6 +151,7 @@ class CollectReverseEntity {
             'referring_entity_id' => $referrer_id,
             'referring_entity' => $node_storage->load($referrer_id),
           ];
+          $ids[$referrer_id] = $referring_entities;
         }
       }
     }
