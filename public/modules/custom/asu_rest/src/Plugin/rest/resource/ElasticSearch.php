@@ -66,7 +66,7 @@ class ElasticSearch extends ResourceBase {
 
     $account = User::load(\Drupal::currentUser()->id());
     $debug = FALSE;
-    if($account->id() == 1) {
+    if ($account->id() == 1) {
       $debug = TRUE;
     }
 
