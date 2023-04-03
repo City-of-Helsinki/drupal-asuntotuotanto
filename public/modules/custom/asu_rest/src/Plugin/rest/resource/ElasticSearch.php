@@ -163,7 +163,10 @@ class ElasticSearch extends ResourceBase {
         }
         $responseArray[$apartment['project_id']][] = $apartment;
       }
-      \Drupal::cache()->set($cid, $responseArray, strtotime('+1 days'));
+
+      if (count($responseArray) > 0) {
+        \Drupal::cache()->set($cid, $responseArray, strtotime('+1 days'));
+      }
     }
 
     return new ResourceResponse($responseArray, 200, $headers);
