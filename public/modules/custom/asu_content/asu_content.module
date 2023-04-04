@@ -16,6 +16,8 @@ use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\node\NodeForm;
 use Drupal\node\Entity\Node;
 use Drupal\search_api\Entity\Server;
+use Drupal\search_api\Entity\Index;
+
 
 /**
  * Implements hook_entity_bundle_info_alter().
@@ -355,7 +357,7 @@ function clearListCache($entity) {
   if (
     $entity instanceof Apartment &&
     method_exists($entity, 'getType') &&
-    $entity->getType() == 'project'
+    $entity->getType() == 'apartment'
   ) {
     if ($project = $entity->getProject()) {
       clearCache($project);
@@ -365,7 +367,7 @@ function clearListCache($entity) {
   if (
     $entity instanceof Project &&
     method_exists($entity, 'getType') &&
-    $entity->getType() == 'apartment'
+    $entity->getType() == 'project'
   ) {
     clearCache($entity);
   }
@@ -373,6 +375,8 @@ function clearListCache($entity) {
 
 function clearCache($project) {
   if ($project->getOwnershipType()) {
+    $index = Index::load('apartment_listing');
+    $index->indexItems();
     $cid = 'asu_rest:apartment_list:' . $project->getOwnershipType();
     \Drupal::cache()->delete($cid);
   }
