@@ -232,8 +232,6 @@ function asu_content_entity_presave(EntityInterface $entity) {
  * Makes sure to update referred apartments after project node save.
  */
 function asu_content_entity_update($entity) {
-  clearListCache($entity);
-
   if (
     $entity instanceof EntityInterface &&
     method_exists($entity, 'getType') &&
@@ -245,16 +243,20 @@ function asu_content_entity_update($entity) {
     /** @var \Drupal\search_api\Entity\Server $server */
     $server = reset($servers);
     $indexes = $server->getIndexes();
-    /** @var Drupal\search_api\Entity\Index $index */
-    $index = reset($indexes);
 
     $ids = [];
 
     foreach ($entity->getApartmentEntities() as $apartment) {
       $ids[] = "{$apartment->id()}:fi";
     }
-    $index->trackItemsUpdated('entity:node', $ids);
+
+    foreach($indexes as $index) {
+      /** @var Drupal\search_api\Entity\Index $index */
+      $index->trackItemsUpdated('entity:node', $ids);
+    }
   }
+
+  clearListCache($entity);
 }
 
 /**
@@ -375,8 +377,13 @@ function clearListCache($entity) {
 
 function clearCache($project) {
   if ($project->getOwnershipType()) {
-    $index = Index::load('apartment_listing');
-    $index->indexItems();
+    // Load search api indexes.
+    $indexes = Index::loadMultiple();
+
+    foreach ($indexes as $index) {
+      $index->indexItems();
+    }
+
     $cid = 'asu_rest:apartment_list:' . $project->getOwnershipType();
     \Drupal::cache()->delete($cid);
   }
