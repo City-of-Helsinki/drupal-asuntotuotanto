@@ -165,7 +165,7 @@ class ElasticSearch extends ResourceBase {
       }
 
       if (count($responseArray) > 0) {
-        \Drupal::cache()->set($cid, $responseArray, strtotime('+1 days'));
+        \Drupal::cache()->set($cid, $responseArray, strtotime(3600));
       }
     }
 
