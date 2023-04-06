@@ -188,6 +188,11 @@ field_settings:
     datasource_id: 'entity:node'
     property_path: 'search_api_reverse_entity_references_node__field_apartments:field_district'
     type: object
+  project_estimated_completion:
+    label: 'Estimated completion'
+    datasource_id: 'entity:node'
+    property_path: 'search_api_reverse_entity_references_node__field_apartments:field_estimated_completion'
+    type: string
   project_has_elevator:
     label: Elevator
     datasource_id: 'entity:node'
