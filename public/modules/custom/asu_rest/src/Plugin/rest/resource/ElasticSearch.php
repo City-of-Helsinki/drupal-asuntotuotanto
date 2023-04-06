@@ -123,6 +123,7 @@ class ElasticSearch extends ResourceBase {
         'project_coordinate_lat',
         'project_coordinate_lon',
         'project_district',
+        'project_estimated_completion',
         'project_housing_company',
         'project_id',
         'project_image_urls',
