@@ -254,9 +254,9 @@ function asu_content_entity_update($entity) {
       /** @var Drupal\search_api\Entity\Index $index */
       $index->trackItemsUpdated('entity:node', $ids);
     }
-  }
 
-  clearListCache($entity);
+    clearListCache($entity);
+  }
 }
 
 /**
