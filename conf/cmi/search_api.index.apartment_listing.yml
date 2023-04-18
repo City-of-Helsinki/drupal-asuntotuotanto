@@ -1,0 +1,354 @@
+uuid: 8035c344-ca3f-4786-8a9d-3fabfd428937
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_floor_max
+    - field.storage.node.field_apartment_number
+    - field.storage.node.field_apartment_state_of_sale
+    - field.storage.node.field_apartment_structure
+    - field.storage.node.field_right_of_occupancy_payment
+    - field.storage.node.field_has_balcony
+    - field.storage.node.field_debt_free_sales_price
+    - field.storage.node.field_floor
+    - field.storage.node.field_living_area
+    - field.storage.node.field_sales_price
+    - field.storage.node.field_has_apartment_sauna
+    - field.storage.node.field_has_terrace
+    - field.storage.node.field_has_yard
+    - search_api.server.asuntotuotanto
+  module:
+    - asu_elastic
+    - node
+    - computed_field_plugin
+    - search_api
+id: apartment_listing
+name: 'Apartment listing'
+description: ''
+read_only: false
+field_settings:
+  apartment_address:
+    label: 'Street address'
+    datasource_id: 'entity:node'
+    property_path: field_apartment_address
+    type: computed_array_string
+    dependencies:
+      module:
+        - computed_field_plugin
+  apartment_number:
+    label: 'Apartment number'
+    datasource_id: 'entity:node'
+    property_path: field_apartment_number
+    type: computed_array_string
+    dependencies:
+      config:
+        - field.storage.node.field_apartment_number
+  apartment_published:
+    label: Julkaistu
+    datasource_id: 'entity:node'
+    property_path: status
+    type: boolean
+    dependencies:
+      module:
+        - node
+  apartment_state_of_sale:
+    label: 'Apartment state of sale'
+    datasource_id: 'entity:node'
+    property_path: field_apartment_state_of_sale
+    type: asu_enum
+    dependencies:
+      config:
+        - field.storage.node.field_apartment_state_of_sale
+  apartment_structure:
+    label: 'Apartment structure'
+    datasource_id: 'entity:node'
+    property_path: field_apartment_structure
+    type: string
+    dependencies:
+      config:
+        - field.storage.node.field_apartment_structure
+  application_url:
+    label: 'Application URL'
+    datasource_id: 'entity:node'
+    property_path: asu_application_form_url
+    type: string
+    dependencies:
+      module:
+        - computed_field_plugin
+  debt_free_sales_price:
+    label: 'Debt free sales price'
+    datasource_id: 'entity:node'
+    property_path: field_debt_free_sales_price
+    type: cent
+    dependencies:
+      config:
+        - field.storage.node.field_debt_free_sales_price
+  floor:
+    label: Floor
+    datasource_id: 'entity:node'
+    property_path: field_floor
+    type: integer
+    dependencies:
+      config:
+        - field.storage.node.field_floor
+  floor_max:
+    label: 'Amount of floors'
+    datasource_id: 'entity:node'
+    property_path: field_floor_max
+    type: integer
+    dependencies:
+      config:
+        - field.storage.node.field_floor_max
+  has_apartment_sauna:
+    label: Sauna
+    datasource_id: 'entity:node'
+    property_path: field_has_apartment_sauna
+    type: boolean
+    dependencies:
+      config:
+        - field.storage.node.field_has_apartment_sauna
+  has_balcony:
+    label: Balcony
+    datasource_id: 'entity:node'
+    property_path: field_has_balcony
+    type: boolean
+    dependencies:
+      config:
+        - field.storage.node.field_has_balcony
+  has_terrace:
+    label: Terrace
+    datasource_id: 'entity:node'
+    property_path: field_has_terrace
+    type: boolean
+    dependencies:
+      config:
+        - field.storage.node.field_has_terrace
+  has_yard:
+    label: Yard
+    datasource_id: 'entity:node'
+    property_path: field_has_yard
+    type: boolean
+    dependencies:
+      config:
+        - field.storage.node.field_has_yard
+  housing_company_fee:
+    label: 'Housing company fee'
+    datasource_id: 'entity:node'
+    property_path: field_housing_company_fee
+    type: computed_array_decimal
+    dependencies:
+      module:
+        - computed_field_plugin
+  living_area:
+    label: 'Living area'
+    datasource_id: 'entity:node'
+    property_path: field_living_area
+    type: decimal
+    dependencies:
+      config:
+        - field.storage.node.field_living_area
+  nid:
+    label: ID
+    datasource_id: 'entity:node'
+    property_path: nid
+    type: integer
+    dependencies:
+      module:
+        - node
+  project_application_end_time:
+    label: 'Application end time'
+    datasource_id: 'entity:node'
+    property_path: 'search_api_reverse_entity_references_node__field_apartments:field_application_end_time'
+    type: asu_date_time
+  project_application_start_time:
+    label: 'Application start time'
+    datasource_id: 'entity:node'
+    property_path: 'search_api_reverse_entity_references_node__field_apartments:field_application_start_time'
+    type: asu_date_time
+  project_building_type:
+    label: 'Building type'
+    datasource_id: 'entity:node'
+    property_path: asu_project_building_type
+    type: string
+    dependencies:
+      module:
+        - computed_field_plugin
+  project_coordinate_lat:
+    label: 'Coordinate latitude'
+    datasource_id: 'entity:node'
+    property_path: 'search_api_reverse_entity_references_node__field_apartments:field_coordinate_lat'
+    type: decimal
+  project_coordinate_lon:
+    label: 'Coordinate longitude'
+    datasource_id: 'entity:node'
+    property_path: 'search_api_reverse_entity_references_node__field_apartments:field_coordinate_lon'
+    type: decimal
+  project_district:
+    label: District
+    datasource_id: 'entity:node'
+    property_path: 'search_api_reverse_entity_references_node__field_apartments:field_district'
+    type: object
+  project_estimated_completion:
+    label: 'Estimated completion'
+    datasource_id: 'entity:node'
+    property_path: 'search_api_reverse_entity_references_node__field_apartments:field_estimated_completion'
+    type: string
+  project_has_elevator:
+    label: Elevator
+    datasource_id: 'entity:node'
+    property_path: 'search_api_reverse_entity_references_node__field_apartments:field_has_elevator'
+    type: boolean
+  project_has_sauna:
+    label: 'Project has sauna'
+    datasource_id: 'entity:node'
+    property_path: 'search_api_reverse_entity_references_node__field_apartments:field_has_sauna'
+    type: boolean
+  project_housing_company:
+    label: 'Housing company'
+    datasource_id: 'entity:node'
+    property_path: 'search_api_reverse_entity_references_node__field_apartments:field_housing_company'
+    type: string
+  project_id:
+    label: 'Project ID'
+    datasource_id: 'entity:node'
+    property_path: 'search_api_reverse_entity_references_node__field_apartments:nid'
+    type: integer
+  project_image_urls:
+    label: Images
+    datasource_id: 'entity:node'
+    property_path: 'search_api_reverse_entity_references_node__field_apartments:field_images'
+    type: asu_file_url
+  project_main_image_url:
+    label: 'Main image'
+    datasource_id: 'entity:node'
+    property_path: 'search_api_reverse_entity_references_node__field_apartments:field_main_image'
+    type: asu_file_url
+  project_new_development_status:
+    label: 'New development status'
+    datasource_id: 'entity:node'
+    property_path: asu_new_development_status
+    type: string
+    dependencies:
+      module:
+        - computed_field_plugin
+  project_ownership_type:
+    label: 'Ownership type'
+    datasource_id: 'entity:node'
+    property_path: 'search_api_reverse_entity_references_node__field_apartments:field_ownership_type:entity:name'
+    type: string
+  project_possession_transfer_date:
+    label: 'Transfer of possession'
+    datasource_id: 'entity:node'
+    property_path: 'search_api_reverse_entity_references_node__field_apartments:field_possession_transfer_date'
+    type: object
+  project_published:
+    label: 'Project status'
+    datasource_id: 'entity:node'
+    property_path: 'search_api_reverse_entity_references_node__field_apartments:status'
+    type: boolean
+  project_state_of_sale:
+    label: 'Project state of sale'
+    datasource_id: 'entity:node'
+    property_path: 'search_api_reverse_entity_references_node__field_apartments:field_state_of_sale'
+    type: asu_enum
+  project_street_address:
+    label: 'Street address'
+    datasource_id: 'entity:node'
+    property_path: 'search_api_reverse_entity_references_node__field_apartments:field_street_address'
+    type: string
+  project_upcoming_description:
+    label: 'Upcoming description'
+    datasource_id: 'entity:node'
+    property_path: 'search_api_reverse_entity_references_node__field_apartments:field_upcoming_description'
+    type: string
+  project_url:
+    label: 'Project url'
+    datasource_id: 'entity:node'
+    property_path: 'search_api_reverse_entity_references_node__field_apartments:nid'
+    type: asu_url
+  project_uuid:
+    label: 'Project UUID'
+    datasource_id: 'entity:node'
+    property_path: 'search_api_reverse_entity_references_node__field_apartments:uuid'
+    type: string
+  right_of_occupancy_payment:
+    label: Asumisoikeusmaksu
+    datasource_id: 'entity:node'
+    property_path: field_right_of_occupancy_payment
+    type: cent
+    dependencies:
+      config:
+        - field.storage.node.field_right_of_occupancy_payment
+  room_count:
+    label: 'Number of rooms'
+    datasource_id: 'entity:node'
+    property_path: field_apartment_structure
+    type: asu_number
+    dependencies:
+      config:
+        - field.storage.node.field_apartment_structure
+  sales_price:
+    label: 'Sales price'
+    datasource_id: 'entity:node'
+    property_path: field_sales_price
+    type: cent
+    dependencies:
+      config:
+        - field.storage.node.field_sales_price
+  title:
+    label: Title
+    datasource_id: 'entity:node'
+    property_path: title
+    type: string
+    dependencies:
+      module:
+        - node
+  url:
+    label: 'Apartment url'
+    datasource_id: 'entity:node'
+    property_path: nid
+    type: asu_url
+    dependencies:
+      module:
+        - node
+  uuid:
+    label: UUID
+    datasource_id: 'entity:node'
+    property_path: uuid
+    type: string
+    dependencies:
+      module:
+        - node
+datasource_settings:
+  'entity:node':
+    bundles:
+      default: false
+      selected:
+        - apartment
+    languages:
+      default: true
+      selected: {  }
+processor_settings:
+  add_url: {  }
+  aggregated_field: {  }
+  entity_type: {  }
+  html_filter:
+    weights:
+      preprocess_index: 0
+      preprocess_query: 0
+    all_fields: false
+    fields: {  }
+    title: true
+    alt: true
+    tags: {  }
+  language_with_fallback: {  }
+  rendered_item: {  }
+  reverse_entity_references: {  }
+tracker_settings:
+  default:
+    indexing_order: fifo
+options:
+  cron_limit: 50
+  index_directly: false
+  track_changes_in_references: true
+server: asuntotuotanto
