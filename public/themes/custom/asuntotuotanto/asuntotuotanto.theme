@@ -762,6 +762,12 @@ function asuntotuotanto_preprocess_node(&$variables) {
         $variables['estimated_completion_date'] = $estimated_completion_date;
         $variables['site_owner'] = $site_owner ?? NULL;
         $variables['site_renter'] = $site_renter ?? NULL;
+        $variables['field_alteration_work'] = $apartment->get('field_alteration_work')->getValue()[0]['value'] ?? NULL;
+        $variables['field_water_fee'] = $apartment->get('field_water_fee')->getValue()[0]['value'] ?? NULL;
+        $variables['field_water_fee_explanation'] = $apartment->get('field_water_fee_explanation')->getValue()[0]['value'] ?? NULL;
+        $variables['field_parking_fee'] = $apartment->get('field_parking_fee')->getValue()[0]['value'] ?? NULL;
+        $variables['field_parking_fee_explanation'] = $apartment->get('field_parking_fee_explanation')->getValue()[0]['value'] ?? NULL;
+        $variables['field_other_fees'] = $apartment->get('field_other_fees')->getValue()[0]['value'] ?? NULL;
       }
       break;
   }
