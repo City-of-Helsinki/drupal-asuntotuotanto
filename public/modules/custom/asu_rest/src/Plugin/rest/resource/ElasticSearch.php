@@ -159,7 +159,7 @@ class ElasticSearch extends ResourceBase {
 
       $responseArray = [];
       foreach ($apartments as $apartment) {
-        if (!$apartment['project_id']) {
+        if (!$apartment['project_id'] || $apartment['apartment_state_of_sale'] == 'SOLD') {
           continue;
         }
         $responseArray[$apartment['project_id']][] = $apartment;
@@ -220,14 +220,15 @@ class ElasticSearch extends ResourceBase {
     $baseConditionGroup->addCondition('project_published', 'true', '=');
     $baseConditionGroup->addCondition('apartment_published', 'true', '=');
 
-    // If no project state of sale is set, return all except upcoming.
+    // If no project state of sale is set, return all except upcoming and sold.
     if (empty($parameters->get('project_state_of_sale'))) {
       $baseConditionGroup->addCondition('project_state_of_sale', ['upcoming'], 'NOT IN');
     }
     else {
       $states = array_map('strtolower', $parameters->get('project_state_of_sale'));
-      $key = array_search('upcoming', $states, 'IN');
-      if ($key === FALSE) {
+      $upcoming = array_search('upcoming', $states, 'IN');
+      // Exclude upcoming apartments unless requested.
+      if ($upcoming === FALSE) {
         $group = $query->createConditionGroup('OR');
         $group->addCondition('project_state_of_sale', $states, 'IN');
         $group->addCondition('project_state_of_sale', ['upcoming'], 'NOT IN');
