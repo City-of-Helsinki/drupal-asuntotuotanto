@@ -484,6 +484,54 @@
 							</p>
 						</li>
 					{% endif %}
+          {% if field_alteration_work|render %}
+            <li class="apartment__details-item">
+              <p>
+                <span>{% trans %}Alteration work{% endtrans %}</span>
+                <span>{{ field_alteration_work }}</span>
+              </p>
+            </li>
+          {% endif %}
+          {% if field_water_fee|render and field_water_fee|render != '0.00' %}
+            <li class="apartment__details-item">
+              <p>
+                <span>{% trans %}Water fee{% endtrans %}</span>
+                <span>{{ field_water_fee }}{% trans %}€ / month{% endtrans %}</span>
+              </p>
+            </li>
+          {% endif %}
+          {% if field_water_fee_explanation|render %}
+            <li class="apartment__details-item">
+              <p>
+                <span>{% trans %}Water fee explanation{% endtrans %}</span>
+                <span>{{ field_water_fee_explanation }}</span>
+              </p>
+            </li>
+          {% endif %}
+          {% if field_parking_fee|render and field_parking_fee|render != '0.00' %}
+            <li class="apartment__details-item">
+              <p>
+                <span>{% trans %}Parking fee{% endtrans %}</span>
+                <span>{{ field_parking_fee }}{% trans %}€ / month{% endtrans %}</span>
+              </p>
+            </li>
+          {% endif %}
+          {% if field_parking_fee_explanation|render %}
+            <li class="apartment__details-item">
+              <p>
+                <span>{% trans %}Parking fee explanation{% endtrans %}</span>
+                <span>{{ field_parking_fee_explanation }}</span>
+              </p>
+            </li>
+          {% endif %}
+          {% if field_other_fees|render %}
+            <li class="apartment__details-item">
+              <p>
+                <span>{% trans %}Other fees{% endtrans %}</span>
+                <span>{{ field_other_fees }}</span>
+              </p>
+            </li>
+          {% endif %}
 				</ul>
 			</div>
 			{% if attachments|length > 0 %}
