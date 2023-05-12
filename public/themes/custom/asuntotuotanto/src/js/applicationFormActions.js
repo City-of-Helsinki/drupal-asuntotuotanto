@@ -360,7 +360,7 @@
 
           if (apartmentAddButton) {
             if ($.active == 0) {
-              //apartmentAddButton.removeAttribute("disabled");
+              apartmentAddButton.removeAttribute("disabled");
             }
             apartmentAddButton.focus();
           }
@@ -563,7 +563,8 @@
         );
 
         if (
-          getApplicationFormApartmentListElementCount() <= 1 &&
+          getApplicationFormApartmentListElementCount() <= 5 &&
+          getApplicationFormApartmentListElementCount() > 1 &&
           getLastOriginalApartmentSelectElement().value !== "0"
         ) {
           ajaxButton.mousedown();
@@ -580,7 +581,7 @@
         target.remove();
         setFocusToLastSelectElement();
 
-        if (getApplicationFormApartmentListElementCount() < 2) {
+        if (getApplicationFormApartmentListElementCount() < 5) {
           // eslint-disable-next-line no-use-before-define
           appendListItemToApartmentList();
         }
@@ -804,12 +805,12 @@
       }
 
       const findMatchingApartmentName = (target) => {
-        return target.parentElement.parentElement.parentElement ? jQuery(target.parentElement.parentElement.parentElement)
+        return jQuery(target.parentElement.parentElement.parentElement)
           .first()
           .find('.application-form-apartment__apartment-number')
           .first()
           .find('span')
-          .last()[0].textContent : null;
+          .last()[0].textContent;
       }
 
       const findMatchingOriginalSelectElementByName = (apartment) => {
