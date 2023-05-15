@@ -86,6 +86,9 @@ class Project extends Node {
     $langcode = \Drupal::languageManager()->getCurrentLanguage()->getId();
     $baseurl = $baseurl . '/' . $langcode;
     if ($this->isApplicationPeriod() || $this->isApplicationPeriod('before')) {
+      if (!isset($this->field_ownership_type->referencedEntities()[0])) {
+        return '';
+      }
       $apartmentType = strtolower($this->field_ownership_type->referencedEntities()[0]->getName());
       return sprintf('%s/application/add/%s/%s', $baseurl, $apartmentType, $this->id());
     }
