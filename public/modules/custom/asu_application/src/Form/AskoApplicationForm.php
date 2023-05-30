@@ -13,7 +13,6 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Messenger\MessengerTrait;
 use Drupal\Core\Url;
 use Drupal\node\Entity\Node;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Form for Application.
@@ -28,6 +27,7 @@ class AskoApplicationForm extends ContentEntityForm {
     $form_state->setRebuild(TRUE);
     // $form_state->disableCache();
     $projectReference = $this->entity->project->first();
+    /** @var Project $project */
     $project = $projectReference->entity;
 
     if (!$project) {
@@ -36,20 +36,12 @@ class AskoApplicationForm extends ContentEntityForm {
     }
 
     $project_id = $project->id();
-    $application_type_id = $this->entity->bundle();
-
-    // @todo muualle jos jotain.
     $applicationsUrl = '<front>';
 
     $form['#project_id'] = $project_id;
     $form['#project_url'] = Url::fromUri('internal:/node/' . $project_id);
 
-    if (!$project_data = $this->getApartments($project)) {
-      $this->logger('asu_application')->critical('User tried to access nonexistent project of id ' . $project_id);
-      $this->messenger()->addMessage($this->t('Unfortunately the project you are trying to apply for is unavailable.'));
-      return new RedirectResponse($applicationsUrl);
-    }
-
+    $project_data = $this->getApartments($project)
     $projectName = $project_data['project_name'];
     $apartments = $project_data['apartments'];
 
@@ -60,41 +52,6 @@ class AskoApplicationForm extends ContentEntityForm {
     $form['#project_uuid'] = $project_data['project_uuid'];
 
     $form = parent::buildForm($form, $form_state);
-
-    // Hitas and haso has their own application forms.
-    if (!$this->isCorrectApplicationFormForProject($application_type_id, $project_data['ownership_type'])) {
-      $this->logger('asu_application')->critical('User tried to access ' . $project_data['ownership_type'] . ' application with project id of ' . $project_id . ' using wrong url.');
-      $types = [
-        'hitas' => 'haso',
-        'haso' => 'hitas',
-      ];
-      $correctApplicationForm = \Drupal::request()->getSchemeAndHttpHost() .
-        '/application/add/' . $types[strtolower($application_type_id)] . '/' .
-        $project_id;
-      return new RedirectResponse($correctApplicationForm);
-    }
-
-    $startDate = $project_data['application_start_date'];
-    $endDate = $project_data['application_end_date'];
-
-    if (!isset($startDate) || !isset($endDate)) {
-      $this->logger('asu_application')->critical('User tried to access application form of a project with no start or end date: project id' . $project_id);
-      $this->messenger()->addMessage($this->t('The apartment you tried to apply has no start or end date.'));
-      return new RedirectResponse($applicationsUrl);
-    }
-
-    if ($this->isApplicationPeriod('before', $startDate, $endDate)) {
-      $this->messenger()->addMessage($this->t('The application period has not yet started. You cannot send the application until the application period starts.'));
-      return new RedirectResponse($applicationsUrl);
-    }
-
-    // @todo tarkista apply_for_free_apartment alterit.
-    if ($this->isApplicationPeriod('after', $startDate, $endDate)) {
-      $this->messenger()->addMessage($this->t('The application period has ended. You can still apply for the apartment by contacting the responsible salesperson.'));
-      $freeApplicationUrl = \Drupal::request()->getSchemeAndHttpHost() .
-        '/contact/apply_for_free_apartment?project=' . $project_id;
-      return new RedirectResponse($freeApplicationUrl);
-    }
 
     return $form;
   }
@@ -350,49 +307,6 @@ class AskoApplicationForm extends ContentEntityForm {
       return \Drupal::request()->getSchemeAndHttpHost() . '/user/applications';
     }
     return 'internal:/user/applications';
-  }
-
-  /**
-   * Check application period.
-   *
-   * @param string $period
-   *   Should be either 'before', 'after', or 'now'.
-   * @param string $startDate
-   *   Project application start date as ISO string.
-   * @param string $endDate
-   *   Project application end date as ISO string.
-   *
-   * @return bool
-   *   Is application period.
-   */
-  private function isApplicationPeriod(string $period, string $startDate, string $endDate): bool {
-    if (!$startDate || !$endDate) {
-      return FALSE;
-    }
-    $startTime = strtotime($startDate);
-    $endTime = strtotime($endDate);
-    $now = time();
-
-    $value = FALSE;
-
-    switch ($period) {
-      case "before":
-        $value = $now < $startTime;
-
-        break;
-
-      case "now":
-        $value = $now > $startTime && $now < $endTime;
-
-        break;
-
-      case "after":
-        $value = $now > $endTime;
-
-        break;
-    }
-
-    return $value;
   }
 
 }
