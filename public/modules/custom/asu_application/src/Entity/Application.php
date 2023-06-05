@@ -37,8 +37,8 @@ use Drupal\user\EntityOwnerTrait;
  *     "access" = "Drupal\asu_application\Entity\Access\ApplicationEntityAccess",
  *     "views_data" = "Drupal\views\EntityViewsData",
  *     "form" = {
- *       "default" = "Drupal\asu_application\Form\AskoApplicationForm",
- *       "add" = "Drupal\asu_application\Form\AskoApplicationForm",
+ *       "default" = "Drupal\asu_application\Form\ApplicationForm",
+ *       "add" = "Drupal\asu_application\Form\ApplicationForm",
  *       "delete" = "Drupal\Core\Entity\ContentEntityDeleteForm",
  *     },
  *     "route_provider" = {
