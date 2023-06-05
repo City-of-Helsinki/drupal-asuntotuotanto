@@ -12,6 +12,16 @@
     }
   }
 
+  .user-form__identiyfy {
+    display: block;
+    margin: 2em 0;
+    text-align: center;
+  }
+
+  .user-form__actions {
+    margin-top: 3em;
+  }
+
   &.user-form--register {
     max-width: 545px;
 

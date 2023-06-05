@@ -24,6 +24,16 @@
     <form{{ attributes|without('class') }}>
       {{ children }}
     </form>
+
+    <span class="user-form__identiyfy">{{ 'Or identify yourself'|t }}</span>
+
+    {% include '@asuntotuotanto/button/button.html.twig' with {
+      type: 'primary',
+      disabled: false,
+      label: 'Bank ID'|t,
+      href: path('user.register')
+    }
+    %}
     <div class="user-form__actions">
       <a href="{{ path('user.pass') }}">{% trans %}Forgot password{% endtrans %}?</a>
     </div>
