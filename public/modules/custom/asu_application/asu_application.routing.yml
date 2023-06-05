@@ -29,11 +29,3 @@ asu_application.apply_for_free_apartment:
     _title: 'Apply for an apartment'
   requirements:
     _permission: 'access content'
-
-asu_application.application_form:
-  path: 'application/add/{application_type}/{project_id}'
-  defaults:
-    _form: 'Drupal\asu_application\Form\AskoApplicationForm'
-    _title: 'Apply for an apartment'
-  requirements:
-    _custom_access: 'Drupal\asu_application\Controller\ApplicationController::access'
