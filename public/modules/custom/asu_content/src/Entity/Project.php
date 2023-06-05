@@ -36,13 +36,11 @@ class Project extends Node {
         !$this->field_application_end_time->value) {
       return FALSE;
     }
-    $startTime = strtotime($this->field_application_start_time->value);
-    $endTime = strtotime($this->field_application_end_time->value);
+    $startTime = $this->convertDatetime($this->field_application_start_time->value);
+    $startTime = strtotime($startTime);
+    $endTime = $this->convertDatetime($this->field_application_end_time->value);
+    $endTime = strtotime($endTime);
     $now = time();
-
-    if (!$startTime || !$endTime) {
-      return FALSE;
-    }
 
     $value = FALSE;
     switch ($period) {
@@ -154,6 +152,22 @@ class Project extends Node {
     }
 
     return $user_field->referencedEntities()[0];
+  }
+
+  /**
+   * Covert datetime.
+   */
+  private function convertDatetime($value) {
+    /** @var Drupal\Core\Datetime\DateFormatterInterface $date_formatter */
+    $date_formatter = \Drupal::service('date.formatter');
+    $date = $date_formatter->format(
+      strtotime($value . ' UTC'),
+      'custom',
+      'Y-m-d\TH:i:sP',
+      'Europe/Helsinki',
+    );
+
+    return $date;
   }
 
 }
