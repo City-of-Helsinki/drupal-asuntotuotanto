@@ -23,60 +23,8 @@ class ApplicationSubscriber implements EventSubscriberInterface {
    */
   public static function getSubscribedEvents() {
     $events = [];
-    $events[ApplicationEvent::EVENT_NAME][] = ['sendAskoMail', 10];
 
     return $events;
-  }
-
-  /**
-   * Send application to the old system.
-   *
-   * @param \Drupal\asu_application\Event\ApplicationEvent $applicationEvent
-   *   Application event.
-   *
-   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
-   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
-   */
-  public function sendAskoMail(ApplicationEvent $applicationEvent) {
-    /** @var \Drupal\Core\Mail\MailManager $mailManager */
-    $mailManager = \Drupal::service('plugin.manager.mail');
-    $application = $applicationEvent->getApplication();
-
-    try {
-      /** @var \Drupal\asu_api\Api\AskoApi\AskoApi $askoApi */
-      $askoApi = \Drupal::service('asu_api.askoapi');
-      $body = $askoApi
-        ->getAskoApplicationRequest($application, $applicationEvent->getProjectName())
-        ->toMailFormat();
-    }
-    catch (\InvalidArgumentException $exception) {
-      \Drupal::messenger()->addMessage('Exception while creating asko request: ' . $exception->getMessage());
-      return;
-      // @todo Add logging.
-    }
-
-    $module = 'asu_mailer';
-    $key = 'application_asko_' . $application->bundle();
-    $to = $askoApi->getEmailAddress($application->bundle());
-    $langcode = 'fi';
-    $send = TRUE;
-    $subject = $askoApi->getEmailTitle($application->bundle());
-    $params = [
-      'subject' => $subject,
-      'message' => $body,
-    ];
-
-    $result = $mailManager->mail($module, $key, $to, $langcode, $params, NULL, $send);
-
-    if ($result['result'] != TRUE) {
-      // Email sending failed.
-      \Drupal::messenger()->addMessage(t('Email sending failed. Please check the form and try again.'));
-      // @todo Add logging.
-      return;
-    }
-
-    // @todo Remove message when logging is done.
-    \Drupal::messenger()->addMessage(t('Thank you, Your application has been successfully sent.'));
   }
 
   /**
