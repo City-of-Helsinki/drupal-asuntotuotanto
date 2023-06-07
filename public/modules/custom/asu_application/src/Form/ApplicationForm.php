@@ -28,7 +28,6 @@ class ApplicationForm extends ContentEntityForm {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $form_state->setRebuild(TRUE);
-    //$form_state->disableCache();
 
     $projectReference = $this->entity->project->first();
     $project = $projectReference->entity;
