@@ -46,6 +46,8 @@ class ApplicationForm extends ContentEntityForm {
     $applicationsUrl = $this->getUserApplicationsUrl();
 
     $form['#project_id'] = $project_id;
+    $form['#project_url'] = Url::fromUri('internal:/node/' . $project_id);
+
     // Redirect cases.
     if ($currentUser->isAnonymous()) {
       $current_path = \Drupal::service('path.current')->getPath();

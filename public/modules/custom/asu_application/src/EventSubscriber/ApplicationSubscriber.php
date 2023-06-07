@@ -67,13 +67,12 @@ class ApplicationSubscriber implements EventSubscriberInterface {
    */
   public static function getSubscribedEvents() {
     $events = [];
-    /*
     $events[ApplicationEvent::EVENT_NAME][] = ['sendApplicationToBackend', 5];
     $events[SalesApplicationEvent::EVENT_NAME][] = [
-    'salesSendApplicationToBackend',
-    10,
+      'salesSendApplicationToBackend',
+      10,
     ];
-     */
+
     return $events;
   }
 

@@ -105,6 +105,11 @@
       {{ element.apartment }}
     </section>
     <section class="application-form__section">
+      <div class="application-form__input-elements">
+        {{ element.main_applicant }}
+      </div>
+    </section>
+    <section class="application-form__section">
       <h3>
         {% trans %}
           Draw
@@ -115,6 +120,22 @@
           Once we have drawn the apartments, you can find your position from the account page.
         {% endtrans %}
       </p>
+    </section>
+    <section class="application-form__section">
+      <h2>
+        {% trans %}
+          Applicant's Social Security Number
+        {% endtrans %}
+      </h2>
+      <p>
+        {% trans %}
+          Enter your ID's last 5 characters.
+        {% endtrans %}
+      </p>
+      <div class="application-form__personal-id">
+        <p aria-label="{% trans %} The beginning of social security number {% endtrans %} {{ element['#pid_start'] }}">{{ element['#pid_start'] }}</p>
+          {{ element.field_personal_id }}
+      </div>
     </section>
     <section class="application-form__section">
       <h2>
