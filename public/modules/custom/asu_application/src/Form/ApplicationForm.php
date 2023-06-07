@@ -28,7 +28,6 @@ class ApplicationForm extends ContentEntityForm {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $form_state->setRebuild(TRUE);
-    $form_state->disableCache();
 
     $projectReference = $this->entity->project->first();
     $project = $projectReference->entity;
@@ -46,6 +45,8 @@ class ApplicationForm extends ContentEntityForm {
     $applicationsUrl = $this->getUserApplicationsUrl();
 
     $form['#project_id'] = $project_id;
+    $form['#project_url'] = Url::fromUri('internal:/node/' . $project_id);
+
     // Redirect cases.
     if ($currentUser->isAnonymous()) {
       $current_path = \Drupal::service('path.current')->getPath();
