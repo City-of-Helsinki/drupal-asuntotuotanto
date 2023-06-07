@@ -8,13 +8,13 @@ DRUPAL_DISABLE_MODULES ?= no
 DRUPAL_ENABLE_MODULES ?= no
 DRUPAL_PROFILE ?= minimal
 DRUPAL_SYNC_FILES ?= yes
-DRUPAL_SYNC_SOURCE ?= production
+DRUPAL_SYNC_SOURCE ?= main
 DRUSH_RSYNC_MODE ?= Pakzu
 DRUSH_RSYNC_OPTS ?=  -- --omit-dir-times --no-perms --no-group --no-owner --chmod=ugo=rwX
 DRUSH_RSYNC_EXCLUDE ?= css:ctools:js:php:tmp:tmp_php
 SYNC_TARGETS += drush-sync
 CS_EXTS := inc,php,module,install,profile,theme
-CS_STANDARD_PATHS := vendor/drupal/coder/coder_sniffer
+CS_STANDARD_PATHS := vendor/drupal/coder/coder_sniffer,vendor/slevomat/coding-standard
 CS_STANDARDS := Drupal,DrupalPractice
 LINT_PATHS_JS += ./$(WEBROOT)/modules/custom/*/js
 LINT_PATHS_JS += ./$(WEBROOT)/themes/custom/*/js
@@ -23,6 +23,8 @@ LINT_PATHS_PHP += $(WEBROOT)/modules/custom
 LINT_PATHS_PHP += $(WEBROOT)/themes/custom
 LINT_PHP_TARGETS += lint-drupal
 FIX_TARGETS += fix-drupal
+DRUPAL_CREATE_FOLDERS := $(WEBROOT)/sites/default/files/private
+DRUPAL_CREATE_FOLDERS += $(WEBROOT)/sites/default/files/translations
 
 ifeq ($(GH_DUMP_ARTIFACT),yes)
 	DRUPAL_FRESH_TARGETS := gh-download-dump $(DRUPAL_FRESH_TARGETS)
@@ -38,7 +40,7 @@ endif
 
 PHONY += drupal-create-folders
 drupal-create-folders:
-	@mkdir -p $(WEBROOT)/sites/default/files/translations
+	@mkdir -p $(DRUPAL_CREATE_FOLDERS)
 
 PHONY += drupal-update
 drupal-update: ## Update Drupal core with Composer
@@ -78,6 +80,7 @@ else
     drush-si: DRUSH_SI := -y $(DRUPAL_PROFILE)
 endif
 drush-si: ## Site install
+	$(call step,Do Drush site:install...\n)
 	$(call drush,si ${DRUSH_SI})
 
 PHONY += drush-deploy
@@ -156,7 +159,7 @@ drush-create-dump: ## Create database dump to dump.sql
 
 PHONY += drush-download-dump
 drush-download-dump: ## Download database dump to dump.sql
-	$(call drush,-Dssh.tty=0 @$(DRUPAL_SYNC_SOURCE) sql-dump --structure-tables-key=common > ${DOCKER_PROJECT_ROOT}/$(DUMP_SQL_FILENAME))
+	$(call drush,@$(DRUPAL_SYNC_SOURCE) sql-dump --structure-tables-key=common > ${DOCKER_PROJECT_ROOT}/$(DUMP_SQL_FILENAME))
 
 PHONY += open-db-gui
 open-db-gui: DB_CONTAINER := $(COMPOSE_PROJECT_NAME)-db
@@ -170,6 +173,12 @@ fix-drupal: PATHS := $(subst $(space),,$(LINT_PATHS_PHP))
 fix-drupal: ## Fix Drupal code style
 	$(call step,Fix Drupal code style with phpcbf...\n)
 	$(call cs,phpcbf,$(PATHS))
+
+PHONY += fix-drupal-coder
+fix-drupal-coder: VERSION := 8.3.16
+fix-drupal-coder: ## Fix Drupal Coder loading
+	composer config repositories.drupal '{"type": "composer", "url": "https://packages.drupal.org/8"}'
+	composer config repositories.drupal/coder '{"type": "package", "package": {"name": "drupal/coder", "type": "phpcodesniffer-standard", "version": "$(VERSION)", "dist": {"type": "zip", "url": "https://ftp.drupal.org/files/projects/coder-$(VERSION).zip"}}}'
 
 PHONY += lint-drupal
 lint-drupal: PATHS := $(subst $(space),,$(LINT_PATHS_PHP))
@@ -185,10 +194,10 @@ mmfix:
 
 ifeq ($(RUN_ON),docker)
 define drush
-	$(call docker_run_cmd,drush --ansi --strict=0 $(1),$(2))
+	$(call docker_compose_exec,drush $(1),$(2))
 endef
 else
 define drush
-	@cd $(COMPOSER_JSON_PATH)/${WEBROOT} && drush --ansi --strict=0 $(1)
+	@drush $(1)
 endef
 endif

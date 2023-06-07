@@ -143,8 +143,6 @@ class AuthService extends SamlService {
         ];
 
         $account = $this->externalAuth->register($unique_id, 'samlauth', $account_data);
-        $this->externalAuth->userLoginFinalize($account, $unique_id, 'samlauth');
-
         $pid = $this->getAttributeByConfig('unique_id_attribute');
         $lastname = reset($attributes['sn']) ?? NULL;
         $first_name = reset($attributes['firstName']) ?? NULL;
@@ -185,9 +183,11 @@ class AuthService extends SamlService {
         }
         catch (\Exception $e) {
           \Drupal::logger('asu_backend_api')->emergency(
-          'Exception while creating user to backend: ' . $e->getMessage()
+            'Exception while creating user to backend: ' . $e->getMessage()
           );
         }
+
+        $this->externalAuth->userLoginFinalize($account, $unique_id, 'samlauth');
       }
       else {
         throw new UserVisibleException('No existing user account matches the SAML ID provided. This authentication service is not configured to create new accounts.');
