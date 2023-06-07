@@ -2,9 +2,11 @@
 
 namespace Drupal\asu_application\Plugin\Field\FieldWidget;
 
+use Drupal\asu_api\Api\BackendApi\Request\UserRequest;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\WidgetBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\user\Entity\User;
 
 /**
  * Plugin implementation of the main applicant field widget.
@@ -24,13 +26,22 @@ class MainApplicantWidget extends WidgetBase {
    * {@inheritdoc}
    */
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
+    $account = User::load(\Drupal::currentUser()->id());
+    $request = new UserRequest($account);
+    $request->setSender($account);
+
+    /** @var \Drupal\asu_api\Api\BackendApi\BackendApi $backendApi */
+    $backendApi = \Drupal::service('asu_api.backendapi');
+    /** @var \Drupal\asu_api\Api\BackendApi\Response\UserResponse $userResponse */
+    $userResponse = $backendApi->send($request);
+    $userInformation = $userResponse->getUserInformation();
 
     $element['first_name'] = [
       '#type' => 'textfield',
       '#title' => $this->t('First name'),
       '#maxlength' => 50,
       '#size' => 100,
-      '#default_value' => $items->getValue()[$delta]['first_name'] ?? '',
+      '#default_value' => $items->getValue()[$delta]['first_name'] ?? $userInformation['first_name'],
       '#required' => TRUE,
     ];
 
@@ -39,7 +50,7 @@ class MainApplicantWidget extends WidgetBase {
       '#title' => $this->t('Last name'),
       '#maxlength' => 50,
       '#size' => 100,
-      '#default_value' => $items->getValue()[$delta]['last_name'] ?? '',
+      '#default_value' => $items->getValue()[$delta]['last_name'] ?? $userInformation['last_name'],
       '#required' => TRUE,
     ];
 
@@ -47,7 +58,7 @@ class MainApplicantWidget extends WidgetBase {
       '#type' => 'date',
       '#title' => $this->t('Date of birth'),
       '#size' => 30,
-      '#default_value' => $items->getValue()[$delta]['date_of_birth'] ?? '',
+      '#default_value' => $items->getValue()[$delta]['date_of_birth'] ?? $userInformation['date_of_birth'],
       '#required' => TRUE,
     ];
 
@@ -65,7 +76,7 @@ class MainApplicantWidget extends WidgetBase {
       '#type' => 'textfield',
       '#title' => $this->t('Street address'),
       '#maxlength' => 99,
-      '#default_value' => $items->getValue()[$delta]['address'] ?? '',
+      '#default_value' => $items->getValue()[$delta]['address'] ?? $userInformation['address'],
       '#required' => TRUE,
     ];
 
@@ -74,7 +85,7 @@ class MainApplicantWidget extends WidgetBase {
       '#title' => $this->t('Postal code'),
       '#maxlength' => 5,
       '#size' => 50,
-      '#default_value' => $items->getValue()[$delta]['postal_code'] ?? '',
+      '#default_value' => $items->getValue()[$delta]['postal_code'] ?? $userInformation['postal_code'],
       '#required' => TRUE,
     ];
 
@@ -83,7 +94,7 @@ class MainApplicantWidget extends WidgetBase {
       '#title' => $this->t('City'),
       '#maxlength' => 50,
       '#size' => 50,
-      '#default_value' => $items->getValue()[$delta]['city'] ?? '',
+      '#default_value' => $items->getValue()[$delta]['city'] ?? $userInformation['city'],
       '#required' => TRUE,
     ];
 
@@ -92,7 +103,7 @@ class MainApplicantWidget extends WidgetBase {
       '#title' => $this->t('Phone number'),
       '#maxlength' => 20,
       '#size' => 20,
-      '#default_value' => $items->getValue()[$delta]['phone'] ?? '',
+      '#default_value' => $items->getValue()[$delta]['phone'] ?? $userInformation['phone_number'],
       '#required' => TRUE,
     ];
 
@@ -101,7 +112,7 @@ class MainApplicantWidget extends WidgetBase {
       '#title' => $this->t('Email'),
       '#maxlength' => 99,
       '#size' => 50,
-      '#default_value' => $items->getValue()[$delta]['email'] ?? '',
+      '#default_value' => $items->getValue()[$delta]['email'] ?? $userInformation['email'],
       '#required' => TRUE,
     ];
 

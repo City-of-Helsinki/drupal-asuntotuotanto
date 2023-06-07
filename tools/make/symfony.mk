@@ -47,9 +47,9 @@ fresh: ## Build fresh development environment
 	@$(MAKE) $(SF_FRESH_TARGETS)
 
 PHONY += fix-symfony
-fix-symfony: tools/php-cs-fixer/vendor ## Fix Symfony code style
-	$(call step,Fix Symfony code style in ./src ...\n)
-	$(call docker_run_cmd,tools/php-cs-fixer/vendor/bin/php-cs-fixer --ansi -vvvv fix src)
+fix-symfony: ## Fix Symfony code style
+	$(call step,Fix Symfony code style...\n)
+	$(call docker_compose_exec,PHP_CS_FIXER_IGNORE_ENV=1 vendor/bin/php-cs-fixer fix --diff --ansi)
 
 PHONY += lint-symfony
 lint-symfony: PATHS := src
@@ -57,24 +57,19 @@ lint-symfony: ## Lint Symfony code style
 	$(call step,Lint Symfony code style...\n)
 	$(call cs_symfony,$(PATHS))
 
-tools/php-cs-fixer/vendor: COMPOSER_JSON_PATH := tools/php-cs-fixer
-tools/php-cs-fixer/vendor:
-	$(call step,Install php-cs-fixer...\n)
-	$(call composer,install)
-
 ifeq ($(RUN_ON),docker)
 define sf_console
-	$(call docker_run_cmd,bin/console --ansi $(1))
+	$(call docker_compose_exec,bin/console $(1))
 endef
 else
 define sf_console
-	@bin/console --ansi $(1)
+	@bin/console $(1)
 endef
 endif
 
 ifeq ($(CS_INSTALLED),yes)
 define cs_symfony
-$(call docker_run_cmd,vendor/bin/phpcs --ignore=node_modules $(1))
+$(call docker_compose_exec,vendor/bin/phpcs --ignore=node_modules $(1))
 endef
 else
 define cs_symfony
