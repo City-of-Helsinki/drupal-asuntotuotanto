@@ -220,10 +220,6 @@ class RegisterForm extends TypedRegisterForm {
     $user->set('preferred_admin_langcode', $formValues['preferred_admin_langcode']);
     $user->set('timezone', 'Europe/Helsinki');
 
-    if ($user->hasField('field_email_is_valid')) {
-      $user->set('field_email_is_valid', 1);
-    }
-
     $user->addRole('customer');
     $user->activate();
 

@@ -6,7 +6,6 @@
  */
 
 use Drupal\asu_api\Api\BackendApi\Request\GetApartmentRevaluationsRequest;
-use Symfony\Component\HttpFoundation\Response;
 use Drupal\node\Entity\Node;
 
 /**
@@ -31,7 +30,7 @@ function asu_api_cron() {
     }
 
     if ($apartment_revaluation) {
-      foreach($apartment_revaluation as $revaluation) {
+      foreach ($apartment_revaluation as $revaluation) {
         // Get apartment based uuid.
         $query = \Drupal::entityTypeManager()->getStorage('node')->getQuery();
         $query->condition('type', 'apartment')
