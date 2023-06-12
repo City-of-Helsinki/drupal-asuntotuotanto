@@ -263,7 +263,6 @@ class ApplicationForm extends ContentEntityForm {
    *   Form array.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   Form state.
-   *
    */
   private function handleApplicationEvent(array $form, FormStateInterface $form_state) {
     $currentUser = User::load(\Drupal::currentUser()->id());
