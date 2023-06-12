@@ -24,7 +24,6 @@
 {% set postal_code = content.postal_code %}
 {% set city = content.city %}
 {% set date_of_birth = content.date_of_birth|date("Y-m-d") %}
-{% set is_email_valid = user.field_email_is_valid.value %}
 
 {% set classes = [
   'user-profile',
@@ -52,13 +51,6 @@
       {% endtrans %}
     </p>
   </div>
-  {% if is_email_valid is same as('0') %}
-    {% include "@asuntotuotanto/user/status-message.html.twig" with {
-      label: 'Confirm email-address'|t,
-      description: 'We have sent a confirmation email to the email address you provided. If you did not receive the message, also check your email spam folder.'|t,
-      id: 'email_verification_message'
-    } %}
-  {% endif %}
   <ul class="user-profile__tabs">
     <li class="user-profile__tab">
       {{ link(
@@ -81,9 +73,6 @@
         Authentication
       {% endtrans %}
     </h2>
-    <div class="user-profile__authentication-information">
-      {{ user_valid|raw }}
-    </div>
     <h2>
       {% trans %}
         User information

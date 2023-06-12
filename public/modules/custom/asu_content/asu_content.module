@@ -15,9 +15,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\node\NodeForm;
 use Drupal\node\Entity\Node;
-use Drupal\search_api\Entity\Server;
 use Drupal\search_api\Entity\Index;
-
 
 /**
  * Implements hook_entity_bundle_info_alter().
@@ -338,6 +336,9 @@ function asu_content_cron() {
   }
 }
 
+/**
+ *
+ */
 function clearListCache($entity) {
   if (
     $entity instanceof Apartment &&
@@ -358,6 +359,9 @@ function clearListCache($entity) {
   }
 }
 
+/**
+ *
+ */
 function clearCache($project) {
   if ($project->getOwnershipType()) {
     // Load search api indexes.

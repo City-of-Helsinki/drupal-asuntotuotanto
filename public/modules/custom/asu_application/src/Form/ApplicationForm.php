@@ -279,14 +279,6 @@ class ApplicationForm extends ContentEntityForm {
       );
     }
     else {
-      $owner = $this->entity->getOwner();
-      if ($owner->hasField('field_email_is_valid') && !$owner->get('field_email_is_valid')->value) {
-        \Drupal::messenger()->addWarning(t('You cannot submit application before you have confirmed your email address.
-      To confirm your email address you must click the link sent to your email address.'));
-        $response = (new RedirectResponse($this->getUserApplicationsUrl(), 301))->send();
-        return $response;
-      }
-
       $eventName = ApplicationEvent::EVENT_NAME;
       $event = new ApplicationEvent(
         $this->entity->id(),
