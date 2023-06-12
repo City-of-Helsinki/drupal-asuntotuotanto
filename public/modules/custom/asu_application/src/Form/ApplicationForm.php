@@ -264,8 +264,6 @@ class ApplicationForm extends ContentEntityForm {
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   Form state.
    *
-   * @return \Symfony\Component\HttpFoundation\RedirectResponse|void
-   *   Redirect response.
    */
   private function handleApplicationEvent(array $form, FormStateInterface $form_state) {
     $currentUser = User::load(\Drupal::currentUser()->id());
