@@ -2,10 +2,10 @@
 
 namespace Drupal\asu_api\Api\BackendApi\Request;
 
-use Drupal\user\UserInterface;
-use Psr\Http\Message\ResponseInterface;
 use Drupal\asu_api\Api\BackendApi\Response\AuthenticationResponse;
 use Drupal\asu_api\Api\Request;
+use Drupal\user\UserInterface;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * Request authentication token.

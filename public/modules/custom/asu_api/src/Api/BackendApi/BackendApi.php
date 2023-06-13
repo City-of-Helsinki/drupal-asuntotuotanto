@@ -10,14 +10,14 @@ use Drupal\asu_api\Helper\AuthenticationHelper;
 use Drupal\asu_api\Helper\RequestHelper;
 use Drupal\Core\TempStore\PrivateTempStore;
 use Drupal\user\UserInterface;
+use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Exception\ServerException;
+use GuzzleHttp\Psr7\Request as GuzzleRequest;
 use GuzzleHttp\TransferStats;
 use Psr\Log\LoggerInterface;
-use GuzzleHttp\Client;
-use GuzzleHttp\Psr7\Request as GuzzleRequest;
 
 /**
  * Integration to django.

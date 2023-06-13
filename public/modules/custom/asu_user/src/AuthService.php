@@ -2,12 +2,12 @@
 
 namespace Drupal\asu_user;
 
-use Drupal\Core\Session\AccountInterface;
-use Symfony\Component\HttpKernel\Exception\TooManyRequestsHttpException;
+use Drupal\asu_api\Api\BackendApi\Request\CreateUserRequest;
 use Drupal\Component\Utility\Crypt;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\samlauth\SamlService;
 use Drupal\samlauth\UserVisibleException;
-use Drupal\asu_api\Api\BackendApi\Request\CreateUserRequest;
+use Symfony\Component\HttpKernel\Exception\TooManyRequestsHttpException;
 
 /**
  * Governs communication between the SAML toolkit and the IdP / login behavior.

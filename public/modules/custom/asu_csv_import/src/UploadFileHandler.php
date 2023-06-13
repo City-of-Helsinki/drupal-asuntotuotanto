@@ -2,12 +2,12 @@
 
 namespace Drupal\asu_csv_import;
 
-use Drupal\asu_csv_import\ImportTypes\DateType;
 use Drupal\asu_csv_import\ImportTypes\BooleanType;
+use Drupal\asu_csv_import\ImportTypes\DateType;
 use Drupal\asu_csv_import\ImportTypes\DecimalType;
 use Drupal\asu_csv_import\ImportTypes\LinkType;
-use Drupal\asu_csv_import\ImportTypes\TextType;
 use Drupal\asu_csv_import\ImportTypes\NumberType;
+use Drupal\asu_csv_import\ImportTypes\TextType;
 use Drupal\file\Entity\File;
 use Drupal\node\Entity\Node;
 

@@ -7,9 +7,9 @@ use Drupal\rest\Plugin\ResourceBase;
 use Drupal\rest\ResourceResponse;
 use Drupal\search_api\Entity\Index;
 use Drupal\search_api\Query\QueryInterface;
+use Drupal\user\Entity\User;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
-use Drupal\user\Entity\User;
 
 /**
  * Provides a resource to get user applications.
