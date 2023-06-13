@@ -4,8 +4,8 @@ declare(strict_types = 1);
 
 namespace Drupal\Tests\asu_elastic\Functional;
 
-use Drupal\search_api\Entity\Server;
 use Drupal\node\NodeInterface;
+use Drupal\search_api\Entity\Server;
 use Drupal\taxonomy\Entity\Vocabulary;
 use weitzman\DrupalTestTraits\ExistingSiteBase;
 

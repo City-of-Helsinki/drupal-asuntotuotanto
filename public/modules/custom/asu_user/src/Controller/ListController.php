@@ -7,9 +7,9 @@ namespace Drupal\asu_user\Controller;
  * Contains \Drupal\asu_user\Controller\ListController.
  */
 
-use Drupal\user\Entity\User;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
+use Drupal\user\Entity\User;
 
 /**
  * List controller.

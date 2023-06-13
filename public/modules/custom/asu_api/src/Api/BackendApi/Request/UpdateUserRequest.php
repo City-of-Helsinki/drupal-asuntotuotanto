@@ -2,11 +2,11 @@
 
 namespace Drupal\asu_api\Api\BackendApi\Request;
 
-use Psr\Http\Message\ResponseInterface;
 use Drupal\asu_api\Api\BackendApi\Response\UpdateUserResponse;
 use Drupal\asu_api\Api\Request;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\user\UserInterface;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * Update existing user information in backend.

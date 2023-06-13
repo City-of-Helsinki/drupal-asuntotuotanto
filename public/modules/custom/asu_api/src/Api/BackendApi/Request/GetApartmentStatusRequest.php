@@ -2,9 +2,9 @@
 
 namespace Drupal\asu_api\Api\BackendApi\Request;
 
-use Psr\Http\Message\ResponseInterface;
 use Drupal\asu_api\Api\BackendApi\Response\GetApartmentStatusResponse;
 use Drupal\asu_api\Api\Request;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * A request to create new backend user.

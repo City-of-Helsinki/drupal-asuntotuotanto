@@ -3,9 +3,9 @@
 namespace Drupal\asu_rest\Plugin\rest\resource;
 
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\rest\Plugin\ResourceBase;
 use Drupal\search_api\Entity\Index;
 use Drupal\taxonomy\Entity\Vocabulary;
-use Drupal\rest\Plugin\ResourceBase;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 

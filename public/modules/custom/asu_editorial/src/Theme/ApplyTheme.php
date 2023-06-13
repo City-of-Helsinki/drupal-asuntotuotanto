@@ -2,9 +2,9 @@
 
 namespace Drupal\asu_editorial\Theme;
 
-use Drupal\user\Entity\User;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Theme\ThemeNegotiatorInterface;
+use Drupal\user\Entity\User;
 
 /**
  * An ApplyTheme class.

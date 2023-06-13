@@ -2,8 +2,8 @@
 
 namespace Drupal\asu_application\EventSubscriber;
 
-use Drupal\asu_api\Api\BackendApi\Request\CreateApplicationRequest;
 use Drupal\asu_api\Api\BackendApi\BackendApi;
+use Drupal\asu_api\Api\BackendApi\Request\CreateApplicationRequest;
 use Drupal\asu_api\Api\BackendApi\Request\SalesCreateApplicationRequest;
 use Drupal\asu_api\Exception\IllegalApplicationException;
 use Drupal\asu_application\Event\ApplicationEvent;
