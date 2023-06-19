@@ -51,7 +51,7 @@ class CreateApplicationRequest extends Request {
     $values = [
       'application_uuid' => $this->application->uuid(),
       'application_type' => $this->application->bundle(),
-      'ssn_suffix' => $this->application->field_personal_id->value,
+      'ssn_suffix' => $this->application->main_applicant[0]->personal_id,
       'has_children' => $this->application->getHasChildren(),
       'additional_applicant' => $this->getApplicant(),
       'right_of_residence' => NULL,

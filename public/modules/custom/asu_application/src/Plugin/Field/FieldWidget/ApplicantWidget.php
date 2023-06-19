@@ -80,7 +80,7 @@ class ApplicantWidget extends WidgetBase {
     $element['personal_id'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Personal id'),
-      '#description' => $this->t('last 5 characters'),
+      '#description' => $this->t('last 4 characters'),
       '#minlength' => 5,
       '#maxlength' => 5,
       '#default_value' => $items->getValue()[$delta]['personal_id'] ?? '',

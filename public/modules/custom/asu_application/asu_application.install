@@ -73,3 +73,11 @@ function asu_application_update_9005() : void {
       ->installFieldStorageDefinition('main_applicant', 'asu_application', 'asu_application', $field);
   }
 }
+
+/**
+ * Install LYK Form Answer entity.
+ */
+function asu_application_update_9006() {
+  $entity_type = \Drupal::entityTypeManager()->getDefinition('asu_application');
+  \Drupal::entityDefinitionUpdateManager()->installEntityType($entity_type);
+}
