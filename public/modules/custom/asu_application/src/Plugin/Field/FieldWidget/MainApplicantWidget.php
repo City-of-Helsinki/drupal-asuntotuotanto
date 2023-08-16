@@ -83,6 +83,7 @@ class MainApplicantWidget extends WidgetBase {
     $element['postal_code'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Postal code'),
+      '#minlength' => 5,
       '#maxlength' => 5,
       '#size' => 50,
       '#default_value' => $items->getValue()[$delta]['postal_code'] ?? $userInformation['postal_code'],

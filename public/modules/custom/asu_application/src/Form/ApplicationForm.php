@@ -156,10 +156,6 @@ class ApplicationForm extends ContentEntityForm {
 
       $form = parent::buildForm($form, $form_state);
 
-      if (isset($form['field_personal_id'])) {
-        $form['field_personal_id']['widget'][0]['value']['#placeholder'] = '-XXXY';
-      }
-
       $form['#title'] = sprintf('%s %s', $this->t('Application for'), $projectName);
 
       $form['actions']['submit']['#value'] = $this->t('Send application');
@@ -185,6 +181,14 @@ class ApplicationForm extends ContentEntityForm {
    * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
+    $formValues = $form_state->cleanValues()->getValues();
+    foreach ($formValues['main_applicant'][0] as $field => $value) {
+      if (empty($value) || $value == '-' || strlen($value) < 2) {
+        $fieldTitle = (string) $form["main_applicant"]['widget'][0][$field]['#title'];
+        $form_state->setErrorByName($field, t('Field @field cannot be empty', ['@field' => $fieldTitle]));
+      }
+    }
+
     $triggerName = $form_state->getTriggeringElement()['#name'];
     if ($triggerName == 'submit-application') {
       parent::validateForm($form, $form_state);
@@ -465,6 +469,11 @@ class ApplicationForm extends ContentEntityForm {
     foreach ($form_state->getUserInput() as $key => $value) {
       if (in_array($key, $form_state->getCleanValueKeys())) {
         continue;
+      }
+      if ($key == 'main_applicant' || $key == 'applicant') {
+        if (!empty($value[0]['personal_id']) && strlen($value[0]['personal_id']) == 4) {
+          $value[0]['personal_id'] = $this->getPersonalIdDivider($value[0]['date_of_birth']) . $value[0]['personal_id'];
+        }
       }
       if ($this->entity->hasField($key)) {
         $this->entity->set($key, $value);
