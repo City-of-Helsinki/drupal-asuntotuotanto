@@ -66,7 +66,7 @@ function asuntotuotanto_preprocess_menu(&$variables) {
       if ($menu_block_configuration_suggestion === 'main__mobile') {
         $login_link = [
           'title' => t('Log in'),
-          'url' => Url::fromRoute('user.login'),
+          'url' => Url::fromRoute('user.register'),
           'is_login_link' => TRUE,
         ];
 
