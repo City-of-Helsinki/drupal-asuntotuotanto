@@ -102,7 +102,7 @@ function template_preprocess_asu_application(array &$variables) {
       $main_image_file = File::load($project->field_main_image->target_id) ?? NULL;
 
       if ($main_image_file) {
-        $main_image_file_url = file_create_url($main_image_file->getFileUri());
+        $main_image_file_url = \Drupal::service('file_url_generator')->generateAbsoluteString($main_image_file->getFileUri());
       }
     }
 
