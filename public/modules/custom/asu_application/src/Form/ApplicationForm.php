@@ -472,7 +472,7 @@ class ApplicationForm extends ContentEntityForm {
       }
       if ($key == 'main_applicant' || $key == 'applicant') {
         if (!empty($value[0]['personal_id']) && strlen($value[0]['personal_id']) == 4) {
-          $value[0]['personal_id'] = $this->getPersonalIdDivider($value[0]['date_of_birth']).$value[0]['personal_id'];
+          $value[0]['personal_id'] = $this->getPersonalIdDivider($value[0]['date_of_birth']) . $value[0]['personal_id'];
         }
       }
       if ($this->entity->hasField($key)) {
