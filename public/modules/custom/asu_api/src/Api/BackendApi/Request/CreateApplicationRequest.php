@@ -108,7 +108,7 @@ class CreateApplicationRequest extends Request {
     if (!$this->application->hasAdditionalApplicant()) {
       return NULL;
     }
-    $applicant = $this->application->getApplicants()[0];
+    $applicant = $this->application->getApplicant()[0];
     return (object) [
       'first_name' => $applicant['first_name'],
       'last_name' => $applicant['last_name'],
