@@ -175,7 +175,7 @@ class ApartmentContentCreateController extends ControllerBase {
 
     foreach ($images as $key => $image) {
       $image = file_get_contents($image);
-      file_save_data($image, "public://generated_apartment_image_$key.jpeg", FileSystemInterface::EXISTS_REPLACE);
+      \Drupal::service('file.repository')->writeData($image, "public://generated_apartment_image_$key.jpeg", FileSystemInterface::EXISTS_REPLACE);
     }
   }
 
