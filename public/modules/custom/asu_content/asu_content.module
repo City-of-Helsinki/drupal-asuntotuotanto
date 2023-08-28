@@ -366,11 +366,36 @@ function clearCache($project) {
   if ($project->getOwnershipType()) {
     // Load search api indexes.
     $indexes = Index::loadMultiple();
+    // Get project apartment entities.
+    $apartment_entities = $project->getApartmentEntities();
+    $apartments_ids = [];
 
+    // Get apartment ids.
+    foreach ($apartment_entities as $apartments_id) {
+      $apartments_ids[] = $apartments_id->id();
+    }
+
+    // Convert apartment id's search api indexing format.
+    $apartments_index = function ($entity_id) {
+      return $entity_id . ':fi';
+    };
+    $apartments_index = array_map($apartments_index, $apartments_ids);
+
+    // Load apartment entities.
+    $apartments = \Drupal::entityTypeManager()->getStorage('node')->loadMultiple($apartments_ids);
+
+    // Update apartments so data will updated to elastic search.
+    foreach ($apartments as $apartment) {
+      $apartment->save();
+    }
+
+    // Trigger search api index update.
     foreach ($indexes as $index) {
+      $index->trackItemsUpdated('entity:node', $apartments_index);
       $index->indexItems();
     }
 
+    // Clear listing page cache.
     $cid = 'asu_rest:apartment_list:' . $project->getOwnershipType();
     \Drupal::cache()->delete($cid);
   }
