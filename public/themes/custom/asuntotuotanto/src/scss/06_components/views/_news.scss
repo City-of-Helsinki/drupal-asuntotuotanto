@@ -92,6 +92,10 @@ line-height: $lineheight-m;
 }
 
 .news-listing__item {
+  @media screen and (min-width: $breakpoint-l) {
+    margin-top: 0;
+  }
+
   & + & {
     margin-top: $spacing-double;
 
