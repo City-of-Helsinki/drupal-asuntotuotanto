@@ -37,7 +37,11 @@
     {% else %}
       <ul class="sub-menu is-level--{{ menu_level }} is-hidden" aria-hidden="true">
     {% endif %}
-    {% for item in items %}
+    {% set link_ok = true %}
+    {% for item in items  if not break %}
+      {% if '/user/' in item.url|render %}
+        {% set link_ok = false %}
+      {% endif %}
       {% set item_classes = [
         menu_level == 0 ? 'menu__item' : 'sub-menu__item',
         item.is_nolink ? 'is-nolink',
@@ -52,19 +56,21 @@
 
       {% set item_attributes = item.attributes ?: create_attribute() %}
 
-      <li{{ item_attributes.addClass(item_classes) }}>
-        <div class="{{ item_container_classes|join(' ') }}">
-          {{ link(item.title, item.url, {'class': item.in_active_trail ? 'is-active'}) }}
-          {% if item.below and menu_level == 0 and not item.is_user_tools %}
-            <button class="sub-menu__button" aria-expanded="false">
-              <span class="visually-hidden">{% trans %}Toggle '{{ item.title }}' submenu{% endtrans %}</span>
-            </button>
+      {% if link_ok == true %}
+        <li{{ item_attributes.addClass(item_classes) }}>
+          <div class="{{ item_container_classes|join(' ') }}">
+            {{ link(item.title, item.url, {'class': item.in_active_trail ? 'is-active'}) }}
+            {% if item.below and menu_level == 0 and not item.is_user_tools %}
+              <button class="sub-menu__button" aria-expanded="false">
+                <span class="visually-hidden">{% trans %}Toggle '{{ item.title }}' submenu{% endtrans %}</span>
+              </button>
+            {% endif %}
+          </div>
+          {% if item.below %}
+            {{ menus.menu_links(item.below, attributes, menu_level + 1) }}
           {% endif %}
-        </div>
-        {% if item.below %}
-          {{ menus.menu_links(item.below, attributes, menu_level + 1) }}
-        {% endif %}
-      </li>
+        </li>
+      {% endif %}
     {% endfor %}
     </ul>
   {% endif %}
