@@ -2,11 +2,11 @@
 
 namespace Drupal\asu_api\Api\BackendApi\Request;
 
-use Psr\Http\Message\ResponseInterface;
-use Drupal\asu_api\Helper\ApplicationHelper;
 use Drupal\asu_api\Api\BackendApi\Response\CreateUserResponse;
 use Drupal\asu_api\Api\Request;
+use Drupal\asu_api\Helper\ApplicationHelper;
 use Drupal\user\UserInterface;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * A request to create new backend user.

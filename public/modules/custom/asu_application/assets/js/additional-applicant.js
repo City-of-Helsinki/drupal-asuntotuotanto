@@ -18,7 +18,7 @@
 
       const pidField = document.getElementById('edit-field-personal-id-0-value');
       if (pidField) {
-        pidField.setAttribute('minlength', '5');
+        pidField.setAttribute('minlength', '4');
       }
     },
   };

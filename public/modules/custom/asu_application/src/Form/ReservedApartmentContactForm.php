@@ -2,9 +2,9 @@
 
 namespace Drupal\asu_application\Form;
 
-use Drupal\node\Entity\Node;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\node\Entity\Node;
 
 /**
  * Reserved apartment contact form.

@@ -2,12 +2,12 @@
 
 namespace Drupal\asu_user;
 
-use Drupal\Core\Session\AccountInterface;
-use Symfony\Component\HttpKernel\Exception\TooManyRequestsHttpException;
+use Drupal\asu_api\Api\BackendApi\Request\CreateUserRequest;
 use Drupal\Component\Utility\Crypt;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\samlauth\SamlService;
 use Drupal\samlauth\UserVisibleException;
-use Drupal\asu_api\Api\BackendApi\Request\CreateUserRequest;
+use Symfony\Component\HttpKernel\Exception\TooManyRequestsHttpException;
 
 /**
  * Governs communication between the SAML toolkit and the IdP / login behavior.
@@ -138,13 +138,10 @@ class AuthService extends SamlService {
           'name' => $name,
           'type' => 'customer',
           'langcode' => 'fi',
-          'field_email_is_valid' => 0,
           'field_saml_hash' => $unique_id,
         ];
 
         $account = $this->externalAuth->register($unique_id, 'samlauth', $account_data);
-        $this->externalAuth->userLoginFinalize($account, $unique_id, 'samlauth');
-
         $pid = $this->getAttributeByConfig('unique_id_attribute');
         $lastname = reset($attributes['sn']) ?? NULL;
         $first_name = reset($attributes['firstName']) ?? NULL;
@@ -185,9 +182,11 @@ class AuthService extends SamlService {
         }
         catch (\Exception $e) {
           \Drupal::logger('asu_backend_api')->emergency(
-          'Exception while creating user to backend: ' . $e->getMessage()
+            'Exception while creating user to backend: ' . $e->getMessage()
           );
         }
+
+        $this->externalAuth->userLoginFinalize($account, $unique_id, 'samlauth');
       }
       else {
         throw new UserVisibleException('No existing user account matches the SAML ID provided. This authentication service is not configured to create new accounts.');

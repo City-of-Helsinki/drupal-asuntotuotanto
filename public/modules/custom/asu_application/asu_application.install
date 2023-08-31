@@ -55,3 +55,29 @@ function asu_application_update_9004() : void {
     $application->save();
   }
 }
+
+/**
+ * Add main applicant fields.
+ */
+function asu_application_update_9005() : void {
+  $fields['main_applicant'] = \Drupal\Core\Field\BaseFieldDefinition::create('asu_main_applicant')
+    ->setLabel(t('Basic information'))
+    ->setDescription(t('Basic information of the people who are applying'))
+    ->setCardinality(1)
+    ->setDisplayOptions('form', [
+      'type' => 'asu_main_applicant',
+    ]);
+
+  foreach ($fields as $name => $field) {
+    \Drupal::entityDefinitionUpdateManager()
+      ->installFieldStorageDefinition('main_applicant', 'asu_application', 'asu_application', $field);
+  }
+}
+
+/**
+ * Install LYK Form Answer entity.
+ */
+function asu_application_update_9006() {
+  $entity_type = \Drupal::entityTypeManager()->getDefinition('asu_application');
+  \Drupal::entityDefinitionUpdateManager()->installEntityType($entity_type);
+}

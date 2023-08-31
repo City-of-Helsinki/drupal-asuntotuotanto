@@ -2,8 +2,8 @@
 
 namespace Drupal\asu_application\EventSubscriber;
 
-use Drupal\asu_api\Api\BackendApi\Request\CreateApplicationRequest;
 use Drupal\asu_api\Api\BackendApi\BackendApi;
+use Drupal\asu_api\Api\BackendApi\Request\CreateApplicationRequest;
 use Drupal\asu_api\Api\BackendApi\Request\SalesCreateApplicationRequest;
 use Drupal\asu_api\Exception\IllegalApplicationException;
 use Drupal\asu_application\Event\ApplicationEvent;
@@ -67,13 +67,12 @@ class ApplicationSubscriber implements EventSubscriberInterface {
    */
   public static function getSubscribedEvents() {
     $events = [];
-    /*
     $events[ApplicationEvent::EVENT_NAME][] = ['sendApplicationToBackend', 5];
     $events[SalesApplicationEvent::EVENT_NAME][] = [
-    'salesSendApplicationToBackend',
-    10,
+      'salesSendApplicationToBackend',
+      10,
     ];
-     */
+
     return $events;
   }
 

@@ -2,8 +2,8 @@
 
 namespace Drupal\asu_user;
 
-use Drupal\user\Entity\User;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\user\Entity\User;
 
 /**
  * Delete users with test_ prefix.

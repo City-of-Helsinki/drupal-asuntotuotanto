@@ -53,14 +53,6 @@
     </p>
   </div>
 
-  {% if is_email_valid is same as('0') %}
-    {% include "@asuntotuotanto/user/status-message.html.twig" with {
-      label: 'Confirm email-address'|t,
-      description: 'We have sent a confirmation email to the email address you provided. If you did not receive the message, also check your email spam folder.'|t,
-      id: 'email_verification_message'
-    } %}
-  {% endif %}
-
   <ul class="user-profile__tabs">
     <li class="user-profile__tab">
       {{ link(

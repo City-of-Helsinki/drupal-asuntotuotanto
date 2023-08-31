@@ -2,13 +2,13 @@
 
 namespace Drupal\asu_content\Plugin\ComputedField;
 
-use Drupal\file\Entity\File;
-use Drupal\node\Entity\Node;
-use Drupal\image\Entity\ImageStyle;
 use Drupal\Core\Field\FieldItemList;
-use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\Core\TypedData\ComputedItemListTrait;
 use Drupal\Core\TypedData\DataDefinitionInterface;
+use Drupal\Core\TypedData\TypedDataInterface;
+use Drupal\file\Entity\File;
+use Drupal\image\Entity\ImageStyle;
+use Drupal\node\Entity\Node;
 
 /**
  * Combines shared images from project and apartment images.

@@ -66,7 +66,7 @@ function asuntotuotanto_preprocess_menu(&$variables) {
       if ($menu_block_configuration_suggestion === 'main__mobile') {
         $login_link = [
           'title' => t('Log in'),
-          'url' => Url::fromRoute('user.login'),
+          'url' => Url::fromRoute('user.register'),
           'is_login_link' => TRUE,
         ];
 
@@ -172,14 +172,6 @@ function asuntotuotanto_preprocess_views_view(&$variables) {
 
       break;
 
-    case 'applications':
-      $current_user = User::load(\Drupal::currentUser()->id());
-      $variables['is_email_valid'] = NULL;
-      if ($current_user->hasField('field_email_is_valid')) {
-        $variables['is_email_valid'] = $current_user->get('field_email_is_valid')->getValue()[0]['value'] ?? NULL;
-      }
-      break;
-
     case 'project_apartments_listing':
       $variables['apartments_count'] = $view->total_rows;
 
@@ -232,10 +224,7 @@ function asuntotuotanto_preprocess_views_view_table(&$variables) {
       }
 
       $is_application_period_active = $project->isApplicationPeriod();
-      $application_url = $project->getApplicationUrl();
-
       $variables['rows'][$key]['is_application_period_active'] = $is_application_period_active;
-      $variables['rows'][$key]['application_url'] = $application_url;
       $variables['rows'][$key]['apartment_number'] = $apartment->field_apartment_number->value;
       $variables['rows'][$key]['reserved_or_sold'] = $reserved_or_sold;
       $variables['rows'][$key]['application_url'] = $project->getApplicationUrl($apartment->field_apartment_number->value);
@@ -601,6 +590,8 @@ function asuntotuotanto_preprocess_node(&$variables) {
 
         $is_application_period_active = $project->isApplicationPeriod();
         $is_application_period_in_the_past = $project->isApplicationPeriod('after');
+        $application_start = NULL;
+        $application_end = NULL;
 
         if (
           $project->hasField('field_application_start_time') &&

@@ -118,7 +118,7 @@ class TranslationFileWriter {
         fwrite($fh, "msgid \"$key\"\n");
         fwrite($fh, "msgstr \"$value\"\n");
       }
-      file_save_data($fh, 'public://<filename>');
+      \Drupal::service('file.repository')->writeData($fh, 'public://<filename>');
       fclose($fh);
     }
   }

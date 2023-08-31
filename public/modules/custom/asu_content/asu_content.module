@@ -5,19 +5,17 @@
  * Contains asu_content.module.
  */
 
-use Drupal\Core\Datetime\DrupalDateTime;
-use Drupal\Core\Entity\EntityFormInterface;
-use Drupal\Core\Field\FieldFilteredMarkup;
 use Drupal\asu_content\Entity\Apartment;
 use Drupal\asu_content\Entity\Project;
 use Drupal\asu_content\ProjectUpdater;
+use Drupal\Core\Datetime\DrupalDateTime;
+use Drupal\Core\Entity\EntityFormInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Field\FieldFilteredMarkup;
 use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\node\NodeForm;
 use Drupal\node\Entity\Node;
-use Drupal\search_api\Entity\Server;
+use Drupal\node\NodeForm;
 use Drupal\search_api\Entity\Index;
-
 
 /**
  * Implements hook_entity_bundle_info_alter().
@@ -338,6 +336,9 @@ function asu_content_cron() {
   }
 }
 
+/**
+ *
+ */
 function clearListCache($entity) {
   if (
     $entity instanceof Apartment &&
@@ -358,15 +359,43 @@ function clearListCache($entity) {
   }
 }
 
+/**
+ *
+ */
 function clearCache($project) {
   if ($project->getOwnershipType()) {
     // Load search api indexes.
     $indexes = Index::loadMultiple();
+    // Get project apartment entities.
+    $apartment_entities = $project->getApartmentEntities();
+    $apartments_ids = [];
 
+    // Get apartment ids.
+    foreach ($apartment_entities as $apartments_id) {
+      $apartments_ids[] = $apartments_id->id();
+    }
+
+    // Convert apartment id's search api indexing format.
+    $apartments_index = function ($entity_id) {
+      return $entity_id . ':fi';
+    };
+    $apartments_index = array_map($apartments_index, $apartments_ids);
+
+    // Load apartment entities.
+    $apartments = \Drupal::entityTypeManager()->getStorage('node')->loadMultiple($apartments_ids);
+
+    // Update apartments so data will updated to elastic search.
+    foreach ($apartments as $apartment) {
+      $apartment->save();
+    }
+
+    // Trigger search api index update.
     foreach ($indexes as $index) {
+      $index->trackItemsUpdated('entity:node', $apartments_index);
       $index->indexItems();
     }
 
+    // Clear listing page cache.
     $cid = 'asu_rest:apartment_list:' . $project->getOwnershipType();
     \Drupal::cache()->delete($cid);
   }

@@ -28,7 +28,6 @@ class ApplicationForm extends ContentEntityForm {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $form_state->setRebuild(TRUE);
-    $form_state->disableCache();
 
     $projectReference = $this->entity->project->first();
     $project = $projectReference->entity;
@@ -46,6 +45,8 @@ class ApplicationForm extends ContentEntityForm {
     $applicationsUrl = $this->getUserApplicationsUrl();
 
     $form['#project_id'] = $project_id;
+    $form['#project_url'] = Url::fromUri('internal:/node/' . $project_id);
+
     // Redirect cases.
     if ($currentUser->isAnonymous()) {
       $current_path = \Drupal::service('path.current')->getPath();
@@ -155,10 +156,6 @@ class ApplicationForm extends ContentEntityForm {
 
       $form = parent::buildForm($form, $form_state);
 
-      if (isset($form['field_personal_id'])) {
-        $form['field_personal_id']['widget'][0]['value']['#placeholder'] = '-XXXY';
-      }
-
       $form['#title'] = sprintf('%s %s', $this->t('Application for'), $projectName);
 
       $form['actions']['submit']['#value'] = $this->t('Send application');
@@ -184,6 +181,14 @@ class ApplicationForm extends ContentEntityForm {
    * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
+    $formValues = $form_state->cleanValues()->getValues();
+    foreach ($formValues['main_applicant'][0] as $field => $value) {
+      if (empty($value) || $value == '-' || strlen($value) < 2) {
+        $fieldTitle = (string) $form["main_applicant"]['widget'][0][$field]['#title'];
+        $form_state->setErrorByName($field, t('Field @field cannot be empty', ['@field' => $fieldTitle]));
+      }
+    }
+
     $triggerName = $form_state->getTriggeringElement()['#name'];
     if ($triggerName == 'submit-application') {
       parent::validateForm($form, $form_state);
@@ -262,9 +267,6 @@ class ApplicationForm extends ContentEntityForm {
    *   Form array.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   Form state.
-   *
-   * @return \Symfony\Component\HttpFoundation\RedirectResponse|void
-   *   Redirect response.
    */
   private function handleApplicationEvent(array $form, FormStateInterface $form_state) {
     $currentUser = User::load(\Drupal::currentUser()->id());
@@ -278,14 +280,6 @@ class ApplicationForm extends ContentEntityForm {
       );
     }
     else {
-      $owner = $this->entity->getOwner();
-      if ($owner->hasField('field_email_is_valid') && !$owner->get('field_email_is_valid')->value) {
-        \Drupal::messenger()->addWarning(t('You cannot submit application before you have confirmed your email address.
-      To confirm your email address you must click the link sent to your email address.'));
-        $response = (new RedirectResponse($this->getUserApplicationsUrl(), 301))->send();
-        return $response;
-      }
-
       $eventName = ApplicationEvent::EVENT_NAME;
       $event = new ApplicationEvent(
         $this->entity->id(),
@@ -475,6 +469,11 @@ class ApplicationForm extends ContentEntityForm {
     foreach ($form_state->getUserInput() as $key => $value) {
       if (in_array($key, $form_state->getCleanValueKeys())) {
         continue;
+      }
+      if ($key == 'main_applicant' || $key == 'applicant') {
+        if (!empty($value[0]['personal_id']) && strlen($value[0]['personal_id']) == 4) {
+          $value[0]['personal_id'] = $this->getPersonalIdDivider($value[0]['date_of_birth']) . $value[0]['personal_id'];
+        }
       }
       if ($this->entity->hasField($key)) {
         $this->entity->set($key, $value);

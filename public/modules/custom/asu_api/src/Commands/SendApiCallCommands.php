@@ -2,8 +2,8 @@
 
 namespace Drupal\asu_api\Commands;
 
-use Drush\Commands\DrushCommands;
 use Drupal\asu_api\Api\BackendApi\Request\GetApartmentRevaluationsRequest;
+use Drush\Commands\DrushCommands;
 
 /**
  * A drush command file.

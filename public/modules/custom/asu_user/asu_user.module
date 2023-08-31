@@ -5,16 +5,16 @@
  * Contains asu_user module.
  */
 
-use Drupal\asu_user\Helper\StoreHelper;
-use Drupal\Core\Url;
-use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Form\FormStateInterface;
 use Drupal\asu_api\Api\BackendApi\Request\UpdateUserRequest;
-use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\asu_api\Api\BackendApi\Request\UserRequest;
+use Drupal\asu_user\Helper\StoreHelper;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 use Drupal\user\Entity\User;
 use Drupal\user\UserInterface;
-use Drupal\asu_api\Api\BackendApi\Request\UserRequest;
 
 /**
  * Implements hook_entity_type_alter().
@@ -29,9 +29,7 @@ function asu_user_entity_type_alter(array &$entity_types) {
 function asu_user_user_login(UserInterface $account) {
   // @todo Use customer bundle instead of role.
   if ($account->hasRole('customer')) {
-    // asu_validate_email($account);
-    // asu_send_user_email_verification_reminder($account);
-    // asu_get_user_external_field_data($account);
+    asu_get_user_external_field_data($account);
   }
 }
 
@@ -43,7 +41,6 @@ function asu_user_user_login(UserInterface $account) {
  */
 function asu_user_openid_connect_userinfo_save(UserInterface $account, array $context) {
   $helsinkiProfiiliUid = $context['userinfo']['sub'];
-  $emailVerified = $context['userinfo']['email_verified'] ? 1 : 0;
 
   if ($context['is_new']) {
     $session = \Drupal::request()->getSession();
@@ -52,7 +49,6 @@ function asu_user_openid_connect_userinfo_save(UserInterface $account, array $co
 
     $account->set('type', 'customer');
     $account->set('field_hel_profiili_uid', $helsinkiProfiiliUid);
-    $account->set('field_email_is_valid', $emailVerified);
     $account->set('langcode', 'fi');
     $account->set('preferred_langcode', 'fi');
     $account->set('preferred_admin_langcode', 'fi');
@@ -63,36 +59,7 @@ function asu_user_openid_connect_userinfo_save(UserInterface $account, array $co
     $newEmail = $context['userinfo']['email'];
     if ($oldEmail !== $newEmail) {
       $account->setEmail($newEmail);
-      $account->set('field_email_is_valid', $emailVerified);
       \Drupal::messenger()->addMessage(t('Your email address has changed. You must verify your new email address before proceeding.'));
-    }
-  }
-}
-
-/**
- * Set email valid if user uses emailed login link.
- */
-function asu_validate_email(UserInterface $account) {
-  $route_name = \Drupal::routeMatch()->getRouteName();
-  $routes = ['user.login.http', 'user.reset.login'];
-  // Set email_is_valid to true.
-  if (in_array($route_name, $routes)) {
-    if ($account->hasField('field_email_is_valid')) {
-      $account->field_email_is_valid = 1;
-      $account->save();
-    }
-  }
-}
-
-/**
- * Send user an email if email has not been validated by user.
- */
-function asu_send_user_email_verification_reminder(UserInterface $account) {
-  if ($account->field_email_is_valid->value == 0) {
-    // Prevent sending email verification mail if necessary.
-    $sendMail = $account->getLastAccessedTime() != 0 && (time() - $account->getCreatedTime() >= 86400);
-    if ($sendMail) {
-      asu_send_user_email('asu_email_approval_required', $account);
     }
   }
 }
@@ -176,8 +143,6 @@ function asu_user_form_user_user_form_alter(&$form, FormStateInterface &$form_st
  * Update user data to backend.
  */
 function user_edit_submit(array $form, FormStateInterface &$form_state) {
-  return;
-
   // @todo Use user bundle not role.
   $user = User::load(\Drupal::currentUser()->id());
   if (!$user->hasRole('customer')) {
