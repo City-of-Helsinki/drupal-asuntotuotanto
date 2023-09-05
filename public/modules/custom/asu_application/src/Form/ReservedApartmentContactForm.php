@@ -118,7 +118,7 @@ class ReservedApartmentContactForm extends FormBase {
     $to = $values['field_contact_person'];
     $langcode = 'fi';
     $send = TRUE;
-    $subject = 'Yhteydenottopyyntö vapaaseen huoneistoon' . $values->field_apartment_information;
+    $subject = 'Yhteydenottopyyntö vapaaseen huoneistoon' . $values['field_apartment_information'];
     $params = [
       'subject' => $subject,
       'message' => $body,

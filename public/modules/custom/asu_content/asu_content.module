@@ -381,14 +381,6 @@ function clearCache($project) {
     };
     $apartments_index = array_map($apartments_index, $apartments_ids);
 
-    // Load apartment entities.
-    $apartments = \Drupal::entityTypeManager()->getStorage('node')->loadMultiple($apartments_ids);
-
-    // Update apartments so data will updated to elastic search.
-    foreach ($apartments as $apartment) {
-      $apartment->save();
-    }
-
     // Trigger search api index update.
     foreach ($indexes as $index) {
       $index->trackItemsUpdated('entity:node', $apartments_index);
