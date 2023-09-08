@@ -364,27 +364,15 @@ function clearListCache($entity) {
  */
 function clearCache($project) {
   if ($project->getOwnershipType()) {
-    // Load search api indexes.
-    $indexes = Index::loadMultiple();
     // Get project apartment entities.
     $apartment_entities = $project->getApartmentEntities();
-    $apartments_ids = [];
+    $queue = \Drupal::service('queue')->get('asu_content_queue_worker');
 
     // Get apartment ids.
     foreach ($apartment_entities as $apartments_id) {
-      $apartments_ids[] = $apartments_id->id();
-    }
-
-    // Convert apartment id's search api indexing format.
-    $apartments_index = function ($entity_id) {
-      return $entity_id . ':fi';
-    };
-    $apartments_index = array_map($apartments_index, $apartments_ids);
-
-    // Trigger search api index update.
-    foreach ($indexes as $index) {
-      $index->trackItemsUpdated('entity:node', $apartments_index);
-      $index->indexItems();
+      $item = new \stdClass();
+      $item->nid = $apartments_id->id();
+      $queue->createItem($item);
     }
 
     // Clear listing page cache.
