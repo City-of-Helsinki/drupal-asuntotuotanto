@@ -236,7 +236,7 @@ function asu_content_entity_update($entity) {
     $entity->getType() == 'project' &&
     $entity->hasField('field_apartments')
   ) {
-    clearListCache($entity);
+    asuQueueWorker($entity);
   }
 }
 
@@ -271,7 +271,7 @@ function asu_content_node_insert(Node $node) {
 
       $node->get('field_apartments')->setValue([$apartment]);
       $node->save();
-      clearListCache($node);
+      asuQueueWorker($node);
     }
   }
 
@@ -279,7 +279,7 @@ function asu_content_node_insert(Node $node) {
     method_exists($node, 'getType') &&
     $node->getType() == 'apartment'
   ) {
-    clearListCache($node);
+    asuQueueWorker($node);
   }
 
 }
@@ -339,14 +339,14 @@ function asu_content_cron() {
 /**
  *
  */
-function clearListCache($entity) {
+function asuQueueWorker($entity) {
   if (
     $entity instanceof Apartment &&
     method_exists($entity, 'getType') &&
     $entity->getType() == 'apartment'
   ) {
     if ($project = $entity->getProject()) {
-      clearCache($project);
+      asuSetQueueWorker($project);
     }
   }
 
@@ -355,14 +355,14 @@ function clearListCache($entity) {
     method_exists($entity, 'getType') &&
     $entity->getType() == 'project'
   ) {
-    clearCache($entity);
+    asuSetQueueWorker($entity);
   }
 }
 
 /**
  *
  */
-function clearCache($project) {
+function asuSetQueueWorker($project) {
   if ($project->getOwnershipType()) {
     // Get project apartment entities.
     $apartment_entities = $project->getApartmentEntities();
@@ -374,9 +374,5 @@ function clearCache($project) {
       $item->nid = $apartments_id->id();
       $queue->createItem($item);
     }
-
-    // Clear listing page cache.
-    $cid = 'asu_rest:apartment_list:' . $project->getOwnershipType();
-    \Drupal::cache()->delete($cid);
   }
 }

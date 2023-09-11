@@ -1,0 +1,20 @@
+uuid: ed515030-6598-4b75-b0fd-657a69367024
+langcode: en
+status: true
+dependencies:
+  module:
+    - asu_content
+title: 'Queue: Asu content apartment update worker'
+id: ultimate_cron_queue_asu_content_queue_worker
+weight: -1
+module: asu_content
+callback: 'ultimate_cron.queue_worker:queueCallback'
+scheduler:
+  id: simple
+  configuration:
+    rules:
+      - '* * * * *'
+launcher:
+  id: serial
+logger:
+  id: database

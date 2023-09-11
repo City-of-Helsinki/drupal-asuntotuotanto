@@ -6,7 +6,7 @@ dependencies:
     - locale
 title: 'Default cron handler'
 id: locale_cron
-weight: 0
+weight: -4
 module: locale
 callback: locale_cron
 scheduler:

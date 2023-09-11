@@ -6,7 +6,7 @@ dependencies:
     - file
 title: 'Deletes temporary files'
 id: file_cron
-weight: 0
+weight: 3
 module: file
 callback: file_cron
 scheduler:
