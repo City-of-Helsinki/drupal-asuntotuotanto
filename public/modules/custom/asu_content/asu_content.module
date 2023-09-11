@@ -236,7 +236,7 @@ function asu_content_entity_update($entity) {
     $entity->getType() == 'project' &&
     $entity->hasField('field_apartments')
   ) {
-    clearListCache($entity);
+    asuQueueWorker($entity);
   }
 }
 
@@ -271,7 +271,7 @@ function asu_content_node_insert(Node $node) {
 
       $node->get('field_apartments')->setValue([$apartment]);
       $node->save();
-      clearListCache($node);
+      asuQueueWorker($node);
     }
   }
 
@@ -279,7 +279,7 @@ function asu_content_node_insert(Node $node) {
     method_exists($node, 'getType') &&
     $node->getType() == 'apartment'
   ) {
-    clearListCache($node);
+    asuQueueWorker($node);
   }
 
 }
@@ -339,14 +339,14 @@ function asu_content_cron() {
 /**
  *
  */
-function clearListCache($entity) {
+function asuQueueWorker($entity) {
   if (
     $entity instanceof Apartment &&
     method_exists($entity, 'getType') &&
     $entity->getType() == 'apartment'
   ) {
     if ($project = $entity->getProject()) {
-      clearCache($project);
+      asuSetQueueWorker($project);
     }
   }
 
@@ -355,40 +355,24 @@ function clearListCache($entity) {
     method_exists($entity, 'getType') &&
     $entity->getType() == 'project'
   ) {
-    clearCache($entity);
+    asuSetQueueWorker($entity);
   }
 }
 
 /**
  *
  */
-function clearCache($project) {
+function asuSetQueueWorker($project) {
   if ($project->getOwnershipType()) {
-    // Load search api indexes.
-    $indexes = Index::loadMultiple();
     // Get project apartment entities.
     $apartment_entities = $project->getApartmentEntities();
-    $apartments_ids = [];
+    $queue = \Drupal::service('queue')->get('asu_content_queue_worker');
 
     // Get apartment ids.
     foreach ($apartment_entities as $apartments_id) {
-      $apartments_ids[] = $apartments_id->id();
+      $item = new \stdClass();
+      $item->nid = $apartments_id->id();
+      $queue->createItem($item);
     }
-
-    // Convert apartment id's search api indexing format.
-    $apartments_index = function ($entity_id) {
-      return $entity_id . ':fi';
-    };
-    $apartments_index = array_map($apartments_index, $apartments_ids);
-
-    // Trigger search api index update.
-    foreach ($indexes as $index) {
-      $index->trackItemsUpdated('entity:node', $apartments_index);
-      $index->indexItems();
-    }
-
-    // Clear listing page cache.
-    $cid = 'asu_rest:apartment_list:' . $project->getOwnershipType();
-    \Drupal::cache()->delete($cid);
   }
 }

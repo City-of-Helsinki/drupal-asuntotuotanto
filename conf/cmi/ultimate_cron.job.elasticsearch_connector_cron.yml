@@ -6,7 +6,7 @@ dependencies:
     - elasticsearch_connector
 title: 'Default cron handler'
 id: elasticsearch_connector_cron
-weight: 0
+weight: -8
 module: elasticsearch_connector
 callback: elasticsearch_connector_cron
 scheduler:

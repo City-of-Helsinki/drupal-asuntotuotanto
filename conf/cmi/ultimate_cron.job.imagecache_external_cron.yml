@@ -6,7 +6,7 @@ dependencies:
     - imagecache_external
 title: 'Default cron handler'
 id: imagecache_external_cron
-weight: 0
+weight: -5
 module: imagecache_external
 callback: imagecache_external_cron
 scheduler:

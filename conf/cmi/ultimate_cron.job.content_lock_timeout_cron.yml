@@ -6,7 +6,7 @@ dependencies:
     - content_lock_timeout
 title: 'Default cron handler'
 id: content_lock_timeout_cron
-weight: 0
+weight: -9
 module: content_lock_timeout
 callback: content_lock_timeout_cron
 scheduler:

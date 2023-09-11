@@ -6,7 +6,7 @@ dependencies:
     - asu_content
 title: 'Default cron handler'
 id: asu_content_cron
-weight: 0
+weight: -10
 module: asu_content
 callback: asu_content_cron
 scheduler:
