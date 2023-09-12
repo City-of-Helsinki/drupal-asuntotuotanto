@@ -42,6 +42,9 @@ class ProjectMigrationService extends AsuMigrationBase {
       ->getStorage('taxonomy_term');
   }
 
+  /**
+   * Get migration files from server tmp.
+   */
   private function getFilesFromTmp() {
     if (!file_exists($this->projectFilePath)) {
       return ['Project file is missing!'];
@@ -55,6 +58,9 @@ class ProjectMigrationService extends AsuMigrationBase {
     $this->file2 = fopen($this->apartmentFilePath, 'r');
   }
 
+  /**
+   * Get migration files from local.
+   */
   private function getFilesFromLocal() {
     $this->file = fopen('/app/migrations/projects.csv', 'r');
     $this->file2 = fopen('/app/migrations/apartments.csv', 'r');
