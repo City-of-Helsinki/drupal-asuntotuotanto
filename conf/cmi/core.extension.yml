@@ -10,6 +10,7 @@ module:
   asu_apartment_search: 0
   asu_api: 0
   asu_application: 0
+  asu_clear_cache: 0
   asu_content: 0
   asu_content_alter: 0
   asu_csv_import: 0

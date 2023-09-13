@@ -6,7 +6,7 @@ dependencies:
     - scheduler
 title: 'Default cron handler'
 id: scheduler_cron
-weight: 0
+weight: -2
 module: scheduler
 callback: scheduler_cron
 scheduler:
