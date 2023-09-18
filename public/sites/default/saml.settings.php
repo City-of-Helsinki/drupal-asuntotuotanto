@@ -67,7 +67,7 @@ if (getenv('APP_ENV') == 'prod' || getenv('APP_ENV') =='stg') {
 }
 if (getenv('APP_ENV') =='stg') {
   // pitää mätsätä idp:n päässä olevan arvon kanssa.
-  $config['samlauth.authentication']['sp_entity_id'] = 'https://asuntotuotanto.hel.fi';
+  $config['samlauth.authentication']['sp_entity_id'] = 'drupal-asuntotuotanto.stage.hel.ninja';
 }
 if (getenv('APP_ENV') =='prod') {
   // pitää mätsätä idp:n päässä olevan arvon kanssa.
