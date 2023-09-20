@@ -37,6 +37,7 @@ $config['samlauth.authentication']['user_mail_attribute'] = 'mail';
 
 $config['samlauth.authentication']['sp_private_key'] = getenv('ASU_SAML_SP');
 $config['samlauth.authentication']['sp_x509_certificate'] = getenv('ASU_SAML_CERT');
+$config['samlauth.authentication']['sp_entity_id'] = getenv('ASU_SP_ENTITY_ID');
 
 if (getenv('APP_ENV') == 'dev' || getenv('APP_ENV') == 'testing' || getenv('APP_ENV') =='development') {
   // pitää mätsätä idp:n päässä olevan arvon kanssa.
@@ -64,12 +65,4 @@ if (getenv('APP_ENV') == 'prod' || getenv('APP_ENV') =='stg') {
   $config['samlauth.authentication']['idp_entity_id'] = 'https://tunnistautuminen.suomi.fi/idp1';
   $config['samlauth.authentication']['idp_single_sign_on_service'] = 'https://tunnistautuminen.suomi.fi/idp/profile/SAML2/Redirect/SSO';
   $config['samlauth.authentication']['idp_single_log_out_service'] = 'https://tunnistautuminen.suomi.fi/idp/profile/SAML2/POST/SLO';
-}
-if (getenv('APP_ENV') =='stg') {
-  // pitää mätsätä idp:n päässä olevan arvon kanssa.
-  $config['samlauth.authentication']['sp_entity_id'] = 'https://asuntotuotanto.hel.fi';
-}
-if (getenv('APP_ENV') =='prod') {
-  // pitää mätsätä idp:n päässä olevan arvon kanssa.
-  $config['samlauth.authentication']['sp_entity_id'] = 'https://asuntotuotanto.hel.fi';
 }
