@@ -249,7 +249,7 @@ class Application extends EditorialContentEntityBase implements ContentEntityInt
       ->setDescription(t('Basic information of the people who are applying'))
       ->setCardinality(1)
       ->setDisplayOptions('form', [
-        'type' => 'asu_main_applicant',
+        'type' => 'asu_main_applicant_widget',
         'weight' => 5,
         'settings' => [],
       ]);
