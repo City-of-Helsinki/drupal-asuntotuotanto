@@ -11,7 +11,7 @@ use Drupal\node\Entity\Node;
  * Implements hook_cron().
  */
 function asu_clear_cache_cron() {
-  $time_ago = strtotime('-5 minutes');
+  $time_ago = strtotime('-10 minutes');
   $database = \Drupal::database();
   $query = $database->select('node_field_data', 'n');
   $query->condition('n.type', 'project');
