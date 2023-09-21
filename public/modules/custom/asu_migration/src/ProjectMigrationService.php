@@ -70,7 +70,7 @@ class ProjectMigrationService extends AsuMigrationBase {
    * Run migrations.
    */
   public function migrate(): array {
-    getFilesFromTmp();
+    self::getFilesFromTmp();
 
     $errors = $this->migrateProjects();
 
@@ -178,11 +178,8 @@ class ProjectMigrationService extends AsuMigrationBase {
 
       if (!$district) {
         $errors[] = "Error with the project $currentProjectId. Error in create district term.";
-        continue;
       }
-      else {
-        $project->field_district->entity = $district;
-      }
+      $project->field_district->entity = $district;
 
       if ($project) {
         if (feof($this->file2)) {
@@ -367,8 +364,8 @@ class ProjectMigrationService extends AsuMigrationBase {
       return reset($terms);
     }
 
-    if (preg_match('~[0-9]+~', $term)) {
-      return FALSE;
+    if (preg_match('~[0-9]+~', $term) || empty($term)) {
+      return NULL;
     }
 
     try {
