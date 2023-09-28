@@ -86,6 +86,16 @@ class Application extends EditorialContentEntityBase implements ContentEntityInt
   }
 
   /**
+   * Return is new permit number.
+   *
+   * @return bool
+   *   Has children.
+   */
+  public function hasNewPermitNumber(): bool {
+    return $this->field_is_new_permit_number->value ?? FALSE;
+  }
+
+  /**
    * Get apartments.
    *
    * @return object

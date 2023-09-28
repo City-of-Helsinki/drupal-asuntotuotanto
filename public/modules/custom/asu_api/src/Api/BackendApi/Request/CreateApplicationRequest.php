@@ -55,19 +55,15 @@ class CreateApplicationRequest extends Request {
       'has_children' => $this->application->getHasChildren(),
       'additional_applicant' => $this->getApplicant(),
       'right_of_residence' => NULL,
-      'is_new_permit_number' => NULL,
       'project_id' => $this->projectUuid,
       'apartments' => $this->getApartments(),
       'is_right_of_occupancy_housing_changer' => FALSE,
       'has_hitas_ownership' => FALSE,
+      'right_of_residence_is_old_batch' => $this->application->hasNewPermitNumber(),
     ];
 
     if ($this->application->hasField('field_right_of_residence_number')) {
       $values['right_of_residence'] = $this->application->field_right_of_residence_number->value;
-    }
-
-    if ($this->application->hasField('field_is_new_permit_number')) {
-      $values['is_new_permit_number'] = $this->application->field_is_new_permit_number->value;
     }
 
     if ($this->application->hasField('field_aso_changer')) {
