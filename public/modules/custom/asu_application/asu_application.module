@@ -172,6 +172,7 @@ function template_preprocess_asu_application(array &$variables) {
         'applicant' => $application->get('applicant')->getValue(),
         'apartments' => $application->get('apartment')->getValue(),
         'field_right_of_residence_number' => '',
+        'field_is_new_permit_number' => '',
         'apartments_data' => $apartments_data,
         // 'haso_owner' => $application->get('field_haso_owner')->getValue(),
         'hitas_owner' => '',
@@ -180,6 +181,10 @@ function template_preprocess_asu_application(array &$variables) {
 
       if ($application->hasField('field_right_of_residence_number')) {
         $application_fields['field_right_of_residence_number'] = $application->get('field_right_of_residence_number')->getValue();
+      }
+
+      if ($application->hasField('field_is_new_permit_number')) {
+        $application_fields['field_is_new_permit_number'] = $application->get('field_is_new_permit_number')->getValue();
       }
 
       if ($application->hasField('field_hitas_owner')) {

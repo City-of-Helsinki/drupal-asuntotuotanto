@@ -189,6 +189,12 @@ class ApplicationForm extends ContentEntityForm {
       }
     }
 
+    if (count($formValues['apartment']) <= 1 && isset($formValues['apartment'][0])) {
+      if ($formValues['apartment'][0]['id'] == '0' || empty($formValues['apartment'][0]['id'])) {
+        $form_state->setErrorByName('apartment', t('Field @field cannot be empty', ['@field' => 'apartment']));
+      }
+    }
+
     $triggerName = $form_state->getTriggeringElement()['#name'];
     if ($triggerName == 'submit-application') {
       parent::validateForm($form, $form_state);

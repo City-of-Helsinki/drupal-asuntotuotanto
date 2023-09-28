@@ -1,0 +1,18 @@
+uuid: 32b93a69-e1e3-4de5-9158-cc7b16df9f85
+langcode: fi
+status: true
+dependencies:
+  module:
+    - asu_application
+id: asu_application.field_is_new_permit_number
+field_name: field_is_new_permit_number
+entity_type: asu_application
+type: boolean
+settings: {  }
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false
