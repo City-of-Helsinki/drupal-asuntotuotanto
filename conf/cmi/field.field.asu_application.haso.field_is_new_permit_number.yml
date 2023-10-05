@@ -10,7 +10,7 @@ field_name: field_is_new_permit_number
 entity_type: asu_application
 bundle: haso
 label: 'Asumisoikeusnumero on myönnetty 1.9.2023 alkaen.'
-description: 'Valitse tämä valinta mikäli asumisoikeusnumero on myönnetty 1.9.2023 alkaen. Jätä valinta tekemättä mikäli asumisoikeusnumero on myönnetty ennen 31.8.2023.'
+description: 'Valitse tämä valinta mikäli sumisoikeusnumero on myönnetty 1.9.2023 alkaen (ARA myöntänyt). Jätä valinta tekemättä mikäli asumisoikeusnumero on myönnetty ennen 31.8.2023.'
 required: false
 translatable: false
 default_value:
