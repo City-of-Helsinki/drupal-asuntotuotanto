@@ -86,6 +86,16 @@ class Application extends EditorialContentEntityBase implements ContentEntityInt
   }
 
   /**
+   * Return is new permit number.
+   *
+   * @return bool
+   *   Has children.
+   */
+  public function hasNewPermitNumber(): bool {
+    return $this->field_is_new_permit_number->value ?? FALSE;
+  }
+
+  /**
    * Get apartments.
    *
    * @return object
@@ -249,7 +259,7 @@ class Application extends EditorialContentEntityBase implements ContentEntityInt
       ->setDescription(t('Basic information of the people who are applying'))
       ->setCardinality(1)
       ->setDisplayOptions('form', [
-        'type' => 'asu_main_applicant',
+        'type' => 'asu_main_applicant_widget',
         'weight' => 5,
         'settings' => [],
       ]);

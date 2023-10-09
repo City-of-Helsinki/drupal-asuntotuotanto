@@ -7,6 +7,7 @@ dependencies:
     - field.field.asu_application.haso.field_agreement_policy
     - field.field.asu_application.haso.field_aso_changer
     - field.field.asu_application.haso.field_data_agreement_policy
+    - field.field.asu_application.haso.field_is_new_permit_number
     - field.field.asu_application.haso.field_personal_id
     - field.field.asu_application.haso.field_right_of_residence_number
   module:
@@ -18,28 +19,35 @@ mode: default
 content:
   field_agreement_policy:
     type: boolean_checkbox
-    weight: 29
+    weight: 4
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
   field_aso_changer:
     type: boolean_checkbox
-    weight: 28
+    weight: 3
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
   field_data_agreement_policy:
     type: boolean_checkbox
-    weight: 30
+    weight: 5
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  field_is_new_permit_number:
+    type: boolean_checkbox
+    weight: 2
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
   field_personal_id:
     type: string_textfield
-    weight: 26
+    weight: 0
     region: content
     settings:
       size: 60
@@ -47,7 +55,7 @@ content:
     third_party_settings: {  }
   field_right_of_residence_number:
     type: string_textfield
-    weight: 27
+    weight: 1
     region: content
     settings:
       size: 60

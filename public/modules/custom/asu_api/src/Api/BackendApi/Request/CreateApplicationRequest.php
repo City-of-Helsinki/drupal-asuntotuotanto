@@ -59,6 +59,7 @@ class CreateApplicationRequest extends Request {
       'apartments' => $this->getApartments(),
       'is_right_of_occupancy_housing_changer' => FALSE,
       'has_hitas_ownership' => FALSE,
+      'right_of_residence_is_old_batch' => $this->application->hasNewPermitNumber(),
     ];
 
     if ($this->application->hasField('field_right_of_residence_number')) {
