@@ -64,6 +64,7 @@
         "drupal/pathauto": "^1.8",
         "drupal/rabbit_hole": "^1.0@beta",
         "drupal/raven": "^3.2",
+        "drupal/rebuild_cache_access": "^1.9",
         "drupal/redirect": "^1.6",
         "drupal/redis": "^1.6",
         "drupal/registration_role": "^1.1",
