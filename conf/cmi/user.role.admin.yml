@@ -55,6 +55,7 @@ dependencies:
     - paragraphs_type_permissions
     - path
     - pathauto
+    - rebuild_cache_access
     - redirect
     - role_delegation
     - samlauth
@@ -226,6 +227,7 @@ permissions:
   - 'edit terms in site_owners'
   - 'edit terms in states_of_sale'
   - 'edit terms in tasks'
+  - 'rebuild cache access'
   - 'revert all revisions'
   - 'revert landing_page revisions'
   - 'revert news revisions'
