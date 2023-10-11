@@ -134,6 +134,7 @@ module:
   path_alias: 0
   rabbit_hole: 0
   raven: 0
+  rebuild_cache_access: 0
   redirect: 0
   redirect_404: 0
   redis: 0
