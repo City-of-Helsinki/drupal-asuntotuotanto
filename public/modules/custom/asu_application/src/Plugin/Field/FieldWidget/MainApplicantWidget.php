@@ -76,7 +76,7 @@ class MainApplicantWidget extends WidgetBase {
       '#type' => 'textfield',
       '#title' => $this->t('Street address'),
       '#maxlength' => 99,
-      '#default_value' => $items->getValue()[$delta]['address'] ?? $userInformation['address'],
+      '#default_value' => $items->getValue()[$delta]['address'] ?? $userInformation['street_address'],
       '#required' => TRUE,
     ];
 
