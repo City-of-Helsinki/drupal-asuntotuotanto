@@ -93,11 +93,11 @@ services:
       - internal
       - stonehenge-network
 
-  #redis:
-    #container_name: "${COMPOSE_PROJECT_NAME}-redis"
-    #image: redis:6-alpine
-    #networks:
-      #- internal
+  redis:
+    container_name: "${COMPOSE_PROJECT_NAME}-redis"
+    image: redis:6-alpine
+    networks:
+      - internal
 #  varnish:
 #    container_name: "${COMPOSE_PROJECT_NAME}-varnish"
 #    image: druidfi/varnish:6-drupal
