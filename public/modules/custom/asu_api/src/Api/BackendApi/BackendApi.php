@@ -86,6 +86,8 @@ class BackendApi {
       }
     }
 
+    $options['timeout'] = 60;
+
     $logger = $this->logger;
     try {
       $response = $this->client->send(

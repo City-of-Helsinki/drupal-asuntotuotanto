@@ -86,15 +86,7 @@ class ApplicationSubscriber implements EventSubscriberInterface {
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
   public function sendApplicationToBackend(ApplicationEvent $applicationEvent) {
-    $entity_type = 'asu_application';
-    $entity_id = $applicationEvent->getApplicationId();
-
     /** @var \Drupal\asu_application\Entity\Application $application */
-    /*
-    $application = \Drupal::entityTypeManager()
-    ->getStorage($entity_type)
-    ->load($entity_id);
-     */
     $application = $applicationEvent->getApplication();
 
     $project = Node::load($application->project_id->value);
