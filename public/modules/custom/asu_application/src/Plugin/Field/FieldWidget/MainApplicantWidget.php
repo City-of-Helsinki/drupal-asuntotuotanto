@@ -7,6 +7,7 @@ use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\WidgetBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\user\Entity\User;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Plugin implementation of the main applicant field widget.
@@ -27,13 +28,28 @@ class MainApplicantWidget extends WidgetBase {
    */
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
     $account = User::load(\Drupal::currentUser()->id());
-    $request = new UserRequest($account);
-    $request->setSender($account);
+
+    if ($account->hasRole('customer')) {
+      $request = new UserRequest($account);
+      $request->setSender($account);
+    }
+    else {
+      $customerUid = $form_state->getFormObject()->getEntity()->get('uid')->target_id;
+      $customer = User::load($customerUid);
+      $request = new UserRequest($customer);
+      $request->setSender($customer);
+    }
 
     /** @var \Drupal\asu_api\Api\BackendApi\BackendApi $backendApi */
     $backendApi = \Drupal::service('asu_api.backendapi');
+    try {
+      $userResponse = $backendApi->send($request);
+    }
+    catch (\Exception $e) {
+      return new Response('Failed to fetch user data to applicant form.', 400);
+    }
+
     /** @var \Drupal\asu_api\Api\BackendApi\Response\UserResponse $userResponse */
-    $userResponse = $backendApi->send($request);
     $userInformation = $userResponse->getUserInformation();
 
     $element['first_name'] = [
