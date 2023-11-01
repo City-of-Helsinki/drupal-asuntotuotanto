@@ -6,7 +6,6 @@ use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\WidgetBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\asu_api\Api\BackendApi\Request\UserRequest;
-use Drupal\asu_api\Exception\RequestException;
 use Drupal\user\Entity\User;
 use Symfony\Component\HttpFoundation\Response;
 
