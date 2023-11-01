@@ -187,6 +187,11 @@ class ApplicationForm extends ContentEntityForm {
         $fieldTitle = (string) $form["main_applicant"]['widget'][0][$field]['#title'];
         $form_state->setErrorByName($field, t('Field @field cannot be empty', ['@field' => $fieldTitle]));
       }
+
+      if ($field == 'personal_id' && strlen($value) < 4) {
+        $fieldTitle = (string) $form["main_applicant"]['widget'][0][$field]['#title'];
+        $form_state->setErrorByName($field, t('Check @field', ['@field' => $fieldTitle]));
+      }
     }
 
     if (count($formValues['apartment']) <= 1 && isset($formValues['apartment'][0])) {
