@@ -30,4 +30,4 @@ external_data_map:
   pid:
     title: PID
     type: textfield
-    external_field: personal_identification_number
+    external_field: national_identification_number
