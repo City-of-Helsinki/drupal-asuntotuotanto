@@ -34,10 +34,19 @@ class MainApplicantWidget extends WidgetBase {
       $request->setSender($account);
     }
     else {
-      $customerUid = $form_state->getFormObject()->getEntity()->get('uid')->target_id;
-      $customer = User::load($customerUid);
-      $request = new UserRequest($customer);
-      $request->setSender($customer);
+      $appication = \Drupal::routeMatch()->getParameter('asu_application');
+
+      if ($appication) {
+        $customer = User::load($appication->getOwnerId());
+        $request = new UserRequest($customer);
+        $request->setSender($customer);
+        /** @var \Drupal\Core\TempStore\PrivateTempStore $tempStorageService */
+        $tempStorageService = \Drupal::service('tempstore.private')->get('customer');
+        $tempStorageService->delete('asu_api_token');
+      }
+      else {
+        return new Response('Failed to fetch application data.', 400);
+      }
     }
 
     /** @var \Drupal\asu_api\Api\BackendApi\BackendApi $backendApi */
