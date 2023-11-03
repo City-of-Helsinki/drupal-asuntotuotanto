@@ -32,34 +32,30 @@ class MainApplicantWidget extends WidgetBase {
     if ($account->hasRole('customer')) {
       $request = new UserRequest($account);
       $request->setSender($account);
+
+      /** @var \Drupal\asu_api\Api\BackendApi\BackendApi $backendApi */
+      $backendApi = \Drupal::service('asu_api.backendapi');
+      try {
+        $userResponse = $backendApi->send($request);
+      } catch (\Exception $e) {
+        return new Response('Failed to fetch user data to applicant form.', 400);
+      }
+
+      /** @var \Drupal\asu_api\Api\BackendApi\Response\UserResponse $userResponse */
+      $userInformation = $userResponse->getUserInformation();
     }
     else {
-      $appication = \Drupal::routeMatch()->getParameter('asu_application');
-
-      if ($appication) {
-        $customer = User::load($appication->getOwnerId());
-        $request = new UserRequest($customer);
-        $request->setSender($customer);
-        /** @var \Drupal\Core\TempStore\PrivateTempStore $tempStorageService */
-        $tempStorageService = \Drupal::service('tempstore.private')->get('customer');
-        $tempStorageService->delete('asu_api_token');
-      }
-      else {
-        return new Response('Failed to fetch application data.', 400);
-      }
+      $userInformation = [
+        'first_name' => NULL,
+        'last_name' => NULL,
+        'date_of_birth' => NULL,
+        'street_address' => NULL,
+        'postal_code' => NULL,
+        'city' => NULL,
+        'phone_number' => NULL,
+        'email' => NULL,
+      ];
     }
-
-    /** @var \Drupal\asu_api\Api\BackendApi\BackendApi $backendApi */
-    $backendApi = \Drupal::service('asu_api.backendapi');
-    try {
-      $userResponse = $backendApi->send($request);
-    }
-    catch (\Exception $e) {
-      return new Response('Failed to fetch user data to applicant form.', 400);
-    }
-
-    /** @var \Drupal\asu_api\Api\BackendApi\Response\UserResponse $userResponse */
-    $userInformation = $userResponse->getUserInformation();
 
     $element['first_name'] = [
       '#type' => 'textfield',
