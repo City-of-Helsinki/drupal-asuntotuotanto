@@ -37,7 +37,8 @@ class MainApplicantWidget extends WidgetBase {
       $backendApi = \Drupal::service('asu_api.backendapi');
       try {
         $userResponse = $backendApi->send($request);
-      } catch (\Exception $e) {
+      }
+      catch (\Exception $e) {
         return new Response('Failed to fetch user data to applicant form.', 400);
       }
 
