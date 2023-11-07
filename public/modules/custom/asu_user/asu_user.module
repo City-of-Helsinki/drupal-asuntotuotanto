@@ -5,14 +5,15 @@
  * Contains asu_user module.
  */
 
-use Drupal\asu_api\Api\BackendApi\Request\UpdateUserRequest;
-use Drupal\asu_api\Api\BackendApi\Request\UserRequest;
-use Drupal\asu_user\Helper\StoreHelper;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
+use Drupal\asu_api\Api\BackendApi\Request\CreateUserRequest;
+use Drupal\asu_api\Api\BackendApi\Request\UpdateUserRequest;
+use Drupal\asu_api\Api\BackendApi\Request\UserRequest;
+use Drupal\asu_user\Helper\StoreHelper;
 use Drupal\user\Entity\User;
 use Drupal\user\UserInterface;
 
@@ -30,6 +31,35 @@ function asu_user_user_login(UserInterface $account) {
   // @todo Use customer bundle instead of role.
   if ($account->hasRole('customer')) {
     asu_get_user_external_field_data($account);
+  }
+
+  if ($account->hasRole('salesperson') && !$account->field_backend_profile->value) {
+    $accountData = [
+      'first_name' => '-',
+      'last_name' => '-',
+      'address' => '-',
+      'phone_number' => '-',
+      'postal_code' => '-',
+      'city' => '-',
+      'date_of_birth' => (new \Datetime())->format('Y-m-d'),
+    ];
+
+    $request = new CreateUserRequest($account, $accountData, 'salesperson');
+    /** @var \Drupal\asu_api\Api\BackendApi\BackendApi $backendApi */
+    $backendApi = \Drupal::service('asu_api.backendapi');
+
+    try {
+      /** @var \Drupal\asu_api\Api\BackendApi\Response\UserResponse $response */
+      $response = $backendApi->send($request);
+      $account->field_backend_profile = $response->getProfileId();
+      $account->field_backend_password = $response->getPassword();
+      $account->save();
+    }
+    catch (\Exception $e) {
+      \Drupal::logger('asu_backend_api')->emergency(
+        'Exception while creating user to backend: ' . $e->getMessage()
+      );
+    }
   }
 }
 
