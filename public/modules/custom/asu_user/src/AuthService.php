@@ -142,50 +142,7 @@ class AuthService extends SamlService {
         ];
 
         $account = $this->externalAuth->register($unique_id, 'samlauth', $account_data);
-        $pid = $this->getAttributeByConfig('unique_id_attribute');
-        $lastname = reset($attributes['sn']) ?? NULL;
-        $first_name = reset($attributes['firstName']) ?? NULL;
-        $divider = substr($pid, 6, 1);
-        $dividers = ['18' => '+', '19' => '-', '20' => 'A'];
-        $century = array_search($divider, $dividers);
-        $year = $century . substr($pid, 4, 2);
-        $day = substr($pid, 0, 2);
-        $month = substr($pid, 2, 2);
-        $birth_day = sprintf('%s.%s.%s', $day, $month, $year);
-
-        $store = \Drupal::service('tempstore.private')
-          ->get('customer');
-        $store->set('first_name', $first_name);
-        $store->set('last_name', $lastname);
-        $store->set('date_of_birth', $birth_day);
-
-        $accountData = [
-          'first_name' => $first_name,
-          'last_name' => $lastname,
-          'date_of_birth' => $birth_day,
-          'national_identification_number' => $pid,
-        ];
-
-        $request = new CreateUserRequest(
-          $account,
-          $accountData,
-          'customer'
-        );
-
-        try {
-          /** @var \Drupal\asu_api\Api\BackendApi\BackendApi $backendApi */
-          $backendApi = \Drupal::service('asu_api.backendapi');
-          $response = $backendApi->send($request);
-          $account->field_backend_profile = $response->getProfileId();
-          $account->field_backend_password = $response->getPassword();
-          $account->save();
-        }
-        catch (\Exception $e) {
-          \Drupal::logger('asu_backend_api')->emergency(
-            'Exception while creating user to backend: ' . $e->getMessage()
-          );
-        }
-
+        $this->createAuthUserRequest($account, $attributes);
         $this->externalAuth->userLoginFinalize($account, $unique_id, 'samlauth');
       }
       else {
@@ -202,10 +159,66 @@ class AuthService extends SamlService {
       throw new UserVisibleException('Requested account is blocked.');
     }
     else {
+      if (empty($account->field_backend_profile->value)) {
+        $attributes = $this->getAttributes();
+        $this->createAuthUserRequest($account, $attributes);
+      }
+
       // Synchronize the user account with SAML attributes if needed.
       $this->synchronizeUserAttributes($account, FALSE, $first_saml_login);
       $this->externalAuth->userLoginFinalize($account, $unique_id, 'samlauth');
     }
+  }
+
+  /**
+   * Custom create auth user request function.
+   */
+  private function createAuthUserRequest($account, $attributes) {
+    $pid = $this->getAttributeByConfig('unique_id_attribute');
+    $lastname = reset($attributes['sn']) ?? NULL;
+    $first_name = reset($attributes['firstName']) ?? NULL;
+    $divider = substr($pid, 6, 1);
+    $dividers = ['18' => '+', '19' => '-', '20' => 'A'];
+    $century = array_search($divider, $dividers);
+    $year = $century . substr($pid, 4, 2);
+    $day = substr($pid, 0, 2);
+    $month = substr($pid, 2, 2);
+    $birth_day = sprintf('%s.%s.%s', $day, $month, $year);
+
+    $store = \Drupal::service('tempstore.private')
+      ->get('customer');
+    $store->set('first_name', $first_name);
+    $store->set('last_name', $lastname);
+    $store->set('date_of_birth', $birth_day);
+
+    $accountData = [
+      'first_name' => $first_name,
+      'last_name' => $lastname,
+      'date_of_birth' => $birth_day,
+      'national_identification_number' => $pid,
+    ];
+
+    $request = new CreateUserRequest(
+      $account,
+      $accountData,
+      'customer'
+    );
+
+    try {
+      /** @var \Drupal\asu_api\Api\BackendApi\BackendApi $backendApi */
+      $backendApi = \Drupal::service('asu_api.backendapi');
+      $response = $backendApi->send($request);
+      $account->field_backend_profile = $response->getProfileId();
+      $account->field_backend_password = $response->getPassword();
+      $account->save();
+    }
+    catch (\Exception $e) {
+      \Drupal::logger('asu_backend_api')->emergency(
+        'Exception while creating user to backend: ' . $e->getMessage()
+      );
+    }
+
+    return $account;
   }
 
   /**
