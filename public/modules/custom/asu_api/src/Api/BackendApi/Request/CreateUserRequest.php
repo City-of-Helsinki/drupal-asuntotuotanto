@@ -64,6 +64,10 @@ class CreateUserRequest extends Request {
       foreach ($fieldMap as $field => $information) {
         $data[$information['external_field']] = $this->userInformation[$field] ?? '-';
       }
+
+      if (!empty($this->userInformation['national_identification_number'])) {
+        $data['national_identification_number'] = $this->userInformation['national_identification_number'];
+      }
     }
 
     if ($this->accountType != 'customer') {

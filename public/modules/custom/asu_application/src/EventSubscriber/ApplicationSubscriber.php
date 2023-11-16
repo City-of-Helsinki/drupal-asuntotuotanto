@@ -4,6 +4,7 @@ namespace Drupal\asu_application\EventSubscriber;
 
 use Drupal\asu_api\Api\BackendApi\BackendApi;
 use Drupal\asu_api\Api\BackendApi\Request\CreateApplicationRequest;
+use Drupal\asu_api\Api\BackendApi\Request\CreateUserRequest;
 use Drupal\asu_api\Api\BackendApi\Request\SalesCreateApplicationRequest;
 use Drupal\asu_api\Exception\IllegalApplicationException;
 use Drupal\asu_application\Event\ApplicationEvent;
@@ -174,6 +175,35 @@ class ApplicationSubscriber implements EventSubscriberInterface {
         $application,
         $project->uuid(),
       );
+
+      $customer = User::load($application->getOwnerId());
+      $accountData = [
+        'first_name' => '',
+        'last_name' => '',
+        'date_of_birth' => '',
+      ];
+
+      if (empty($customer->field_backend_profile->value)) {
+        $request = new CreateUserRequest(
+          $customer,
+          $accountData,
+          'customer'
+        );
+
+        try {
+          /** @var \Drupal\asu_api\Api\BackendApi\BackendApi $backendApi */
+          $backendApi = \Drupal::service('asu_api.backendapi');
+          $response = $backendApi->send($request);
+          $customer->field_backend_profile = $response->getProfileId();
+          $customer->field_backend_password = $response->getPassword();
+          $customer->save();
+        }
+        catch (\Exception $e) {
+          \Drupal::logger('asu_backend_api')->emergency(
+            'Exception while creating user to backend: ' . $e->getMessage()
+          );
+        }
+      }
 
       $request->setSender($sender);
 
