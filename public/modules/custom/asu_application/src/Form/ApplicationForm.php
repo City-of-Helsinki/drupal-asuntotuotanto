@@ -200,9 +200,9 @@ class ApplicationForm extends ContentEntityForm {
       }
     }
 
-    $has_additional_applicant = (!empty($formValues['applicant'][0]['has_additional_applicant'])) ? $formValues['applicant'][0]['has_additional_applicant'] : NULL;
+    $has_additional_applicant = (!empty($formValues['applicant'][0]['has_additional_applicant'])) ? (bool) $formValues['applicant'][0]['has_additional_applicant'] : FALSE;
 
-    if ($has_additional_applicant && $has_additional_applicant) {
+    if ($has_additional_applicant) {
       foreach ($formValues['applicant'][0] as $applicant_field => $applicant_value) {
         if ($applicant_field == 'has_additional_applicant') {
           continue;
