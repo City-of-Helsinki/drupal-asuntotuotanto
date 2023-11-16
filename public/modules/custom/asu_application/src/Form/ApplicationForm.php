@@ -200,6 +200,26 @@ class ApplicationForm extends ContentEntityForm {
       }
     }
 
+    $has_additional_applicant = (!empty($formValues['applicant'][0]['has_additional_applicant'])) ? (bool) $formValues['applicant'][0]['has_additional_applicant'] : FALSE;
+
+    if ($has_additional_applicant) {
+      foreach ($formValues['applicant'][0] as $applicant_field => $applicant_value) {
+        if ($applicant_field == 'has_additional_applicant') {
+          continue;
+        }
+
+        if ($applicant_field == 'personal_id' && strlen($applicant_value) != 4) {
+          $fieldTitle = (string) $form["applicant"]['widget'][0][$applicant_field]['#title'];
+          $form_state->setErrorByName($field, t('Check @field', ['@field' => $fieldTitle]));
+        }
+
+        if (empty($applicant_value) || $applicant_value == '-' || strlen($applicant_value) < 2) {
+          $fieldTitle = (string) $form["applicant"]['widget'][0][$applicant_field]['#title'];
+          $form_state->setErrorByName($applicant_field, t('Field @field cannot be empty', ['@field' => $fieldTitle]));
+        }
+      }
+    }
+
     $triggerName = $form_state->getTriggeringElement()['#name'];
     if ($triggerName == 'submit-application') {
       parent::validateForm($form, $form_state);
