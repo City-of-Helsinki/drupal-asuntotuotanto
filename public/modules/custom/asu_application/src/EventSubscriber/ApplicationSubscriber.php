@@ -176,7 +176,7 @@ class ApplicationSubscriber implements EventSubscriberInterface {
         $project->uuid(),
       );
 
-      $customer = User::load($project->uuid());
+      $customer = User::load($project->get('uid')->target_id);
       $accountData = [
         'first_name' => '',
         'last_name' => '',
