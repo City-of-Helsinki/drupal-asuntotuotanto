@@ -16,9 +16,6 @@
 {% if content %}
   <div{{ create_attribute({'class': ['page-header__top', 'wrapper', 'wrapper--mw-1264']}) }}>
     {{ content }}
-    {% if not logged_in %}
-      {{ link('Log in'|t, 'route:user.register', {'class': 'login-link'}) }}
-    {% endif %}
     {{ drupal_block('language_block:language_content', { variation: 'desktop' }) }}
     <button type="button" class="page-header__mobile-navigation-toggle-button" id="mobile_navigation_toggle_button" aria-hidden="false" aria-expanded="false">
       <span class="visually-hidden">{{ 'Open navigation'|t }}</span>
