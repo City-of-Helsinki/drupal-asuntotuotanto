@@ -35,6 +35,7 @@ class RouteSubscriber extends RouteSubscriberBase {
           '_controller' => '\Drupal\asu_user\Controller\AuthController::login',
         ]
       );
+      $route->setRequirement('_access', 'FALSE');
       $route->setOption('no_cache', TRUE);
     }
   }
