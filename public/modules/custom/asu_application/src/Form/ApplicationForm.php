@@ -54,7 +54,7 @@ class ApplicationForm extends ContentEntityForm {
       return (new RedirectResponse($redirect, 301));
     }
 
-    if (!$project_data = $this->getApartments($project)) {
+    if (!$project_data = $this->getApartments($project, ['sold', 'reserved', 'reserved_haso'])) {
       $this->logger('asu_application')->critical('User tried to access nonexistent project of id ' . $project_id);
       $this->messenger()->addMessage($this->t('Unfortunately the project you are trying to apply for is unavailable.'));
       return new RedirectResponse($applicationsUrl);
@@ -344,7 +344,7 @@ class ApplicationForm extends ContentEntityForm {
    * @return array
    *   Array of project information & apartments.
    */
-  private function getApartments(Project $project): ?array {
+  private function getApartments(Project $project, array $limit = []): ?array {
     $cid = 'application_project_apartments_' . $project->id();
     $values = [];
     $type = $project->field_ownership_type->first()->entity->getName();
@@ -356,9 +356,19 @@ class ApplicationForm extends ContentEntityForm {
       $apartments = [];
       foreach ($project->field_apartments as $apartmentReference) {
         $apartment = $apartmentReference->entity;
+        // Skip unpublish apartments.
+        if( $apartment->get('status')->value == 0) {
+          continue;
+        }
+
         $number = $apartment->field_apartment_number->value;
 
         if (trim(strtolower($number)) == 'a0') {
+          continue;
+        }
+
+        // Skip wanted state of sale e.g. sold, reserved.
+        if ($limit && in_array($apartment->field_apartment_state_of_sale->target_id, $limit)) {
           continue;
         }
 
