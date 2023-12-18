@@ -54,7 +54,8 @@ class ApplicationForm extends ContentEntityForm {
       return (new RedirectResponse($redirect, 301));
     }
 
-    if (!$project_data = $this->getApartments($project, ['sold', 'reserved', 'reserved_haso'])) {
+    $limit = ['sold', 'reserved', 'reserved_haso'];
+    if (!$project_data = $this->getApartments($project, $limit)) {
       $this->logger('asu_application')->critical('User tried to access nonexistent project of id ' . $project_id);
       $this->messenger()->addMessage($this->t('Unfortunately the project you are trying to apply for is unavailable.'));
       return new RedirectResponse($applicationsUrl);
@@ -357,7 +358,7 @@ class ApplicationForm extends ContentEntityForm {
       foreach ($project->field_apartments as $apartmentReference) {
         $apartment = $apartmentReference->entity;
         // Skip unpublish apartments.
-        if( $apartment->get('status')->value == 0) {
+        if ($apartment->get('status')->value == 0) {
           continue;
         }
 
