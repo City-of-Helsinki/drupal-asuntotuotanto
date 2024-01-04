@@ -586,25 +586,27 @@ class ApplicationForm extends ContentEntityForm {
     if (!$startDate || !$endDate) {
       return FALSE;
     }
-    $startTime = strtotime($startDate);
-    $endTime = strtotime($endDate);
+    $startDate = $this->convertDatetime($startDate);
+    $startDate = strtotime($startDate);
+    $endDate = $this->convertDatetime($endDate);
+    $endDate = strtotime($endDate);
     $now = time();
 
     $value = FALSE;
 
     switch ($period) {
       case "before":
-        $value = $now < $startTime;
+        $value = $now < $startDate;
 
         break;
 
       case "now":
-        $value = $now > $startTime && $now < $endTime;
+        $value = $now > $startDate && $now < $endDate;
 
         break;
 
       case "after":
-        $value = $now > $endTime;
+        $value = $now > $endDate;
 
         break;
     }
@@ -612,4 +614,19 @@ class ApplicationForm extends ContentEntityForm {
     return $value;
   }
 
+  /**
+   * Covert datetime.
+   */
+  private function convertDatetime($value) {
+    /** @var Drupal\Core\Datetime\DateFormatterInterface $date_formatter */
+    $date_formatter = \Drupal::service('date.formatter');
+    $date = $date_formatter->format(
+      strtotime($value . ' UTC'),
+      'custom',
+      'Y-m-d\TH:i:sP',
+      'Europe/Helsinki',
+    );
+
+    return $date;
+  }
 }
