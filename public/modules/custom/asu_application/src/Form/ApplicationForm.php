@@ -629,4 +629,5 @@ class ApplicationForm extends ContentEntityForm {
 
     return $date;
   }
+
 }
