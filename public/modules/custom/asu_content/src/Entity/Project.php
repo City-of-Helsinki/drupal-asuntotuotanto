@@ -36,9 +36,9 @@ class Project extends Node {
         !$this->field_application_end_time->value) {
       return FALSE;
     }
-    $startTime = $this->convertDatetime($this->field_application_start_time->value);
+    $startTime = asu_content_convert_datetime($this->field_application_start_time->value);
     $startTime = strtotime($startTime);
-    $endTime = $this->convertDatetime($this->field_application_end_time->value);
+    $endTime = asu_content_convert_datetime($this->field_application_end_time->value);
     $endTime = strtotime($endTime);
     $now = time();
 
@@ -152,22 +152,6 @@ class Project extends Node {
     }
 
     return $user_field->referencedEntities()[0];
-  }
-
-  /**
-   * Covert datetime.
-   */
-  private function convertDatetime($value) {
-    /** @var Drupal\Core\Datetime\DateFormatterInterface $date_formatter */
-    $date_formatter = \Drupal::service('date.formatter');
-    $date = $date_formatter->format(
-      strtotime($value . ' UTC'),
-      'custom',
-      'Y-m-d\TH:i:sP',
-      'Europe/Helsinki',
-    );
-
-    return $date;
   }
 
 }
