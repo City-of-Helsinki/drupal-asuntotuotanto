@@ -586,25 +586,27 @@ class ApplicationForm extends ContentEntityForm {
     if (!$startDate || !$endDate) {
       return FALSE;
     }
-    $startTime = strtotime($startDate);
-    $endTime = strtotime($endDate);
+    $startDate = asu_content_convert_datetime($startDate);
+    $startDate = strtotime($startDate);
+    $endDate = asu_content_convert_datetime($endDate);
+    $endDate = strtotime($endDate);
     $now = time();
 
     $value = FALSE;
 
     switch ($period) {
       case "before":
-        $value = $now < $startTime;
+        $value = $now < $startDate;
 
         break;
 
       case "now":
-        $value = $now > $startTime && $now < $endTime;
+        $value = $now > $startDate && $now < $endDate;
 
         break;
 
       case "after":
-        $value = $now > $endTime;
+        $value = $now > $endDate;
 
         break;
     }

@@ -376,3 +376,19 @@ function asuSetQueueWorker($project) {
     }
   }
 }
+
+/**
+ * Covert datetime.
+ */
+function asu_content_convert_datetime($value): string {
+    /** @var Drupal\Core\Datetime\DateFormatterInterface $date_formatter */
+    $date_formatter = \Drupal::service('date.formatter');
+    $date = $date_formatter->format(
+      strtotime($value . ' UTC'),
+      'custom',
+      'Y-m-d\TH:i:sP',
+      'Europe/Helsinki',
+    );
+
+    return $date;
+}
