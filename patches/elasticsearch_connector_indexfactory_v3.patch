@@ -1,70 +1,24 @@
 diff --git a/src/ElasticSearch/Parameters/Factory/IndexFactory.php b/src/ElasticSearch/Parameters/Factory/IndexFactory.php
-index 20cffea..1eb83c7 100644
+index 8427984..37732d5 100644
 --- a/src/ElasticSearch/Parameters/Factory/IndexFactory.php
 +++ b/src/ElasticSearch/Parameters/Factory/IndexFactory.php
-@@ -2,10 +2,14 @@
- 
- namespace Drupal\elasticsearch_connector\ElasticSearch\Parameters\Factory;
- 
-+use Drupal\Core\Field\FieldDefinitionInterface;
-+use Drupal\file\Entity\File;
+@@ -4,11 +4,15 @@ namespace Drupal\elasticsearch_connector\ElasticSearch\Parameters\Factory;
+
+ use Drupal\elasticsearch_connector\Plugin\search_api\backend\SearchApiElasticsearchBackend;
  use Drupal\search_api\IndexInterface;
++use Drupal\search_api\Processor\EntityProcessorProperty;
++use Drupal\search_api\Utility\Utility;
  use Drupal\elasticsearch_connector\Event\PrepareIndexEvent;
  use Drupal\elasticsearch_connector\Event\PrepareIndexMappingEvent;
  use Drupal\elasticsearch_connector\Event\BuildIndexParamsEvent;
-+use Drupal\search_api\Processor\EntityProcessorProperty;
-+use Drupal\search_api\Utility\Utility;
  use Drupal\search_api_autocomplete\Suggester\SuggesterInterface;
  use Drupal\elasticsearch_connector\Entity\Cluster;
- 
-@@ -48,26 +52,26 @@ class IndexFactory {
-    *
-    * @return array
-    */
--   public static function create(IndexInterface $index) {
--     $indexName = static::getIndexName($index);
--     $indexConfig =  [
--       'index' => $indexName,
--       'body' => [
--         'settings' => [
--           'number_of_shards' => $index->getOption('number_of_shards', 5),
--           'number_of_replicas' => $index->getOption('number_of_replicas', 1),
--         ],
--       ],
--     ];
--
--     // Allow other modules to alter index config before we create it.
--     $dispatcher = \Drupal::service('event_dispatcher');
--     $prepareIndexEvent = new PrepareIndexEvent($indexConfig, $indexName);
--     $event = $dispatcher->dispatch(PrepareIndexEvent::PREPARE_INDEX, $prepareIndexEvent);
--     $indexConfig = $event->getIndexConfig();
--
--     return $indexConfig;
--   }
-+  public static function create(IndexInterface $index) {
-+    $indexName = static::getIndexName($index);
-+    $indexConfig =  [
-+      'index' => $indexName,
-+      'body' => [
-+        'settings' => [
-+          'number_of_shards' => $index->getOption('number_of_shards', 5),
-+          'number_of_replicas' => $index->getOption('number_of_replicas', 1),
-+        ],
-+      ],
-+    ];
-+
-+    // Allow other modules to alter index config before we create it.
-+    $dispatcher = \Drupal::service('event_dispatcher');
-+    $prepareIndexEvent = new PrepareIndexEvent($indexConfig, $indexName);
-+    $event = $dispatcher->dispatch(PrepareIndexEvent::PREPARE_INDEX, $prepareIndexEvent);
-+    $indexConfig = $event->getIndexConfig();
-+
-+    return $indexConfig;
-+  }
- 
-   /**
-    * Build parameters to bulk delete indexes.
-@@ -112,28 +116,17 @@ class IndexFactory {
++use Drupal\Core\Field\FieldDefinitionInterface;
++use Drupal\file\Entity\File;
+
+ /**
+  * Create Elasticsearch Indices.
+@@ -113,28 +117,17 @@ class IndexFactory {
        ];
        /** @var \Drupal\search_api\Item\FieldInterface $field */
        foreach ($item as $name => $field) {
@@ -101,27 +55,19 @@ index 20cffea..1eb83c7 100644
          }
        }
        $params['body'][] = ['index' => ['_id' => $id]];
-@@ -191,7 +184,7 @@ class IndexFactory {
+@@ -192,7 +185,7 @@ class IndexFactory {
          // Collect autocompletion fields in an array keyed by field id.
          $all_autocompletion_fields += array_flip($autocompletion_fields);
        }
 -     }
 +    }
- 
+
      // Map index fields.
      foreach ($index->getFields() as $field_id => $field_data) {
-@@ -228,7 +221,6 @@ class IndexFactory {
-    *   uniqueness, the database name, and index machine name.
-    */
-   public static function getIndexName(IndexInterface $index) {
--
-     // Get index machine name.
-     $index_machine_name = is_string($index) ? $index : $index->id();
- 
-@@ -260,4 +252,112 @@ class IndexFactory {
+@@ -267,4 +260,112 @@ class IndexFactory {
      ));
    }
- 
+
 +  /**
 +   * Helper function. Returns the elasticsearch value for a given field.
 +   *
