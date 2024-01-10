@@ -165,15 +165,8 @@
             "drupal/field_group": {
                 "Custom patch to add classes for each horizontal tab": "patches/field_group_horizontal_tabs_classes.patch"
             },
-            "drupal/hdbt_admin": {
-                "Custom hero addition": "./patches/custom_hero_addition-2.patch",
-                "Column paragraph modification": "./patches/columns_toggle_modification.patch"
-            },
             "drupal/user_bundle": {
                 "Custom patch prevents install from dying when trying to edit nonexisting admin configuration file.": "./patches/remove_editing_admin_configuration.patch"
-            },
-            "drupal/helfi_platform_config": {
-                "Temporary patch for field description missing storage": "patches/field_description_missing_storage.patch"
             }
         }
     },
