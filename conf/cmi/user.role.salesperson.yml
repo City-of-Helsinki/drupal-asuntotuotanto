@@ -10,7 +10,6 @@ dependencies:
     - media.type.remote_video
     - media.type.soundcloud
     - node.type.apartment
-    - node.type.article
     - node.type.landing_page
     - node.type.news
     - node.type.page
