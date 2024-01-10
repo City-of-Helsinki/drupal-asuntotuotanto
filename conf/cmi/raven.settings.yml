@@ -3,8 +3,6 @@ _core:
 client_key: ''
 environment: ''
 release: ''
-fatal_error_handler: true
-fatal_error_handler_memory: 2560
 log_levels:
   1: 1
   2: 0
@@ -14,12 +12,14 @@ log_levels:
   6: 0
   7: 0
   8: 0
-drush_error_handler: false
 stack: true
-timeout: 2
+timeout: !!float 2
 message_limit: 2048
 trace: false
+fatal_error_handler: true
+fatal_error_handler_memory: 2560
 javascript_error_handler: false
+drush_error_handler: false
 public_dsn: ''
 ssl: verify_ssl
 ca_cert: ''
@@ -36,5 +36,5 @@ auto_session_tracking: false
 send_client_reports: false
 drush_tracing: false
 seckit_set_report_uri: false
-send_attempts: 0
 send_monitoring_sensor_status_changes: false
+send_attempts: 0

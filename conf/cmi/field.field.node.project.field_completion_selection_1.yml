@@ -1,5 +1,5 @@
 uuid: 54d35204-bcf8-466c-995e-ebec6dcca2d7
-langcode: fi
+langcode: en
 status: true
 dependencies:
   config:
@@ -9,7 +9,7 @@ id: node.project.field_completion_selection_1
 field_name: field_completion_selection_1
 entity_type: node
 bundle: project
-label: 'Asunnon arvioitu valmistumisaika 1 valinta'
+label: 'Estimated completion time of the apartment - selection 1'
 description: ''
 required: false
 translatable: false

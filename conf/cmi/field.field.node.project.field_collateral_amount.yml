@@ -1,5 +1,5 @@
 uuid: b7f77b0e-fc64-4572-81e3-736954c69228
-langcode: fi
+langcode: en
 status: true
 dependencies:
   config:
@@ -9,7 +9,7 @@ id: node.project.field_collateral_amount
 field_name: field_collateral_amount
 entity_type: node
 bundle: project
-label: 'Vakuus on suuruuudeltaan'
+label: 'Collateral amount'
 description: ''
 required: false
 translatable: false

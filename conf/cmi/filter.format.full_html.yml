@@ -50,13 +50,6 @@ filters:
     weight: -48
     settings:
       title: true
-  token_filter:
-    id: token_filter
-    provider: token_filter
-    status: true
-    weight: -47
-    settings:
-      replace_empty: '1'
   media_embed:
     id: media_embed
     provider: media
@@ -110,3 +103,10 @@ filters:
     settings:
       optionset: default
       media_switch: ''
+  token_filter:
+    id: token_filter
+    provider: token_filter
+    status: true
+    weight: -47
+    settings:
+      replace_empty: '1'
