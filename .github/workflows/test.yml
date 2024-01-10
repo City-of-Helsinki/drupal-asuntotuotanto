@@ -1,18 +1,23 @@
-on: [push]
+on:
+  pull_request:
+  push:
+    branches: ['main', 'develop']
 name: CI
 env:
-  SIMPLETEST_DB: "mysql://drupal:drupal@db:3306/drupal"
-  SIMPLETEST_BASE_URL: "http://127.0.0.1:8080"
-  DTT_BASE_URL: "http://127.0.0.1:8080"
   SYMFONY_DEPRECATIONS_HELPER: disabled
+  SIMPLETEST_BASE_URL: http://app:8888
   APP_ENV: "test"
   ASU_ELASTICSEARCH_ADDRESS: "http://elastic:9200"
   ASU_ELASTICSEARCH_USERNAME: "test"
   ASU_ELASTICSEARCH_PASSWORD: "pass"
   ASU_DJANGO_BACKEND_URL: "https://django-backend-test-url.fi"
-  XDEBUG_MODE: off
 jobs:
   tests:
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/city-of-helsinki/drupal-php-docker:8.2-alpine
+      options: --hostname app
+
     services:
       db:
         image: mariadb
@@ -36,27 +41,41 @@ jobs:
         ports:
           - 9200:9200
 
-    runs-on: ubuntu-latest
-    container:
-      image: ghcr.io/city-of-helsinki/drupal-php-docker:8.1-alpine
-
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 1
 
       - name: Build project
-        run: composer install
+        run: composer install --no-interaction
+
+      - name: Scan security updates
+        run: composer audit
+
+      - name: Check that subtheme is not built with dev mode
+        run: if grep -q 'sourceMappingURL=' -R public/themes/custom/hdbt_subtheme/dist/css; then exit 1; fi
 
       - name: Run PHPCS
-        run: vendor/bin/phpcs public/modules/custom/ --standard=Drupal
+        run: |
+          vendor/bin/phpcs public/modules/custom/ --ignore="*.js,*.css" --extensions=php,module,install --standard=Drupal,DrupalPractice
+          vendor/bin/phpcs public/themes/custom/ --ignore="*.js,*.css" --extensions=php,theme --standard=Drupal,DrupalPractice
+
+      - name: Run phpstan
+        run: vendor/bin/phpstan analyze
+
+      - name: Download latest dump
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh run download -n latest.sql
 
       - name: Install Drupal
-        run: php -d sendmail_path=$(which true); vendor/bin/drush --yes -v site-install --existing-config --db-url="$SIMPLETEST_DB"
+        run: |
+          mysql --user=drupal --password=drupal --database=drupal --host=db --port=3306 -A < latest.sql
+          drush deploy
 
       - name: Start services
         run: |
-          drush runserver $SIMPLETEST_BASE_URL > /dev/null 2>&1 &
+          drush runserver $SIMPLETEST_BASE_URL --dns > /dev/null 2>&1 &
           chromedriver --port=4444 > /dev/null 2>&1 &
           # Chromium browser is required to run 'functional-javascript' and
           # 'existing-site-javascript' tests.
@@ -67,4 +86,4 @@ jobs:
       - name: Run PHPUnit tests
         run: |
           composer test-php public/modules/custom
-          [ -d "tests/" ] && composer test-php tests/ || echo "No DTT tests found. Ignoring..."
+          if [ -d "tests/" ]; then composer test-php tests/; else echo "No DTT tests found. Ignoring..."; fi
