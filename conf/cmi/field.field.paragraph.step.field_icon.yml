@@ -5,8 +5,6 @@ dependencies:
   config:
     - field.storage.paragraph.field_icon
     - paragraphs.paragraphs_type.step
-  module:
-    - select2_icon
 id: paragraph.step.field_icon
 field_name: field_icon
 entity_type: paragraph

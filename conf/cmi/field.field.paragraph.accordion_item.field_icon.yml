@@ -5,8 +5,6 @@ dependencies:
   config:
     - field.storage.paragraph.field_icon
     - paragraphs.paragraphs_type.accordion_item
-  module:
-    - select2_icon
 _core:
   default_config_hash: G6zorz3ZMUu-XmBlZwIKHrNDDckuew1f3XQkGyIdIOI
 id: paragraph.accordion_item.field_icon

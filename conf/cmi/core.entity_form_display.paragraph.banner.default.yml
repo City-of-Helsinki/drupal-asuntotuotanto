@@ -12,7 +12,6 @@ dependencies:
     - paragraphs.paragraphs_type.banner
   module:
     - hdbt_admin_editorial
-    - select2_icon
     - text
 _core:
   default_config_hash: cUl5PG2elS-k5_0QkIjSKWmdrnqkv8IfEZC7PTqQWYc

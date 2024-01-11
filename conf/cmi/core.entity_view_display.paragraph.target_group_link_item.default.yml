@@ -9,7 +9,6 @@ dependencies:
     - paragraphs.paragraphs_type.target_group_link_item
   module:
     - link
-    - select2_icon
 id: paragraph.target_group_link_item.default
 targetEntityType: paragraph
 bundle: target_group_link_item
