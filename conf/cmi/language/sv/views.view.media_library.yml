@@ -1,8 +1,7 @@
-label: Mediakirjasto
 description: 'Hitta och hantera media.'
 display:
   default:
-    display_title: Huvud
+    display_title: Förvald
     display_options:
       title: Media
       fields:
@@ -20,10 +19,10 @@ display:
       exposed_form:
         options:
           submit_button: 'Tillämpa filter'
-          reset_button_label: Reset
-          exposed_sorts_label: 'Sort by'
-          sort_asc_label: Asc
-          sort_desc_label: Desc
+          reset_button_label: Återställ
+          exposed_sorts_label: 'Sortera efter'
+          sort_asc_label: Stigande
+          sort_desc_label: Fallande
       empty:
         area_text_custom:
           content: 'Ingen media tillgänglig.'
@@ -46,8 +45,6 @@ display:
             group_items:
               1:
                 title: Publicerad
-              2:
-                title: 'Ej publicerad'
         name:
           expose:
             label: Namn
