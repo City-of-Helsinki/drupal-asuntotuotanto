@@ -7,7 +7,7 @@ dependencies:
 id: paragraph.field_email
 field_name: field_email
 entity_type: paragraph
-type: string
+type: email
 settings:
   max_length: 255
   case_sensitive: false
