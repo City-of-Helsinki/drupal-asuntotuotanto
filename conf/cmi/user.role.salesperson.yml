@@ -8,7 +8,6 @@ dependencies:
     - media.type.file
     - media.type.image
     - media.type.remote_video
-    - media.type.soundcloud
     - node.type.apartment
     - node.type.landing_page
     - node.type.news
@@ -268,7 +267,6 @@ permissions:
   - 'translate service node'
   - 'translate services taxonomy_term'
   - 'translate site_owners taxonomy_term'
-  - 'translate soundcloud media'
   - 'translate tasks taxonomy_term'
   - 'update any media'
   - 'update content translations'
