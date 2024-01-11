@@ -1,0 +1,34 @@
+<?php
+
+/**
+ * @file
+ * Contains installation tasks for asu_editorial module.
+ */
+
+declare(strict_types = 1);
+
+/**
+ * (Re)install filter formats and editor formats.
+ */
+function asu_editorial_update_9001(): void {
+  Drupal::configFactory()
+    ->getEditable('editor.editor.minimal')
+    ->delete();
+}
+
+/**
+ * (Re)run allowed values fixes to field_hero_design and field_banner_design.
+ */
+function asu_editorial_update_9002(): void {
+  \Drupal::moduleHandler()->loadInclude('helfi_paragraphs_banner', 'install');
+  \Drupal::moduleHandler()->loadInclude('helfi_paragraphs_hero', 'install');
+  helfi_paragraphs_hero_update_9002();
+  helfi_paragraphs_hero_update_9003();
+  helfi_paragraphs_banner_update_9001();
+
+  if (!\Drupal::hasService('helfi_platform_config.config_update_helper')) {
+    return;
+  }
+  \Drupal::service('helfi_platform_config.config_update_helper')
+    ->update('helfi_ckeditor');
+}
