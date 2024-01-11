@@ -229,3 +229,14 @@ function asu_content_update_9006() {
     $paragraph_storage->delete($entities);
   }
 }
+
+/**
+ * Install external entities module if it doesn't exist.
+ */
+function asu_content_update_9007(): void {
+  $module_installer = \Drupal::service('module_installer');
+
+  if (!\Drupal::moduleHandler()->moduleExists('external_entities')) {
+    $module_installer->install(['external_entities']);
+  }
+}
