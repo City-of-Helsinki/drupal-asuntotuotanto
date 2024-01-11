@@ -13,10 +13,10 @@ settings:
   allowed_values:
     -
       value: ownership
-      label: Omistus
+      label: Ownership
     -
       value: rental
-      label: Vuokra
+      label: Rental
   allowed_values_function: ''
 module: options
 locked: false
