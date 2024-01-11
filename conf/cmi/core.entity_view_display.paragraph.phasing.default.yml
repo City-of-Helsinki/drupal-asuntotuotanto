@@ -5,6 +5,7 @@ dependencies:
   config:
     - field.field.paragraph.phasing.field_description
     - field.field.paragraph.phasing.field_phasing_item
+    - field.field.paragraph.phasing.field_phasing_item_title_level
     - field.field.paragraph.phasing.field_phasing_title_level
     - field.field.paragraph.phasing.field_show_phase_numbers
     - field.field.paragraph.phasing.field_title
@@ -60,4 +61,5 @@ content:
     weight: 0
     region: content
 hidden:
+  field_phasing_item_title_level: true
   search_api_excerpt: true

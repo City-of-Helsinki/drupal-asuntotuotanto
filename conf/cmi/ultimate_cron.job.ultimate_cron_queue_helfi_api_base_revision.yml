@@ -1,0 +1,20 @@
+uuid: 2c8af6d5-493f-4521-891d-acd59475c3c3
+langcode: en
+status: true
+dependencies:
+  module:
+    - helfi_api_base
+title: 'Queue: Queue worker for deleting old revisions'
+id: ultimate_cron_queue_helfi_api_base_revision
+weight: 10
+module: helfi_api_base
+callback: 'ultimate_cron.queue_worker:queueCallback'
+scheduler:
+  id: simple
+  configuration:
+    rules:
+      - '* * * * *'
+launcher:
+  id: serial
+logger:
+  id: database

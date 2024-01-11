@@ -6,11 +6,12 @@ dependencies:
     - field.field.paragraph.accordion_item.field_accordion_item_content
     - field.field.paragraph.accordion_item.field_accordion_item_heading
     - field.field.paragraph.accordion_item.field_icon
-    - paragraphs.paragraphs_type.accordion_item
   module:
     - paragraphs
-_core:
-  default_config_hash: xQxl3DJdyXGfIMoF68zkvPXCgW-oWKdsAFKm2mhn7PM
+    - hdbt_admin_tools
+  enforced:
+    config:
+      - paragraphs.paragraphs_type.accordion_item
 id: paragraph.accordion_item.default
 targetEntityType: paragraph
 bundle: accordion_item
@@ -44,7 +45,7 @@ content:
       placeholder: ''
     third_party_settings: {  }
   field_icon:
-    type: select2_icon_widget
+    type: select_icon_widget
     weight: 1
     region: content
     settings: {  }

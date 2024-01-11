@@ -6,9 +6,11 @@ dependencies:
     - field.field.node.page.field_content
     - field.field.node.page.field_has_hero
     - field.field.node.page.field_hero
+    - field.field.node.page.field_lead_in
     - field.field.node.page.field_liftup_image
     - field.field.node.page.field_lower_content
     - field.field.node.page.field_metatags
+    - field.field.node.page.field_sidebar_content
     - node.type.page
   module:
     - entity_reference_revisions
@@ -28,6 +30,13 @@ content:
       view_mode: default
       link: ''
     third_party_settings: {  }
+    weight: 3
+    region: content
+  field_lead_in:
+    type: text_span
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
     weight: 1
     region: content
   field_lower_content:
@@ -37,19 +46,14 @@ content:
       view_mode: default
       link: ''
     third_party_settings: {  }
-    weight: 4
+    weight: 5
     region: content
   field_metatags:
     type: metatag_empty_formatter
     label: above
     settings: {  }
     third_party_settings: {  }
-    weight: 2
-    region: content
-  links:
-    settings: {  }
-    third_party_settings: {  }
-    weight: 0
+    weight: 4
     region: content
   field_sidebar_content:
     type: entity_reference_revisions_entity_view
@@ -60,9 +64,25 @@ content:
     third_party_settings: {  }
     weight: 5
     region: content
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  toc_enabled:
+    type: boolean
+    label: hidden
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    weight: 2
+    region: content
 hidden:
   field_has_hero: true
   field_hero: true
   field_liftup_image: true
   langcode: true
+  published_at: true
   search_api_excerpt: true

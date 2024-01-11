@@ -5,6 +5,8 @@ dependencies:
   config:
     - field.storage.paragraph.field_icon
     - paragraphs.paragraphs_type.target_group_link_item
+  module:
+    - hdbt_admin_tools
 id: paragraph.target_group_link_item.field_icon
 field_name: field_icon
 entity_type: paragraph

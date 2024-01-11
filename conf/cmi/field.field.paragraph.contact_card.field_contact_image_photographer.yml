@@ -1,0 +1,19 @@
+uuid: 04fd55db-9e20-4920-9942-226f3436407b
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_contact_image_photographer
+    - paragraphs.paragraphs_type.contact_card
+id: paragraph.contact_card.field_contact_image_photographer
+field_name: field_contact_image_photographer
+entity_type: paragraph
+bundle: contact_card
+label: 'Contact image photographer'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

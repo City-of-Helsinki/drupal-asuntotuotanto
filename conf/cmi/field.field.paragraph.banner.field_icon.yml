@@ -5,8 +5,8 @@ dependencies:
   config:
     - field.storage.paragraph.field_icon
     - paragraphs.paragraphs_type.banner
-_core:
-  default_config_hash: YjDB77W8py1v-akIwDnWiJ7y0cijdsqaLT3hQNqOQHc
+  module:
+    - hdbt_admin_tools
 id: paragraph.banner.field_icon
 field_name: field_icon
 entity_type: paragraph

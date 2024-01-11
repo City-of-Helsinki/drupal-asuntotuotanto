@@ -9,7 +9,7 @@ dependencies:
     - node.type.media_bank
   module:
     - file
-    - hdbt_admin_editorial
+    - hdbt_admin_tools
     - path
     - scheduler
     - select2
@@ -75,6 +75,12 @@ content:
   publish_on:
     type: datetime_timestamp_no_default
     weight: 7
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  published_at:
+    type: publication_date_timestamp
+    weight: 10
     region: content
     settings: {  }
     third_party_settings: {  }
