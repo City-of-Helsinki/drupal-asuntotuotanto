@@ -1,24 +1,20 @@
 <?php
 
+/**
+ * @file
+ * Contains installation functions for asu content.
+ */
+
+declare(strict_types = 1);
+
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Symfony\Component\Yaml\Yaml;
 
 /**
- * @file
- * Module.install.
- */
-
-/**
- * Add taxonomy terms to News category vocabularity automatically.
- */
-function asu_content_update_9001() {
-}
-
-/**
  * Manually update asu admin blocks to support Gin region format.
  */
-function asu_content_update_9002() {
+function asu_content_update_9002(): void {
   $theme_handler = Drupal::service('theme_handler');
   $config_factory = \Drupal::configFactory();
   $config_location = dirname(__FILE__) . '/config/install/';
@@ -65,7 +61,7 @@ function asu_content_update_9002() {
     $configurations = [
       'block.block.asu_admin_primary_local_tasks',
       'block.block.asu_admin_secondary_local_tasks',
-      'block.block.asu_admin_content'
+      'block.block.asu_admin_content',
     ];
 
     foreach ($configurations as $config_name) {
@@ -81,7 +77,7 @@ function asu_content_update_9002() {
 }
 
 /**
- * Set field max length 3 chars
+ * Set field max length 3 chars.
  */
 function asu_content_update_9003(): void {
   // Prepare relevant variables.
@@ -114,13 +110,13 @@ function asu_content_update_9003(): void {
   $config->save(TRUE);
 
   // Update field storage configuration.
-  \Drupal\field\Entity\FieldStorageConfig::loadByName($entity_type, $field_name)->save();
+  FieldStorageConfig::loadByName($entity_type, $field_name)->save();
 }
 
 /**
  * Remove field_unit_ tables and update content & paragraphs field.
  */
-function asu_content_update_9004() {
+function asu_content_update_9004(): void {
   $drop_tables = [
     'node__field_unit_alternative_image',
     'node__field_unit_is_parent',
@@ -131,7 +127,7 @@ function asu_content_update_9004() {
     'node__field_unit_visible_title',
   ];
 
-  foreach($drop_tables as $drop_table) {
+  foreach ($drop_tables as $drop_table) {
     \Drupal::database()->schema()->dropTable($drop_table);
     \Drupal::database()->schema()->dropTable("node_revision__$drop_table");
   }
@@ -150,7 +146,7 @@ function asu_content_update_9004() {
 /**
  * Switch field type for the email paragraphs field.
  */
-function asu_content_update_9005() {
+function asu_content_update_9005(): void {
   $database = \Drupal::database();
   $entity_type = 'paragraph';
   $field_name = 'field_email';
@@ -218,7 +214,7 @@ function asu_content_update_9005() {
 /**
  * Remove all content for Article, Gallery and Gallery slide types.
  */
-function asu_content_update_9006() {
+function asu_content_update_9006(): void {
   $node_storage = \Drupal::entityTypeManager()->getStorage('node');
   $entities = $node_storage->loadByProperties(['type' => 'article']);
   $node_storage->delete($entities);

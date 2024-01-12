@@ -2,18 +2,20 @@
 
 /**
  * @file
- * Contains asu_user module.
+ * Contains hooks for user alterations.
  */
 
+declare(strict_types = 1);
+
+use Drupal\asu_api\Api\BackendApi\Request\CreateUserRequest;
+use Drupal\asu_api\Api\BackendApi\Request\UpdateUserRequest;
+use Drupal\asu_api\Api\BackendApi\Request\UserRequest;
+use Drupal\asu_user\Helper\StoreHelper;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
-use Drupal\asu_api\Api\BackendApi\Request\CreateUserRequest;
-use Drupal\asu_api\Api\BackendApi\Request\UpdateUserRequest;
-use Drupal\asu_api\Api\BackendApi\Request\UserRequest;
-use Drupal\asu_user\Helper\StoreHelper;
 use Drupal\user\Entity\User;
 use Drupal\user\UserInterface;
 

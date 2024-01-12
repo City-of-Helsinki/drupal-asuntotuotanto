@@ -8,7 +8,7 @@
 declare(strict_types = 1);
 
 /**
- * (Re)install filter formats and editor formats.
+ * Re-install filter formats and editor formats.
  */
 function asu_editorial_update_9001(): void {
   Drupal::configFactory()
@@ -17,7 +17,7 @@ function asu_editorial_update_9001(): void {
 }
 
 /**
- * (Re)run allowed values fixes to field_hero_design and field_banner_design.
+ * Re-run allowed values fixes to field_hero_design and field_banner_design.
  */
 function asu_editorial_update_9002(): void {
   \Drupal::moduleHandler()->loadInclude('helfi_paragraphs_banner', 'install');
