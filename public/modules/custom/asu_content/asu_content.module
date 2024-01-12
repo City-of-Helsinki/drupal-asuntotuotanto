@@ -5,6 +5,8 @@
  * Contains asu_content.module.
  */
 
+declare(strict_types = 1);
+
 use Drupal\asu_content\Entity\Apartment;
 use Drupal\asu_content\Entity\Project;
 use Drupal\asu_content\ProjectUpdater;
@@ -13,9 +15,9 @@ use Drupal\Core\Entity\EntityFormInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Field\FieldFilteredMarkup;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\helfi_platform_config\DTO\ParagraphTypeCollection;
 use Drupal\node\Entity\Node;
 use Drupal\node\NodeForm;
-use Drupal\search_api\Entity\Index;
 
 /**
  * Implements hook_entity_bundle_info_alter().
@@ -157,7 +159,7 @@ function asu_content_entity_presave(EntityInterface $entity) {
 
           \Drupal::messenger()->addMessage(
             t("Apartment @title was sold and is now unpublished.",
-              ['@title' => $entity->title->value]
+              ['@title' => $entity->getTitle()]
             )
           );
         }
@@ -337,7 +339,7 @@ function asu_content_cron() {
 }
 
 /**
- *
+ * Queue worker.
  */
 function asuQueueWorker($entity) {
   if (
@@ -360,7 +362,7 @@ function asuQueueWorker($entity) {
 }
 
 /**
- *
+ * Set queue worker.
  */
 function asuSetQueueWorker($project) {
   if ($project->getOwnershipType()) {
@@ -378,17 +380,61 @@ function asuSetQueueWorker($project) {
 }
 
 /**
- * Covert datetime.
+ * Convert datetime.
  */
 function asu_content_convert_datetime($value): string {
-    /** @var Drupal\Core\Datetime\DateFormatterInterface $date_formatter */
-    $date_formatter = \Drupal::service('date.formatter');
-    $date = $date_formatter->format(
-      strtotime($value . ' UTC'),
-      'custom',
-      'Y-m-d\TH:i:sP',
-      'Europe/Helsinki',
-    );
+  /** @var Drupal\Core\Datetime\DateFormatterInterface $date_formatter */
+  $date_formatter = \Drupal::service('date.formatter');
+  $date = $date_formatter->format(
+    strtotime($value . ' UTC'),
+    'custom',
+    'Y-m-d\TH:i:sP',
+    'Europe/Helsinki',
+  );
 
-    return $date;
+  return $date;
+}
+
+/**
+ * Implements hook_helfi_paragraph_types().
+ */
+function asu_content_helfi_paragraph_types() : array {
+  $entities = [
+    'node' => [
+      'page' => [
+        'field_content' => [
+          'cta_block',
+          'showcase_block',
+          'steps_list',
+        ],
+        'field_lower_content' => [
+          'cta_block',
+          'showcase_block',
+          'steps_list',
+        ],
+      ],
+      'landing_page' => [
+        'field_content' => [
+          'contact_information_with_map',
+          'latest_news',
+          'liftup_with_image_and_links',
+          'showcase_block',
+          'stacked_contact_blocks',
+          'stacked_text_blocks_with_image',
+        ],
+      ],
+    ],
+  ];
+
+  $enabled = [];
+  foreach ($entities as $entityTypeId => $bundles) {
+    foreach ($bundles as $bundle => $fields) {
+      foreach ($fields as $field => $paragraphTypes) {
+        foreach ($paragraphTypes as $paragraphType) {
+          $enabled[] = new ParagraphTypeCollection($entityTypeId, $bundle, $field, $paragraphType);
+        }
+      }
+    }
+  }
+  return $enabled;
 }
