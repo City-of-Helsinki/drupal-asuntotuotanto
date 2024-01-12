@@ -12,6 +12,13 @@ use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
+ * Implements hook_install().
+ */
+function asu_application_install() : void {
+  asu_application_grant_permissions();
+}
+
+/**
  * Installs error field to application.
  */
 function asu_application_update_9001() : void {
@@ -91,4 +98,24 @@ function asu_application_update_9005() : void {
 function asu_application_update_9006() {
   $entity_type = \Drupal::entityTypeManager()->getDefinition('asu_application');
   \Drupal::entityDefinitionUpdateManager()->installEntityType($entity_type);
+}
+
+/**
+ * Grants required permissions.
+ */
+function asu_application_grant_permissions() : void {
+  $permissions = [
+    'admin' => [
+      'administer applications',
+    ],
+    'anonymous' => [
+      'create application',
+    ],
+    'authenticated' => [
+      'create application',
+      'view application',
+    ],
+  ];
+
+  helfi_platform_config_grant_permissions($permissions);
 }
