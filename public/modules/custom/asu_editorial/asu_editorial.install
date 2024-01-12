@@ -6,6 +6,10 @@
  */
 
 declare(strict_types = 1);
+use Drupal\Core\Entity\Exception\FieldStorageDefinitionUpdateForbiddenException;
+use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\paragraphs\Entity\Paragraph;
+use Drupal\paragraphs\ParagraphInterface;
 
 /**
  * Re-install filter formats and editor formats.
@@ -20,13 +24,53 @@ function asu_editorial_update_9001(): void {
  * Re-run allowed values fixes to field_hero_design and field_banner_design.
  */
 function asu_editorial_update_9002(): void {
-  \Drupal::moduleHandler()->loadInclude('helfi_paragraphs_banner', 'install');
-  \Drupal::moduleHandler()->loadInclude('helfi_paragraphs_hero', 'install');
-  helfi_paragraphs_hero_update_9002();
-  helfi_paragraphs_hero_update_9003();
-  helfi_paragraphs_banner_update_9001();
+  if (\Drupal::moduleHandler()->moduleExists('helfi_paragraphs_banner')) {
 
-  if (!\Drupal::hasService('helfi_platform_config.config_update_helper')) {
+    // Get all paragraphs with centered design.
+    $ids = \Drupal::entityQuery('paragraph')
+      ->condition('type', 'banner')
+      ->condition('field_banner_design', [
+        'align-center',
+        'align-center-secondary',
+      ], "IN")
+      ->execute();
+
+    $paragraphs = Paragraph::loadMultiple($ids);
+
+    // Convert to left aligned design.
+    foreach ($paragraphs as $paragraph) {
+      if ($paragraph instanceof ParagraphInterface) {
+        $field_update_map = [
+          'align-center' => 'align-left',
+          'align-center-secondary' => 'align-left-secondary',
+        ];
+
+        $paragraph
+          ->set('field_banner_design', $field_update_map[$paragraph->field_banner_design->value])
+          ->save();
+      }
+    }
+    \Drupal::service('helfi_platform_config.config_update_helper')
+      ->update('helfi_paragraphs_banner');
+  }
+
+  if (\Drupal::moduleHandler()->moduleExists('helfi_paragraphs_hero')) {
+      try {
+        $field_hero_design = FieldStorageConfig::loadByName('paragraph', 'field_hero_design');
+        $field_hero_design->setSetting('allowed_values_function', 'helfi_paragraphs_hero_design_allowed_values');
+        $field_hero_design->save();
+      }
+      catch (FieldStorageDefinitionUpdateForbiddenException $exception) {
+        // We know the database values are different what we are trying
+        // to write there, but we are only replacing the
+        // values with allowed_values_function.
+      }
+  }
+
+  if (
+    !\Drupal::hasService('helfi_platform_config.config_update_helper') ||
+    !(\Drupal::moduleHandler()->moduleExists('helfi_ckeditor'))
+  ) {
     return;
   }
   \Drupal::service('helfi_platform_config.config_update_helper')
