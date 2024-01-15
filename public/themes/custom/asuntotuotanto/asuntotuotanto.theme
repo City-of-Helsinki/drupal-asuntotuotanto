@@ -213,6 +213,8 @@ function asuntotuotanto_preprocess_views_view_table(&$variables) {
       $reserved_or_sold = FALSE;
       if ($apartment->isSold() || $apartment->isReserved() || $apartment->isFree()) {
         $reserved_or_sold = $apartment->isReserved() ? t('Reserved') : t('Vacant');
+        // Set application status to HIGH if apartment is reserved.
+        $variables['rows'][$key]['application_status']['status'] = $apartment->isReserved() ? 'high' : 'low';
         // Sold apartment is not listed so this is not necessary.
         if ($apartment->isSold()) {
           $reserved_or_sold = t('Sold');
