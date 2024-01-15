@@ -125,12 +125,8 @@
   }
 
   > .hel-icon {
-    margin-right: $spacing-quarter;
-  }
-
-  > svg {
     display: none;
-    margin-right: $spacing;
+    margin-right: $spacing-quarter;
     visibility: hidden;
 
     @media screen and (min-width: $breakpoint-l) {

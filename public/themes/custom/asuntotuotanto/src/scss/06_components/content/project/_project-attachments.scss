@@ -1,6 +1,6 @@
 .project__attachments-label {
- font-size: $fontsize-heading-m;
-line-height: $lineheight-m;
+  font-size: $fontsize-heading-m;
+  line-height: $lineheight-m;
   font-weight: $font-weight-bold;
   color: var(--color-black-90);
   margin-bottom: $spacing-half-and-half;
@@ -8,8 +8,8 @@ line-height: $lineheight-m;
   padding-top: calc(#{$spacing-and-half} + 74px);
 
   @media screen and (min-width: $breakpoint-m) {
-   font-size: $fontsize-heading-l;
-line-height: $lineheight-m;
+    font-size: $fontsize-heading-l;
+    line-height: $lineheight-m;
     margin-bottom: $spacing-and-half;
   }
 }
@@ -34,7 +34,7 @@ line-height: $lineheight-m;
   text-decoration: none;
   width: 100%;
 
-  > svg {
+  > .hel-icon {
     flex-shrink: 0;
   }
 }
@@ -47,7 +47,7 @@ line-height: $lineheight-m;
 
 .project__attachment-description {
   font-size: $fontsize-body-s;
-line-height: $lineheight-l; // Was 26px.
+  line-height: $lineheight-l; // Was 26px.
   font-weight: $font-weight-medium;
   margin-bottom: $spacing-quarter;
   margin-top: 0;
@@ -71,7 +71,7 @@ line-height: $lineheight-l; // Was 26px.
 }
 
 .project__attachment-name {
- font-size: $fontsize-body-m;
+  font-size: $fontsize-body-m;
   font-weight: $font-weight-bold;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -82,7 +82,7 @@ line-height: $lineheight-l; // Was 26px.
 
 .project__attachment-size {
   font-size: $fontsize-body-s;
-line-height: $lineheight-l; // Was 26px.
+  line-height: $lineheight-l; // Was 26px.
   color: var(--color-black-90);
   margin: 0;
 }
