@@ -23,6 +23,7 @@ dependencies:
     - field.storage.node.field_right_of_occupancy_fee
     - field.storage.node.field_right_of_occupancy_deposit
     - field.storage.node.field_living_area
+    - field.storage.node.field_release_payment
     - field.storage.node.field_maintenance_fee
     - field.storage.node.field_other_fees
     - field.storage.node.field_parking_fee
@@ -822,6 +823,14 @@ field_settings:
     dependencies:
       config:
         - field.storage.node.field_publish_on_oikotie
+  release_payment:
+    label: Luovutushinta
+    datasource_id: 'entity:node'
+    property_path: field_release_payment
+    type: cent
+    dependencies:
+      config:
+        - field.storage.node.field_release_payment
   right_of_occupancy_deposit:
     label: Käyttövastikevakuus
     datasource_id: 'entity:node'
