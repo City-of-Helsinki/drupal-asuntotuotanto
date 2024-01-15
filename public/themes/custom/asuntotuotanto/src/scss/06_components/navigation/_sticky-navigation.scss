@@ -71,7 +71,7 @@
 
 .sticky-navigation__content-item {
  font-size: $fontsize-body-m;
-line-height: $lineheight-l; // Was 24px.
+  line-height: $lineheight-l; // Was 24px.
   font-weight: $font-weight-regular;
   color: var(--color-black-90);
   margin: 0;
@@ -107,7 +107,7 @@ line-height: $lineheight-l; // Was 24px.
 
 .sticky-navigation__anchor-link {
   font-size: $fontsize-body-m;
-line-height: $lineheight-l;
+  line-height: $lineheight-l;
   align-items: center;
   display: inline-flex;
   margin-left: -#{$spacing-half-and-half};
@@ -122,6 +122,10 @@ line-height: $lineheight-l;
   @media screen and (min-width: $breakpoint-xl) {
     padding-bottom: $spacing-and-half;
     padding-top: $spacing-and-half;
+  }
+
+  > .hel-icon {
+    margin-right: $spacing-quarter;
   }
 
   > svg {

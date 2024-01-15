@@ -1,12 +1,12 @@
 .project__area-overview-wrapper {
-  margin-top: calc(-#{$spacing-and-half} - 26px);
+  margin-top: $spacing;
   padding-top: calc(#{$spacing-and-half} + 74px);
 
   @media screen and (min-width: $breakpoint-l) {
     display: flex;
-    margin-top: -2px;
-    padding-top: calc(#{$spacing-and-half} + 74px);
     justify-content: center;
+    margin-top: $spacing-double;
+    padding-top: calc(#{$spacing-and-half} + 74px);
   }
 }
 
@@ -34,11 +34,15 @@
 
 .project__area-overview-label {
   font-size: $fontsize-heading-s;
-line-height: $lineheight-m;
+  line-height: $lineheight-m;
   font-weight: $font-weight-bold;
   color: var(--color-black-90);
   margin-bottom: $spacing-and-half;
   margin-top: 0;
+
+  > .hel-icon {
+    vertical-align: top;
+  }
 }
 
 .project__services-list {
@@ -99,7 +103,6 @@ line-height: $lineheight-xl;
 line-height: $lineheight-l; // Was 24px.
     color: var(--color-black-90);
     margin: 0;
-    max-width: 300px;
 
     @media screen and (min-width: $breakpoint-m) {
      font-size: $fontsize-body-l;

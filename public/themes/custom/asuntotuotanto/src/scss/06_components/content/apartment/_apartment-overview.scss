@@ -99,7 +99,6 @@ line-height: $lineheight-xl;
 line-height: $lineheight-l; // Was 24px.
     color: var(--color-black-90);
     margin: 0;
-    max-width: 300px;
 
     @media screen and (min-width: $breakpoint-m) {
      font-size: $fontsize-body-l;
