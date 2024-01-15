@@ -138,6 +138,8 @@ class AuthService extends SamlService {
           'name' => $name,
           'type' => 'customer',
           'langcode' => 'fi',
+          'preferred_langcode' => 'fi',
+          'preferred_admin_langcode' => 'fi',
           'field_saml_hash' => $unique_id,
         ];
 
