@@ -136,6 +136,7 @@ class ElasticSearch extends ResourceBase {
         'project_upcoming_description',
         'project_url',
         'project_uuid',
+        'release_payment',
         'right_of_occupancy_payment',
         'title',
         'url',
