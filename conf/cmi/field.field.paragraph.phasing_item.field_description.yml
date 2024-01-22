@@ -12,6 +12,8 @@ third_party_settings:
   allowed_formats:
     allowed_formats:
       - minimal
+_core:
+  default_config_hash: R3xpZBQW6GkrWie9LRvO70PI9g5nYvm4VLVJ0ZFNmDY
 id: paragraph.phasing_item.field_description
 field_name: field_description
 entity_type: paragraph
@@ -22,5 +24,6 @@ required: false
 translatable: true
 default_value: {  }
 default_value_callback: ''
-settings: {  }
+settings:
+  allowed_formats: {  }
 field_type: text_long

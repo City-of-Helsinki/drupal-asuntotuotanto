@@ -4,9 +4,11 @@ status: true
 dependencies:
   module:
     - eu_cookie_compliance
+    - file
 id: customer
 label: Customer
 weight: -8
 is_admin: null
 permissions:
+  - 'delete own files'
   - 'display eu cookie compliance popup'

@@ -147,6 +147,7 @@ permissions:
   - 'delete own apartment content'
   - 'delete own article content'
   - 'delete own file media'
+  - 'delete own files'
   - 'delete own image media'
   - 'delete own landing_page content'
   - 'delete own news content'

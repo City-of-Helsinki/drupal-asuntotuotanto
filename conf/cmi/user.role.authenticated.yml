@@ -10,6 +10,7 @@ dependencies:
     - asu_application
     - eu_cookie_compliance
     - external_entities
+    - file
     - helfi_api_base
     - media
     - paragraphs
@@ -27,6 +28,7 @@ permissions:
   - 'access content'
   - 'access toolbar'
   - 'create application'
+  - 'delete own files'
   - 'display eu cookie compliance popup'
   - 'restful get asu_initialize'
   - 'restful post asu_elasticsearch'

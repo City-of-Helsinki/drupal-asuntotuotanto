@@ -2,7 +2,12 @@ uuid: null
 langcode: en
 status: true
 dependencies:
+  config:
+    - node.type.announcement
+    - node.type.landing_page
+    - node.type.page
   module:
+    - file
     - node
     - paragraphs
     - toolbar
@@ -13,6 +18,7 @@ weight: -6
 is_admin: null
 permissions:
   - 'access toolbar'
+  - 'delete own files'
   - 'view any unpublished announcement content'
   - 'view any unpublished landing_page content'
   - 'view any unpublished page content'

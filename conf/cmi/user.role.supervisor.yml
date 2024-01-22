@@ -25,6 +25,7 @@ permissions:
   - 'create image media'
   - 'create project content'
   - 'delete own file media'
+  - 'delete own files'
   - 'delete own image media'
   - 'edit any apartment content'
   - 'edit any project content'

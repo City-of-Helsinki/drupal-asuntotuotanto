@@ -6,5 +6,5 @@ id: contact_persons
 label: 'Contact persons'
 icon_uuid: null
 icon_default: null
-description: 'Let''s you list persons with contact details.'
+description: "Let's you list persons with contact details."
 behavior_plugins: {  }

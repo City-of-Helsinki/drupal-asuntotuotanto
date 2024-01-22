@@ -6,5 +6,6 @@ dependencies:
     - media
 id: media.stacked_text_blocks_with_image
 label: 'Stacked text blocks with image'
+description: ''
 targetEntityType: media
 cache: true

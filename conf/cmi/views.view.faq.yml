@@ -285,7 +285,6 @@ display:
         - 'languages:language_content'
         - 'languages:language_interface'
         - url
-        - user
         - user.permissions
       tags: {  }
   faq_page_haso:
@@ -471,7 +470,6 @@ display:
         - 'languages:language_content'
         - 'languages:language_interface'
         - url
-        - user
         - user.permissions
       tags: {  }
   faq_page_hitas:
@@ -500,6 +498,5 @@ display:
         - 'languages:language_content'
         - 'languages:language_interface'
         - url
-        - user
         - user.permissions
       tags: {  }

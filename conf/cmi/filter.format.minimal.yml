@@ -46,12 +46,6 @@ filters:
       allowed_html: '<em> <strong> <ul> <ol start> <li> <p class=""> <a href hreflang !href rel target title data-design data-link-text data-selected-icon data-is-external data-protocol class=""> <span role aria-* lang dir class="">'
       filter_html_help: true
       filter_html_nofollow: false
-  filter_htmlcorrector:
-    id: filter_htmlcorrector
-    provider: filter
-    status: true
-    weight: -40
-    settings: {  }
   filter_html_escape:
     id: filter_html_escape
     provider: filter
@@ -64,6 +58,18 @@ filters:
     status: false
     weight: -42
     settings: {  }
+  filter_htmlcorrector:
+    id: filter_htmlcorrector
+    provider: filter
+    status: true
+    weight: -40
+    settings: {  }
+  filter_image_lazy_load:
+    id: filter_image_lazy_load
+    provider: filter
+    status: true
+    weight: -47
+    settings: {  }
   filter_url:
     id: filter_url
     provider: filter
@@ -71,6 +77,12 @@ filters:
     weight: -46
     settings:
       filter_url_length: 72
+  helfi_link_converter:
+    id: helfi_link_converter
+    provider: helfi_api_base
+    status: true
+    weight: -10
+    settings: {  }
   linkit:
     id: linkit
     provider: linkit
@@ -78,12 +90,6 @@ filters:
     weight: -44
     settings:
       title: true
-  helfi_link_converter:
-    id: helfi_link_converter
-    provider: helfi_api_base
-    status: true
-    weight: -10
-    settings: {  }
   slick_filter:
     id: slick_filter
     provider: slick
