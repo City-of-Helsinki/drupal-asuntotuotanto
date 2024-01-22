@@ -34,7 +34,7 @@
         "drupal/gin_login": "^1.0@RC",
         "drupal/hdbt": "^5.0",
         "drupal/hdbt_admin": "^2.0",
-        "drupal/helfi_azure_fs": "^1.0",
+        "drupal/helfi_azure_fs": "^2.0",
         "drupal/helfi_platform_config": "dev-UHF-X_d95_without_ajax_patch",
         "drupal/helfi_tunnistamo": "^2.0",
         "drupal/honeypot": "^2.0",
@@ -85,7 +85,9 @@
             "composer/installers": true,
             "cweagans/composer-patches": true,
             "drupal/core-composer-scaffold": true,
-            "zaporylie/composer-drupal-optimizations": true
+            "zaporylie/composer-drupal-optimizations": true,
+            "php-http/discovery": true,
+            "phpstan/extension-installer": true
         }
     },
     "extra": {
