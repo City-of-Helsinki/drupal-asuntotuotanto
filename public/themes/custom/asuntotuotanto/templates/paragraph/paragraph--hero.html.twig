@@ -84,7 +84,7 @@
             %}
               {% set link_type = content.field_hero_link_design[0]['#markup'] %}
               <div class="hero__cta">
-                {% for key, item in content.field_hero_link if key|first != '#' %}
+                {% for key, item in content.field_hero_link |filter((value, key) => key|first != '#') %}
                   {% set link = item['#url'] %}
                   {% set text = item['#title'] %}
                   {% set target_new = item['#options']['target_new'] %}
