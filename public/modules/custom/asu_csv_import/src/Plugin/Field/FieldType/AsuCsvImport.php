@@ -250,7 +250,7 @@ class AsuCsvImport extends EntityReferenceItem {
    * fieldSettingsForm().
    */
   public static function validateMaxFilesize($element, FormStateInterface $form_state) {
-    if (!empty($element['#value']) && !is_numeric(Bytes::toInt($element['#value']))) {
+    if (!empty($element['#value']) && !is_numeric(Bytes::toNumber($element['#value']))) {
       $form_state->setError($element, t('The "@name" option must contain a valid value. You may either leave the text field empty or enter a string like "512" (bytes), "80 KB" (kilobytes) or "50 MB" (megabytes).', ['@name' => $element['title']]));
     }
   }
@@ -306,9 +306,9 @@ class AsuCsvImport extends EntityReferenceItem {
     $settings = $this->getSettings();
 
     // Cap the upload size according to the PHP limit.
-    $max_filesize = Bytes::toInt(Environment::getUploadMaxSize());
+    $max_filesize = Bytes::toNumber(Environment::getUploadMaxSize());
     if (!empty($settings['max_filesize'])) {
-      $max_filesize = min($max_filesize, Bytes::toInt($settings['max_filesize']));
+      $max_filesize = min($max_filesize, Bytes::toNumber($settings['max_filesize']));
     }
 
     // There is always a file size limit due to the PHP server limit.
@@ -336,7 +336,7 @@ class AsuCsvImport extends EntityReferenceItem {
     // Generate a file entity.
     $destination = $dirname . '/' . $random->name(10, TRUE) . '.txt';
     $data = $random->paragraphs(3);
-    $file = file_save_data($data, $destination, FileSystemInterface::EXISTS_ERROR);
+    $file = \Drupal::service('file.repository')->writeData($data, $destination, FileSystemInterface::EXISTS_ERROR);
     $values = [
       'target_id' => $file->id(),
       'display' => (int) $settings['display_default'],
