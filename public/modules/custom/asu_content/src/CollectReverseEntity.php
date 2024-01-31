@@ -181,12 +181,14 @@ class CollectReverseEntity {
     try {
       if (isset($referring_bundle)) {
         $result = $referring_entity_storage->getQuery()
+          ->accessCheck(TRUE)
           ->condition('type', $referring_bundle)
           ->condition($field_name, $this->currentEntity->id())
           ->execute();
       }
       else {
         $result = $referring_entity_storage->getQuery()
+          ->accessCheck(TRUE)
           ->condition($field_name, $this->currentEntity->id())
           ->execute();
       }

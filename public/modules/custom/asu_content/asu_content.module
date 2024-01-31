@@ -288,7 +288,7 @@ function asu_content_cron() {
     ->condition('field_state_of_sale', 'for_sale', '<>')
     ->condition('field_application_start_time', $now, '<')
     ->condition('field_application_end_time', $now, '>');
-  $projectsToUpdateForSale = $query->execute();
+  $projectsToUpdateForSale = $query->accessCheck(TRUE)->execute();
 
   if (!empty($projectsToUpdateForSale)) {
     try {
@@ -311,7 +311,7 @@ function asu_content_cron() {
     ->condition('status', 1)
     ->condition('field_state_of_sale', 'for_sale')
     ->condition('field_application_end_time', $now, '<');
-  $projectsToUpdateReserved = $query2->execute();
+  $projectsToUpdateReserved = $query2->accessCheck(TRUE)->execute();
 
   if ($projectsToUpdateReserved) {
     try {
