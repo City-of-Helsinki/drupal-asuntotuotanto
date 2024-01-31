@@ -4,7 +4,6 @@ status: true
 dependencies:
   config:
     - filter.format.full_html
-    - filter.format.wysiwyg
     - media.type.file
     - media.type.image
     - media.type.remote_video
@@ -302,7 +301,6 @@ permissions:
   - 'update paragraph content text'
   - 'update paragraph content text_block_with_link'
   - 'use text format full_html'
-  - 'use text format wysiwyg'
   - 'view all revisions'
   - 'view any unpublished apartment content'
   - 'view any unpublished article content'

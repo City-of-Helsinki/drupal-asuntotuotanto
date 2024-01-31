@@ -299,7 +299,7 @@ display:
           empty: true
           content:
             value: "No projects were found.\r\n\r\n<div class=\"link__wrapper\">\r\n<a href=\"/en/node/add/project\" class=\"link\">Create a project</a>\r\n</div>"
-            format: wysiwyg
+            format: full_html
           tokenize: false
       sorts:
         created:
