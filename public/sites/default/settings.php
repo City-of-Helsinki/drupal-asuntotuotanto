@@ -368,9 +368,6 @@ if ($env = getenv('APP_ENV')) {
   $config['mailsystem.settings']['modules']['symfony_mailer_lite']['none']['sender'] = 'symfony_mailer_lite';
 
   $config['symfony_mailer_lite.settings']['default_transport'] = 'smtp';
-  $config['symfony_mailer_lite.transport_plugin.smtp']['host'] = getenv('ASU_MAILSERVER_ADDRESS');
-  $config['symfony_mailer_lite.transport_plugin.smtp']['port'] = 25;
-
 
   $settings['ASU_DJANGO_BACKEND_URL'] = getenv('ASU_DJANGO_BACKEND_URL');
 
@@ -471,6 +468,10 @@ if ($env = getenv('APP_ENV')) {
     $config['search_api.server.asuntotuotanto']['backend_config']['port'] = '443';
 
     $config['raven.settings']['environment'] = 'production';
+
+    // Email settings
+    $config['symfony_mailer_lite.transport_plugin.smtp']['host'] = getenv('ASU_MAILSERVER_ADDRESS');
+    $config['symfony_mailer_lite.transport_plugin.smtp']['port'] = 25;
   }
 
   // Saml Authentication.
