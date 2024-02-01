@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e41e861782e59d963f4a938f28d4d95e",
+    "content-hash": "f5ff0366b81346209534b733bdeb09da",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -2747,6 +2747,10 @@
             ],
             "authors": [
                 {
+                    "name": "AstonVictor",
+                    "homepage": "https://www.drupal.org/user/3466615"
+                },
+                {
                     "name": "scott_euser",
                     "homepage": "https://www.drupal.org/user/3267594"
                 }
@@ -3583,10 +3587,6 @@
                     "name": "Greg Boggs",
                     "homepage": "https://www.drupal.org/u/greg-boggs",
                     "role": "Maintainer"
-                },
-                {
-                    "name": "Greg Boggs",
-                    "homepage": "https://www.drupal.org/user/153069"
                 },
                 {
                     "name": "hmartens",
@@ -5656,6 +5656,10 @@
                     "homepage": "https://www.drupal.org/user/99340"
                 },
                 {
+                    "name": "dww",
+                    "homepage": "https://www.drupal.org/user/46549"
+                },
+                {
                     "name": "geek-merlin",
                     "homepage": "https://www.drupal.org/user/229048"
                 },
@@ -6663,6 +6667,10 @@
                     "name": "Viktor Holovachek (AstonVictor)",
                     "homepage": "https://www.drupal.org/u/astonvictor",
                     "role": "Maintainer"
+                },
+                {
+                    "name": "shkiper",
+                    "homepage": "https://www.drupal.org/user/2261152"
                 }
             ],
             "description": "This module makes the 'current password' field on the user edit form optional.",
@@ -8383,10 +8391,10 @@
             "extra": {
                 "drupal": {
                     "version": "8.x-2.4",
-                    "datestamp": "1673559953",
+                    "datestamp": "1706212504",
                     "security-coverage": {
-                        "status": "covered",
-                        "message": "Covered by Drupal's security advisory policy"
+                        "status": "revoked",
+                        "message": "Project has been unsupported by the Drupal Security Team"
                     }
                 }
             },
