@@ -5,7 +5,7 @@ defaults:
   sender: test_mail_collector
   formatter: php_mail
 modules:
-  swiftmailer:
+  symfony_mailer_lite:
     none:
-      sender: swiftmailer
-      formatter: swiftmailer
+      sender: symfony_mailer_lite
+      formatter: symfony_mailer_lite
