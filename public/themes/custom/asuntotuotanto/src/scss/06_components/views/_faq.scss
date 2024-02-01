@@ -213,6 +213,8 @@ line-height: $lineheight-m;
   }
 
   p {
+    color: $color-black;
+
     &:first-child {
       margin-top: 0;
     }
