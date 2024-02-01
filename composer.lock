@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "620b99937f98536d1bc50259b75ca492",
+    "content-hash": "5396fdcc051e6c07693e2a8847df4162",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -2675,123 +2675,6 @@
             "support": {
                 "source": "https://git.drupalcode.org/project/config_terms",
                 "issues": "https://www.drupal.org/project/issues/config_terms"
-            }
-        },
-        {
-            "name": "drupal/contact_emails",
-            "version": "1.21.0",
-            "source": {
-                "type": "git",
-                "url": "https://git.drupalcode.org/project/contact_emails.git",
-                "reference": "8.x-1.21"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/contact_emails-8.x-1.21.zip",
-                "reference": "8.x-1.21",
-                "shasum": "5b67681e9835350011b3577d84d96008b47d6808"
-            },
-            "require": {
-                "drupal/contact_storage": "*",
-                "drupal/core": "^8 || ^9 || ^10"
-            },
-            "require-dev": {
-                "drupal/contact_storage": "*"
-            },
-            "type": "drupal-module",
-            "extra": {
-                "drupal": {
-                    "version": "8.x-1.21",
-                    "datestamp": "1681541283",
-                    "security-coverage": {
-                        "status": "covered",
-                        "message": "Covered by Drupal's security advisory policy"
-                    }
-                }
-            },
-            "notification-url": "https://packages.drupal.org/8/downloads",
-            "license": [
-                "GPL-2.0+"
-            ],
-            "authors": [
-                {
-                    "name": "AstonVictor",
-                    "homepage": "https://www.drupal.org/user/3466615"
-                },
-                {
-                    "name": "scott_euser",
-                    "homepage": "https://www.drupal.org/user/3267594"
-                }
-            ],
-            "description": "Module to handle contact emails",
-            "homepage": "https://www.drupal.org/project/contact_emails",
-            "keywords": [
-                "Drupal"
-            ],
-            "support": {
-                "source": "http://cgit.drupalcode.org/contact_emails",
-                "issues": "https://www.drupal.org/project/issues/contact_emails"
-            }
-        },
-        {
-            "name": "drupal/contact_storage",
-            "version": "1.3.0",
-            "source": {
-                "type": "git",
-                "url": "https://git.drupalcode.org/project/contact_storage.git",
-                "reference": "8.x-1.3"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/contact_storage-8.x-1.3.zip",
-                "reference": "8.x-1.3",
-                "shasum": "719dad5a991aa32e14c9bcb7b9dc76830e2331df"
-            },
-            "require": {
-                "drupal/core": "^9.1 || ^10",
-                "drupal/token": "^1.6"
-            },
-            "type": "drupal-module",
-            "extra": {
-                "drupal": {
-                    "version": "8.x-1.3",
-                    "datestamp": "1667651867",
-                    "security-coverage": {
-                        "status": "covered",
-                        "message": "Covered by Drupal's security advisory policy"
-                    }
-                }
-            },
-            "notification-url": "https://packages.drupal.org/8/downloads",
-            "license": [
-                "GPL-2.0-or-later"
-            ],
-            "authors": [
-                {
-                    "name": "andypost",
-                    "homepage": "https://www.drupal.org/user/118908"
-                },
-                {
-                    "name": "Arla",
-                    "homepage": "https://www.drupal.org/user/226712"
-                },
-                {
-                    "name": "Berdir",
-                    "homepage": "https://www.drupal.org/user/214652"
-                },
-                {
-                    "name": "jibran",
-                    "homepage": "https://www.drupal.org/user/1198144"
-                },
-                {
-                    "name": "larowlan",
-                    "homepage": "https://www.drupal.org/user/395439"
-                }
-            ],
-            "description": "Provides storage and edit capability for contact messages.",
-            "homepage": "https://www.drupal.org/project/contact_storage",
-            "support": {
-                "source": "https://git.drupalcode.org/project/contact_storage"
             }
         },
         {
