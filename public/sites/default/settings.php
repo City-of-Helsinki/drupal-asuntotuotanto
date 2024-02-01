@@ -385,8 +385,9 @@ if ($env = getenv('APP_ENV')) {
     $config['swiftmailer.transport']['smtp_host'] = 'mailhog';
     $config['swiftmailer.transport']['smtp_port'] = '1025';
     $config['swiftmailer.transport']['smtp_encryption'] = '0';
-
-    $config['elasticsearch_connector.cluster.asuntotuotanto']['url'] = 'http://elastic:9200';
+    
+    $orbstack = str_contains(php_uname('r'), 'orbstack');
+    $config['elasticsearch_connector.cluster.asuntotuotanto']['url'] = $orbstack ? 'elastic.asuntotuotanto.orb.local' : 'http://elastic:9200';
   }
 
   if ($env === 'test') {
