@@ -152,3 +152,5 @@ $config['system.performance']['js']['preprocess'] = 0;
 $config['openid_connect.client.tunnistamo']['settings']['client_id'] = "asuntotuotanto-ui-dev";
 $config['openid_connect.client.tunnistamo']['settings']['client_secret'] = '';
 $config['openid_connect.client.tunnistamo']['settings']['is_production'] = FALSE;
+
+$settings['skip_permissions_hardening'] = TRUE;
