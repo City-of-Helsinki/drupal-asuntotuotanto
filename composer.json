@@ -56,6 +56,7 @@
         "drupal/samlauth": "^3.9",
         "drupal/slick": "^2.10",
         "drupal/swiftmailer": "^2.4",
+        "drupal/symfony_mailer_lite": "^1.0",
         "drupal/ultimate_cron": "^2.0-alpha6",
         "drupal/user_bundle": "^1.2",
         "drupal/user_registrationpassword": "^2.0.0",
