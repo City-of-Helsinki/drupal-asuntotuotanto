@@ -17,7 +17,6 @@ dependencies:
     - paragraphs_type_permissions
     - rest
     - system
-    - toolbar
 _core:
   default_config_hash: 83Nuup-6oYkkdAsvg3nrR2pBOgtTXEV1JrzpCCLkYLM
 id: authenticated
@@ -26,7 +25,6 @@ weight: -9
 is_admin: false
 permissions:
   - 'access content'
-  - 'access toolbar'
   - 'create application'
   - 'delete own files'
   - 'display eu cookie compliance popup'
