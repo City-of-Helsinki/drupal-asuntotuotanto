@@ -6,19 +6,25 @@ dependencies:
     - field.storage.node.field_content
     - node.type.landing_page
     - paragraphs.paragraphs_type.banner
+    - paragraphs.paragraphs_type.chart
     - paragraphs.paragraphs_type.columns
     - paragraphs.paragraphs_type.contact_information_with_map
     - paragraphs.paragraphs_type.content_cards
+    - paragraphs.paragraphs_type.event_list
     - paragraphs.paragraphs_type.from_library
+    - paragraphs.paragraphs_type.hearings
     - paragraphs.paragraphs_type.latest_news
     - paragraphs.paragraphs_type.liftup_with_image
     - paragraphs.paragraphs_type.liftup_with_image_and_links
     - paragraphs.paragraphs_type.list_of_links
+    - paragraphs.paragraphs_type.map
+    - paragraphs.paragraphs_type.phasing
+    - paragraphs.paragraphs_type.popular_services
     - paragraphs.paragraphs_type.remote_video
     - paragraphs.paragraphs_type.showcase_block
     - paragraphs.paragraphs_type.stacked_contact_blocks
     - paragraphs.paragraphs_type.stacked_text_blocks_with_image
-    - paragraphs.paragraphs_type.text
+    - paragraphs.paragraphs_type.target_group_links
   module:
     - entity_reference_revisions
 _core:
@@ -38,128 +44,85 @@ settings:
   handler_settings:
     target_bundles:
       columns: columns
-      banner: banner
       list_of_links: list_of_links
-      liftup_with_image: liftup_with_image
       content_cards: content_cards
-      text: text
-      stacked_text_blocks_with_image: stacked_text_blocks_with_image
+      banner: banner
+      liftup_with_image: liftup_with_image
       from_library: from_library
+      chart: chart
       remote_video: remote_video
-      latest_news: latest_news
-      contact_information_with_map: contact_information_with_map
-      liftup_with_image_and_links: liftup_with_image_and_links
-      showcase_block: showcase_block
-      stacked_contact_blocks: stacked_contact_blocks
+      map: map
       event_list: event_list
       phasing: phasing
       popular_services: popular_services
       target_group_links: target_group_links
+      hearings: hearings
+      contact_information_with_map: contact_information_with_map
+      latest_news: latest_news
+      liftup_with_image_and_links: liftup_with_image_and_links
+      showcase_block: showcase_block
+      stacked_contact_blocks: stacked_contact_blocks
+      stacked_text_blocks_with_image: stacked_text_blocks_with_image
     negate: 0
     target_bundles_drag_drop:
-      accordion:
-        weight: -22
-        enabled: false
-      accordion_item:
-        weight: -21
-        enabled: false
       banner:
-        weight: -26
+        weight: 0
+        enabled: true
+      chart:
+        weight: 0
         enabled: true
       columns:
-        weight: -27
+        weight: 0
         enabled: true
       contact_information_with_map:
-        weight: 31
+        weight: 0
         enabled: true
-      contact_person:
-        weight: 35
-        enabled: false
-      contact_persons:
-        weight: 36
-        enabled: false
       content_cards:
-        weight: -23
+        weight: 0
         enabled: true
-      cta_block:
-        weight: 33
-        enabled: false
       event_list:
-        weight: 30
+        weight: 0
         enabled: true
       from_library:
-        weight: 21
+        weight: 0
         enabled: true
-      gallery:
-        weight: -20
-        enabled: false
-      gallery_slide:
-        weight: -19
-        enabled: false
-      hero:
-        weight: -18
-        enabled: false
-      image:
-        weight: -17
-        enabled: false
+      hearings:
+        weight: 0
+        enabled: true
       latest_news:
-        weight: 28
+        weight: 0
         enabled: true
       liftup_with_image:
-        weight: -24
+        weight: 0
         enabled: true
       liftup_with_image_and_links:
-        weight: 33
+        weight: 0
         enabled: true
       list_of_links:
-        weight: -25
+        weight: 0
         enabled: true
-      list_of_links_item:
-        weight: -16
-        enabled: false
-      news_info_card:
-        weight: 32
-        enabled: false
+      map:
+        weight: 0
+        enabled: true
       phasing:
-        weight: 50
+        weight: 0
         enabled: true
-      phasing_item:
-        weight: 30
-        enabled: false
       popular_services:
-        weight: 42
+        weight: 0
         enabled: true
       remote_video:
-        weight: 27
+        weight: 0
         enabled: true
-      showcase:
-        weight: 46
-        enabled: false
       showcase_block:
-        weight: 47
+        weight: 0
         enabled: true
       stacked_contact_blocks:
-        weight: 49
+        weight: 0
         enabled: true
       stacked_text_blocks_with_image:
-        weight: 20
+        weight: 0
         enabled: true
-      step:
-        weight: 49
-        enabled: false
-      steps_list:
-        weight: 50
-        enabled: false
-      target_group_link_item:
-        weight: 45
-        enabled: false
       target_group_links:
-        weight: 24
+        weight: 0
         enabled: true
-      text:
-        weight: -15
-        enabled: true
-      text_block_with_link:
-        weight: 38
-        enabled: false
 field_type: entity_reference_revisions

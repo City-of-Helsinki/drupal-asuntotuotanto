@@ -213,6 +213,8 @@ function asuntotuotanto_preprocess_views_view_table(&$variables) {
       $reserved_or_sold = FALSE;
       if ($apartment->isSold() || $apartment->isReserved() || $apartment->isFree()) {
         $reserved_or_sold = $apartment->isReserved() ? t('Reserved') : t('Vacant');
+        // Set application status to HIGH if apartment is reserved.
+        $variables['rows'][$key]['application_status']['status'] = $apartment->isReserved() ? 'high' : 'low';
         // Sold apartment is not listed so this is not necessary.
         if ($apartment->isSold()) {
           $reserved_or_sold = t('Sold');
@@ -494,7 +496,7 @@ function asuntotuotanto_preprocess_node(&$variables) {
           $description = $attachment['description'];
           $file_name = $file->getFilename();
           $file_size = format_size($file->getSize());
-          $file_uri = file_create_url($file->getFileUri());
+          $file_uri = \Drupal::service('file_url_generator')->generateAbsoluteString($file->getFileUri());
 
           $attachments_stack[$key] = [
             'description' => $description,
@@ -676,7 +678,7 @@ function asuntotuotanto_preprocess_node(&$variables) {
               $description = $attachment['description'];
               $file_name = $file->getFilename();
               $file_size = format_size($file->getSize());
-              $file_uri = file_create_url($file->getFileUri());
+              $file_uri = \Drupal::service('file_url_generator')->generateAbsoluteString($file->getFileUri());
 
               array_push($attachments_stack, [
                 'description' => $description,
@@ -697,7 +699,7 @@ function asuntotuotanto_preprocess_node(&$variables) {
               $description = $attachment['description'];
               $file_name = $file->getFilename();
               $file_size = format_size($file->getSize());
-              $file_uri = file_create_url($file->getFileUri());
+              $file_uri = \Drupal::service('file_url_generator')->generateAbsoluteString($file->getFileUri());
 
               array_push($attachments_stack, [
                 'description' => $description,
@@ -958,7 +960,7 @@ function getProjectApartmentTeaserValues($project_id) {
 
   $values['project_ownership_type'] = $project->field_ownership_type->entity ? $project->field_ownership_type->entity->name->value : '';
   $values['project_district'] = $project->field_district->entity ? $project->field_district->entity->name->value : '';
-  $values['project_main_image_url'] = isset($project->field_main_image[0]) ? file_create_url($project->field_main_image[0]->entity->getFileUri()) : '';
+  $values['project_main_image_url'] = isset($project->field_main_image[0]) ? \Drupal::service('file_url_generator')->generateAbsoluteString($project->field_main_image[0]->entity->getFileUri()) : '';
 
   foreach ($fields as $key => $field) {
     if ($project->hasField($field)) {
@@ -980,7 +982,7 @@ function getProjectApartmentTeaserValues($project_id) {
  */
 function asuntotuotanto_preprocess_blazy(&$variables) {
   // dd($variables);
-  $variables['image']['#attributes']['data-image'] = file_create_url($variables['image']['#uri']);
+  $variables['image']['#attributes']['data-image'] = \Drupal::service('file_url_generator')->generateAbsoluteString($variables['image']['#uri']);
   $variables['#attached']['library'][] = 'asuntotuotanto/intense-images';
 }
 

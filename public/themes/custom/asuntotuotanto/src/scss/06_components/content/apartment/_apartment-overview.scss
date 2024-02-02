@@ -34,7 +34,7 @@
 
 .apartment__area-overview-label {
   font-size: $fontsize-heading-s;
-line-height: $lineheight-m;
+  line-height: $lineheight-m;
   font-weight: $font-weight-bold;
   color: var(--color-black-90);
   margin-bottom: $spacing-and-half;
@@ -57,7 +57,7 @@ line-height: $lineheight-m;
     margin-top: 12px;
   }
 
-  > svg {
+  > .hel-icon {
     margin-right: $spacing;
 
     @media screen and (min-width: $breakpoint-l) {
@@ -69,13 +69,13 @@ line-height: $lineheight-m;
 
   p {
     font-size: $fontsize-body-m;
-line-height: $lineheight-l;
+    line-height: $lineheight-l;
     color: var(--color-black-90);
     margin: 0;
 
     @media screen and (min-width: $breakpoint-l) {
-     font-size: $fontsize-body-xl;
-line-height: $lineheight-xl;
+      font-size: $fontsize-body-xl;
+      line-height: $lineheight-xl;
     }
   }
 }
@@ -84,7 +84,7 @@ line-height: $lineheight-xl;
   display: flex;
   margin-top: 12px;
 
-  > svg {
+  > .hel-icon {
     margin-right: $spacing;
 
     @media screen and (min-width: $breakpoint-l) {
@@ -95,22 +95,21 @@ line-height: $lineheight-xl;
   }
 
   p {
-   font-size: $fontsize-body-m;
-line-height: $lineheight-l; // Was 24px.
+    font-size: $fontsize-body-m;
+    line-height: $lineheight-l; // Was 24px.
     color: var(--color-black-90);
     margin: 0;
-    max-width: 300px;
 
     @media screen and (min-width: $breakpoint-m) {
-     font-size: $fontsize-body-l;
-line-height: $lineheight-xl; // Was 27px.
+      font-size: $fontsize-body-l;
+      line-height: $lineheight-xl; // Was 27px.
     }
   }
 }
 
 .apartment__area-overvink-link {
- font-size: $fontsize-body-l;
-line-height: $lineheight-l; // Was 26px.
+  font-size: $fontsize-body-l;
+  line-height: $lineheight-l; // Was 26px.
   font-weight: $font-weight-bold;
   color: var(--color-bus);
   display: inline-block;
@@ -148,7 +147,7 @@ line-height: $lineheight-l; // Was 26px.
 
 .apartment__map-location-label {
   font-size: $fontsize-heading-s;
-line-height: $lineheight-m;
+  line-height: $lineheight-m;
   font-weight: $font-weight-bold;
   color: var(--color-black-90);
   margin: 0;

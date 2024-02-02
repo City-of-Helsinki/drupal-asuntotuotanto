@@ -271,14 +271,6 @@ display:
             default_group_multiple: {  }
             group_items:
               -
-                title: Julkaistu
-                operator: '='
-                value: '1'
-              -
-                title: Julkaisematon
-                operator: '='
-                value: '0'
-              -
                 title: Published
                 operator: '='
                 value: '1'
@@ -1035,7 +1027,7 @@ display:
           group_type: group
           admin_label: ''
           entity_type: media
-          plugin_id: helfi_media_entity_link_edit
+          plugin_id: entity_link_edit
           label: ''
           exclude: false
           alter:
@@ -1078,8 +1070,8 @@ display:
           empty_zero: false
           hide_alter_empty: true
           text: Edit
-          output_url_as_text: 0
-          absolute: 0
+          output_url_as_text: false
+          absolute: false
       pager:
         type: full
         options:
@@ -1380,7 +1372,7 @@ display:
           label: Updated
           type: timestamp
           settings:
-            date_format: short
+            date_format: long
             custom_date_format: ''
             timezone: ''
       access:

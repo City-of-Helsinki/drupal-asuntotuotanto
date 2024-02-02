@@ -1,0 +1,18 @@
+uuid: c5435bf7-50a3-4073-bda8-796ced7a6660
+langcode: en
+status: true
+dependencies:
+  module:
+    - paragraphs
+id: paragraph.field_event_time
+field_name: field_event_time
+entity_type: paragraph
+type: boolean
+settings: {  }
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

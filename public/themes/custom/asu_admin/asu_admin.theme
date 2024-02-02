@@ -26,7 +26,7 @@ function asu_admin_get_icons_path() {
   static $icon_path;
   if (!isset($icon_path)) {
     global $base_secure_url;
-    $icon_path = $base_secure_url . '/' . drupal_get_path('theme', 'asu_admin') . '/dist/icons/sprite.svg';
+    $icon_path = $base_secure_url . '/' . \Drupal::service('extension.list.theme')->getPath('asu_admin') . '/dist/icons/sprite.svg';
 
     if (!empty($icon_path)) {
       // Add icons path as a global variable.

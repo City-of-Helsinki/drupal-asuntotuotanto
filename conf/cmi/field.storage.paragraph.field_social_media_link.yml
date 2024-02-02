@@ -1,0 +1,22 @@
+uuid: c11d6839-52d1-4c9e-a38f-4a32ae11d4ef
+langcode: en
+status: true
+dependencies:
+  module:
+    - link
+    - paragraphs
+  enforced:
+    config:
+      - paragraphs.paragraphs_type.social_media_link
+id: paragraph.field_social_media_link
+field_name: field_social_media_link
+entity_type: paragraph
+type: link
+settings: {  }
+module: link
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

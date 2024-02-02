@@ -17,11 +17,12 @@
   align-items: center;
   display: flex;
   justify-content: space-between;
-  padding: 0 $spacing;
+  padding: $spacing;
   z-index: 100;
 
   @media screen and (min-width: $breakpoint-xs) {
-    padding: 0 $spacing-double;
+    padding-left: $spacing-double;
+    padding-right: $spacing-double;
   }
 }
 

@@ -20,15 +20,15 @@
 }
 
 .project__anchor-link {
- font-size: $fontsize-body-xl;
-line-height: $lineheight-l;;
+  font-size: $fontsize-body-xl;
+  line-height: $lineheight-l;;
   font-weight: $font-weight-bold;
   align-items: center;
   display: inline-flex;
   padding: $spacing-and-half;
   text-decoration: none;
 
-  > svg {
-    margin-right: 12px;
+  > .hel-icon {
+    margin-right: $spacing-half;
   }
 }

@@ -53,7 +53,7 @@ dependencies:
     - datetime
     - field_group
     - file
-    - hdbt_admin_editorial
+    - hdbt_admin_tools
     - image
     - link
     - path
@@ -498,6 +498,17 @@ content:
   publish_on:
     type: datetime_timestamp_no_default
     weight: 30
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  published_at:
+    type: publication_date_timestamp
+    weight: 10
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  simple_sitemap:
+    weight: 10
     region: content
     settings: {  }
     third_party_settings: {  }
