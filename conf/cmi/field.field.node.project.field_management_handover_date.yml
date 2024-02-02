@@ -1,5 +1,5 @@
 uuid: 388e3f81-2e9f-4059-b67b-4f537f09064a
-langcode: fi
+langcode: en
 status: true
 dependencies:
   config:
@@ -11,7 +11,7 @@ id: node.project.field_management_handover_date
 field_name: field_management_handover_date
 entity_type: node
 bundle: project
-label: 'Hallinnon luvutuspäivämäärä'
+label: 'Management handover date'
 description: ''
 required: false
 translatable: false

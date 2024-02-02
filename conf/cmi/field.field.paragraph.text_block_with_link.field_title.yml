@@ -1,5 +1,5 @@
 uuid: 669b9bb1-dba6-4e56-b333-d98aa96dcdeb
-langcode: fi
+langcode: en
 status: true
 dependencies:
   config:
@@ -9,7 +9,7 @@ id: paragraph.text_block_with_link.field_title
 field_name: field_title
 entity_type: paragraph
 bundle: text_block_with_link
-label: Otsikko
+label: Title
 description: ''
 required: true
 translatable: true

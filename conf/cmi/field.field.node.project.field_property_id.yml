@@ -1,5 +1,5 @@
 uuid: 2b38767e-47db-4170-92a0-cc0ac286dc54
-langcode: fi
+langcode: en
 status: true
 dependencies:
   config:
@@ -9,7 +9,7 @@ id: node.project.field_property_id
 field_name: field_property_id
 entity_type: node
 bundle: project
-label: Kiinteistötunnus
+label: 'Property ID'
 description: ''
 required: false
 translatable: false

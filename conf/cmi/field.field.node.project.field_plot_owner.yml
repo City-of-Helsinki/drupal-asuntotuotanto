@@ -1,5 +1,5 @@
 uuid: 4012816e-854b-4e6d-bacc-0161d51cb233
-langcode: fi
+langcode: en
 status: true
 dependencies:
   config:
@@ -11,7 +11,7 @@ id: node.project.field_plot_owner
 field_name: field_plot_owner
 entity_type: node
 bundle: project
-label: Tontti
+label: 'Plot owner'
 description: ''
 required: false
 translatable: false

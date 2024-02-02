@@ -1,5 +1,5 @@
 uuid: 90355255-01c2-476c-b590-0a9244e0792b
-langcode: fi
+langcode: en
 status: true
 dependencies:
   module:
@@ -10,8 +10,10 @@ plugin: tunnistamo
 settings:
   client_id: ''
   client_secret: ''
+  iss_allowed_domains: ''
   is_production: 0
-  redirect_url: ''
   auto_login: 0
-  client_scopes: ''
   environment_url: ''
+  client_scopes: ''
+  client_roles: {  }
+  redirect_url: ''

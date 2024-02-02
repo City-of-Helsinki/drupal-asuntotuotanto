@@ -1,10 +1,10 @@
 uuid: 7df0ac2f-6984-4f4b-ad95-f3ed92be0d9b
-langcode: fi
+langcode: en
 status: true
 dependencies: {  }
 id: sold
 vid: apartment_state_of_sale
-label: Myyty
+label: Sold
 parents:
   - '0'
 weight: 0

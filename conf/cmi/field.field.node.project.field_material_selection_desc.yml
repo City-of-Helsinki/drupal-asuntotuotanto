@@ -1,5 +1,5 @@
 uuid: 5ed9722b-7a52-4572-9d87-809642350cd6
-langcode: fi
+langcode: en
 status: true
 dependencies:
   config:
@@ -9,7 +9,7 @@ id: node.project.field_material_selection_desc
 field_name: field_material_selection_desc
 entity_type: node
 bundle: project
-label: 'Materiaalivalinnat täsmennetään miltä osin'
+label: 'Material selection descriptions'
 description: ''
 required: false
 translatable: false

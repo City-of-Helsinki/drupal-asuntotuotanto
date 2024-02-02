@@ -1,0 +1,5 @@
+label: 'Asumisoikeusnumero on myönnetty 1.9.2023 alkaen.'
+description: 'Valitse tämä valinta mikäli asumisoikeusnumero on myönnetty 1.9.2023 alkaen (ARA myöntänyt). Jätä valinta tekemättä mikäli asumisoikeusnumero on myönnetty ennen 31.8.2023.'
+settings:
+  on_label: Käytössä
+  off_label: 'Pois päältä'

@@ -1,5 +1,5 @@
 uuid: 49cbd92a-c0fa-4488-acf2-f6cd8e1c9e96
-langcode: fi
+langcode: en
 status: true
 dependencies:
   config:
@@ -17,7 +17,7 @@ provider: null
 plugin: 'menu_block:main'
 settings:
   id: 'menu_block:main'
-  label: Päävalikko
+  label: 'Main menu'
   label_display: '0'
   provider: menu_block
   follow: false

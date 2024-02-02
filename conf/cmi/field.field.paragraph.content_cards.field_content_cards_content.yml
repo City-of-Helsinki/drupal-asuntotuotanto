@@ -4,7 +4,6 @@ status: true
 dependencies:
   config:
     - field.storage.paragraph.field_content_cards_content
-    - node.type.article
     - node.type.landing_page
     - node.type.page
     - paragraphs.paragraphs_type.content_cards

@@ -1,5 +1,5 @@
 uuid: bad0961e-1f35-4219-a6e4-6c6a84850afd
-langcode: fi
+langcode: en
 status: true
 dependencies:
   config:
@@ -9,7 +9,7 @@ id: node.project.field_location_block
 field_name: field_location_block
 entity_type: node
 bundle: project
-label: Sijaintikortteli
+label: 'Location block'
 description: ''
 required: false
 translatable: false

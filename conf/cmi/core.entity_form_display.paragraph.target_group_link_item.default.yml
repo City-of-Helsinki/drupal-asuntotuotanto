@@ -1,3 +1,4 @@
+uuid: 9576a5a7-5165-4088-b8ba-14755aa9662c
 langcode: en
 status: true
 dependencies:
@@ -8,7 +9,6 @@ dependencies:
     - paragraphs.paragraphs_type.target_group_link_item
   module:
     - link
-    - select2_icon
 id: paragraph.target_group_link_item.default
 targetEntityType: paragraph
 bundle: target_group_link_item

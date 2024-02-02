@@ -1,5 +1,5 @@
 uuid: 87de6660-01fd-4b75-a826-f95e8197b504
-langcode: fi
+langcode: en
 status: true
 dependencies:
   config:
@@ -9,7 +9,7 @@ id: node.project.field_contract_other_terms
 field_name: field_contract_other_terms
 entity_type: node
 bundle: project
-label: 'Muut tiedot'
+label: 'Other terms'
 description: ''
 required: false
 translatable: false

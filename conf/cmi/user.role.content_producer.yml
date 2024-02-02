@@ -7,7 +7,6 @@ dependencies:
     - media.type.file
     - media.type.image
     - media.type.remote_video
-    - media.type.soundcloud
     - node.type.landing_page
     - node.type.news
     - node.type.page
@@ -60,7 +59,6 @@ permissions:
   - 'create page content'
   - 'create paragraph library item'
   - 'create remote_video media'
-  - 'create soundcloud media'
   - 'create terms in faq_category'
   - 'create terms in faq_haso'
   - 'create terms in faq_hitas'
@@ -74,7 +72,6 @@ permissions:
   - 'delete own news content'
   - 'delete own page content'
   - 'delete own remote_video media'
-  - 'delete own soundcloud media'
   - 'delete terms in faq_category'
   - 'delete terms in faq_haso'
   - 'delete terms in faq_hitas'
@@ -86,14 +83,12 @@ permissions:
   - 'edit any news content'
   - 'edit any page content'
   - 'edit any remote_video media'
-  - 'edit any soundcloud media'
   - 'edit own file media'
   - 'edit own image media'
   - 'edit own landing_page content'
   - 'edit own news content'
   - 'edit own page content'
   - 'edit own remote_video media'
-  - 'edit own soundcloud media'
   - 'edit paragraph library item'
   - 'edit terms in faq_category'
   - 'edit terms in faq_haso'

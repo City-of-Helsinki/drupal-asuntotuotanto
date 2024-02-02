@@ -1,5 +1,7 @@
 <?php
 
+use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
 use Symfony\Component\Yaml\Yaml;
 
 /**
@@ -142,5 +144,99 @@ function asu_content_update_9004() {
   foreach ($change_summary as $entity_type_id => $change_list) {
     $entity_type = $entity_type_manager->getDefinition($entity_type_id);
     \Drupal::entityDefinitionUpdateManager()->installEntityType($entity_type);
+  }
+}
+
+/**
+ * Switch field type for the email paragraphs field.
+ */
+function asu_content_update_9005() {
+  $database = \Drupal::database();
+  $entity_type = 'paragraph';
+  $field_name = 'field_email';
+  $table = "paragraph__field_email";
+  $field_data = NULL;
+  $new_fields = [];
+  $field_storage = FieldStorageConfig::loadByName($entity_type, $field_name);
+
+  if (is_null($field_storage)) {
+    return;
+  }
+
+  // Get all field data from database.
+  if ($database->schema()->tableExists($table)) {
+    $field_data = $database->select($table, 'n')
+      ->fields('n')
+      ->execute()
+      ->fetchAll();
+  }
+
+  // Use existing field config for new field.
+  foreach ($field_storage->getBundles() as $bundle => $label) {
+    $field = FieldConfig::loadByName($entity_type, $bundle, $field_name);
+    $new_field = $field->toArray();
+    $new_field['field_type'] = 'email';
+    $new_field['settings'] = [];
+    $new_fields[] = $new_field;
+  }
+
+  // Deleting field storage which will also delete bundles(fields).
+  $new_field_storage = $field_storage->toArray();
+  $new_field_storage['type'] = 'email';
+  $new_field_storage['settings'] = [
+    'max_length' => 255,
+    'case_sensitive' => FALSE,
+    'is_ascii' => FALSE,
+  ];
+
+  $field_storage->delete();
+
+  // Purge field data now to allow new field and field_storage with same name
+  // to be created.
+  field_purge_batch(40);
+
+  // Create new field storage.
+  $new_field_storage = FieldStorageConfig::create($new_field_storage);
+  $new_field_storage->save();
+
+  // Create new fields.
+  foreach ($new_fields as $new_field) {
+    $new_field_config = FieldConfig::create($new_field);
+    $new_field_config->save();
+  }
+
+  // Restore existing data in new table.
+  if (!is_null($field_data)) {
+    foreach ($field_data as $data) {
+      $database->insert($table)
+        ->fields((array) $data)
+        ->execute();
+    }
+  }
+}
+
+/**
+ * Remove all content for Article, Gallery and Gallery slide types.
+ */
+function asu_content_update_9006() {
+  $node_storage = \Drupal::entityTypeManager()->getStorage('node');
+  $entities = $node_storage->loadByProperties(['type' => 'article']);
+  $node_storage->delete($entities);
+
+  foreach (['gallery', 'gallery_slide'] as $paragraph_type) {
+    $paragraph_storage = \Drupal::entityTypeManager()->getStorage('paragraph');
+    $entities = $paragraph_storage->loadByProperties(['type' => $paragraph_type]);
+    $paragraph_storage->delete($entities);
+  }
+}
+
+/**
+ * Install external entities module if it doesn't exist.
+ */
+function asu_content_update_9007(): void {
+  $module_installer = \Drupal::service('module_installer');
+
+  if (!\Drupal::moduleHandler()->moduleExists('external_entities')) {
+    $module_installer->install(['external_entities']);
   }
 }

@@ -1,5 +1,5 @@
 uuid: f86fc5fa-a9b8-4c66-b666-3ab090c178a6
-langcode: fi
+langcode: en
 status: true
 dependencies:
   config:
@@ -9,7 +9,7 @@ id: node.project.field_transfer_restriction
 field_name: field_transfer_restriction
 entity_type: node
 bundle: project
-label: Luovutusrajoitus
+label: 'Transfer restriction'
 description: ''
 required: false
 translatable: false
