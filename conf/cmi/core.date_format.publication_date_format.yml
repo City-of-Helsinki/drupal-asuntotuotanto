@@ -2,6 +2,8 @@ uuid: 99265a57-ad68-4397-895f-be65fc1bb85f
 langcode: en
 status: true
 dependencies: {  }
+_core:
+  default_config_hash: BkpFqSItc6gSqoNEgRUBLDpW-ZIo_cOcHnd2Cvmt4b4
 id: publication_date_format
 label: 'Publication date format'
 locked: false

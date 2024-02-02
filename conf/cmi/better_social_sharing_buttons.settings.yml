@@ -1,24 +1,12 @@
+_core:
+  default_config_hash: DlFPozYNOFuBqQVms526YfSXmbsKH-9c1-f4ZYJXDc0
 iconset: social-icons--square
 services:
   facebook: facebook
-  twitter: twitter
+  x: x
   linkedin: linkedin
-  whatsapp: 0
-  facebook_messenger: 0
-  email: 0
-  pinterest: 0
-  digg: 0
-  stumbleupon: 0
-  slashdot: 0
-  tumblr: 0
-  reddit: 0
-  evernote: 0
-  print: 0
-  copy: 0
 width: 24px
 radius: 0px
 print_css: ''
 facebook_app_id: ''
-node_field: 0
-_core:
-  default_config_hash: DlFPozYNOFuBqQVms526YfSXmbsKH-9c1-f4ZYJXDc0
+node_field: false

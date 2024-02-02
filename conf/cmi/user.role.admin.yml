@@ -39,6 +39,7 @@ dependencies:
   module:
     - asu_application
     - block
+    - block_content
     - config_translation
     - content_lock
     - content_translation
@@ -78,6 +79,7 @@ weight: -2
 is_admin: null
 permissions:
   - 'access administration pages'
+  - 'access block library'
   - 'access content'
   - 'access content overview'
   - 'access entity usage statistics'
@@ -89,11 +91,12 @@ permissions:
   - 'access toolbar'
   - 'access user profiles'
   - 'administer applications'
+  - 'administer block content'
+  - 'administer block types'
   - 'administer blocks'
   - 'administer content translation'
   - 'administer eu cookie compliance categories'
   - 'administer eu cookie compliance popup'
-  - 'administer hotjar settings'
   - 'administer menu'
   - 'administer nodes'
   - 'administer paragraphs library'
@@ -166,6 +169,7 @@ permissions:
   - 'delete media'
   - 'delete own announcement content'
   - 'delete own file media'
+  - 'delete own files'
   - 'delete own hel_map media'
   - 'delete own helfi_chart media'
   - 'delete own image media'

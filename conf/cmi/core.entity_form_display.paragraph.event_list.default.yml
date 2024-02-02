@@ -16,7 +16,7 @@ dependencies:
     - link
     - text
 _core:
-  default_config_hash: Tyi9wGAv2OWtaU056U3LSPa3HhdiWSFnd1nZqhZNC8k
+  default_config_hash: bGb0ZQ38-NxHtZ1rrdqclYHeStlwA5q3ucy5Wpnb0ng
 id: paragraph.event_list.default
 targetEntityType: paragraph
 bundle: event_list
@@ -82,5 +82,4 @@ content:
     third_party_settings: {  }
 hidden:
   created: true
-  field_load_more: true
   status: true

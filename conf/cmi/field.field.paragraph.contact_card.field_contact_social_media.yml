@@ -8,6 +8,8 @@ dependencies:
     - paragraphs.paragraphs_type.social_media_link
   module:
     - entity_reference_revisions
+_core:
+  default_config_hash: ZqgrD2xFyv-VKitZqJ7VFPkatRSGyeyOgLwnW-C1Hss
 id: paragraph.contact_card.field_contact_social_media
 field_name: field_contact_social_media
 entity_type: paragraph

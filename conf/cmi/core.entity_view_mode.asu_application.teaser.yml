@@ -6,5 +6,6 @@ dependencies:
     - asu_application
 id: asu_application.teaser
 label: Teaser
+description: ''
 targetEntityType: asu_application
 cache: true

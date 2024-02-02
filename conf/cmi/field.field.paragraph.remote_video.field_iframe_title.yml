@@ -5,6 +5,8 @@ dependencies:
   config:
     - field.storage.paragraph.field_iframe_title
     - paragraphs.paragraphs_type.remote_video
+_core:
+  default_config_hash: 4JZoeG_XitvgE9Tg7ZfVUwjpWcjeqktlO2tOnx_WfWU
 id: paragraph.remote_video.field_iframe_title
 field_name: field_iframe_title
 entity_type: paragraph

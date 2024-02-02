@@ -95,6 +95,7 @@ line-height: $lineheight-l; // Was 26px.
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  margin-top: 0;
 
   & + & {
     margin-left: 12px;

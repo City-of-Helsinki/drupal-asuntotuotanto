@@ -8,6 +8,8 @@ dependencies:
     - paragraphs.paragraphs_type.contact_card_listing
   module:
     - entity_reference_revisions
+_core:
+  default_config_hash: KQMfZ0H61OpPP_Mbzo50RsVfQYhVst3vpN-IDT7mQeo
 id: paragraph.contact_card_listing.field_contact_card
 field_name: field_contact_card
 entity_type: paragraph

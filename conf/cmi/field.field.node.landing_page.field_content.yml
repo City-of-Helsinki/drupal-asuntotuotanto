@@ -28,7 +28,7 @@ dependencies:
   module:
     - entity_reference_revisions
 _core:
-  default_config_hash: WyK1iEGE9PlvLsufft0XR67JYRUdRpDxDaMPH1l-wic
+  default_config_hash: zEXoDFJnyArUOiL2ZrtDuq4YDWKyn6ung9JndPk_Ntg
 id: node.landing_page.field_content
 field_name: field_content
 entity_type: node
@@ -43,57 +43,57 @@ settings:
   handler: 'default:paragraph'
   handler_settings:
     target_bundles:
-      columns: columns
-      list_of_links: list_of_links
-      content_cards: content_cards
-      banner: banner
-      liftup_with_image: liftup_with_image
-      from_library: from_library
-      chart: chart
-      remote_video: remote_video
-      map: map
-      event_list: event_list
-      phasing: phasing
-      popular_services: popular_services
-      target_group_links: target_group_links
-      hearings: hearings
       contact_information_with_map: contact_information_with_map
       latest_news: latest_news
       liftup_with_image_and_links: liftup_with_image_and_links
       showcase_block: showcase_block
       stacked_contact_blocks: stacked_contact_blocks
       stacked_text_blocks_with_image: stacked_text_blocks_with_image
+      list_of_links: list_of_links
+      content_cards: content_cards
+      banner: banner
+      liftup_with_image: liftup_with_image
+      popular_services: popular_services
+      from_library: from_library
+      columns: columns
+      phasing: phasing
+      map: map
+      remote_video: remote_video
+      chart: chart
+      target_group_links: target_group_links
+      event_list: event_list
+      hearings: hearings
     negate: 0
     target_bundles_drag_drop:
       banner:
-        weight: 0
+        weight: 2
         enabled: true
       chart:
-        weight: 0
+        weight: 10
         enabled: true
       columns:
-        weight: 0
+        weight: 6
         enabled: true
       contact_information_with_map:
         weight: 0
         enabled: true
       content_cards:
-        weight: 0
+        weight: 1
         enabled: true
       event_list:
-        weight: 0
+        weight: 13
         enabled: true
       from_library:
-        weight: 0
+        weight: 5
         enabled: true
       hearings:
-        weight: 0
+        weight: 14
         enabled: true
       latest_news:
         weight: 0
         enabled: true
       liftup_with_image:
-        weight: 0
+        weight: 3
         enabled: true
       liftup_with_image_and_links:
         weight: 0
@@ -102,16 +102,16 @@ settings:
         weight: 0
         enabled: true
       map:
-        weight: 0
+        weight: 8
         enabled: true
       phasing:
-        weight: 0
+        weight: 7
         enabled: true
       popular_services:
-        weight: 0
+        weight: 4
         enabled: true
       remote_video:
-        weight: 0
+        weight: 9
         enabled: true
       showcase_block:
         weight: 0
@@ -123,6 +123,6 @@ settings:
         weight: 0
         enabled: true
       target_group_links:
-        weight: 0
+        weight: 12
         enabled: true
 field_type: entity_reference_revisions

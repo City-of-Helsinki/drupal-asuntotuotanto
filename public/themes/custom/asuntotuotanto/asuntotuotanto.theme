@@ -56,6 +56,30 @@ function asuntotuotanto_theme_suggestions_alter(array &$suggestions, array $vari
 /**
  * Implements hook_preprocess_HOOK().
  */
+function asuntotuotanto_preprocess_page(array &$variables) : void {
+  $route_name = \Drupal::routeMatch()->getRouteName();
+  // Return early if route name is empty.
+  if (!$route_name) {
+    return;
+  }
+  // Removing the js library on user pages.
+  // Return if route is not related to the user route.
+  if (
+    $route_name !== 'entity.user.canonical' &&
+    !str_starts_with($route_name, 'asu_user')
+  ) {
+    return;
+  }
+  // If table of contents library is attached remove it from user routes.
+  if (($key = array_search('helfi_toc/table_of_contents', $variables['#attached']['library'])) !== false) {
+    unset($variables['#attached']['library'][$key]);
+  }
+
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
 function asuntotuotanto_preprocess_menu(&$variables) {
   $menu_name = $variables['menu_name'];
 
@@ -584,6 +608,7 @@ function asuntotuotanto_preprocess_node(&$variables) {
       if ($project) {
 
         if (!$project->field_salesperson->isEmpty()) {
+
           $salesperson = $project->field_salesperson->first()->entity;
           $variables['sales_phone'] = $salesperson->field_phone_number->value;
           $variables['sales_email'] = $salesperson->getEmail();

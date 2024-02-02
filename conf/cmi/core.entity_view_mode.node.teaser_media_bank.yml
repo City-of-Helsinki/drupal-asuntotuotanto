@@ -6,5 +6,6 @@ dependencies:
     - node
 id: node.teaser_media_bank
 label: 'Teaser Media bank'
+description: ''
 targetEntityType: node
 cache: true
