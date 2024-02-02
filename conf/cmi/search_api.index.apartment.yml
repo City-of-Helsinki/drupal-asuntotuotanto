@@ -14,6 +14,7 @@ dependencies:
     - field.storage.node.field_balcony_description
     - field.storage.node.field_bathroom_appliances
     - field.storage.node.field_debt_free_sales_price
+    - field.storage.node.field_stock_start_number
     - field.storage.node.field_financing_fee
     - field.storage.node.field_floor
     - field.storage.node.field_floorplan
@@ -23,6 +24,7 @@ dependencies:
     - field.storage.node.field_right_of_occupancy_fee
     - field.storage.node.field_right_of_occupancy_deposit
     - field.storage.node.field_living_area
+    - field.storage.node.field_release_payment
     - field.storage.node.field_maintenance_fee
     - field.storage.node.field_other_fees
     - field.storage.node.field_parking_fee
@@ -37,6 +39,7 @@ dependencies:
     - field.storage.node.field_storage_description
     - field.storage.node.field_has_terrace
     - field.storage.node.field_view_description
+    - field.storage.node.field_stock_end_number
     - field.storage.node.field_water_fee
     - field.storage.node.field_water_fee_explanation
     - field.storage.node.field_has_yard
@@ -822,6 +825,14 @@ field_settings:
     dependencies:
       config:
         - field.storage.node.field_publish_on_oikotie
+  release_payment:
+    label: Luovutushinta
+    datasource_id: 'entity:node'
+    property_path: field_release_payment
+    type: cent
+    dependencies:
+      config:
+        - field.storage.node.field_release_payment
   right_of_occupancy_deposit:
     label: Käyttövastikevakuus
     datasource_id: 'entity:node'
@@ -891,6 +902,22 @@ field_settings:
     datasource_id: 'entity:node'
     property_path: 'search_api_reverse_entity_references_node__field_apartments:field_site_owner:entity:name'
     type: string
+  stock_end_number:
+    label: 'Viimeisen osakkeen numero'
+    datasource_id: 'entity:node'
+    property_path: field_stock_end_number
+    type: integer
+    dependencies:
+      config:
+        - field.storage.node.field_stock_end_number
+  stock_start_number:
+    label: 'Ensimmäisen osakkeen numero'
+    datasource_id: 'entity:node'
+    property_path: field_stock_start_number
+    type: integer
+    dependencies:
+      config:
+        - field.storage.node.field_stock_start_number
   storage_description:
     label: 'Storage description'
     datasource_id: 'entity:node'
