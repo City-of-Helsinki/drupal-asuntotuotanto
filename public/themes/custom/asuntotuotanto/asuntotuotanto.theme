@@ -426,9 +426,9 @@ function asuntotuotanto_preprocess_node(&$variables) {
           ?->first()
           ?->get('entity')
           ?->getTarget();
-        $variables['sales_phone'] = $salesperson?->get('field_phone_number')->first()->getValue();
-        $variables['sales_email'] = $salesperson?->get('mail')->first()->getValue();
-        $variables['sales_name'] = $salesperson?->get('field_full_name')->first()->getValue();
+        $variables['sales_phone'] = $salesperson?->get('field_phone_number')->value;
+        $variables['sales_email'] = $salesperson?->get('mail')->value;
+        $variables['sales_name'] = $salesperson?->get('field_full_name')->value;
       }
 
       $apartments = $project->getApartmentEntities();
@@ -621,9 +621,9 @@ function asuntotuotanto_preprocess_node(&$variables) {
             ?->first()
             ?->get('entity')
             ?->getTarget();
-          $variables['sales_phone'] = $salesperson?->get('field_phone_number')->first()->getValue();
-          $variables['sales_email'] = $salesperson?->get('mail')->first()->getValue();
-          $variables['sales_name'] = $salesperson?->get('field_full_name')->first()->getValue();
+          $variables['sales_phone'] = $salesperson?->get('field_phone_number')->value;
+          $variables['sales_email'] = $salesperson?->get('mail')->value;
+          $variables['sales_name'] = $salesperson?->get('field_full_name')->value;
         }
 
         $is_application_period_active = $project->isApplicationPeriod();
