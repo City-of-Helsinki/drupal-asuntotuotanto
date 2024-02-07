@@ -999,7 +999,7 @@ function getProjectApartmentTeaserValues($project_id) {
   $values['project_main_image_url'] = isset($project->field_main_image[0]) ? \Drupal::service('file_url_generator')->generateAbsoluteString($project->field_main_image[0]->entity->getFileUri()) : '';
 
   foreach ($fields as $key => $field) {
-    if ($project->hasField($field)) {
+    if ($project && $project->hasField($field)) {
       $values[$key] = $project->get($field)->value ?? '';
     }
     else {
