@@ -2,7 +2,7 @@
 
 namespace Drupal\asu_user;
 
-use Drupal\asu_api\AuthenticationHelper;
+use Drupal\asu_api\Helper\AuthenticationHelper;
 use Drupal\asu_user\Helper\StoreHelper;
 use Drupal\Core\Session\AccountProxy;
 use Drupal\Core\TempStore\PrivateTempStore;
