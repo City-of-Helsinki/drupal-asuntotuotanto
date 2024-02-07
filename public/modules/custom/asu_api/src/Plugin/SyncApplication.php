@@ -66,11 +66,7 @@ class SyncApplication extends QueueWorkerBase implements ContainerFactoryPluginI
         $apartmentData[$apartment->id()] = $apartment->uuid();
       }
 
-      $projectData = [
-        'uuid' => $project->uuid(),
-        'apartment_uuids' => $apartmentData,
-      ];
-      $request = new CreateApplicationRequest($application->getOwner(), $application, $projectData);
+      $request = new CreateApplicationRequest($application->getOwner(), $application, $project->uuid());
       $this->backendApi->send($request);
     }
     catch (\Exception $e) {

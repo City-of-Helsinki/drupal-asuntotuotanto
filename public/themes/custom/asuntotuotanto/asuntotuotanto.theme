@@ -382,7 +382,7 @@ function asuntotuotanto_preprocess_node(&$variables) {
       }
 
       if (!empty($paragraph) && $paragraph instanceof Paragraph) {
-        if ($paragraph->type->getValue()[0]["target_id"] === "text") {
+        if ($paragraph->getType() === "text") {
           $text = strip_tags($paragraph->get('field_text')->value);
           $text = str_replace(["\r", "\n"], ' ', $text);
 
@@ -418,11 +418,17 @@ function asuntotuotanto_preprocess_node(&$variables) {
       $project = $node;
       $project_type = $project->field_ownership_type->entity->name->value;
 
-      if (!$project->field_salesperson->isEmpty()) {
-        $salesperson = $project->field_salesperson->first()->entity;
-        $variables['sales_phone'] = $salesperson->field_phone_number->value;
-        $variables['sales_email'] = $salesperson->getEmail();
-        $variables['sales_name'] = $salesperson->field_full_name->value;
+      if (
+        $project->hasField('field_salesperson') &&
+        !$project->get('field_salesperson')?->isEmpty()
+      ) {
+        $salesperson = $project->get('field_salesperson')
+          ?->first()
+          ?->get('entity')
+          ?->getTarget();
+        $variables['sales_phone'] = $salesperson?->get('field_phone_number')->value;
+        $variables['sales_email'] = $salesperson?->get('mail')->value;
+        $variables['sales_name'] = $salesperson?->get('field_full_name')->value;
       }
 
       $apartments = $project->getApartmentEntities();
@@ -607,12 +613,17 @@ function asuntotuotanto_preprocess_node(&$variables) {
 
       if ($project) {
 
-        if (!$project->field_salesperson->isEmpty()) {
-
-          $salesperson = $project->field_salesperson->first()->entity;
-          $variables['sales_phone'] = $salesperson->field_phone_number->value;
-          $variables['sales_email'] = $salesperson->getEmail();
-          $variables['sales_name'] = $salesperson->field_full_name->value;
+        if (
+          $project->hasField('field_salesperson') &&
+          !$project->get('field_salesperson')?->isEmpty()
+        ) {
+          $salesperson = $project->get('field_salesperson')
+            ?->first()
+            ?->get('entity')
+            ?->getTarget();
+          $variables['sales_phone'] = $salesperson?->get('field_phone_number')->value;
+          $variables['sales_email'] = $salesperson?->get('mail')->value;
+          $variables['sales_name'] = $salesperson?->get('field_full_name')->value;
         }
 
         $is_application_period_active = $project->isApplicationPeriod();
@@ -988,7 +999,7 @@ function getProjectApartmentTeaserValues($project_id) {
   $values['project_main_image_url'] = isset($project->field_main_image[0]) ? \Drupal::service('file_url_generator')->generateAbsoluteString($project->field_main_image[0]->entity->getFileUri()) : '';
 
   foreach ($fields as $key => $field) {
-    if ($project->hasField($field)) {
+    if ($project && $project->hasField($field)) {
       $values[$key] = $project->get($field)->value ?? '';
     }
     else {
