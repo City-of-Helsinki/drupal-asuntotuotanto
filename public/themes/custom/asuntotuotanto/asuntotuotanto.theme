@@ -235,7 +235,7 @@ function asuntotuotanto_preprocess_views_view_table(&$variables) {
       $variables['rows'][$key]['application_status'] = get_apartment_application_status($applicationCountEnum);
 
       $reserved_or_sold = FALSE;
-      if ($apartment->isSold() || $apartment->isReserved() || $apartment->isFree()) {
+      if ($apartment->isSold() || $apartment->isReserved()) {
         $reserved_or_sold = $apartment->isReserved() ? t('Reserved') : t('Vacant');
         // Set application status to HIGH if apartment is reserved.
         $variables['rows'][$key]['application_status']['status'] = $apartment->isReserved() ? 'high' : 'low';
@@ -243,6 +243,9 @@ function asuntotuotanto_preprocess_views_view_table(&$variables) {
         if ($apartment->isSold()) {
           $reserved_or_sold = t('Sold');
         }
+      }
+      else if ($apartment->isFree()) {
+        $reserved_or_sold = t('Free');
       }
 
       if (!$project) {
