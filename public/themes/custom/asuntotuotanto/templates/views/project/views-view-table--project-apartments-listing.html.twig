@@ -268,6 +268,7 @@
 
               {% if reserved_or_sold %}
                 {% trans %}
+                  <span aria-hidden="true" class="project__apartment-application-status project__apartment-application-status--{{ application_status.status|trim }}"></span>
                   {{ reserved_or_sold }}
                 {% endtrans %}
               {% else %}
