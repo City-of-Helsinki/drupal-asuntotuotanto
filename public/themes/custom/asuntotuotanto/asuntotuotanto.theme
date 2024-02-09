@@ -244,7 +244,7 @@ function asuntotuotanto_preprocess_views_view_table(&$variables) {
           $reserved_or_sold = t('Sold');
         }
       }
-      else if ($apartment->isFree()) {
+      else if ($apartment->isFree() || !$apartment->isReserved()) {
         $reserved_or_sold = t('Free');
       }
 
