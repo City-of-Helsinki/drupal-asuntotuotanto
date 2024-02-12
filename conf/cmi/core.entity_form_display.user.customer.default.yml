@@ -26,13 +26,17 @@ content:
       size: 60
       placeholder: ''
     third_party_settings: {  }
+  language:
+    weight: 1
+    region: content
+    settings: {  }
+    third_party_settings: {  }
 hidden:
   contact: true
   field_backend_password: true
   field_backend_profile: true
   field_email_is_valid: true
   langcode: true
-  language: true
   matomo: true
   path: true
   translation: true
