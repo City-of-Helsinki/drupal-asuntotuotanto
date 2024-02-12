@@ -130,7 +130,7 @@ class AuthService extends SamlService {
     if (!$account) {
       if ($config->get('create_users')) {
         $attributes = $this->getAttributes();
-        $name = reset($attributes['displayName']);
+        $name = $this->getAccountUsername(reset($attributes['displayName']));
         $mail = (isset($attributes['mail'])) ? reset($attributes['mail']) : NULL;
 
         $account_data = [
@@ -237,6 +237,25 @@ class AuthService extends SamlService {
     $hash = Crypt::hmacBase64($string, $hash_key);
 
     return $hash;
+  }
+
+  private function getAccountUsername($user_name) {
+    $query = \Drupal::database()->select('users_field_data', 'u');
+    $query->fields('u', ['name']);
+    // OR CONDITION
+    $or_group = $query->orConditionGroup();
+    $or_group->condition('name', $query->escapeLike($user_name));
+    $or_group->condition('name', $user_name . '_[0-9]', 'REGEXP');
+    // Added OR CONDITION TO QUERY.
+    $query->condition($or_group);
+    $result = $query->execute()->fetchAll();
+    $result_count = count($result);
+
+    if ($result_count > 0) {
+      return $user_name . '_' . $result_count + 1;
+    }
+
+    return $user_name;
   }
 
 }
