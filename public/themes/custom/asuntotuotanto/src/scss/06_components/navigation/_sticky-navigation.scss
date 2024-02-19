@@ -103,6 +103,10 @@
   margin: 0;
   padding: 0;
   gap: $spacing-and-half;
+
+  .sticky-navigation__anchor-item {
+    margin-top: 0;
+  }
 }
 
 .sticky-navigation__anchor-link {

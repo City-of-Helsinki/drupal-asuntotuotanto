@@ -37,7 +37,7 @@
             <button
               aria-expanded="false"
               class="project__apartments-item-button"
-              aria-label="Open apartment {{ apartment_number }} information"
+              aria-label="{{ "Open apartment @apartment_number information"|t({'@apartment_number': apartment_number}) }}"
             >
               <span>{{ apartment_number }}</span>
               <span aria-hidden="true" class="project__apartment-application-status project__apartment-application-status--{{ application_status.status|trim }}"></span>

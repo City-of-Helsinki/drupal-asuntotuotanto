@@ -145,3 +145,9 @@ line-height: $lineheight-l; // Was 24px.
     right: $spacing-double;
   }
 }
+
+.liftup-with-image {
+  .liftup-with-image__container {
+    z-index: 1;
+  }
+}
