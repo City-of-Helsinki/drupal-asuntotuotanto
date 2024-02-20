@@ -236,21 +236,3 @@ function asu_content_update_9007(): void {
     $module_installer->install(['external_entities']);
   }
 }
-
-/**
- * Update projects and apartments url aliases.
- */
-function asu_content_update_9008(): void {
-  $node_ids = \Drupal::entityQuery('node')
-    ->condition('type', ['project', 'apartment'], 'IN')
-    ->accessCheck(TRUE)
-    ->execute();
-
-  $nodes = \Drupal::entityTypeManager()->getStorage('node')->loadMultiple($node_ids);
-
-  foreach($nodes as $node) {
-    /** @var \Drupal\node\Entity $node */
-    $node->path->pathauto = 1;
-    $node->save();
-  }
-}
