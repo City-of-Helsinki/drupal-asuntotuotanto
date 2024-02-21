@@ -35,6 +35,14 @@
         "Updated": {
           "fi": "Huoneistojen järjestys on päivitetty",
           "en": "Apartment list order has been updated."
+        },
+        "ApartmentAdded": {
+          "fi": "Lisätty huoneisto listaukseen.",
+          "en": "Added to the apartment list."
+        },
+        "ApartmentRemoved": {
+          "fi": "Poistettu huoneisto listauksesta.",
+          "en": "Removed from the apartment list."
         }
       };
 
@@ -323,7 +331,7 @@
           const information = document.createElement("p");
           information.appendChild(
             document.createTextNode(
-              Drupal.t("Apartment list has been updated.")
+              translation["ApartmentAdded"][lang]
             )
           );
           screenReaderInformationBoxElement.append(information);
@@ -520,6 +528,13 @@
         if (!apartment) return;
         const originalDropdown = findMatchingOriginalSelectElementByName(apartment)
         const removeButton = originalDropdown.closest('tr').find(':submit')[0];
+        const information = document.createElement("p");
+        information.appendChild(
+          document.createTextNode(
+            translation["ApartmentRemoved"][lang]
+          )
+        );
+        screenReaderInformationBoxElement.append(information);
 
         originalDropdown.val(0);
         originalDropdown.change()
