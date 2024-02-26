@@ -17,7 +17,7 @@ class AsuContentDrushCommands extends DrushCommands {
    * Create content aliases automatically.
    *
    * @param string $type
-   *   ID to clear data from migrate tables.
+   *   The content type.
    * @command asu_content:content-alias-create
    */
   #[CLI\Command(name: 'asu_content:ContentAliasCreate', aliases: ['ac-cac'])]
