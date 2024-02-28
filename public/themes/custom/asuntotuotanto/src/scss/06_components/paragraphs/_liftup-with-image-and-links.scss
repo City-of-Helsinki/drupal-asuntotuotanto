@@ -15,6 +15,7 @@
 
     img {
       width: 100%;
+      object-fit: cover;
     }
   }
 
@@ -143,5 +144,11 @@ line-height: $lineheight-l; // Was 24px.
   .liftup-with-image-and-links__content {
     left: auto;
     right: $spacing-double;
+  }
+}
+
+.liftup-with-image {
+  .liftup-with-image__container {
+    z-index: 1;
   }
 }

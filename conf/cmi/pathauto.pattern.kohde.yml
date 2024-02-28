@@ -1,0 +1,33 @@
+uuid: 18dcbd65-7bf9-4bb0-8447-d381dc505ce8
+langcode: fi
+status: true
+dependencies:
+  module:
+    - language
+    - node
+id: kohde
+label: Kohde
+type: 'canonical_entities:node'
+pattern: '/asuntohaku/[node:field_ownership_type:entity:name]/[node:title]'
+selection_criteria:
+  899acf34-c587-4314-ad78-21b6c6f1aa03:
+    id: 'entity_bundle:node'
+    negate: false
+    uuid: 899acf34-c587-4314-ad78-21b6c6f1aa03
+    context_mapping:
+      node: node
+    bundles:
+      project: project
+  c25c08fb-a7fe-4330-8098-6db1f1d1df43:
+    id: language
+    negate: false
+    uuid: c25c08fb-a7fe-4330-8098-6db1f1d1df43
+    context_mapping:
+      language: 'node:langcode:language'
+    langcodes:
+      fi: fi
+selection_logic: and
+weight: -10
+relationships:
+  'node:langcode:language':
+    label: Kieli

@@ -1,0 +1,5 @@
+services:
+  asu_content.commands:
+    class: Drupal\asu_content\Commands\AsuContentDrushCommands
+    tags:
+      - { name: drush.command }
