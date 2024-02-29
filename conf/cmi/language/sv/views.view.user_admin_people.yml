@@ -2,7 +2,7 @@ label: Personer
 description: 'Hitta och hantera personer som använder din webbplats.'
 display:
   default:
-    display_title: Huvud
+    display_title: Förvald
     display_options:
       title: Personer
       fields:
@@ -11,7 +11,7 @@ display:
         name:
           label: Användarnamn
         status:
-          label: Status
+          label: Tila
           settings:
             format_custom_false: Spärrad
             format_custom_true: Aktiv
@@ -38,11 +38,11 @@ display:
             offset_label: Kompensera
       exposed_form:
         options:
-          submit_button: Filter
-          reset_button_label: Reset
-          exposed_sorts_label: 'Sort by'
-          sort_asc_label: Asc
-          sort_desc_label: Desc
+          submit_button: Filtrera
+          reset_button_label: Återställ
+          exposed_sorts_label: 'Sortera efter'
+          sort_asc_label: Stigande
+          sort_desc_label: Fallande
       empty:
         area_text_custom:
           content: 'Inga personer tillgängliga.'
@@ -52,7 +52,7 @@ display:
             label: 'Namn eller e-post innehåller'
         status:
           group_info:
-            label: Status
+            label: Tila
             group_items:
               1:
                 title: Aktiv

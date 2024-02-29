@@ -2,7 +2,7 @@ label: 'Bibliotek med anpassade block'
 description: 'Hitta och hantera anpassade block.'
 display:
   default:
-    display_title: Huvud
+    display_title: Förvald
     display_options:
       title: 'Bibliotek med anpassade block'
       fields:
@@ -28,10 +28,10 @@ display:
       exposed_form:
         options:
           submit_button: Verkställ
-          reset_button_label: Reset
-          exposed_sorts_label: 'Sort by'
-          sort_asc_label: Asc
-          sort_desc_label: Desc
+          reset_button_label: Återställ
+          exposed_sorts_label: 'Sortera efter'
+          sort_asc_label: Stigande
+          sort_desc_label: Fallande
       empty:
         area_text_custom:
           content: 'Det finns inga anpassade block tillgängliga.'
@@ -46,4 +46,4 @@ display:
     display_title: Sida
     display_options:
       menu:
-        title: 'Bibliotek med anpassade block'
+        title: Block
