@@ -2,16 +2,16 @@ label: 'Vilka är nya?'
 description: 'Visar en lista över de senast användarkontona på webbplatsen.'
 display:
   default:
-    display_title: Huvud
+    display_title: Förvald
     display_options:
       title: 'Vilka är nya?'
       exposed_form:
         options:
           submit_button: Verkställ
-          reset_button_label: Reset
-          exposed_sorts_label: 'Sort by'
-          sort_asc_label: Asc
-          sort_desc_label: Desc
+          reset_button_label: Återställ
+          exposed_sorts_label: 'Sortera efter'
+          sort_asc_label: Stigande
+          sort_desc_label: Fallande
   block_1:
     display_title: 'Vilka är nya?'
     display_options:
