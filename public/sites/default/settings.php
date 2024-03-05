@@ -375,7 +375,7 @@ if ($env = getenv('APP_ENV')) {
 
   if ($env === 'dev') {
     $orbstack = str_contains(php_uname('r'), 'orbstack');
-    $config['elasticsearch_connector.cluster.asuntotuotanto']['url'] = $orbstack ? 'https://elastic.asuntotuotanto.orb.local' : 'http://elastic:9200';
+    $config['elasticsearch_connector.cluster.asuntotuotanto']['url'] = $orbstack ? 'http://elastic.asuntotuotanto.orb.local' : 'http://elastic:9200';
   }
 
   if ($env === 'test') {
