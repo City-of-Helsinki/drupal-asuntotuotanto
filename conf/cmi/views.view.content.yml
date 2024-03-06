@@ -17,7 +17,7 @@ base_field: nid
 display:
   default:
     id: default
-    display_title: Master
+    display_title: Default
     display_plugin: default
     position: 0
     display_options:
@@ -250,7 +250,7 @@ display:
           hide_alter_empty: true
           type: timestamp
           settings:
-            date_format: short
+            date_format: long
             custom_date_format: ''
             timezone: ''
         operations:
@@ -504,8 +504,9 @@ display:
             remember_roles:
               authenticated: authenticated
               anonymous: '0'
-              administrator: '0'
-            reduce: false
+              admin: '0'
+              content_producer: '0'
+            reduce: true
           is_grouped: false
           group_info:
             label: ''

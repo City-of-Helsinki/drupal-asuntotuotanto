@@ -27,7 +27,7 @@ class DeleteTestUsers {
    * Execute user deletion.
    */
   public function doDeleteTestUsers() {
-    $user_ids = \Drupal::entityQuery('user')->execute();
+    $user_ids = \Drupal::entityQuery('user')->accessCheck(TRUE)->execute();
     $users = User::loadMultiple($user_ids);
 
     foreach ($users as $user) {

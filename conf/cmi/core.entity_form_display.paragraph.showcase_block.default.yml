@@ -8,7 +8,7 @@ dependencies:
     - field.field.paragraph.showcase_block.field_title
     - paragraphs.paragraphs_type.showcase_block
   module:
-    - hdbt_admin_editorial
+    - hdbt_admin_tools
     - paragraphs
 id: paragraph.showcase_block.default
 targetEntityType: paragraph

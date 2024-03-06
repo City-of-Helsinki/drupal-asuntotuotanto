@@ -410,6 +410,7 @@
   <div class="project__area-overview-wrapper wrapper wrapper--mw-1264" id="project_location">
     <div class="project__area-overview">
       <h2 class="project__area-overview-label">
+        {% include "@hdbt/misc/icon.twig" with {icon: 'location', label: ''} %}
         {% trans %}
           Area overview
         {% endtrans %}
@@ -426,7 +427,6 @@
       {% endif %}
       {% if project_area_description|render %}
         <div class="project__project-area-description">
-          {% include "@hdbt/misc/icon.twig" with {icon: 'location', label: ''} %}
           <p>{{ project_area_description|raw }}</p>
         </div>
       {% endif %}

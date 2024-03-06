@@ -7,9 +7,11 @@ dependencies:
     - field.field.node.page.field_content
     - field.field.node.page.field_has_hero
     - field.field.node.page.field_hero
+    - field.field.node.page.field_lead_in
     - field.field.node.page.field_liftup_image
     - field.field.node.page.field_lower_content
     - field.field.node.page.field_metatags
+    - field.field.node.page.field_sidebar_content
     - node.type.page
   module:
     - user
@@ -33,8 +35,12 @@ hidden:
   field_content: true
   field_has_hero: true
   field_hero: true
+  field_lead_in: true
   field_lower_content: true
   field_metatags: true
+  field_sidebar_content: true
   langcode: true
   links: true
+  published_at: true
   search_api_excerpt: true
+  toc_enabled: true

@@ -8,10 +8,7 @@ id: paragraph.field_email
 field_name: field_email
 entity_type: paragraph
 type: email
-settings:
-  max_length: 255
-  case_sensitive: false
-  is_ascii: false
+settings: {  }
 module: core
 locked: false
 cardinality: 1

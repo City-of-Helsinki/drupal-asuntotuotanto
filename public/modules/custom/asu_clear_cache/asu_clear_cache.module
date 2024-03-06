@@ -1,11 +1,13 @@
 <?php
 
-use Drupal\node\Entity\Node;
-
 /**
  * @file
- * Contains asu_clear_cache.module.
+ * Contains hooks for the asu_clear_cache module.
  */
+
+declare(strict_types = 1);
+
+use Drupal\node\Entity\Node;
 
 /**
  * Implements hook_cron().

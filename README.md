@@ -7,6 +7,7 @@ A City of Helsinki - Asuntotuotanto Drupal 9 website.
 Env | Branch | Drush alias | URL
 --- | ------ | ----------- | ---
 development | * | - | https://asuntotuotanto.docker.so/
+testing | develop | - | https://nginx-asuntotuotanto-test.agw.arodevtest.hel.fi
 production | main | @main | TBD
 
 ## Requirements

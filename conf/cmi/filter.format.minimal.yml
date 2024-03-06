@@ -1,3 +1,4 @@
+uuid: 79bf3057-f53b-40b7-91a5-b2e202dc11be
 langcode: en
 status: true
 dependencies:
@@ -5,6 +6,9 @@ dependencies:
     - editor
     - helfi_api_base
     - linkit
+    - slick
+_core:
+  default_config_hash: 6AGo1h4zFCH6SC4pUy99nHKNsUsd7ZNLffnFw9RiSBA
 name: Minimal
 format: minimal
 weight: 0
@@ -80,3 +84,11 @@ filters:
     status: true
     weight: -10
     settings: {  }
+  slick_filter:
+    id: slick_filter
+    provider: slick
+    status: false
+    weight: 4
+    settings:
+      optionset: default
+      media_switch: ''

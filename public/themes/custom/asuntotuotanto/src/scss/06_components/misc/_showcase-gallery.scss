@@ -15,6 +15,14 @@
     @media screen and (min-width: $breakpoint-l) {
       max-height: 550px;
     }
+
+    &.blazy {
+      display: block;
+      margin: 0;
+      overflow: hidden;
+      padding: 0;
+      position: relative;
+    }
   }
 
   .showcase-gallery__label {

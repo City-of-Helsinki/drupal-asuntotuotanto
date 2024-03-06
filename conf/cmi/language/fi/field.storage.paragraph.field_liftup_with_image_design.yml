@@ -8,3 +8,7 @@ settings:
       label: 'Kuva oikealla, toissijainen väri'
     -
       label: 'Kuva vasemmalla, toissijainen väri'
+    -
+      label: 'Taustakuva, teksti oikealla'
+    -
+      label: 'Taustakuva, teksti vasemmalla'

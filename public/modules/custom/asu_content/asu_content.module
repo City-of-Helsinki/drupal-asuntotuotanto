@@ -2,8 +2,10 @@
 
 /**
  * @file
- * Contains asu_content.module.
+ * Contains hooks for content alterations.
  */
+
+declare(strict_types=1);
 
 use Drupal\asu_content\Entity\Apartment;
 use Drupal\asu_content\Entity\Project;
@@ -12,10 +14,9 @@ use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Entity\EntityFormInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Field\FieldFilteredMarkup;
-use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\helfi_platform_config\DTO\ParagraphTypeCollection;
 use Drupal\node\Entity\Node;
 use Drupal\node\NodeForm;
-use Drupal\search_api\Entity\Index;
 
 /**
  * Implements hook_entity_bundle_info_alter().
@@ -30,29 +31,12 @@ function asu_content_entity_bundle_info_alter(array &$bundles): void {
 }
 
 /**
- * Implements hook_help().
- */
-function asu_content_help($route_name, RouteMatchInterface $route_match) {
-  switch ($route_name) {
-    // Main module help for the asu_content module.
-    case 'help.page.asu_content':
-      $output = '';
-      $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('ASU - Content provides functionalities for creating, providing and altering content.') . '</p>';
-      return $output;
-
-    default:
-  }
-}
-
-/**
  * Implements hook_form_BASE_FORM_ID_alter().
  */
 function asu_content_form_node_form_alter(&$form, $form_state) {
   asu_content_hide_node_title($form);
   asu_content_show_computed_fields($form, $form_state);
   asu_content_project_add_archived_handling($form, $form_state);
-
 }
 
 /**
@@ -115,7 +99,9 @@ function asu_content_show_computed_fields(&$form, $form_state) {
 
       if ($price && $price != 0 && $living_area && $living_area != 0) {
         $value = number_format((float) $price / $living_area, 2, '.', '');
-        $form['field_debt_free_sales_price']['widget'][0]['value']['#description'] = FieldFilteredMarkup::create($value . ' €/m²');
+        $form['field_debt_free_sales_price']['widget'][0]['value']['#description'] = FieldFilteredMarkup::create(
+          $value.' €/m²'
+        );
       }
     }
   }
@@ -130,7 +116,6 @@ function asu_content_entity_presave(EntityInterface $entity) {
     method_exists($entity, 'getType')
   ) {
     if ($entity->getType() == 'apartment') {
-
       // Apartment title is generated using project information.
       if (!$entity->isNew()) {
         $title = $entity->getTitle() ?? t('Apartment');
@@ -156,17 +141,17 @@ function asu_content_entity_presave(EntityInterface $entity) {
           $entity->set('field_publish_on_etuovi', 0);
 
           \Drupal::messenger()->addMessage(
-            t("Apartment @title was sold and is now unpublished.",
-              ['@title' => $entity->title->value]
+            t(
+              "Apartment @title was sold and is now unpublished.",
+              ['@title' => $entity->getTitle()]
             )
           );
         }
       }
     }
 
+    // If project address changes, must apartment address change as well.
     if ($entity->getType() == 'project') {
-
-      // If project address changes, must apartment address change as well.
       $archivedChanged = FALSE;
       $addressChanged = FALSE;
       $housingCompanyChanged = FALSE;
@@ -194,7 +179,11 @@ function asu_content_entity_presave(EntityInterface $entity) {
       ) {
         $entity->set('field_archived', FALSE);
         $entity->setPublished();
-        \Drupal::messenger()->addWarning(t('Project was not unpublished when it was set as archived. Resetted published and archived statuses.'));
+        \Drupal::messenger()->addWarning(
+          t(
+            'Project was not unpublished when it was set as archived. Resetted published and archived statuses.'
+          )
+        );
       }
 
       // All apartments are not yet set as sold, cannot set project as archived.
@@ -205,7 +194,9 @@ function asu_content_entity_presave(EntityInterface $entity) {
       ) {
         $entity->set('field_archived', FALSE);
         $entity->setPublished(TRUE);
-        \Drupal::messenger()->addWarning(t('Project cannot be archived since all the apartments are not sold'));
+        \Drupal::messenger()->addWarning(
+          t('Project cannot be archived since all the apartments are not sold')
+        );
       }
 
       // Success message.
@@ -220,7 +211,6 @@ function asu_content_entity_presave(EntityInterface $entity) {
       $apartment_count = count($entity->getApartmentEntities());
       $entity->set('field_apartment_count', $apartment_count);
     }
-
   }
 }
 
@@ -243,7 +233,7 @@ function asu_content_entity_update($entity) {
 /**
  * Implements hook_node_insert().
  *
- * On empty project, precreate placeholder apartment.
+ * On empty project, pre-create placeholder apartment.
  */
 function asu_content_node_insert(Node $node) {
   if (
@@ -251,7 +241,6 @@ function asu_content_node_insert(Node $node) {
     $node->getType() == 'project' &&
     $node->hasField('field_apartments')
   ) {
-
     // If we are importing from csv, stop the process.
     if (
       $node->hasField('field_import_apartments') &&
@@ -281,7 +270,6 @@ function asu_content_node_insert(Node $node) {
   ) {
     asuQueueWorker($node);
   }
-
 }
 
 /**
@@ -300,7 +288,7 @@ function asu_content_cron() {
     ->condition('field_state_of_sale', 'for_sale', '<>')
     ->condition('field_application_start_time', $now, '<')
     ->condition('field_application_end_time', $now, '>');
-  $projectsToUpdateForSale = $query->execute();
+  $projectsToUpdateForSale = $query->accessCheck(TRUE)->execute();
 
   if (!empty($projectsToUpdateForSale)) {
     try {
@@ -310,7 +298,9 @@ function asu_content_cron() {
       }
     }
     catch (\Exception $e) {
-      \Drupal::logger('asu_cron')->emergency('Unable to update projects to "For sale" state: ' . $e->getMessage());
+      \Drupal::logger('asu_cron')->emergency(
+        'Unable to update projects to "For sale" state: '.$e->getMessage()
+      );
     }
     $projects = NULL;
   }
@@ -321,7 +311,7 @@ function asu_content_cron() {
     ->condition('status', 1)
     ->condition('field_state_of_sale', 'for_sale')
     ->condition('field_application_end_time', $now, '<');
-  $projectsToUpdateReserved = $query2->execute();
+  $projectsToUpdateReserved = $query2->accessCheck(TRUE)->execute();
 
   if ($projectsToUpdateReserved) {
     try {
@@ -331,13 +321,15 @@ function asu_content_cron() {
       }
     }
     catch (\Exception $e) {
-      \Drupal::logger('asu_cron')->emergency('Unable to update projects to "Reserved" state: ' . $e->getMessage());
+      \Drupal::logger('asu_cron')->emergency(
+        'Unable to update projects to "Reserved" state: '.$e->getMessage()
+      );
     }
   }
 }
 
 /**
- *
+ * Queue worker.
  */
 function asuQueueWorker($entity) {
   if (
@@ -360,7 +352,7 @@ function asuQueueWorker($entity) {
 }
 
 /**
- *
+ * Set queue worker.
  */
 function asuSetQueueWorker($project) {
   if ($project->getOwnershipType()) {
@@ -378,17 +370,67 @@ function asuSetQueueWorker($project) {
 }
 
 /**
- * Covert datetime.
+ * Convert datetime.
  */
 function asu_content_convert_datetime($value): string {
-    /** @var Drupal\Core\Datetime\DateFormatterInterface $date_formatter */
-    $date_formatter = \Drupal::service('date.formatter');
-    $date = $date_formatter->format(
-      strtotime($value . ' UTC'),
-      'custom',
-      'Y-m-d\TH:i:sP',
-      'Europe/Helsinki',
-    );
+  /** @var Drupal\Core\Datetime\DateFormatterInterface $date_formatter */
+  $date_formatter = \Drupal::service('date.formatter');
+  $date = $date_formatter->format(
+    strtotime($value.' UTC'),
+    'custom',
+    'Y-m-d\TH:i:sP',
+    'Europe/Helsinki',
+  );
 
-    return $date;
+  return $date;
+}
+
+/**
+ * Implements hook_helfi_paragraph_types().
+ */
+function asu_content_helfi_paragraph_types(): array {
+  $entities = [
+    'node' => [
+      'page' => [
+        'field_content' => [
+          'cta_block',
+          'showcase_block',
+          'steps_list',
+        ],
+        'field_lower_content' => [
+          'cta_block',
+          'showcase_block',
+          'steps_list',
+        ],
+      ],
+      'landing_page' => [
+        'field_content' => [
+          'contact_information_with_map',
+          'latest_news',
+          'liftup_with_image_and_links',
+          'showcase_block',
+          'stacked_contact_blocks',
+          'stacked_text_blocks_with_image',
+        ],
+      ],
+    ],
+  ];
+
+  $enabled = [];
+  foreach ($entities as $entityTypeId => $bundles) {
+    foreach ($bundles as $bundle => $fields) {
+      foreach ($fields as $field => $paragraphTypes) {
+        foreach ($paragraphTypes as $paragraphType) {
+          $enabled[] = new ParagraphTypeCollection(
+            $entityTypeId,
+            $bundle,
+            $field,
+            $paragraphType
+          );
+        }
+      }
+    }
+  }
+
+  return $enabled;
 }

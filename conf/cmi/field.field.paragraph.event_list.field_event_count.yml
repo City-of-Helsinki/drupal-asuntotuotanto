@@ -1,0 +1,23 @@
+uuid: 0616e8a2-0323-427a-8c03-bb2555d632d1
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_event_count
+    - paragraphs.paragraphs_type.event_list
+  module:
+    - options
+id: paragraph.event_list.field_event_count
+field_name: field_event_count
+entity_type: paragraph
+bundle: event_list
+label: 'Event count'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 3
+default_value_callback: ''
+settings: {  }
+field_type: list_integer

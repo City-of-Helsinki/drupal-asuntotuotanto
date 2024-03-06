@@ -2,25 +2,29 @@
 
 /**
  * @file
- * Contains asu_api.module.
+ * Contains hooks for ASU API.
  */
 
-use Drupal\asu_api\Api\BackendApi\Request\GetApartmentStatusRequest;
-use Symfony\Component\HttpFoundation\Response;
+declare(strict_types = 1);
+
 use Drupal\asu_api\Api\BackendApi\Request\GetApartmentRevaluationsRequest;
+use Drupal\asu_api\Api\BackendApi\Request\GetApartmentStatusRequest;
 use Drupal\node\Entity\Node;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Implements hook_cron().
- *
- * Update apartments adjusted_right_of_occupancy_payment and
- * alteration_work_total values.
  */
 function asu_api_cron() {
+  // Update apartments adjusted_right_of_occupancy_payment and
+  // alteration_work_total values.
   getApartmentRevaluationCron();
   getApartmentStatusRequestCron();
 }
 
+/**
+ * Get apartment revaluation cron.
+ */
 function getApartmentRevaluationCron() {
   $apartment_revaluation = NULL;
 
@@ -36,26 +40,24 @@ function getApartmentRevaluationCron() {
       return;
     }
 
-    if ($apartment_revaluation) {
-      foreach ($apartment_revaluation as $revaluation) {
-        // Get apartment based uuid.
-        $query = \Drupal::entityTypeManager()->getStorage('node')->getQuery();
-        $query->condition('type', 'apartment')
-          ->condition('uuid', $revaluation['apartment_uuid'], '=');
-        $apartment = $query->execute();
+    foreach ($apartment_revaluation as $revaluation) {
+      // Get apartment based uuid.
+      $query = \Drupal::entityTypeManager()->getStorage('node')->getQuery();
+      $query->condition('type', 'apartment')
+        ->condition('uuid', $revaluation['apartment_uuid'], '=');
+      $apartment = $query->accessCheck(TRUE)->execute();
 
-        if ($apartment) {
-          // Load node object.
-          $node = Node::load(reset($apartment));
-          // Set adjusted_right_of_occupancy_payment value.
-          $node->set('field_index_adjusted_right_of_oc', $revaluation['right_of_occupancy_payment_adjustment']);
-          // Set alteration_work_total value.
-          $node->set('field_alteration_work', $revaluation['alteration_work_total']);
-          // Set field_release_payment value.
-          $node->set('field_release_payment', $revaluation['release_payment']);
-          // Save node.
-          $node->save();
-        }
+      if ($apartment) {
+        // Load node object.
+        $node = Node::load(reset($apartment));
+        // Set adjusted_right_of_occupancy_payment value.
+        $node->set('field_index_adjusted_right_of_oc', $revaluation['right_of_occupancy_payment_adjustment']);
+        // Set alteration_work_total value.
+        $node->set('field_alteration_work', $revaluation['alteration_work_total']);
+        // Set field_release_payment value.
+        $node->set('field_release_payment', $revaluation['release_payment']);
+        // Save node.
+        $node->save();
       }
     }
   }
@@ -94,7 +96,7 @@ function getApartmentStatusRequestCron() {
   $query->condition('status', 1)
     ->condition('type', 'apartment')
     ->condition('uuid', $apartment_uuids, 'IN');
-  $apartments = $query->execute();
+  $apartments = $query->accessCheck(TRUE)->execute();
 
   foreach ($apartments as $apartment) {
     // Load node object by nid.
