@@ -1,0 +1,29 @@
+<?php
+
+/**
+ * @file
+ * Contains installation tasks for asu_editorial module.
+ */
+
+declare(strict_types = 1);
+
+/**
+ * (Re)install filter formats and editor formats.
+ */
+function asu_editorial_update_9001(): void {
+  Drupal::configFactory()
+    ->getEditable('editor.editor.minimal')
+    ->delete();
+
+  // Remove filter token from full_html format.
+  $full_format = Drupal::configFactory()
+    ->getEditable('filter.format.full_html');
+  $raw_data = $full_format->getRawData();
+  if (($key = array_search('filter_token', $raw_data['dependencies']['module'])) !== false) {
+    unset($raw_data['dependencies']['module'][$key]);
+  }
+  if (array_key_exists('filter_token', $raw_data['filters'])) {
+    unset($raw_data['filters']['filter_token']);
+  }
+  $full_format->setData($raw_data);
+}

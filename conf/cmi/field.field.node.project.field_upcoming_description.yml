@@ -1,5 +1,5 @@
 uuid: 2b148084-bd27-46c9-a8dd-c2f2932e88e2
-langcode: fi
+langcode: en
 status: true
 dependencies:
   config:
@@ -9,7 +9,7 @@ id: node.project.field_upcoming_description
 field_name: field_upcoming_description
 entity_type: node
 bundle: project
-label: 'Tulevan kohteen lyhyt kuvaus'
+label: 'Description of upcoming project'
 description: ''
 required: false
 translatable: false

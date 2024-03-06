@@ -61,6 +61,7 @@ module:
   entity: 0
   entity_reference_revisions: 0
   entity_usage: 0
+  external_entities: 0
   field: 0
   field_group: 0
   field_ui: 0
@@ -108,7 +109,6 @@ module:
   mailsystem: 0
   media: 0
   media_entity_file_replace: 0
-  media_entity_soundcloud: 0
   media_library: 0
   menu_block: 0
   menu_block_current_language: 0

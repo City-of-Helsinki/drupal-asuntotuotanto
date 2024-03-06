@@ -1,5 +1,5 @@
 uuid: 203efacf-c0ec-44d7-8cb7-bca5841473ac
-langcode: fi
+langcode: en
 status: true
 dependencies:
   config:
@@ -75,6 +75,11 @@ content:
   publish_on:
     type: datetime_timestamp_no_default
     weight: 7
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  simple_sitemap:
+    weight: 10
     region: content
     settings: {  }
     third_party_settings: {  }

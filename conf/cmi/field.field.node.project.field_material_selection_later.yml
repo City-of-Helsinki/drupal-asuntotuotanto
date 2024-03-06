@@ -1,5 +1,5 @@
 uuid: d0efab61-678a-4b82-bbc7-078c2850c308
-langcode: fi
+langcode: en
 status: true
 dependencies:
   config:
@@ -9,7 +9,7 @@ id: node.project.field_material_selection_later
 field_name: field_material_selection_later
 entity_type: node
 bundle: project
-label: 'Materiaalivalinnat täsmennetään myöhemmin'
+label: 'Material selections will be specified later'
 description: ''
 required: false
 translatable: false

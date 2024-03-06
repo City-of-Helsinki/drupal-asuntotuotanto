@@ -1,5 +1,5 @@
 uuid: c67031a3-da41-4d5b-817e-d9ad0b3e756e
-langcode: fi
+langcode: en
 status: true
 dependencies:
   config:
@@ -9,7 +9,7 @@ id: node.project.field_customer_document_handover
 field_name: field_customer_document_handover
 entity_type: node
 bundle: project
-label: 'Sopimuksenteossa asiakkaalle luovutettavat avat asiakirjat'
+label: 'Documents to be handed over to the customer when concluding the contract'
 description: ''
 required: false
 translatable: false

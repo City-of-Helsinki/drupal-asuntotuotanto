@@ -1,5 +1,5 @@
 uuid: 8e981245-c97b-40a2-bd68-eb4867259f80
-langcode: fi
+langcode: en
 status: true
 dependencies:
   config:
@@ -11,7 +11,7 @@ id: node.project.field_estimated_handover_start
 field_name: field_estimated_handover_start
 entity_type: node
 bundle: project
-label: 'Tilojen arvioitu luovutusajankohta alku'
+label: 'Estimated handover start date'
 description: ''
 required: false
 translatable: false

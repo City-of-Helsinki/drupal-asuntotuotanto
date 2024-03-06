@@ -1,5 +1,5 @@
 uuid: 3dce0497-c562-48c9-86f0-e91f8f284bae
-langcode: fi
+langcode: en
 status: true
 dependencies:
   config:
@@ -9,7 +9,7 @@ id: node.project.field_collateral_amount_fixed
 field_name: field_collateral_amount_fixed
 entity_type: node
 bundle: project
-label: 'Vakuus on 2x käyttövastike'
+label: 'Fixed collateral amount'
 description: ''
 required: false
 translatable: false

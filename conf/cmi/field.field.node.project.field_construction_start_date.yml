@@ -1,5 +1,5 @@
 uuid: 205e4896-784f-4c04-84d4-40452430ccb9
-langcode: fi
+langcode: en
 status: true
 dependencies:
   config:
@@ -11,7 +11,7 @@ id: node.project.field_construction_start_date
 field_name: field_construction_start_date
 entity_type: node
 bundle: project
-label: 'Rakennusaika alku'
+label: 'Construction start date'
 description: ''
 required: false
 translatable: false

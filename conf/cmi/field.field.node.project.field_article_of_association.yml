@@ -1,5 +1,5 @@
 uuid: f8d509ea-5861-44dd-b8e1-43f9c42b7da4
-langcode: fi
+langcode: en
 status: true
 dependencies:
   config:
@@ -9,7 +9,7 @@ id: node.project.field_article_of_association
 field_name: field_article_of_association
 entity_type: node
 bundle: project
-label: 'Yhtiöjärjestyksen pykälä'
+label: 'Article of association'
 description: ''
 required: false
 translatable: false

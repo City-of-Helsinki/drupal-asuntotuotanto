@@ -1,5 +1,5 @@
 uuid: 11a27621-cf52-4387-b053-bf7bf32cd985
-langcode: fi
+langcode: en
 status: true
 dependencies:
   module:
@@ -8,8 +8,8 @@ third_party_settings:
   paragraphs_library:
     allow_library_conversion: true
 id: text_block_with_link
-label: 'Tekstilohko linkillä'
+label: 'Text block with link'
 icon_uuid: null
 icon_default: null
-description: 'Lohko otsikkolla, kuvaustekstillä sekä linkillä.'
+description: 'Text block with title, description and link.'
 behavior_plugins: {  }
