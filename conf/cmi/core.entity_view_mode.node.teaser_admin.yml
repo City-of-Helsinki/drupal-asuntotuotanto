@@ -6,5 +6,6 @@ dependencies:
     - node
 id: node.teaser_admin
 label: 'Teaser - Admin'
+description: ''
 targetEntityType: node
 cache: true

@@ -2,5 +2,5 @@ name: 'ASU - Migration'
 type: module
 description: 'ASU - Migration provides everything needed for migration.'
 core: 8.x
-core_version_requirement: ^8 || ^9
+core_version_requirement: ^8 || ^9 || ^10
 package: 'ASU'

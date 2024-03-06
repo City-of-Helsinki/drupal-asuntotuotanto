@@ -2,5 +2,5 @@ name: 'ASU - REST'
 type: module
 description: 'ASU - REST provides rest apis for external systems to use'
 core: 8.x
-core_version_requirement: ^8 || ^9
+core_version_requirement: ^8 || ^9 || ^10
 package: 'ASU'

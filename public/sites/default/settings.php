@@ -362,31 +362,20 @@ if ($env = getenv('APP_ENV')) {
   $settings['ASU_ELASTICSEARCH_PASSWORD'] = getenv('ASU_ELASTICSEARCH_PASSWORD');
 
   // Email settings.
-  $config['mailsystem.settings']['defaults']['sender'] = 'swiftmailer';
-  $config['mailsystem.settings']['defaults']['formatter'] = 'swiftmailer';
-  $config['mailsystem.settings']['modules']['swiftmailer']['none']['formatter'] = 'swiftmailer';
-  $config['mailsystem.settings']['modules']['swiftmailer']['none']['sender'] = 'swiftmailer';
+  $config['mailsystem.settings']['defaults']['sender'] = 'symfony_mailer_lite';
+  $config['mailsystem.settings']['defaults']['formatter'] = 'symfony_mailer_lite';
+  $config['mailsystem.settings']['modules']['symfony_mailer_lite']['none']['formatter'] = 'symfony_mailer_lite';
+  $config['mailsystem.settings']['modules']['symfony_mailer_lite']['none']['sender'] = 'symfony_mailer_lite';
 
-  $config['swiftmailer.transport']['transport'] = 'smtp';
-  $config['swiftmailer.transport']['smtp_host'] = getenv('ASU_MAILSERVER_ADDRESS');
-  $config['swiftmailer.transport']['smtp_port'] = 25;
-  $config['swiftmailer.transport']['smtp_encryption'] = '0';
-  $config['swiftmailer.transport']['smtp_credential_provider'] = 'swiftmailer';
+  $config['symfony_mailer_lite.settings']['default_transport'] = 'smtp';
 
   $settings['ASU_DJANGO_BACKEND_URL'] = getenv('ASU_DJANGO_BACKEND_URL');
 
   $config['elasticsearch_connector.cluster.asuntotuotanto']['url'] = getenv('ASU_ELASTICSEARCH_ADDRESS') ?? 'http://localhost:9200';
 
   if ($env === 'dev') {
-    // Local development environment.
-    $config['mailsystem.settings']['defaults']['sender'] = 'swiftmailer';
-    $config['mailsystem.settings']['defaults']['formatter'] = 'swiftmailer';
-    $config['swiftmailer.transport']['transport'] = 'smtp';
-    $config['swiftmailer.transport']['smtp_host'] = 'mailhog';
-    $config['swiftmailer.transport']['smtp_port'] = '1025';
-    $config['swiftmailer.transport']['smtp_encryption'] = '0';
-
-    $config['elasticsearch_connector.cluster.asuntotuotanto']['url'] = 'http://elastic:9200';
+    $orbstack = str_contains(php_uname('r'), 'orbstack');
+    $config['elasticsearch_connector.cluster.asuntotuotanto']['url'] = $orbstack ? 'elastic.asuntotuotanto.orb.local' : 'http://elastic:9200';
   }
 
   if ($env === 'test') {

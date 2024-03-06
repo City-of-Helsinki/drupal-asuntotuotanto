@@ -2,6 +2,4 @@ _core:
   default_config_hash: o1wWkhSOJotsHFgvzESaUOiTWhLak62cKBDyEtewAIM
 role_to_select:
   customer: customer
-  admin: '0'
-  content_producer: '0'
 registration_mode: user

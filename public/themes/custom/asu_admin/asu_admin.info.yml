@@ -2,7 +2,7 @@ name: ASU Admin
 type: theme
 description: 'Admin theme for Asuntotuotanto'
 package: Other
-core_version_requirement: ^8 || ^9
+core_version_requirement: ^10
 base theme: hdbt_admin
 
 # Regions

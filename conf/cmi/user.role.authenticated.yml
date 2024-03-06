@@ -10,13 +10,13 @@ dependencies:
     - asu_application
     - eu_cookie_compliance
     - external_entities
+    - file
     - helfi_api_base
     - media
     - paragraphs
     - paragraphs_type_permissions
     - rest
     - system
-    - toolbar
 _core:
   default_config_hash: 83Nuup-6oYkkdAsvg3nrR2pBOgtTXEV1JrzpCCLkYLM
 id: authenticated
@@ -25,8 +25,8 @@ weight: -9
 is_admin: false
 permissions:
   - 'access content'
-  - 'access toolbar'
   - 'create application'
+  - 'delete own files'
   - 'display eu cookie compliance popup'
   - 'restful get asu_initialize'
   - 'restful post asu_elasticsearch'

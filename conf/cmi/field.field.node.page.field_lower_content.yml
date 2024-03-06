@@ -25,7 +25,7 @@ dependencies:
   module:
     - entity_reference_revisions
 _core:
-  default_config_hash: eJkL-fx9TKoBSVDCmBhhEWZQmP1GWC5h_UeHbW4dQng
+  default_config_hash: AejXN443GE3b159k_6fsqDyZ_BHs68SU9wBMY24Ueog
 id: node.page.field_lower_content
 field_name: field_lower_content
 entity_type: node
@@ -40,66 +40,66 @@ settings:
   handler: 'default:paragraph'
   handler_settings:
     target_bundles:
-      text: text
-      columns: columns
-      image: image
-      accordion: accordion
-      list_of_links: list_of_links
-      contact_card_listing: contact_card_listing
-      content_cards: content_cards
-      banner: banner
-      event_list: event_list
-      from_library: from_library
-      chart: chart
-      phasing: phasing
-      remote_video: remote_video
-      map: map
       cta_block: cta_block
       showcase_block: showcase_block
       steps_list: steps_list
+      list_of_links: list_of_links
+      content_cards: content_cards
+      text: text
+      accordion: accordion
+      banner: banner
+      image: image
+      columns: columns
+      phasing: phasing
+      from_library: from_library
+      map: map
+      remote_video: remote_video
+      chart: chart
+      event_list: event_list
+      contact_card_listing: contact_card_listing
     negate: 0
     target_bundles_drag_drop:
       accordion:
-        weight: 0
+        weight: 3
         enabled: true
       banner:
-        weight: 0
+        weight: 4
         enabled: true
       chart:
-        weight: 0
+        weight: 11
         enabled: true
       columns:
-        weight: 0
+        weight: 6
         enabled: true
       contact_card_listing:
-        weight: 0
+        weight: 14
         enabled: true
       content_cards:
-        weight: 0
+        weight: 1
         enabled: true
       cta_block:
         weight: 0
         enabled: true
       event_list:
-        weight: 0
+        weight: 13
         enabled: true
       from_library:
-        weight: 0
+        weight: 8
         enabled: true
       image:
-        weight: 0
+        weight: 5
         enabled: true
       list_of_links:
         weight: 0
         enabled: true
       map:
-        weight: 0
+        weight: 9
         enabled: true
       phasing:
-        weight: 0
+        weight: 7
         enabled: true
       remote_video:
-        weight: 0
+        weight: 10
         enabled: true
       showcase_block:
         weight: 0
@@ -108,6 +108,6 @@ settings:
         weight: 0
         enabled: true
       text:
-        weight: 0
+        weight: 2
         enabled: true
 field_type: entity_reference_revisions
