@@ -1,7 +1,7 @@
 label: 'Kustomoitujen lohkojen kirjasto'
 display:
   default:
-    display_title: Isäntä
+    display_title: Oletus
     display_options:
       title: 'Kustomoitujen lohkojen kirjasto'
       fields:
@@ -27,10 +27,10 @@ display:
       exposed_form:
         options:
           submit_button: Käytä
-          reset_button_label: Reset
-          exposed_sorts_label: 'Sort by'
-          sort_asc_label: Asc
-          sort_desc_label: Desc
+          reset_button_label: Palauta
+          exposed_sorts_label: Lajittele
+          sort_asc_label: Nousevasti
+          sort_desc_label: Laskevasti
       filters:
         info:
           expose:
@@ -42,4 +42,4 @@ display:
     display_title: Sivu
     display_options:
       menu:
-        title: 'Kustomoitujen lohkojen kirjasto'
+        title: Lohkot

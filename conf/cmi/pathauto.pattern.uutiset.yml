@@ -1,0 +1,33 @@
+uuid: 791883b5-e46b-4c0a-bed5-a15d34af2e31
+langcode: fi
+status: true
+dependencies:
+  module:
+    - language
+    - node
+id: uutiset
+label: Uutiset
+type: 'canonical_entities:node'
+pattern: '/uutiset/[node:title]'
+selection_criteria:
+  28e290c1-ae09-44e3-acd4-40e5d8e9fb1d:
+    id: 'entity_bundle:node'
+    negate: false
+    uuid: 28e290c1-ae09-44e3-acd4-40e5d8e9fb1d
+    context_mapping:
+      node: node
+    bundles:
+      news: news
+  73fe95aa-ebc7-48f7-afdf-d72d7a956f86:
+    id: language
+    negate: false
+    uuid: 73fe95aa-ebc7-48f7-afdf-d72d7a956f86
+    context_mapping:
+      language: 'node:langcode:language'
+    langcodes:
+      fi: fi
+selection_logic: and
+weight: -10
+relationships:
+  'node:langcode:language':
+    label: Kieli

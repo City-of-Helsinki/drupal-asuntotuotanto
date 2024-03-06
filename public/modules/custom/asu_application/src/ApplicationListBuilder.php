@@ -30,7 +30,7 @@ class ApplicationListBuilder extends EntityListBuilder {
     $row['id'] = $entity->toLink($entity->id());
     $row['content_entity_label'] = $entity->getEntityType()->getLabel()->render();
     $row['content_entity_id'] = $entity->getEntityType()->id();
-    $row['bundle_label'] = $entity->bundle->entity->label();
+    $row['bundle_label'] = $entity->get('bundle')->entity->label();
     $row['bundle_id'] = $entity->bundle();
 
     return $row + parent::buildRow($entity);

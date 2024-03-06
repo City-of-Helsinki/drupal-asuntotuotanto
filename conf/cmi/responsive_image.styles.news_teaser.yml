@@ -16,69 +16,69 @@ dependencies:
     - image.style.3_2_xxs
     - image.style.3_2_xxs_2x
   theme:
-    - hdbt
+    - asuntotuotanto
 id: news_teaser
 label: 'News teaser'
 image_style_mappings:
   -
     image_mapping_type: image_style
     image_mapping: 1_1_xl
-    breakpoint_id: hdbt.xl
+    breakpoint_id: asuntotuotanto.xl
     multiplier: 1x
   -
     image_mapping_type: image_style
     image_mapping: 1_1_xl_2x
-    breakpoint_id: hdbt.xl
+    breakpoint_id: asuntotuotanto.xl
     multiplier: 2x
   -
     image_mapping_type: image_style
     image_mapping: 1_1_l
-    breakpoint_id: hdbt.l
+    breakpoint_id: asuntotuotanto.l
     multiplier: 1x
   -
     image_mapping_type: image_style
     image_mapping: 1_1_l_2x
-    breakpoint_id: hdbt.l
+    breakpoint_id: asuntotuotanto.l
     multiplier: 2x
   -
     image_mapping_type: image_style
     image_mapping: 3_2_m
-    breakpoint_id: hdbt.m
+    breakpoint_id: asuntotuotanto.m
     multiplier: 1x
   -
     image_mapping_type: image_style
     image_mapping: 3_2_m_2x
-    breakpoint_id: hdbt.m
+    breakpoint_id: asuntotuotanto.m
     multiplier: 2x
   -
     image_mapping_type: image_style
     image_mapping: 3_2_s
-    breakpoint_id: hdbt.s
+    breakpoint_id: asuntotuotanto.s
     multiplier: 1x
   -
     image_mapping_type: image_style
     image_mapping: 3_2_s_2x
-    breakpoint_id: hdbt.s
+    breakpoint_id: asuntotuotanto.s
     multiplier: 2x
   -
     image_mapping_type: image_style
     image_mapping: 3_2_xs
-    breakpoint_id: hdbt.xs
+    breakpoint_id: asuntotuotanto.xs
+    multiplier: 1x
+  -
+    image_mapping_type: image_style
+    image_mapping: 3_2_xxs
+    breakpoint_id: asuntotuotanto.xxs
     multiplier: 1x
   -
     image_mapping_type: image_style
     image_mapping: 3_2_xs_2x
-    breakpoint_id: hdbt.xs
+    breakpoint_id: asuntotuotanto.xs
     multiplier: 2x
-  -
-    image_mapping_type: image_style
-    image_mapping: 3_2_xxs
-    breakpoint_id: hdbt.xxs
-    multiplier: 1x
   -
     image_mapping_type: image_style
     image_mapping: 3_2_xxs_2x
-    breakpoint_id: hdbt.xxs
+    breakpoint_id: asuntotuotanto.xxs
     multiplier: 2x
-breakpoint_group: hdbt
+breakpoint_group: asuntotuotanto
 fallback_image_style: 3_2_m

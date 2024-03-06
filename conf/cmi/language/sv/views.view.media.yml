@@ -8,18 +8,25 @@ display:
           action_title: Åtgärd
         thumbnail__target_id:
           label: Miniatyr
+          separator: ', '
         name:
           label: Medianamn
+          separator: ', '
         bundle:
           label: Typ
+          separator: ', '
         uid:
           label: Författare
+          separator: ', '
         status:
           settings:
             format_custom_false: 'Ej publicerad'
             format_custom_true: Publicerad
+          label: Tila
+          separator: ', '
         changed:
           label: Uppdaterad
+          separator: ', '
         operations:
           label: Funktioner
       pager:
@@ -63,3 +70,10 @@ display:
         langcode:
           expose:
             label: Språk
+      title: Media
+  media_page_list:
+    display_title: Media
+    display_options:
+      menu:
+        title: Media
+label: Media

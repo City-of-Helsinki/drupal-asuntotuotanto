@@ -1,7 +1,7 @@
 label: Sanasto
 display:
   default:
-    display_title: Isäntä
+    display_title: Oletus
     display_options:
       fields:
         title:
@@ -22,10 +22,10 @@ display:
       exposed_form:
         options:
           submit_button: Käytä
-          reset_button_label: Reset
-          exposed_sorts_label: 'Sort by'
-          sort_asc_label: Asc
-          sort_desc_label: Desc
+          reset_button_label: Palauta
+          exposed_sorts_label: Lajittele
+          sort_asc_label: Nousevasti
+          sort_desc_label: Laskevasti
   attachment_1:
     display_title: Liite
   page_1:

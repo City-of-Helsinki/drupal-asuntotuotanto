@@ -219,6 +219,8 @@ line-height: $lineheight-l; // Was 24px.
   }
 
   li {
+    margin-top: 0;
+
     &:first-child {
       min-width: 135px;
     }

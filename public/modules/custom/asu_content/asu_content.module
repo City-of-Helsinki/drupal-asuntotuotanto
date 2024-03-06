@@ -7,13 +7,14 @@
 
 declare(strict_types=1);
 
-use Drupal\asu_content\Entity\Apartment;
-use Drupal\asu_content\Entity\Project;
-use Drupal\asu_content\ProjectUpdater;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Entity\EntityFormInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Field\FieldFilteredMarkup;
+use Drupal\Core\Render\BubbleableMetadata;
+use Drupal\asu_content\Entity\Apartment;
+use Drupal\asu_content\Entity\Project;
+use Drupal\asu_content\ProjectUpdater;
 use Drupal\helfi_platform_config\DTO\ParagraphTypeCollection;
 use Drupal\node\Entity\Node;
 use Drupal\node\NodeForm;
@@ -433,4 +434,54 @@ function asu_content_helfi_paragraph_types(): array {
   }
 
   return $enabled;
+}
+
+/**
+ * Implements hook_token_info().
+ */
+function asu_content_token_info() {
+  $type = [
+    'name' => t('ASU Content'),
+    'description' => t('ASU Content custom tokens'),
+  ];
+
+  $node['project_name'] = [
+    'name' => t("Apartment project name"),
+    'description' => t('Apartment project name.'),
+  ];
+
+  $node['project_type'] = [
+    'name' => t("Apartment project type"),
+    'description' => t('Apartment project type.'),
+  ];
+
+  return [
+    'types' => ['asu_content_tokens' => $type],
+    'tokens' => ['asu_content_tokens' => $node],
+  ];
+}
+
+/**
+ * Implements hook_tokens().
+ */
+function asu_content_tokens($type, $tokens, array $data, array $options, BubbleableMetadata $bubbleable_metadata) {
+  $replacements = [];
+  $apartment = $data['node'] ?? NULL;
+
+  if ($type == 'asu_content_tokens' && $apartment instanceof Apartment) {
+    $project = $apartment->getProject() ?? NULL;
+
+    foreach ($tokens as $name => $original) {
+      switch ($name) {
+        case 'project_type':
+          $replacements[$original] = $project ? $project->getOwnershipType() : NULL;
+          break;
+        case 'project_name':
+          $replacements[$original] = $project ? $project->getTitle() : NULL;
+          break;
+      }
+    }
+  }
+
+  return $replacements;
 }

@@ -125,9 +125,10 @@
 }
 
 figure {
-  display: flex;
-  justify-content: center;
   align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 
   img {
     transform: translate(0) !important;

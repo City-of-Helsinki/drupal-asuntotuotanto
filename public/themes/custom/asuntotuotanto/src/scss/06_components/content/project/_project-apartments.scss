@@ -143,10 +143,11 @@ line-height: $lineheight-m;
 
 .project__apartments-item-details-item {
   p {
-    font-size: $fontsize-body-m;
-line-height: $lineheight-l;
     color: var(--color-black-90);
-    display: inline-flex;
+    display: flex;
+    font-size: $fontsize-body-m;
+    justify-content: space-between;
+    line-height: $lineheight-l;
     margin: 0;
 
     > span {

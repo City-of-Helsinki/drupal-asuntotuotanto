@@ -1,0 +1,33 @@
+uuid: 3f0c76f0-1a93-4b3a-adac-8606bc1ad1b5
+langcode: fi
+status: true
+dependencies:
+  module:
+    - language
+    - node
+id: news
+label: News
+type: 'canonical_entities:node'
+pattern: '/news/[node:title]'
+selection_criteria:
+  31aad533-bf29-4480-b490-f8aec1337276:
+    id: 'entity_bundle:node'
+    negate: false
+    uuid: 31aad533-bf29-4480-b490-f8aec1337276
+    context_mapping:
+      node: node
+    bundles:
+      news: news
+  bd5eb7ac-2a64-48da-826b-2c64ccb82b17:
+    id: language
+    negate: false
+    uuid: bd5eb7ac-2a64-48da-826b-2c64ccb82b17
+    context_mapping:
+      language: 'node:langcode:language'
+    langcodes:
+      en: en
+selection_logic: and
+weight: -10
+relationships:
+  'node:langcode:language':
+    label: Kieli

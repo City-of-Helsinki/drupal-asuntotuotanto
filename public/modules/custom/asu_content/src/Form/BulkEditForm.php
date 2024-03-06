@@ -33,7 +33,7 @@ class BulkEditForm extends FormBase {
         ]);
       $options = [$this->t('Select')];
       foreach ($projects as $project) {
-        $options[$project->id()] = $project->title->value;
+        $options[$project->id()] = $project->getTitle();
       }
 
       $form['project'] = [

@@ -348,7 +348,12 @@ class ApplicationForm extends ContentEntityForm {
   private function getApartments(Project $project, array $limit = []): ?array {
     $cid = 'application_project_apartments_' . $project->id();
     $values = [];
-    $type = $project->field_ownership_type->first()->entity->getName();
+    $type = $project->get('field_ownership_type')
+      ?->first()
+      ->get('entity')
+      ->getTarget()
+      ->getValue()
+      ->getName();
 
     if ($apartmentData = \Drupal::cache()->get($cid)) {
       $values['apartments'] = $apartmentData->data;
