@@ -15,7 +15,7 @@ bundle: step
 mode: default
 content:
   field_icon:
-    type: select2_icon_widget
+    type: select_icon_widget
     weight: 1
     region: content
     settings: {  }
