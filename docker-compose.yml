@@ -14,9 +14,12 @@ services:
       STAGE_FILE_PROXY_ORIGIN: "${STAGE_FILE_PROXY_ORIGIN}"
       STAGE_FILE_PROXY_ORIGIN_DIR: "${STAGE_FILE_PROXY_ORIGIN_DIR}"
       DRUSH_OPTIONS_URI: "https://${DRUPAL_HOSTNAME}"
-      # XDEBUG_ENABLE: "true"
-      # DOCKERHOST: host.docker.internal
-      # XDEBUG_CONFIG: "remote_port=9001 remote_host=host.docker.internal remote_connect_back=0"
+      # To enable xdebug, run `export XDEBUG_ENABLE=true` before (re)starting your project.
+      # Optionally, you can add this to your default environments variables to enable or disable
+      # xdebug by default (like /etc/environments, ~/.bashrc, or ~/.zshrc).
+      XDEBUG_ENABLE: "${XDEBUG_ENABLE:-false}"
+      XDEBUG_CONFIG: "${XDEBUG_CONFIG:-}"
+      PHP_IDE_CONFIG: "${PHP_IDE_CONFIG:-serverName=${DRUPAL_HOSTNAME}}"
       PHP_SENDMAIL_PATH: /usr/sbin/sendmail -S stonehenge:1025
 
       # permission issues.
