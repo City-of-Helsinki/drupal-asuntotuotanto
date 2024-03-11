@@ -7,7 +7,7 @@ on:
 name: Build artifacts
 env:
   APP_ENV: "test"
-  ASU_ELASTICSEARCH_ADDRESS: "https://elastic:9200"
+  ASU_ELASTICSEARCH_ADDRESS: "http://elastic:9200"
   ASU_ELASTICSEARCH_USERNAME: "test"
   ASU_ELASTICSEARCH_PASSWORD: "pass"
 jobs:
@@ -32,7 +32,7 @@ jobs:
         env:
           discovery.type: single-node
         options: >-
-          --health-cmd "curl https://localhost:9200/_cluster/health"
+          --health-cmd "curl http://localhost:9200/_cluster/health"
           --health-interval 10s
           --health-timeout 5s
           --health-retries 10
