@@ -471,6 +471,9 @@ if ($env = getenv('APP_ENV')) {
     $config['raven.settings']['environment'] = 'production';
   }
 
+  var_dump('search_api env: ' . $env . ' Server host' . $config['search_api.server.asuntotuotanto']['backend_config']['host']);
+
+
   // Saml Authentication.
   include 'saml.settings.php';
 }
@@ -484,3 +487,4 @@ if ($env = getenv('APP_ENV')) {
 if (empty($settings['deployment_identifier'])) {
   $settings['deployment_identifier'] = filemtime(__DIR__ . '/../../../composer.lock');
 }
+
