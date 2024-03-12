@@ -59,18 +59,10 @@ class ProjectMigrationService extends AsuMigrationBase {
   }
 
   /**
-   * Get migration files from local.
-   */
-  private function getFilesFromLocal() {
-    $this->file = fopen('/app/migrations/projects.csv', 'r');
-    $this->file2 = fopen('/app/migrations/apartments.csv', 'r');
-  }
-
-  /**
    * Run migrations.
    */
   public function migrate(): array {
-    self::getFilesFromTmp();
+    $this->getFilesFromTmp();
 
     $errors = $this->migrateProjects();
 
