@@ -2,7 +2,7 @@ name: 'ASU - Mailer'
 type: module
 description: 'Handles sending email'
 core: 8.x
-core_version_requirement: ^8 || ^9 || ^10
+core_version_requirement: ^10
 package: 'ASU'
 dependencies:
   - asu_application:asu_application

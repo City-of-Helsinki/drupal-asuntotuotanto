@@ -2,5 +2,5 @@ name: 'ASU - Editorial'
 type: module
 description: 'ASU - Editorial provides editorial enhancements for content editors.'
 core: 8.x
-core_version_requirement: ^8 || ^9 || ^10
+core_version_requirement: ^10
 package: 'ASU'
