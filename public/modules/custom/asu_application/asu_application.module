@@ -120,7 +120,7 @@ function template_preprocess_asu_application(array &$variables) {
 
     if (
       $project->hasField('field_application_end_time') &&
-      $application_end_time_value = $project->get('field_application_end_time')->value
+      !$project->get('field_application_end_time')->isEmpty()
     ) {
       $date_formatter = \Drupal::service('date.formatter');
       $application_end = $date_formatter->format(
@@ -272,7 +272,7 @@ function asu_application_cron() {
 function asu_application_mail(string $key, array &$message, array $params) {
   switch ($key) {
     case 'apply_for_free_apartment':
-      send_apply_for_free_apartment($message, $params);
+      _send_apply_for_free_apartment($message, $params);
       break;
   }
 }
@@ -285,7 +285,7 @@ function asu_application_mail(string $key, array &$message, array $params) {
  * @param array $params
  *   Parameters variable.
  */
-function send_apply_for_free_apartment(array &$message, array $params) {
+function _send_apply_for_free_apartment(array &$message, array $params) {
   $message['from'] = \Drupal::config('system.site')->get('mail');
   $message['subject'] = $params['subject'];
   $message['body'][] = $params['message'];
