@@ -2,5 +2,5 @@ name: 'ASU - Tasklist'
 type: module
 description: 'ASU - Tasklist implementation'
 core: 8.x
-core_version_requirement: ^8 || ^9 || ^10
+core_version_requirement: ^10
 package: 'ASU'
