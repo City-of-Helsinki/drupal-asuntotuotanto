@@ -7,14 +7,14 @@
 
 declare(strict_types=1);
 
-use Drupal\asu_content\Entity\Apartment;
-use Drupal\asu_content\Entity\Project;
-use Drupal\asu_content\ProjectUpdater;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Entity\EntityFormInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Field\FieldFilteredMarkup;
 use Drupal\Core\Render\BubbleableMetadata;
+use Drupal\asu_content\Entity\Apartment;
+use Drupal\asu_content\Entity\Project;
+use Drupal\asu_content\ProjectUpdater;
 use Drupal\helfi_platform_config\DTO\ParagraphTypeCollection;
 use Drupal\node\Entity\Node;
 use Drupal\node\NodeForm;
@@ -101,7 +101,7 @@ function asu_content_show_computed_fields(&$form, $form_state) {
       if ($price && $price != 0 && $living_area && $living_area != 0) {
         $value = number_format((float) $price / $living_area, 2, '.', '');
         $form['field_debt_free_sales_price']['widget'][0]['value']['#description'] = FieldFilteredMarkup::create(
-          $value . ' €/m²'
+          $value.' €/m²'
         );
       }
     }
@@ -300,7 +300,7 @@ function asu_content_cron() {
     }
     catch (\Exception $e) {
       \Drupal::logger('asu_cron')->emergency(
-        'Unable to update projects to "For sale" state: ' . $e->getMessage()
+        'Unable to update projects to "For sale" state: '.$e->getMessage()
       );
     }
     $projects = NULL;
@@ -323,7 +323,7 @@ function asu_content_cron() {
     }
     catch (\Exception $e) {
       \Drupal::logger('asu_cron')->emergency(
-        'Unable to update projects to "Reserved" state: ' . $e->getMessage()
+        'Unable to update projects to "Reserved" state: '.$e->getMessage()
       );
     }
   }
@@ -377,7 +377,7 @@ function asu_content_convert_datetime($value): string {
   /** @var Drupal\Core\Datetime\DateFormatterInterface $date_formatter */
   $date_formatter = \Drupal::service('date.formatter');
   $date = $date_formatter->format(
-    strtotime($value . ' UTC'),
+    strtotime($value.' UTC'),
     'custom',
     'Y-m-d\TH:i:sP',
     'Europe/Helsinki',
@@ -476,7 +476,6 @@ function asu_content_tokens($type, $tokens, array $data, array $options, Bubblea
         case 'project_type':
           $replacements[$original] = $project ? $project->getOwnershipType() : NULL;
           break;
-
         case 'project_name':
           $replacements[$original] = $project ? $project->getTitle() : NULL;
           break;

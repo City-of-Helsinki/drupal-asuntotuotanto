@@ -30,7 +30,7 @@ function asu_csv_import_form_node_form_alter(&$form, FormStateInterface $form_st
         '#name' => 'hitas',
         '#value' => t('Download Hitas CSV template') . ' ',
         '#limit_validation_errors' => [],
-        '#submit' => ['asu_csv_import_csv_import_download_template'],
+        '#submit' => ['csv_import_download_template'],
         '#button_type' => 'primary',
       ];
 
@@ -39,7 +39,7 @@ function asu_csv_import_form_node_form_alter(&$form, FormStateInterface $form_st
         '#name' => 'haso',
         '#value' => t('Download HASO CSV template'),
         '#limit_validation_errors' => [],
-        '#submit' => ['asu_csv_import_csv_import_download_template'],
+        '#submit' => ['csv_import_download_template'],
         '#button_type' => 'primary',
       ];
       $form['actions']['submit']['#submit'][] = 'asu_csv_import_process';
@@ -52,7 +52,7 @@ function asu_csv_import_form_node_form_alter(&$form, FormStateInterface $form_st
 /**
  * Form submission callback function for download button.
  */
-function asu_csv_import_csv_import_download_template(&$form, FormStateInterface $form_state) {
+function csv_import_download_template(&$form, FormStateInterface $form_state) {
   $trigger = $form_state->getTriggeringElement()['#name'];
   $configName = 'asu_csv_import.haso_apartment_fields';
   if ($trigger == 'hitas') {

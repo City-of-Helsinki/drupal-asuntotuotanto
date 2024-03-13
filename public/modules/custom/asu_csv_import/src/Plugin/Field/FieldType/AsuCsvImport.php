@@ -192,7 +192,7 @@ class AsuCsvImport extends EntityReferenceItem {
       '#type' => 'checkbox',
       '#title' => $this->t('Enable <em>Description</em> field'),
       '#default_value' => $settings['description_field'] ?? '',
-      '#description' => $this->t('The description field allows users to enter a description about the uploaded file.'),
+      '#description' => t('The description field allows users to enter a description about the uploaded file.'),
       '#weight' => 11,
     ];
 

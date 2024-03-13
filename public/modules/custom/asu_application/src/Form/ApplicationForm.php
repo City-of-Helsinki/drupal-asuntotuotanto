@@ -350,10 +350,10 @@ class ApplicationForm extends ContentEntityForm {
     $values = [];
     $type = $project->get('field_ownership_type')
       ?->first()
-        ->get('entity')
-        ->getTarget()
-        ->getValue()
-        ->getName();
+      ->get('entity')
+      ->getTarget()
+      ->getValue()
+      ->getName();
 
     if ($apartmentData = \Drupal::cache()->get($cid)) {
       $values['apartments'] = $apartmentData->data;

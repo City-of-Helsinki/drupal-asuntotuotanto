@@ -63,7 +63,7 @@ class DateType extends ImportType {
       return TRUE;
     }
     try {
-      new \DateTime($date);
+      $dt = new \DateTime($date);
       return TRUE;
     }
     catch (\Exception $e) {
