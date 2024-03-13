@@ -14,12 +14,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 /**
  * Implements hook_install().
  */
-function asu_application_install($is_syncing) : void {
-  // Do not perform following steps if the module is being installed as part
-  // of a configuration import.
-  if ($is_syncing) {
-    return;
-  }
+function asu_application_install() : void {
   asu_application_grant_permissions();
 }
 
