@@ -31,17 +31,52 @@ class AsuContentDrushCommands extends DrushCommands {
       return;
     }
 
-    $node_ids = \Drupal::entityQuery('node')
-      ->condition('type', $type)
-      ->accessCheck(TRUE)
-      ->execute();
+    // Create the operations array for the batch.
+    $operations = [];
+    $num_operations = 0;
+    $batch_id = 1;
 
-    $nodes = \Drupal::entityTypeManager()->getStorage('node')->loadMultiple($node_ids);
+    $database = \Drupal::database();
+    $query = $database->select('node_field_data', 'd');
+    $query->condition('d.type', $type);
+    $query->fields('d', ['nid']);
+    $results_count = count($query->execute()->fetchAll());
 
-    foreach($nodes as $node) {
-      /** @var \Drupal\node\Entity $node */
-      $node->path->pathauto = 1;
-      $node->save();
+    if ($results_count > 0) {
+      for ($i = 0; $i < $results_count; $i = $i + 100) {
+        $query->range($i, 100);
+        $results = $query->execute()->fetchAll();
+
+        // Prepare the operation. Here we could do other operations on nodes.
+        $this->output()->writeln("Preparing batch: " . $batch_id);
+
+        $operations[] = [
+          '\Drupal\asu_content\BatchService::processContentAliasUpdate',
+          [
+            $batch_id,
+            $results,
+          ],
+        ];
+
+        $batch_id++;
+        $num_operations++;
+      }
+
+      // Create the batch.
+      $batch = [
+        'title' => t('Updating @num node aliases', ['@num' => $num_operations]),
+        'operations' => $operations,
+        'finished' => '\Drupal\asu_content\BatchService::processContentAliasUpdateFinished',
+      ];
+
+      // Add batch operations as new batch sets.
+      batch_set($batch);
+
+      // Process the batch sets.
+      drush_backend_batch_process();
+
+      // Show some information.
+      $this->logger()->notice("Batch operations end.");
     }
   }
 
