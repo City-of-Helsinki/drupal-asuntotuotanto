@@ -70,8 +70,6 @@ class ElasticSearch extends ResourceBase {
       $debug = TRUE;
     }
 
-    $params = \Drupal::request()->query->all();
-
     // If a cached entry exists, return it.
     if (!$debug && $cached = \Drupal::cache()->get($cid)) {
       $responseArray = $cached->data;
