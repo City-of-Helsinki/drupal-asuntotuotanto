@@ -39,7 +39,7 @@ class AsuTaskListFormatter extends FormatterBase {
 
     $count = 0;
     if (isset($items[0]) && $items[0]->value) {
-      $data = unserialize($items[0]->value);
+      $data = unserialize($items[0]->value, ['allowed_classes' => FALSE]);
       foreach ($data as $values) {
         $count += $values['value'];
       }

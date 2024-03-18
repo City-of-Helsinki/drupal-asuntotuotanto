@@ -12,6 +12,7 @@ use Drupal\asu_application\Event\SalesApplicationEvent;
 use Drupal\Core\Messenger\MessengerTrait;
 use Drupal\Core\Queue\QueueFactory;
 use Drupal\Core\Queue\QueueInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\node\Entity\Node;
 use Drupal\user\Entity\User;
 use Psr\Log\LoggerInterface;
@@ -21,6 +22,8 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  * Application subscriber.
  */
 class ApplicationSubscriber implements EventSubscriberInterface {
+  use StringTranslationTrait;
+
   use MessengerTrait;
 
   /**
@@ -111,7 +114,7 @@ class ApplicationSubscriber implements EventSubscriberInterface {
         'User sent an application to backend successfully'
       );
 
-      $this->messenger()->addMessage(t('Your application has been received. We will contact you when all the application has been processed.'));
+      $this->messenger()->addMessage($this->t('Your application has been received. We will contact you when all the application has been processed.'));
     }
     catch (IllegalApplicationException $e) {
       $code = $e->getApiErrorCode();
@@ -131,7 +134,7 @@ class ApplicationSubscriber implements EventSubscriberInterface {
           $e->getMessage()
         );
         $message = 'Undefined exception while sending application';
-        $this->messenger()->addError(t('Unfortunately we were unable to handle your application.'));
+        $this->messenger()->addError($this->t('Unfortunately we were unable to handle your application.'));
       }
 
       $application->set('error', $message);
@@ -148,7 +151,7 @@ class ApplicationSubscriber implements EventSubscriberInterface {
       $application->set('error', 'Undefined exception while sending application');
       $application->save();
 
-      $this->messenger()->addError(t('Unfortunately we were unable to handle your application.'));
+      $this->messenger()->addError($this->t('Unfortunately we were unable to handle your application.'));
       $this->queue->createItem($application->id());
     }
   }
@@ -216,7 +219,7 @@ class ApplicationSubscriber implements EventSubscriberInterface {
       $application->set('error', NULL);
       $application->save();
 
-      $this->messenger()->addStatus(t('The application has been submitted successfully.
+      $this->messenger()->addStatus($this->t('The application has been submitted successfully.
      You can no longer edit the application.'));
 
     }

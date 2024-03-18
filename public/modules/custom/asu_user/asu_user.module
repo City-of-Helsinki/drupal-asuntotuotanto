@@ -32,7 +32,7 @@ function asu_user_entity_type_alter(array &$entity_types) {
 function asu_user_user_login(UserInterface $account) {
   // @todo Use customer bundle instead of role.
   if ($account->hasRole('customer')) {
-    asu_get_user_external_field_data($account);
+    asu_user_asu_get_user_external_field_data($account);
   }
 
   if ($account->hasRole('salesperson') && !$account->field_backend_profile->value) {
@@ -99,14 +99,14 @@ function asu_user_openid_connect_userinfo_save(UserInterface $account, array $co
 /**
  * Get the user data from django backend.
  */
-function asu_get_user_external_field_data(UserInterface $account) {
+function asu_user_asu_get_user_external_field_data(UserInterface $account) {
   if ($account->bundle() != 'customer') {
     return;
   }
 
   // Workaround around issue caused by cache.
   if (!$profileId = $account->field_backend_profile->value) {
-    $profileId = asu_get_user_profile_id($account);
+    $profileId = asu_user_asu_get_user_profile_id($account);
     $account->set('field_backend_profile', $profileId);
   }
 
@@ -155,7 +155,7 @@ function asu_user_form_user_customer_form_alter(&$form, FormStateInterface &$for
         $form['basic_information'][$field]['#attributes']['type'] = 'date';
       }
     }
-    $form['actions']['submit']['#submit'][] = 'user_edit_submit';
+    $form['actions']['submit']['#submit'][] = 'asu_user_user_edit_submit';
   }
 
   $form['field_saml_hash']['#access'] = FALSE;
@@ -174,7 +174,7 @@ function asu_user_form_user_user_form_alter(&$form, FormStateInterface &$form_st
  *
  * Update user data to backend.
  */
-function user_edit_submit(array $form, FormStateInterface &$form_state) {
+function asu_user_user_edit_submit(array $form, FormStateInterface &$form_state) {
   // @todo Use user bundle not role.
   $user = User::load(\Drupal::currentUser()->id());
   if (!$user->hasRole('customer')) {
@@ -272,7 +272,7 @@ function _asu_user_user_edit_form_submit($form, &$form_state) {
 /**
  * Workaround for first time login cache problem.
  */
-function asu_get_user_profile_id(&$account) {
+function asu_user_asu_get_user_profile_id(&$account) {
   $profileId = $account->field_backend_profile->value;
   if (!$profileId) {
     $database = \Drupal::database();
@@ -318,13 +318,13 @@ function asu_user_entity_operation(EntityInterface $entity) {
  *
  * @param string $op
  *   Which mail to send.
- * @param \Drupal\user\Entity\UserInterface $user
+ * @param \Drupal\user\Entity\UserInterface $account
  *   Who to send the mail.
  *
  * @return mixed
  *   Check _user_mail_notify function.
  */
-function asu_send_user_email(string $op, UserInterface $account) {
+function asu_user_asu_send_user_email(string $op, UserInterface $account) {
   $params['account'] = $account;
   $langcode = $account->getPreferredLangcode() ?? 'fi';
   // Get the custom site notification email to use as the from email address

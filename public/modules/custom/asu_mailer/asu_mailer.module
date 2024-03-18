@@ -11,7 +11,7 @@
 function asu_mailer_mail(string $key, array &$message, array $params) {
   switch ($key) {
     case 'application_user_confirmation':
-      send_application_confirmation($message, $params);
+      asu_mailer_send_application_confirmation($message, $params);
       break;
   }
 }
@@ -24,7 +24,7 @@ function asu_mailer_mail(string $key, array &$message, array $params) {
  * @param array $params
  *   Parameters variable.
  */
-function send_application_confirmation(array &$message, array $params) {
+function asu_mailer_send_application_confirmation(array &$message, array $params) {
   $message['from'] = \Drupal::config('system.site')->get('mail');
   $message['subject'] = $params['subject'];
   $message['body'][] = $params['message'];
