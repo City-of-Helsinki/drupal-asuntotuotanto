@@ -2,7 +2,9 @@
 
 namespace Drupal\asu_content\Commands;
 
-use Drupal\node\Entity\NodeType;
+use Drupal\Core\Database\Connection;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drush\Attributes as CLI;
 use Drush\Commands\DrushCommands;
 
@@ -13,6 +15,35 @@ use Drush\Commands\DrushCommands;
  */
 class AsuContentDrushCommands extends DrushCommands {
 
+  use StringTranslationTrait;
+
+  /**
+   * Entity type service.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
+   * The database connection.
+   *
+   * @var \Drupal\Core\Database\Connection
+   */
+  protected $connection;
+
+  /**
+   * Constructs a new AsuContentDrushCommands object.
+   *
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
+   *   Entity type service.
+   * @param \Drupal\Core\Database\Connection $connection
+   *   The database connection.
+   */
+  public function __construct(EntityTypeManagerInterface $entityTypeManager, Connection $connection) {
+    $this->entityTypeManager = $entityTypeManager;
+    $this->connection = $connection;
+  }
+
   /**
    * Create content aliases automatically.
    *
@@ -21,11 +52,12 @@ class AsuContentDrushCommands extends DrushCommands {
    *
    * @command asu_content:content-alias-create
    */
-  #[CLI\Command(name: 'asu_content:ContentAliasCreate', aliases: ['ac-cac'])]
+  #[CLI\Command(name: 'asu_content:contentAliasCreate', aliases: ['ac-cac'])]
   #[CLI\Argument(name: 'type', description: 'Content type.')]
   #[CLI\Usage(name: 'drush ac-cac', description: 'Create node alias automatically to content type.')]
-  public function ContentAliasCreate(string $type) {
-    $node_types = array_keys(NodeType::loadMultiple());
+  public function contentAliasCreate(string $type) {
+    $nodes = $this->entityTypeManager->getStorage('node_type')->loadMultiple();
+    $node_types = array_keys($nodes);
 
     if (!in_array($type, $node_types)) {
       $this->output()->writeln('Content type doesnt exists');
@@ -37,8 +69,7 @@ class AsuContentDrushCommands extends DrushCommands {
     $num_operations = 0;
     $batch_id = 1;
 
-    $database = \Drupal::database();
-    $query = $database->select('node_field_data', 'd');
+    $query = $this->connection->select('node_field_data', 'd');
     $query->condition('d.type', $type);
     $query->fields('d', ['nid']);
     $results_count = count($query->execute()->fetchAll());
@@ -65,7 +96,7 @@ class AsuContentDrushCommands extends DrushCommands {
 
       // Create the batch.
       $batch = [
-        'title' => t('Updating @num node aliases', ['@num' => $num_operations]),
+        'title' => $this->t('Updating @num node aliases', ['@num' => $num_operations]),
         'operations' => $operations,
         'finished' => '\Drupal\asu_content\BatchService::processContentAliasUpdateFinished',
       ];

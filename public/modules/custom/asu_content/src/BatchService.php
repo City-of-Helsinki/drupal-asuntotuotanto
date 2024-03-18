@@ -3,7 +3,7 @@
 namespace Drupal\asu_content;
 
 /**
- * Class BatchService.
+ * Batch service to update node aliases.
  */
 class BatchService {
 
