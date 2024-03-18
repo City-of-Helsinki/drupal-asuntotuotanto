@@ -18,6 +18,7 @@ class AsuContentDrushCommands extends DrushCommands {
    *
    * @param string $type
    *   The content type.
+   *
    * @command asu_content:content-alias-create
    */
   #[CLI\Command(name: 'asu_content:ContentAliasCreate', aliases: ['ac-cac'])]

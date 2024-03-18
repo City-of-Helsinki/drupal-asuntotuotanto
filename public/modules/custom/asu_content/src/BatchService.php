@@ -12,12 +12,12 @@ class BatchService {
    *
    * @param int $id
    *   Id of the batch.
-   * @param string $operation_details
-   *   Details of the operation.
+   * @param array $nodes
+   *   Nodes for batch.
    * @param object $context
    *   Context for operations.
    */
-  static public function processContentAliasUpdate($id, $nodes, &$context) {
+  public static function processContentAliasUpdate($id, $nodes, &$context) {
     foreach ($nodes as $node) {
       usleep(100);
       $entityService = \Drupal::entityTypeManager();
@@ -45,7 +45,7 @@ class BatchService {
    * @param array $operations
    *   Array of operations.
    */
-  static public function processContentAliasUpdateFinished($success, array $results, array $operations) {
+  public static function processContentAliasUpdateFinished($success, array $results, array $operations) {
     $messenger = \Drupal::messenger();
 
     if ($success) {
