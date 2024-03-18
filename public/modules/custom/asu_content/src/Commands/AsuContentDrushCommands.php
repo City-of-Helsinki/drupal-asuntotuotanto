@@ -18,6 +18,7 @@ class AsuContentDrushCommands extends DrushCommands {
    *
    * @param string $type
    *   The content type.
+   *
    * @command asu_content:content-alias-create
    */
   #[CLI\Command(name: 'asu_content:ContentAliasCreate', aliases: ['ac-cac'])]
@@ -38,7 +39,7 @@ class AsuContentDrushCommands extends DrushCommands {
 
     $nodes = \Drupal::entityTypeManager()->getStorage('node')->loadMultiple($node_ids);
 
-    foreach($nodes as $node) {
+    foreach ($nodes as $node) {
       /** @var \Drupal\node\Entity $node */
       $node->path->pathauto = 1;
       $node->save();

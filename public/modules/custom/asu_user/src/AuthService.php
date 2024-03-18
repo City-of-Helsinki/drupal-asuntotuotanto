@@ -239,10 +239,13 @@ class AuthService extends SamlService {
     return $hash;
   }
 
+  /**
+   * Check and create a username if username is already exists.
+   */
   private function getAccountUsername($user_name) {
     $query = \Drupal::database()->select('users_field_data', 'u');
     $query->fields('u', ['name']);
-    // OR CONDITION
+    // OR CONDITION.
     $or_group = $query->orConditionGroup();
     $or_group->condition('name', $query->escapeLike($user_name));
     $or_group->condition('name', $user_name . '_[0-9]', 'REGEXP');
