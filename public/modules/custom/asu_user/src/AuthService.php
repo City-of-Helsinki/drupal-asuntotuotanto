@@ -38,13 +38,13 @@ class AuthService extends SamlService {
   public function acs() {
     $config = $this->configFactory->get('samlauth.authentication');
     if ($config->get('debug_log_in')) {
-      if (isset($_POST['SAMLResponse'])) {
-        $response = base64_decode($_POST['SAMLResponse']);
+      if ($this->requestStack->getCurrentRequest()->request->get('SAMLResponse') !== NULL) {
+        $response = base64_decode($this->requestStack->getCurrentRequest()->request->get('SAMLResponse'));
         if ($response) {
           $this->logger->debug("ACS received 'SAMLResponse' in POST request (base64 decoded): <pre>@message</pre>", ['@message' => $response]);
         }
         else {
-          $this->logger->warning("ACS received 'SAMLResponse' in POST request which could not be base64 decoded: <pre>@message</pre>", ['@message' => $_POST['SAMLResponse']]);
+          $this->logger->warning("ACS received 'SAMLResponse' in POST request which could not be base64 decoded: <pre>@message</pre>", ['@message' => $this->requestStack->getCurrentRequest()->request->get('SAMLResponse')]);
         }
       }
       else {
