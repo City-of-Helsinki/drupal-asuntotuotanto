@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5396fdcc051e6c07693e2a8847df4162",
+    "content-hash": "3a059ad1e0c6306d25ccbb95e1455822",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -64,10 +64,10 @@
         },
         {
             "name": "asuntomyynti/react",
-            "version": "1.3.4",
+            "version": "1.3.7",
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/City-of-Helsinki/asuntomyynti-react/releases/download/v1.3.4/asuntomyynti-react-1.3.4.zip"
+                "url": "https://github.com/City-of-Helsinki/asuntomyynti-react/releases/download/v1.3.7/asuntomyynti-react-1.3.7.zip"
             },
             "type": "library"
         },
