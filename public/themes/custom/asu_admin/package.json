@@ -70,6 +70,6 @@
   },
   "dependencies": {
     "glob": "^7.1.6",
-    "modernizr": "^3.11.2"
+    "modernizr": "^3.13.0"
   }
 }
