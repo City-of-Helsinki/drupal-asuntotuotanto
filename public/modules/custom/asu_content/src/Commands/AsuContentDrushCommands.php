@@ -21,10 +21,10 @@ class AsuContentDrushCommands extends DrushCommands {
    *
    * @command asu_content:content-alias-create
    */
-  #[CLI\Command(name: 'asu_content:ContentAliasCreate', aliases: ['ac-cac'])]
+  #[CLI\Command(name: 'asu_content:contentAliasCreate', aliases: ['ac-cac'])]
   #[CLI\Argument(name: 'type', description: 'Content type.')]
   #[CLI\Usage(name: 'drush ac-cac', description: 'Create node alias automatically to content type.')]
-  public function ContentAliasCreate(string $type) {
+  public function contentAliasCreate(string $type): void {
     $node_types = array_keys(NodeType::loadMultiple());
 
     if (!in_array($type, $node_types)) {
