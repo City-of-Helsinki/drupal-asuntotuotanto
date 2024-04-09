@@ -247,10 +247,7 @@ function asuntotuotanto_preprocess_views_view_table(&$variables) {
     foreach ($results as $key => $row) {
       /** @var \Drupal\asu_content\Entity\Apartment $entity */
       $apartment = $row->_entity;
-      $applicationCounts = $project->getApartmentApplicationCounts();
-      $applicationCount = $applicationCounts[$apartment->id()] ?? 0;
-      $applicationCountEnum = Applications::resolveApplicationCountEnum((int) $applicationCount);
-      $variables['rows'][$key]['application_status'] = get_apartment_application_status($applicationCountEnum);
+      $variables['rows'][$key]['application_status'] = get_apartment_application_status('low');
 
       $reserved_or_sold = FALSE;
       if ($apartment->isSold() || $apartment->isReserved()) {
