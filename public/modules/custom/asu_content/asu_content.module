@@ -37,24 +37,6 @@ function asu_content_entity_bundle_info_alter(array &$bundles): void {
 function asu_content_form_node_form_alter(&$form, $form_state) {
   asu_content_hide_node_title($form);
   asu_content_show_computed_fields($form, $form_state);
-  asu_content_project_add_archived_handling($form, $form_state);
-}
-
-/**
- * Add archived button logic, button widget positioning is handled in theme.
- */
-function asu_content_project_add_archived_handling(&$form, &$form_state) {
-  // Add javascript to project form.
-  $formObject = $form_state->getFormObject();
-  if ($formObject instanceof EntityFormInterface) {
-    $entity = $formObject->getEntity();
-    if (
-      $entity->getEntityTypeId() === 'node'
-      && in_array($entity->bundle(), ['project'])
-    ) {
-      $form['#attached']['library'][] = 'asu_content/asu_editform';
-    }
-  }
 }
 
 /**

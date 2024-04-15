@@ -9,11 +9,6 @@ const globImporter = require("node-sass-glob-importer");
 const FixStyleOnlyEntriesPlugin = require("webpack-fix-style-only-entries");
 
 module.exports = {
-  entry: {
-    styles: ["./src/scss/styles.scss"],
-    "gin-overrides": ["./src/scss/gin-overrides/gin.scss"],
-    "bundle": ["./src/js/common.js"],
-  },
   output: {
     devtoolLineToLine: true,
     path: path.resolve(__dirname, "dist"),

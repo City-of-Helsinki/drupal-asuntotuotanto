@@ -1,4 +1,0 @@
-asu_editform:
-  version: 1.x
-  js:
-    assets/js/asu_editform.js: {}
