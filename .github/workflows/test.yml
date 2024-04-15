@@ -49,6 +49,9 @@ jobs:
       - name: Build project
         run: composer install --no-interaction
 
+      - name: Composer code execution and possible privilege escalation via compromised InstalledVersions.php or installed.php
+        run: rm vendor/composer/installed.php vendor/composer/InstalledVersions.php composer install --no-scripts --no-plugins
+
       - name: Scan security updates
         run: composer audit
 
