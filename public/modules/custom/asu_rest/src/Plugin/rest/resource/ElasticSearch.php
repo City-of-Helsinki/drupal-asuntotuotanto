@@ -2,6 +2,7 @@
 
 namespace Drupal\asu_rest\Plugin\rest\resource;
 
+use Drupal\Core\Cache\Cache;
 use Drupal\rest\ModifiedResourceResponse;
 use Drupal\rest\Plugin\ResourceBase;
 use Drupal\rest\ResourceResponse;
@@ -60,9 +61,24 @@ class ElasticSearch extends ResourceBase {
       return new ModifiedResourceResponse(['message' => $message], 500, $headers);
     }
 
-    $apartment_type = $data['project_ownership_type'];
+    $ownership_type = $data['project_ownership_type'];
+    $url_params = [];
+
+    foreach ($data as $param => $value) {
+      if ($param == 'project_ownership_type') {
+        continue;
+      }
+      elseif (is_array($value)) {
+        $url_params[] = "{$param}:" . implode(',', $value);
+      }
+      else {
+        $url_params[] = "$param:{$value}";
+      }
+    }
+
+    $url_params = ($url_params) ? implode('_', $url_params) : '';
     // Setup a cache ID.
-    $cid = 'asu_rest:apartment_list:' . $apartment_type;
+    $cid = 'asu_rest:apartment_list:' . $ownership_type . $url_params;
 
     $account = User::load(\Drupal::currentUser()->id());
     $debug = FALSE;
@@ -146,7 +162,7 @@ class ElasticSearch extends ResourceBase {
         'sales_price',
       ];
 
-      foreach ($resultItems as $key => $item) {
+      foreach ($resultItems as $item) {
         $parsed = [];
 
         $itemFields = $item->getFields();
@@ -160,14 +176,11 @@ class ElasticSearch extends ResourceBase {
 
       $responseArray = [];
       foreach ($apartments as $apartment) {
-        if (!$apartment['project_id'] || $apartment['apartment_state_of_sale'] == 'SOLD') {
-          continue;
-        }
         $responseArray[$apartment['project_id']][] = $apartment;
       }
 
       if (count($responseArray) > 0) {
-        \Drupal::cache()->set($cid, $responseArray, strtotime(3600));
+        \Drupal::cache()->set($cid, $responseArray, Cache::PERMANENT, ['search_api_list:apartment_listing']);
       }
     }
 
@@ -220,6 +233,8 @@ class ElasticSearch extends ResourceBase {
 
     $baseConditionGroup->addCondition('project_published', 'true', '=');
     $baseConditionGroup->addCondition('apartment_published', 'true', '=');
+    $baseConditionGroup->addCondition('project_id', NULL, '<>');
+    $baseConditionGroup->addCondition('apartment_state_of_sale', 'SOLD', '<>');
 
     // If no project state of sale is set, return all except upcoming and sold.
     if (empty($parameters->get('project_state_of_sale'))) {
