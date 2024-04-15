@@ -5,7 +5,7 @@
  * Contains hooks for user alterations.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 use Drupal\asu_api\Api\BackendApi\Request\CreateUserRequest;
 use Drupal\asu_api\Api\BackendApi\Request\UpdateUserRequest;
