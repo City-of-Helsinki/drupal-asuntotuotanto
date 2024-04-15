@@ -371,15 +371,23 @@ if ($env = getenv('APP_ENV')) {
 
   $settings['ASU_DJANGO_BACKEND_URL'] = getenv('ASU_DJANGO_BACKEND_URL');
 
-  $config['elasticsearch_connector.cluster.asuntotuotanto']['url'] = getenv('ASU_ELASTICSEARCH_ADDRESS') ?? 'http://localhost:9200';
+  $config['elasticsearch_connector.cluster.asuntotuotanto']['url'] = getenv('ASU_ELASTICSEARCH_ADDRESS') ?? 'https://localhost:9200';
 
   if ($env === 'dev') {
     $orbstack = str_contains(php_uname('r'), 'orbstack');
-    $config['elasticsearch_connector.cluster.asuntotuotanto']['url'] = $orbstack ? 'http://elastic.asuntotuotanto.orb.local' : 'http://elastic:9200';
+    $config['elasticsearch_connector.cluster.asuntotuotanto']['url'] = $orbstack ? 'http://elastic.asuntotuotanto.orb.local' : 'https://elastic:9200';
   }
 
   if ($env === 'test') {
-    $config['elasticsearch_connector.cluster.asuntotuotanto']['url'] = 'http://elastic:9200';
+    $config['elasticsearch_connector.cluster.asuntotuotanto']['url'] = 'https://elastic:9200';
+    $config['elasticsearch_connector.index.apartments']['index_id'] = 'asuntotuotanto_apartment';
+    $config['elasticsearch_connector.index.apartments']['server'] = 'asuntotuotanto';
+    $config['elasticsearch_connector.cluster.asuntotuotanto']['status'] = '1';
+    $config['elasticsearch_connector.cluster.asuntotuotanto']['cluster_id'] = 'asuntotuotanto';
+
+    $config['search_api.server.asuntotuotanto']['backend_config']['scheme'] = 'https';
+    $config['search_api.server.asuntotuotanto']['backend_config']['host'] = getenv('ASU_ELASTICSEARCH_ADDRESS') ? str_replace(['https://', ':443'], '', getenv('ASU_ELASTICSEARCH_ADDRESS')) : '';
+    $config['search_api.server.asuntotuotanto']['backend_config']['port'] = '443';
   }
 
   // Development environment.
@@ -471,6 +479,13 @@ if ($env = getenv('APP_ENV')) {
     $config['raven.settings']['environment'] = 'production';
   }
 
+  // CI environment.
+  if ($env === 'ci') {
+    $config['search_api.server.asuntotuotanto']['backend_config']['scheme'] = 'https';
+    $config['search_api.server.asuntotuotanto']['backend_config']['host'] = 'localhost';
+    $config['search_api.server.asuntotuotanto']['backend_config']['port'] = '443';
+  }
+
   // Saml Authentication.
   include 'saml.settings.php';
 }
@@ -484,3 +499,4 @@ if ($env = getenv('APP_ENV')) {
 if (empty($settings['deployment_identifier'])) {
   $settings['deployment_identifier'] = filemtime(__DIR__ . '/../../../composer.lock');
 }
+
