@@ -240,7 +240,7 @@ class AuthService extends SamlService {
   }
 
   /**
-   *
+   * Gets the username from the database.
    */
   private function getAccountUsername($user_name) {
     $query = \Drupal::database()->select('users_field_data', 'u');
