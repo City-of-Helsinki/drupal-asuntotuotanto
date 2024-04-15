@@ -20,22 +20,19 @@
 <div {{ create_attribute({'class': classes}) }}>
   <h1 class="visually-hidden">{{ 'Log in page'|t }}</h1>
   <div class="user-form__section">
-    <h2>{{ 'Log in'|t }}</h2>
-    <form{{ attributes|without('class') }}>
-      {{ children }}
-    </form>
-
-    <span class="user-form__identiyfy">{{ 'Or identify yourself'|t }}</span>
+    <h2 class="user-form__identiyfy">{{ 'Basic user identify yourself and login'|t }}</h2>
 
     {% include '@asuntotuotanto/button/button.html.twig' with {
       type: 'primary',
       disabled: false,
-      label: 'Bank ID'|t,
+      label: 'Suomi.fi authentication'|t,
       href: path('user.register')
     }
     %}
-    <div class="user-form__actions">
-      <a href="{{ path('user.pass') }}">{% trans %}Forgot password{% endtrans %}?</a>
-    </div>
+
+    <h2 class="user-form__userlogin">{{ 'Log in'|t }}</h2>
+    <form{{ attributes|without('class') }}>
+      {{ children }}
+    </form>
   </div>
 </div>

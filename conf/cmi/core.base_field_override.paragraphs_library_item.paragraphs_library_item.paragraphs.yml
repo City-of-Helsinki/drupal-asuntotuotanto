@@ -6,17 +6,22 @@ dependencies:
     - paragraphs.paragraphs_type.accordion
     - paragraphs.paragraphs_type.banner
     - paragraphs.paragraphs_type.columns
+    - paragraphs.paragraphs_type.contact_card_listing
     - paragraphs.paragraphs_type.content_cards
-    - paragraphs.paragraphs_type.gallery
     - paragraphs.paragraphs_type.image
     - paragraphs.paragraphs_type.liftup_with_image
     - paragraphs.paragraphs_type.list_of_links
+    - paragraphs.paragraphs_type.map
+    - paragraphs.paragraphs_type.sidebar_text
     - paragraphs.paragraphs_type.text
   module:
     - entity_reference_revisions
     - paragraphs_library
+  enforced:
+    module:
+      - helfi_base_content
 _core:
-  default_config_hash: 1q3kdhNu6cQRAG89NkQ3ahKTmg_d3cHIofeCdeX7viA
+  default_config_hash: _Nbhr4JLQXcrcmDFzHXgntvTpv2ZLX_zza-h7gjrYws
 id: paragraphs_library_item.paragraphs_library_item.paragraphs
 field_name: paragraphs
 entity_type: paragraphs_library_item
@@ -28,60 +33,53 @@ translatable: true
 default_value: {  }
 default_value_callback: ''
 settings:
-  handler: default
+  handler: 'default:paragraph'
   handler_settings:
     target_bundles:
       accordion: accordion
       banner: banner
       columns: columns
+      contact_card_listing: contact_card_listing
       content_cards: content_cards
-      gallery: gallery
       image: image
       liftup_with_image: liftup_with_image
       list_of_links: list_of_links
+      map: map
+      sidebar_text: sidebar_text
       text: text
-    negate: '0'
+    negate: 0
     target_bundles_drag_drop:
       accordion:
-        enabled: '1'
-        weight: '16'
-      accordion_item:
-        weight: '17'
-        enabled: 0
+        weight: 0
+        enabled: true
       banner:
-        enabled: '1'
-        weight: '18'
+        weight: 0
+        enabled: true
       columns:
-        enabled: '1'
-        weight: '19'
+        weight: 0
+        enabled: true
+      contact_card_listing:
+        weight: 0
+        enabled: true
       content_cards:
-        enabled: '1'
-        weight: '20'
-      from_library:
-        weight: '21'
-        enabled: 0
-      gallery:
-        enabled: '1'
-        weight: '22'
-      gallery_slide:
-        weight: '23'
-        enabled: 0
-      hero:
-        weight: '24'
-        enabled: 0
+        weight: 0
+        enabled: true
       image:
-        enabled: '1'
-        weight: '25'
+        weight: 0
+        enabled: true
       liftup_with_image:
-        enabled: '1'
-        weight: '26'
+        weight: 0
+        enabled: true
       list_of_links:
-        enabled: '1'
-        weight: '27'
-      list_of_links_item:
-        weight: '28'
-        enabled: 0
+        weight: 0
+        enabled: true
+      map:
+        weight: 0
+        enabled: true
+      sidebar_text:
+        weight: 0
+        enabled: true
       text:
-        enabled: '1'
-        weight: '29'
+        weight: 0
+        enabled: true
 field_type: entity_reference_revisions

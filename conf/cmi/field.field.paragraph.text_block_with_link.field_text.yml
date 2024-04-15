@@ -1,5 +1,5 @@
 uuid: 6453784b-05f7-467f-8d32-3186fea1b840
-langcode: fi
+langcode: en
 status: true
 dependencies:
   config:
@@ -11,7 +11,7 @@ id: paragraph.text_block_with_link.field_text
 field_name: field_text
 entity_type: paragraph
 bundle: text_block_with_link
-label: Teksti
+label: Text
 description: ''
 required: true
 translatable: true

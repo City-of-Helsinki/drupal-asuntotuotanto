@@ -1,5 +1,5 @@
 uuid: d307faad-b057-4c39-a6be-4f3e14e362b6
-langcode: fi
+langcode: en
 status: true
 dependencies:
   config:
@@ -33,5 +33,6 @@ hidden:
   field_media_bank_file: true
   field_project: true
   langcode: true
+  published_at: true
   search_api_excerpt: true
   toc_enabled: true

@@ -47,7 +47,7 @@ social_media:
     show_forward: '1'
   facebook_msg:
     enable: 0
-    api_url: 'FB.ui({method: ''send'',link: ''[current-page:url]''})'
+    api_url: "FB.ui({method: 'send',link: '[current-page:url]'})"
     api_event: onclick
     drupalSettings: 'application_id|Your Application ID'
     library: social_media/facebook

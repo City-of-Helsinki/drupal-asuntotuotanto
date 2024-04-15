@@ -1,0 +1,17 @@
+uuid: e6c63275-99b5-4b07-8e30-a6b041c05d60
+langcode: en
+status: true
+dependencies:
+  module:
+    - helfi_global_announcement
+title: 'Default cron handler'
+id: helfi_global_announcement_cron
+weight: 0
+module: helfi_global_announcement
+callback: helfi_global_announcement_cron
+scheduler:
+  id: simple
+launcher:
+  id: serial
+logger:
+  id: database

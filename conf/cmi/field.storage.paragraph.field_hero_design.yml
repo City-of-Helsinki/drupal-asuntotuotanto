@@ -34,7 +34,7 @@ settings:
     -
       value: split-text-with-wavy-koro
       label: 'Split text with wavy koro'
-  allowed_values_function: ''
+  allowed_values_function: helfi_paragraphs_hero_design_allowed_values
 module: options
 locked: false
 cardinality: 1

@@ -1,0 +1,21 @@
+uuid: 5a163212-6f39-4c55-a1ae-d67d99657452
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_lead_in
+    - node.type.page
+_core:
+  default_config_hash: tPwfvL9sS2_dI0nhmfCMypX6JXVe5rARuztaSQ5h6Z8
+id: node.page.field_lead_in
+field_name: field_lead_in
+entity_type: node
+bundle: page
+label: Lead
+description: 'Lead is visible on the content page, content listings, search results and on social media.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string_long

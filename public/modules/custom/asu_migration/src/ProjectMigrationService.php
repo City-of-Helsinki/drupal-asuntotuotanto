@@ -43,9 +43,9 @@ class ProjectMigrationService extends AsuMigrationBase {
   }
 
   /**
-   * Run migrations.
+   * Get migration files from server tmp.
    */
-  public function migrate(): array {
+  private function getFilesFromTmp() {
     if (!file_exists($this->projectFilePath)) {
       return ['Project file is missing!'];
     }
@@ -55,8 +55,22 @@ class ProjectMigrationService extends AsuMigrationBase {
     }
 
     $this->file = fopen($this->projectFilePath, 'r');
-
     $this->file2 = fopen($this->apartmentFilePath, 'r');
+  }
+
+  /**
+   * Get migration files from local.
+   */
+  private function getFilesFromLocal() {
+    $this->file = fopen('/app/migrations/projects.csv', 'r');
+    $this->file2 = fopen('/app/migrations/apartments.csv', 'r');
+  }
+
+  /**
+   * Run migrations.
+   */
+  public function migrate(): array {
+    self::getFilesFromTmp();
 
     $errors = $this->migrateProjects();
 
@@ -152,10 +166,20 @@ class ProjectMigrationService extends AsuMigrationBase {
         'author' => 1,
       ]);
 
-      $project->field_holding_type->entity = $holdingType;
-      $project->field_ownership_type->entity = $ownershipType;
+      if (!$holdingType || !$ownershipType || !$siteOwner) {
+        $errors[] = "Error with the project $currentProjectId. Error in create term.";
+        break;
+      }
+      else {
+        $project->field_holding_type->entity = $holdingType;
+        $project->field_ownership_type->entity = $ownershipType;
+        $project->field_site_owner->entity = $siteOwner;
+      }
+
+      if (!$district) {
+        $errors[] = "Error with the project $currentProjectId. Error in create district term.";
+      }
       $project->field_district->entity = $district;
-      $project->field_site_owner->entity = $siteOwner;
 
       if ($project) {
         if (feof($this->file2)) {
@@ -340,11 +364,20 @@ class ProjectMigrationService extends AsuMigrationBase {
       return reset($terms);
     }
 
-    $new_term = Term::create([
-      'name' => $term,
-      'vid' => $vid,
-    ]);
-    $new_term->save();
+    if (preg_match('~[0-9]+~', $term) || empty($term)) {
+      return NULL;
+    }
+
+    try {
+      $new_term = Term::create([
+        'name' => $term,
+        'vid' => $vid,
+      ]);
+      $new_term->save();
+    }
+    catch (\Exception $exception) {
+      return FALSE;
+    }
 
     return $new_term;
   }

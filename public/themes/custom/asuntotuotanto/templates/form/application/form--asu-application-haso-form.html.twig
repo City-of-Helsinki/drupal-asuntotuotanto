@@ -124,22 +124,6 @@
     <section class="application-form__section">
       <h2>
         {% trans %}
-          Applicant's Social Security Number
-        {% endtrans %}
-      </h2>
-      <p>
-        {% trans %}
-          Enter your ID's last 5 characters.
-        {% endtrans %}
-      </p>
-      <div class="application-form__personal-id">
-        <p aria-label="{% trans %} The beginning of social security number {% endtrans %} {{ element['#pid_start'] }}">{{ element['#pid_start'] }}</p>
-          {{ element.field_personal_id }}
-      </div>
-    </section>
-    <section class="application-form__section">
-      <h2>
-        {% trans %}
           Right of Residence Number
         {% endtrans %}
       </h2>
@@ -149,6 +133,8 @@
         {% endtrans %}
       </p>
       {{ element.field_right_of_residence_number }}
+
+      {{ element.field_is_new_permit_number }}
     </section>
     <section class="application-form__section">
       <h2>

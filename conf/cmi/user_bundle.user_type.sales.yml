@@ -1,7 +1,7 @@
 uuid: d854c3b4-4d3b-4614-8213-650bf854c5a3
-langcode: fi
+langcode: en
 status: true
 dependencies: {  }
 id: sales
-label: Myynti
+label: Sales
 description: ''

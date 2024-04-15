@@ -10,7 +10,7 @@ dependencies:
     - field.field.paragraph.liftup_with_image_and_links.field_links
     - paragraphs.paragraphs_type.liftup_with_image_and_links
   module:
-    - hdbt_admin_editorial
+    - hdbt_admin_tools
     - media_library
     - text
 id: paragraph.liftup_with_image_and_links.default

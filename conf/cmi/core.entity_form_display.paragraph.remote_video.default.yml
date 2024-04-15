@@ -14,12 +14,20 @@ dependencies:
     - media_library
     - text
 _core:
-  default_config_hash: Vt6e-uIFB3vt8xMj-uoVJNDO8F9ZFxo1CjPktEvIDsQ
+  default_config_hash: AMDZDzWNP90sUgt9bSZf2RbL7KmSxkXMKIiueo1JSWg
 id: paragraph.remote_video.default
 targetEntityType: paragraph
 bundle: remote_video
 mode: default
 content:
+  field_iframe_title:
+    type: string_textfield
+    weight: 3
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
   field_remote_video:
     type: media_library_widget
     weight: 2
@@ -59,19 +67,7 @@ content:
       size: 60
       placeholder: ''
     third_party_settings: {  }
-  field_iframe_title:
-    type: string_textfield
-    weight: 3
-    region: content
-    settings:
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
 hidden:
   created: true
   field_iframe_title: true
-  field_remote_video_description: true
-  field_remote_video_title: true
-  field_remote_video_video_desc: true
-  field_remote_video_video_title: true
   status: true

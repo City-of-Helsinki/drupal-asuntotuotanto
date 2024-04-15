@@ -1,12 +1,12 @@
 uuid: 4569a5eb-7436-4a58-bc3f-b6fc810aaf35
-langcode: fi
+langcode: en
 status: true
 dependencies:
   module:
     - node
 title: 'Updates search rankings for nodes'
 id: node_cron
-weight: 0
+weight: 7
 module: node
 callback: node_cron
 scheduler:

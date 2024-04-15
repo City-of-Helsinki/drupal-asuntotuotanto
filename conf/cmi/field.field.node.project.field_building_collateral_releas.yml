@@ -1,5 +1,5 @@
 uuid: ecd9cbf6-f44f-4abf-b618-f22633673104
-langcode: fi
+langcode: en
 status: true
 dependencies:
   config:
@@ -11,7 +11,7 @@ id: node.project.field_building_collateral_releas
 field_name: field_building_collateral_releas
 entity_type: node
 bundle: project
-label: 'Hallitus vapauttanut rakentamisvaiheen vakuuden'
+label: 'Building collateral has been released'
 description: ''
 required: false
 translatable: false

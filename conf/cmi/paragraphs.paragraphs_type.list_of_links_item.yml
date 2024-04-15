@@ -1,9 +1,10 @@
 uuid: 1f646c6b-c01c-48c3-a9ef-f3957e9bee16
 langcode: en
 status: true
-dependencies: {  }
-_core:
-  default_config_hash: JJbV-c48oaLAnXbQQmvKk3j5QaOWCX84DFicAqITi68
+dependencies:
+  enforced:
+    config:
+      - paragraphs.paragraphs_type.list_of_links
 id: list_of_links_item
 label: 'List of links item'
 icon_uuid: null

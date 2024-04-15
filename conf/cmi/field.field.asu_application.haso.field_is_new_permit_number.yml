@@ -1,0 +1,23 @@
+uuid: f7ee7283-44e8-4380-bb1c-acfefafbedfe
+langcode: en
+status: true
+dependencies:
+  config:
+    - asu_application.application_type.haso
+    - field.storage.asu_application.field_is_new_permit_number
+id: asu_application.haso.field_is_new_permit_number
+field_name: field_is_new_permit_number
+entity_type: asu_application
+bundle: haso
+label: 'The residence permit number has been issued from 1 September 2023.'
+description: 'Choose this option if the residence permit number has been issued since 1 September 2023 (issued by ARA). Do not make the selection if the residence permit number was issued before 31 August 2023.'
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: Käytössä
+  off_label: 'Pois päältä'
+field_type: boolean

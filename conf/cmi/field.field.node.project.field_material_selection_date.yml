@@ -1,5 +1,5 @@
 uuid: 06e19600-4672-49b1-b8be-176c34e77b3c
-langcode: fi
+langcode: en
 status: true
 dependencies:
   config:
@@ -11,7 +11,7 @@ id: node.project.field_material_selection_date
 field_name: field_material_selection_date
 entity_type: node
 bundle: project
-label: 'Materiaalivalintojen täsmennysaika'
+label: 'Material selection date'
 description: ''
 required: false
 translatable: false

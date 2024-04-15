@@ -8,7 +8,6 @@ dependencies:
     - field.field.paragraph.step.field_title
     - paragraphs.paragraphs_type.step
   module:
-    - select2_icon
     - text
 id: paragraph.step.default
 targetEntityType: paragraph

@@ -1,10 +1,8 @@
-label: Media
 description: 'Hitta och hantera media.'
 display:
   default:
-    display_title: Huvud
+    display_title: Förvald
     display_options:
-      title: Media
       fields:
         media_bulk_form:
           action_title: Åtgärd
@@ -21,10 +19,10 @@ display:
           label: Författare
           separator: ', '
         status:
-          label: Status
           settings:
             format_custom_false: 'Ej publicerad'
             format_custom_true: Publicerad
+          label: Tila
           separator: ', '
         changed:
           label: Uppdaterad
@@ -44,11 +42,11 @@ display:
             offset_label: Kompensera
       exposed_form:
         options:
-          submit_button: Filter
-          reset_button_label: Reset
-          exposed_sorts_label: 'Sort by'
-          sort_asc_label: Asc
-          sort_desc_label: Desc
+          submit_button: Filtrera
+          reset_button_label: Återställ
+          exposed_sorts_label: 'Sortera efter'
+          sort_asc_label: Stigande
+          sort_desc_label: Fallande
       empty:
         area_text_custom:
           content: 'Ingen media tillgänglig.'
@@ -72,8 +70,10 @@ display:
         langcode:
           expose:
             label: Språk
+      title: Media
   media_page_list:
     display_title: Media
     display_options:
       menu:
         title: Media
+label: Media

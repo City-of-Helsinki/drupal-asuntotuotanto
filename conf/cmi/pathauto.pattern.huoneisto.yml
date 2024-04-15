@@ -1,0 +1,33 @@
+uuid: b5a2f37b-add1-42c8-b88b-cf17f402a827
+langcode: fi
+status: true
+dependencies:
+  module:
+    - language
+    - node
+id: huoneisto
+label: Huoneisto
+type: 'canonical_entities:node'
+pattern: '/asuntohaku/[asu_content_tokens:project_type]/[asu_content_tokens:project_name]/[node:field_apartment_number]'
+selection_criteria:
+  0428fb58-d64c-4ade-8ca4-6bef0d24837e:
+    id: 'entity_bundle:node'
+    negate: false
+    uuid: 0428fb58-d64c-4ade-8ca4-6bef0d24837e
+    context_mapping:
+      node: node
+    bundles:
+      apartment: apartment
+  a3b03e09-c0e9-4847-a643-4c59cf653964:
+    id: language
+    negate: false
+    uuid: a3b03e09-c0e9-4847-a643-4c59cf653964
+    context_mapping:
+      language: 'node:langcode:language'
+    langcodes:
+      fi: fi
+selection_logic: and
+weight: -10
+relationships:
+  'node:langcode:language':
+    label: Kieli

@@ -5,11 +5,14 @@ types:
   crop: {  }
   file: {  }
   menu_link_content: {  }
-  node: {  }
-  paragraphs_library_item: {  }
+  node:
+    '*': '*'
+  paragraphs_library_item:
+    '*': '*'
   path_alias: {  }
   redirect: {  }
-  taxonomy_term: {  }
+  taxonomy_term:
+    '*': '*'
   user: {  }
   paragraph: {  }
   media: {  }

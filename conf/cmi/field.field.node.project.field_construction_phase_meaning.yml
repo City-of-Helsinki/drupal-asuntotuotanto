@@ -1,5 +1,5 @@
 uuid: 40ab3126-3b2a-485a-8022-ac85f9b1d268
-langcode: fi
+langcode: en
 status: true
 dependencies:
   config:
@@ -11,7 +11,7 @@ id: node.project.field_construction_phase_meaning
 field_name: field_construction_phase_meaning
 entity_type: node
 bundle: project
-label: 'Rakennusvaiheella tarkoitetaan'
+label: 'Construction phase meaning'
 description: ''
 required: false
 translatable: false

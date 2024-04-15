@@ -119,7 +119,7 @@ final class Content extends ResourceBase {
 
     $image = $this->loadResponsiveImageStyle($cta_image_file_target_id, 'image__3_2');
 
-    $data['cta_image_url'] = str_replace('http://', 'http://Asu:asunnot_2020@', file_create_url($image['#uri']));
+    $data['cta_image_url'] = str_replace('http://', 'http://Asu:asunnot_2020@', \Drupal::service('file_url_generator')->generateAbsoluteString($image['#uri']));
 
     $parent_node_results = \Drupal::entityTypeManager()
       ->getListBuilder('node')
@@ -195,7 +195,7 @@ final class Content extends ResourceBase {
           $description = $attachment['description'];
           $file_name = $file->getFilename();
           $file_size = format_size($file->getSize());
-          $file_uri = file_create_url($file->getFileUri());
+          $file_uri = \Drupal::service('file_url_generator')->generateAbsoluteString($file->getFileUri());
 
           array_push($attachments_stack, [
             'description' => $description,
@@ -211,16 +211,16 @@ final class Content extends ResourceBase {
 
     if (!$node->field_floorplan->isEmpty()) {
       $image = $this->loadResponsiveImageStyle($node->field_floorplan->entity->id(), 'image__3_2');
-      $images[] = file_create_url($image['#uri']);
+      $images[] = \Drupal::service('file_url_generator')->generateAbsoluteString($image['#uri']);
     }
 
     foreach ($node->field_images->getValue() as $value) {
       $image = $this->loadResponsiveImageStyle($value['target_id'], 'image__3_2');
-      $images[] = file_create_url($image['#uri']);
+      $images[] = \Drupal::service('file_url_generator')->generateAbsoluteString($image['#uri']);
     }
     foreach ($parent_node->field_shared_apartment_images->getValue() as $value) {
       $image = $this->loadResponsiveImageStyle($value['target_id'], 'image__3_2');
-      $images[] = file_create_url($image['#uri']);
+      $images[] = \Drupal::service('file_url_generator')->generateAbsoluteString($image['#uri']);
     }
 
     $nodeData = $node->toArray();
@@ -299,7 +299,6 @@ final class Content extends ResourceBase {
         'sales_price' => $apartment_sales_price,
         'debt_free_sales_price' => $apartment_debt_free_sales_price,
         'living_area_size' => $apartment_living_area_size,
-        'application_url' => $application_url,
         'structure' => $apartment_structure,
       ];
     }
@@ -351,7 +350,7 @@ final class Content extends ResourceBase {
       $description = $attachment['description'];
       $file_name = $file->getFilename();
       $file_size = format_size($file->getSize());
-      $file_uri = file_create_url($file->getFileUri());
+      $file_uri = \Drupal::service('file_url_generator')->generateAbsoluteString($file->getFileUri());
 
       $attachments_stack[$key] = [
         'description' => $description,
@@ -380,7 +379,7 @@ final class Content extends ResourceBase {
 
     foreach ($node->field_images->getValue() as $key => $value) {
       $image = $this->loadResponsiveImageStyle($value['target_id'], 'image__3_2');
-      $images[] = file_create_url($image['#uri']);
+      $images[] = \Drupal::service('file_url_generator')->generateAbsoluteString($image['#uri']);
     }
 
     foreach ($nodeData as $field => $value) {

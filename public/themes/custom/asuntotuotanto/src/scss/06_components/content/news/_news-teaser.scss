@@ -24,6 +24,7 @@
 
   img {
     width: 100%;
+    height: auto;
 
     @media screen and (min-width: $breakpoint-l) {
       object-fit: cover;

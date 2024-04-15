@@ -8,7 +8,7 @@ dependencies:
   module:
     - text
 _core:
-  default_config_hash: SzE8z9tE3ud5ZHtE7FrtYyTUx0LHVzqMWydOAFsDDGY
+  default_config_hash: oPuSy256H3spbbctja0gZ-kBYwVQNKt-K6vBYmtoJlo
 id: paragraph.event_list.field_event_list_description
 field_name: field_event_list_description
 entity_type: paragraph
@@ -19,5 +19,6 @@ required: false
 translatable: false
 default_value: {  }
 default_value_callback: ''
-settings: {  }
+settings:
+  allowed_formats: {  }
 field_type: text_long

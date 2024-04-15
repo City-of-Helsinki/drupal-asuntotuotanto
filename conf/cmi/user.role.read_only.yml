@@ -2,16 +2,25 @@ uuid: null
 langcode: en
 status: true
 dependencies:
+  config:
+    - node.type.announcement
+    - node.type.landing_page
+    - node.type.page
   module:
+    - file
+    - node
     - paragraphs
     - toolbar
     - view_unpublished
 id: read_only
-label: Lukija
+label: 'Read only'
 weight: -6
 is_admin: null
 permissions:
   - 'access toolbar'
+  - 'delete own files'
+  - 'view any unpublished announcement content'
   - 'view any unpublished landing_page content'
   - 'view any unpublished page content'
+  - 'view own unpublished content'
   - 'view unpublished paragraphs'

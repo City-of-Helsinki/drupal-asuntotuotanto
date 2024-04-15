@@ -1,5 +1,5 @@
 uuid: 105d0534-19e9-457f-9e30-4313ff47e59c
-langcode: fi
+langcode: en
 status: true
 dependencies:
   config:
@@ -11,7 +11,7 @@ id: node.project.field_warranty_deposit_releas
 field_name: field_warranty_deposit_releas
 entity_type: node
 bundle: project
-label: 'Hallitus vapauttanut takuuajan vakuuden'
+label: 'Warranty deposit released'
 description: ''
 required: false
 translatable: false

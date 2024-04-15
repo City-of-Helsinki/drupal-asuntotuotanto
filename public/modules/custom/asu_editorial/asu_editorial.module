@@ -32,3 +32,10 @@ function asu_editorial_theme() {
     ],
   ];
 }
+
+/**
+ * Implements hook_helfi_hero_design_alter().
+ */
+function asu_editorial_helfi_hero_design_alter(array &$designs): void {
+  $designs['background-image-with-text-box'] = t('Background image with text box');
+}

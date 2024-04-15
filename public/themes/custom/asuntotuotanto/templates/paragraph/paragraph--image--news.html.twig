@@ -74,7 +74,7 @@
           {% endif %}
         {% endfor %}
       {% endif %}
-      {% spaceless %}
+      {% apply spaceless %}
         <figcaption class="media--image__caption">
           {{ content.field_image_caption }}
 
@@ -91,7 +91,7 @@
             {% endfor %}
           {% endif %}
         </figcaption>
-      {% endspaceless %}
+      {% endapply %}
       </div>
     {% endblock %}
   </div>

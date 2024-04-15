@@ -1,5 +1,5 @@
 uuid: 98113a91-9d78-4baf-9645-b2d790d7f9b9
-langcode: fi
+langcode: en
 status: true
 dependencies:
   config:
@@ -9,7 +9,7 @@ id: node.project.field_archived
 field_name: field_archived
 entity_type: node
 bundle: project
-label: Arkistoitu
+label: Archived
 description: ''
 required: false
 translatable: false
@@ -18,6 +18,6 @@ default_value:
     value: 0
 default_value_callback: ''
 settings:
-  on_label: Arkistoitu
+  on_label: Archived
   off_label: Aktiivinen
 field_type: boolean

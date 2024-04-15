@@ -13,13 +13,21 @@ dependencies:
   module:
     - entity_reference_revisions
     - options
+    - text
 _core:
-  default_config_hash: qEkRAraBh43m5uf-XgNcLTMcQzKw-0B_zZtWyzgVMOk
+  default_config_hash: yJAD4ny-ijX5i6mYmUprDsh_4JqcMH8yIk6PNNRNUDQ
 id: paragraph.accordion.default
 targetEntityType: paragraph
 bundle: accordion
 mode: default
 content:
+  field_accordion_description:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 3
+    region: content
   field_accordion_design:
     type: list_key
     label: hidden
@@ -42,13 +50,6 @@ content:
       link: ''
     third_party_settings: {  }
     weight: 5
-    region: content
-  field_accordion_description:
-    type: text_default
-    label: hidden
-    settings: {  }
-    third_party_settings: {  }
-    weight: 3
     region: content
   field_accordion_title:
     type: string

@@ -59,14 +59,16 @@ class SalesCreateApplicationRequest extends Request {
       'profile' => $owner->uuid(),
       'application_uuid' => $this->application->uuid(),
       'application_type' => $this->application->bundle(),
-      'ssn_suffix' => $this->application->field_personal_id->value,
+      'ssn_suffix' => $this->application->main_applicant[0]->personal_id,
       'has_children' => $this->application->getHasChildren(),
-      'additional_applicant' => $this->getApplicant(),
+      'additional_applicant' => $this->getAdditionalApplicant(),
       'right_of_residence' => NULL,
+      'is_new_permit_number' => NULL,
       'project_id' => $this->projectUuid,
       'apartments' => $this->getApartments(),
       'is_right_of_occupancy_housing_changer' => FALSE,
       'has_hitas_ownership' => FALSE,
+      'right_of_residence_is_old_batch' => $this->application->hasNewPermitNumber(),
     ];
 
     if ($this->application->hasField('field_right_of_residence_number')) {
@@ -113,11 +115,11 @@ class SalesCreateApplicationRequest extends Request {
    * @return array
    *   Applicant information.
    */
-  private function getApplicant() {
+  private function getAdditionalApplicant() {
     if (!$this->application->hasAdditionalApplicant()) {
       return NULL;
     }
-    $applicant = $this->application->getApplicants()[0];
+    $applicant = $this->application->getAdditionalApplicants()[0];
     return [
       'first_name' => $applicant['first_name'],
       'last_name' => $applicant['last_name'],

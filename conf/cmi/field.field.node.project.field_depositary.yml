@@ -1,5 +1,5 @@
 uuid: 5e12cfdb-4658-40ad-84cb-9e75d00036c2
-langcode: fi
+langcode: en
 status: true
 dependencies:
   config:
@@ -9,7 +9,7 @@ id: node.project.field_depositary
 field_name: field_depositary
 entity_type: node
 bundle: project
-label: Säilyttäjä
+label: Depositary
 description: ''
 required: false
 translatable: false

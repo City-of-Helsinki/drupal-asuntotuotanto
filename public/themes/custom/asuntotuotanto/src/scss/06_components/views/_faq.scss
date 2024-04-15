@@ -183,7 +183,7 @@ line-height: $lineheight-m;
     background-color: transparent;
   }
 
-  > svg {
+  > .hel-icon {
     pointer-events: none;
 
     @media screen and (min-width: $breakpoint-l) {
@@ -213,6 +213,8 @@ line-height: $lineheight-m;
   }
 
   p {
+    color: $color-black;
+
     &:first-child {
       margin-top: 0;
     }

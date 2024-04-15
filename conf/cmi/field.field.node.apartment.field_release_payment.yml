@@ -1,5 +1,5 @@
 uuid: 745d43d5-10e8-438f-9410-8e45377b189e
-langcode: fi
+langcode: en
 status: true
 dependencies:
   config:
@@ -9,7 +9,7 @@ id: node.apartment.field_release_payment
 field_name: field_release_payment
 entity_type: node
 bundle: apartment
-label: Luovutushinta
+label: 'Release payment'
 description: ''
 required: false
 translatable: false

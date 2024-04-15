@@ -7,6 +7,7 @@ use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\WidgetBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\user\Entity\User;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Plugin implementation of the main applicant field widget.
@@ -27,14 +28,35 @@ class MainApplicantWidget extends WidgetBase {
    */
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
     $account = User::load(\Drupal::currentUser()->id());
-    $request = new UserRequest($account);
-    $request->setSender($account);
 
-    /** @var \Drupal\asu_api\Api\BackendApi\BackendApi $backendApi */
-    $backendApi = \Drupal::service('asu_api.backendapi');
-    /** @var \Drupal\asu_api\Api\BackendApi\Response\UserResponse $userResponse */
-    $userResponse = $backendApi->send($request);
-    $userInformation = $userResponse->getUserInformation();
+    if ($account->hasRole('customer')) {
+      $request = new UserRequest($account);
+      $request->setSender($account);
+
+      /** @var \Drupal\asu_api\Api\BackendApi\BackendApi $backendApi */
+      $backendApi = \Drupal::service('asu_api.backendapi');
+      try {
+        $userResponse = $backendApi->send($request);
+      }
+      catch (\Exception $e) {
+        return new Response('Failed to fetch user data to applicant form.', 400);
+      }
+
+      /** @var \Drupal\asu_api\Api\BackendApi\Response\UserResponse $userResponse */
+      $userInformation = $userResponse->getUserInformation();
+    }
+    else {
+      $userInformation = [
+        'first_name' => NULL,
+        'last_name' => NULL,
+        'date_of_birth' => NULL,
+        'street_address' => NULL,
+        'postal_code' => NULL,
+        'city' => NULL,
+        'phone_number' => NULL,
+        'email' => NULL,
+      ];
+    }
 
     $element['first_name'] = [
       '#type' => 'textfield',
@@ -76,13 +98,14 @@ class MainApplicantWidget extends WidgetBase {
       '#type' => 'textfield',
       '#title' => $this->t('Street address'),
       '#maxlength' => 99,
-      '#default_value' => $items->getValue()[$delta]['address'] ?? $userInformation['address'],
+      '#default_value' => $items->getValue()[$delta]['address'] ?? $userInformation['street_address'],
       '#required' => TRUE,
     ];
 
     $element['postal_code'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Postal code'),
+      '#minlength' => 5,
       '#maxlength' => 5,
       '#size' => 50,
       '#default_value' => $items->getValue()[$delta]['postal_code'] ?? $userInformation['postal_code'],

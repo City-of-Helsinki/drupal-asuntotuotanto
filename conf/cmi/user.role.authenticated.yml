@@ -9,25 +9,30 @@ dependencies:
   module:
     - asu_application
     - eu_cookie_compliance
+    - external_entities
+    - file
     - helfi_api_base
     - media
+    - paragraphs
     - paragraphs_type_permissions
     - rest
     - system
 _core:
   default_config_hash: 83Nuup-6oYkkdAsvg3nrR2pBOgtTXEV1JrzpCCLkYLM
 id: authenticated
-label: 'Sisäänkirjautunut käyttäjä'
+label: 'Authenticated user'
 weight: -9
 is_admin: false
 permissions:
   - 'access content'
   - 'create application'
+  - 'delete own files'
   - 'display eu cookie compliance popup'
   - 'restful get asu_initialize'
   - 'restful post asu_elasticsearch'
   - 'restful post mailinglist'
   - 'view application'
+  - 'view helfi_announcements external entity'
   - 'view media'
   - 'view paragraph content accordion'
   - 'view paragraph content accordion_item'
@@ -59,3 +64,4 @@ permissions:
   - 'view paragraph content text'
   - 'view paragraph content text_block_with_link'
   - 'view remote entities'
+  - 'view unpublished paragraphs'

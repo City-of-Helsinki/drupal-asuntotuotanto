@@ -6,5 +6,5 @@ id: contact_information_with_map
 label: 'Contact information with map'
 icon_uuid: null
 icon_default: null
-description: 'Let''s you add a block with contact information with a map.'
+description: "Let's you add a block with contact information with a map."
 behavior_plugins: {  }

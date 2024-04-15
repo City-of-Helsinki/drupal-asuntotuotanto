@@ -54,7 +54,8 @@ class ApplicationForm extends ContentEntityForm {
       return (new RedirectResponse($redirect, 301));
     }
 
-    if (!$project_data = $this->getApartments($project)) {
+    $limit = ['sold', 'reserved', 'reserved_haso'];
+    if (!$project_data = $this->getApartments($project, $limit)) {
       $this->logger('asu_application')->critical('User tried to access nonexistent project of id ' . $project_id);
       $this->messenger()->addMessage($this->t('Unfortunately the project you are trying to apply for is unavailable.'));
       return new RedirectResponse($applicationsUrl);
@@ -156,10 +157,6 @@ class ApplicationForm extends ContentEntityForm {
 
       $form = parent::buildForm($form, $form_state);
 
-      if (isset($form['field_personal_id'])) {
-        $form['field_personal_id']['widget'][0]['value']['#placeholder'] = '-XXXY';
-      }
-
       $form['#title'] = sprintf('%s %s', $this->t('Application for'), $projectName);
 
       $form['actions']['submit']['#value'] = $this->t('Send application');
@@ -185,6 +182,45 @@ class ApplicationForm extends ContentEntityForm {
    * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
+    $formValues = $form_state->cleanValues()->getValues();
+    foreach ($formValues['main_applicant'][0] as $field => $value) {
+      if (empty($value) || $value == '-' || strlen($value) < 2) {
+        $fieldTitle = (string) $form["main_applicant"]['widget'][0][$field]['#title'];
+        $form_state->setErrorByName($field, t('Field @field cannot be empty', ['@field' => $fieldTitle]));
+      }
+
+      if ($field == 'personal_id' && strlen($value) != 4) {
+        $fieldTitle = (string) $form["main_applicant"]['widget'][0][$field]['#title'];
+        $form_state->setErrorByName($field, t('Check @field', ['@field' => $fieldTitle]));
+      }
+    }
+
+    if (count($formValues['apartment']) <= 1 && isset($formValues['apartment'][0])) {
+      if ($formValues['apartment'][0]['id'] == '0' || empty($formValues['apartment'][0]['id'])) {
+        $form_state->setErrorByName('apartment', t('Field @field cannot be empty', ['@field' => 'apartment']));
+      }
+    }
+
+    $has_additional_applicant = (!empty($formValues['applicant'][0]['has_additional_applicant'])) ? (bool) $formValues['applicant'][0]['has_additional_applicant'] : FALSE;
+
+    if ($has_additional_applicant) {
+      foreach ($formValues['applicant'][0] as $applicant_field => $applicant_value) {
+        if ($applicant_field == 'has_additional_applicant') {
+          continue;
+        }
+
+        if ($applicant_field == 'personal_id' && strlen($applicant_value) != 4) {
+          $fieldTitle = (string) $form["applicant"]['widget'][0][$applicant_field]['#title'];
+          $form_state->setErrorByName($field, t('Check @field', ['@field' => $fieldTitle]));
+        }
+
+        if (empty($applicant_value) || $applicant_value == '-' || strlen($applicant_value) < 2) {
+          $fieldTitle = (string) $form["applicant"]['widget'][0][$applicant_field]['#title'];
+          $form_state->setErrorByName($applicant_field, t('Field @field cannot be empty', ['@field' => $fieldTitle]));
+        }
+      }
+    }
+
     $triggerName = $form_state->getTriggeringElement()['#name'];
     if ($triggerName == 'submit-application') {
       parent::validateForm($form, $form_state);
@@ -309,10 +345,15 @@ class ApplicationForm extends ContentEntityForm {
    * @return array
    *   Array of project information & apartments.
    */
-  private function getApartments(Project $project): ?array {
+  private function getApartments(Project $project, array $limit = []): ?array {
     $cid = 'application_project_apartments_' . $project->id();
     $values = [];
-    $type = $project->field_ownership_type->first()->entity->getName();
+    $type = $project->get('field_ownership_type')
+      ?->first()
+      ->get('entity')
+      ->getTarget()
+      ->getValue()
+      ->getName();
 
     if ($apartmentData = \Drupal::cache()->get($cid)) {
       $values['apartments'] = $apartmentData->data;
@@ -321,9 +362,19 @@ class ApplicationForm extends ContentEntityForm {
       $apartments = [];
       foreach ($project->field_apartments as $apartmentReference) {
         $apartment = $apartmentReference->entity;
+        // Skip unpublish apartments.
+        if ($apartment->get('status')->value == 0) {
+          continue;
+        }
+
         $number = $apartment->field_apartment_number->value;
 
         if (trim(strtolower($number)) == 'a0') {
+          continue;
+        }
+
+        // Skip wanted state of sale e.g. sold, reserved.
+        if ($limit && in_array($apartment->field_apartment_state_of_sale->target_id, $limit)) {
           continue;
         }
 
@@ -466,6 +517,11 @@ class ApplicationForm extends ContentEntityForm {
       if (in_array($key, $form_state->getCleanValueKeys())) {
         continue;
       }
+      if ($key == 'main_applicant' || $key == 'applicant') {
+        if (!empty($value[0]['personal_id']) && strlen($value[0]['personal_id']) == 4) {
+          $value[0]['personal_id'] = $this->getPersonalIdDivider($value[0]['date_of_birth']) . $value[0]['personal_id'];
+        }
+      }
       if ($this->entity->hasField($key)) {
         $this->entity->set($key, $value);
       }
@@ -535,25 +591,27 @@ class ApplicationForm extends ContentEntityForm {
     if (!$startDate || !$endDate) {
       return FALSE;
     }
-    $startTime = strtotime($startDate);
-    $endTime = strtotime($endDate);
+    $startDate = asu_content_convert_datetime($startDate);
+    $startDate = strtotime($startDate);
+    $endDate = asu_content_convert_datetime($endDate);
+    $endDate = strtotime($endDate);
     $now = time();
 
     $value = FALSE;
 
     switch ($period) {
       case "before":
-        $value = $now < $startTime;
+        $value = $now < $startDate;
 
         break;
 
       case "now":
-        $value = $now > $startTime && $now < $endTime;
+        $value = $now > $startDate && $now < $endDate;
 
         break;
 
       case "after":
-        $value = $now > $endTime;
+        $value = $now > $endDate;
 
         break;
     }

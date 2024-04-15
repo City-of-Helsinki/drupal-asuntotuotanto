@@ -33,7 +33,7 @@ use Drupal\user\EntityOwnerTrait;
  *   admin_permission = "administer content",
  *   handlers = {
  *     "view_builder" = "Drupal\Core\Entity\EntityViewBuilder",
- *     "list_builder" = "Drupal\Core\Entity\EntityListBuilder",
+ *     "list_builder" = "Drupal\asu_application\ApplicationListBuilder",
  *     "access" = "Drupal\asu_application\Entity\Access\ApplicationEntityAccess",
  *     "views_data" = "Drupal\views\EntityViewsData",
  *     "form" = {
@@ -86,6 +86,22 @@ class Application extends EditorialContentEntityBase implements ContentEntityInt
   }
 
   /**
+   * Return is new permit number.
+   *
+   * @return bool
+   *   Has children.
+   */
+  public function hasNewPermitNumber(): bool {
+    $permitValue = $this->field_is_new_permit_number->value ?? FALSE;
+
+    if ($permitValue || $permitValue == '1') {
+      return FALSE;
+    }
+
+    return TRUE;
+  }
+
+  /**
    * Get apartments.
    *
    * @return object
@@ -128,7 +144,7 @@ class Application extends EditorialContentEntityBase implements ContentEntityInt
    * @return array
    *   Array of applicants.
    */
-  public function getApplicant(): array {
+  public function getAdditionalApplicants(): array {
     return $this->applicant->getValue() ?? [];
   }
 
@@ -249,7 +265,7 @@ class Application extends EditorialContentEntityBase implements ContentEntityInt
       ->setDescription(t('Basic information of the people who are applying'))
       ->setCardinality(1)
       ->setDisplayOptions('form', [
-        'type' => 'asu_main_applicant',
+        'type' => 'asu_main_applicant_widget',
         'weight' => 5,
         'settings' => [],
       ]);

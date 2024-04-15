@@ -90,13 +90,3 @@ line-height: $lineheight-m;
     grid-row-gap: $spacing-double;
   }
 }
-
-.news-listing__item {
-  & + & {
-    margin-top: $spacing-double;
-
-    @media screen and (min-width: $breakpoint-l) {
-      margin-top: 0;
-    }
-  }
-}

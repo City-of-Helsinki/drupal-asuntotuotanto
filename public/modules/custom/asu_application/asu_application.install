@@ -1,11 +1,29 @@
 <?php
 
 /**
- * Installs application error field.
+ * @file
+ * Application install functions.
+ */
+
+declare(strict_types = 1);
+
+use Drupal\asu_application\Entity\Application;
+use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+
+/**
+ * Implements hook_install().
+ */
+function asu_application_install() : void {
+  asu_application_grant_permissions();
+}
+
+/**
+ * Installs error field to application.
  */
 function asu_application_update_9001() : void {
-  $fields['error'] = \Drupal\Core\Field\BaseFieldDefinition::create('string')
-    ->setLabel(new \Drupal\Core\StringTranslation\TranslatableMarkup('Error'))
+  $fields['error'] = BaseFieldDefinition::create('string')
+    ->setLabel(new TranslatableMarkup('Error'))
     ->setTranslatable(TRUE)
     ->setDefaultValue('');
 
@@ -16,11 +34,11 @@ function asu_application_update_9001() : void {
 }
 
 /**
- * Installs project entity reference field to application
+ * Installs project entity reference field to application.
  */
 function asu_application_update_9002() : void {
-  $fields['project'] = \Drupal\Core\Field\BaseFieldDefinition::create('entity_reference')
-    ->setLabel(new \Drupal\Core\StringTranslation\TranslatableMarkup('Project'))
+  $fields['project'] = BaseFieldDefinition::create('entity_reference')
+    ->setLabel(new TranslatableMarkup('Project'))
     ->setSettings([
       'target_type' => 'node',
       'handler_settings' => [
@@ -38,8 +56,8 @@ function asu_application_update_9002() : void {
  * Update all applications' project entity reference field value.
  */
 function asu_application_update_9003() : void {
-  $applications = Drupal\asu_application\Entity\Application::loadMultiple();
-  foreach($applications as $application) {
+  $applications = Application::loadMultiple();
+  foreach ($applications as $application) {
     $application->project->target_id = $application->getProjectId();
     $application->save();
   }
@@ -49,8 +67,8 @@ function asu_application_update_9003() : void {
  * Update all applications' project entity reference field value.
  */
 function asu_application_update_9004() : void {
-  $applications = Drupal\asu_application\Entity\Application::loadMultiple();
-  foreach($applications as $application) {
+  $applications = Application::loadMultiple();
+  foreach ($applications as $application) {
     $application->project->target_id = $application->getProjectId();
     $application->save();
   }
@@ -60,7 +78,7 @@ function asu_application_update_9004() : void {
  * Add main applicant fields.
  */
 function asu_application_update_9005() : void {
-  $fields['main_applicant'] = \Drupal\Core\Field\BaseFieldDefinition::create('asu_main_applicant')
+  $fields['main_applicant'] = BaseFieldDefinition::create('asu_main_applicant')
     ->setLabel(t('Basic information'))
     ->setDescription(t('Basic information of the people who are applying'))
     ->setCardinality(1)
@@ -72,4 +90,32 @@ function asu_application_update_9005() : void {
     \Drupal::entityDefinitionUpdateManager()
       ->installFieldStorageDefinition('main_applicant', 'asu_application', 'asu_application', $field);
   }
+}
+
+/**
+ * Install LYK Form Answer entity.
+ */
+function asu_application_update_9006() {
+  $entity_type = \Drupal::entityTypeManager()->getDefinition('asu_application');
+  \Drupal::entityDefinitionUpdateManager()->installEntityType($entity_type);
+}
+
+/**
+ * Grants required permissions.
+ */
+function asu_application_grant_permissions() : void {
+  $permissions = [
+    'admin' => [
+      'administer applications',
+    ],
+    'anonymous' => [
+      'create application',
+    ],
+    'authenticated' => [
+      'create application',
+      'view application',
+    ],
+  ];
+
+  helfi_platform_config_grant_permissions($permissions);
 }

@@ -17,9 +17,6 @@ settings:
       value: 50-50
       label: 'Divided 50/50'
     -
-      value: 50-50-fw
-      label: 'Divided 50/50 Full width'
-    -
       value: 30-70
       label: 'Divided 30/70'
     -

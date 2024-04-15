@@ -1,0 +1,20 @@
+uuid: 51744f57-3447-48d6-8386-2280c3eea12a
+langcode: en
+status: true
+dependencies:
+  module:
+    - entity_reference_revisions
+title: 'Queue: Entity Reference Revisions Orphan Purger'
+id: ultimate_cron_queue_entity_reference_revisions_orphan_purger
+weight: 8
+module: entity_reference_revisions
+callback: 'ultimate_cron.queue_worker:queueCallback'
+scheduler:
+  id: simple
+  configuration:
+    rules:
+      - '* * * * *'
+launcher:
+  id: serial
+logger:
+  id: database
