@@ -5,8 +5,8 @@ dependencies:
   config:
     - system.menu.main
   module:
-    - ctools
     - menu_block_current_language
+    - node
   theme:
     - hdbt
 _core:

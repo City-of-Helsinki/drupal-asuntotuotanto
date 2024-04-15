@@ -1,5 +1,5 @@
 uuid: b708a73f-3a52-4945-82c1-eeea1d8d22a5
-langcode: fi
+langcode: en
 status: true
 dependencies:
   config:
@@ -9,7 +9,7 @@ id: node.project.field_collateral_type
 field_name: field_collateral_type
 entity_type: node
 bundle: project
-label: 'Vakuuden tyyppi'
+label: 'Collateral type'
 description: ''
 required: false
 translatable: false

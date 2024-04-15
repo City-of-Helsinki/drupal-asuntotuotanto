@@ -1,5 +1,5 @@
 uuid: f4fcb31e-526c-419b-8850-580d4ff93265
-langcode: fi
+langcode: en
 status: true
 dependencies:
   config:
@@ -10,7 +10,7 @@ id: paragraph.stacked_text_blocks_with_image.field_image
 field_name: field_image
 entity_type: paragraph
 bundle: stacked_text_blocks_with_image
-label: Kuvatiedosto
+label: Image
 description: ''
 required: true
 translatable: true

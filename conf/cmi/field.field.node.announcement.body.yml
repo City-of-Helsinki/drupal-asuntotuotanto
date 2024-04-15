@@ -1,0 +1,31 @@
+uuid: 0a771502-b240-45d0-926b-5b12d4387d4c
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.body
+    - node.type.announcement
+  module:
+    - allowed_formats
+    - text
+third_party_settings:
+  allowed_formats:
+    allowed_formats:
+      - minimal
+_core:
+  default_config_hash: HSTIidPRZ7nvH0u914u-3ghCj6hqbgiKqfU-3SHZaUw
+id: node.announcement.body
+field_name: body
+entity_type: node
+bundle: announcement
+label: Body
+description: 'Please note that title is not shown alongside with the body text.'
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  display_summary: false
+  required_summary: false
+  allowed_formats: {  }
+field_type: text_with_summary

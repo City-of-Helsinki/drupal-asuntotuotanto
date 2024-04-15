@@ -51,11 +51,11 @@
       {% set floor = row.columns.field_floor.content.0.field_output['#markup']|striptags|trim %}
       {% set living_area_size = row.columns.field_living_area.content.0.field_output['#markup']|striptags|trim %}
       {% set nid = row.columns.nid.content.0.field_output['#markup']|striptags|trim %}
-      {% set price_title = 'Debt-free sales price' %}
+      {% set price_title = 'Debt-free sales price'|t %}
 
       {% if debt_free_sales_price == null or debt_free_sales_price == '' or debt_free_sales_price == 0 or debt_free_sales_price == '0,00' %}
         {% set debt_free_sales_price = row.columns.field_right_of_occupancy_payment.content.0.field_output['#markup']|striptags|trim %}
-        {% set price_title = 'Right of occupancy payment' %}
+        {% set price_title = 'Right of occupancy payment'|t %}
       {% endif %}
 
       {% set application_status = row.application_status %}
@@ -69,7 +69,7 @@
         <button
           aria-expanded="false"
           class="project__apartments-item-button"
-          aria-label="Open apartment {{ apartment_number }} information"
+          aria-label="{{ "Open apartment @apartment_number information"|t({'@apartment_number': apartment_number}) }}"
         >
           <span>{{ apartment_number }}</span>
           <span aria-hidden="true" class="project__apartment-application-status project__apartment-application-status--{{ application_status.status|trim }}"></span>
@@ -105,9 +105,7 @@
             <li class="project__apartments-item-details-item">
               <p>
                 <span>
-                  {% trans %}
-                    {{ price_title }}
-                  {% endtrans %}
+                  {{ price_title }}
                 </span>
                 <span>
                   {{ debt_free_sales_price }} €
@@ -233,11 +231,11 @@
         {% set floor = row.columns.field_floor.content.0.field_output['#markup']|striptags|trim %}
         {% set living_area_size = row.columns.field_living_area.content.0.field_output['#markup']|striptags|trim %}
         {% set nid = row.columns.nid.content.0.field_output['#markup']|striptags|trim %}
-        {% set price_title = 'Debt-free sales price' %}
+        {% set price_title = 'Debt-free sales price'|t %}
 
         {% if debt_free_sales_price == null or debt_free_sales_price == '' or debt_free_sales_price == 0 or debt_free_sales_price == '0,00' %}
           {% set debt_free_sales_price = row.columns.field_right_of_occupancy_payment.content.0.field_output['#markup']|striptags|trim %}
-          {% set price_title = 'Right of occupancy payment' %}
+          {% set price_title = 'Right of occupancy payment'|t %}
         {% endif %}
 
         {% if release_payment_price is not empty and release_payment_price > 0 %}
@@ -270,6 +268,7 @@
 
               {% if reserved_or_sold %}
                 {% trans %}
+                  <span aria-hidden="true" class="project__apartment-application-status project__apartment-application-status--{{ application_status.status|trim }}"></span>
                   {{ reserved_or_sold }}
                 {% endtrans %}
               {% else %}

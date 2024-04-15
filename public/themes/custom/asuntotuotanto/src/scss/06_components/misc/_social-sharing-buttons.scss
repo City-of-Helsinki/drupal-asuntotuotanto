@@ -1,21 +1,21 @@
 .social-sharing-buttons {
   h2 {
-    font-size: $fontsize-heading-xs;
-line-height: $lineheight-m; // Was 22px.
     color: var(--color-black-90);
+    font-size: $fontsize-heading-xs;
     font-weight: $font-weight-bold;
+    line-height: $lineheight-m; // Was 22px.
     margin: 0 0 $spacing;
 
     @media screen and (min-width: $breakpoint-l) {
       font-size: $fontsize-heading-s;
-line-height: $lineheight-l;
+      line-height: $lineheight-l;
     }
   }
 
   ul {
     list-style: none;
-    padding: 0;
     margin: 0;
+    padding: 0;
   }
 
   li {
@@ -25,15 +25,15 @@ line-height: $lineheight-l;
   }
 
   a {
-    font-size: $fontsize-body-m;
-line-height: $lineheight-l;
     align-items: center;
     color: var(--color-black-90);
     display: inline-flex;
+    font-size: $fontsize-body-m;
     font-weight: $font-weight-regular;
+    line-height: $lineheight-l;
     text-decoration: none;
 
-    > svg {
+    > .hel-icon {
       height: 30px;
       margin-right: $spacing-half-and-half;
       width: 30px;

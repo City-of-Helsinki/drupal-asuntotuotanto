@@ -86,6 +86,8 @@ class BackendApi {
       }
     }
 
+    $options['timeout'] = 60;
+
     $logger = $this->logger;
     try {
       $response = $this->client->send(
@@ -170,6 +172,7 @@ class BackendApi {
           json_encode($request->toArray())
         ),
         [
+          'timeout' => 60,
           'on_stats' => function (TransferStats $stats) use ($logger, $request) {
             $time = $stats->getTransferTime();
             if ($time > 5) {

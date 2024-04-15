@@ -8,5 +8,6 @@ _core:
   default_config_hash: b0XK3387F_O-XCxozCWvCVEVmNuctDMeX05ccqPn9gg
 id: node.parent_service
 label: 'Parent service'
+description: ''
 targetEntityType: node
 cache: true

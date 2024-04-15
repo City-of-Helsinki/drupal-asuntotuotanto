@@ -12,7 +12,7 @@ field_name: field_address
 entity_type: paragraph
 bundle: contact_information_with_map
 label: Address
-description: 'If the map is not displaying your address location correctly, it might be that your address you added doesn''t exist in the palvelukartta-index. You can check the original palvelukartta page to see if your address can be found. https://palvelukartta.hel.fi/en/'
+description: "If the map is not displaying your address location correctly, it might be that your address you added doesn't exist in the palvelukartta-index. You can check the original palvelukartta page to see if your address can be found. https://palvelukartta.hel.fi/en/"
 required: true
 translatable: false
 default_value:

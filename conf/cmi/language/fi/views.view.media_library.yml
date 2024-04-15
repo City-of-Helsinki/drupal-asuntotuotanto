@@ -2,9 +2,8 @@ label: Mediakirjasto
 description: 'Etsi ja ylläpidä mediatiedostoja.'
 display:
   default:
-    display_title: Isäntä
+    display_title: Oletus
     display_options:
-      title: Media
       fields:
         media_bulk_form:
           action_title: Toiminto
@@ -20,13 +19,13 @@ display:
       exposed_form:
         options:
           submit_button: 'Suodata tuloksia'
-          reset_button_label: Reset
-          exposed_sorts_label: 'Sort by'
-          sort_asc_label: Asc
-          sort_desc_label: Desc
+          reset_button_label: Palauta
+          exposed_sorts_label: Lajittele
+          sort_asc_label: Nousevasti
+          sort_desc_label: Laskevasti
       empty:
         area_text_custom:
-          content: 'Ei mediatiedostoja saatavilla.'
+          content: 'Mediatiedostoja ei ole saatavilla.'
       sorts:
         created:
           expose:
@@ -46,8 +45,6 @@ display:
             group_items:
               1:
                 title: Julkaistu
-              2:
-                title: Julkaisematon
         name:
           expose:
             label: Nimi
@@ -59,14 +56,13 @@ display:
         langcode:
           expose:
             label: Kieli
+      title: Media
   page:
     display_title: Sivu
     display_options:
       fields:
         media_bulk_form:
           action_title: Toiminto
-        name:
-          separator: ', '
         edit_media:
           alter:
             text: 'Muokkaa {{ name }}'
@@ -77,6 +73,8 @@ display:
             text: 'Poista {{ name }}'
             alt: 'Poista {{ name }}'
           text: Poista
+        name:
+          separator: ', '
   widget:
     display_title: Widgetti
     display_options:

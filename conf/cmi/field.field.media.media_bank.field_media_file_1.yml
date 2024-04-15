@@ -1,5 +1,5 @@
 uuid: 1bd9489b-cce4-4a80-a2c7-a02e9b402e02
-langcode: fi
+langcode: en
 status: true
 dependencies:
   config:
@@ -11,7 +11,7 @@ id: media.media_bank.field_media_file_1
 field_name: field_media_file_1
 entity_type: media
 bundle: media_bank
-label: Tiedosto
+label: File
 description: ''
 required: true
 translatable: true

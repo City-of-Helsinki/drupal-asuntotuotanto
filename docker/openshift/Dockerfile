@@ -1,5 +1,10 @@
-ARG DRUPAL_DOCKER_TAG=8.1
+ARG DRUPAL_DOCKER_TAG=8.2
 FROM ghcr.io/city-of-helsinki/drupal-docker-base:${DRUPAL_DOCKER_TAG}
+
+# Override PHP's maximum upload file size and post max size
+RUN sed -i -E \
+    's/^(upload_max_filesize|post_max_size)=.*/\1=64M/' \
+    /etc/php82/conf.d/php-overrides.ini
 
 COPY / /var/www/html/
 WORKDIR /var/www/html

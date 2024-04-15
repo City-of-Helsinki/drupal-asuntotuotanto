@@ -28,32 +28,16 @@ class AsuDateTime extends DataTypePluginBase {
       $dates = [];
 
       foreach ($value as $date) {
-        $dates[] = $this->convertDatetime($date);
+        $dates[] = asu_content_convert_datetime($date);
       }
 
       $newvalue = $dates;
     }
     else {
-      $newvalue = $this->convertDatetime($value);
+      $newvalue = asu_content_convert_datetime($value);
     }
 
     return $newvalue;
-  }
-
-  /**
-   * Covert datetime.
-   */
-  private function convertDatetime($value) {
-    /** @var Drupal\Core\Datetime\DateFormatterInterface $date_formatter */
-    $date_formatter = \Drupal::service('date.formatter');
-    $date = $date_formatter->format(
-      strtotime($value . ' UTC'),
-      'custom',
-      'Y-m-d\TH:i:sP',
-      'Europe/Helsinki',
-    );
-
-    return $date;
   }
 
 }

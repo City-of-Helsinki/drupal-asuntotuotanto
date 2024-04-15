@@ -1,0 +1,33 @@
+uuid: 8ca0e967-4bc7-42c6-915d-62398901d1eb
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_contact_card
+    - paragraphs.paragraphs_type.contact_card
+    - paragraphs.paragraphs_type.contact_card_listing
+  module:
+    - entity_reference_revisions
+_core:
+  default_config_hash: KQMfZ0H61OpPP_Mbzo50RsVfQYhVst3vpN-IDT7mQeo
+id: paragraph.contact_card_listing.field_contact_card
+field_name: field_contact_card
+entity_type: paragraph
+bundle: contact_card_listing
+label: 'Contact card'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    target_bundles:
+      contact_card: contact_card
+    negate: 0
+    target_bundles_drag_drop:
+      contact_card:
+        weight: 0
+        enabled: true
+field_type: entity_reference_revisions

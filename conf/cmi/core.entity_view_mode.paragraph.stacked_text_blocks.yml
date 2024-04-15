@@ -6,5 +6,6 @@ dependencies:
     - paragraphs
 id: paragraph.stacked_text_blocks
 label: 'Stacked text blocks'
+description: ''
 targetEntityType: paragraph
 cache: true

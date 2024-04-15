@@ -1,5 +1,5 @@
 uuid: f7ee7283-44e8-4380-bb1c-acfefafbedfe
-langcode: fi
+langcode: en
 status: true
 dependencies:
   config:
@@ -9,8 +9,8 @@ id: asu_application.haso.field_is_new_permit_number
 field_name: field_is_new_permit_number
 entity_type: asu_application
 bundle: haso
-label: 'Asumisoikeusnumero on myönnetty 1.9.2023 alkaen.'
-description: 'Valitse tämä valinta mikäli asumisoikeusnumero on myönnetty 1.9.2023 alkaen. Jätä valinta tekemättä mikäli asumisoikeusnumero on myönnetty ennen 31.8.2023.'
+label: 'The residence permit number has been issued from 1 September 2023.'
+description: 'Choose this option if the residence permit number has been issued since 1 September 2023 (issued by ARA). Do not make the selection if the residence permit number was issued before 31 August 2023.'
 required: false
 translatable: false
 default_value:

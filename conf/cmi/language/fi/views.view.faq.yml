@@ -1,10 +1,6 @@
 display:
   faq_page_haso:
     display_options:
-      filters:
-        field_faq_category_target_id:
-          group_info:
-            description: ''
       menu:
         title: 'Usein kysytyt kysymykset'
   faq_page_hitas:
@@ -21,7 +17,3 @@ display:
           sort_asc_label: Nouseva
           sort_desc_label: Laskeva
           text_input_required: 'Valitse suodatin ja paina Lisää nähdäksesi tulokset'
-      filters:
-        field_faq_category_target_id:
-          group_info:
-            description: ''

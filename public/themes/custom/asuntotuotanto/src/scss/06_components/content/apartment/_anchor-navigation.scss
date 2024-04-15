@@ -17,19 +17,22 @@
   list-style: none;
   margin: 0;
   padding: 0;
+
+  .apartment__anchor-item {
+    margin-top: 0;
+  }
 }
 
 .apartment__anchor-link {
   align-items: center;
   display: inline-flex;
+  font-size: $fontsize-body-xl;
+  font-weight: $font-weight-bold;
+  line-height: $lineheight-l;
+  padding: $spacing-and-half;
   text-decoration: none;
 
- font-size: $fontsize-body-xl;
-line-height: $lineheight-l;;
-  font-weight: $font-weight-bold;
-  padding: $spacing-and-half;
-
-  > svg {
+  > .hel-icon {
     margin-right: 12px;
   }
 }

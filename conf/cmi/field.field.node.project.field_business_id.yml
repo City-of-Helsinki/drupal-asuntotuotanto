@@ -1,5 +1,5 @@
 uuid: 467b1c77-3559-4a2b-be49-c330a3460856
-langcode: fi
+langcode: en
 status: true
 dependencies:
   config:
@@ -9,7 +9,7 @@ id: node.project.field_business_id
 field_name: field_business_id
 entity_type: node
 bundle: project
-label: Y-tunnus
+label: 'Business ID'
 description: ''
 required: false
 translatable: false

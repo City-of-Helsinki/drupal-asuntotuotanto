@@ -54,6 +54,48 @@ function asuntotuotanto_theme_suggestions_alter(array &$suggestions, array $vari
 }
 
 /**
+ * Implements hook_preprocess_html() for html templates.
+ */
+function asuntotuotanto_preprocess_html(array &$variables) {
+  $path = \Drupal::service('path.current')->getPath();
+  $path_parts = explode('/', $path);
+
+  if (str_contains($path, 'asuntohaku') && isset($path_parts[2])) {
+    $title = ucfirst("$path_parts[1] $path_parts[2]");
+
+    if (isset($path_parts[3])) {
+      $title .= " $path_parts[3]";
+    }
+
+    $variables['head_title']['title'] = "$title | Helsingin kaupunki";
+  }
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function asuntotuotanto_preprocess_page(array &$variables) : void {
+  $route_name = \Drupal::routeMatch()->getRouteName();
+  // Return early if route name is empty.
+  if (!$route_name) {
+    return;
+  }
+  // Removing the js library on user pages.
+  // Return if route is not related to the user route.
+  if (
+    $route_name !== 'entity.user.canonical' &&
+    !str_starts_with($route_name, 'asu_user')
+  ) {
+    return;
+  }
+  // If table of contents library is attached remove it from user routes.
+  if (($key = array_search('helfi_toc/table_of_contents', $variables['#attached']['library'])) !== false) {
+    unset($variables['#attached']['library'][$key]);
+  }
+
+}
+
+/**
  * Implements hook_preprocess_HOOK().
  */
 function asuntotuotanto_preprocess_menu(&$variables) {
@@ -211,12 +253,17 @@ function asuntotuotanto_preprocess_views_view_table(&$variables) {
       $variables['rows'][$key]['application_status'] = get_apartment_application_status($applicationCountEnum);
 
       $reserved_or_sold = FALSE;
-      if ($apartment->isSold() || $apartment->isReserved() || $apartment->isFree()) {
+      if ($apartment->isSold() || $apartment->isReserved()) {
         $reserved_or_sold = $apartment->isReserved() ? t('Reserved') : t('Vacant');
+        // Set application status to HIGH if apartment is reserved.
+        $variables['rows'][$key]['application_status']['status'] = $apartment->isReserved() ? 'high' : 'low';
         // Sold apartment is not listed so this is not necessary.
         if ($apartment->isSold()) {
           $reserved_or_sold = t('Sold');
         }
+      }
+      else if ($apartment->isFree() || !$apartment->isReserved()) {
+        $reserved_or_sold = t('Available');
       }
 
       if (!$project) {
@@ -356,7 +403,7 @@ function asuntotuotanto_preprocess_node(&$variables) {
       }
 
       if (!empty($paragraph) && $paragraph instanceof Paragraph) {
-        if ($paragraph->type->getValue()[0]["target_id"] === "text") {
+        if ($paragraph->getType() === "text") {
           $text = strip_tags($paragraph->get('field_text')->value);
           $text = str_replace(["\r", "\n"], ' ', $text);
 
@@ -392,11 +439,17 @@ function asuntotuotanto_preprocess_node(&$variables) {
       $project = $node;
       $project_type = $project->field_ownership_type->entity->name->value;
 
-      if (!$project->field_salesperson->isEmpty()) {
-        $salesperson = $project->field_salesperson->first()->entity;
-        $variables['sales_phone'] = $salesperson->field_phone_number->value;
-        $variables['sales_email'] = $salesperson->getEmail();
-        $variables['sales_name'] = $salesperson->field_full_name->value;
+      if (
+        $project->hasField('field_salesperson') &&
+        !$project->get('field_salesperson')?->isEmpty()
+      ) {
+        $salesperson = $project->get('field_salesperson')
+          ?->first()
+          ?->get('entity')
+          ?->getTarget();
+        $variables['sales_phone'] = $salesperson?->get('field_phone_number')->value;
+        $variables['sales_email'] = $salesperson?->get('mail')->value;
+        $variables['sales_name'] = $salesperson?->get('field_full_name')->value;
       }
 
       $apartments = $project->getApartmentEntities();
@@ -494,7 +547,7 @@ function asuntotuotanto_preprocess_node(&$variables) {
           $description = $attachment['description'];
           $file_name = $file->getFilename();
           $file_size = format_size($file->getSize());
-          $file_uri = file_create_url($file->getFileUri());
+          $file_uri = \Drupal::service('file_url_generator')->generateAbsoluteString($file->getFileUri());
 
           $attachments_stack[$key] = [
             'description' => $description,
@@ -581,11 +634,17 @@ function asuntotuotanto_preprocess_node(&$variables) {
 
       if ($project) {
 
-        if (!$project->field_salesperson->isEmpty()) {
-          $salesperson = $project->field_salesperson->first()->entity;
-          $variables['sales_phone'] = $salesperson->field_phone_number->value;
-          $variables['sales_email'] = $salesperson->getEmail();
-          $variables['sales_name'] = $salesperson->field_full_name->value;
+        if (
+          $project->hasField('field_salesperson') &&
+          !$project->get('field_salesperson')?->isEmpty()
+        ) {
+          $salesperson = $project->get('field_salesperson')
+            ?->first()
+            ?->get('entity')
+            ?->getTarget();
+          $variables['sales_phone'] = $salesperson?->get('field_phone_number')->value;
+          $variables['sales_email'] = $salesperson?->get('mail')->value;
+          $variables['sales_name'] = $salesperson?->get('field_full_name')->value;
         }
 
         $is_application_period_active = $project->isApplicationPeriod();
@@ -676,7 +735,7 @@ function asuntotuotanto_preprocess_node(&$variables) {
               $description = $attachment['description'];
               $file_name = $file->getFilename();
               $file_size = format_size($file->getSize());
-              $file_uri = file_create_url($file->getFileUri());
+              $file_uri = \Drupal::service('file_url_generator')->generateAbsoluteString($file->getFileUri());
 
               array_push($attachments_stack, [
                 'description' => $description,
@@ -697,7 +756,7 @@ function asuntotuotanto_preprocess_node(&$variables) {
               $description = $attachment['description'];
               $file_name = $file->getFilename();
               $file_size = format_size($file->getSize());
-              $file_uri = file_create_url($file->getFileUri());
+              $file_uri = \Drupal::service('file_url_generator')->generateAbsoluteString($file->getFileUri());
 
               array_push($attachments_stack, [
                 'description' => $description,
@@ -958,10 +1017,10 @@ function getProjectApartmentTeaserValues($project_id) {
 
   $values['project_ownership_type'] = $project->field_ownership_type->entity ? $project->field_ownership_type->entity->name->value : '';
   $values['project_district'] = $project->field_district->entity ? $project->field_district->entity->name->value : '';
-  $values['project_main_image_url'] = isset($project->field_main_image[0]) ? file_create_url($project->field_main_image[0]->entity->getFileUri()) : '';
+  $values['project_main_image_url'] = isset($project->field_main_image[0]) ? \Drupal::service('file_url_generator')->generateAbsoluteString($project->field_main_image[0]->entity->getFileUri()) : '';
 
   foreach ($fields as $key => $field) {
-    if ($project->hasField($field)) {
+    if ($project && $project->hasField($field)) {
       $values[$key] = $project->get($field)->value ?? '';
     }
     else {
@@ -980,7 +1039,7 @@ function getProjectApartmentTeaserValues($project_id) {
  */
 function asuntotuotanto_preprocess_blazy(&$variables) {
   // dd($variables);
-  $variables['image']['#attributes']['data-image'] = file_create_url($variables['image']['#uri']);
+  $variables['image']['#attributes']['data-image'] = \Drupal::service('file_url_generator')->generateAbsoluteString($variables['image']['#uri']);
   $variables['#attached']['library'][] = 'asuntotuotanto/intense-images';
 }
 

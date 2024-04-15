@@ -1,32 +1,7 @@
 <?php
 
-use Drupal\node\Entity\Node;
-
 /**
  * @file
- * Contains asu_clear_cache.module.
+ * Contains hooks for the asu_clear_cache module.
  */
 
-/**
- * Implements hook_cron().
- */
-function asu_clear_cache_cron() {
-  $time_ago = strtotime('-10 minutes');
-  $database = \Drupal::database();
-  $query = $database->select('node_field_data', 'n');
-  $query->condition('n.type', 'project');
-  $query->condition('n.status', 1);
-  $query->condition('n.changed', $time_ago, '>=');
-  $query->fields('n', ['nid']);
-
-  $projects = $query->execute()->fetchAll();
-
-  if (count($projects) > 0) {
-    foreach ($projects as $project) {
-      $project = Node::load($project->nid);
-      // Clear listing page cache.
-      $cid = 'asu_rest:apartment_list:' . $project->getOwnershipType();
-      \Drupal::cache()->delete($cid);
-    }
-  }
-}

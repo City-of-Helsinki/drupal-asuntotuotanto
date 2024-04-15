@@ -1,5 +1,5 @@
 uuid: 850869a7-b65e-4d58-8eaf-683106c4f491
-langcode: fi
+langcode: en
 status: true
 dependencies:
   config:
@@ -46,5 +46,6 @@ content:
     region: content
 hidden:
   langcode: true
+  published_at: true
   search_api_excerpt: true
   toc_enabled: true

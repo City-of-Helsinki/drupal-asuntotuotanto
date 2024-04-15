@@ -71,7 +71,7 @@
 
 .sticky-navigation__content-item {
  font-size: $fontsize-body-m;
-line-height: $lineheight-l; // Was 24px.
+  line-height: $lineheight-l; // Was 24px.
   font-weight: $font-weight-regular;
   color: var(--color-black-90);
   margin: 0;
@@ -99,15 +99,20 @@ line-height: $lineheight-l; // Was 24px.
 .sticky-navigation__anchor-list {
   align-items: center;
   display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-and-half;
   list-style: none;
   margin: 0;
   padding: 0;
-  gap: $spacing-and-half;
+
+  .sticky-navigation__anchor-item {
+    margin-top: 0;
+  }
 }
 
 .sticky-navigation__anchor-link {
   font-size: $fontsize-body-m;
-line-height: $lineheight-l;
+  line-height: $lineheight-l;
   align-items: center;
   display: inline-flex;
   margin-left: -#{$spacing-half-and-half};
@@ -124,9 +129,9 @@ line-height: $lineheight-l;
     padding-top: $spacing-and-half;
   }
 
-  > svg {
+  > .hel-icon {
     display: none;
-    margin-right: $spacing;
+    margin-right: $spacing-quarter;
     visibility: hidden;
 
     @media screen and (min-width: $breakpoint-l) {

@@ -299,7 +299,6 @@ final class Content extends ResourceBase {
         'sales_price' => $apartment_sales_price,
         'debt_free_sales_price' => $apartment_debt_free_sales_price,
         'living_area_size' => $apartment_living_area_size,
-        'application_url' => $application_url,
         'structure' => $apartment_structure,
       ];
     }

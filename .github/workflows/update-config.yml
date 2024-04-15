@@ -3,19 +3,15 @@ on:
   repository_dispatch:
     types: [config_change]
 name: Update config
-env:
-  SIMPLETEST_BASE_URL: "http://127.0.0.1:8080"
-  SIMPLETEST_DB: "mysql://drupal:drupal@db:3306/drupal"
-  XDEBUG_MODE: off
 jobs:
   update-config:
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/city-of-helsinki/drupal-php-docker:8.1-alpine
+      image: ghcr.io/city-of-helsinki/drupal-php-docker:8.2-alpine
 
     services:
       db:
-        image: mariadb:10.7
+        image: mariadb
         env:
           MYSQL_USER: drupal
           MYSQL_PASSWORD: drupal
@@ -37,12 +33,11 @@ jobs:
 
       - name: Build project
         run: |
-          composer install
+          composer install --no-interaction
           $(drush sql:connect) < latest.sql
-          drush cr && drush cim -y
-          composer update drupal/helfi_* drupal/hdbt* -W
-          drush updb -y
-          drush cex -y
+          drush cim -y && drush updb -y && drush cr
+          composer update drupal/helfi_* drupal/hdbt* -W --no-interaction
+          drush cr && drush updb -y && drush cex -y
           # Update platform
           drush helfi:tools:update-platform
 
@@ -53,6 +48,7 @@ jobs:
           author: actions-bot <actions-bot@users.noreply.github.com>
           commit-message: Update configuration
           title: Automatic update
+          labels: auto-update
           body: |
             - Updated active configuration.
             - Updated platform

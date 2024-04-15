@@ -84,7 +84,7 @@
           {% endif %}
           {% if content.field_links|render %}
             <div class="liftup-with-image-and-links__cta">
-              {% for key, item in content.field_links if key|first != '#' %}
+              {% for key, item in content.field_links |filter((value, key) => key|first != '#') %}
                 {% set link = item['#url'] %}
                 {% set text = item['#title'] %}
                 {% set target_new = item['#options']['target_new'] %}

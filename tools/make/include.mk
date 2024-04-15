@@ -12,7 +12,6 @@ include $(DRUIDFI_TOOLS_MAKE_DIR)qa.mk
 
 IS_DRUPAL ?= $(shell test -f $(WEBROOT)/sites/default/settings.php && echo yes || echo no)
 IS_SYMFONY ?= $(shell test -f config/bundles.php && echo yes || echo no)
-IS_WP ?= $(shell (test -f $(WEBROOT)/wp-settings.php || test -f conf/wp-config.php) && echo yes || echo no)
 
 ifeq ($(IS_DRUPAL),yes)
 include $(DRUIDFI_TOOLS_MAKE_DIR)drupal.mk
@@ -22,8 +21,14 @@ ifeq ($(IS_SYMFONY),yes)
 include $(DRUIDFI_TOOLS_MAKE_DIR)symfony.mk
 endif
 
-ifeq ($(IS_WP),yes)
-include $(DRUIDFI_TOOLS_MAKE_DIR)wordpress.mk
+#
+# Other tools
+#
+
+HAS_ANSIBLE ?= $(shell test -d ansible && echo yes || echo no)
+
+ifeq ($(HAS_ANSIBLE),yes)
+include $(DRUIDFI_TOOLS_MAKE_DIR)ansible.mk
 endif
 
 #

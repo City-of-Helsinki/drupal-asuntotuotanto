@@ -9,7 +9,7 @@ dependencies:
     - field.field.paragraph.news_info_card.field_title
     - paragraphs.paragraphs_type.news_info_card
   module:
-    - hdbt_admin_editorial
+    - hdbt_admin_tools
     - media_library
 id: paragraph.news_info_card.default
 targetEntityType: paragraph

@@ -4,12 +4,14 @@ status: true
 dependencies:
   config:
     - filter.format.full_html
+    - filter.format.minimal
     - media.type.file
+    - media.type.hel_map
+    - media.type.helfi_chart
     - media.type.image
     - media.type.remote_video
-    - media.type.soundcloud
+    - node.type.announcement
     - node.type.apartment
-    - node.type.article
     - node.type.landing_page
     - node.type.news
     - node.type.page
@@ -37,10 +39,12 @@ dependencies:
   module:
     - asu_application
     - block
+    - block_content
     - config_translation
     - content_lock
     - content_translation
     - editoria11y
+    - entity_usage
     - eu_cookie_compliance
     - file
     - filter
@@ -55,6 +59,8 @@ dependencies:
     - paragraphs_type_permissions
     - path
     - pathauto
+    - publication_date
+    - rebuild_cache_access
     - redirect
     - role_delegation
     - samlauth
@@ -68,13 +74,15 @@ dependencies:
 _core:
   default_config_hash: fnOpQQ5r1eprWvQPrJPWRfDqxozQiZnwIdYFPKb0lbM
 id: admin
-label: Pääkäyttäjä
+label: Administrator
 weight: -2
 is_admin: null
 permissions:
   - 'access administration pages'
+  - 'access block library'
   - 'access content'
   - 'access content overview'
+  - 'access entity usage statistics'
   - 'access files overview'
   - 'access media overview'
   - 'access remote entities overview'
@@ -83,11 +91,12 @@ permissions:
   - 'access toolbar'
   - 'access user profiles'
   - 'administer applications'
+  - 'administer block content'
+  - 'administer block types'
   - 'administer blocks'
   - 'administer content translation'
   - 'administer eu cookie compliance categories'
   - 'administer eu cookie compliance popup'
-  - 'administer hotjar settings'
   - 'administer menu'
   - 'administer nodes'
   - 'administer paragraphs library'
@@ -108,10 +117,12 @@ permissions:
   - 'cancel account'
   - 'change own username'
   - 'configure saml'
+  - 'create announcement content'
   - 'create apartment content'
-  - 'create article content'
   - 'create content translations'
   - 'create file media'
+  - 'create hel_map media'
+  - 'create helfi_chart media'
   - 'create image media'
   - 'create landing_page content'
   - 'create media'
@@ -121,7 +132,6 @@ permissions:
   - 'create project content'
   - 'create remote entities'
   - 'create remote_video media'
-  - 'create soundcloud media'
   - 'create terms in apartment_state_of_sale'
   - 'create terms in building_types'
   - 'create terms in construction_materials'
@@ -143,24 +153,30 @@ permissions:
   - 'create terms in tasks'
   - 'create url aliases'
   - 'delete all revisions'
+  - 'delete announcement revisions'
+  - 'delete any announcement content'
   - 'delete any file media'
+  - 'delete any hel_map media'
+  - 'delete any helfi_chart media'
   - 'delete any image media'
   - 'delete any landing_page content'
   - 'delete any media'
   - 'delete any news content'
   - 'delete any page content'
   - 'delete any remote_video media'
-  - 'delete any soundcloud media'
   - 'delete content translations'
   - 'delete landing_page revisions'
   - 'delete media'
+  - 'delete own announcement content'
   - 'delete own file media'
+  - 'delete own files'
+  - 'delete own hel_map media'
+  - 'delete own helfi_chart media'
   - 'delete own image media'
   - 'delete own landing_page content'
   - 'delete own news content'
   - 'delete own page content'
   - 'delete own remote_video media'
-  - 'delete own soundcloud media'
   - 'delete page revisions'
   - 'delete remote entities'
   - 'delete terms in apartment_state_of_sale'
@@ -183,9 +199,12 @@ permissions:
   - 'delete terms in states_of_sale'
   - 'delete terms in tasks'
   - 'display eu cookie compliance popup'
+  - 'edit any announcement content'
   - 'edit any apartment content'
   - 'edit any article content'
   - 'edit any file media'
+  - 'edit any hel_map media'
+  - 'edit any helfi_chart media'
   - 'edit any image media'
   - 'edit any landing_page content'
   - 'edit any news content'
@@ -193,10 +212,12 @@ permissions:
   - 'edit any project content'
   - 'edit any remote_video media'
   - 'edit any service content'
-  - 'edit any soundcloud media'
+  - 'edit own announcement content'
   - 'edit own apartment content'
   - 'edit own article content'
   - 'edit own file media'
+  - 'edit own hel_map media'
+  - 'edit own helfi_chart media'
   - 'edit own image media'
   - 'edit own landing_page content'
   - 'edit own news content'
@@ -204,7 +225,6 @@ permissions:
   - 'edit own project content'
   - 'edit own remote_video media'
   - 'edit own service content'
-  - 'edit own soundcloud media'
   - 'edit paragraph library item'
   - 'edit remote entities'
   - 'edit terms in apartment_state_of_sale'
@@ -226,13 +246,17 @@ permissions:
   - 'edit terms in site_owners'
   - 'edit terms in states_of_sale'
   - 'edit terms in tasks'
+  - 'rebuild cache access'
   - 'revert all revisions'
+  - 'revert announcement revisions'
   - 'revert landing_page revisions'
   - 'revert news revisions'
   - 'revert page revisions'
   - 'schedule publishing of nodes'
+  - 'set announcement published on date'
   - 'set landing_page published on date'
   - 'set page published on date'
+  - 'translate announcement node'
   - 'translate any entity'
   - 'translate apartment node'
   - 'translate apartment_state_of_sale taxonomy_term'
@@ -263,7 +287,6 @@ permissions:
   - 'translate service node'
   - 'translate services taxonomy_term'
   - 'translate site_owners taxonomy_term'
-  - 'translate soundcloud media'
   - 'translate tasks taxonomy_term'
   - 'update any media'
   - 'update content translations'
@@ -276,6 +299,7 @@ permissions:
   - 'use views bulk edit'
   - 'view all media revisions'
   - 'view all revisions'
+  - 'view announcement revisions'
   - 'view any unpublished apartment content'
   - 'view any unpublished article content'
   - 'view any unpublished content'

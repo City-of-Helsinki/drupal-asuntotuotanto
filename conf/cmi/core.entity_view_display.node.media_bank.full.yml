@@ -1,5 +1,5 @@
 uuid: 71705cad-83d9-44cd-bf70-8a54e1bafee0
-langcode: fi
+langcode: en
 status: true
 dependencies:
   config:
@@ -44,5 +44,6 @@ content:
 hidden:
   langcode: true
   links: true
+  published_at: true
   search_api_excerpt: true
   toc_enabled: true
