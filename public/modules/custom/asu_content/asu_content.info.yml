@@ -4,6 +4,8 @@ description: 'ASU - Content provides functionalities for creating, providing and
 core: 8.x
 core_version_requirement: ^8 || ^9 || ^10
 package: 'ASU'
+libraries:
+  - asu_editform
 dependencies:
   - computed_field_plugin
 'interface translation project': asu_content
