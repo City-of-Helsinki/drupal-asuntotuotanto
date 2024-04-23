@@ -8,7 +8,6 @@
     "prefer-stable": true,
     "require": {
         "asuntomyynti/react": "^1.3",
-        "composer/composer": "2.7.2",
         "composer/installers": "^2.0",
         "cweagans/composer-patches": "^1.6.7",
         "dinbror/blazy": "^1.8",
@@ -22,8 +21,8 @@
         "drupal/computed_field_plugin": "^1.4",
         "drupal/config_terms": "^1.9",
         "drupal/context": "^5.0@RC",
-        "drupal/core": "^10.2.2",
-        "drupal/core-composer-scaffold": "^10.2.2",
+        "drupal/core": "^10.2",
+        "drupal/core-composer-scaffold": "^10.2",
         "drupal/email_registration": "^1.4",
         "drupal/externalauth": "^2.0",
         "drupal/field_group": "^3.1",
