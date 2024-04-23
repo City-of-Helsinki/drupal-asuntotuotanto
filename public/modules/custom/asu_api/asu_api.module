@@ -18,14 +18,14 @@ use Symfony\Component\HttpFoundation\Response;
 function asu_api_cron() {
   // Update apartments adjusted_right_of_occupancy_payment and
   // alteration_work_total values.
-  getApartmentRevaluationCron();
-  getApartmentStatusRequestCron();
+  asu_api_getApartmentRevaluationCron();
+  asu_api_getApartmentStatusRequestCron();
 }
 
 /**
  * Get apartment revaluation cron.
  */
-function getApartmentRevaluationCron() {
+function asu_api_getApartmentRevaluationCron() {
   $apartment_revaluation = NULL;
 
   try {
@@ -71,7 +71,7 @@ function getApartmentRevaluationCron() {
  *
  * Update apartments state of sale sold status.
  */
-function getApartmentStatusRequestCron() {
+function asu_api_getApartmentStatusRequestCron() {
   try {
     /** @var \Drupal\asu_api\Api\BackendApi\BackendApi $api */
     $api = \Drupal::service('asu_api.backendapi');

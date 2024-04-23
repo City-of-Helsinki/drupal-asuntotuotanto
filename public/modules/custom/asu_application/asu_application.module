@@ -274,7 +274,7 @@ function asu_application_cron() {
 function asu_application_mail(string $key, array &$message, array $params) {
   switch ($key) {
     case 'apply_for_free_apartment':
-      send_apply_for_free_apartment($message, $params);
+      asu_application_send_apply_for_free_apartment($message, $params);
       break;
   }
 }
@@ -287,7 +287,7 @@ function asu_application_mail(string $key, array &$message, array $params) {
  * @param array $params
  *   Parameters variable.
  */
-function send_apply_for_free_apartment(array &$message, array $params) {
+function asu_application_send_apply_for_free_apartment(array &$message, array $params) {
   $message['from'] = \Drupal::config('system.site')->get('mail');
   $message['subject'] = $params['subject'];
   $message['body'][] = $params['message'];
