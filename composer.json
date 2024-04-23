@@ -8,6 +8,7 @@
     "prefer-stable": true,
     "require": {
         "asuntomyynti/react": "^1.3",
+        "composer/composer": "2.7.2",
         "composer/installers": "^2.0",
         "cweagans/composer-patches": "^1.6.7",
         "dinbror/blazy": "^1.8",
