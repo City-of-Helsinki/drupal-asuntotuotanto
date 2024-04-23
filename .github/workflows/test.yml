@@ -46,9 +46,6 @@ jobs:
         with:
           fetch-depth: 1
 
-      - name: Composer self-update
-        run: composer self-update
-
       - name: Build project
         run: composer install --no-interaction
 
