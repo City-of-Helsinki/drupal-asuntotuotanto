@@ -86,6 +86,9 @@
             "zaporylie/composer-drupal-optimizations": true,
             "php-http/discovery": true,
             "phpstan/extension-installer": true
+        },
+        "audit": {
+            "abandoned": "ignore"
         }
     },
     "extra": {
