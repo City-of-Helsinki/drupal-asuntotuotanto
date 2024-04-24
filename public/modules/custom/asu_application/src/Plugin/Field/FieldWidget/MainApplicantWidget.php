@@ -2,11 +2,14 @@
 
 namespace Drupal\asu_application\Plugin\Field\FieldWidget;
 
+use Drupal\asu_api\Api\BackendApi\BackendApi;
 use Drupal\asu_api\Api\BackendApi\Request\UserRequest;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\WidgetBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\user\Entity\User;
+use Drupal\Core\Session\AccountInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -24,19 +27,82 @@ use Symfony\Component\HttpFoundation\Response;
 class MainApplicantWidget extends WidgetBase {
 
   /**
+   * The entity type manager service.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
+   * Current user account.
+   *
+   * @var \Drupal\Core\Session\AccountInterface
+   */
+  protected $currentUser;
+
+  /**
+   * Backend api.
+   *
+   * @var Drupal\asu_api\Api\BackendApi\BackendApi
+   */
+  private $backendApi;
+
+  /**
+   * Constructs a new class instance.
+   *
+   * @param array $configuration
+   *   A configuration array containing information about the plugin instance.
+   * @param string $plugin_id
+   *   The plugin_id for the plugin instance.
+   * @param mixed $plugin_definition
+   *   The plugin implementation definition.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   Entity type manager service.
+   * @param \Drupal\Core\Session\AccountInterface $current_user
+   *   Current user account.
+   * @param Drupal\asu_api\Api\BackendApi\BackendApi $backendApi
+   *   Asu backend api.
+   */
+  public function __construct(
+    array $configuration,
+    $plugin_id,
+    $plugin_definition,
+    EntityTypeManagerInterface $entity_type_manager,
+    AccountInterface $current_user,
+    BackendApi $backendApi,
+  ) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+    $this->entityTypeManager = $entity_type_manager;
+    $this->currentUser = $current_user;
+    $this->backendApi = $backendApi;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('entity_type.manager'),
+      $container->get('current_user'),
+      $container->get('asu_api.backendapi')
+    );
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
-    $account = User::load(\Drupal::currentUser()->id());
+    $account = $this->entityTypeManager->getStorage('user')->load($this->currentUser->id());
 
     if ($account->hasRole('customer')) {
       $request = new UserRequest($account);
       $request->setSender($account);
 
-      /** @var \Drupal\asu_api\Api\BackendApi\BackendApi $backendApi */
-      $backendApi = \Drupal::service('asu_api.backendapi');
       try {
-        $userResponse = $backendApi->send($request);
+        $userResponse = $this->backendApi->send($request);
       }
       catch (\Exception $e) {
         return new Response('Failed to fetch user data to applicant form.', 400);

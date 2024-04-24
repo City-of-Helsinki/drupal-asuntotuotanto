@@ -9,12 +9,15 @@ use Drupal\asu_content\Entity\Project;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Ajax\UpdateBuildIdCommand;
+use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Entity\ContentEntityForm;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Messenger\MessengerTrait;
+use Drupal\Core\Path\CurrentPathStack;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
-use Drupal\node\Entity\Node;
-use Drupal\user\Entity\User;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
@@ -22,6 +25,84 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
  */
 class ApplicationForm extends ContentEntityForm {
   use MessengerTrait;
+
+  /**
+   * The entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
+   * Current user account.
+   *
+   * @var \Drupal\Core\Session\AccountInterface
+   */
+  protected $currentUser;
+
+  /**
+   * A request stack symfony instance.
+   *
+   * @var \Symfony\Component\HttpFoundation\RequestStack
+   */
+  protected $requestStack;
+
+  /**
+   * A cache service.
+   *
+   * @var \Drupal\Core\Cache\CacheBackendInterface
+   */
+  protected $cache;
+
+  /**
+   * Current path.
+   *
+   * @var \Drupal\Core\Path\CurrentPathStack
+   */
+  protected $currentPath;
+
+  /**
+   * The current route match.
+   *
+   * @var \Drupal\Core\Routing\RouteMatchInterface
+   */
+  protected $routeMatch;
+
+  /**
+   * Constructs a FieldMapperBase object.
+   *
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
+   *   The entity type manager service.
+   * @param \Drupal\Core\Session\AccountInterface $current_user
+   *   Current user.
+   * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
+   *   The request stack.
+   * @param \Drupal\Core\Cache\CacheBackendInterface $cache
+   *   The cache.
+   * @param \Drupal\Core\Path\CurrentPathStack $current_path
+   *   The current path.
+   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
+   *   The current path.
+   * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $event_dispatcher
+   *   The event dispatcher.
+   */
+  public function __construct(
+    EntityTypeManagerInterface $entityTypeManager,
+    AccountInterface $current_user,
+    RequestStack $requestStack,
+    CacheBackendInterface $cache,
+    CurrentPathStack $current_path,
+    RouteMatchInterface $route_match,
+    EventDispatcherInterface $event_dispatcher
+  ) {
+    $this->entityTypeManager = $entityTypeManager;
+    $this->currentUser = $current_user;
+    $this->requestStack = $requestStack;
+    $this->cache = $cache;
+    $this->currentPath = $current_path;
+    $this->routeMatch = $route_match;
+    $this->eventDispatcher = $event_dispatcher;
+  }
 
   /**
    * {@inheritdoc}
@@ -34,14 +115,14 @@ class ApplicationForm extends ContentEntityForm {
 
     if (!$project) {
       $project_id = $this->entity->get('project_id')->value;
-      $project = Node::load($project_id);
+      $project = $this->entityTypeManager->getStorage('node')->load($project_id);
     }
 
     $project_id = $project->id();
     $application_type_id = $this->entity->bundle();
 
     /** @var \Drupal\user\Entity\User $currentUser */
-    $currentUser = User::load(\Drupal::currentUser()->id());
+    $currentUser = $this->entityTypeManager->getStorage('user')->load($this->currentUser->id());
     $applicationsUrl = $this->getUserApplicationsUrl();
 
     $form['#project_id'] = $project_id;
@@ -49,7 +130,7 @@ class ApplicationForm extends ContentEntityForm {
 
     // Redirect cases.
     if ($currentUser->isAnonymous()) {
-      $current_path = \Drupal::service('path.current')->getPath();
+      $current_path = $this->currentPath->getPath();
       $redirect = '/user/login?destination=' . $current_path;
       return (new RedirectResponse($redirect, 301));
     }
@@ -67,14 +148,14 @@ class ApplicationForm extends ContentEntityForm {
       $owner = $currentUser;
     }
     else {
-      if (!$owner_id = \Drupal::request()->get('user_id')) {
+      if (!$owner_id = $this->requestStack->getCurrentRequest()->get('user_id')) {
         $owner_id = $this->entity->getOwnerId();
       }
-      $owner = User::load($owner_id);
+      $owner = $this->entityTypeManager->getStorage('user')->load($owner_id);
     }
 
     if ($this->entity->isNew()) {
-      $applications = \Drupal::entityTypeManager()
+      $applications = $this->entityTypeManager
         ->getStorage('asu_application')
         ->loadByProperties([
           'uid' => $owner_id,
@@ -85,11 +166,11 @@ class ApplicationForm extends ContentEntityForm {
         return new RedirectResponse($applicationsUrl);
       }
 
-      $parameters = \Drupal::routeMatch()->getParameters();
+      $parameters = $this->routeMatch->getParameters();
 
       // If user already has an application for this project.
       if ($project_id = $parameters->get('project_id')) {
-        $applications = \Drupal::entityTypeManager()
+        $applications = $this->entityTypeManager
           ->getStorage('asu_application')
           ->loadByProperties([
             'uid' => $owner->id(),
@@ -110,7 +191,7 @@ class ApplicationForm extends ContentEntityForm {
           'hitas' => 'haso',
           'haso' => 'hitas',
         ];
-        $correctApplicationForm = \Drupal::request()->getSchemeAndHttpHost() .
+        $correctApplicationForm = $this->requestStack->getCurrentRequest()->getSchemeAndHttpHost() .
           '/application/add/' . $types[strtolower($application_type_id)] . '/' .
           $project_id;
         return new RedirectResponse($correctApplicationForm);
@@ -132,7 +213,7 @@ class ApplicationForm extends ContentEntityForm {
 
       if ($this->isApplicationPeriod('after', $startDate, $endDate)) {
         $this->messenger()->addMessage($this->t('The application period has ended. You can still apply for the apartment by contacting the responsible salesperson.'));
-        $freeApplicationUrl = \Drupal::request()->getSchemeAndHttpHost() .
+        $freeApplicationUrl = $this->requestStack->getCurrentRequest()->getSchemeAndHttpHost() .
           '/contact/apply_for_free_apartment?project=' . $project_id;
         return new RedirectResponse($freeApplicationUrl);
       }
@@ -166,7 +247,7 @@ class ApplicationForm extends ContentEntityForm {
       if ($currentUser->bundle() == 'customer') {
         $form['actions']['draft'] = [
           '#type' => 'submit',
-          '#value' => t('Save as a draft'),
+          '#value' => $this->t('Save as a draft'),
           '#attributes' => ['class' => ['hds-button--secondary']],
           '#limit_validation_errors' => [],
           '#name' => 'submit-draft',
@@ -186,18 +267,18 @@ class ApplicationForm extends ContentEntityForm {
     foreach ($formValues['main_applicant'][0] as $field => $value) {
       if (empty($value) || $value == '-' || strlen($value) < 2) {
         $fieldTitle = (string) $form["main_applicant"]['widget'][0][$field]['#title'];
-        $form_state->setErrorByName($field, t('Field @field cannot be empty', ['@field' => $fieldTitle]));
+        $form_state->setErrorByName($field, $this->t('Field @field cannot be empty', ['@field' => $fieldTitle]));
       }
 
       if ($field == 'personal_id' && strlen($value) != 4) {
         $fieldTitle = (string) $form["main_applicant"]['widget'][0][$field]['#title'];
-        $form_state->setErrorByName($field, t('Check @field', ['@field' => $fieldTitle]));
+        $form_state->setErrorByName($field, $this->t('Check @field', ['@field' => $fieldTitle]));
       }
     }
 
     if (count($formValues['apartment']) <= 1 && isset($formValues['apartment'][0])) {
       if ($formValues['apartment'][0]['id'] == '0' || empty($formValues['apartment'][0]['id'])) {
-        $form_state->setErrorByName('apartment', t('Field @field cannot be empty', ['@field' => 'apartment']));
+        $form_state->setErrorByName('apartment', $this->t('Field @field cannot be empty', ['@field' => 'apartment']));
       }
     }
 
@@ -211,12 +292,12 @@ class ApplicationForm extends ContentEntityForm {
 
         if ($applicant_field == 'personal_id' && strlen($applicant_value) != 4) {
           $fieldTitle = (string) $form["applicant"]['widget'][0][$applicant_field]['#title'];
-          $form_state->setErrorByName($field, t('Check @field', ['@field' => $fieldTitle]));
+          $form_state->setErrorByName($field, $this->t('Check @field', ['@field' => $fieldTitle]));
         }
 
         if (empty($applicant_value) || $applicant_value == '-' || strlen($applicant_value) < 2) {
           $fieldTitle = (string) $form["applicant"]['widget'][0][$applicant_field]['#title'];
-          $form_state->setErrorByName($applicant_field, t('Field @field cannot be empty', ['@field' => $fieldTitle]));
+          $form_state->setErrorByName($applicant_field, $this->t('Field @field cannot be empty', ['@field' => $fieldTitle]));
         }
       }
     }
@@ -281,7 +362,7 @@ class ApplicationForm extends ContentEntityForm {
 
     // Validate additional applicant.
     if ($values['applicant'][0]['has_additional_applicant'] === "1") {
-      foreach ($values['applicant'][0] as $key => $value) {
+      foreach ($values['applicant'][0] as $value) {
         if (!isset($value) || !$value || $value === '') {
           if ($errors) {
             $this->messenger()->addError($this->t('You must fill all fields for additional applicant before application can be submitted'));
@@ -301,7 +382,7 @@ class ApplicationForm extends ContentEntityForm {
    *   Form state.
    */
   private function handleApplicationEvent(array $form, FormStateInterface $form_state) {
-    $currentUser = User::load(\Drupal::currentUser()->id());
+    $currentUser = $this->entityTypeManager->getStorage('user')->load($this->currentUser->id());
     if ($currentUser->bundle() == 'sales' || $currentUser->hasPermission('administer')) {
       $eventName = SalesApplicationEvent::EVENT_NAME;
       $event = new SalesApplicationEvent(
@@ -320,8 +401,7 @@ class ApplicationForm extends ContentEntityForm {
         $this->entity
       );
     }
-    \Drupal::service('event_dispatcher')
-      ->dispatch($event, $eventName);
+    $this->eventDispatcher->dispatch($event, $eventName);
   }
 
   /**
@@ -350,12 +430,12 @@ class ApplicationForm extends ContentEntityForm {
     $values = [];
     $type = $project->get('field_ownership_type')
       ?->first()
-      ->get('entity')
-      ->getTarget()
-      ->getValue()
-      ->getName();
+        ->get('entity')
+        ->getTarget()
+        ->getValue()
+        ->getName();
 
-    if ($apartmentData = \Drupal::cache()->get($cid)) {
+    if ($apartmentData = $this->cache->get($cid)) {
       $values['apartments'] = $apartmentData->data;
     }
     else {
@@ -397,7 +477,7 @@ class ApplicationForm extends ContentEntityForm {
         $apartments[$apartment->id()] = $select_text;
       }
       ksort($apartments, SORT_NUMERIC);
-      \Drupal::cache()->set($cid, $apartments, (time() + 60 * 60));
+      $this->cache->set($cid, $apartments, (time() + 60 * 60));
       $values['apartments'] = $apartments;
     }
 
@@ -546,30 +626,11 @@ class ApplicationForm extends ContentEntityForm {
   }
 
   /**
-   * Turn date into henkilötunnus format "ddmmyy".
-   *
-   * @param string|null $dateString
-   *   Date of birth.
-   *
-   * @return string
-   *   Date of birth formatted as pid.
-   *
-   * @throws \Exception
-   */
-  private function dateToPersonalId(?string $dateString) {
-    $date = new \DateTime($dateString);
-    $day = $date->format('d');
-    $month = $date->format('m');
-    $year = $date->format('y');
-    return $day . $month . $year;
-  }
-
-  /**
    * Get url to applications page.
    */
   private function getUserApplicationsUrl($url = TRUE): string {
     if ($url) {
-      return \Drupal::request()->getSchemeAndHttpHost() . '/user/applications';
+      return $this->requestStack->getCurrentRequest()->getSchemeAndHttpHost() . '/user/applications';
     }
     return 'internal:/user/applications';
   }

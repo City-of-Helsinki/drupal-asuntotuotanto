@@ -2,13 +2,17 @@
 
 namespace Drupal\asu_application\Controller;
 
+use Drupal\asu_api\Api\BackendApi\BackendApi;
 use Drupal\asu_api\Api\BackendApi\Request\ApplicationLotteryResult;
 use Drupal\asu_api\Api\BackendApi\Request\TriggerProjectLotteryRequest;
 use Drupal\asu_application\Entity\Application;
 use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Controller\ControllerBase;
-use Drupal\node\Entity\Node;
-use Drupal\user\Entity\User;
+use Drupal\Core\Entity\EntityRepositoryInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Session\AccountInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -17,22 +21,95 @@ use Symfony\Component\HttpFoundation\Response;
 class ResultController extends ControllerBase {
 
   /**
+   * The entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
+   * Current user account.
+   *
+   * @var \Drupal\Core\Session\AccountInterface
+   */
+  protected $currentUser;
+
+  /**
+   * Backend api class.
+   *
+   * @var \Drupal\asu_api\Api\BackendApi\BackendApi
+   */
+  private BackendApi $backendApi;
+
+  /**
+   * The entity repository service.
+   *
+   * @var \Drupal\Core\Entity\EntityRepositoryInterface
+   */
+  protected $entityRepository;
+
+  /**
+   * A request stack symfony instance.
+   *
+   * @var \Symfony\Component\HttpFoundation\RequestStack
+   */
+  protected $requestStack;
+
+  /**
+   * A cache service.
+   *
+   * @var \Drupal\Core\Cache\CacheBackendInterface
+   */
+  protected $cache;
+
+  /**
+   * Constructs a FieldMapperBase object.
+   *
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
+   *   The entity type manager service.
+   * @param \Drupal\Core\Session\AccountInterface $current_user
+   *   Current user.
+   * @param \Drupal\asu_api\Api\BackendApi\BackendApi $backendApi
+   *   Api manager.
+   * @param \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository
+   *   The entity repository service.
+   * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
+   *   The form builder.
+   * @param \Drupal\Core\Cache\CacheBackendInterface $cache
+   *   The cache.
+   */
+  public function __construct(
+    EntityTypeManagerInterface $entityTypeManager,
+    AccountInterface $current_user,
+    BackendApi $backendApi,
+    EntityRepositoryInterface $entity_repository,
+    RequestStack $requestStack,
+    CacheBackendInterface $cache
+  ) {
+    $this->entityTypeManager = $entityTypeManager;
+    $this->currentUser = $current_user;
+    $this->backendApi = $backendApi;
+    $this->entityRepository  = $entity_repository;
+    $this->requestStack = $requestStack;
+    $this->cache = $cache;
+  }
+
+  /**
    * Get apartment result array.
    */
   public function getResults(): AjaxResponse {
-    $user = User::load(\Drupal::currentUser()->id());
-    $applicationId = \Drupal::request()->get('application_id');
+    $user = $this->entityTypeManager->getStorage('user')->load($this->currentUser->id());
+    $applicationId = $this->requestStack->getCurrentRequest()->get('application_id');
     if ($user && $applicationId) {
-      $backendApi = \Drupal::service('asu_api.backendapi');
       $application = Application::load($applicationId);
 
-      $project = Node::load($application->getProjectId());
+      $project = $this->entityTypeManager->getStorage('node')->load($application->getProjectId());
       if ($application->getOwnerId() != $user->id()) {
         return new AjaxResponse([], 401);
       }
 
       $cid = 'asu_application_result_' . $user->id() . '_' . $applicationId;
-      if ($cached = \Drupal::cache()->get($cid)) {
+      if ($cached = $this->cache->get($cid)) {
         return new AjaxResponse(json_decode($cached->data, TRUE, 200));
       }
 
@@ -40,7 +117,7 @@ class ResultController extends ControllerBase {
         $request = new ApplicationLotteryResult($project->uuid());
         $request->setSender($user);
         /** @var \Drupal\asu_api\Api\BackendApi\Request\ApplicationLotteryResultResponse $responseContent */
-        $responseContent = $backendApi
+        $responseContent = $this->backendApi
           ->send($request)
           ->getContent();
       }
@@ -55,7 +132,7 @@ class ResultController extends ControllerBase {
 
       $results = [];
       foreach ($responseContent as $result) {
-        $apartment = \Drupal::service('entity.repository')->loadEntityByUuid('node', $result['apartment_uuid']);
+        $apartment = $this->entityRepository->loadEntityByUuid('node', $result['apartment_uuid']);
         $results[] = [
           'apartment_id' => $apartment->id(),
           'apartment_uuid' => $result['apartment_uuid'],
@@ -67,7 +144,7 @@ class ResultController extends ControllerBase {
         ];
       }
 
-      \Drupal::cache()->set($cid, json_encode($results), (time() + 60 * 60));
+      $this->cache->set($cid, json_encode($results), (time() + 60 * 60));
       return new AjaxResponse($results);
     }
     return new AjaxResponse([], 400);
@@ -83,15 +160,14 @@ class ResultController extends ControllerBase {
    *   Result response.
    */
   public function startLottery(string $project_uuid) {
-    $user = User::load(\Drupal::currentUser()->id());
+    $user = $this->entityTypeManager->getStorage('user')->load($this->currentUser->id());
     if ($user->bundle() != 'sales') {
       return new Response([], 404);
     }
     try {
-      $backendApi = \Drupal::service('asu_api.backendapi');
       $request = new TriggerProjectLotteryRequest($project_uuid);
       $request->setSender($user);
-      $backendApi->send($request);
+      $this->backendApi->send($request);
     }
     catch (\Exception $e) {
       return new Response('problem with request.', 400);
