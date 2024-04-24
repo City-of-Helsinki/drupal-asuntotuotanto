@@ -7,9 +7,9 @@ namespace Drupal\asu_api\Plugin\QueueWorker;
 use Drupal\asu_api\Api\BackendApi\BackendApi;
 use Drupal\asu_api\Api\BackendApi\Request\CreateApplicationRequest;
 use Drupal\asu_application\Entity\Application;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Queue\QueueWorkerBase;
-use Drupal\node\Entity\Node;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -33,8 +33,9 @@ class SyncApplication extends QueueWorkerBase implements ContainerFactoryPluginI
   /**
    * Constructor.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, BackendApi $backendApi) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entityTypeManager, BackendApi $backendApi) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
+    $this->entityTypeManager = $entityTypeManager;
     $this->backendApi = $backendApi;
   }
 
@@ -46,6 +47,7 @@ class SyncApplication extends QueueWorkerBase implements ContainerFactoryPluginI
       $configuration,
       $plugin_id,
       $plugin_definition,
+      $container->get('entity_type.manager'),
       $container->get('asu_api.apimanager')
     );
   }
@@ -57,10 +59,10 @@ class SyncApplication extends QueueWorkerBase implements ContainerFactoryPluginI
     $application = Application::load($data);
     try {
       /** @var \Drupal\node\Entity\Node $project */
-      $project = Node::load($application->getProjectId());
+      $project = $this->entityTypeManager->getStorage('node')->load($application->getProjectId());
 
       /** @var \Drupal\node\Entity\Node[] $apartments */
-      $apartments = Node::loadMultiple($application->getApartmentIds());
+      $apartments = $this->entityTypeManager->getStorage('node')->loadMultiple($application->getApartmentIds());
       $apartmentData = [];
       foreach ($apartments as $apartment) {
         $apartmentData[$apartment->id()] = $apartment->uuid();

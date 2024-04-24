@@ -9,6 +9,7 @@ use Drupal\asu_api\Exception\IllegalApplicationException;
 use Drupal\asu_api\Helper\AuthenticationHelper;
 use Drupal\asu_api\Helper\RequestHelper;
 use Drupal\Core\TempStore\PrivateTempStore;
+use Drupal\Core\TempStore\PrivateTempStoreFactory;
 use Drupal\user\UserInterface;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
@@ -52,11 +53,13 @@ class BackendApi {
    *   Http client.
    * @param Psr\Log\LoggerInterface $logger
    *   Logger.
+   * @param \Drupal\Core\TempStore\PrivateTempStoreFactory $temp_store_factory
+   *   Temp store service.
    */
-  public function __construct(Client $client, LoggerInterface $logger) {
+  public function __construct(Client $client, LoggerInterface $logger, PrivateTempStoreFactory $temp_store_factory) {
     $this->client = $client;
     $this->logger = $logger;
-    $storeFactory = \Drupal::service('tempstore.private');
+    $storeFactory = $temp_store_factory;
     $this->store = $storeFactory->get('customer');
   }
 

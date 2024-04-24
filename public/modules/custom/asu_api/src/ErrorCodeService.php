@@ -19,8 +19,8 @@ class ErrorCodeService {
   /**
    * Constructor.
    */
-  public function __construct() {
-    $this->config = \Drupal::config('asu_api.error_codes');
+  public function __construct(ImmutableConfig $config) {
+    $this->config = $config;
   }
 
   /**
