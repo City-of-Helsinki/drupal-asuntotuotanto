@@ -4,11 +4,29 @@ namespace Drupal\asu_mailer\Form;
 
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Language\LanguageManager;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Form to save configurations for emails.
  */
 class EmailContentSettingsform extends ConfigFormBase {
+
+  /**
+   * Constructor.
+   */
+  public function __construct(LanguageManager $languageManager) {
+    $this->languageManager = $languageManager;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('language_manager')
+    );
+  }
 
   /**
    * {@inheritdoc}
@@ -31,7 +49,7 @@ class EmailContentSettingsform extends ConfigFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $config = $this->config('asu_mailer.email_content_settings');
-    $language = \Drupal::languageManager()->getCurrentLanguage()->getId();
+    $language = $this->languageManager->getCurrentLanguage()->getId();
 
     foreach ($this->getFields() as $formId => $details) {
       $configKey = $formId . '_' . $language;
@@ -48,7 +66,7 @@ class EmailContentSettingsform extends ConfigFormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $config = $this->config('asu_mailer.email_content_settings');
-    $language = \Drupal::languageManager()->getCurrentLanguage()->getId();
+    $language = $this->languageManager->getCurrentLanguage()->getId();
 
     foreach ($this->getFields() as $formId => $details) {
       $configKey = $formId . '_' . $language;

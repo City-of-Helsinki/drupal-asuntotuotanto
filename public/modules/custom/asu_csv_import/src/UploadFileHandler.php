@@ -8,13 +8,27 @@ use Drupal\asu_csv_import\ImportTypes\DecimalType;
 use Drupal\asu_csv_import\ImportTypes\LinkType;
 use Drupal\asu_csv_import\ImportTypes\NumberType;
 use Drupal\asu_csv_import\ImportTypes\TextType;
+use Drupal\Component\Plugin\PluginBase;
+use Drupal\Core\Entity\EntityFieldManagerInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\file\Entity\File;
 use Drupal\node\Entity\Node;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Class to handle csv upload logic.
  */
 class UploadFileHandler {
+
+  /**
+   * The entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
   /**
    * The entity type manager.
    *
@@ -23,26 +37,30 @@ class UploadFileHandler {
   protected $entityFieldManager;
 
   /**
-   * The language manager.
+   * Current user account.
    *
-   * @var \Drupal\Core\Language\LanguageManager
+   * @var \Drupal\Core\Session\AccountInterface
    */
-  protected $languageManager;
+  protected $currentUser;
 
   /**
-   * The translation manager.
+   * Constructs a FieldMapperBase object.
    *
-   * @var \Drupal\Core\StringTranslation\TranslationManager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
+   *   The entity type manager service.
+   * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager
+   *   The entity field manager.
+   * @param \Drupal\Core\Session\AccountInterface $current_user
+   *   Current user.
    */
-  protected $translationManager;
-
-  /**
-   * Constructor.
-   */
-  public function __construct() {
-    $this->entityFieldManager = \Drupal::service('entity_field.manager');
-    $this->languageManager = \Drupal::languageManager();
-    $this->translationManager = \Drupal::translation();
+  public function __construct(
+    EntityTypeManagerInterface $entityTypeManager,
+    EntityFieldManagerInterface $entity_field_manager,
+    AccountInterface $current_user
+  ) {
+    $this->entityTypeManager = $entityTypeManager;
+    $this->entityFieldManager = $entity_field_manager;
+    $this->currentUser = $current_user;
   }
 
   /**
@@ -117,7 +135,7 @@ class UploadFileHandler {
     $field_definitions = $this->entityFieldManager->getFieldDefinitions('node', 'apartment');
     $update_nodes = [];
     $create_nodes = [];
-    $userid = \Drupal::currentUser()->id();
+    $userid = $this->currentUser->id();
 
     // @todo Throw exception, delimiter not found.
     $delimiter = $this->getFileDelimiter($file->getFileUri());
@@ -166,7 +184,7 @@ class UploadFileHandler {
 
         // Update existing or create new node.
         if (isset($node_fields['nid'])) {
-          $node = Node::load($node_fields['nid']);
+          $node = $this->entityTypeManager->getStorage('node')->load($node_fields['nid']);
 
           if (!$node || $node->bundle() !== 'apartment') {
             throw new \Exception('You are not allowed to set the \'nid\' field manually.');
@@ -192,7 +210,7 @@ class UploadFileHandler {
           $update_nodes[] = $node;
         }
         else {
-          $create_nodes[] = Node::create($node_fields);
+          $create_nodes[] = $this->entityTypeManager->getStorage('node')->create($node_fields);
         }
 
         $i++;
@@ -241,7 +259,7 @@ class UploadFileHandler {
 
     foreach ($node->field_apartments as $apartment) {
       $row = [];
-      $apt = Node::load($apartment->getValue()['target_id']);
+      $apt = $this->entityTypeManager->getStorage('node')->load($apartment->getValue()['target_id']);
       foreach ($fields_in_order as $field) {
         $data = NULL;
         // Csv can have "empty" between fields.
@@ -287,7 +305,7 @@ class UploadFileHandler {
       $type = $field->getFieldDefinition()->getType();
       if ($type == 'asu_csv_import' && !$field->isEmpty()) {
         $file_id = $field->getValue()[0]['target_id'];
-        $file = File::load($file_id);
+        $file = $this->entityTypeManager->getStorage('file')->load($file_id);
         return $file;
       }
     }
@@ -307,7 +325,7 @@ class UploadFileHandler {
    */
   private function getFieldTypes(array $header, array $field_definitions) {
     $field_types = [];
-    foreach ($header as $key => $title) {
+    foreach ($header as $title) {
       // Csv may have empty values.
       if ($title == 'empty') {
         $field_types[] = 'empty';
