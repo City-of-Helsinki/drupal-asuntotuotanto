@@ -33,7 +33,7 @@ class ApplicationFormUrl extends FieldItemList {
     /** @var Drupal\asu_content\Entity\Apartment $apartment */
     $apartment = $this->getEntity();
     if (!$apartment instanceof Apartment ||
-        !$project = $apartment->getProject()
+        $apartment->getProject()
     ) {
       return [
         '#markup' => '',

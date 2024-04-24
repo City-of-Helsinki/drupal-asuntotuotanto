@@ -172,7 +172,8 @@ function asu_content_entity_presave(EntityInterface $entity) {
       }
 
       // Handle archived value
-      // Resetting published & archived statuses since project was still published when archiving.
+      // Resetting published & archived statuses since project
+      // was still published when archiving.
       if (
         $archivedChanged &&
         $entity->field_archived->value == TRUE &&
@@ -227,7 +228,7 @@ function asu_content_entity_update($entity) {
     $entity->getType() == 'project' &&
     $entity->hasField('field_apartments')
   ) {
-    asuQueueWorker($entity);
+    asu_content_asu_queue_worker($entity);
   }
 }
 
@@ -261,7 +262,7 @@ function asu_content_node_insert(Node $node) {
 
       $node->get('field_apartments')->setValue([$apartment]);
       $node->save();
-      asuQueueWorker($node);
+      asu_content_asu_queue_worker($node);
     }
   }
 
@@ -269,7 +270,7 @@ function asu_content_node_insert(Node $node) {
     method_exists($node, 'getType') &&
     $node->getType() == 'apartment'
   ) {
-    asuQueueWorker($node);
+    asu_content_asu_queue_worker($node);
   }
 }
 
@@ -332,14 +333,14 @@ function asu_content_cron() {
 /**
  * Queue worker.
  */
-function asuQueueWorker($entity) {
+function asu_content_asu_queue_worker($entity) {
   if (
     $entity instanceof Apartment &&
     method_exists($entity, 'getType') &&
     $entity->getType() == 'apartment'
   ) {
     if ($project = $entity->getProject()) {
-      asuSetQueueWorker($project);
+      asu_content_asu_set_queue_worker($project);
     }
   }
 
@@ -348,14 +349,14 @@ function asuQueueWorker($entity) {
     method_exists($entity, 'getType') &&
     $entity->getType() == 'project'
   ) {
-    asuSetQueueWorker($entity);
+    asu_content_asu_set_queue_worker($entity);
   }
 }
 
 /**
  * Set queue worker.
  */
-function asuSetQueueWorker($project) {
+function asu_content_asu_set_queue_worker($project) {
   if ($project->getOwnershipType()) {
     // Get project apartment entities.
     $apartment_entities = $project->getApartmentEntities();

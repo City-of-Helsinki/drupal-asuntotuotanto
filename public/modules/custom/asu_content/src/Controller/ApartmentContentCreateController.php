@@ -4,11 +4,65 @@ namespace Drupal\asu_content\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\File\FileSystemInterface;
+use Drupal\file\FileRepositoryInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * An asu_content controller.
  */
 class ApartmentContentCreateController extends ControllerBase {
+
+  /**
+   * A request stack symfony instance.
+   *
+   * @var \Symfony\Component\HttpFoundation\RequestStack
+   */
+  protected $requestStack;
+
+  /**
+   * The file.repository service.
+   *
+   * @var \Drupal\file\FileRepositoryInterface
+   */
+  protected $fileRepository;
+
+  /**
+   * The file system service.
+   *
+   * @var \Drupal\Core\File\FileSystemInterface
+   */
+  protected $fileSystem;
+
+  /**
+   * A request stack symfony instance.
+   *
+   * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
+   *   The form builder.
+   * @param \Drupal\file\FileRepositoryInterface $fileRepository
+   *   The file.repository service.
+   * @param \Drupal\Core\File\FileSystemInterface $file_system
+   *   The file system service.
+   */
+  public function __construct(RequestStack $requestStack, FileRepositoryInterface $fileRepository, FileSystemInterface $file_system) {
+    $this->requestStack = $requestStack;
+    $this->fileRepository = $fileRepository;
+    $this->fileSystem = $file_system;
+
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
+   *   The Drupal service container.
+   *
+   * @return static
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('request_stack')
+    );
+  }
 
   /**
    * Update project and apartment fields values.
@@ -36,7 +90,7 @@ class ApartmentContentCreateController extends ControllerBase {
    *   Will return an array of images in File format.
    */
   private function getGeneratedImages() {
-    $host = \Drupal::request()->getSchemeAndHttpHost();
+    $host = $this->requestStack->getCurrentRequest()->getSchemeAndHttpHost();
 
     $external_images = [
       'https://images.pexels.com/photos/1643384/pexels-photo-1643384.jpeg',
@@ -122,43 +176,9 @@ class ApartmentContentCreateController extends ControllerBase {
    *   Will return an array of nodes for that content type.
    */
   private function getContent($content_type) {
-    return \Drupal::entityTypeManager()
+    return $this->entityTypeManager()
       ->getStorage('node')
       ->loadByProperties(['type' => $content_type]);
-  }
-
-  /**
-   * Get all apartment nodes referenced by project id.
-   *
-   * @param string $id
-   *
-   *   Project id.
-   *
-   * @return array
-   *
-   *   Will return an array of apartment nodes by project id.
-   */
-  private function getApartmentNodesByProjectId($id) {
-    $apartments = $this->getContent('apartment');
-    $apartments_stack = [];
-
-    foreach ($apartments as $key => $apartment) {
-      $parent_node_results = \Drupal::entityTypeManager()
-        ->getListBuilder('node')
-        ->getStorage()
-        ->loadByProperties([
-          'type' => 'project',
-          'status' => 1,
-          'field_apartments' => $apartment->id(),
-        ]
-      );
-
-      if (key($parent_node_results) === (int) $id) {
-        $apartments_stack[$key] = $key;
-      }
-    }
-
-    return array_intersect_key($apartments, array_flip($apartments_stack));
   }
 
   /**
@@ -175,7 +195,7 @@ class ApartmentContentCreateController extends ControllerBase {
 
     foreach ($images as $key => $image) {
       $image = file_get_contents($image);
-      \Drupal::service('file.repository')->writeData($image, "public://generated_apartment_image_$key.jpeg", FileSystemInterface::EXISTS_REPLACE);
+      $this->fileRepository->writeData($image, "public://generated_apartment_image_$key.jpeg", FileSystemInterface::EXISTS_REPLACE);
     }
   }
 
@@ -191,8 +211,8 @@ class ApartmentContentCreateController extends ControllerBase {
    *   Will return an array of image data.
    */
   private function getFileData(string $file_url) {
-    $file_name = \Drupal::service('file_system')->basename($file_url);
-    $target_file = \Drupal::entityTypeManager()->getStorage('file')->loadByProperties(['filename' => $file_name]);
+    $file_name = $this->fileSystem->basename($file_url);
+    $target_file = $this->entityTypeManager()->getStorage('file')->loadByProperties(['filename' => $file_name]);
     $file_data = reset($target_file);
 
     if (!$file_data) {
