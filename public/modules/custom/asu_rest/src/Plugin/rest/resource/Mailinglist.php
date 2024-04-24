@@ -32,8 +32,6 @@ final class Mailinglist extends ResourceBase {
    *   The HTTP response object.
    */
   public function post(array $data = []): ModifiedResourceResponse {
-    $email = \Drupal::currentUser()->id();
-
     /** @var \Symfony\Component\HttpFoundation\ParameterBag $parameters */
     $parameters = new ParameterBag($data);
     $required = [
