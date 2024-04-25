@@ -246,7 +246,7 @@ class RegisterForm extends TypedRegisterForm {
       ]);
     $user->password = $pass;
     \Drupal::messenger()->addMessage(
-      t('New customer account was created: @email', ['@email' => $form_state->getValue('mail')])
+      $this->t('New customer account was created: @email', ['@email' => $form_state->getValue('mail')])
     );
   }
 

@@ -7,14 +7,30 @@ services:
     arguments: ['@entity_type.manager']
   asu_user.commands:
     class: \Drupal\asu_user\Commands\DeleteTestUsersCommands
+    arguments: ['@asu_user.delete_test_users']
     tags:
       - { name: drush.command }
   asu_user.customer:
     class: Drupal\asu_user\Customer
-    arguments: ['@current_user', '@tempstore.private']
+    arguments: ['@entity_type.manager', '@current_user', '@tempstore.private', '@config.factory']
   asu_user.auth:
     class: Drupal\asu_user\AuthService
-    arguments: [ '@externalauth.externalauth', '@externalauth.authmap', '@config.factory', '@entity_type.manager', '@logger.channel.asu_user', '@event_dispatcher', '@request_stack', '@tempstore.private', '@flood', '@current_user', '@messenger', '@string_translation' ]
+    arguments: [
+      '@externalauth.externalauth',
+      '@externalauth.authmap',
+      '@config.factory',
+      '@entity_type.manager',
+      '@logger.channel.asu_user',
+      '@event_dispatcher',
+      '@request_stack',
+      '@tempstore.private',
+      '@flood',
+      '@current_user',
+      '@messenger',
+      '@string_translation',
+      '@asu_api.backendapi',
+      '@database'
+    ]
     calls:
       - [ setKeyRepository, [ '@?key.repository' ] ]
   asu_user.route_subscriber:
