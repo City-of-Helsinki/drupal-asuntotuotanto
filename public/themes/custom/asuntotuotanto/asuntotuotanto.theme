@@ -5,8 +5,6 @@
  * Functions to support theming in the HDBT Subtheme.
  */
 
-// phpcs:ignore
-use Drupal\asu_application\Applications;
 use Drupal\Core\Url;
 use Drupal\file\Entity\File;
 use Drupal\paragraphs\Entity\Paragraph;
@@ -249,7 +247,8 @@ function asuntotuotanto_preprocess_views_view_table(&$variables) {
       $apartment = $row->_entity;
       $applicationCounts = $project->getApartmentApplicationCounts();
       $applicationCount = $applicationCounts[$apartment->id()] ?? 0;
-      $applicationCountEnum = Applications::resolveApplicationCountEnum((int) $applicationCount);
+      // phpcs:ignore
+      $applicationCountEnum = \Drupal\asu_application\Applications::resolveApplicationCountEnum((int) $applicationCount);
       $variables['rows'][$key]['application_status'] = get_apartment_application_status($applicationCountEnum);
 
       $reserved_or_sold = FALSE;
