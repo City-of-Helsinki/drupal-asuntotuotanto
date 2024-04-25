@@ -118,9 +118,7 @@ function template_preprocess_asu_application(array &$variables) {
         ?->getName();
     }
 
-    if (
-      $project->hasField('field_application_end_time') &&
-    ) {
+    if ($project->hasField('field_application_end_time')) {
       $date_formatter = \Drupal::service('date.formatter');
       $application_end = $date_formatter->format(
         $project->get('field_application_end_time')->date->getTimestamp(),

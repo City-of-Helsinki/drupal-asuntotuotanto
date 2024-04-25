@@ -1,0 +1,1608 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Call to an undefined method Drupal\\\\asu_api\\\\Api\\\\Response\\:\\:getToken\\(\\)\\.$#"
+			count: 2
+			path: public/modules/custom/asu_api/src/Api/BackendApi/BackendApi.php
+
+		-
+			message: """
+				#^Call to deprecated method getConfig\\(\\) of class GuzzleHttp\\\\Client\\:
+				Client\\:\\:getConfig will be removed in guzzlehttp/guzzle\\:8\\.0\\.$#
+			"""
+			count: 2
+			path: public/modules/custom/asu_api/src/Api/BackendApi/BackendApi.php
+
+		-
+			message: "#^Method Drupal\\\\asu_api\\\\Api\\\\BackendApi\\\\BackendApi\\:\\:handleAuthentication\\(\\) should return string\\|null but returns false\\.$#"
+			count: 1
+			path: public/modules/custom/asu_api/src/Api/BackendApi/BackendApi.php
+
+		-
+			message: "#^PHPDoc tag @param for parameter \\$client with type Drupal\\\\asu_api\\\\Api\\\\BackendApi\\\\GuzzleHttp\\\\Client is not subtype of native type GuzzleHttp\\\\Client\\.$#"
+			count: 1
+			path: public/modules/custom/asu_api/src/Api/BackendApi/BackendApi.php
+
+		-
+			message: "#^PHPDoc tag @param for parameter \\$logger with type Drupal\\\\asu_api\\\\Api\\\\BackendApi\\\\Psr\\\\Log\\\\LoggerInterface is not subtype of native type Psr\\\\Log\\\\LoggerInterface\\.$#"
+			count: 1
+			path: public/modules/custom/asu_api/src/Api/BackendApi/BackendApi.php
+
+		-
+			message: "#^PHPDoc tag @param for parameter \\$user with type Drupal\\\\asu_api\\\\Api\\\\BackendApi\\\\Drupal\\\\user\\\\UserInterface is not subtype of native type Drupal\\\\user\\\\UserInterface\\.$#"
+			count: 1
+			path: public/modules/custom/asu_api/src/Api/BackendApi/BackendApi.php
+
+		-
+			message: "#^PHPDoc tag @var for property Drupal\\\\asu_api\\\\Api\\\\BackendApi\\\\BackendApi\\:\\:\\$store with type Drupal\\\\asu_api\\\\Api\\\\BackendApi\\\\Drupal\\\\Core\\\\TempStore\\\\PrivateTempStore is not subtype of native type Drupal\\\\Core\\\\TempStore\\\\PrivateTempStore\\.$#"
+			count: 1
+			path: public/modules/custom/asu_api/src/Api/BackendApi/BackendApi.php
+
+		-
+			message: "#^Parameter \\$client of method Drupal\\\\asu_api\\\\Api\\\\BackendApi\\\\BackendApi\\:\\:__construct\\(\\) has invalid type Drupal\\\\asu_api\\\\Api\\\\BackendApi\\\\GuzzleHttp\\\\Client\\.$#"
+			count: 1
+			path: public/modules/custom/asu_api/src/Api/BackendApi/BackendApi.php
+
+		-
+			message: "#^Parameter \\$logger of method Drupal\\\\asu_api\\\\Api\\\\BackendApi\\\\BackendApi\\:\\:__construct\\(\\) has invalid type Drupal\\\\asu_api\\\\Api\\\\BackendApi\\\\Psr\\\\Log\\\\LoggerInterface\\.$#"
+			count: 1
+			path: public/modules/custom/asu_api/src/Api/BackendApi/BackendApi.php
+
+		-
+			message: "#^Parameter \\$user of method Drupal\\\\asu_api\\\\Api\\\\BackendApi\\\\BackendApi\\:\\:authenticate\\(\\) has invalid type Drupal\\\\asu_api\\\\Api\\\\BackendApi\\\\Drupal\\\\user\\\\UserInterface\\.$#"
+			count: 1
+			path: public/modules/custom/asu_api/src/Api/BackendApi/BackendApi.php
+
+		-
+			message: "#^Property Drupal\\\\asu_api\\\\Api\\\\BackendApi\\\\BackendApi\\:\\:\\$store has unknown class Drupal\\\\asu_api\\\\Api\\\\BackendApi\\\\Drupal\\\\Core\\\\TempStore\\\\PrivateTempStore as its type\\.$#"
+			count: 1
+			path: public/modules/custom/asu_api/src/Api/BackendApi/BackendApi.php
+
+		-
+			message: "#^Variable \\$response might not be defined\\.$#"
+			count: 1
+			path: public/modules/custom/asu_api/src/Api/BackendApi/BackendApi.php
+
+		-
+			message: "#^Parameter \\$response of method Drupal\\\\asu_api\\\\Api\\\\BackendApi\\\\Request\\\\ApplicationLotteryResult\\:\\:getResponse\\(\\) has invalid type Drupal\\\\asu_api\\\\Api\\\\Psr\\\\Http\\\\Message\\\\ResponseInterface\\.$#"
+			count: 1
+			path: public/modules/custom/asu_api/src/Api/BackendApi/Request/ApplicationLotteryResult.php
+
+		-
+			message: "#^Parameter \\$response of method Drupal\\\\asu_api\\\\Api\\\\BackendApi\\\\Request\\\\AuthenticationRequest\\:\\:getResponse\\(\\) has invalid type Drupal\\\\asu_api\\\\Api\\\\Psr\\\\Http\\\\Message\\\\ResponseInterface\\.$#"
+			count: 1
+			path: public/modules/custom/asu_api/src/Api/BackendApi/Request/AuthenticationRequest.php
+
+		-
+			message: "#^Access to an undefined property Drupal\\\\Core\\\\TypedData\\\\TypedDataInterface\\:\\:\\$personal_id\\.$#"
+			count: 1
+			path: public/modules/custom/asu_api/src/Api/BackendApi/Request/CreateApplicationRequest.php
+
+		-
+			message: "#^PHPDoc tag @var for property Drupal\\\\asu_api\\\\Api\\\\BackendApi\\\\Request\\\\CreateApplicationRequest\\:\\:\\$application with type Drupal\\\\asu_api\\\\Api\\\\BackendApi\\\\Request\\\\Drupal\\\\asu_application\\\\Entity\\\\Application is not subtype of native type Drupal\\\\asu_application\\\\Entity\\\\Application\\.$#"
+			count: 1
+			path: public/modules/custom/asu_api/src/Api/BackendApi/Request/CreateApplicationRequest.php
+
+		-
+			message: "#^Parameter \\$response of method Drupal\\\\asu_api\\\\Api\\\\BackendApi\\\\Request\\\\CreateApplicationRequest\\:\\:getResponse\\(\\) has invalid type Drupal\\\\asu_api\\\\Api\\\\Psr\\\\Http\\\\Message\\\\ResponseInterface\\.$#"
+			count: 1
+			path: public/modules/custom/asu_api/src/Api/BackendApi/Request/CreateApplicationRequest.php
+
+		-
+			message: "#^Property Drupal\\\\asu_api\\\\Api\\\\BackendApi\\\\Request\\\\CreateApplicationRequest\\:\\:\\$application has unknown class Drupal\\\\asu_api\\\\Api\\\\BackendApi\\\\Request\\\\Drupal\\\\asu_application\\\\Entity\\\\Application as its type\\.$#"
+			count: 1
+			path: public/modules/custom/asu_api/src/Api/BackendApi/Request/CreateApplicationRequest.php
+
+		-
+			message: "#^PHPDoc tag @var for property Drupal\\\\asu_api\\\\Api\\\\BackendApi\\\\Request\\\\CreateUserRequest\\:\\:\\$user with type array is incompatible with native type Drupal\\\\user\\\\UserInterface\\.$#"
+			count: 1
+			path: public/modules/custom/asu_api/src/Api/BackendApi/Request/CreateUserRequest.php
+
+		-
+			message: "#^Parameter \\$response of method Drupal\\\\asu_api\\\\Api\\\\BackendApi\\\\Request\\\\CreateUserRequest\\:\\:getResponse\\(\\) has invalid type Drupal\\\\asu_api\\\\Api\\\\Psr\\\\Http\\\\Message\\\\ResponseInterface\\.$#"
+			count: 1
+			path: public/modules/custom/asu_api/src/Api/BackendApi/Request/CreateUserRequest.php
+
+		-
+			message: "#^\\\\Drupal calls should be avoided in classes, use dependency injection instead$#"
+			count: 1
+			path: public/modules/custom/asu_api/src/Api/BackendApi/Request/CreateUserRequest.php
+
+		-
+			message: "#^Parameter \\$response of method Drupal\\\\asu_api\\\\Api\\\\BackendApi\\\\Request\\\\GetApartmentRevaluationsRequest\\:\\:getResponse\\(\\) has invalid type Drupal\\\\asu_api\\\\Api\\\\Psr\\\\Http\\\\Message\\\\ResponseInterface\\.$#"
+			count: 1
+			path: public/modules/custom/asu_api/src/Api/BackendApi/Request/GetApartmentRevaluationsRequest.php
+
+		-
+			message: "#^Parameter \\$response of method Drupal\\\\asu_api\\\\Api\\\\BackendApi\\\\Request\\\\GetApartmentStatusRequest\\:\\:getResponse\\(\\) has invalid type Drupal\\\\asu_api\\\\Api\\\\Psr\\\\Http\\\\Message\\\\ResponseInterface\\.$#"
+			count: 1
+			path: public/modules/custom/asu_api/src/Api/BackendApi/Request/GetApartmentStatusRequest.php
+
+		-
+			message: "#^Access to an undefined property Drupal\\\\Core\\\\TypedData\\\\TypedDataInterface\\:\\:\\$personal_id\\.$#"
+			count: 1
+			path: public/modules/custom/asu_api/src/Api/BackendApi/Request/SalesCreateApplicationRequest.php
+
+		-
+			message: "#^Method Drupal\\\\asu_api\\\\Api\\\\BackendApi\\\\Request\\\\SalesCreateApplicationRequest\\:\\:getAdditionalApplicant\\(\\) should return array but returns null\\.$#"
+			count: 1
+			path: public/modules/custom/asu_api/src/Api/BackendApi/Request/SalesCreateApplicationRequest.php
+
+		-
+			message: "#^PHPDoc tag @var for property Drupal\\\\asu_api\\\\Api\\\\BackendApi\\\\Request\\\\SalesCreateApplicationRequest\\:\\:\\$application with type Drupal\\\\asu_api\\\\Api\\\\BackendApi\\\\Request\\\\Drupal\\\\asu_application\\\\Entity\\\\Application is not subtype of native type Drupal\\\\asu_application\\\\Entity\\\\Application\\.$#"
+			count: 1
+			path: public/modules/custom/asu_api/src/Api/BackendApi/Request/SalesCreateApplicationRequest.php
+
+		-
+			message: "#^Parameter \\$response of method Drupal\\\\asu_api\\\\Api\\\\BackendApi\\\\Request\\\\SalesCreateApplicationRequest\\:\\:getResponse\\(\\) has invalid type Drupal\\\\asu_api\\\\Api\\\\Psr\\\\Http\\\\Message\\\\ResponseInterface\\.$#"
+			count: 1
+			path: public/modules/custom/asu_api/src/Api/BackendApi/Request/SalesCreateApplicationRequest.php
+
+		-
+			message: "#^Property Drupal\\\\asu_api\\\\Api\\\\BackendApi\\\\Request\\\\SalesCreateApplicationRequest\\:\\:\\$application has unknown class Drupal\\\\asu_api\\\\Api\\\\BackendApi\\\\Request\\\\Drupal\\\\asu_application\\\\Entity\\\\Application as its type\\.$#"
+			count: 1
+			path: public/modules/custom/asu_api/src/Api/BackendApi/Request/SalesCreateApplicationRequest.php
+
+		-
+			message: "#^Parameter \\$response of method Drupal\\\\asu_api\\\\Api\\\\BackendApi\\\\Request\\\\TriggerProjectLotteryRequest\\:\\:getResponse\\(\\) has invalid type Drupal\\\\asu_api\\\\Api\\\\Psr\\\\Http\\\\Message\\\\ResponseInterface\\.$#"
+			count: 1
+			path: public/modules/custom/asu_api/src/Api/BackendApi/Request/TriggerProjectLotteryRequest.php
+
+		-
+			message: "#^Access to an undefined property Drupal\\\\user\\\\UserInterface\\:\\:\\$field_backend_profile\\.$#"
+			count: 1
+			path: public/modules/custom/asu_api/src/Api/BackendApi/Request/UpdateUserRequest.php
+
+		-
+			message: "#^PHPDoc tag @var for property Drupal\\\\asu_api\\\\Api\\\\BackendApi\\\\Request\\\\UpdateUserRequest\\:\\:\\$formState with type Drupal\\\\asu_api\\\\Api\\\\BackendApi\\\\Request\\\\Drupal\\\\Core\\\\Form\\\\FormStateInterface is not subtype of native type Drupal\\\\Core\\\\Form\\\\FormStateInterface\\.$#"
+			count: 1
+			path: public/modules/custom/asu_api/src/Api/BackendApi/Request/UpdateUserRequest.php
+
+		-
+			message: "#^PHPDoc tag @var for property Drupal\\\\asu_api\\\\Api\\\\BackendApi\\\\Request\\\\UpdateUserRequest\\:\\:\\$user with type Drupal\\\\asu_api\\\\Api\\\\BackendApi\\\\Request\\\\Drupal\\\\user\\\\UserInterface is not subtype of native type Drupal\\\\user\\\\UserInterface\\.$#"
+			count: 1
+			path: public/modules/custom/asu_api/src/Api/BackendApi/Request/UpdateUserRequest.php
+
+		-
+			message: "#^Parameter \\$response of method Drupal\\\\asu_api\\\\Api\\\\BackendApi\\\\Request\\\\UpdateUserRequest\\:\\:getResponse\\(\\) has invalid type Drupal\\\\asu_api\\\\Api\\\\Psr\\\\Http\\\\Message\\\\ResponseInterface\\.$#"
+			count: 1
+			path: public/modules/custom/asu_api/src/Api/BackendApi/Request/UpdateUserRequest.php
+
+		-
+			message: "#^Property Drupal\\\\asu_api\\\\Api\\\\BackendApi\\\\Request\\\\UpdateUserRequest\\:\\:\\$formState has unknown class Drupal\\\\asu_api\\\\Api\\\\BackendApi\\\\Request\\\\Drupal\\\\Core\\\\Form\\\\FormStateInterface as its type\\.$#"
+			count: 1
+			path: public/modules/custom/asu_api/src/Api/BackendApi/Request/UpdateUserRequest.php
+
+		-
+			message: "#^Property Drupal\\\\asu_api\\\\Api\\\\BackendApi\\\\Request\\\\UpdateUserRequest\\:\\:\\$user has unknown class Drupal\\\\asu_api\\\\Api\\\\BackendApi\\\\Request\\\\Drupal\\\\user\\\\UserInterface as its type\\.$#"
+			count: 1
+			path: public/modules/custom/asu_api/src/Api/BackendApi/Request/UpdateUserRequest.php
+
+		-
+			message: "#^Method Drupal\\\\asu_api\\\\Api\\\\BackendApi\\\\Request\\\\UserRequest\\:\\:getUser\\(\\) has invalid return type Drupal\\\\asu_api\\\\Api\\\\BackendApi\\\\Request\\\\Drupal\\\\user\\\\Entity\\\\User\\.$#"
+			count: 1
+			path: public/modules/custom/asu_api/src/Api/BackendApi/Request/UserRequest.php
+
+		-
+			message: "#^Method Drupal\\\\asu_api\\\\Api\\\\BackendApi\\\\Request\\\\UserRequest\\:\\:getUser\\(\\) should return Drupal\\\\asu_api\\\\Api\\\\BackendApi\\\\Request\\\\Drupal\\\\user\\\\Entity\\\\User but returns Drupal\\\\user\\\\UserInterface\\.$#"
+			count: 1
+			path: public/modules/custom/asu_api/src/Api/BackendApi/Request/UserRequest.php
+
+		-
+			message: "#^PHPDoc tag @param for parameter \\$user with type Drupal\\\\asu_api\\\\Api\\\\BackendApi\\\\Request\\\\Drupal\\\\user\\\\UserInterface is not subtype of native type Drupal\\\\user\\\\UserInterface\\.$#"
+			count: 1
+			path: public/modules/custom/asu_api/src/Api/BackendApi/Request/UserRequest.php
+
+		-
+			message: "#^PHPDoc tag @var for property Drupal\\\\asu_api\\\\Api\\\\BackendApi\\\\Request\\\\UserRequest\\:\\:\\$user with type Drupal\\\\asu_api\\\\Api\\\\BackendApi\\\\Request\\\\Drupal\\\\user\\\\UserInterface is not subtype of native type Drupal\\\\user\\\\UserInterface\\.$#"
+			count: 1
+			path: public/modules/custom/asu_api/src/Api/BackendApi/Request/UserRequest.php
+
+		-
+			message: "#^Parameter \\$response of method Drupal\\\\asu_api\\\\Api\\\\BackendApi\\\\Request\\\\UserRequest\\:\\:getResponse\\(\\) has invalid type Drupal\\\\asu_api\\\\Api\\\\Psr\\\\Http\\\\Message\\\\ResponseInterface\\.$#"
+			count: 1
+			path: public/modules/custom/asu_api/src/Api/BackendApi/Request/UserRequest.php
+
+		-
+			message: "#^Parameter \\$user of method Drupal\\\\asu_api\\\\Api\\\\BackendApi\\\\Request\\\\UserRequest\\:\\:__construct\\(\\) has invalid type Drupal\\\\asu_api\\\\Api\\\\BackendApi\\\\Request\\\\Drupal\\\\user\\\\UserInterface\\.$#"
+			count: 1
+			path: public/modules/custom/asu_api/src/Api/BackendApi/Request/UserRequest.php
+
+		-
+			message: "#^Property Drupal\\\\asu_api\\\\Api\\\\BackendApi\\\\Request\\\\UserRequest\\:\\:\\$user has unknown class Drupal\\\\asu_api\\\\Api\\\\BackendApi\\\\Request\\\\Drupal\\\\user\\\\UserInterface as its type\\.$#"
+			count: 1
+			path: public/modules/custom/asu_api/src/Api/BackendApi/Request/UserRequest.php
+
+		-
+			message: "#^Access to an undefined property Drupal\\\\asu_api\\\\Api\\\\BackendApi\\\\Response\\\\CreateApplicationResponse\\:\\:\\$status\\.$#"
+			count: 2
+			path: public/modules/custom/asu_api/src/Api/BackendApi/Response/CreateApplicationResponse.php
+
+		-
+			message: "#^Method Drupal\\\\asu_api\\\\Api\\\\BackendApi\\\\Response\\\\CreateApplicationResponse\\:\\:createFromHttpResponse\\(\\) has invalid return type Drupal\\\\asu_api\\\\Api\\\\BackendApi\\\\Response\\\\ApplicationResponse\\.$#"
+			count: 1
+			path: public/modules/custom/asu_api/src/Api/BackendApi/Response/CreateApplicationResponse.php
+
+		-
+			message: "#^PHPDoc tag @return with type Drupal\\\\asu_api\\\\Api\\\\BackendApi\\\\Response\\\\ApplicationResponse is not subtype of native type Drupal\\\\asu_api\\\\Api\\\\BackendApi\\\\Response\\\\CreateApplicationResponse\\.$#"
+			count: 1
+			path: public/modules/custom/asu_api/src/Api/BackendApi/Response/CreateApplicationResponse.php
+
+		-
+			message: "#^PHPDoc tag @return with type string is incompatible with native type array\\.$#"
+			count: 1
+			path: public/modules/custom/asu_api/src/Api/BackendApi/Response/GetApartmentRevaluationsResponse.php
+
+		-
+			message: "#^PHPDoc tag @return with type string is incompatible with native type array\\.$#"
+			count: 1
+			path: public/modules/custom/asu_api/src/Api/BackendApi/Response/GetApartmentStatusResponse.php
+
+		-
+			message: "#^Method Drupal\\\\asu_api\\\\Api\\\\BackendApi\\\\Response\\\\SalesCreateApplicationResponse\\:\\:createFromHttpResponse\\(\\) has invalid return type Drupal\\\\asu_api\\\\Api\\\\BackendApi\\\\Response\\\\ApplicationResponse\\.$#"
+			count: 1
+			path: public/modules/custom/asu_api/src/Api/BackendApi/Response/SalesCreateApplicationResponse.php
+
+		-
+			message: "#^PHPDoc tag @return with type Drupal\\\\asu_api\\\\Api\\\\BackendApi\\\\Response\\\\ApplicationResponse is not subtype of native type Drupal\\\\asu_api\\\\Api\\\\BackendApi\\\\Response\\\\SalesCreateApplicationResponse\\.$#"
+			count: 1
+			path: public/modules/custom/asu_api/src/Api/BackendApi/Response/SalesCreateApplicationResponse.php
+
+		-
+			message: "#^Method Drupal\\\\asu_api\\\\Api\\\\BackendApi\\\\Response\\\\UpdateUserResponse\\:\\:createFromHttpResponse\\(\\) has invalid return type Drupal\\\\asu_api\\\\Api\\\\BackendApi\\\\Response\\\\ApplicationResponse\\.$#"
+			count: 1
+			path: public/modules/custom/asu_api/src/Api/BackendApi/Response/UpdateUserResponse.php
+
+		-
+			message: "#^PHPDoc tag @return with type Drupal\\\\asu_api\\\\Api\\\\BackendApi\\\\Response\\\\ApplicationResponse is not subtype of native type Drupal\\\\asu_api\\\\Api\\\\BackendApi\\\\Response\\\\UpdateUserResponse\\.$#"
+			count: 1
+			path: public/modules/custom/asu_api/src/Api/BackendApi/Response/UpdateUserResponse.php
+
+		-
+			message: "#^Instantiated class Drupal\\\\asu_api\\\\Api\\\\BackendApi\\\\Response\\\\RequestException not found\\.$#"
+			count: 1
+			path: public/modules/custom/asu_api/src/Api/BackendApi/Response/UserResponse.php
+
+		-
+			message: "#^Throwing object of an unknown class Drupal\\\\asu_api\\\\Api\\\\BackendApi\\\\Response\\\\RequestException\\.$#"
+			count: 1
+			path: public/modules/custom/asu_api/src/Api/BackendApi/Response/UserResponse.php
+
+		-
+			message: "#^Method Drupal\\\\asu_api\\\\Api\\\\ClientFactory\\:\\:create\\(\\) has invalid return type Drupal\\\\asu_api\\\\Api\\\\GuzzleHttp\\\\Client\\.$#"
+			count: 1
+			path: public/modules/custom/asu_api/src/Api/ClientFactory.php
+
+		-
+			message: "#^PHPDoc tag @return with type Drupal\\\\asu_api\\\\Api\\\\GuzzleHttp\\\\Client is not subtype of native type GuzzleHttp\\\\Client\\.$#"
+			count: 1
+			path: public/modules/custom/asu_api/src/Api/ClientFactory.php
+
+		-
+			message: "#^Method Drupal\\\\asu_api\\\\Api\\\\Request\\:\\:getResponse\\(\\) has invalid return type Drupal\\\\asu_api\\\\Api\\\\Drupal\\\\asu_api\\\\Response\\.$#"
+			count: 1
+			path: public/modules/custom/asu_api/src/Api/Request.php
+
+		-
+			message: "#^PHPDoc tag @param for parameter \\$response with type Drupal\\\\asu_api\\\\Api\\\\Psr\\\\Http\\\\Message\\\\ResponseInterface is not subtype of native type Psr\\\\Http\\\\Message\\\\ResponseInterface\\.$#"
+			count: 1
+			path: public/modules/custom/asu_api/src/Api/Request.php
+
+		-
+			message: "#^PHPDoc tag @param for parameter \\$sender with type Drupal\\\\asu_api\\\\Api\\\\Drupal\\\\user\\\\UserInterface is not subtype of native type Drupal\\\\user\\\\UserInterface\\.$#"
+			count: 1
+			path: public/modules/custom/asu_api/src/Api/Request.php
+
+		-
+			message: "#^PHPDoc tag @return with type Drupal\\\\asu_api\\\\Api\\\\Drupal\\\\asu_api\\\\Response is not subtype of native type Drupal\\\\asu_api\\\\Api\\\\Response\\.$#"
+			count: 1
+			path: public/modules/custom/asu_api/src/Api/Request.php
+
+		-
+			message: "#^PHPDoc tag @var for property Drupal\\\\asu_api\\\\Api\\\\Request\\:\\:\\$sender with type Drupal\\\\asu_api\\\\Api\\\\Drupal\\\\user\\\\UserInterface\\|null is not subtype of native type Drupal\\\\user\\\\UserInterface\\|null\\.$#"
+			count: 1
+			path: public/modules/custom/asu_api/src/Api/Request.php
+
+		-
+			message: "#^Parameter \\$response of method Drupal\\\\asu_api\\\\Api\\\\Request\\:\\:getResponse\\(\\) has invalid type Drupal\\\\asu_api\\\\Api\\\\Psr\\\\Http\\\\Message\\\\ResponseInterface\\.$#"
+			count: 1
+			path: public/modules/custom/asu_api/src/Api/Request.php
+
+		-
+			message: "#^Parameter \\$sender of method Drupal\\\\asu_api\\\\Api\\\\Request\\:\\:setSender\\(\\) has invalid type Drupal\\\\asu_api\\\\Api\\\\Drupal\\\\user\\\\UserInterface\\.$#"
+			count: 1
+			path: public/modules/custom/asu_api/src/Api/Request.php
+
+		-
+			message: "#^Property Drupal\\\\asu_api\\\\Api\\\\Request\\:\\:\\$sender has unknown class Drupal\\\\asu_api\\\\Api\\\\Drupal\\\\user\\\\UserInterface as its type\\.$#"
+			count: 1
+			path: public/modules/custom/asu_api/src/Api/Request.php
+
+		-
+			message: "#^PHPDoc tag @var for property Drupal\\\\asu_api\\\\Commands\\\\SendApiCallCommands\\:\\:\\$backendApi with type Drupal\\\\asu_api\\\\Commands\\\\Drupal\\\\asu_api\\\\Api\\\\BackendApi\\\\BackendApi is not subtype of native type Drupal\\\\asu_api\\\\Api\\\\BackendApi\\\\BackendApi\\.$#"
+			count: 1
+			path: public/modules/custom/asu_api/src/Commands/SendApiCallCommands.php
+
+		-
+			message: "#^Property Drupal\\\\asu_api\\\\Commands\\\\SendApiCallCommands\\:\\:\\$backendApi has unknown class Drupal\\\\asu_api\\\\Commands\\\\Drupal\\\\asu_api\\\\Api\\\\BackendApi\\\\BackendApi as its type\\.$#"
+			count: 1
+			path: public/modules/custom/asu_api/src/Commands/SendApiCallCommands.php
+
+		-
+			message: "#^PHPDoc tag @return with type mixed is not subtype of native type string\\|null\\.$#"
+			count: 1
+			path: public/modules/custom/asu_api/src/ErrorCodeService.php
+
+		-
+			message: "#^PHPDoc tag @var for property Drupal\\\\asu_api\\\\ErrorCodeService\\:\\:\\$config with type Drupal\\\\asu_api\\\\Drupal\\\\Core\\\\Config\\\\ImmutableConfig is not subtype of native type Drupal\\\\Core\\\\Config\\\\ImmutableConfig\\.$#"
+			count: 1
+			path: public/modules/custom/asu_api/src/ErrorCodeService.php
+
+		-
+			message: "#^Property Drupal\\\\asu_api\\\\ErrorCodeService\\:\\:\\$config has unknown class Drupal\\\\asu_api\\\\Drupal\\\\Core\\\\Config\\\\ImmutableConfig as its type\\.$#"
+			count: 1
+			path: public/modules/custom/asu_api/src/ErrorCodeService.php
+
+		-
+			message: "#^Access to an undefined property Drupal\\\\asu_api\\\\Plugin\\\\QueueWorker\\\\SyncApplication\\:\\:\\$entityTypeManager\\.$#"
+			count: 3
+			path: public/modules/custom/asu_api/src/Plugin/SyncApplication.php
+
+		-
+			message: "#^PHPDoc tag @var for property Drupal\\\\asu_api\\\\Plugin\\\\QueueWorker\\\\SyncApplication\\:\\:\\$backendApi with type Drupal\\\\asu_api\\\\Plugin\\\\QueueWorker\\\\Drupal\\\\asu_api\\\\Api\\\\BackendApi\\\\BackendApi is not subtype of native type Drupal\\\\asu_api\\\\Api\\\\BackendApi\\\\BackendApi\\.$#"
+			count: 1
+			path: public/modules/custom/asu_api/src/Plugin/SyncApplication.php
+
+		-
+			message: "#^Property Drupal\\\\asu_api\\\\Plugin\\\\QueueWorker\\\\SyncApplication\\:\\:\\$backendApi has unknown class Drupal\\\\asu_api\\\\Plugin\\\\QueueWorker\\\\Drupal\\\\asu_api\\\\Api\\\\BackendApi\\\\BackendApi as its type\\.$#"
+			count: 1
+			path: public/modules/custom/asu_api/src/Plugin/SyncApplication.php
+
+		-
+			message: "#^Unsafe usage of new static\\(\\)\\.$#"
+			count: 1
+			path: public/modules/custom/asu_api/src/Plugin/SyncApplication.php
+
+		-
+			message: "#^Access to an undefined property Drupal\\\\Core\\\\Field\\\\FieldItemListInterface\\<Drupal\\\\Core\\\\Field\\\\FieldItemInterface\\>\\:\\:\\$date\\.$#"
+			count: 1
+			path: public/modules/custom/asu_application/asu_application.module
+
+		-
+			message: "#^Call to an undefined method Drupal\\\\Core\\\\TypedData\\\\TypedDataInterface\\:\\:get\\(\\)\\.$#"
+			count: 1
+			path: public/modules/custom/asu_application/asu_application.module
+
+		-
+			message: "#^Call to an undefined method Drupal\\\\Core\\\\TypedData\\\\TypedDataInterface\\:\\:getTarget\\(\\)\\.$#"
+			count: 1
+			path: public/modules/custom/asu_application/asu_application.module
+
+		-
+			message: "#^Variable \\$application_end might not be defined\\.$#"
+			count: 1
+			path: public/modules/custom/asu_application/asu_application.module
+
+		-
+			message: "#^Call to an undefined method Drupal\\\\Core\\\\Entity\\\\EntityInterface\\:\\:get\\(\\)\\.$#"
+			count: 1
+			path: public/modules/custom/asu_application/src/ApplicationListBuilder.php
+
+		-
+			message: "#^Method Drupal\\\\asu_application\\\\Applications\\:\\:applicationsByUser\\(\\) should return static\\(Drupal\\\\asu_application\\\\Applications\\) but returns Drupal\\\\asu_application\\\\Applications\\.$#"
+			count: 1
+			path: public/modules/custom/asu_application/src/Applications.php
+
+		-
+			message: "#^Method Drupal\\\\asu_application\\\\Applications\\:\\:create\\(\\) should return static\\(Drupal\\\\asu_application\\\\Applications\\) but returns Drupal\\\\asu_application\\\\Applications\\.$#"
+			count: 1
+			path: public/modules/custom/asu_application/src/Applications.php
+
+		-
+			message: "#^\\\\Drupal calls should be avoided in classes, use dependency injection instead$#"
+			count: 1
+			path: public/modules/custom/asu_application/src/Applications.php
+
+		-
+			message: "#^Access to an undefined property Drupal\\\\Core\\\\Entity\\\\EntityInterface\\:\\:\\$field_apartment_number\\.$#"
+			count: 1
+			path: public/modules/custom/asu_application/src/Controller/ResultController.php
+
+		-
+			message: "#^Call to an undefined method Drupal\\\\asu_api\\\\Api\\\\Response\\:\\:getContent\\(\\)\\.$#"
+			count: 1
+			path: public/modules/custom/asu_application/src/Controller/ResultController.php
+
+		-
+			message: "#^Iterating over an object of an unknown class Drupal\\\\asu_api\\\\Api\\\\BackendApi\\\\Request\\\\ApplicationLotteryResultResponse\\.$#"
+			count: 1
+			path: public/modules/custom/asu_application/src/Controller/ResultController.php
+
+		-
+			message: "#^PHPDoc tag @var for variable \\$responseContent contains unknown class Drupal\\\\asu_api\\\\Api\\\\BackendApi\\\\Request\\\\ApplicationLotteryResultResponse\\.$#"
+			count: 1
+			path: public/modules/custom/asu_application/src/Controller/ResultController.php
+
+		-
+			message: "#^Variable \\$responseContent in empty\\(\\) always exists and is not falsy\\.$#"
+			count: 1
+			path: public/modules/custom/asu_application/src/Controller/ResultController.php
+
+		-
+			message: "#^Call to an undefined method Drupal\\\\Core\\\\Entity\\\\EntityInterface\\:\\:getOwnerId\\(\\)\\.$#"
+			count: 2
+			path: public/modules/custom/asu_application/src/Entity/Access/ApplicationEntityAccess.php
+
+		-
+			message: "#^PHPDoc tag @param for parameter \\$storage with type Drupal\\\\asu_application\\\\Entity\\\\Drupal\\\\Core\\\\Entity\\\\EntityStorageInterface is not subtype of native type Drupal\\\\Core\\\\Entity\\\\EntityStorageInterface\\.$#"
+			count: 1
+			path: public/modules/custom/asu_application/src/Entity/Application.php
+
+		-
+			message: "#^Parameter \\$storage of method Drupal\\\\asu_application\\\\Entity\\\\Application\\:\\:preCreate\\(\\) has invalid type Drupal\\\\asu_application\\\\Entity\\\\Drupal\\\\Core\\\\Entity\\\\EntityStorageInterface\\.$#"
+			count: 1
+			path: public/modules/custom/asu_application/src/Entity/Application.php
+
+		-
+			message: "#^Call to an undefined method Drupal\\\\asu_api\\\\Api\\\\Response\\:\\:getPassword\\(\\)\\.$#"
+			count: 1
+			path: public/modules/custom/asu_application/src/EventSubscriber/ApplicationSubscriber.php
+
+		-
+			message: "#^Call to an undefined method Drupal\\\\asu_api\\\\Api\\\\Response\\:\\:getProfileId\\(\\)\\.$#"
+			count: 1
+			path: public/modules/custom/asu_application/src/EventSubscriber/ApplicationSubscriber.php
+
+		-
+			message: "#^Call to an undefined method Drupal\\\\asu_application\\\\EventSubscriber\\\\ApplicationSubscriber\\:\\:logger\\(\\)\\.$#"
+			count: 1
+			path: public/modules/custom/asu_application/src/EventSubscriber/ApplicationSubscriber.php
+
+		-
+			message: "#^Call to an undefined method Drupal\\\\asu_application\\\\EventSubscriber\\\\ApplicationSubscriber\\:\\:t\\(\\)\\.$#"
+			count: 4
+			path: public/modules/custom/asu_application/src/EventSubscriber/ApplicationSubscriber.php
+
+		-
+			message: "#^Call to sprintf contains 0 placeholders, 2 values given\\.$#"
+			count: 1
+			path: public/modules/custom/asu_application/src/EventSubscriber/ApplicationSubscriber.php
+
+		-
+			message: "#^PHPDoc tag @var for property Drupal\\\\asu_application\\\\EventSubscriber\\\\ApplicationSubscriber\\:\\:\\$backendApi with type Drupal\\\\asu_application\\\\EventSubscriber\\\\Drupal\\\\asu_api\\\\Api\\\\BackendApi\\\\BackendApi is not subtype of native type Drupal\\\\asu_api\\\\Api\\\\BackendApi\\\\BackendApi\\.$#"
+			count: 1
+			path: public/modules/custom/asu_application/src/EventSubscriber/ApplicationSubscriber.php
+
+		-
+			message: "#^PHPDoc tag @var for property Drupal\\\\asu_application\\\\EventSubscriber\\\\ApplicationSubscriber\\:\\:\\$queue with type Drupal\\\\asu_application\\\\EventSubscriber\\\\Drupal\\\\Core\\\\Queue\\\\QueueInterface is not subtype of native type Drupal\\\\Core\\\\Queue\\\\QueueInterface\\.$#"
+			count: 1
+			path: public/modules/custom/asu_application/src/EventSubscriber/ApplicationSubscriber.php
+
+		-
+			message: "#^Property Drupal\\\\asu_application\\\\EventSubscriber\\\\ApplicationSubscriber\\:\\:\\$backendApi has unknown class Drupal\\\\asu_application\\\\EventSubscriber\\\\Drupal\\\\asu_api\\\\Api\\\\BackendApi\\\\BackendApi as its type\\.$#"
+			count: 1
+			path: public/modules/custom/asu_application/src/EventSubscriber/ApplicationSubscriber.php
+
+		-
+			message: "#^Property Drupal\\\\asu_application\\\\EventSubscriber\\\\ApplicationSubscriber\\:\\:\\$queue has unknown class Drupal\\\\asu_application\\\\EventSubscriber\\\\Drupal\\\\Core\\\\Queue\\\\QueueInterface as its type\\.$#"
+			count: 1
+			path: public/modules/custom/asu_application/src/EventSubscriber/ApplicationSubscriber.php
+
+		-
+			message: "#^Access to an undefined property Drupal\\\\Core\\\\Entity\\\\ContentEntityInterface\\|Drupal\\\\Core\\\\Entity\\\\RevisionLogInterface\\:\\:\\$field_locked\\.$#"
+			count: 1
+			path: public/modules/custom/asu_application/src/Form/ApplicationForm.php
+
+		-
+			message: "#^Access to an undefined property Drupal\\\\Core\\\\Entity\\\\ContentEntityInterface\\|Drupal\\\\Core\\\\Entity\\\\RevisionLogInterface\\:\\:\\$project\\.$#"
+			count: 1
+			path: public/modules/custom/asu_application/src/Form/ApplicationForm.php
+
+		-
+			message: "#^Access to an undefined property Drupal\\\\Core\\\\Form\\\\FormInterface\\:\\:\\$entity\\.$#"
+			count: 1
+			path: public/modules/custom/asu_application/src/Form/ApplicationForm.php
+
+		-
+			message: "#^Access to an undefined property Drupal\\\\asu_application\\\\Form\\\\ApplicationForm\\:\\:\\$eventDispatcher\\.$#"
+			count: 2
+			path: public/modules/custom/asu_application/src/Form/ApplicationForm.php
+
+		-
+			message: "#^Call to an undefined method Drupal\\\\Core\\\\Entity\\\\ContentEntityInterface\\|Drupal\\\\Core\\\\Entity\\\\RevisionLogInterface\\:\\:getOwnerId\\(\\)\\.$#"
+			count: 1
+			path: public/modules/custom/asu_application/src/Form/ApplicationForm.php
+
+		-
+			message: "#^Call to an undefined method Drupal\\\\Core\\\\TypedData\\\\TypedDataInterface\\:\\:getTarget\\(\\)\\.$#"
+			count: 1
+			path: public/modules/custom/asu_application/src/Form/ApplicationForm.php
+
+		-
+			message: "#^Method Drupal\\\\asu_application\\\\Form\\\\ApplicationForm\\:\\:buildForm\\(\\) should return array but returns Symfony\\\\Component\\\\HttpFoundation\\\\RedirectResponse\\.$#"
+			count: 7
+			path: public/modules/custom/asu_application/src/Form/ApplicationForm.php
+
+		-
+			message: "#^Method Drupal\\\\asu_application\\\\Form\\\\ApplicationForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
+			count: 1
+			path: public/modules/custom/asu_application/src/Form/ApplicationForm.php
+
+		-
+			message: "#^Method Drupal\\\\asu_application\\\\Form\\\\ApplicationForm\\:\\:validateForm\\(\\) should return Drupal\\\\Core\\\\Entity\\\\ContentEntityInterface but return statement is missing\\.$#"
+			count: 1
+			path: public/modules/custom/asu_application/src/Form/ApplicationForm.php
+
+		-
+			message: "#^Offset non\\-empty\\-string does not exist on array\\{18\\: '\\+', 19\\: '\\-', 20\\: 'A'\\}\\.$#"
+			count: 1
+			path: public/modules/custom/asu_application/src/Form/ApplicationForm.php
+
+		-
+			message: "#^PHPDoc tag @param for parameter \\$entity with type Drupal\\\\asu_application\\\\Form\\\\Drupal\\\\asu_application\\\\Entity\\\\Application is not subtype of native type Drupal\\\\asu_application\\\\Entity\\\\Application\\.$#"
+			count: 1
+			path: public/modules/custom/asu_application/src/Form/ApplicationForm.php
+
+		-
+			message: "#^PHPDoc tag @param for parameter \\$entityTypeManager with type Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface is not subtype of native type Drupal\\\\asu_application\\\\Form\\\\EntityTypeManagerInterface\\.$#"
+			count: 1
+			path: public/modules/custom/asu_application/src/Form/ApplicationForm.php
+
+		-
+			message: "#^PHPDoc tag @param for parameter \\$requestStack with type Symfony\\\\Component\\\\HttpFoundation\\\\RequestStack is not subtype of native type Drupal\\\\asu_application\\\\Form\\\\RequestStack\\.$#"
+			count: 1
+			path: public/modules/custom/asu_application/src/Form/ApplicationForm.php
+
+		-
+			message: "#^Parameter \\$entity of method Drupal\\\\asu_application\\\\Form\\\\ApplicationForm\\:\\:updateApartments\\(\\) has invalid type Drupal\\\\asu_application\\\\Form\\\\Drupal\\\\asu_application\\\\Entity\\\\Application\\.$#"
+			count: 1
+			path: public/modules/custom/asu_application/src/Form/ApplicationForm.php
+
+		-
+			message: "#^Parameter \\$entityTypeManager of method Drupal\\\\asu_application\\\\Form\\\\ApplicationForm\\:\\:__construct\\(\\) has invalid type Drupal\\\\asu_application\\\\Form\\\\EntityTypeManagerInterface\\.$#"
+			count: 1
+			path: public/modules/custom/asu_application/src/Form/ApplicationForm.php
+
+		-
+			message: "#^Parameter \\$requestStack of method Drupal\\\\asu_application\\\\Form\\\\ApplicationForm\\:\\:__construct\\(\\) has invalid type Drupal\\\\asu_application\\\\Form\\\\RequestStack\\.$#"
+			count: 1
+			path: public/modules/custom/asu_application/src/Form/ApplicationForm.php
+
+		-
+			message: "#^Property Drupal\\\\asu_application\\\\Form\\\\ApplicationForm\\:\\:\\$entityTypeManager \\(Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface\\) does not accept Drupal\\\\asu_application\\\\Form\\\\EntityTypeManagerInterface\\.$#"
+			count: 1
+			path: public/modules/custom/asu_application/src/Form/ApplicationForm.php
+
+		-
+			message: "#^Property Drupal\\\\asu_application\\\\Form\\\\ApplicationForm\\:\\:\\$requestStack \\(Symfony\\\\Component\\\\HttpFoundation\\\\RequestStack\\) does not accept Drupal\\\\asu_application\\\\Form\\\\RequestStack\\.$#"
+			count: 1
+			path: public/modules/custom/asu_application/src/Form/ApplicationForm.php
+
+		-
+			message: "#^Variable \\$field might not be defined\\.$#"
+			count: 1
+			path: public/modules/custom/asu_application/src/Form/ApplicationForm.php
+
+		-
+			message: "#^Method Drupal\\\\asu_application\\\\Form\\\\ApplicationTypeEntityForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
+			count: 1
+			path: public/modules/custom/asu_application/src/Form/ApplicationTypeEntityForm.php
+
+		-
+			message: "#^\\\\Drupal calls should be avoided in classes, use dependency injection instead$#"
+			count: 1
+			path: public/modules/custom/asu_application/src/Form/ApplicationTypeEntityForm.php
+
+		-
+			message: "#^Call to an undefined method Drupal\\\\node\\\\Entity\\\\Node\\:\\:getSalesPerson\\(\\)\\.$#"
+			count: 1
+			path: public/modules/custom/asu_application/src/Form/ReservedApartmentContactForm.php
+
+		-
+			message: "#^PHPDoc tag @param for parameter \\$entityTypeManager with type Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface is not subtype of native type Drupal\\\\asu_application\\\\Form\\\\EntityTypeManagerInterface\\.$#"
+			count: 1
+			path: public/modules/custom/asu_application/src/Form/ReservedApartmentContactForm.php
+
+		-
+			message: "#^PHPDoc tag @param for parameter \\$requestStack with type Symfony\\\\Component\\\\HttpFoundation\\\\RequestStack is not subtype of native type Drupal\\\\asu_application\\\\Form\\\\RequestStack\\.$#"
+			count: 1
+			path: public/modules/custom/asu_application/src/Form/ReservedApartmentContactForm.php
+
+		-
+			message: "#^Parameter \\$entityTypeManager of method Drupal\\\\asu_application\\\\Form\\\\ReservedApartmentContactForm\\:\\:__construct\\(\\) has invalid type Drupal\\\\asu_application\\\\Form\\\\EntityTypeManagerInterface\\.$#"
+			count: 1
+			path: public/modules/custom/asu_application/src/Form/ReservedApartmentContactForm.php
+
+		-
+			message: "#^Parameter \\$requestStack of method Drupal\\\\asu_application\\\\Form\\\\ReservedApartmentContactForm\\:\\:__construct\\(\\) has invalid type Drupal\\\\asu_application\\\\Form\\\\RequestStack\\.$#"
+			count: 1
+			path: public/modules/custom/asu_application/src/Form/ReservedApartmentContactForm.php
+
+		-
+			message: "#^Property Drupal\\\\asu_application\\\\Form\\\\ReservedApartmentContactForm\\:\\:\\$entityTypeManager \\(Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface\\) does not accept Drupal\\\\asu_application\\\\Form\\\\EntityTypeManagerInterface\\.$#"
+			count: 1
+			path: public/modules/custom/asu_application/src/Form/ReservedApartmentContactForm.php
+
+		-
+			message: "#^Property Drupal\\\\asu_application\\\\Form\\\\ReservedApartmentContactForm\\:\\:\\$requestStack \\(Symfony\\\\Component\\\\HttpFoundation\\\\RequestStack\\) does not accept Drupal\\\\asu_application\\\\Form\\\\RequestStack\\.$#"
+			count: 1
+			path: public/modules/custom/asu_application/src/Form/ReservedApartmentContactForm.php
+
+		-
+			message: "#^Access to an undefined property Drupal\\\\asu_application\\\\Form\\\\SalespersonApplicationForm\\:\\:\\$parseModeManager\\.$#"
+			count: 2
+			path: public/modules/custom/asu_application/src/Form/SalespersonApplicationForm.php
+
+		-
+			message: "#^Call to an undefined method Drupal\\\\Core\\\\Entity\\\\EntityInterface\\:\\:getProjectId\\(\\)\\.$#"
+			count: 1
+			path: public/modules/custom/asu_application/src/Form/SalespersonApplicationForm.php
+
+		-
+			message: "#^Call to an undefined method Drupal\\\\Core\\\\Entity\\\\EntityInterface\\:\\:isLocked\\(\\)\\.$#"
+			count: 1
+			path: public/modules/custom/asu_application/src/Form/SalespersonApplicationForm.php
+
+		-
+			message: "#^Method Drupal\\\\asu_application\\\\Form\\\\SalespersonApplicationForm\\:\\:buildForm\\(\\) should return array but return statement is missing\\.$#"
+			count: 1
+			path: public/modules/custom/asu_application/src/Form/SalespersonApplicationForm.php
+
+		-
+			message: "#^PHPDoc tag @param for parameter \\$requestStack with type Symfony\\\\Component\\\\HttpFoundation\\\\RequestStack is not subtype of native type Drupal\\\\asu_application\\\\Form\\\\RequestStack\\.$#"
+			count: 1
+			path: public/modules/custom/asu_application/src/Form/SalespersonApplicationForm.php
+
+		-
+			message: "#^Parameter \\$requestStack of method Drupal\\\\asu_application\\\\Form\\\\SalespersonApplicationForm\\:\\:__construct\\(\\) has invalid type Drupal\\\\asu_application\\\\Form\\\\RequestStack\\.$#"
+			count: 1
+			path: public/modules/custom/asu_application/src/Form/SalespersonApplicationForm.php
+
+		-
+			message: "#^Property Drupal\\\\asu_application\\\\Form\\\\SalespersonApplicationForm\\:\\:\\$requestStack \\(Symfony\\\\Component\\\\HttpFoundation\\\\RequestStack\\) does not accept Drupal\\\\asu_application\\\\Form\\\\RequestStack\\.$#"
+			count: 1
+			path: public/modules/custom/asu_application/src/Form/SalespersonApplicationForm.php
+
+		-
+			message: "#^Variable \\$key might not be defined\\.$#"
+			count: 1
+			path: public/modules/custom/asu_application/src/Form/SalespersonApplicationForm.php
+
+		-
+			message: "#^Variable \\$projects might not be defined\\.$#"
+			count: 1
+			path: public/modules/custom/asu_application/src/Form/SalespersonApplicationForm.php
+
+		-
+			message: "#^Access to an undefined property Drupal\\\\asu_application\\\\Plugin\\\\Field\\\\FieldType\\\\ApartmentFieldItem\\:\\:\\$id\\.$#"
+			count: 1
+			path: public/modules/custom/asu_application/src/Plugin/Field/FieldType/ApartmentFieldItem.php
+
+		-
+			message: "#^Access to an undefined property Drupal\\\\asu_application\\\\Plugin\\\\Field\\\\FieldType\\\\ApplicantFieldItem\\:\\:\\$city\\.$#"
+			count: 1
+			path: public/modules/custom/asu_application/src/Plugin/Field/FieldType/ApplicantFieldItem.php
+
+		-
+			message: "#^Access to an undefined property Drupal\\\\asu_application\\\\Plugin\\\\Field\\\\FieldType\\\\ApplicantFieldItem\\:\\:\\$date_of_birth\\.$#"
+			count: 1
+			path: public/modules/custom/asu_application/src/Plugin/Field/FieldType/ApplicantFieldItem.php
+
+		-
+			message: "#^Access to an undefined property Drupal\\\\asu_application\\\\Plugin\\\\Field\\\\FieldType\\\\ApplicantFieldItem\\:\\:\\$email\\.$#"
+			count: 1
+			path: public/modules/custom/asu_application/src/Plugin/Field/FieldType/ApplicantFieldItem.php
+
+		-
+			message: "#^Access to an undefined property Drupal\\\\asu_application\\\\Plugin\\\\Field\\\\FieldType\\\\ApplicantFieldItem\\:\\:\\$first_name\\.$#"
+			count: 1
+			path: public/modules/custom/asu_application/src/Plugin/Field/FieldType/ApplicantFieldItem.php
+
+		-
+			message: "#^Access to an undefined property Drupal\\\\asu_application\\\\Plugin\\\\Field\\\\FieldType\\\\ApplicantFieldItem\\:\\:\\$last_name\\.$#"
+			count: 1
+			path: public/modules/custom/asu_application/src/Plugin/Field/FieldType/ApplicantFieldItem.php
+
+		-
+			message: "#^Access to an undefined property Drupal\\\\asu_application\\\\Plugin\\\\Field\\\\FieldType\\\\ApplicantFieldItem\\:\\:\\$personal_id\\.$#"
+			count: 1
+			path: public/modules/custom/asu_application/src/Plugin/Field/FieldType/ApplicantFieldItem.php
+
+		-
+			message: "#^Access to an undefined property Drupal\\\\asu_application\\\\Plugin\\\\Field\\\\FieldType\\\\ApplicantFieldItem\\:\\:\\$phone\\.$#"
+			count: 1
+			path: public/modules/custom/asu_application/src/Plugin/Field/FieldType/ApplicantFieldItem.php
+
+		-
+			message: "#^Access to an undefined property Drupal\\\\asu_application\\\\Plugin\\\\Field\\\\FieldType\\\\ApplicantFieldItem\\:\\:\\$street_address\\.$#"
+			count: 1
+			path: public/modules/custom/asu_application/src/Plugin/Field/FieldType/ApplicantFieldItem.php
+
+		-
+			message: "#^Access to an undefined property Drupal\\\\asu_application\\\\Plugin\\\\Field\\\\FieldType\\\\MainApplicantFieldItem\\:\\:\\$city\\.$#"
+			count: 1
+			path: public/modules/custom/asu_application/src/Plugin/Field/FieldType/MainApplicantFieldItem.php
+
+		-
+			message: "#^Access to an undefined property Drupal\\\\asu_application\\\\Plugin\\\\Field\\\\FieldType\\\\MainApplicantFieldItem\\:\\:\\$date_of_birth\\.$#"
+			count: 1
+			path: public/modules/custom/asu_application/src/Plugin/Field/FieldType/MainApplicantFieldItem.php
+
+		-
+			message: "#^Access to an undefined property Drupal\\\\asu_application\\\\Plugin\\\\Field\\\\FieldType\\\\MainApplicantFieldItem\\:\\:\\$email\\.$#"
+			count: 1
+			path: public/modules/custom/asu_application/src/Plugin/Field/FieldType/MainApplicantFieldItem.php
+
+		-
+			message: "#^Access to an undefined property Drupal\\\\asu_application\\\\Plugin\\\\Field\\\\FieldType\\\\MainApplicantFieldItem\\:\\:\\$first_name\\.$#"
+			count: 1
+			path: public/modules/custom/asu_application/src/Plugin/Field/FieldType/MainApplicantFieldItem.php
+
+		-
+			message: "#^Access to an undefined property Drupal\\\\asu_application\\\\Plugin\\\\Field\\\\FieldType\\\\MainApplicantFieldItem\\:\\:\\$last_name\\.$#"
+			count: 1
+			path: public/modules/custom/asu_application/src/Plugin/Field/FieldType/MainApplicantFieldItem.php
+
+		-
+			message: "#^Access to an undefined property Drupal\\\\asu_application\\\\Plugin\\\\Field\\\\FieldType\\\\MainApplicantFieldItem\\:\\:\\$personal_id\\.$#"
+			count: 1
+			path: public/modules/custom/asu_application/src/Plugin/Field/FieldType/MainApplicantFieldItem.php
+
+		-
+			message: "#^Access to an undefined property Drupal\\\\asu_application\\\\Plugin\\\\Field\\\\FieldType\\\\MainApplicantFieldItem\\:\\:\\$phone\\.$#"
+			count: 1
+			path: public/modules/custom/asu_application/src/Plugin/Field/FieldType/MainApplicantFieldItem.php
+
+		-
+			message: "#^Access to an undefined property Drupal\\\\asu_application\\\\Plugin\\\\Field\\\\FieldType\\\\MainApplicantFieldItem\\:\\:\\$street_address\\.$#"
+			count: 1
+			path: public/modules/custom/asu_application/src/Plugin/Field/FieldType/MainApplicantFieldItem.php
+
+		-
+			message: "#^Call to method send\\(\\) on an unknown class Drupal\\\\asu_application\\\\Plugin\\\\Field\\\\FieldWidget\\\\Drupal\\\\asu_api\\\\Api\\\\BackendApi\\\\BackendApi\\.$#"
+			count: 1
+			path: public/modules/custom/asu_application/src/Plugin/Field/FieldWidget/MainApplicantWidget.php
+
+		-
+			message: "#^Method Drupal\\\\Core\\\\Field\\\\WidgetBase\\:\\:__construct\\(\\) invoked with 3 parameters, 5 required\\.$#"
+			count: 1
+			path: public/modules/custom/asu_application/src/Plugin/Field/FieldWidget/MainApplicantWidget.php
+
+		-
+			message: "#^Method Drupal\\\\asu_application\\\\Plugin\\\\Field\\\\FieldWidget\\\\MainApplicantWidget\\:\\:formElement\\(\\) should return array but returns Symfony\\\\Component\\\\HttpFoundation\\\\Response\\.$#"
+			count: 1
+			path: public/modules/custom/asu_application/src/Plugin/Field/FieldWidget/MainApplicantWidget.php
+
+		-
+			message: "#^PHPDoc tag @param for parameter \\$backendApi with type Drupal\\\\asu_application\\\\Plugin\\\\Field\\\\FieldWidget\\\\Drupal\\\\asu_api\\\\Api\\\\BackendApi\\\\BackendApi is not subtype of native type Drupal\\\\asu_api\\\\Api\\\\BackendApi\\\\BackendApi\\.$#"
+			count: 1
+			path: public/modules/custom/asu_application/src/Plugin/Field/FieldWidget/MainApplicantWidget.php
+
+		-
+			message: "#^Parameter \\$backendApi of method Drupal\\\\asu_application\\\\Plugin\\\\Field\\\\FieldWidget\\\\MainApplicantWidget\\:\\:__construct\\(\\) has invalid type Drupal\\\\asu_application\\\\Plugin\\\\Field\\\\FieldWidget\\\\Drupal\\\\asu_api\\\\Api\\\\BackendApi\\\\BackendApi\\.$#"
+			count: 1
+			path: public/modules/custom/asu_application/src/Plugin/Field/FieldWidget/MainApplicantWidget.php
+
+		-
+			message: "#^Property Drupal\\\\asu_application\\\\Plugin\\\\Field\\\\FieldWidget\\\\MainApplicantWidget\\:\\:\\$backendApi \\(Drupal\\\\asu_application\\\\Plugin\\\\Field\\\\FieldWidget\\\\Drupal\\\\asu_api\\\\Api\\\\BackendApi\\\\BackendApi\\) does not accept Drupal\\\\asu_api\\\\Api\\\\BackendApi\\\\BackendApi\\.$#"
+			count: 1
+			path: public/modules/custom/asu_application/src/Plugin/Field/FieldWidget/MainApplicantWidget.php
+
+		-
+			message: "#^Property Drupal\\\\asu_application\\\\Plugin\\\\Field\\\\FieldWidget\\\\MainApplicantWidget\\:\\:\\$backendApi has unknown class Drupal\\\\asu_application\\\\Plugin\\\\Field\\\\FieldWidget\\\\Drupal\\\\asu_api\\\\Api\\\\BackendApi\\\\BackendApi as its type\\.$#"
+			count: 1
+			path: public/modules/custom/asu_application/src/Plugin/Field/FieldWidget/MainApplicantWidget.php
+
+		-
+			message: "#^Unsafe usage of new static\\(\\)\\.$#"
+			count: 1
+			path: public/modules/custom/asu_application/src/Plugin/Field/FieldWidget/MainApplicantWidget.php
+
+		-
+			message: "#^Access to an undefined property Drupal\\\\Core\\\\Entity\\\\EntityInterface\\:\\:\\$field_apartment_state_of_sale\\.$#"
+			count: 1
+			path: public/modules/custom/asu_content/asu_content.module
+
+		-
+			message: "#^Access to an undefined property Drupal\\\\Core\\\\Entity\\\\EntityInterface\\:\\:\\$field_archived\\.$#"
+			count: 4
+			path: public/modules/custom/asu_content/asu_content.module
+
+		-
+			message: "#^Access to an undefined property Drupal\\\\Core\\\\Entity\\\\EntityInterface\\:\\:\\$field_debt_free_sales_price\\.$#"
+			count: 1
+			path: public/modules/custom/asu_content/asu_content.module
+
+		-
+			message: "#^Access to an undefined property Drupal\\\\Core\\\\Entity\\\\EntityInterface\\:\\:\\$field_housing_company\\.$#"
+			count: 1
+			path: public/modules/custom/asu_content/asu_content.module
+
+		-
+			message: "#^Access to an undefined property Drupal\\\\Core\\\\Entity\\\\EntityInterface\\:\\:\\$field_living_area\\.$#"
+			count: 2
+			path: public/modules/custom/asu_content/asu_content.module
+
+		-
+			message: "#^Access to an undefined property Drupal\\\\Core\\\\Entity\\\\EntityInterface\\:\\:\\$field_street_address\\.$#"
+			count: 2
+			path: public/modules/custom/asu_content/asu_content.module
+
+		-
+			message: "#^Access to an undefined property Drupal\\\\Core\\\\Entity\\\\EntityInterface\\:\\:\\$original\\.$#"
+			count: 1
+			path: public/modules/custom/asu_content/asu_content.module
+
+		-
+			message: "#^Call to an undefined method Drupal\\\\Core\\\\Entity\\\\EntityInterface\\:\\:getApartmentEntities\\(\\)\\.$#"
+			count: 2
+			path: public/modules/custom/asu_content/asu_content.module
+
+		-
+			message: "#^Call to an undefined method Drupal\\\\Core\\\\Entity\\\\EntityInterface\\:\\:getTitle\\(\\)\\.$#"
+			count: 2
+			path: public/modules/custom/asu_content/asu_content.module
+
+		-
+			message: "#^Call to an undefined method Drupal\\\\Core\\\\Entity\\\\EntityInterface\\:\\:hasField\\(\\)\\.$#"
+			count: 3
+			path: public/modules/custom/asu_content/asu_content.module
+
+		-
+			message: "#^Call to an undefined method Drupal\\\\Core\\\\Entity\\\\EntityInterface\\:\\:isArchievable\\(\\)\\.$#"
+			count: 2
+			path: public/modules/custom/asu_content/asu_content.module
+
+		-
+			message: "#^Call to an undefined method Drupal\\\\Core\\\\Entity\\\\EntityInterface\\:\\:isPublished\\(\\)\\.$#"
+			count: 2
+			path: public/modules/custom/asu_content/asu_content.module
+
+		-
+			message: "#^Call to an undefined method Drupal\\\\Core\\\\Entity\\\\EntityInterface\\:\\:set\\(\\)\\.$#"
+			count: 5
+			path: public/modules/custom/asu_content/asu_content.module
+
+		-
+			message: "#^Call to an undefined method Drupal\\\\Core\\\\Entity\\\\EntityInterface\\:\\:setPublished\\(\\)\\.$#"
+			count: 2
+			path: public/modules/custom/asu_content/asu_content.module
+
+		-
+			message: "#^Call to an undefined method Drupal\\\\Core\\\\Entity\\\\EntityInterface\\:\\:setUnpublished\\(\\)\\.$#"
+			count: 1
+			path: public/modules/custom/asu_content/asu_content.module
+
+		-
+			message: "#^Access to property \\$path on an unknown class Drupal\\\\node\\\\Entity\\.$#"
+			count: 1
+			path: public/modules/custom/asu_content/src/BatchService.php
+
+		-
+			message: "#^Call to method save\\(\\) on an unknown class Drupal\\\\node\\\\Entity\\.$#"
+			count: 1
+			path: public/modules/custom/asu_content/src/BatchService.php
+
+		-
+			message: "#^PHPDoc tag @var for variable \\$entity contains unknown class Drupal\\\\node\\\\Entity\\.$#"
+			count: 1
+			path: public/modules/custom/asu_content/src/BatchService.php
+
+		-
+			message: "#^Default value of the parameter \\#3 \\$bundles \\(array\\<int, null\\>\\) of method Drupal\\\\asu_content\\\\CollectReverseEntity\\:\\:getReferrers\\(\\) is incompatible with type array\\<string\\>\\.$#"
+			count: 1
+			path: public/modules/custom/asu_content/src/CollectReverseEntity.php
+
+		-
+			message: "#^Method Drupal\\\\asu_content\\\\Controller\\\\ApartmentContentCreateController\\:\\:getFileData\\(\\) should return array but returns Drupal\\\\file\\\\Entity\\\\File\\.$#"
+			count: 1
+			path: public/modules/custom/asu_content/src/Controller/ApartmentContentCreateController.php
+
+		-
+			message: "#^Method Drupal\\\\asu_content\\\\Controller\\\\ApartmentContentCreateController\\:\\:getFileData\\(\\) should return array but returns false\\.$#"
+			count: 1
+			path: public/modules/custom/asu_content/src/Controller/ApartmentContentCreateController.php
+
+		-
+			message: "#^PHPDoc tag @param for parameter \\$requestStack with type Symfony\\\\Component\\\\HttpFoundation\\\\RequestStack is not subtype of native type Drupal\\\\asu_content\\\\Controller\\\\RequestStack\\.$#"
+			count: 1
+			path: public/modules/custom/asu_content/src/Controller/ApartmentContentCreateController.php
+
+		-
+			message: "#^Parameter \\$requestStack of method Drupal\\\\asu_content\\\\Controller\\\\ApartmentContentCreateController\\:\\:__construct\\(\\) has invalid type Drupal\\\\asu_content\\\\Controller\\\\RequestStack\\.$#"
+			count: 1
+			path: public/modules/custom/asu_content/src/Controller/ApartmentContentCreateController.php
+
+		-
+			message: "#^Property Drupal\\\\asu_content\\\\Controller\\\\ApartmentContentCreateController\\:\\:\\$requestStack \\(Symfony\\\\Component\\\\HttpFoundation\\\\RequestStack\\) does not accept Drupal\\\\asu_content\\\\Controller\\\\RequestStack\\.$#"
+			count: 1
+			path: public/modules/custom/asu_content/src/Controller/ApartmentContentCreateController.php
+
+		-
+			message: "#^Unsafe usage of new static\\(\\)\\.$#"
+			count: 1
+			path: public/modules/custom/asu_content/src/Controller/ApartmentContentCreateController.php
+
+		-
+			message: "#^Method Drupal\\\\asu_content\\\\Entity\\\\Apartment\\:\\:getProject\\(\\) has invalid return type Drupal\\\\asu_content\\\\Entity\\\\Drupal\\\\asu_content\\\\Entity\\\\Project\\.$#"
+			count: 1
+			path: public/modules/custom/asu_content/src/Entity/Apartment.php
+
+		-
+			message: "#^Method Drupal\\\\asu_content\\\\Entity\\\\Apartment\\:\\:getProject\\(\\) should return Drupal\\\\asu_content\\\\Entity\\\\Project\\|null but returns Drupal\\\\node\\\\Entity\\\\Node\\.$#"
+			count: 1
+			path: public/modules/custom/asu_content/src/Entity/Apartment.php
+
+		-
+			message: "#^PHPDoc tag @return with type Drupal\\\\asu_content\\\\Entity\\\\Drupal\\\\asu_content\\\\Entity\\\\Project\\|null is not subtype of native type Drupal\\\\asu_content\\\\Entity\\\\Project\\|null\\.$#"
+			count: 1
+			path: public/modules/custom/asu_content/src/Entity/Apartment.php
+
+		-
+			message: "#^Access to an undefined property Drupal\\\\asu_content\\\\Form\\\\BulkEditForm\\:\\:\\$entityTypeManager\\.$#"
+			count: 4
+			path: public/modules/custom/asu_content/src/Form/BulkEditForm.php
+
+		-
+			message: "#^Access to an undefined property Drupal\\\\asu_content\\\\Form\\\\BulkEditForm\\:\\:\\$urlGenerator\\.$#"
+			count: 2
+			path: public/modules/custom/asu_content/src/Form/BulkEditForm.php
+
+		-
+			message: "#^Unsafe usage of new static\\(\\)\\.$#"
+			count: 1
+			path: public/modules/custom/asu_content/src/Form/BulkEditForm.php
+
+		-
+			message: "#^Access to an undefined property Drupal\\\\Core\\\\Entity\\\\FieldableEntityInterface\\:\\:\\$field_floorplan\\.$#"
+			count: 2
+			path: public/modules/custom/asu_content/src/Plugin/ComputedField/ApartmentImages.php
+
+		-
+			message: "#^Access to an undefined property Drupal\\\\Core\\\\Entity\\\\FieldableEntityInterface\\:\\:\\$field_images\\.$#"
+			count: 2
+			path: public/modules/custom/asu_content/src/Plugin/ComputedField/ApartmentImages.php
+
+		-
+			message: "#^Access to property \\$field_apartment_number on an unknown class Drupal\\\\asu_content\\\\Plugin\\\\ComputedField\\\\Drupal\\\\asu_content\\\\Entity\\\\Apartment\\.$#"
+			count: 1
+			path: public/modules/custom/asu_content/src/Plugin/ComputedField/ApplicationFormUrl.php
+
+		-
+			message: "#^Call to method getApplicationUrl\\(\\) on an unknown class Drupal\\\\asu_content\\\\Plugin\\\\ComputedField\\\\Drupal\\\\asu_content\\\\Entity\\\\Apartment\\.$#"
+			count: 1
+			path: public/modules/custom/asu_content/src/Plugin/ComputedField/ApplicationFormUrl.php
+
+		-
+			message: "#^Call to method getProject\\(\\) on an unknown class Drupal\\\\asu_content\\\\Plugin\\\\ComputedField\\\\Drupal\\\\asu_content\\\\Entity\\\\Apartment\\.$#"
+			count: 1
+			path: public/modules/custom/asu_content/src/Plugin/ComputedField/ApplicationFormUrl.php
+
+		-
+			message: "#^PHPDoc tag @var for variable \\$apartment contains unknown class Drupal\\\\asu_content\\\\Plugin\\\\ComputedField\\\\Drupal\\\\asu_content\\\\Entity\\\\Apartment\\.$#"
+			count: 1
+			path: public/modules/custom/asu_content/src/Plugin/ComputedField/ApplicationFormUrl.php
+
+		-
+			message: "#^Access to an undefined property Drupal\\\\Core\\\\Entity\\\\FieldableEntityInterface\\:\\:\\$field_financing_fee\\.$#"
+			count: 1
+			path: public/modules/custom/asu_content/src/Plugin/ComputedField/HousingCompanyFee.php
+
+		-
+			message: "#^Access to an undefined property Drupal\\\\Core\\\\Entity\\\\FieldableEntityInterface\\:\\:\\$field_maintenance_fee\\.$#"
+			count: 1
+			path: public/modules/custom/asu_content/src/Plugin/ComputedField/HousingCompanyFee.php
+
+		-
+			message: "#^Call to an undefined method Drupal\\\\Core\\\\Entity\\\\EntityInterface\\:\\:getName\\(\\)\\.$#"
+			count: 1
+			path: public/modules/custom/asu_content/src/Plugin/ComputedField/NewDevelopmentStatus.php
+
+		-
+			message: "#^Access to an undefined property Drupal\\\\Core\\\\Entity\\\\FieldableEntityInterface\\:\\:\\$field_debt_free_sales_price\\.$#"
+			count: 1
+			path: public/modules/custom/asu_content/src/Plugin/ComputedField/PricePerSquareMeter.php
+
+		-
+			message: "#^Access to an undefined property Drupal\\\\Core\\\\Entity\\\\FieldableEntityInterface\\:\\:\\$field_living_area\\.$#"
+			count: 1
+			path: public/modules/custom/asu_content/src/Plugin/ComputedField/PricePerSquareMeter.php
+
+		-
+			message: "#^Call to an undefined method Drupal\\\\Core\\\\Entity\\\\EntityInterface\\:\\:getName\\(\\)\\.$#"
+			count: 1
+			path: public/modules/custom/asu_content/src/Plugin/ComputedField/ProjectBuildingType.php
+
+		-
+			message: "#^Call to an undefined method Drupal\\\\Core\\\\Entity\\\\EntityInterface\\:\\:getName\\(\\)\\.$#"
+			count: 1
+			path: public/modules/custom/asu_content/src/Plugin/ComputedField/ProjectHoldingType.php
+
+		-
+			message: "#^Call to an undefined method Drupal\\\\Core\\\\TypedData\\\\TraversableTypedDataInterface\\:\\:getEntity\\(\\)\\.$#"
+			count: 1
+			path: public/modules/custom/asu_content/src/Plugin/Field/FieldFormatter/AsuCustomSlickFormatter.php
+
+		-
+			message: "#^Method Drupal\\\\Core\\\\Field\\\\FormatterBase\\:\\:__construct\\(\\) invoked with 3 parameters, 7 required\\.$#"
+			count: 1
+			path: public/modules/custom/asu_content/src/Plugin/Field/FieldFormatter/AsuServiceFormatter.php
+
+		-
+			message: "#^Unsafe usage of new static\\(\\)\\.$#"
+			count: 1
+			path: public/modules/custom/asu_content/src/Plugin/Field/FieldFormatter/AsuServiceFormatter.php
+
+		-
+			message: "#^Call to an undefined method Drupal\\\\Core\\\\Entity\\\\EntityInterface\\:\\:get\\(\\)\\.$#"
+			count: 1
+			path: public/modules/custom/asu_content/src/Plugin/Field/FieldWidget/AsuServiceWidget.php
+
+		-
+			message: "#^Call to an undefined method Drupal\\\\Core\\\\TypedData\\\\TypedDataInterface\\:\\:getFieldDefinition\\(\\)\\.$#"
+			count: 1
+			path: public/modules/custom/asu_content/src/Plugin/Field/FieldWidget/AsuServiceWidget.php
+
+		-
+			message: "#^Method Drupal\\\\Core\\\\Field\\\\WidgetBase\\:\\:__construct\\(\\) invoked with 3 parameters, 5 required\\.$#"
+			count: 1
+			path: public/modules/custom/asu_content/src/Plugin/Field/FieldWidget/AsuServiceWidget.php
+
+		-
+			message: "#^Unsafe usage of new static\\(\\)\\.$#"
+			count: 1
+			path: public/modules/custom/asu_content/src/Plugin/Field/FieldWidget/AsuServiceWidget.php
+
+		-
+			message: "#^Unsafe usage of new static\\(\\)\\.$#"
+			count: 1
+			path: public/modules/custom/asu_content/src/Plugin/QueueWorker/ApartmentUpdateWorker.php
+
+		-
+			message: "#^PHPDoc tag @param for parameter \\$project with type Drupal\\\\asu_content\\\\Drupal\\\\asu_content\\\\Entity\\\\Project is not subtype of native type Drupal\\\\asu_content\\\\Entity\\\\Project\\.$#"
+			count: 1
+			path: public/modules/custom/asu_content/src/ProjectUpdater.php
+
+		-
+			message: "#^Parameter \\$project of method Drupal\\\\asu_content\\\\ProjectUpdater\\:\\:updateApartmentsOpenForApplication\\(\\) has invalid type Drupal\\\\asu_content\\\\Drupal\\\\asu_content\\\\Entity\\\\Project\\.$#"
+			count: 1
+			path: public/modules/custom/asu_content/src/ProjectUpdater.php
+
+		-
+			message: "#^Property Drupal\\\\asu_content\\\\Entity\\\\Apartment\\:\\:\\$field_apartment_state_of_sale \\(Drupal\\\\Core\\\\Field\\\\FieldItemListInterface\\) does not accept string\\.$#"
+			count: 2
+			path: public/modules/custom/asu_content/src/ProjectUpdater.php
+
+		-
+			message: "#^Property Drupal\\\\asu_content\\\\Entity\\\\Project\\:\\:\\$field_state_of_sale \\(Drupal\\\\Core\\\\Field\\\\FieldItemListInterface\\) does not accept string\\.$#"
+			count: 1
+			path: public/modules/custom/asu_content/src/ProjectUpdater.php
+
+		-
+			message: "#^Call to an undefined method Drupal\\\\Core\\\\Form\\\\FormInterface\\:\\:getEntity\\(\\)\\.$#"
+			count: 7
+			path: public/modules/custom/asu_csv_import/asu_csv_import.module
+
+		-
+			message: "#^Variable \\$file in PHPDoc tag @var does not exist\\.$#"
+			count: 1
+			path: public/modules/custom/asu_csv_import/asu_csv_import.module
+
+		-
+			message: "#^Variable \\$nodes might not be defined\\.$#"
+			count: 1
+			path: public/modules/custom/asu_csv_import/asu_csv_import.module
+
+		-
+			message: "#^Variable \\$number in empty\\(\\) is never defined\\.$#"
+			count: 1
+			path: public/modules/custom/asu_csv_import/src/ImportTypes/NumberType.php
+
+		-
+			message: "#^Access to an undefined property Drupal\\\\Core\\\\Entity\\\\EntityInterface\\:\\:\\$_referringItem\\.$#"
+			count: 1
+			path: public/modules/custom/asu_csv_import/src/Plugin/Field/FieldFormatter/AsuCsvFileFormatter.php
+
+		-
+			message: "#^Access to an undefined property Drupal\\\\asu_csv_import\\\\Plugin\\\\Field\\\\FieldType\\\\AsuCsvImport\\:\\:\\$display\\.$#"
+			count: 1
+			path: public/modules/custom/asu_csv_import/src/Plugin/Field/FieldType/AsuCsvImport.php
+
+		-
+			message: """
+				#^Call to deprecated function format_size\\(\\)\\:
+				in drupal\\:10\\.2\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use
+				  \\\\Drupal\\\\Core\\\\StringTranslation\\\\ByteSizeMarkup\\:\\:create\\(\\$size, \\$langcode\\)
+				  instead\\.$#
+			"""
+			count: 1
+			path: public/modules/custom/asu_csv_import/src/Plugin/Field/FieldType/AsuCsvImport.php
+
+		-
+			message: "#^Access to an undefined property Drupal\\\\Core\\\\TypedData\\\\TypedDataInterface\\:\\:\\$fids\\.$#"
+			count: 1
+			path: public/modules/custom/asu_csv_import/src/Plugin/Field/FieldWidget/AsuFileWidget.php
+
+		-
+			message: "#^Access to an undefined property Drupal\\\\asu_csv_import\\\\Plugin\\\\Field\\\\FieldWidget\\\\AsuFileWidget\\:\\:\\$elementInfo\\.$#"
+			count: 2
+			path: public/modules/custom/asu_csv_import/src/Plugin/Field/FieldWidget/AsuFileWidget.php
+
+		-
+			message: "#^Call to an undefined method Drupal\\\\Core\\\\TypedData\\\\TypedDataInterface\\:\\:getUploadLocation\\(\\)\\.$#"
+			count: 1
+			path: public/modules/custom/asu_csv_import/src/Plugin/Field/FieldWidget/AsuFileWidget.php
+
+		-
+			message: "#^Call to an undefined method Drupal\\\\Core\\\\TypedData\\\\TypedDataInterface\\:\\:getUploadValidators\\(\\)\\.$#"
+			count: 1
+			path: public/modules/custom/asu_csv_import/src/Plugin/Field/FieldWidget/AsuFileWidget.php
+
+		-
+			message: "#^Unsafe usage of new static\\(\\)\\.$#"
+			count: 1
+			path: public/modules/custom/asu_csv_import/src/Plugin/Field/FieldWidget/AsuFileWidget.php
+
+		-
+			message: "#^Method Drupal\\\\asu_csv_import\\\\UploadFileHandler\\:\\:getUploadedFile\\(\\) has invalid return type Drupal\\\\asu_csv_import\\\\Drupal\\\\Core\\\\Entity\\\\EntityInterface\\.$#"
+			count: 1
+			path: public/modules/custom/asu_csv_import/src/UploadFileHandler.php
+
+		-
+			message: "#^PHPDoc tag @param for parameter \\$file with type Drupal\\\\asu_csv_import\\\\Drupal\\\\file\\\\Entity\\\\File is not subtype of native type Drupal\\\\file\\\\Entity\\\\File\\.$#"
+			count: 2
+			path: public/modules/custom/asu_csv_import/src/UploadFileHandler.php
+
+		-
+			message: "#^PHPDoc tag @param for parameter \\$node with type Drupal\\\\asu_csv_import\\\\Drupal\\\\node\\\\Entity\\\\Node is not subtype of native type Drupal\\\\node\\\\Entity\\\\Node\\.$#"
+			count: 1
+			path: public/modules/custom/asu_csv_import/src/UploadFileHandler.php
+
+		-
+			message: "#^Parameter \\$file of method Drupal\\\\asu_csv_import\\\\UploadFileHandler\\:\\:createNodes\\(\\) has invalid type Drupal\\\\asu_csv_import\\\\Drupal\\\\file\\\\Entity\\\\File\\.$#"
+			count: 1
+			path: public/modules/custom/asu_csv_import/src/UploadFileHandler.php
+
+		-
+			message: "#^Parameter \\$file of method Drupal\\\\asu_csv_import\\\\UploadFileHandler\\:\\:validateImportData\\(\\) has invalid type Drupal\\\\asu_csv_import\\\\Drupal\\\\file\\\\Entity\\\\File\\.$#"
+			count: 1
+			path: public/modules/custom/asu_csv_import/src/UploadFileHandler.php
+
+		-
+			message: "#^Parameter \\$node of method Drupal\\\\asu_csv_import\\\\UploadFileHandler\\:\\:createCsvTemplateRows\\(\\) has invalid type Drupal\\\\asu_csv_import\\\\Drupal\\\\node\\\\Entity\\\\Node\\.$#"
+			count: 1
+			path: public/modules/custom/asu_csv_import/src/UploadFileHandler.php
+
+		-
+			message: "#^Variable \\$field_types might not be defined\\.$#"
+			count: 2
+			path: public/modules/custom/asu_csv_import/src/UploadFileHandler.php
+
+		-
+			message: "#^Variable \\$header might not be defined\\.$#"
+			count: 1
+			path: public/modules/custom/asu_csv_import/src/UploadFileHandler.php
+
+		-
+			message: """
+				#^Call to deprecated function file_validate_is_image\\(\\)\\:
+				in drupal\\:10\\.2\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use the
+				  'file\\.validator' service instead\\.$#
+			"""
+			count: 1
+			path: public/modules/custom/asu_elastic/src/Plugin/search_api/data_type/FileIdToUrl.php
+
+		-
+			message: "#^\\\\Drupal calls should be avoided in classes, use dependency injection instead$#"
+			count: 1
+			path: public/modules/custom/asu_elastic/src/Plugin/search_api/data_type/IdToUrl.php
+
+		-
+			message: "#^Call to static method create\\(\\) on an unknown class Drupal\\\\contact_emails\\\\Entity\\\\ContactEmail\\.$#"
+			count: 1
+			path: public/modules/custom/asu_mailer/asu_mailer.install
+
+		-
+			message: "#^Parameter \\$mail_manager of method Drupal\\\\asu_mailer\\\\EventSubscriber\\\\ApplicationSubscriber\\:\\:__construct\\(\\) has invalid type Drupal\\\\asu_mailer\\\\EventSubscriber\\\\MailManagerInterface\\.$#"
+			count: 1
+			path: public/modules/custom/asu_mailer/src/EventSubscriber/ApplicationSubscriber.php
+
+		-
+			message: "#^Property Drupal\\\\asu_mailer\\\\EventSubscriber\\\\ApplicationSubscriber\\:\\:\\$mailManager \\(Drupal\\\\Core\\\\Mail\\\\MailManager\\) does not accept Drupal\\\\asu_mailer\\\\EventSubscriber\\\\MailManagerInterface\\.$#"
+			count: 1
+			path: public/modules/custom/asu_mailer/src/EventSubscriber/ApplicationSubscriber.php
+
+		-
+			message: "#^Variable \\$subject might not be defined\\.$#"
+			count: 1
+			path: public/modules/custom/asu_mailer/src/EventSubscriber/ApplicationSubscriber.php
+
+		-
+			message: "#^Variable \\$text might not be defined\\.$#"
+			count: 1
+			path: public/modules/custom/asu_mailer/src/EventSubscriber/ApplicationSubscriber.php
+
+		-
+			message: "#^Access to an undefined property Drupal\\\\asu_mailer\\\\Form\\\\EmailContentSettingsform\\:\\:\\$languageManager\\.$#"
+			count: 3
+			path: public/modules/custom/asu_mailer/src/Form/EmailContentSettingsform.php
+
+		-
+			message: "#^Unsafe usage of new static\\(\\)\\.$#"
+			count: 1
+			path: public/modules/custom/asu_mailer/src/Form/EmailContentSettingsform.php
+
+		-
+			message: """
+				#^Call to deprecated function format_size\\(\\)\\:
+				in drupal\\:10\\.2\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use
+				  \\\\Drupal\\\\Core\\\\StringTranslation\\\\ByteSizeMarkup\\:\\:create\\(\\$size, \\$langcode\\)
+				  instead\\.$#
+			"""
+			count: 2
+			path: public/modules/custom/asu_rest/src/Plugin/rest/resource/Content.php
+
+		-
+			message: "#^Method Drupal\\\\asu_rest\\\\Plugin\\\\rest\\\\resource\\\\Content\\:\\:get\\(\\) has invalid return type Drupal\\\\asu_rest\\\\Plugin\\\\rest\\\\resource\\\\Drupal\\\\rest\\\\ModifiedResourceResponse\\.$#"
+			count: 1
+			path: public/modules/custom/asu_rest/src/Plugin/rest/resource/Content.php
+
+		-
+			message: "#^PHPDoc tag @return with type Drupal\\\\asu_rest\\\\Plugin\\\\rest\\\\resource\\\\Drupal\\\\rest\\\\ModifiedResourceResponse is not subtype of native type Drupal\\\\rest\\\\ModifiedResourceResponse\\.$#"
+			count: 1
+			path: public/modules/custom/asu_rest/src/Plugin/rest/resource/Content.php
+
+		-
+			message: "#^Variable \\$application_end_time_timestamp might not be defined\\.$#"
+			count: 1
+			path: public/modules/custom/asu_rest/src/Plugin/rest/resource/Content.php
+
+		-
+			message: "#^Variable \\$application_start_time_timestamp might not be defined\\.$#"
+			count: 1
+			path: public/modules/custom/asu_rest/src/Plugin/rest/resource/Content.php
+
+		-
+			message: "#^Variable \\$attachments_stack on left side of \\?\\? always exists and is not nullable\\.$#"
+			count: 1
+			path: public/modules/custom/asu_rest/src/Plugin/rest/resource/Content.php
+
+		-
+			message: "#^Variable \\$city might not be defined\\.$#"
+			count: 1
+			path: public/modules/custom/asu_rest/src/Plugin/rest/resource/Content.php
+
+		-
+			message: "#^Variable \\$estimated_completion_date might not be defined\\.$#"
+			count: 1
+			path: public/modules/custom/asu_rest/src/Plugin/rest/resource/Content.php
+
+		-
+			message: "#^Variable \\$is_application_period_active might not be defined\\.$#"
+			count: 1
+			path: public/modules/custom/asu_rest/src/Plugin/rest/resource/Content.php
+
+		-
+			message: "#^Variable \\$is_application_period_in_the_past might not be defined\\.$#"
+			count: 1
+			path: public/modules/custom/asu_rest/src/Plugin/rest/resource/Content.php
+
+		-
+			message: "#^Variable \\$parent_node might not be defined\\.$#"
+			count: 1
+			path: public/modules/custom/asu_rest/src/Plugin/rest/resource/Content.php
+
+		-
+			message: "#^Variable \\$postal_code might not be defined\\.$#"
+			count: 1
+			path: public/modules/custom/asu_rest/src/Plugin/rest/resource/Content.php
+
+		-
+			message: "#^Variable \\$services_stack on left side of \\?\\? always exists and is not nullable\\.$#"
+			count: 1
+			path: public/modules/custom/asu_rest/src/Plugin/rest/resource/Content.php
+
+		-
+			message: "#^Variable \\$services_url on left side of \\?\\? always exists and is not nullable\\.$#"
+			count: 1
+			path: public/modules/custom/asu_rest/src/Plugin/rest/resource/Content.php
+
+		-
+			message: "#^Variable \\$street_address might not be defined\\.$#"
+			count: 1
+			path: public/modules/custom/asu_rest/src/Plugin/rest/resource/Content.php
+
+		-
+			message: "#^\\\\Drupal calls should be avoided in classes, use dependency injection instead$#"
+			count: 11
+			path: public/modules/custom/asu_rest/src/Plugin/rest/resource/Content.php
+
+		-
+			message: "#^Unsafe usage of new static\\(\\)\\.$#"
+			count: 1
+			path: public/modules/custom/asu_rest/src/Plugin/rest/resource/ElasticSearch.php
+
+		-
+			message: "#^\\\\Drupal calls should be avoided in classes, use dependency injection instead$#"
+			count: 5
+			path: public/modules/custom/asu_rest/src/Plugin/rest/resource/ElasticSearch.php
+
+		-
+			message: "#^\\\\Drupal calls should be avoided in classes, use dependency injection instead$#"
+			count: 4
+			path: public/modules/custom/asu_rest/src/Plugin/rest/resource/Filters.php
+
+		-
+			message: "#^Variable \\$applicationCountByApartment in isset\\(\\) always exists and is not nullable\\.$#"
+			count: 1
+			path: public/modules/custom/asu_rest/src/Plugin/rest/resource/Initialize.php
+
+		-
+			message: "#^Variable \\$user in PHPDoc tag @var does not exist\\.$#"
+			count: 1
+			path: public/modules/custom/asu_rest/src/Plugin/rest/resource/Initialize.php
+
+		-
+			message: "#^\\\\Drupal calls should be avoided in classes, use dependency injection instead$#"
+			count: 15
+			path: public/modules/custom/asu_rest/src/Plugin/rest/resource/Initialize.php
+
+		-
+			message: "#^Method Drupal\\\\asu_rest\\\\Plugin\\\\rest\\\\resource\\\\Mailinglist\\:\\:post\\(\\) has invalid return type Drupal\\\\asu_rest\\\\Plugin\\\\rest\\\\resource\\\\Drupal\\\\rest\\\\ModifiedResourceResponse\\.$#"
+			count: 1
+			path: public/modules/custom/asu_rest/src/Plugin/rest/resource/Mailinglist.php
+
+		-
+			message: "#^PHPDoc tag @return with type Drupal\\\\asu_rest\\\\Plugin\\\\rest\\\\resource\\\\Drupal\\\\rest\\\\ModifiedResourceResponse is not subtype of native type Drupal\\\\rest\\\\ModifiedResourceResponse\\.$#"
+			count: 1
+			path: public/modules/custom/asu_rest/src/Plugin/rest/resource/Mailinglist.php
+
+		-
+			message: "#^Method Drupal\\\\asu_rest\\\\UserDto\\:\\:createFromUser\\(\\) should return static\\(Drupal\\\\asu_rest\\\\UserDto\\) but returns Drupal\\\\asu_rest\\\\UserDto\\.$#"
+			count: 1
+			path: public/modules/custom/asu_rest/src/UserDto.php
+
+		-
+			message: "#^Access to an undefined property Drupal\\\\Core\\\\TypedData\\\\TypedDataInterface\\:\\:\\$value\\.$#"
+			count: 1
+			path: public/modules/custom/asu_tasklist/src/Plugin/Field/FieldFormatter/AsuTaskListFormatter.php
+
+		-
+			message: "#^Call to an undefined method Drupal\\\\Core\\\\Entity\\\\EntityInterface\\:\\:get\\(\\)\\.$#"
+			count: 1
+			path: public/modules/custom/asu_tasklist/src/Plugin/Field/FieldFormatter/AsuTaskListFormatter.php
+
+		-
+			message: "#^Method Drupal\\\\Core\\\\Field\\\\FormatterBase\\:\\:__construct\\(\\) invoked with 3 parameters, 7 required\\.$#"
+			count: 1
+			path: public/modules/custom/asu_tasklist/src/Plugin/Field/FieldFormatter/AsuTaskListFormatter.php
+
+		-
+			message: "#^Unsafe usage of new static\\(\\)\\.$#"
+			count: 1
+			path: public/modules/custom/asu_tasklist/src/Plugin/Field/FieldFormatter/AsuTaskListFormatter.php
+
+		-
+			message: "#^Call to an undefined method Drupal\\\\Core\\\\Entity\\\\EntityInterface\\:\\:get\\(\\)\\.$#"
+			count: 1
+			path: public/modules/custom/asu_tasklist/src/Plugin/Field/FieldWidget/AsuTaskListWidget.php
+
+		-
+			message: "#^Call to an undefined method Drupal\\\\Core\\\\TypedData\\\\TypedDataInterface\\:\\:getFieldDefinition\\(\\)\\.$#"
+			count: 1
+			path: public/modules/custom/asu_tasklist/src/Plugin/Field/FieldWidget/AsuTaskListWidget.php
+
+		-
+			message: "#^Method Drupal\\\\Core\\\\Field\\\\WidgetBase\\:\\:__construct\\(\\) invoked with 3 parameters, 5 required\\.$#"
+			count: 1
+			path: public/modules/custom/asu_tasklist/src/Plugin/Field/FieldWidget/AsuTaskListWidget.php
+
+		-
+			message: "#^Unsafe usage of new static\\(\\)\\.$#"
+			count: 1
+			path: public/modules/custom/asu_tasklist/src/Plugin/Field/FieldWidget/AsuTaskListWidget.php
+
+		-
+			message: "#^Call to an undefined method Drupal\\\\Core\\\\Language\\\\LanguageManager\\:\\:getLanguageConfigOverride\\(\\)\\.$#"
+			count: 1
+			path: public/modules/custom/asu_translation/src/TranslationFileWriter.php
+
+		-
+			message: "#^Parameter \\$fileRepository of method Drupal\\\\asu_translation\\\\TranslationFileWriter\\:\\:__construct\\(\\) has invalid type Drupal\\\\asu_translation\\\\FileRepositoryInterface\\.$#"
+			count: 1
+			path: public/modules/custom/asu_translation/src/TranslationFileWriter.php
+
+		-
+			message: "#^Property Drupal\\\\asu_translation\\\\TranslationFileWriter\\:\\:\\$fileRepository \\(Drupal\\\\file\\\\FileRepositoryInterface\\) does not accept Drupal\\\\asu_translation\\\\FileRepositoryInterface\\.$#"
+			count: 1
+			path: public/modules/custom/asu_translation/src/TranslationFileWriter.php
+
+		-
+			message: "#^Access to an undefined property Drupal\\\\user\\\\UserInterface\\:\\:\\$field_backend_password\\.$#"
+			count: 1
+			path: public/modules/custom/asu_user/asu_user.module
+
+		-
+			message: "#^Access to an undefined property Drupal\\\\user\\\\UserInterface\\:\\:\\$field_backend_profile\\.$#"
+			count: 3
+			path: public/modules/custom/asu_user/asu_user.module
+
+		-
+			message: "#^Call to an undefined method Drupal\\\\asu_api\\\\Api\\\\BackendApi\\\\Response\\\\UserResponse\\:\\:getPassword\\(\\)\\.$#"
+			count: 1
+			path: public/modules/custom/asu_user/asu_user.module
+
+		-
+			message: "#^Call to an undefined method Drupal\\\\asu_api\\\\Api\\\\BackendApi\\\\Response\\\\UserResponse\\:\\:getProfileId\\(\\)\\.$#"
+			count: 1
+			path: public/modules/custom/asu_user/asu_user.module
+
+		-
+			message: "#^PHPDoc tag @param for parameter \\$account with type Drupal\\\\user\\\\Entity\\\\UserInterface is not subtype of native type Drupal\\\\user\\\\UserInterface\\.$#"
+			count: 1
+			path: public/modules/custom/asu_user/asu_user.module
+
+		-
+			message: "#^Parameter \\$account of function asu_user_asu_send_user_email\\(\\) has invalid type Drupal\\\\user\\\\Entity\\\\UserInterface\\.$#"
+			count: 1
+			path: public/modules/custom/asu_user/asu_user.module
+
+		-
+			message: "#^Variable \\$bakendApi in PHPDoc tag @var does not match assigned variable \\$backendApi\\.$#"
+			count: 1
+			path: public/modules/custom/asu_user/asu_user.module
+
+		-
+			message: "#^Access to an undefined property Drupal\\\\asu_user\\\\AuthService\\:\\:\\$backendApi\\.$#"
+			count: 2
+			path: public/modules/custom/asu_user/src/AuthService.php
+
+		-
+			message: "#^Access to an undefined property Drupal\\\\asu_user\\\\AuthService\\:\\:\\$database\\.$#"
+			count: 2
+			path: public/modules/custom/asu_user/src/AuthService.php
+
+		-
+			message: "#^Access to an undefined property Drupal\\\\asu_user\\\\AuthService\\:\\:\\$privateTempCustomer\\.$#"
+			count: 2
+			path: public/modules/custom/asu_user/src/AuthService.php
+
+		-
+			message: "#^Binary operation \"\\+\" between non\\-falsy\\-string and 1 results in an error\\.$#"
+			count: 1
+			path: public/modules/custom/asu_user/src/AuthService.php
+
+		-
+			message: "#^Call to an undefined method Drupal\\\\Core\\\\Session\\\\AccountInterface\\:\\:isBlocked\\(\\)\\.$#"
+			count: 1
+			path: public/modules/custom/asu_user/src/AuthService.php
+
+		-
+			message: "#^Call to an undefined method Drupal\\\\asu_user\\\\AuthService\\:\\:logger\\(\\)\\.$#"
+			count: 1
+			path: public/modules/custom/asu_user/src/AuthService.php
+
+		-
+			message: "#^Variable \\$backendApi in PHPDoc tag @var does not match assigned variable \\$response\\.$#"
+			count: 1
+			path: public/modules/custom/asu_user/src/AuthService.php
+
+		-
+			message: "#^Unsafe usage of new static\\(\\)\\.$#"
+			count: 1
+			path: public/modules/custom/asu_user/src/Controller/AuthController.php
+
+		-
+			message: "#^\\\\Drupal calls should be avoided in classes, use dependency injection instead$#"
+			count: 2
+			path: public/modules/custom/asu_user/src/Controller/AuthController.php
+
+		-
+			message: "#^\\\\Drupal calls should be avoided in classes, use dependency injection instead$#"
+			count: 2
+			path: public/modules/custom/asu_user/src/Controller/ListController.php
+
+		-
+			message: "#^Access to an undefined property Drupal\\\\Core\\\\Field\\\\FieldItemInterface\\:\\:\\$value\\.$#"
+			count: 1
+			path: public/modules/custom/asu_user/src/Customer.php
+
+		-
+			message: "#^Argument of an invalid type Drupal\\\\Core\\\\Config\\\\ImmutableConfig supplied for foreach, only iterables are supported\\.$#"
+			count: 1
+			path: public/modules/custom/asu_user/src/Customer.php
+
+		-
+			message: "#^Class Drupal\\\\asu_user\\\\Customer constructor invoked with 2 parameters, 4 required\\.$#"
+			count: 1
+			path: public/modules/custom/asu_user/src/Customer.php
+
+		-
+			message: "#^PHPDoc tag @var for property Drupal\\\\asu_user\\\\Customer\\:\\:\\$config with type array\\|Drupal\\\\Core\\\\Config\\\\ImmutableConfig is not subtype of native type Drupal\\\\Core\\\\Config\\\\ImmutableConfig\\.$#"
+			count: 1
+			path: public/modules/custom/asu_user/src/Customer.php
+
+		-
+			message: "#^PHPDoc tag @var for property Drupal\\\\asu_user\\\\Customer\\:\\:\\$user with type Drupal\\\\asu_user\\\\Drupal\\\\user\\\\Entity\\\\User is not subtype of native type Drupal\\\\user\\\\Entity\\\\User\\.$#"
+			count: 1
+			path: public/modules/custom/asu_user/src/Customer.php
+
+		-
+			message: "#^Property Drupal\\\\asu_user\\\\Customer\\:\\:\\$user has unknown class Drupal\\\\asu_user\\\\Drupal\\\\user\\\\Entity\\\\User as its type\\.$#"
+			count: 1
+			path: public/modules/custom/asu_user/src/Customer.php
+
+		-
+			message: "#^Call to an undefined method Drupal\\\\user\\\\UserStorage\\:\\:accessCheck\\(\\)\\.$#"
+			count: 1
+			path: public/modules/custom/asu_user/src/DeleteTestUsers.php
+
+		-
+			message: "#^PHPDoc tag @param for parameter \\$store with type Drupal\\\\asu_user\\\\Helper\\\\Drupal\\\\Core\\\\TempStore\\\\PrivateTempStore is not subtype of native type Drupal\\\\Core\\\\TempStore\\\\PrivateTempStore\\.$#"
+			count: 1
+			path: public/modules/custom/asu_user/src/Helper/StoreHelper.php
+
+		-
+			message: "#^Parameter \\$store of method Drupal\\\\asu_user\\\\Helper\\\\StoreHelper\\:\\:setMultipleValuesToStoreByConfiguration\\(\\) has invalid type Drupal\\\\asu_user\\\\Helper\\\\Drupal\\\\Core\\\\TempStore\\\\PrivateTempStore\\.$#"
+			count: 1
+			path: public/modules/custom/asu_user/src/Helper/StoreHelper.php
+
+		-
+			message: "#^Access to an undefined property Drupal\\\\Core\\\\Form\\\\FormInterface\\:\\:\\$entity\\.$#"
+			count: 1
+			path: public/modules/custom/asu_user/src/RegisterForm.php
+
+		-
+			message: "#^Access to an undefined property Drupal\\\\user\\\\UserInterface\\:\\:\\$field_backend_password\\.$#"
+			count: 1
+			path: public/modules/custom/asu_user/src/RegisterForm.php
+
+		-
+			message: "#^Access to an undefined property Drupal\\\\user\\\\UserInterface\\:\\:\\$field_backend_profile\\.$#"
+			count: 1
+			path: public/modules/custom/asu_user/src/RegisterForm.php
+
+		-
+			message: "#^Call to an undefined method Drupal\\\\Core\\\\Form\\\\FormInterface\\:\\:getEntity\\(\\)\\.$#"
+			count: 1
+			path: public/modules/custom/asu_user/src/RegisterForm.php
+
+		-
+			message: "#^Method Drupal\\\\asu_user\\\\RegisterForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
+			count: 1
+			path: public/modules/custom/asu_user/src/RegisterForm.php
+
+		-
+			message: "#^PHPDoc tag @param for parameter \\$backendApi with type Drupal\\\\asu_api\\\\Api\\\\BackendApi is not subtype of native type Drupal\\\\asu_api\\\\Api\\\\BackendApi\\\\BackendApi\\.$#"
+			count: 1
+			path: public/modules/custom/asu_user/src/RegisterForm.php
+
+		-
+			message: "#^Parameter \\$backendApi of method Drupal\\\\asu_user\\\\RegisterForm\\:\\:__construct\\(\\) has invalid type Drupal\\\\asu_api\\\\Api\\\\BackendApi\\.$#"
+			count: 1
+			path: public/modules/custom/asu_user/src/RegisterForm.php
+
+		-
+			message: "#^Property Drupal\\\\user_bundle\\\\Entity\\\\TypedUser\\:\\:\\$password \\(Drupal\\\\Core\\\\Field\\\\FieldItemListInterface\\) does not accept string\\|null\\.$#"
+			count: 2
+			path: public/modules/custom/asu_user/src/RegisterForm.php
+
+		-
+			message: "#^Unsafe usage of new static\\(\\)\\.$#"
+			count: 1
+			path: public/modules/custom/asu_user/src/RegisterForm.php
+
+		-
+			message: "#^\\\\Drupal calls should be avoided in classes, use dependency injection instead$#"
+			count: 8
+			path: public/modules/custom/asu_user/src/RegisterForm.php
+
+		-
+			message: "#^PHPDoc tag @var for property Drupal\\\\asu_user\\\\Store\\:\\:\\$config with type array\\|Drupal\\\\Core\\\\Config\\\\ImmutableConfig is not subtype of native type array\\|null\\.$#"
+			count: 1
+			path: public/modules/custom/asu_user/src/Store.php
+
+		-
+			message: "#^\\\\Drupal calls should be avoided in classes, use dependency injection instead$#"
+			count: 1
+			path: public/modules/custom/asu_user/src/Store.php
