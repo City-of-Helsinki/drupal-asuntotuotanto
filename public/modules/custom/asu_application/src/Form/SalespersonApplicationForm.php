@@ -6,8 +6,10 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Messenger\MessengerTrait;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\search_api\Entity\Index;
 use Drupal\search_api\ParseMode\ParseModePluginManager;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Allow salesperson to create an application on behalf of customer.
@@ -20,33 +22,32 @@ class SalespersonApplicationForm extends FormBase {
    *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  protected $entityTypeManager;
-
-  /**
-   * A request stack symfony instance.
-   *
-   * @var \Symfony\Component\HttpFoundation\RequestStack
-   */
-  protected $requestStack;
+  protected EntityTypeManagerInterface $entityTypeManager;
 
   /**
    * Constructs a FieldMapperBase object.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager service.
-   * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
-   *   The request stack.
    * @param \Drupal\search_api\ParseMode\ParseModePluginManager $parseModeManager
    *   The parse mode manager.
    */
   public function __construct(
     EntityTypeManagerInterface $entityTypeManager,
-    RequestStack $requestStack,
     ParseModePluginManager $parseModeManager,
   ) {
     $this->entityTypeManager = $entityTypeManager;
-    $this->requestStack = $requestStack;
     $this->parseModeManager = $parseModeManager;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('entity_type.manager'),
+      $container->get('plugin.manager.search_api.parse_mode'),
+    );
   }
 
   /**
@@ -146,7 +147,8 @@ class SalespersonApplicationForm extends FormBase {
     $userId = $values['user_id'];
     $ownershipType = $ownershipTypes[(int) $projectId];
 
-    $this->requestStack->getCurrentRequest()->query->remove('destination');
+    $form_state->setIgnoreDestination();
+
     $form_state->setRedirect(
       'entity.asu_application.add_form',
       [

@@ -9,15 +9,11 @@ use Drupal\asu_content\Entity\Project;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Ajax\UpdateBuildIdCommand;
-use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Entity\ContentEntityForm;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Messenger\MessengerTrait;
-use Drupal\Core\Path\CurrentPathStack;
-use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
@@ -69,39 +65,23 @@ class ApplicationForm extends ContentEntityForm {
   protected $routeMatch;
 
   /**
-   * Constructs a FieldMapperBase object.
-   *
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
-   *   The entity type manager service.
-   * @param \Drupal\Core\Session\AccountInterface $current_user
-   *   Current user.
-   * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
-   *   The request stack.
-   * @param \Drupal\Core\Cache\CacheBackendInterface $cache
-   *   The cache.
-   * @param \Drupal\Core\Path\CurrentPathStack $current_path
-   *   The current path.
-   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
-   *   The current path.
-   * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $event_dispatcher
-   *   The event dispatcher.
+   * {@inheritdoc}
    */
-  public function __construct(
-    EntityTypeManagerInterface $entityTypeManager,
-    AccountInterface $current_user,
-    RequestStack $requestStack,
-    CacheBackendInterface $cache,
-    CurrentPathStack $current_path,
-    RouteMatchInterface $route_match,
-    EventDispatcherInterface $event_dispatcher
-  ) {
-    $this->entityTypeManager = $entityTypeManager;
-    $this->currentUser = $current_user;
-    $this->requestStack = $requestStack;
-    $this->cache = $cache;
-    $this->currentPath = $current_path;
-    $this->routeMatch = $route_match;
-    $this->eventDispatcher = $event_dispatcher;
+  public static function create(ContainerInterface $container) {
+    $instance = new static(
+      $container->get('entity.repository'),
+      $container->get('entity_type.bundle.info'),
+      $container->get('datetime.time')
+    );
+    $instance->entityTypeManager = $container->get('entity_type.manager');
+    $instance->currentUser = $container->get('current_user');
+    $instance->requestStack = $container->get('request_stack');
+    $instance->cache = $container->get('cache.default');
+    $instance->currentPath = $container->get('path.current');
+    $instance->routeMatch = $container->get('current_route_match');
+    $instance->eventDispatcher = $container->get('event_dispatcher');
+
+    return $instance;
   }
 
   /**

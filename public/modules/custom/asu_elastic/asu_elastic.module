@@ -8,7 +8,7 @@
 /**
  * Implements hook_elasticsearch_connector_supported_data_types_alter().
  */
-function asu_elastic_asu_content_elasticsearch_connector_supported_data_types_alter(array &$data_types) {
+function asu_elastic_elasticsearch_connector_supported_data_types_alter(array &$data_types): void {
   $data_types = [
     'asu_date_time',
     'cent',

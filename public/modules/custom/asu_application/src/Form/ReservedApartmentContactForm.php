@@ -4,7 +4,7 @@ namespace Drupal\asu_application\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Mail\MailManagerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Reserved apartment contact form.
@@ -33,23 +33,15 @@ class ReservedApartmentContactForm extends FormBase {
   protected $mailManager;
 
   /**
-   * Constructs a FieldMapperBase object.
-   *
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
-   *   The entity type manager service.
-   * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
-   *   The request stack.
-   * @param \Drupal\Core\Mail\MailManagerInterface $mail_manager
-   *   The mail manager.
+   * {@inheritdoc}
    */
-  public function __construct(
-    EntityTypeManagerInterface $entityTypeManager,
-    RequestStack $requestStack,
-    MailManagerInterface $mail_manager,
-  ) {
-    $this->entityTypeManager = $entityTypeManager;
-    $this->requestStack = $requestStack;
-    $this->mailManager = $mail_manager;
+  public static function create(ContainerInterface $container) {
+    $instance = new static();
+    $instance->entityTypeManager = $container->get('entity_type.manager');
+    $instance->requestStack = $container->get('request_stack');
+    $instance->mailManager = $container->get('plugin.manager.mail');
+
+    return $instance;
   }
 
   /**
