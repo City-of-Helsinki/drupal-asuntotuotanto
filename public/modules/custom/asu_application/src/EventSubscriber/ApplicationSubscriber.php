@@ -15,6 +15,7 @@ use Drupal\Core\Language\LanguageManager;
 use Drupal\Core\Messenger\MessengerTrait;
 use Drupal\Core\Queue\QueueFactory;
 use Drupal\Core\Queue\QueueInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -23,6 +24,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class ApplicationSubscriber implements EventSubscriberInterface {
   use MessengerTrait;
+  use StringTranslationTrait;
 
   /**
    * Logger.

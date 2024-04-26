@@ -123,7 +123,7 @@ class MainApplicantWidget extends WidgetBase {
       '#description' => $this->t('last 4 characters'),
       '#minlength' => 5,
       '#maxlength' => 5,
-      '#default_value' => $items->getValue()[$delta]['personal_id'] ?? '',
+      '#default_value' => substr($items->getValue()[$delta]['personal_id'], -4) ?? '',
       '#required' => TRUE,
     ];
 

@@ -254,6 +254,11 @@ class ApplicationForm extends ContentEntityForm {
         $fieldTitle = (string) $form["main_applicant"]['widget'][0][$field]['#title'];
         $form_state->setErrorByName($field, $this->t('Check @field', ['@field' => $fieldTitle]));
       }
+
+      if ($field == 'date_of_birth' && empty($this->getPersonalIdDivider($value))) {
+        $fieldTitle = (string) $form["main_applicant"]['widget'][0][$field]['#title'];
+        $form_state->setErrorByName($field, $this->t('Check @field', ['@field' => $fieldTitle]));
+      }
     }
 
     if (count($formValues['apartment']) <= 1 && isset($formValues['apartment'][0])) {
@@ -602,7 +607,7 @@ class ApplicationForm extends ContentEntityForm {
   private function getPersonalIdDivider(?string $dateString) {
     $dividers = ['18' => '+', '19' => '-', '20' => 'A'];
     $year = (new \DateTime($dateString))->format('Y');
-    return $dividers[substr($year, 0, 2)];
+    return (isset($dividers[substr($year, 0, 2)])) ? $dividers[substr($year, 0, 2)] : NULL;
   }
 
   /**

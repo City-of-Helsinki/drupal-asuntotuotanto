@@ -2,6 +2,7 @@
 
 namespace Drupal\asu_api;
 
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\ImmutableConfig;
 
 /**
@@ -12,15 +13,15 @@ class ErrorCodeService {
   /**
    * Config.
    *
-   * @var Drupal\Core\Config\ImmutableConfig
+   * @var Drupal\Core\Config\ConfigFactoryInterface
    */
-  private ImmutableConfig $config;
+  private $config;
 
   /**
    * Constructor.
    */
-  public function __construct(ImmutableConfig $config) {
-    $this->config = $config;
+  public function __construct(ConfigFactoryInterface $config) {
+    $this->config = $config->get('asu_api.error_codes');
   }
 
   /**
