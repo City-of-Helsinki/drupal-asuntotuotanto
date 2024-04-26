@@ -3,7 +3,6 @@
 namespace Drupal\asu_api;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
-use Drupal\Core\Config\ImmutableConfig;
 
 /**
  * Handle error code sent by backend api.

@@ -2,8 +2,6 @@
 
 namespace Drupal\asu_tasklist\Plugin\Field\FieldWidget;
 
-use Drupal\Core\Entity\EntityRepositoryInterface;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\WidgetBase;
 use Drupal\Core\Form\FormStateInterface;
