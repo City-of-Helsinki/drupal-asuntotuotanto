@@ -79,7 +79,7 @@ content:
         duplicate: '0'
     third_party_settings: {  }
   field_lead_in:
-    type: textarea_character_counter
+    type: string_textarea
     weight: 13
     region: content
     settings:
