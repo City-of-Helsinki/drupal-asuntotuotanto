@@ -111,7 +111,7 @@ class ApplicationForm extends ContentEntityForm {
     // Redirect cases.
     if ($currentUser->isAnonymous()) {
       $current_path = $this->currentPath->getPath();
-      $redirect = '/user/login?destination=' . $current_path;
+      $redirect = '/user/register';
       return (new RedirectResponse($redirect, 301));
     }
 
