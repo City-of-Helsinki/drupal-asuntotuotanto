@@ -7,8 +7,7 @@
   "repository": "github:City-of-Helsinki/drupal-asuntotuotanto",
   "scripts": {
     "dev": "webpack --progress --mode development --config  webpack.config.dev.js --watch",
-    "build": "webpack -p --progress --mode production --config webpack.config.build.js",
-    "postinstall": "cp -r node_modules/helsinki-design-system/packages/core/src/svg/ src/icons/hds && find node_modules/ -name \"*.info\" -type f -delete"
+    "build": "webpack -p --progress --mode production --config webpack.config.build.js"
   },
   "browserslist": [
     "last 2 versions",
@@ -38,7 +37,6 @@
     "file-loader": "^2.0.0",
     "friendly-errors-webpack-plugin": "^1.7.0",
     "hds-design-tokens": "^0.14.0",
-    "helsinki-design-system": "https://github.com/City-of-Helsinki/helsinki-design-system/archive/master.tar.gz",
     "html-loader": "^0.5.5",
     "html-webpack-plugin": "^3.2.0",
     "image-webpack-loader": "^7.0.1",

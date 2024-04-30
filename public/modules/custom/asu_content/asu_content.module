@@ -52,6 +52,10 @@ function asu_content_project_add_archived_handling(&$form, &$form_state) {
       $entity->getEntityTypeId() === 'node'
       && in_array($entity->bundle(), ['project'])
     ) {
+      if (isset($form['field_archived'])) {
+        $form['actions']['field_archived_action'] = $form['field_archived'];
+      }
+
       $form['#attached']['library'][] = 'asu_content/asu_editform';
     }
   }
