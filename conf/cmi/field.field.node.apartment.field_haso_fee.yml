@@ -1,0 +1,23 @@
+uuid: 4e5eb76c-0d4c-4fcf-8a82-d3d04682ce7c
+langcode: fi
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_haso_fee
+    - node.type.apartment
+id: node.apartment.field_haso_fee
+field_name: field_haso_fee
+entity_type: node
+bundle: apartment
+label: 'Alkuperäinen asumisoikeusmaksu'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: null
+  max: null
+  prefix: ''
+  suffix: €
+field_type: decimal
