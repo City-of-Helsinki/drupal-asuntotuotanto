@@ -1,5 +1,5 @@
 uuid: 4e5eb76c-0d4c-4fcf-8a82-d3d04682ce7c
-langcode: fi
+langcode: en
 status: true
 dependencies:
   config:
@@ -9,7 +9,7 @@ id: node.apartment.field_haso_fee
 field_name: field_haso_fee
 entity_type: node
 bundle: apartment
-label: 'Alkuperäinen asumisoikeusmaksu'
+label: 'Original HASO Fee'
 description: ''
 required: false
 translatable: false
