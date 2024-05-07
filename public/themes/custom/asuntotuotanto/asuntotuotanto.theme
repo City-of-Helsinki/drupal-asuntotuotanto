@@ -562,15 +562,18 @@ function asuntotuotanto_preprocess_node(&$variables) {
       $application_start = NULL;
       $application_end = NULL;
 
-      if ($project->hasField('field_application_start_time')) {
+      if ($project->hasField('field_application_start_time') &&
+        $project->get('field_application_start_time')->value
+      ) {
         $application_start = $date_formatter->format(
             $node->get('field_application_start_time')->date->getTimestamp(),
             'custom',
             'd.m.Y H:i'
           );
-
       }
-      if ($project->hasField('field_application_end_time')) {
+      if ($project->hasField('field_application_end_time') &&
+        $project->get('field_application_end_time')->value
+      ) {
         $application_end = $date_formatter->format(
           $node->get('field_application_end_time')->date->getTimestamp(),
           'custom',
