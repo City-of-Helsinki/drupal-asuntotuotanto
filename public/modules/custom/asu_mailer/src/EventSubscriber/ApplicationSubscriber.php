@@ -5,6 +5,7 @@ namespace Drupal\asu_mailer\EventSubscriber;
 use Drupal\asu_application\Event\ApplicationEvent;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Mail\MailManagerInterface;
 use Drupal\Core\Messenger\MessengerTrait;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
