@@ -654,10 +654,9 @@ function asuntotuotanto_preprocess_node(&$variables) {
             'd.m.Y H:i'
           );
         }
-        if (
-          $project->hasField('field_application_end_time') &&
-          $project->get('field_application_end_time')->value
-        ) {
+        if ($project->hasField('field_application_end_time') &&
+          $project->get('field_application_end_time'
+          )->value) {
           $application_end = $date_formatter->format(
             $project->get('field_application_end_time')->date->getTimestamp(),
             'custom',
