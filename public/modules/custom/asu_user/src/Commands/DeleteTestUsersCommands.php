@@ -2,6 +2,7 @@
 
 namespace Drupal\asu_user\Commands;
 
+use Drupal\asu_user\DeleteTestUsers;
 use Drush\Commands\DrushCommands;
 
 /**
@@ -10,6 +11,19 @@ use Drush\Commands\DrushCommands;
  * @package Drupal\asu_user\Commands
  */
 class DeleteTestUsersCommands extends DrushCommands {
+  /**
+   * The entity type manager.
+   *
+   * @var \Drupal\asu_user\DeleteTestUsers
+   */
+  protected $deleteService;
+
+  /**
+   * Constructor.
+   */
+  public function __construct(DeleteTestUsers $delete_service) {
+    $this->deleteService = $delete_service;
+  }
 
   /**
    * Drush command that deletes all users starting with "test_".
@@ -19,8 +33,7 @@ class DeleteTestUsersCommands extends DrushCommands {
    * @usage asu_user:deleteTestUsers
    */
   public function deleteTestUsers() {
-    $delete_service = \Drupal::service('asu_user.delete_test_users');
-    $delete_service->doDeleteTestUsers();
+    $this->deleteService->doDeleteTestUsers();
     $this->output()->writeln('Test users have been deleted.');
   }
 

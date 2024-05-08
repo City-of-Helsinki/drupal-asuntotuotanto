@@ -2,7 +2,7 @@
 
 namespace Drupal\asu_api;
 
-use Drupal\Core\Config\ImmutableConfig;
+use Drupal\Core\Config\ConfigFactoryInterface;
 
 /**
  * Handle error code sent by backend api.
@@ -12,15 +12,15 @@ class ErrorCodeService {
   /**
    * Config.
    *
-   * @var Drupal\Core\Config\ImmutableConfig
+   * @var Drupal\Core\Config\ConfigFactoryInterface
    */
-  private ImmutableConfig $config;
+  private $config;
 
   /**
    * Constructor.
    */
-  public function __construct() {
-    $this->config = \Drupal::config('asu_api.error_codes');
+  public function __construct(ConfigFactoryInterface $config) {
+    $this->config = $config->get('asu_api.error_codes');
   }
 
   /**

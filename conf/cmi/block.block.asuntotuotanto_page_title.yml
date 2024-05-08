@@ -35,14 +35,6 @@ visibility:
     id: request_path
     negate: true
     pages: "<front>\r\n/mediabank/*"
-  context_all:
-    id: context_all
-    negate: null
-    values: ''
-  context:
-    id: context
-    negate: null
-    values: ''
   user_status:
     id: user_status
     negate: false

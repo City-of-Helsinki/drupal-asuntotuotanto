@@ -37,4 +37,5 @@ send_client_reports: false
 drush_tracing: false
 seckit_set_report_uri: false
 send_monitoring_sensor_status_changes: false
+http_compression: true
 send_attempts: 0

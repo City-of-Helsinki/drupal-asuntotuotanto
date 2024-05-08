@@ -2,15 +2,52 @@
 
 namespace Drupal\asu_application\Form;
 
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Messenger\MessengerTrait;
 use Drupal\search_api\Entity\Index;
-use Drupal\user\Entity\User;
+use Drupal\search_api\ParseMode\ParseModePluginManager;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Allow salesperson to create an application on behalf of customer.
  */
 class SalespersonApplicationForm extends FormBase {
+  use MessengerTrait;
+
+  /**
+   * The entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected EntityTypeManagerInterface $entityTypeManager;
+
+  /**
+   * Constructs a FieldMapperBase object.
+   *
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
+   *   The entity type manager service.
+   * @param \Drupal\search_api\ParseMode\ParseModePluginManager $parseModeManager
+   *   The parse mode manager.
+   */
+  public function __construct(
+    EntityTypeManagerInterface $entityTypeManager,
+    ParseModePluginManager $parseModeManager,
+  ) {
+    $this->entityTypeManager = $entityTypeManager;
+    $this->parseModeManager = $parseModeManager;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('entity_type.manager'),
+      $container->get('plugin.manager.search_api.parse_mode'),
+    );
+  }
 
   /**
    * {@inheritDoc}
@@ -24,15 +61,15 @@ class SalespersonApplicationForm extends FormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state, string $user_id = NULL, string $project_id = NULL) {
     if ($user_id) {
-      $user = User::load($user_id);
+      $user = $this->entityTypeManager->getStorage('user')->load($user_id);
       try {
         $projects = $this->getProjects();
       }
       catch (\Exception $e) {
-        \Drupal::messenger()->addError($this->t('Failed to fetch projects'));
+        $this->messenger()->addError($this->t('Failed to fetch projects'));
       }
 
-      $userApplications = \Drupal::entityTypeManager()
+      $userApplications = $this->entityTypeManager
         ->getStorage('asu_application')
         ->loadByProperties(['uid' => $user->id()]);
 
@@ -100,7 +137,7 @@ class SalespersonApplicationForm extends FormBase {
     $values = $form_state->cleanValues()->getValues();
 
     if (!isset($values['projects']) || !isset($values['user_id'])) {
-      \Drupal::messenger()->addError($this->t('User or project was not selected'));
+      $this->messenger()->addError($this->t('User or project was not selected'));
       return;
     }
 
@@ -109,7 +146,8 @@ class SalespersonApplicationForm extends FormBase {
     $userId = $values['user_id'];
     $ownershipType = $ownershipTypes[(int) $projectId];
 
-    \Drupal::request()->query->remove('destination');
+    $form_state->setIgnoreDestination();
+
     $form_state->setRedirect(
       'entity.asu_application.add_form',
       [
@@ -133,8 +171,7 @@ class SalespersonApplicationForm extends FormBase {
     $index = $indexes['apartment'] ?? reset($indexes);
     $query = $index->query();
 
-    $parse_mode = \Drupal::service('plugin.manager.search_api.parse_mode')
-      ->createInstance('direct');
+    $parse_mode = $this->parseModeManager->createInstance('direct');
     $parse_mode->setConjunction('AND');
     $query->setParseMode($parse_mode);
 

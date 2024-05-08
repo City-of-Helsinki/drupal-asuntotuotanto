@@ -86,7 +86,7 @@ function asu_application_update_9005() : void {
       'type' => 'asu_main_applicant',
     ]);
 
-  foreach ($fields as $name => $field) {
+  foreach ($fields as $field) {
     \Drupal::entityDefinitionUpdateManager()
       ->installFieldStorageDefinition('main_applicant', 'asu_application', 'asu_application', $field);
   }

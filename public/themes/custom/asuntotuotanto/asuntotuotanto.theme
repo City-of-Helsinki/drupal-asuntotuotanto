@@ -5,13 +5,11 @@
  * Functions to support theming in the HDBT Subtheme.
  */
 
-use Drupal\asu_application\Applications;
 use Drupal\Core\Url;
 use Drupal\file\Entity\File;
-use Drupal\user\Entity\User;
-use Drupal\taxonomy\Entity\Term;
 use Drupal\paragraphs\Entity\Paragraph;
-
+use Drupal\taxonomy\Entity\Term;
+use Drupal\user\Entity\User;
 
 /**
  * Helper function to get the icons path.
@@ -89,7 +87,7 @@ function asuntotuotanto_preprocess_page(array &$variables) : void {
     return;
   }
   // If table of contents library is attached remove it from user routes.
-  if (($key = array_search('helfi_toc/table_of_contents', $variables['#attached']['library'])) !== false) {
+  if (($key = array_search('helfi_toc/table_of_contents', $variables['#attached']['library'])) !== FALSE) {
     unset($variables['#attached']['library'][$key]);
   }
 
@@ -259,7 +257,7 @@ function asuntotuotanto_preprocess_views_view_table(&$variables) {
           $reserved_or_sold = t('Sold');
         }
       }
-      else if ($apartment->isFree() || !$apartment->isReserved()) {
+      elseif ($apartment->isFree() || !$apartment->isReserved()) {
         $reserved_or_sold = t('Available');
       }
 
@@ -353,7 +351,7 @@ function asuntotuotanto_form_alter(&$form, &$form_state, $form_id) {
     $form['#id'] == 'asu-application-haso-form'
   ) {
     $project_id = $form['#project_id'];
-    $application_teaser_values = getProjectApartmentTeaserValues($project_id);
+    $application_teaser_values = get_project_apartment_teaser_values($project_id);
     $form['application_project_information'] = $application_teaser_values;
 
     if (isset($application_teaser_values['#teaser_values']['application_end_time'])) {
@@ -564,20 +562,17 @@ function asuntotuotanto_preprocess_node(&$variables) {
       $application_start = NULL;
       $application_end = NULL;
 
-      if (
-        $project->hasField('field_application_start_time') &&
-        $application_start_time_value = $node->get('field_application_start_time')->value
+      if ($project->hasField('field_application_start_time') &&
+        $project->get('field_application_start_time')->value
       ) {
         $application_start = $date_formatter->format(
             $node->get('field_application_start_time')->date->getTimestamp(),
             'custom',
             'd.m.Y H:i'
           );
-
       }
-      if (
-        $project->hasField('field_application_end_time') &&
-        $application_end_time_value = $node->get('field_application_end_time')->value
+      if ($project->hasField('field_application_end_time') &&
+        $project->get('field_application_end_time')->value
       ) {
         $application_end = $date_formatter->format(
           $node->get('field_application_end_time')->date->getTimestamp(),
@@ -841,11 +836,9 @@ function asuntotuotanto_preprocess_pager(&$variables) {
 }
 
 /**
- *
+ * Implements template_preprocess_user().
  */
 function asuntotuotanto_preprocess_user(&$variables) {
-  global $base_url;
-
   $account = User::load(\Drupal::currentUser()->id());
 
   if ($account->bundle() == 'customer') {
@@ -984,13 +977,13 @@ function load_responsive_image_style($image_file_target_id, $responsive_image_st
 /**
  * Get project teaser values.
  *
- * @param $project_id
+ * @param int $project_id
  *   Project id.
  *
  * @return array[]
  *   Project teaser values.
  */
-function getProjectApartmentTeaserValues($project_id) {
+function get_project_apartment_teaser_values($project_id) {
   $projects = \Drupal::entityTypeManager()
     ->getListBuilder('node')
     ->getStorage()
@@ -1039,26 +1032,32 @@ function asuntotuotanto_preprocess_blazy(&$variables) {
   $variables['#attached']['library'][] = 'asuntotuotanto/intense-images';
 }
 
+/**
+ * Implements template_theme_suggestions_file_link_alter().
+ */
 function asuntotuotanto_theme_suggestions_file_link_alter(&$suggestions, $vars, $hook) {
   // Get the node type.
   $node = \Drupal::routeMatch()->getParameter('node');
   $type = $node->getType();
   // Create the theme hook suggestion.
-  $suggestions[] = 'file_link__' . 'type_' . $type;
+  $suggestions[] = 'file_link__type_' . $type;
 }
 
+/**
+ * Implements template_preprocess_file_link().
+ */
 function asuntotuotanto_preprocess_file_link(&$variables) {
   // File type.
   $file = $variables['file'];
   $mime_type = $file->getMimeType();
-  $variables['mime_type'] = t(file_icon_class($mime_type));
+  $variables['mime_type'] = file_icon_class($mime_type);
   // File url.
   /** @var \Drupal\Core\File\FileUrlGeneratorInterface $file_url_generator */
   $file_url_generator = \Drupal::service('file_url_generator');
   $url = $file_url_generator
-      ->generate(
-        $file->getFileUri()
-      );
+    ->generate(
+      $file->getFileUri()
+    );
   $variables['file_link'] = $url;
   // Use the description as the file name if available.
   if (empty($variables['description'])) {

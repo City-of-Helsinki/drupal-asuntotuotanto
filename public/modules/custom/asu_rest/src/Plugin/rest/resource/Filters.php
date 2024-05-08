@@ -64,7 +64,7 @@ final class Filters extends ResourceBase {
         $responseData[strtolower('project_district_hitas')] = $index_hitas;
 
         $index_haso = [
-          'label' => t('Districts'),
+          'label' => $this->t('Districts'),
           'items' => $activeProjectDistricts['haso'],
           'suffix' => NULL,
         ];

@@ -2,11 +2,25 @@
 
 namespace Drupal\asu_user;
 
+use Drupal\asu_api\Api\BackendApi\BackendApi;
 use Drupal\asu_api\Api\BackendApi\Request\CreateUserRequest;
 use Drupal\Component\Utility\Crypt;
+use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Database\Connection;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Flood\FloodInterface;
+use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\StringTranslation\TranslationInterface;
+use Drupal\Core\TempStore\PrivateTempStoreFactory;
+use Drupal\externalauth\Authmap;
+use Drupal\externalauth\ExternalAuth;
 use Drupal\samlauth\SamlService;
 use Drupal\samlauth\UserVisibleException;
+use OneLogin\Saml2\Utils as SamlUtils;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Exception\TooManyRequestsHttpException;
 
 /**
@@ -20,6 +34,53 @@ use Symfony\Component\HttpKernel\Exception\TooManyRequestsHttpException;
  * around to new classes in 4.x.
  */
 class AuthService extends SamlService {
+
+  /**
+   * {@inheritDoc}
+   */
+  public function __construct(
+    ExternalAuth $external_auth,
+    Authmap $authmap,
+    ConfigFactoryInterface $config_factory,
+    EntityTypeManagerInterface $entity_type_manager,
+    LoggerInterface $logger,
+    EventDispatcherInterface $event_dispatcher,
+    RequestStack $request_stack,
+    PrivateTempStoreFactory $temp_store_factory,
+    FloodInterface $flood,
+    AccountInterface $current_user,
+    MessengerInterface $messenger,
+    TranslationInterface $translation,
+    BackendApi $backendApi,
+    Connection $database
+  ) {
+    $this->externalAuth = $external_auth;
+    $this->authmap = $authmap;
+    $this->configFactory = $config_factory;
+    $this->entityTypeManager = $entity_type_manager;
+    $this->logger = $logger;
+    $this->eventDispatcher = $event_dispatcher;
+    $this->requestStack = $request_stack;
+    $this->privateTempStore = $temp_store_factory->get('samlauth');
+    $this->privateTempCustomer = $temp_store_factory->get('customer');
+    $this->flood = $flood;
+    $this->currentUser = $current_user;
+    $this->messenger = $messenger;
+    $this->setStringTranslation($translation);
+    $this->backendApi = $backendApi;
+    $this->database = $database;
+
+    $config = $this->configFactory->get('samlauth.authentication');
+    // setProxyVars lets the SAML PHP Toolkit use 'X-Forwarded-*' HTTP headers
+    // for identifying the SP URL, but we should pass the Drupal/Symfony base
+    // URL to into the toolkit instead. That uses headers/trusted values in the
+    // same way as the rest of Drupal (as configured in settings.php).
+    // @todo remove this in v4.x
+    if ($config->get('use_proxy_headers') && !$config->get('use_base_url')) {
+      // Use 'X-Forwarded-*' HTTP headers for identifying the SP URL.
+      SamlUtils::setProxyVars(TRUE);
+    }
+  }
 
   /**
    * Processes a SAML response (Assertion Consumer Service).
@@ -38,13 +99,13 @@ class AuthService extends SamlService {
   public function acs() {
     $config = $this->configFactory->get('samlauth.authentication');
     if ($config->get('debug_log_in')) {
-      if (isset($_POST['SAMLResponse'])) {
-        $response = base64_decode($_POST['SAMLResponse']);
+      if ($this->requestStack->getCurrentRequest()->request->get('SAMLResponse') !== NULL) {
+        $response = base64_decode($this->requestStack->getCurrentRequest()->request->get('SAMLResponse'));
         if ($response) {
           $this->logger->debug("ACS received 'SAMLResponse' in POST request (base64 decoded): <pre>@message</pre>", ['@message' => $response]);
         }
         else {
-          $this->logger->warning("ACS received 'SAMLResponse' in POST request which could not be base64 decoded: <pre>@message</pre>", ['@message' => $_POST['SAMLResponse']]);
+          $this->logger->warning("ACS received 'SAMLResponse' in POST request which could not be base64 decoded: <pre>@message</pre>", ['@message' => $this->requestStack->getCurrentRequest()->request->get('SAMLResponse')]);
         }
       }
       else {
@@ -187,8 +248,7 @@ class AuthService extends SamlService {
     $month = substr($pid, 2, 2);
     $birth_day = sprintf('%s.%s.%s', $day, $month, $year);
 
-    $store = \Drupal::service('tempstore.private')
-      ->get('customer');
+    $store = $this->privateTempCustomer;
     $store->set('first_name', $first_name);
     $store->set('last_name', $lastname);
     $store->set('date_of_birth', $birth_day);
@@ -208,14 +268,13 @@ class AuthService extends SamlService {
 
     try {
       /** @var \Drupal\asu_api\Api\BackendApi\BackendApi $backendApi */
-      $backendApi = \Drupal::service('asu_api.backendapi');
-      $response = $backendApi->send($request);
+      $response = $this->backendApi->send($request);
       $account->field_backend_profile = $response->getProfileId();
       $account->field_backend_password = $response->getPassword();
       $account->save();
     }
     catch (\Exception $e) {
-      \Drupal::logger('asu_backend_api')->emergency(
+      $this->logger('asu_backend_api')->emergency(
         'Exception while creating user to backend: ' . $e->getMessage()
       );
     }
@@ -239,10 +298,13 @@ class AuthService extends SamlService {
     return $hash;
   }
 
+  /**
+   * Get Drupal account user name.
+   */
   private function getAccountUsername($user_name) {
-    $query = \Drupal::database()->select('users_field_data', 'u');
+    $query = $this->database->select('users_field_data', 'u');
     $query->fields('u', ['name']);
-    // OR CONDITION
+    // OR CONDITION.
     $or_group = $query->orConditionGroup();
     $or_group->condition('name', $query->escapeLike($user_name));
     $or_group->condition('name', $user_name . '_[0-9]', 'REGEXP');

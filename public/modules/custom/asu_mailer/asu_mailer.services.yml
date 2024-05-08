@@ -1,5 +1,6 @@
 services:
   asu_mailer.application_subscriber:
     class: Drupal\asu_mailer\EventSubscriber\ApplicationSubscriber
+    arguments: ['@entity_type.manager','@plugin.manager.mail','@config.factory']
     tags:
       - { name: event_subscriber }

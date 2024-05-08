@@ -30,16 +30,17 @@ class ApplicationFormUrl extends FieldItemList {
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
   protected function singleComputeValue() {
-    /** @var Drupal\asu_content\Entity\Apartment $apartment */
     $apartment = $this->getEntity();
     if (!$apartment instanceof Apartment ||
-        !$project = $apartment->getProject()
+        $apartment->getProject()
     ) {
       return [
         '#markup' => '',
       ];
     }
-    // Strip spaces out of a apartment mumber value.
+    // Only triggers when the apartment is free for reservation
+    // when application time has ended and is apartment is free.
+    // Strip spaces out of a apartment number value.
     $apartment_number = trim(str_replace(' ', '', $apartment->field_apartment_number->value));
     return [
       '#markup' => $apartment->getApplicationUrl($apartment_number),

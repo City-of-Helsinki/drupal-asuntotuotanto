@@ -11,10 +11,12 @@ services:
     arguments: ['backend_api']
   asu_api.backendapi:
     class: Drupal\asu_api\Api\BackendApi\BackendApi
-    arguments: ['@asu_api.backend_client', '@logger.channel.asu_api']
+    arguments: ['@asu_api.backend_client', '@logger.channel.asu_api','@tempstore.private']
   asu_api.error_code_service:
     class: Drupal\asu_api\ErrorCodeService
+    arguments: ['@config.factory']
   asu_api.commands:
     class: \Drupal\asu_api\Commands\SendApiCallCommands
+    arguments: ['@asu_api.backendapi']
     tags:
       - { name: drush.command }

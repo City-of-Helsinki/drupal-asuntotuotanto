@@ -5,6 +5,7 @@ namespace Drupal\asu_content\Plugin\Field\FieldWidget;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\WidgetBase;
 use Drupal\Core\Form\FormStateInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * A widget bar.
@@ -20,17 +21,42 @@ use Drupal\Core\Form\FormStateInterface;
 class AsuServiceWidget extends WidgetBase {
 
   /**
+   * The entity type manager service.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
+   * The entity repository service.
+   *
+   * @var \Drupal\Core\Entity\EntityRepositoryInterface
+   */
+  protected $entityRepository;
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    $instance = new static($plugin_id, $plugin_definition, $configuration['field_definition'], $configuration['settings'], $configuration['third_party_settings']);
+    $instance->entityTypeManager = $container->get('entity_type.manager');
+    $instance->entityRepository = $container->get('entity.repository');
+
+    return $instance;
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
     $selected_vocabylary_id = $items[$delta]->getFieldDefinition()->getSettings()['selected_taxonomy_id'];
-    $vocabulary = \Drupal::service('entity.repository')->loadEntityByUuid('taxonomy_vocabulary', $selected_vocabylary_id);
+    $vocabulary = $this->entityRepository->loadEntityByUuid('taxonomy_vocabulary', $selected_vocabylary_id);
     $term_list = [$this->t('Select service')];
 
     if (isset($vocabulary)) {
       /** @var \Drupal\taxonomy\Entity\Term[] $terms */
-      $terms = \Drupal::service('entity_type.manager')->getStorage("taxonomy_term")->loadTree($vocabulary->get('originalId'), 0, 1, TRUE);
-      foreach ($terms as $key => $term) {
+      $terms = $this->entityTypeManager->getStorage('taxonomy_term')->loadTree($vocabulary->get('originalId'), 0, 1, TRUE);
+      foreach ($terms as $term) {
         $term_list[$term->id()] = $term->getName();
       }
     }
