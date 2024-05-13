@@ -368,7 +368,7 @@ if ($env = getenv('APP_ENV')) {
   $config['mailsystem.settings']['modules']['symfony_mailer_lite']['none']['sender'] = 'symfony_mailer_lite';
   $config['symfony_mailer_lite.settings']['default_transport'] = 'smtp';
   // Mailer settings.
-  $config['symfony_mailer_lite.symfony_mailer_lite_transport.smtp']['configuration']['host'] = getenv('ASU_MAILSERVER_ADDRESS') ?? 'host.docker.internal';
+  $config['symfony_mailer_lite.symfony_mailer_lite_transport.smtp']['configuration']['host'] = getenv('ASU_MAILSERVER_ADDRESS') ? getenv('ASU_MAILSERVER_ADDRESS') : 'host.docker.internal';
   $config['symfony_mailer_lite.symfony_mailer_lite_transport.smtp']['configuration']['post'] = getenv('ASU_MAILSERVER_ADDRESS') ? '25' : '1025';
 
 
