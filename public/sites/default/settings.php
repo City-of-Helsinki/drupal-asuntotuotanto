@@ -366,15 +366,15 @@ if ($env = getenv('APP_ENV')) {
   $config['mailsystem.settings']['defaults']['formatter'] = 'symfony_mailer_lite';
   $config['mailsystem.settings']['modules']['symfony_mailer_lite']['none']['formatter'] = 'symfony_mailer_lite';
   $config['mailsystem.settings']['modules']['symfony_mailer_lite']['none']['sender'] = 'symfony_mailer_lite';
-
   $config['symfony_mailer_lite.settings']['default_transport'] = 'smtp';
+  // Mailer settings.
+  $config['symfony_mailer_lite.symfony_mailer_lite_transport.smtp']['configuration']['host'] = getenv('ASU_MAILSERVER_ADDRESS') ?? 'host.docker.internal';
+  $config['symfony_mailer_lite.symfony_mailer_lite_transport.smtp']['configuration']['post'] = getenv('ASU_MAILSERVER_ADDRESS') ? '25' : '1025';
+
 
   $settings['ASU_DJANGO_BACKEND_URL'] = getenv('ASU_DJANGO_BACKEND_URL');
 
   $config['elasticsearch_connector.cluster.asuntotuotanto']['url'] = getenv('ASU_ELASTICSEARCH_ADDRESS') ?? 'http://localhost:9200';
-  // Mailer settings.
-  $config['symfony_mailer_lite.symfony_mailer_lite_transport.smtp']['configuration']['host'] = getenv('ASU_MAILSERVER_ADDRESS') ?? 'host.docker.internal';
-  $config['symfony_mailer_lite.symfony_mailer_lite_transport.smtp']['configuration']['post'] = getenv('ASU_MAILSERVER_ADDRESS') ? '25' : '1025';
 
   if ($env === 'dev') {
     $orbstack = str_contains(php_uname('r'), 'orbstack');
