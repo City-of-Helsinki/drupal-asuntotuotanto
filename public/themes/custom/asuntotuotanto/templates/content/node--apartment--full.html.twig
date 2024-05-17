@@ -95,7 +95,6 @@
 {% set release_payment = content.field_release_payment.0 %}
 {% set debt_free_sales_price = content.field_debt_free_sales_price.0 %}
 {% set apartment_number = content.field_apartment_number.0 %}
-{% set financing_fee = content.field_financing_fee.0 %}
 {% set maintenance_fee = content.field_maintenance_fee.0 %}
 {% set right_of_occupancy_fee = content.field_right_of_occupancy_fee.0 %}
 {% set right_of_occupancy_payment = content.field_right_of_occupancy_payment.0 %}
@@ -325,7 +324,6 @@
               and (apartment_structure|render == '')
               and (right_of_occupancy_fee|render == '0.00€')
               and (maintenance_fee|render == '0.00€ / kk')
-              and (financing_fee|render == '0.00€ / month')
               and (energy_class|render == null)
               and (accessibility|render == null)
               and (site_owner|render == null)
@@ -458,14 +456,6 @@
 							<p>
 								<span>{% trans %}Maintenance fee{% endtrans %}</span>
 								<span>{{ maintenance_fee }}</span>
-							</p>
-						</li>
-					{% endif %}
-          {% if financing_fee|render and financing_fee|render != '0.00€ / month' %}
-						<li class="apartment__details-item">
-							<p>
-								<span>{% trans %}Financing fee{% endtrans %}</span>
-								<span>{{ financing_fee }}</span>
 							</p>
 						</li>
 					{% endif %}
