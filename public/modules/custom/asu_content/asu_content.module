@@ -199,6 +199,7 @@ function asu_content_hide_fields_in_hitas(&$form) {
     'field_right_of_occupancy_fee',
     'field_index_adjusted_right_of_oc',
     'field_right_of_occupancy_deposit',
+    'field_release_payment',
   ];
 
   foreach ($hide_fields as $field) {
