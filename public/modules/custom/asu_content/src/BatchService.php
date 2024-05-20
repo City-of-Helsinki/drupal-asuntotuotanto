@@ -40,7 +40,7 @@ class BatchService {
 
   public static function processConvertOccupancyPayment($id, $nodes, &$context) {
     foreach ($nodes as $node) {
-      usleep(10);
+      usleep(100);
       $entityService = \Drupal::entityTypeManager();
       /** @var \Drupal\asu_content\Entity\Project $project */
       $project = $entityService->getStorage('node')->load($node->nid);
