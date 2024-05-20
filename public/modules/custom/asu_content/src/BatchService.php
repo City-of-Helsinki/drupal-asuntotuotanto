@@ -2,9 +2,6 @@
 
 namespace Drupal\asu_content;
 
-use Drupal\asu_content\Entity\Apartment;
-use Drupal\asu_content\Entity\Project;
-
 /**
  * Batch service to update node aliases.
  */
@@ -38,6 +35,9 @@ class BatchService {
     }
   }
 
+  /**
+   * Batch process to process occupancy Ppayment.
+   */
   public static function processConvertOccupancyPayment($id, $nodes, &$context) {
     foreach ($nodes as $node) {
       usleep(100);

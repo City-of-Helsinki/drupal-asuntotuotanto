@@ -120,7 +120,7 @@ class AsuContentDrushCommands extends DrushCommands {
   #[CLI\Command(name: 'asu_content:convertOccupancyToHasofee', aliases: ['ac-oth'])]
   #[CLI\Usage(name: 'drush ac-oth', description: 'Convert right_of_occupancy_payment to haso_fee field.')]
   public function convertOccupancyToHasofee() {
-    $projects = \Drupal::entityTypeManager()
+    $projects = $this->entityTypeManager
       ->getStorage('node')
       ->loadByProperties([
         'type' => 'project',

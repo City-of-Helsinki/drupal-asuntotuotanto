@@ -139,7 +139,8 @@ function asu_content_get_ownershiptype() {
   if ($node instanceof Apartment || $node instanceof Project) {
     if ($node instanceof Apartment) {
       $project = $node->getProject();
-    } else {
+    }
+    else {
       $project = $node;
     }
 
