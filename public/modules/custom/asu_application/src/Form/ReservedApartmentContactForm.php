@@ -143,10 +143,23 @@ class ReservedApartmentContactForm extends FormBase {
     $project_id = $this->requestStack->getCurrentRequest()->get('project') ?? NULL;
     $values = $form_state->cleanValues()->getValues();
     $body = $this->convertMessage($values);
+    $email_to = $values['field_contact_person'];
+
+    $user = $this->entityTypeManager->getStorage('user')
+      ->loadByProperties([
+        'mail' => $values['field_contact_person'],
+        'type' => 'sales',
+      ]);
+    $user = reset($user);
+
+    // If salesperson not exist use default email address.
+    if (!$user) {
+      $email_to = getenv('DRUPAL_DEFAULT_FORM_EMAIL');
+    }
 
     $module = 'asu_application';
     $key = 'apply_for_free_apartment';
-    $to = $values['field_contact_person'];
+    $to = $email_to;
     $langcode = 'fi';
     $send = TRUE;
     $subject = 'Yhteydenottopyyntö vapaaseen huoneistoon' . $values['field_apartment_information'];
