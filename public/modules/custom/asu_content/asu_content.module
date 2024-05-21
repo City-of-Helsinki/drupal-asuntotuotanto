@@ -38,6 +38,7 @@ function asu_content_form_node_form_alter(&$form, $form_state) {
   asu_content_hide_node_title($form);
   asu_content_show_computed_fields($form, $form_state);
   asu_content_project_add_archived_handling($form, $form_state);
+  asu_content_hide_field_in_apartment_edit($form, $form_state);
 }
 
 /**
@@ -108,6 +109,103 @@ function asu_content_show_computed_fields(&$form, $form_state) {
           $value . ' €/m²'
         );
       }
+    }
+  }
+}
+
+/**
+ * Hide price fields which is not used in HASO.
+ */
+function asu_content_hide_field_in_apartment_edit(&$form, $form_state) {
+  if ($ownership_type = asu_content_get_ownershiptype()) {
+    if (strtolower($ownership_type) == 'haso') {
+      asu_content_hide_fields_in_haso($form);
+    }
+
+    if (strtolower($ownership_type) == 'hitas') {
+      asu_content_hide_fields_in_hitas($form);
+    }
+  }
+
+}
+
+/**
+ * Get HASO / HITAS edit form ownership type from url.
+ */
+function asu_content_get_ownershiptype() {
+  $ownership_type = NULL;
+  $node = \Drupal::routeMatch()->getParameter('node');
+
+  if ($node instanceof Apartment || $node instanceof Project) {
+    if ($node instanceof Apartment) {
+      $project = $node->getProject();
+    }
+    else {
+      $project = $node;
+    }
+
+    $ownership_type = $project->get('field_ownership_type')->referencedEntities()[0]->getName() ?? NULL;
+  }
+
+  return $ownership_type;
+}
+
+/**
+ * Hide fields in HASO / HITAS apartment edit form.
+ */
+function asu_content_inline_entity_form_entity_form_alter(&$entity_form, &$form_state) {
+  if ($entity_form['#entity_type'] == 'node' && $entity_form['#bundle'] == 'apartment') {
+    $ownership_type = asu_content_get_ownershiptype();
+
+    if ($ownership_type && strtolower($ownership_type) == 'haso') {
+      asu_content_hide_fields_in_haso($entity_form);
+    }
+
+    if ($ownership_type && strtolower($ownership_type) == 'hitas') {
+      asu_content_hide_fields_in_hitas($entity_form);
+    }
+  }
+}
+
+/**
+ * Hide fields in HASO apartment edit form.
+ */
+function asu_content_hide_fields_in_haso(&$form) {
+  $hide_fields = [
+    'field_debt_free_sales_price',
+    'field_sales_price',
+    'field_maintenance_fee',
+    'field_financing_fee',
+    'field_debt_free_sales_price',
+    'field_water_fee',
+    'field_water_fee_explanation',
+    'field_loan_share',
+  ];
+
+  foreach ($hide_fields as $field) {
+    if (isset($form[$field])) {
+      $form[$field]['#access'] = FALSE;
+    }
+  }
+}
+
+/**
+ * Hide fields in HITAS apartment edit form.
+ */
+function asu_content_hide_fields_in_hitas(&$form) {
+  $hide_fields = [
+    'field_haso_fee',
+    'field_right_of_occupancy_payment',
+    'field_index_adjusted_right_of_oc',
+    'field_right_of_occupancy_fee',
+    'field_index_adjusted_right_of_oc',
+    'field_right_of_occupancy_deposit',
+    'field_release_payment',
+  ];
+
+  foreach ($hide_fields as $field) {
+    if (isset($form[$field])) {
+      $form[$field]['#access'] = FALSE;
     }
   }
 }
