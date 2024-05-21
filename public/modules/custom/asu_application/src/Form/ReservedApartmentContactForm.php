@@ -144,32 +144,41 @@ class ReservedApartmentContactForm extends FormBase {
     $values = $form_state->cleanValues()->getValues();
     $body = $this->convertMessage($values);
     $email_to = $values['field_contact_person'];
+    $user = NULL;
 
-    $user = $this->entityTypeManager->getStorage('user')
-      ->loadByProperties([
-        'mail' => $values['field_contact_person'],
-        'type' => 'sales',
-      ]);
-    $user = reset($user);
+    if ($email_to) {
+      $user = $this->entityTypeManager->getStorage('user')
+        ->loadByProperties([
+          'mail' => $values['field_contact_person'],
+          'type' => 'sales',
+        ]);
+      $user = reset($user);
+    }
 
     // If salesperson not exist use default email address.
     if (!$user) {
       $email_to = getenv('DRUPAL_DEFAULT_FORM_EMAIL');
     }
 
-    $module = 'asu_application';
-    $key = 'apply_for_free_apartment';
-    $to = $email_to;
-    $langcode = 'fi';
-    $send = TRUE;
-    $subject = 'Yhteydenottopyyntö vapaaseen huoneistoon' . $values['field_apartment_information'];
-    $params = [
-      'subject' => $subject,
-      'message' => $body,
-    ];
+    if (!$email_to) {
+      $this->messenger()->addError($this->t('Cannot sent email, please contact us'));
+    }
+    else {
+      $module = 'asu_application';
+      $key = 'apply_for_free_apartment';
+      $to = $email_to;
+      $langcode = 'fi';
+      $send = TRUE;
+      $subject = 'Yhteydenottopyyntö vapaaseen huoneistoon' . $values['field_apartment_information'];
+      $params = [
+        'subject' => $subject,
+        'message' => $body,
+      ];
 
-    $this->mailManager->mail($module, $key, $to, $langcode, $params, NULL, $send);
-    $this->messenger()->addStatus($this->t('Thank you for the application, we will be in touch'));
+      $this->mailManager->mail($module, $key, $to, $langcode, $params, NULL, $send);
+      $this->messenger()->addStatus($this->t('Thank you for the application, we will be in touch'));
+    }
+
     $form_state->setRedirect('entity.node.canonical', ['node' => $project_id]);
   }
 
