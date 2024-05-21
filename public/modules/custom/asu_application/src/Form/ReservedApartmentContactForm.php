@@ -161,7 +161,7 @@ class ReservedApartmentContactForm extends FormBase {
     }
 
     if (!$email_to) {
-      $this->messenger()->addError($this->t('Cannot sent email, please contact us'));
+      $this->messenger()->addError($this->t('Could not send the email, please contact us at asuntomyynti@hel.fi'));
     }
     else {
       $module = 'asu_application';
