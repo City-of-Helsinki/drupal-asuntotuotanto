@@ -380,9 +380,7 @@ function asuntotuotanto_form_alter(&$form, &$form_state, $form_id) {
  * Implements hook_preprocess_node().
  */
 function asuntotuotanto_preprocess_node(&$variables) {
-
   $date_formatter = \Drupal::service('date.formatter');
-
   $node = $variables['node'];
   $bundle = $node->getType();
 
