@@ -105,8 +105,9 @@ class BatchService {
           // should be in haso fee field.
           if ($apartment->get('field_haso_fee')->isEmpty() &&
             !$apartment->get('field_right_of_occupancy_payment')->isEmpty() &&
-            !empty($field_alteration_work) &&
-            !empty($field_index_adjusted_right_of_oc)
+            !$apartment->get('field_release_payment')->isEmpty() &&
+            (!empty($field_alteration_work) ||
+            !empty($field_index_adjusted_right_of_oc))
           ) {
             $occupancy_payment = floatval($apartment->get('field_right_of_occupancy_payment')->first()->getValue()['value']);
             $field_release_payment = $apartment->get('field_release_payment')->first()->getValue()['value'];
