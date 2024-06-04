@@ -144,9 +144,7 @@ class BatchService {
           }
 
           // Set a new HASO fee field value.
-          if ($apartment->get('field_haso_fee')->isEmpty() &&
-            !$apartment->get('field_release_payment')->isEmpty())
-          {
+          if ($apartment->get('field_haso_fee')->isEmpty() && !$apartment->get('field_release_payment')->isEmpty()) {
             $apartment->set('field_haso_fee', $field_right_of_occupancy_payment);
           }
           $apartment->save();
