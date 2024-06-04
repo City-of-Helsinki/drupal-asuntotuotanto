@@ -124,10 +124,31 @@ class BatchService {
               // if release_payment field is empty.
               $apartment->set('field_release_payment', $field_right_of_occupancy_payment);
             }
+            // Check if release_payment field empty.
+            if ($apartment->get('field_haso_fee')->isEmpty()) {
+              // Set HASO fee value to release_payment field
+              // if release_payment field is empty.
+              $apartment->set('field_release_payment', $field_right_of_occupancy_payment);
+            }
+          }
+
+          // Case where haso fee & release payment is empty.
+          if ($apartment->get('field_haso_fee')->isEmpty() &&
+            $apartment->get('field_release_payment')->isEmpty() &&
+            !empty($field_alteration_work) &&
+            !empty($field_index_adjusted_right_of_oc)
+          ) {
+            // Get Haso fee field value if exist.
+            $apartment->set('field_release_payment', $field_index_adjusted_right_of_oc + $field_alteration_work);
+            $field_right_of_occupancy_payment = $field_index_adjusted_right_of_oc - floatval($apartment->get('field_right_of_occupancy_payment')->first()->getValue()['value']);
           }
 
           // Set a new HASO fee field value.
-          $apartment->set('field_haso_fee', $field_right_of_occupancy_payment);
+          if ($apartment->get('field_haso_fee')->isEmpty() &&
+            !$apartment->get('field_release_payment')->isEmpty())
+          {
+            $apartment->set('field_haso_fee', $field_right_of_occupancy_payment);
+          }
           $apartment->save();
         }
 
