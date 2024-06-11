@@ -30,9 +30,10 @@ class ApplicationFormUrl extends FieldItemList {
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
   protected function singleComputeValue() {
+    /** @var Drupal\asu_content\Entity\Apartment $apartment */
     $apartment = $this->getEntity();
     if (!$apartment instanceof Apartment ||
-        $apartment->getProject()
+        !$apartment->getProject()
     ) {
       return [
         '#markup' => '',
