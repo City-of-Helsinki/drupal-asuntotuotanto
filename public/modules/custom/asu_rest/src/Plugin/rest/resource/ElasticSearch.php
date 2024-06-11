@@ -62,7 +62,7 @@ class ElasticSearch extends ResourceBase {
     }
 
     $ownership_type = $data['project_ownership_type'];
-    $url_params = [];
+    $url_params =  [];
 
     foreach ($data as $param => $value) {
       if ($param == 'project_ownership_type') {
@@ -162,7 +162,7 @@ class ElasticSearch extends ResourceBase {
         'haso_fee',
       ];
 
-      foreach ($resultItems as $item) {
+      foreach ($resultItems as $key => $item) {
         $parsed = [];
 
         $itemFields = $item->getFields();
