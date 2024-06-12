@@ -89,7 +89,6 @@
 {% set images = content.field_images %}
 {% set floor = content.field_floor.0 %}
 {% set sales_price = content.field_sales_price.0 %}
-{% set haso_fee = content.field_haso_fee.0 %}
 {% set adjusted_price = content.field_index_adjusted_right_of_oc.0 %}
 {% set alteration_price = content.field_alteration_work.0 %}
 {% set release_payment = content.field_release_payment.0 %}
@@ -408,14 +407,6 @@
                 <span>{{ release_payment }}</span>
               </p>
               <ul class="apartment__details-list sub__details-list">
-                {% if haso_fee|render and haso_fee|render != '0,00€' and haso_fee|render != null %}
-                  <li class="apartment__details-item">
-                  <p>
-                      <span>{% trans %}Original HASO Fee{% endtrans %}</span>
-                      <span>{{ haso_fee }}</span>
-                    </p>
-                  </li>
-                {% endif %}
                 {% if right_of_occupancy_payment|render and right_of_occupancy_payment|render != '0,00€' and right_of_occupancy_payment|render != null %}
                   <li class="apartment__details-item">
                     <p>

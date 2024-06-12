@@ -22,7 +22,6 @@ dependencies:
     - field.field.node.apartment.field_has_balcony
     - field.field.node.apartment.field_has_terrace
     - field.field.node.apartment.field_has_yard
-    - field.field.node.apartment.field_haso_fee
     - field.field.node.apartment.field_images
     - field.field.node.apartment.field_index_adjusted_right_of_oc
     - field.field.node.apartment.field_kitchen_appliances
@@ -122,7 +121,6 @@ third_party_settings:
         - field_sales_price
         - field_debt_free_sales_price
         - field_release_payment
-        - field_haso_fee
         - field_right_of_occupancy_fee
         - field_right_of_occupancy_deposit
         - field_right_of_occupancy_payment
@@ -295,13 +293,6 @@ content:
     region: content
     settings:
       display_label: true
-    third_party_settings: {  }
-  field_haso_fee:
-    type: number
-    weight: 44
-    region: content
-    settings:
-      placeholder: ''
     third_party_settings: {  }
   field_images:
     type: image_image
