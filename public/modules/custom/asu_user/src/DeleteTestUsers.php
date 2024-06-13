@@ -3,7 +3,6 @@
 namespace Drupal\asu_user;
 
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\user\Entity\User;
 
 /**
  * Delete users with test_ prefix.
@@ -27,8 +26,8 @@ class DeleteTestUsers {
    * Execute user deletion.
    */
   public function doDeleteTestUsers() {
-    $user_ids = \Drupal::entityQuery('user')->accessCheck(TRUE)->execute();
-    $users = User::loadMultiple($user_ids);
+    $user_ids = $this->entityTypeManager->getStorage('user')->accessCheck(TRUE)->execute();
+    $users = $this->entityTypeManager->getStorage('user')->loadMultiple($user_ids);
 
     foreach ($users as $user) {
       if (str_starts_with($user->getAccountName(), 'test_') || str_starts_with($user->getEmail(), 'test_')) {

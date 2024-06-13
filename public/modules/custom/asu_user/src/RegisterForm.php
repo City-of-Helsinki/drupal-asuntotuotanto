@@ -164,7 +164,7 @@ class RegisterForm extends TypedRegisterForm {
       $saved = $account->save();
 
       if ($saved === SAVED_NEW) {
-        asu_send_user_email('asu_new_customer_registered', $account);
+        asu_user_asu_send_user_email('asu_new_customer_registered', $account);
       }
 
       $request = new CreateUserRequest($account, $form_state->getUserInput());
@@ -225,7 +225,7 @@ class RegisterForm extends TypedRegisterForm {
 
     $user->save();
     if ($formValues['notify'] == TRUE) {
-      asu_send_user_email('asu_sales_registered_new_customer', $user);
+      asu_user_asu_send_user_email('asu_sales_registered_new_customer', $user);
     }
 
     if ($form_state->getTriggeringElement()['#parents'][0] == 'create_application') {
@@ -246,7 +246,7 @@ class RegisterForm extends TypedRegisterForm {
       ]);
     $user->password = $pass;
     \Drupal::messenger()->addMessage(
-      t('New customer account was created: @email', ['@email' => $form_state->getValue('mail')])
+      $this->t('New customer account was created: @email', ['@email' => $form_state->getValue('mail')])
     );
   }
 
@@ -269,7 +269,7 @@ class RegisterForm extends TypedRegisterForm {
 
     $formValues = $form_state->getValues();
     if ($formValues['notify'] == TRUE) {
-      asu_send_user_email('asu_new_salesperson_registered', $account);
+      asu_user_asu_send_user_email('asu_new_salesperson_registered', $account);
     }
 
     $phone = '-';

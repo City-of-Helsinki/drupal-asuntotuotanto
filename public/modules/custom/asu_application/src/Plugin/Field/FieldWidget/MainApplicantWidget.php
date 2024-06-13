@@ -2,11 +2,14 @@
 
 namespace Drupal\asu_application\Plugin\Field\FieldWidget;
 
+use Drupal\asu_api\Api\BackendApi\BackendApi;
 use Drupal\asu_api\Api\BackendApi\Request\UserRequest;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\WidgetBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\user\Entity\User;
+use Drupal\Core\Session\AccountInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -22,21 +25,51 @@ use Symfony\Component\HttpFoundation\Response;
  * )
  */
 class MainApplicantWidget extends WidgetBase {
+  /**
+   * The entity type manager service.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected EntityTypeManagerInterface $entityTypeManager;
+
+  /**
+   * Current user account.
+   *
+   * @var \Drupal\Core\Session\AccountInterface
+   */
+  protected AccountInterface $currentUser;
+
+  /**
+   * Backend api.
+   *
+   * @var Drupal\asu_api\Api\BackendApi\BackendApi
+   */
+  private BackendApi $backendApi;
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    $instance = new static($plugin_id, $plugin_definition, $configuration['field_definition'], $configuration['settings'], $configuration['third_party_settings']);
+    $instance->entityTypeManager = $container->get('entity_type.manager');
+    $instance->currentUser = $container->get('current_user');
+    $instance->backendApi = $container->get('asu_api.backendapi');
+
+    return $instance;
+  }
 
   /**
    * {@inheritdoc}
    */
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
-    $account = User::load(\Drupal::currentUser()->id());
+    $account = $this->entityTypeManager->getStorage('user')->load($this->currentUser->id());
 
     if ($account->hasRole('customer')) {
       $request = new UserRequest($account);
       $request->setSender($account);
 
-      /** @var \Drupal\asu_api\Api\BackendApi\BackendApi $backendApi */
-      $backendApi = \Drupal::service('asu_api.backendapi');
       try {
-        $userResponse = $backendApi->send($request);
+        $userResponse = $this->backendApi->send($request);
       }
       catch (\Exception $e) {
         return new Response('Failed to fetch user data to applicant form.', 400);
@@ -90,7 +123,7 @@ class MainApplicantWidget extends WidgetBase {
       '#description' => $this->t('last 4 characters'),
       '#minlength' => 5,
       '#maxlength' => 5,
-      '#default_value' => $items->getValue()[$delta]['personal_id'] ?? '',
+      '#default_value' => substr($items->getValue()[$delta]['personal_id'], -4) ?? '',
       '#required' => TRUE,
     ];
 

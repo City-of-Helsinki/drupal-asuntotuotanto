@@ -6,14 +6,16 @@ use Drupal\asu_api\Api\BackendApi\BackendApi;
 use Drupal\asu_api\Api\BackendApi\Request\CreateApplicationRequest;
 use Drupal\asu_api\Api\BackendApi\Request\CreateUserRequest;
 use Drupal\asu_api\Api\BackendApi\Request\SalesCreateApplicationRequest;
+use Drupal\asu_api\ErrorCodeService;
 use Drupal\asu_api\Exception\IllegalApplicationException;
 use Drupal\asu_application\Event\ApplicationEvent;
 use Drupal\asu_application\Event\SalesApplicationEvent;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Language\LanguageManager;
 use Drupal\Core\Messenger\MessengerTrait;
 use Drupal\Core\Queue\QueueFactory;
 use Drupal\Core\Queue\QueueInterface;
-use Drupal\node\Entity\Node;
-use Drupal\user\Entity\User;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -22,6 +24,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class ApplicationSubscriber implements EventSubscriberInterface {
   use MessengerTrait;
+  use StringTranslationTrait;
 
   /**
    * Logger.
@@ -45,6 +48,27 @@ class ApplicationSubscriber implements EventSubscriberInterface {
   private QueueInterface $queue;
 
   /**
+   * The entity type manager service.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
+   * The asu error service.
+   *
+   * @var \Drupal\asu_api\ErrorCodeService
+   */
+  protected $errorCodeService;
+
+  /**
+   * The language manager.
+   *
+   * @var \Drupal\Core\Language\LanguageManager
+   */
+  protected $languageManager;
+
+  /**
    * Constructor.
    *
    * @param \Psr\Log\LoggerInterface $logger
@@ -53,11 +77,27 @@ class ApplicationSubscriber implements EventSubscriberInterface {
    *   Api manager.
    * @param \Drupal\Core\Queue\QueueFactory $queueFactory
    *   Queue factory.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   Entity type manager service.
+   * @param \Drupal\asu_api\ErrorCodeService $error_code_service
+   *   Asu error service.
+   * @param \Drupal\Core\Language\LanguageManager $languageManager
+   *   Language manager.
    */
-  public function __construct(LoggerInterface $logger, BackendApi $backendApi, QueueFactory $queueFactory) {
+  public function __construct(
+    LoggerInterface $logger,
+    BackendApi $backendApi,
+    QueueFactory $queueFactory,
+    EntityTypeManagerInterface $entity_type_manager,
+    ErrorCodeService $error_code_service,
+    LanguageManager $languageManager
+  ) {
     $this->logger = $logger;
     $this->backendApi = $backendApi;
     $this->queue = $queueFactory->get('application_api_queue');
+    $this->entityTypeManager = $entity_type_manager;
+    $this->errorCodeService = $error_code_service;
+    $this->languageManager = $languageManager;
   }
 
   /**
@@ -90,7 +130,7 @@ class ApplicationSubscriber implements EventSubscriberInterface {
     /** @var \Drupal\asu_application\Entity\Application $application */
     $application = $applicationEvent->getApplication();
 
-    $project = Node::load($application->project_id->value);
+    $project = $this->entityTypeManager->getStorage("node")->load($application->project_id->value);
     $user = $application->getOwner();
 
     try {
@@ -111,13 +151,12 @@ class ApplicationSubscriber implements EventSubscriberInterface {
         'User sent an application to backend successfully'
       );
 
-      $this->messenger()->addMessage(t('Your application has been received. We will contact you when all the application has been processed.'));
+      $this->messenger()->addMessage($this->t('Your application has been received. We will contact you when all the application has been processed.'));
     }
     catch (IllegalApplicationException $e) {
       $code = $e->getApiErrorCode();
-      /** @var \Drupal\asu_api\ErrorCodeService $errorCodeService */
-      $errorCodeService = \Drupal::service('asu_api.error_code_service');
-      $langCode = \Drupal::languageManager()->getCurrentLanguage()->getId();
+      $errorCodeService = $this->errorCodeService;
+      $langCode = $this->languageManager->getCurrentLanguage()->getId();
       $message = $errorCodeService->getErrorMessageByCode($code, $langCode);
 
       if ($message) {
@@ -131,7 +170,7 @@ class ApplicationSubscriber implements EventSubscriberInterface {
           $e->getMessage()
         );
         $message = 'Undefined exception while sending application';
-        $this->messenger()->addError(t('Unfortunately we were unable to handle your application.'));
+        $this->messenger()->addError($this->t('Unfortunately we were unable to handle your application.'));
       }
 
       $application->set('error', $message);
@@ -148,7 +187,7 @@ class ApplicationSubscriber implements EventSubscriberInterface {
       $application->set('error', 'Undefined exception while sending application');
       $application->save();
 
-      $this->messenger()->addError(t('Unfortunately we were unable to handle your application.'));
+      $this->messenger()->addError($this->t('Unfortunately we were unable to handle your application.'));
       $this->queue->createItem($application->id());
     }
   }
@@ -160,14 +199,14 @@ class ApplicationSubscriber implements EventSubscriberInterface {
     $entity_type = 'asu_application';
     $entity_id = $applicationEvent->getApplicationId();
 
-    $sender = User::load($applicationEvent->getSenderId());
+    $sender = $this->entityTypeManager->getStorage("user")->load($applicationEvent->getSenderId());
 
     /** @var \Drupal\asu_application\Entity\Application $application */
-    $application = \Drupal::entityTypeManager()
+    $application = $this->entityTypeManager
       ->getStorage($entity_type)
       ->load($entity_id);
 
-    $project = Node::load($application->project_id->value);
+    $project = $this->entityTypeManager->getStorage("node")->load($application->project_id->value);
 
     try {
       $request = new SalesCreateApplicationRequest(
@@ -176,7 +215,7 @@ class ApplicationSubscriber implements EventSubscriberInterface {
         $project->uuid(),
       );
 
-      $customer = User::load($application->getOwnerId());
+      $customer = $this->entityTypeManager->getStorage("user")->load($application->getOwnerId());
       $accountData = [
         'first_name' => '',
         'last_name' => '',
@@ -191,15 +230,13 @@ class ApplicationSubscriber implements EventSubscriberInterface {
         );
 
         try {
-          /** @var \Drupal\asu_api\Api\BackendApi\BackendApi $backendApi */
-          $backendApi = \Drupal::service('asu_api.backendapi');
-          $response = $backendApi->send($request);
+          $response = $this->backendApi->send($request);
           $customer->field_backend_profile = $response->getProfileId();
           $customer->field_backend_password = $response->getPassword();
           $customer->save();
         }
         catch (\Exception $e) {
-          \Drupal::logger('asu_backend_api')->emergency(
+          $this->logger('asu_backend_api')->emergency(
             'Exception while creating user to backend: ' . $e->getMessage()
           );
         }
@@ -216,13 +253,12 @@ class ApplicationSubscriber implements EventSubscriberInterface {
       $application->set('error', NULL);
       $application->save();
 
-      $this->messenger()->addStatus(t('The application has been submitted successfully.
+      $this->messenger()->addStatus($this->t('The application has been submitted successfully.
      You can no longer edit the application.'));
 
     }
     catch (IllegalApplicationException $e) {
       $code = $e->getApiErrorCode();
-      /** @var \Drupal\asu_api\ErrorCodeService $errorCodeService */
 
       $this->logger->info(sprintf(
           'Illegal application error with code %s: %s',
@@ -230,8 +266,8 @@ class ApplicationSubscriber implements EventSubscriberInterface {
           $e->getMessage())
       );
 
-      $errorCodeService = \Drupal::service('asu_api.error_code_service');
-      $langCode = \Drupal::languageManager()->getCurrentLanguage()->getId();
+      $errorCodeService = $this->errorCodeService;
+      $langCode = $this->languageManager->getCurrentLanguage()->getId();
       $message = $errorCodeService->getErrorMessageByCode($code, $langCode);
 
       if ($message) {

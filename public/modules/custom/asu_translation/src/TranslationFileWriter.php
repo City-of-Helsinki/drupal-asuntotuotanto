@@ -34,23 +34,20 @@ class TranslationFileWriter {
   protected $translationManager;
 
   /**
+   * The File Repository Interface.
+   *
+   * @var \Drupal\file\FileRepositoryInterface
+   */
+  protected $fileRepository;
+
+  /**
    * Constructor.
    */
-  public function __construct(EntityTypeManager $entityTypeManager, LanguageManager $languageManager, TranslationManager $translationManager) {
+  public function __construct(EntityTypeManager $entityTypeManager, LanguageManager $languageManager, TranslationManager $translationManager, FileRepositoryInterface $fileRepository) {
     $this->entityTypeManager = $entityTypeManager;
     $this->languageManager = $languageManager;
     $this->translationManager = $translationManager;
-  }
-
-  /**
-   * Write PO files for fields.
-   *
-   * @param array $fields
-   *   Fields to add to the translation files.
-   */
-  public function writePoFile(array $fields = []) {
-    $translations = $this->getFieldTranslations($fields);
-    // $this->doWriteTranslationFiles($translations);
+    $this->fileRepository = $fileRepository;
   }
 
   /**
@@ -118,7 +115,7 @@ class TranslationFileWriter {
         fwrite($fh, "msgid \"$key\"\n");
         fwrite($fh, "msgstr \"$value\"\n");
       }
-      \Drupal::service('file.repository')->writeData($fh, 'public://<filename>');
+      $this->fileRepository->writeData($fh, 'public://<filename>');
       fclose($fh);
     }
   }

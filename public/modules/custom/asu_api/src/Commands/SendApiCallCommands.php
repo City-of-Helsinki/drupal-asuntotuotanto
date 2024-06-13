@@ -2,6 +2,7 @@
 
 namespace Drupal\asu_api\Commands;
 
+use Drupal\asu_api\Api\BackendApi\BackendApi;
 use Drupal\asu_api\Api\BackendApi\Request\GetApartmentRevaluationsRequest;
 use Drush\Commands\DrushCommands;
 
@@ -13,6 +14,20 @@ use Drush\Commands\DrushCommands;
 class SendApiCallCommands extends DrushCommands {
 
   /**
+   * Backend api.
+   *
+   * @var Drupal\asu_api\Api\BackendApi\BackendApi
+   */
+  private BackendApi $backendApi;
+
+  /**
+   * Constructor.
+   */
+  public function __construct(BackendApi $backendApi) {
+    $this->backendApi = $backendApi;
+  }
+
+  /**
    * Drush.
    *
    * @command asu_api:sendApiCall
@@ -21,11 +36,9 @@ class SendApiCallCommands extends DrushCommands {
    */
   public function sendApiCall() {
     try {
-      /** @var \Drupal\asu_api\Api\BackendApi\BackendApi $api */
-      $api = \Drupal::service('asu_api.backendapi');
       $request = new GetApartmentRevaluationsRequest();
       /** @var \Drupal\asu_api\Api\BackendApi\Response\GetApartmentRevaluationsResponse $response */
-      $response = $api->send($request);
+      $response = $this->backendApi->send($request);
       $apartment_revaluation = $response->getContent();
       $this->output()->writeln(json_encode($apartment_revaluation));
     }

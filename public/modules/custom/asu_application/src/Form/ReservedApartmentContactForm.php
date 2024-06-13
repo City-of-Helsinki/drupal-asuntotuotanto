@@ -4,12 +4,45 @@ namespace Drupal\asu_application\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\node\Entity\Node;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Reserved apartment contact form.
  */
 class ReservedApartmentContactForm extends FormBase {
+
+  /**
+   * The entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
+   * A request stack symfony instance.
+   *
+   * @var \Symfony\Component\HttpFoundation\RequestStack
+   */
+  protected $requestStack;
+
+  /**
+   * The mail manager.
+   *
+   * @var \Drupal\Core\Mail\MailManagerInterface
+   */
+  protected $mailManager;
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    $instance = new static();
+    $instance->entityTypeManager = $container->get('entity_type.manager');
+    $instance->requestStack = $container->get('request_stack');
+    $instance->mailManager = $container->get('plugin.manager.mail');
+
+    return $instance;
+  }
 
   /**
    * {@inheritDoc}
@@ -22,25 +55,25 @@ class ReservedApartmentContactForm extends FormBase {
    * {@inheritDoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state, string $user_id = NULL, string $project_id = NULL) {
-    $project_id = \Drupal::request()->get('project') ?? NULL;
-    $apartment_id = \Drupal::request()->get('apartment') ?? NULL;
+    $project_id = $this->requestStack->getCurrentRequest()->get('project') ?? NULL;
+    $apartment_id = $this->requestStack->getCurrentRequest()->get('apartment') ?? NULL;
     $project = NULL;
     $contact_person_value = NULL;
 
     if ($project_id) {
-      $project = Node::load($project_id);
+      $project = $this->entityTypeManager->getStorage('node')->load($project_id);
 
       if ($salesperson = $project->getSalesPerson()) {
         $contact_person_value = $salesperson->getEmail();
       }
     }
 
-    $form['#contact_form_title'] = t('Apply for an apartment');
-    $form['#contact_form_text'] = t('Leave your contact information and we will personally contact you regarding this apartment.');
+    $form['#contact_form_title'] = $this->t('Apply for an apartment');
+    $form['#contact_form_text'] = $this->t('Leave your contact information and we will personally contact you regarding this apartment.');
 
     $form['field_project'] = [
       '#type' => 'textfield',
-      '#title' => t('Project'),
+      '#title' => $this->t('Project'),
       '#value' => $project->getTitle(),
       '#required' => TRUE,
       '#disabled' => TRUE,
@@ -48,7 +81,7 @@ class ReservedApartmentContactForm extends FormBase {
 
     $form['field_apartment_id'] = [
       '#type' => 'textfield',
-      '#title' => t('Apartment'),
+      '#title' => $this->t('Apartment'),
       '#required' => TRUE,
       '#value' => $apartment_id,
       '#disabled' => TRUE,
@@ -56,36 +89,36 @@ class ReservedApartmentContactForm extends FormBase {
 
     $form['field_name'] = [
       '#type' => 'textfield',
-      '#title' => t('Name'),
+      '#title' => $this->t('Name'),
       '#required' => TRUE,
     ];
 
     $form['field_apartment_information'] = [
       '#type' => 'textfield',
-      '#title' => t('Apartment information'),
+      '#title' => $this->t('Apartment information'),
     ];
 
     $form['field_email'] = [
       '#type' => 'email',
-      '#title' => t('Email'),
+      '#title' => $this->t('Email'),
       '#required' => TRUE,
     ];
 
     $form['field_phone'] = [
       '#type' => 'textfield',
-      '#title' => t('Phone number'),
+      '#title' => $this->t('Phone number'),
       '#required' => TRUE,
     ];
 
     $form['field_date_of_birth'] = [
       '#type' => 'date',
-      '#title' => t('Date of birth'),
+      '#title' => $this->t('Date of birth'),
       '#required' => TRUE,
     ];
 
     $form['field_message'] = [
       '#type' => 'textarea',
-      '#title' => t('Message'),
+      '#title' => $this->t('Message'),
     ];
 
     $form['field_contact_person'] = [
@@ -95,7 +128,7 @@ class ReservedApartmentContactForm extends FormBase {
 
     $form['submit'] = [
       '#type' => 'submit',
-      '#value' => t('Submit'),
+      '#value' => $this->t('Submit'),
     ];
 
     $form['#cache'] = ['max-age' => 0];
@@ -107,25 +140,45 @@ class ReservedApartmentContactForm extends FormBase {
    * {@inheritDoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $project_id = \Drupal::request()->get('project') ?? NULL;
+    $project_id = $this->requestStack->getCurrentRequest()->get('project') ?? NULL;
     $values = $form_state->cleanValues()->getValues();
     $body = $this->convertMessage($values);
+    $email_to = $values['field_contact_person'];
+    $user = NULL;
 
-    /** @var \Drupal\Core\Mail\MailManager $mailManager */
-    $mailManager = \Drupal::service('plugin.manager.mail');
-    $module = 'asu_application';
-    $key = 'apply_for_free_apartment';
-    $to = $values['field_contact_person'];
-    $langcode = 'fi';
-    $send = TRUE;
-    $subject = 'Yhteydenottopyyntö vapaaseen huoneistoon' . $values['field_apartment_information'];
-    $params = [
-      'subject' => $subject,
-      'message' => $body,
-    ];
+    if ($email_to) {
+      $user = $this->entityTypeManager->getStorage('user')
+        ->loadByProperties([
+          'mail' => $values['field_contact_person'],
+          'type' => 'sales',
+        ]);
+      $user = reset($user);
+    }
 
-    $result = $mailManager->mail($module, $key, $to, $langcode, $params, NULL, $send);
-    $this->messenger()->addStatus($this->t('Thank you for the application, we will be in touch'));
+    // If salesperson not exist use default email address.
+    if (!$user) {
+      $email_to = getenv('DRUPAL_DEFAULT_FORM_EMAIL');
+    }
+
+    if (!$email_to) {
+      $this->messenger()->addError($this->t('Could not send the email, please contact us at asuntomyynti@hel.fi'));
+    }
+    else {
+      $module = 'asu_application';
+      $key = 'apply_for_free_apartment';
+      $to = $email_to;
+      $langcode = 'fi';
+      $send = TRUE;
+      $subject = 'Yhteydenottopyyntö vapaaseen huoneistoon' . $values['field_apartment_information'];
+      $params = [
+        'subject' => $subject,
+        'message' => $body,
+      ];
+
+      $this->mailManager->mail($module, $key, $to, $langcode, $params, NULL, $send);
+      $this->messenger()->addStatus($this->t('Thank you for the application, we will be in touch'));
+    }
+
     $form_state->setRedirect('entity.node.canonical', ['node' => $project_id]);
   }
 

@@ -1,5 +1,6 @@
 services:
   asu_editorial.apply_theme:
     class: Drupal\asu_editorial\Theme\ApplyTheme
+    arguments: ['@entity_type.manager','@current_user']
     tags:
       - { name: theme_negotiator, priority: 1000 }

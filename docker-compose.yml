@@ -17,7 +17,8 @@ services:
       # XDEBUG_ENABLE: "true"
       # DOCKERHOST: host.docker.internal
       # XDEBUG_CONFIG: "remote_port=9001 remote_host=host.docker.internal remote_connect_back=0"
-      PHP_SENDMAIL_PATH: /usr/sbin/sendmail -S stonehenge:1025
+      # PHP_IDE_CONFIG: "${PHP_IDE_CONFIG:-serverName=${DRUPAL_HOSTNAME}}"
+      PHP_SENDMAIL_PATH: /usr/sbin/sendmail -S host.docker.internal:1025 -t
 
       # permission issues.
       DTT_BASE_URL: "http://app:8080"

@@ -4,6 +4,8 @@ namespace Drupal\asu_user;
 
 use Drupal\asu_api\Helper\AuthenticationHelper;
 use Drupal\asu_user\Helper\StoreHelper;
+use Drupal\Core\Config\ImmutableConfig;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Session\AccountProxy;
 use Drupal\Core\TempStore\PrivateTempStore;
 use Drupal\Core\TempStore\PrivateTempStoreFactory;
@@ -15,6 +17,13 @@ use Drupal\user\Entity\User;
 class Customer {
 
   private const API_TOKEN = 'asu_api_token';
+
+  /**
+   * The entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
 
   /**
    * User class.
@@ -35,15 +44,16 @@ class Customer {
    *
    * @var array|\Drupal\Core\Config\ImmutableConfig
    */
-  private ?array $config;
+  private ImmutableConfig $config;
 
   /**
    * Constructor.
    */
-  public function __construct(AccountProxy $user, PrivateTempStoreFactory $storeFactory) {
-    $this->user = User::load($user->id());
+  public function __construct(EntityTypeManagerInterface $entityTypeManager, AccountProxy $user, PrivateTempStoreFactory $storeFactory, ImmutableConfig $config) {
+    $this->entityTypeManager = $entityTypeManager;
+    $this->user = $this->entityTypeManager->getStorage('user')->load($user->id());
     $this->store = $storeFactory->get('customer');
-    $this->config = \Drupal::config('asu_user.external_user_fields')
+    $this->config = $config('asu_user.external_user_fields')
       ->get('external_data_map');
   }
 
@@ -62,13 +72,7 @@ class Customer {
     if ($this->user->hasField($name)) {
       return $this->user->get($name)->first()->value;
     }
-    /*
-    if ($this->user->bundle() != 'customer') {
-    throw new \Exception(
-    'Trying to access external data of an user of a wrong type.'
-    );
-    }
-     */
+
     return '';
   }
 

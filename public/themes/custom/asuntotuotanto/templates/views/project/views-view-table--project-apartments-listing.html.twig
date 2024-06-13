@@ -233,11 +233,6 @@
         {% set nid = row.columns.nid.content.0.field_output['#markup']|striptags|trim %}
         {% set price_title = 'Debt-free sales price'|t %}
 
-        {% if debt_free_sales_price == null or debt_free_sales_price == '' or debt_free_sales_price == 0 or debt_free_sales_price == '0,00' %}
-          {% set debt_free_sales_price = row.columns.field_right_of_occupancy_payment.content.0.field_output['#markup']|striptags|trim %}
-          {% set price_title = 'Right of occupancy payment'|t %}
-        {% endif %}
-
         {% if release_payment_price is not empty and release_payment_price > 0 %}
           {% set debt_free_sales_price = release_payment_price %}
         {% endif %}

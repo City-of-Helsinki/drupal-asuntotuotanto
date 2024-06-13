@@ -2,15 +2,37 @@
 
 namespace Drupal\asu_content\Form;
 
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\node\Entity\Node;
+use Drupal\Core\Messenger\MessengerTrait;
+use Drupal\Core\Routing\UrlGeneratorInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Form which allows bulk adding images to apartments.
  */
 class BulkEditForm extends FormBase {
+  use MessengerTrait;
+
+  /**
+   * Constructor.
+   */
+  public function __construct(EntityTypeManagerInterface $entityTypeManager, UrlGeneratorInterface $url_generator) {
+    $this->entityTypeManager = $entityTypeManager;
+    $this->urlGenerator = $url_generator;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('entity_type.manager'),
+      $container->get('url_generator')
+    );
+  }
 
   /**
    * {@inheritDoc}
@@ -25,7 +47,7 @@ class BulkEditForm extends FormBase {
   public function buildForm(array $form, FormStateInterface $form_state, string $id = NULL) {
     // Build the form for route without a project id.
     if (!$id) {
-      $projects = \Drupal::entityTypeManager()
+      $projects = $this->entityTypeManager
         ->getStorage('node')
         ->loadByProperties([
           'type' => 'project',
@@ -48,17 +70,17 @@ class BulkEditForm extends FormBase {
     }
 
     // Build the form for route with a project id.
-    $project = Node::load($id);
+    $project = $this->entityTypeManager->getStorage('node')->load($id);
     $apartments = $project->field_apartments->referencedEntities();
 
     $form['floorplan'] = [
       '#type' => 'managed_file',
-      '#title' => t('Floorplan'),
+      '#title' => $this->t('Floorplan'),
       '#upload_location' => 'public://',
       '#multiple' => FALSE,
     ];
     $form['images'] = [
-      '#title' => t('Images'),
+      '#title' => $this->t('Images'),
       '#type' => 'managed_file',
       '#upload_location' => 'public://',
       '#required' => FALSE,
@@ -95,7 +117,7 @@ class BulkEditForm extends FormBase {
 
     // Handling the project selection.
     if (isset($values['project'])) {
-      $url = \Drupal::urlGenerator()
+      $url = $this->urlGenerator
         ->generateFromRoute(
         'asu_user.bulk_edit',
         ['id' => $values['project']],
@@ -110,7 +132,7 @@ class BulkEditForm extends FormBase {
     foreach ($values['apartments'] as $key => $value) {
       if ($key == $value) {
         /** @var \Drupal\node\Entity\Node $apartment */
-        $apartment = Node::load($value);
+        $apartment = $this->entityTypeManager->getStorage('node')->load($value);
         if (!empty($values['floorplan']) && isset($values['floorplan'][0])) {
           $apartment->set('field_floorplan', ['target_id' => $values['floorplan'][0]]);
         }
@@ -127,7 +149,7 @@ class BulkEditForm extends FormBase {
         $updated[] = $apartment->id();
       }
     }
-    \Drupal::messenger()->addMessage(count($updated) . ' ' . $this->t('apartments updated.'));
+    $this->messenger()->addMessage(count($updated) . ' ' . $this->t('apartments updated.'));
   }
 
 }

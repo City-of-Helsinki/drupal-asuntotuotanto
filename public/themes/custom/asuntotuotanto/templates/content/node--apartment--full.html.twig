@@ -92,9 +92,9 @@
 {% set adjusted_price = content.field_index_adjusted_right_of_oc.0 %}
 {% set alteration_price = content.field_alteration_work.0 %}
 {% set release_payment = content.field_release_payment.0 %}
+{% set loan_share = content.field_loan_share.0 %}
 {% set debt_free_sales_price = content.field_debt_free_sales_price.0 %}
 {% set apartment_number = content.field_apartment_number.0 %}
-{% set financing_fee = content.field_financing_fee.0 %}
 {% set maintenance_fee = content.field_maintenance_fee.0 %}
 {% set right_of_occupancy_fee = content.field_right_of_occupancy_fee.0 %}
 {% set right_of_occupancy_payment = content.field_right_of_occupancy_payment.0 %}
@@ -324,7 +324,6 @@
               and (apartment_structure|render == '')
               and (right_of_occupancy_fee|render == '0.00€')
               and (maintenance_fee|render == '0.00€ / kk')
-              and (financing_fee|render == '0.00€ / month')
               and (energy_class|render == null)
               and (accessibility|render == null)
               and (site_owner|render == null)
@@ -377,7 +376,7 @@
 							</p>
 						</li>
 					{% endif %}
-					{% if sales_price|render and sales_price|render != '0,00€' and sales_price|render != null %}
+					{% if ownership_type|lower == 'hitas' and sales_price|render and sales_price|render != '0,00€' and sales_price|render != null %}
 						<li class="apartment__details-item">
 							<p>
 								<span>{% trans %}Sales price{% endtrans %}</span>
@@ -385,7 +384,15 @@
 							</p>
 						</li>
 					{% endif %}
-					{% if debt_free_sales_price|render and debt_free_sales_price|render != '0,00€' and debt_free_sales_price|render != null %}
+          {% if ownership_type|lower == 'hitas' and loan_share|render and loan_share['#markup'] != '0.00' and loan_share|render != null %}
+            <li class="apartment__details-item">
+              <p>
+                <span>{% trans %}Share of housing company loan{% endtrans %}</span>
+                <span>{{ loan_share }}€</span>
+              </p>
+            </li>
+          {% endif %}
+					{% if ownership_type|lower == 'hitas' and debt_free_sales_price|render and debt_free_sales_price|render != '0,00€' and debt_free_sales_price|render != null %}
 						<li class="apartment__details-item">
 							<p>
 								<span>{% trans %}Debt free sales price{% endtrans %}</span>
@@ -393,7 +400,7 @@
 							</p>
 						</li>
 					{% endif %}
-          {% if release_payment|render and release_payment|render != '0,00€' and release_payment|render != null %}
+          {% if ownership_type|lower == 'haso' and release_payment|render and release_payment|render != '0,00€' and release_payment|render != null %}
             <li class="apartment__details-item">
               <p>
                 <span>{% trans %}Release payment{% endtrans %}</span>
@@ -436,7 +443,7 @@
               </li>
             {% endif %}
           {% endif %}
-          {% if right_of_occupancy_fee|render and right_of_occupancy_fee|render != '0.00€' %}
+          {% if ownership_type|lower == 'haso' and right_of_occupancy_fee|render and right_of_occupancy_fee|render != '0.00€' %}
 						<li class="apartment__details-item">
 							<p>
 								<span>{% trans %}Right of occupancy fee{% endtrans %}</span>
@@ -444,19 +451,11 @@
 							</p>
 						</li>
 					{% endif %}
-          {% if maintenance_fee|render and maintenance_fee|render != '0.00€ / kk' %}
+          {% if ownership_type|lower == 'hitas' and maintenance_fee|render and maintenance_fee|render != '0.00€ / kk' %}
 						<li class="apartment__details-item">
 							<p>
 								<span>{% trans %}Maintenance fee{% endtrans %}</span>
 								<span>{{ maintenance_fee }}</span>
-							</p>
-						</li>
-					{% endif %}
-          {% if financing_fee|render and financing_fee|render != '0.00€ / month' %}
-						<li class="apartment__details-item">
-							<p>
-								<span>{% trans %}Financing fee{% endtrans %}</span>
-								<span>{{ financing_fee }}</span>
 							</p>
 						</li>
 					{% endif %}
@@ -484,7 +483,7 @@
 							</p>
 						</li>
 					{% endif %}
-          {% if field_alteration_work|render %}
+          {% if ownership_type|lower == 'hitas' and field_alteration_work|render %}
             <li class="apartment__details-item">
               <p>
                 <span>{% trans %}Alteration work{% endtrans %}</span>
@@ -492,7 +491,7 @@
               </p>
             </li>
           {% endif %}
-          {% if field_water_fee|render and field_water_fee|render != '0.00' %}
+          {% if ownership_type|lower == 'hitas' and field_water_fee|render and field_water_fee|render != '0.00' %}
             <li class="apartment__details-item">
               <p>
                 <span>{% trans %}Water fee{% endtrans %}</span>
@@ -500,7 +499,7 @@
               </p>
             </li>
           {% endif %}
-          {% if field_water_fee_explanation|render %}
+          {% if ownership_type|lower == 'hitas' and field_water_fee_explanation|render %}
             <li class="apartment__details-item">
               <p>
                 <span>{% trans %}Water fee explanation{% endtrans %}</span>

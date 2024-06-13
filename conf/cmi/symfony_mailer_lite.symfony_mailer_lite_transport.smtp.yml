@@ -8,8 +8,8 @@ plugin: smtp
 configuration:
   user: ''
   pass: ''
-  host: host.docker.internal
-  port: 1025
+  host: relay.hel.fi
+  port: 25
   query:
     verify_peer: true
     local_domain: ''

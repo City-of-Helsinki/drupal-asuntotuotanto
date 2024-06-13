@@ -366,7 +366,6 @@ if ($env = getenv('APP_ENV')) {
   $config['mailsystem.settings']['defaults']['formatter'] = 'symfony_mailer_lite';
   $config['mailsystem.settings']['modules']['symfony_mailer_lite']['none']['formatter'] = 'symfony_mailer_lite';
   $config['mailsystem.settings']['modules']['symfony_mailer_lite']['none']['sender'] = 'symfony_mailer_lite';
-
   $config['symfony_mailer_lite.settings']['default_transport'] = 'smtp';
 
   $settings['ASU_DJANGO_BACKEND_URL'] = getenv('ASU_DJANGO_BACKEND_URL');
@@ -376,6 +375,12 @@ if ($env = getenv('APP_ENV')) {
   if ($env === 'dev') {
     $orbstack = str_contains(php_uname('r'), 'orbstack');
     $config['elasticsearch_connector.cluster.asuntotuotanto']['url'] = $orbstack ? 'http://elastic.asuntotuotanto.orb.local' : 'http://elastic:9200';
+
+    if ($orbstack) {
+      // Mailer settings.
+      $config['symfony_mailer_lite.symfony_mailer_lite_transport.smtp']['configuration']['host'] = 'host.docker.internal';
+      $config['symfony_mailer_lite.symfony_mailer_lite_transport.smtp']['configuration']['port'] = '1025';
+    }
   }
 
   if ($env === 'test') {

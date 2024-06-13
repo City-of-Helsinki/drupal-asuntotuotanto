@@ -1,4 +1,4 @@
 services:
   asu_csv_import.upload_file_handler:
     class: Drupal\asu_csv_import\UploadFileHandler
-    arguments: ['@entity_type.manager']
+    arguments: ['@entity_type.manager', '@entity_field.manager', '@current_user']
