@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.storage.node.field_haso_fee
     - field.storage.node.field_floor_max
     - field.storage.node.field_apartment_number
     - field.storage.node.field_apartment_state_of_sale
@@ -10,7 +11,6 @@ dependencies:
     - field.storage.node.field_has_balcony
     - field.storage.node.field_debt_free_sales_price
     - field.storage.node.field_floor
-    - field.storage.node.field_right_of_occupancy_payment
     - field.storage.node.field_living_area
     - field.storage.node.field_release_payment
     - field.storage.node.field_sales_price
@@ -133,6 +133,14 @@ field_settings:
     dependencies:
       config:
         - field.storage.node.field_has_yard
+  haso_fee:
+    label: 'Alkuperäinen asumisoikeusmaksu'
+    datasource_id: 'entity:node'
+    property_path: field_haso_fee
+    type: cent
+    dependencies:
+      config:
+        - field.storage.node.field_haso_fee
   housing_company_fee:
     label: 'Housing company fee'
     datasource_id: 'entity:node'
@@ -281,14 +289,6 @@ field_settings:
     dependencies:
       config:
         - field.storage.node.field_release_payment
-  right_of_occupancy_payment:
-    label: 'Indeksikorotuksen määrä'
-    datasource_id: 'entity:node'
-    property_path: field_right_of_occupancy_payment
-    type: cent
-    dependencies:
-      config:
-        - field.storage.node.field_right_of_occupancy_payment
   room_count:
     label: 'Number of rooms'
     datasource_id: 'entity:node'

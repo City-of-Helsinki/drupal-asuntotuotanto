@@ -23,6 +23,7 @@ dependencies:
     - field.field.node.apartment.field_has_balcony
     - field.field.node.apartment.field_has_terrace
     - field.field.node.apartment.field_has_yard
+    - field.field.node.apartment.field_haso_fee
     - field.field.node.apartment.field_images
     - field.field.node.apartment.field_index_adjusted_right_of_oc
     - field.field.node.apartment.field_kitchen_appliances
@@ -105,6 +106,7 @@ hidden:
   field_has_balcony: true
   field_has_terrace: true
   field_has_yard: true
+  field_haso_fee: true
   field_housing_company_fee: true
   field_housing_manager: true
   field_images: true

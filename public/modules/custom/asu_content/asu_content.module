@@ -194,6 +194,7 @@ function asu_content_hide_fields_in_haso(&$form) {
  */
 function asu_content_hide_fields_in_hitas(&$form) {
   $hide_fields = [
+    'field_haso_fee',
     'field_right_of_occupancy_payment',
     'field_index_adjusted_right_of_oc',
     'field_right_of_occupancy_fee',
