@@ -140,6 +140,9 @@
             "drupal/field_group": {
                 "Custom patch to add classes for each horizontal tab": "patches/field_group_horizontal_tabs_classes.patch"
             },
+            "drupal/samlauth": {
+                "https://www.drupal.org/project/samlauth/issues/3424834": "https://git.drupalcode.org/project/samlauth/-/merge_requests/18.patch"
+            },
             "drupal/user_bundle": {
                 "Custom patch prevents install from dying when trying to edit nonexisting admin configuration file.": "./patches/remove_editing_admin_configuration.patch"
             }
