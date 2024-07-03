@@ -292,10 +292,13 @@ class AuthService extends SamlService {
    *   Crypted string.
    */
   protected function hashPid($string) {
-    $hash_key = getenv('ASU_HASH_KEY');
-    $hash = Crypt::hmacBase64($string, $hash_key);
+    if (empty($string)) {
+      return NULL;
+    }
 
-    return $hash;
+    $hash_key = getenv('ASU_HASH_KEY');
+
+    return Crypt::hmacBase64($string, $hash_key);
   }
 
   /**
