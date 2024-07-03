@@ -38,6 +38,7 @@
         "drupal/jquery_ui_slider": "^2.0.0",
         "drupal/jquery_ui_touch_punch": "^1.1",
         "drupal/key": "^1.17",
+        "drupal/login_history": "^2.0@alpha",
         "drupal/mailsystem": "^4.4",
         "drupal/matomo": "^1.23",
         "drupal/matomo_reports": "^1.4",
