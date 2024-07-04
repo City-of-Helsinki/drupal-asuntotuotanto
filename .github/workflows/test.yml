@@ -63,7 +63,7 @@ jobs:
           vendor/bin/phpcs public/themes/custom/
 
       - name: Run phpstan
-        run: vendor/bin/phpstan analyze
+        run: vendor/bin/phpstan analyse phpstan.neon
 
       - name: Download latest dump
         env:
