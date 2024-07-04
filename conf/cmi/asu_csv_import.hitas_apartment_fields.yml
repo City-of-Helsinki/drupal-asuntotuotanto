@@ -32,3 +32,4 @@ apartment_fields:
   - field_services_description
   - field_additional_information
   - nid
+langcode: en

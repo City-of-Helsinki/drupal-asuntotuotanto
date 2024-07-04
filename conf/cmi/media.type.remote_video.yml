@@ -4,13 +4,14 @@ status: true
 dependencies:
   module:
     - crop
+    - oembed_providers
 third_party_settings:
   crop:
     image_field: null
 _core:
-  default_config_hash: Oa2agR_t9WunrVJl4JGuv32as0WLOmEEgaGYehqOInE
+  default_config_hash: SEAaKGKNlLURAVHdZyi3WdqTEQvElZ6_AKRYGqoXmME
 id: remote_video
-label: 'Remote video'
+label: 'Remote video embed'
 description: 'Media type for remote media from external sources.'
 source: 'oembed:video'
 queue_thumbnail_downloads: false

@@ -6,7 +6,7 @@ apartment_fields:
   - empty
   - field_right_of_occupancy_fee
   - field_right_of_occupancy_deposit
-  - field_haso_fee
+  - field_right_of_occupancy_payment
   - field_floor_max
   - field_water_fee
   - field_water_fee_explanation
@@ -26,3 +26,4 @@ apartment_fields:
   - field_services_description
   - field_additional_information
   - nid
+langcode: en

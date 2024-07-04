@@ -14,5 +14,5 @@ _core:
 id: node.announcement
 target_entity_type_id: node
 target_bundle: announcement
-default_langcode: fi
+default_langcode: en
 language_alterable: true

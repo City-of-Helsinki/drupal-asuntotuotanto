@@ -1,5 +1,6 @@
 _core:
   default_config_hash: dsJEXT6TwE7EnEgdtZKLq4XYaUIH2D8WXwnpzKzW1JU
+langcode: en
 local_task_enabled_entity_types:
   - paragraphs_library_item
   - paragraphs_library_item

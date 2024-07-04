@@ -1,5 +1,6 @@
 _core:
   default_config_hash: NGxFi-xycxrzrGVZtCUl7MACi0jVRk130tNabvIN6ng
+langcode: en
 content_root: ''
 assertiveness: smart
 no_load: ''

@@ -1,5 +1,6 @@
 _core:
   default_config_hash: hQu_5Svi0TQ5SE3dzjC55vecrEOKTYurvK-K7IJ8oXk
+langcode: en
 admin_css: true
 fx: ''
 noscript: false

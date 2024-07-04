@@ -1,26 +1,21 @@
 on:
   pull_request:
   push:
-    branches: ['main', 'develop']
+    branches: ['main', 'dev']
 name: CI
 env:
   SYMFONY_DEPRECATIONS_HELPER: disabled
   SIMPLETEST_BASE_URL: http://app:8888
-  APP_ENV: "test"
-  ASU_ELASTICSEARCH_ADDRESS: "http://elastic:9200"
-  ASU_ELASTICSEARCH_USERNAME: "test"
-  ASU_ELASTICSEARCH_PASSWORD: "pass"
-  ASU_DJANGO_BACKEND_URL: "https://django-backend-test-url.fi"
 jobs:
   tests:
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/city-of-helsinki/drupal-php-docker:8.2-alpine
+      image: ghcr.io/city-of-helsinki/drupal-php-docker:8.3-alpine
       options: --hostname app
 
     services:
       db:
-        image: mariadb
+        image: mysql:8
         env:
           MYSQL_USER: drupal
           MYSQL_PASSWORD: drupal
@@ -28,23 +23,22 @@ jobs:
           MYSQL_ROOT_PASSWORD: drupal
         ports:
           - 3306:3306
-
-      elastic:
-        image: docker.elastic.co/elasticsearch/elasticsearch:7.9.2
-        env:
-          discovery.type: single-node
-        options: >-
-          --health-cmd "curl http://localhost:9200/_cluster/health"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 10
-        ports:
-          - 9200:9200
-
     steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 1
+      - uses: actions/checkout@v4
+
+      - name: Set browsertest output folder
+        run: |
+          echo "BROWSERTEST_OUTPUT_DIRECTORY=$GITHUB_WORKSPACE/public/sites/simpletest" >> $GITHUB_ENV
+
+      - name: Make sure configuration was exported in correct language (en or und)
+        run: |
+          OUTPUT=$(grep -oP '^langcode: \b(?!(?:en|und)\b)\w+' conf -R || true)
+
+          if [ ! -z "$OUTPUT" ]; then
+            echo "Found configuration that does not match the pattern 'langcode: (en|und)':" >> $GITHUB_STEP_SUMMARY
+            echo "$OUTPUT" >> $GITHUB_STEP_SUMMARY
+            exit 1
+          fi
 
       - name: Build project
         run: composer install --no-interaction
@@ -57,11 +51,11 @@ jobs:
 
       - name: Run PHPCS
         run: |
-          vendor/bin/phpcs public/modules/custom/ --ignore="*.js,*.css" --extensions=php,module,install --standard=Drupal,DrupalPractice
-          vendor/bin/phpcs public/themes/custom/ --ignore="*.js,*.css" --extensions=php,theme --standard=Drupal,DrupalPractice
+          vendor/bin/phpcs public/modules/custom/
+          vendor/bin/phpcs public/themes/custom/
 
       - name: Run phpstan
-        run: vendor/bin/phpstan analyse phpstan.neon
+        run: vendor/bin/phpstan analyze
 
       - name: Download latest dump
         env:
@@ -76,10 +70,7 @@ jobs:
       - name: Start services
         run: |
           drush runserver $SIMPLETEST_BASE_URL --dns > /dev/null 2>&1 &
-          chromedriver --port=4444 > /dev/null 2>&1 &
-          # Chromium browser is required to run 'functional-javascript' and
-          # 'existing-site-javascript' tests.
-          chromium-browser --headless --disable-gpu --no-sandbox --remote-debugging-port=9222 &
+
           # Wait for drush server to start.
           for i in {1..5}; do RESPONSE_CODE=$(curl -s -o /dev/null -w "%{http_code}" "$SIMPLETEST_BASE_URL" || true); if [ "$RESPONSE_CODE" -gt "301" ] || [ "$RESPONSE_CODE" -lt "200" ]; then sleep 2; fi; done
 
@@ -87,3 +78,11 @@ jobs:
         run: |
           composer test-php public/modules/custom
           if [ -d "tests/" ]; then composer test-php tests/; else echo "No DTT tests found. Ignoring..."; fi
+
+      - name: Create an artifact from test report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: results
+          path: ${{ env.BROWSERTEST_OUTPUT_DIRECTORY }}
+          retention-days: 1

@@ -1,5 +1,6 @@
 _core:
   default_config_hash: o1wWkhSOJotsHFgvzESaUOiTWhLak62cKBDyEtewAIM
+langcode: en
 role_to_select:
   customer: customer
 registration_mode: user

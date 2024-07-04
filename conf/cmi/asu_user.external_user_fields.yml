@@ -27,3 +27,4 @@ external_data_map:
     title: 'Date of birth'
     type: date
     external_field: date_of_birth
+langcode: en

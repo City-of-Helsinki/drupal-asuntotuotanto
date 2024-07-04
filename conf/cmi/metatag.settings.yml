@@ -1,3 +1,4 @@
+langcode: en
 entity_type_groups:
   node:
     page:
