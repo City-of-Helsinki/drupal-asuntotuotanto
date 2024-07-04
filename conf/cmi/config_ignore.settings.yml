@@ -1,4 +1,3 @@
-langcode: en
 ignored_config_entities:
   - 'system.site:page.front'
   - 'easy_breadcrumb.settings:home_segment_title'

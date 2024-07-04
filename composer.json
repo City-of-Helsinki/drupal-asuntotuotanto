@@ -32,7 +32,7 @@
         "drupal/hdbt": "^6.0",
         "drupal/hdbt_admin": "^3.0",
         "drupal/helfi_azure_fs": "^2.0",
-        "drupal/helfi_platform_config": "4.3.54",
+        "drupal/helfi_platform_config": "^4.4",
         "drupal/helfi_tunnistamo": "^2.0",
         "drupal/honeypot": "^2.1",
         "drupal/inline_entity_form": "^1.0@RC",
@@ -72,12 +72,10 @@
         "drupal/devel": "^5.0",
         "phpspec/prophecy-phpunit": "^2",
         "phpunit/phpunit": "^9.5",
-        "weitzman/drupal-test-traits": "^2.0",
-        "drupal/config_filter": "^1.8||^2.2"
+        "weitzman/drupal-test-traits": "^2.0"
     },
     "conflict": {
-        "drupal/drupal": "*",
-        "drupal/core": ">10.2"
+        "drupal/drupal": "*"
     },
     "config": {
         "optimize-autoloader": true,

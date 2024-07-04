@@ -10,7 +10,7 @@ dependencies:
 _core:
   default_config_hash: 67G2lyvlXJE8P8b1oAheELEdM5i74aipXfDIZCpAsdQ
 id: paragraphs_library
-label: 'Paragraphs library'
+label: 'Uudelleenkäytettävät lohkot'
 module: views
 description: ''
 tag: ''
@@ -19,11 +19,11 @@ base_field: id
 display:
   default:
     id: default
-    display_title: Default
+    display_title: Oletus
     display_plugin: default
     position: 0
     display_options:
-      title: 'Paragraphs library'
+      title: 'Uudelleenkäytettävät lohkot'
       fields:
         label:
           id: label
@@ -35,7 +35,7 @@ display:
           entity_type: paragraphs_library_item
           entity_field: label
           plugin_id: field
-          label: Label
+          label: Otsikko
           exclude: false
           alter:
             alter_text: false
@@ -100,7 +100,7 @@ display:
           entity_type: paragraph
           entity_field: type
           plugin_id: field
-          label: Type
+          label: Tyyppi
           exclude: false
           alter:
             alter_text: false
@@ -165,7 +165,7 @@ display:
           entity_type: paragraphs_library_item
           entity_field: paragraphs
           plugin_id: field
-          label: Paragraphs
+          label: Lohkot
           exclude: false
           alter:
             alter_text: false
@@ -231,7 +231,7 @@ display:
           entity_type: paragraphs_library_item
           entity_field: langcode
           plugin_id: field
-          label: Language
+          label: Kieli
           exclude: true
           alter:
             alter_text: false
@@ -420,7 +420,7 @@ display:
           entity_type: paragraphs_library_item
           entity_field: changed
           plugin_id: field
-          label: Changed
+          label: Muuttunut
           exclude: false
           alter:
             alter_text: false
@@ -495,7 +495,7 @@ display:
           admin_label: ''
           entity_type: paragraphs_library_item
           plugin_id: entity_operations
-          label: Operations
+          label: Toimenpiteet
           exclude: false
           alter:
             alter_text: false
@@ -545,26 +545,27 @@ display:
           total_pages: null
           id: 0
           tags:
-            next: ››
-            previous: ‹‹
+            next: 'Seuraava ›'
+            previous: '‹ Edellinen'
           expose:
             items_per_page: false
-            items_per_page_label: 'Items per page'
+            items_per_page_label: 'Merkintöjä sivua kohti'
             items_per_page_options: '5, 10, 25, 50'
             items_per_page_options_all: false
-            items_per_page_options_all_label: '- All -'
+            items_per_page_options_all_label: '- Kaikki -'
             offset: false
             offset_label: Offset
+          pagination_heading_level: h4
       exposed_form:
         type: basic
         options:
-          submit_button: Filter
+          submit_button: Suodata
           reset_button: false
-          reset_button_label: Reset
-          exposed_sorts_label: 'Sort by'
+          reset_button_label: Palauta
+          exposed_sorts_label: Lajittele
           expose_sort_order: true
-          sort_asc_label: Asc
-          sort_desc_label: Desc
+          sort_asc_label: Nousevasti
+          sort_desc_label: Laskevasti
       access:
         type: perm
         options:
@@ -603,7 +604,7 @@ display:
           exposed: true
           expose:
             operator_id: label_op
-            label: Label
+            label: Otsikko
             description: ''
             use_operator: false
             operator: label_op
@@ -619,7 +620,7 @@ display:
               administrator: '0'
           is_grouped: false
           group_info:
-            label: Label
+            label: Otsikko
             description: null
             identifier: label
             optional: true
@@ -646,7 +647,7 @@ display:
           exposed: true
           expose:
             operator_id: type_op
-            label: Type
+            label: Tyyppi
             description: ''
             use_operator: false
             operator: type_op
@@ -857,7 +858,7 @@ display:
       tags: {  }
   page_1:
     id: page_1
-    display_title: Page
+    display_title: Sivu
     display_plugin: page
     position: 1
     display_options:

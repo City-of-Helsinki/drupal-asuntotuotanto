@@ -1,6 +1,5 @@
 _core:
   default_config_hash: Ne69dMMwlFhwkLqsxAPs20dQCSMk3iibq1pr5qrHf2I
-langcode: en
 enabled_entity_types:
   - user
 punctuation:

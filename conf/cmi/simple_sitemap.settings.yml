@@ -1,4 +1,3 @@
-langcode: en
 max_links: 10000
 cron_generate: true
 cron_generate_interval: 24

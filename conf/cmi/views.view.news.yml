@@ -17,7 +17,7 @@ dependencies:
     - taxonomy
     - user
 id: news
-label: News
+label: Uutiset
 module: views
 description: ''
 tag: ''
@@ -472,7 +472,7 @@ display:
           plugin_id: text
           empty: false
           content:
-            value: '<h2>Common news</h2>'
+            value: "<h2>Yleiset uutiset</h2>\r\n"
             format: full_html
           tokenize: false
       display_extenders:
@@ -664,7 +664,7 @@ display:
           plugin_id: text
           empty: false
           content:
-            value: '<h2>Right-of-occupancy apartments</h2>'
+            value: "<h2>Asumisoikeusasunnot</h2>\r\n"
             format: full_html
           tokenize: false
       display_extenders:
@@ -855,7 +855,7 @@ display:
           plugin_id: text
           empty: false
           content:
-            value: '<h2>Owned apartments</h2>'
+            value: "<h2>Omistusasunnot</h2>\r\n"
             format: full_html
           tokenize: false
       display_extenders:
@@ -877,7 +877,7 @@ display:
     display_plugin: page
     position: 8
     display_options:
-      title: 'Common news'
+      title: Yleistä
       pager:
         type: full
         options:
@@ -899,6 +899,7 @@ display:
             offset: false
             offset_label: Offset
           quantity: 9
+          pagination_heading_level: h4
       empty:
         area:
           id: area
@@ -910,7 +911,7 @@ display:
           plugin_id: text
           empty: true
           content:
-            value: '<p>No news content available.</p>'
+            value: "<p>Ei uutisia saatavilla.</p>\r\n"
             format: full_html
           tokenize: false
       sorts:
@@ -1074,7 +1075,7 @@ display:
     display_plugin: page
     position: 7
     display_options:
-      title: 'HASO news'
+      title: 'HASO uutiset'
       pager:
         type: full
         options:
@@ -1096,6 +1097,7 @@ display:
             offset: false
             offset_label: Offset
           quantity: 9
+          pagination_heading_level: h4
       empty:
         area:
           id: area
@@ -1107,7 +1109,7 @@ display:
           plugin_id: text
           empty: true
           content:
-            value: '<p>No news content available.</p>'
+            value: "<p>Ei uutisia saatavilla.</p>\r\n"
             format: full_html
           tokenize: false
       sorts:
@@ -1272,7 +1274,7 @@ display:
     display_plugin: page
     position: 6
     display_options:
-      title: 'HITAS news'
+      title: 'HITAS uutiset'
       pager:
         type: full
         options:
@@ -1294,6 +1296,7 @@ display:
             offset: false
             offset_label: Offset
           quantity: 9
+          pagination_heading_level: h4
       empty:
         area:
           id: area
@@ -1305,7 +1308,7 @@ display:
           plugin_id: text
           empty: true
           content:
-            value: '<p>No news content available.</p>'
+            value: "<p>Ei uutisia saatavilla.</p>\r\n"
             format: full_html
           tokenize: false
       sorts:
@@ -1469,7 +1472,7 @@ display:
     display_plugin: page
     position: 1
     display_options:
-      title: 'Current news'
+      title: Ajankohtaista
       pager:
         type: some
         options:

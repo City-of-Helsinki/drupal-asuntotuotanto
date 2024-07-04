@@ -2,7 +2,8 @@ uuid: 6da93c19-f57e-49b9-a7e4-9d1285faa648
 langcode: en
 status: true
 dependencies: {  }
-name: Services
+name: Palvelut
 vid: services
-description: ''
+description: null
 weight: 0
+new_revision: false

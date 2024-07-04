@@ -1,6 +1,5 @@
 _core:
   default_config_hash: IhwTepsVwtbtbcT5GzQKhCXDCRvbk3MNkWqPiuiZ10s
-langcode: en
 theme: current
 defaults:
   sender: test_mail_collector
