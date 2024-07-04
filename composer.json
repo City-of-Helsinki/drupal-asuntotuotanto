@@ -77,7 +77,7 @@
     },
     "conflict": {
         "drupal/drupal": "*",
-        "drupal/core": ">10.2"
+        "drupal/core": ">10.2.2"
     },
     "config": {
         "optimize-autoloader": true,
