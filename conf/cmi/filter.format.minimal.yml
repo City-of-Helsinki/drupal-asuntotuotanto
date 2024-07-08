@@ -6,9 +6,8 @@ dependencies:
     - editor
     - helfi_api_base
     - linkit
-    - slick
 _core:
-  default_config_hash: nm55IrbIRUkXWb1rcdNrjFz-NFu-r74KkzwJFtrkAns
+  default_config_hash: 31awHbgNFO3J02_aNfv_b1s5MOHuULl0sP0FmwDMqfs
 name: Minimal
 format: minimal
 weight: 0
@@ -43,7 +42,7 @@ filters:
     status: true
     weight: -50
     settings:
-      allowed_html: '<br> <p> <span dir> <ul> <ol start> <li> <a href data-entity-type data-entity-uuid data-entity-substitution data-hds-icon-start data-is-external data-protocol data-hds-component data-hds-variant rel target="_blank"> <strong> <em>'
+      allowed_html: '<br> <p data-chat-trigger> <span dir> <ul> <ol start> <li> <a href data-entity-type data-entity-uuid data-entity-substitution data-hds-icon-start data-is-external data-protocol data-hds-component data-hds-variant rel target="_blank"> <strong> <em>'
       filter_html_help: true
       filter_html_nofollow: false
   filter_html_escape:
@@ -90,11 +89,3 @@ filters:
     weight: -44
     settings:
       title: true
-  slick_filter:
-    id: slick_filter
-    provider: slick
-    status: false
-    weight: 4
-    settings:
-      optionset: default
-      media_switch: ''

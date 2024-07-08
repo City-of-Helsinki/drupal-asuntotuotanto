@@ -2,7 +2,8 @@ uuid: d4a96684-c85f-441b-ae1e-2e65dfc624e2
 langcode: en
 status: true
 dependencies: {  }
-name: 'Site owners'
+name: 'Tontin omistajat'
 vid: site_owners
-description: ''
+description: null
 weight: 0
+new_revision: false

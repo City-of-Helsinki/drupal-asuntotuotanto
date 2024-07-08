@@ -2,7 +2,8 @@ uuid: ed403634-d7f8-4db2-88c2-a9a041ed5481
 langcode: en
 status: true
 dependencies: {  }
-name: 'General condition'
+name: Kunto
 vid: general_condition
-description: ''
+description: null
 weight: 0
+new_revision: false

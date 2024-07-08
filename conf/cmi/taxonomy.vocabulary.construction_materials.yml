@@ -2,7 +2,8 @@ uuid: 2669b989-d4a8-4718-81fd-38b941308939
 langcode: en
 status: true
 dependencies: {  }
-name: 'Construction materials'
+name: Rakennusmateriaalit
 vid: construction_materials
-description: ''
+description: null
 weight: 0
+new_revision: false

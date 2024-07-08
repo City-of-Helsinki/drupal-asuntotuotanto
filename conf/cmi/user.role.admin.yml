@@ -12,6 +12,7 @@ dependencies:
     - media.type.remote_video
     - node.type.announcement
     - node.type.apartment
+    - node.type.article
     - node.type.landing_page
     - node.type.news
     - node.type.page
@@ -106,7 +107,6 @@ permissions:
   - 'administer taxonomy'
   - 'administer url aliases'
   - 'administer users'
-  - 'assign admin role'
   - 'assign content_producer role'
   - 'assign customer role'
   - 'assign editor role'

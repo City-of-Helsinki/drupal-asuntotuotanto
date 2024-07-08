@@ -111,6 +111,7 @@ module:
   helfi_toc: 0
   helfi_tunnistamo: 0
   helfi_user_roles: 0
+  help: 0
   honeypot: 0
   image: 0
   image_style_quality: 0
@@ -141,6 +142,7 @@ module:
   metatag_twitter_cards: 0
   metatag_views: 0
   migrate: 0
+  monolog: 0
   mysql: 0
   nocurrent_pass: 0
   node: 0
@@ -156,6 +158,7 @@ module:
   phpass: 0
   rabbit_hole: 0
   raven: 0
+  readonly_field_widget: 0
   rebuild_cache_access: 0
   redirect: 0
   redirect_404: 0
