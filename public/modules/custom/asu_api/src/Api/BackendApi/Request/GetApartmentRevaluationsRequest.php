@@ -12,7 +12,7 @@ use Psr\Http\Message\ResponseInterface;
 class GetApartmentRevaluationsRequest extends Request {
 
   protected const METHOD = 'GET';
-  protected const PATH = '/v1/sales/apartment/revaluations/summary';
+  protected const PATH = '/v1/sales/apartment/revaluations/summary/{url_params}';
   protected const AUTHENTICATED = TRUE;
 
   /**
@@ -20,6 +20,19 @@ class GetApartmentRevaluationsRequest extends Request {
    */
   public function __construct() {
     $this->sender = NULL;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function getPath(): string {
+    $dt = new \DateTime();
+    $end_date = $dt->format('Y-m-d\TH:i:s');
+    $dt->modify('-30 min');
+    $start_date = $dt->format('Y-m-d\TH:i:s');
+    $url_params = '?start_time=' . $start_date . '&end_time=' . $end_date;
+
+    return str_replace('/{url_params}', $url_params, parent::getPath());
   }
 
   /**
