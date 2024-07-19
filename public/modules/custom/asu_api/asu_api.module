@@ -9,6 +9,7 @@ declare(strict_types = 1);
 
 use Drupal\asu_api\Api\BackendApi\Request\GetApartmentRevaluationsRequest;
 use Drupal\asu_api\Api\BackendApi\Request\GetApartmentStatusRequest;
+use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\node\Entity\Node;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -51,12 +52,13 @@ function asu_api_get_apartment_revaluation_cron() {
         // Load node object.
         $node = Node::load(reset($apartment));
         // Set adjusted_right_of_occupancy_payment value.
-        $node->set('field_index_adjusted_right_of_oc', $revaluation['right_of_occupancy_payment_adjustment']);
+        $node->set('field_right_of_occupancy_payment', $revaluation['right_of_occupancy_payment_adjustment']);
         // Set alteration_work_total value.
         $node->set('field_alteration_work', $revaluation['alteration_work_total']);
         // Set field_release_payment value.
         $node->set('field_release_payment', $revaluation['release_payment']);
         // Save node.
+        die('stop');
         $node->save();
       }
     }
@@ -75,7 +77,7 @@ function asu_api_get_apartment_status_request_cron() {
   try {
     /** @var \Drupal\asu_api\Api\BackendApi\BackendApi $api */
     $api = \Drupal::service('asu_api.backendapi');
-    $request = new GetApartmentStatusRequest();
+    $request = new GetApartmentStatusRequest(['start' => $start, 'end'=> $end]);
     /** @var \Drupal\asu_api\Api\BackendApi\Response\GetApartmentStatusResponse $response */
     $response = $api->send($request);
     $apartment_states = $response->getContent();

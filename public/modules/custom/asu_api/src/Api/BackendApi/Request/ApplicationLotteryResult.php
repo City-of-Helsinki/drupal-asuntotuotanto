@@ -28,7 +28,7 @@ class ApplicationLotteryResult extends Request {
   /**
    * {@inheritDoc}
    */
-  public function getPath(): string {
+  public function getPath(array $queryparameters = []): string {
     return str_replace('{project_uuid}', $this->projectUuid, parent::getPath());
   }
 

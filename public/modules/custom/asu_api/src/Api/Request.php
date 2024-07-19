@@ -35,10 +35,13 @@ abstract class Request {
    *
    * For example /prices.
    *
+   * @param array $queryparameters
+   *   Optional query parameters.
+   *
    * @return string
    *   The path.
    */
-  public function getPath(): string {
+  public function getPath(array $queryparameters = []): string {
     if (!static::PATH) {
       throw new \LogicException('Missing path.');
     }

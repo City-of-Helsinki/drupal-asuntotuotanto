@@ -49,7 +49,7 @@ class UpdateUserRequest extends Request {
   /**
    * {@inheritDoc}
    */
-  public function getPath(): string {
+  public function getPath(array $queryparameters = []): string {
     return static::PATH . $this->getBackendProfileId() . '/';
   }
 
