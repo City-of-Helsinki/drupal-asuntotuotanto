@@ -44,11 +44,17 @@ class BatchService {
       $entityService = \Drupal::entityTypeManager();
       /** @var \Drupal\asu_content\Entity\Project $project */
       $project = $entityService->getStorage('node')->load($node->nid);
+      if ($project->nid->value == "7901"){
+        $blaablaa = 'asdf';
+      }
 
       if ($project) {
         // Get project apartment entities.
         /** @var \Drupal\asu_content\Entity\Apartment $apartment */
         foreach ($project->getApartmentEntities() as $apartment) {
+          if ($apartment->nid->value == "7921"){
+            $koiasdfj = 'asfd';
+          }
           $field_alteration_work = NULL;
           $field_index_adjusted_right_of_oc = NULL;
           $field_right_of_occupancy_payment = NULL;
@@ -63,6 +69,7 @@ class BatchService {
           }
 
           // Get index_adjusted_right_of_oc value if that exist and it's not 0€.
+          //@Todo: If the indeksitarkistettu asumisoikeusmaksu (field_index_adjusted_right_of_oc) does not exist, calculate it.
           if (!$apartment->get('field_index_adjusted_right_of_oc')->isEmpty()) {
             $field_index_adjusted_right_of_oc = $apartment->get('field_index_adjusted_right_of_oc')->first()->getValue()['value'];
 
@@ -147,6 +154,25 @@ class BatchService {
           if ($apartment->get('field_haso_fee')->isEmpty() && !$apartment->get('field_release_payment')->isEmpty()) {
             $apartment->set('field_haso_fee', $field_right_of_occupancy_payment);
           }
+
+          // case where field_index_adjusted_right_of_oc are on opposite fields
+          if (!$apartment->get('field_haso_fee')->isEmpty() &&
+            !$apartment->get('field_right_of_occupancy_payment')->isEmpty() &&
+            !$apartment->get('field_index_adjusted_right_of_oc')->isEmpty() &&
+            $apartment->get('field_release_payment')->value == ($apartment->get('field_haso_fee')->first()->getValue()['value'] + $apartment->get('field_index_adjusted_right_of_oc')->first()->getValue()['value'])
+          ) {
+//            $original_field_right_of_occupancy_payment = $apartment->get('field_right_of_occupancy_payment')->first()->getValue()['value'];
+            $original_field_index_adjusted_right_of_oc = $apartment->get('field_index_adjusted_right_of_oc')->first()->getValue()['value'];
+            $field_haso_fee = $apartment->get('field_haso_fee')->first()->getValue()['value'];
+            $field_right_of_occupancy_payment = $original_field_index_adjusted_right_of_oc;
+            $field_index_adjusted_right_of_oc = $field_haso_fee + $field_right_of_occupancy_payment;
+
+
+            $apartment->set('field_index_adjusted_right_of_oc', $field_index_adjusted_right_of_oc);
+            $apartment->set('field_right_of_occupancy_payment', $field_right_of_occupancy_payment);
+//            die('asdf');
+          }
+
           $apartment->save();
         }
 
