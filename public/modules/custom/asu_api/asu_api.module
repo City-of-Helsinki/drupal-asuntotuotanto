@@ -30,12 +30,20 @@ function asu_api_get_apartment_revaluation_cron() {
   $apartment_revaluation = NULL;
 
   try {
-    /** @var \Drupal\asu_api\Api\BackendApi\BackendApi $api */
-    $api = \Drupal::service('asu_api.backendapi');
-    $request = new GetApartmentRevaluationsRequest();
-    /** @var \Drupal\asu_api\Api\BackendApi\Response\GetApartmentRevaluationsResponse $response */
-    $response = $api->send($request);
-    $apartment_revaluation = $response->getContent();
+//    /** @var \Drupal\asu_api\Api\BackendApi\BackendApi $api */
+//    $api = \Drupal::service('asu_api.backendapi');
+//    $request = new GetApartmentRevaluationsRequest();
+//    /** @var \Drupal\asu_api\Api\BackendApi\Response\GetApartmentRevaluationsResponse $response */
+//    $response = $api->send($request);
+//    $apartment_revaluation = $response->getContent();
+    $apartment_revaluation = array(array(
+      "apartment_uuid" => "14aee2da-c27a-4a51-9908-a89161405696",
+      "created_at" => "2022-12-15T13:24:17.380240Z",
+      "updated_at" => "2023-01-04T08:47:12.013913Z",
+      "alteration_work_total" => 777.0,
+      "right_of_occupancy_payment_adjustment" => 1212.0,
+      "release_payment" => 60411.0)
+    );
 
     if (empty($apartment_revaluation)) {
       return;
@@ -58,7 +66,6 @@ function asu_api_get_apartment_revaluation_cron() {
         // Set field_release_payment value.
         $node->set('field_release_payment', $revaluation['release_payment']);
         // Save node.
-        die('stop');
         $node->save();
       }
     }

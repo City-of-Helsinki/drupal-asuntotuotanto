@@ -164,8 +164,9 @@ class BatchService {
 //            $original_field_right_of_occupancy_payment = $apartment->get('field_right_of_occupancy_payment')->first()->getValue()['value'];
             $original_field_index_adjusted_right_of_oc = $apartment->get('field_index_adjusted_right_of_oc')->first()->getValue()['value'];
             $field_haso_fee = $apartment->get('field_haso_fee')->first()->getValue()['value'];
+            $field_alteration_work = $apartment->get('field_alteration_work')->first()->getValue()['value'];
             $field_right_of_occupancy_payment = $original_field_index_adjusted_right_of_oc;
-            $field_index_adjusted_right_of_oc = $field_haso_fee + $field_right_of_occupancy_payment;
+            $field_index_adjusted_right_of_oc = $field_haso_fee + $field_right_of_occupancy_payment + $field_alteration_work;
 
 
             $apartment->set('field_index_adjusted_right_of_oc', $field_index_adjusted_right_of_oc);
