@@ -94,7 +94,7 @@ function asu_api_get_apartment_status_request_cron() {
   // Get apartment uuids.
   $apartment_uuids = array_keys($apartment_states);
 
-  // Get all aparments which state is not sold.
+  // Get all apartments which state is not sold.
   $query = \Drupal::entityTypeManager()->getStorage('node')->getQuery();
   $query->condition('status', 1)
     ->condition('type', 'apartment')
