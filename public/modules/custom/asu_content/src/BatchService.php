@@ -141,12 +141,10 @@ class BatchService {
             $apartment->set('field_haso_fee', $new_field_value);
           }
 
-          /*
-           * In cases where field_right_of_occupancy_payment has gotten the value for
-           * field_index_adjusted_right_of_oc from the API. field_right_of_occupancy_payment
-           * should only be in the thousands and never bigger than the index corrected right of
-           * occupancy.
-           */
+          // In cases where field_right_of_occupancy_payment has gotten the
+          // value for field_index_adjusted_right_of_oc from the API.
+          // field_right_of_occupancy_payment should only be in the
+          // thousands and never bigger than the field_index_adjusted_right_of_oc.
           if (!$apartment->get('field_index_adjusted_right_of_oc')->isEmpty() &&
             ($apartment->get('field_right_of_occupancy_payment')->first()->getValue()['value'] >
               $apartment->get('field_index_adjusted_right_of_oc')->first()->getValue()['value'])
