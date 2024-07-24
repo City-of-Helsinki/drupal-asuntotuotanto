@@ -36,7 +36,7 @@ class BatchService {
   }
 
   /**
-   * Batch process to process occupancy Ppayment.
+   * Batch process to process occupancy payment.
    */
   public static function processConvertOccupancyPayment($id, $nodes, &$context) {
     foreach ($nodes as $node) {
@@ -140,6 +140,28 @@ class BatchService {
           if ($apartment->get('field_haso_fee')->isEmpty() && !$apartment->get('field_release_payment')->isEmpty()) {
             $apartment->set('field_haso_fee', $new_field_value);
           }
+
+          /*
+           * In cases where field_right_of_occupancy_payment has gotten the value for
+           * field_index_adjusted_right_of_oc from the API. field_right_of_occupancy_payment
+           * should only be in the thousands and never bigger than the index corrected right of
+           * occupancy.
+           */
+          if (!$apartment->get('field_index_adjusted_right_of_oc')->isEmpty() &&
+            ($apartment->get('field_right_of_occupancy_payment')->first()->getValue()['value'] >
+              $apartment->get('field_index_adjusted_right_of_oc')->first()->getValue()['value'])
+          ) {
+            $field_haso_fee = $apartment->get('field_haso_fee')->first()->getValue()['value'];
+            $original_index_adjusted_right_of_oc = $apartment->get('field_index_adjusted_right_of_oc')->first()->getValue()['value'];
+            // Use the field_haso_fee for calculating the right value.
+            $corrected_index_adjusted_right_of_oc = $original_index_adjusted_right_of_oc + $field_haso_fee;
+            // Moving the wrongly imported value.
+            $corrected_right_of_occupancy_payment = $original_index_adjusted_right_of_oc;
+
+            $apartment->set('field_index_adjusted_right_of_oc', $corrected_index_adjusted_right_of_oc);
+            $apartment->set('field_right_of_occupancy_payment', $corrected_right_of_occupancy_payment);
+          }
+
           $apartment->save();
         }
 
