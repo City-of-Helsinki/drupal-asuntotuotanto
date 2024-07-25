@@ -51,11 +51,13 @@ function asu_api_get_apartment_revaluation_cron() {
         // Load node object.
         $node = Node::load(reset($apartment));
         // Set adjusted_right_of_occupancy_payment value.
-        $node->set('field_index_adjusted_right_of_oc', $revaluation['right_of_occupancy_payment_adjustment']);
+        $node->set('field_right_of_occupancy_payment', $revaluation['right_of_occupancy_payment_adjustment']);
         // Set alteration_work_total value.
         $node->set('field_alteration_work', $revaluation['alteration_work_total']);
         // Set field_release_payment value.
         $node->set('field_release_payment', $revaluation['release_payment']);
+        // Set field_index_adjusted_right_of_oc value.
+        $node->set('field_index_adjusted_right_of_oc', $revaluation['end_right_of_occupancy_payment']);
         // Save node.
         $node->save();
       }
@@ -91,7 +93,7 @@ function asu_api_get_apartment_status_request_cron() {
   // Get apartment uuids.
   $apartment_uuids = array_keys($apartment_states);
 
-  // Get all aparments which state is not sold.
+  // Get all apartments which state is not sold.
   $query = \Drupal::entityTypeManager()->getStorage('node')->getQuery();
   $query->condition('status', 1)
     ->condition('type', 'apartment')
