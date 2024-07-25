@@ -57,8 +57,8 @@ function asu_api_get_apartment_revaluation_cron() {
         // Set field_release_payment value.
         $node->set('field_release_payment', $revaluation['release_payment']);
         // Set field_index_adjusted_right_of_oc value.
-        // @todo: Once Django gets updated make sure that we use the right field
-        $node->set('field_index_adjusted_right_of_oc', $revaluation['index_adjusted_right_of_oc']);
+        // @todo Once Django gets updated make sure that we use the right field
+        // $node->set('field_index_adjusted_right_of_oc', $revaluation['end_right_of_occupancy_payment']);
         // Save node.
         $node->save();
       }
