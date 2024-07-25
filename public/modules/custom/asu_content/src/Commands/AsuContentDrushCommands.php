@@ -121,8 +121,8 @@ class AsuContentDrushCommands extends DrushCommands {
   #[CLI\Argument(name: 'project_nid', description: 'Optional argument to fix a specific project')]
   #[CLI\Usage(name: 'drush ac-oth', description: 'Convert right_of_occupancy_payment to haso_fee field.')]
   #[CLI\Usage(name: 'drush ac-oth 1234', description: 'Fix fields in the given project.')]
-  public function convertOccupancyToHasofee($project_nid = null): void {
-    // Specific project nid is given
+  public function convertOccupancyToHasofee($project_nid = NULL): void {
+    // Specific project nid is given.
     $properties = [
       'type' => 'project',
       'field_ownership_type' => 14,
@@ -145,7 +145,7 @@ class AsuContentDrushCommands extends DrushCommands {
 
     $query = $this->connection->select('node', 'n');
     $query->leftJoin('node__field_ownership_type', 'o', 'n.nid = o.entity_id');
-    // Single out the given project for the query
+    // Single out the given project for the query.
     if ($project_nid) {
       $query->condition('n.nid', $project_nid);
     }
