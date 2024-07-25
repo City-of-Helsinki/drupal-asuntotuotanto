@@ -118,14 +118,25 @@ class AsuContentDrushCommands extends DrushCommands {
    * @command asu_content:occupancy-to-hasofee
    */
   #[CLI\Command(name: 'asu_content:convertOccupancyToHasofee', aliases: ['ac-oth'])]
+  #[CLI\Argument(name: 'project_nid', description: 'Optional argument to fix a specific project')]
   #[CLI\Usage(name: 'drush ac-oth', description: 'Convert right_of_occupancy_payment to haso_fee field.')]
-  public function convertOccupancyToHasofee() {
+  #[CLI\Usage(name: 'drush ac-oth 1234', description: 'Fix fields in the given project.')]
+  public function convertOccupancyToHasofee($project_nid = null): void {
+    // Specific project nid is given
+    $properties = [
+      'type' => 'project',
+      'field_ownership_type' => 14,
+    ];
+    if ($project_nid) {
+      $properties['nid'] = $project_nid;
+    }
     $projects = $this->entityTypeManager
       ->getStorage('node')
-      ->loadByProperties([
-        'type' => 'project',
-        'field_ownership_type' => 14,
-      ]);
+      ->loadByProperties($properties);
+
+    if (!$projects) {
+      return;
+    }
 
     // Create the operations array for the batch.
     $operations = [];
@@ -134,47 +145,53 @@ class AsuContentDrushCommands extends DrushCommands {
 
     $query = $this->connection->select('node', 'n');
     $query->leftJoin('node__field_ownership_type', 'o', 'n.nid = o.entity_id');
+    // Single out the given project for the query
+    if ($project_nid) {
+      $query->condition('n.nid', $project_nid);
+    }
     $query->condition('n.type', 'project');
     $query->condition('o.field_ownership_type_target_id', 14);
     $query->fields('n', ['nid']);
     $results_count = count($projects);
 
-    if ($results_count > 0) {
-      for ($i = 0; $i < $results_count; $i = $i + 10) {
-        $query->range($i, 10);
-        $results = $query->execute()->fetchAll();
+    if ($results_count === 0) {
+      return;
+    }
 
-        // Prepare the operation. Here we could do other operations on nodes.
-        $this->output()->writeln("Preparing batch: " . $batch_id);
+    for ($i = 0; $i < $results_count; $i = $i + 10) {
+      $query->range($i, 10);
+      $results = $query->execute()->fetchAll();
 
-        $operations[] = [
-          '\Drupal\asu_content\BatchService::processConvertOccupancyPayment',
-          [
-            $batch_id,
-            $results,
-          ],
-        ];
+      // Prepare the operation. Here we could do other operations on nodes.
+      $this->output()->writeln("Preparing batch: " . $batch_id);
 
-        $batch_id++;
-        $num_operations++;
-      }
-
-      // Create the batch.
-      $batch = [
-        'title' => $this->t('Updating @num node aliases', ['@num' => $num_operations]),
-        'operations' => $operations,
-        'finished' => '\Drupal\asu_content\BatchService::processContentAliasUpdateFinished',
+      $operations[] = [
+        '\Drupal\asu_content\BatchService::processConvertOccupancyPayment',
+        [
+          $batch_id,
+          $results,
+        ],
       ];
 
-      // Add batch operations as new batch sets.
-      batch_set($batch);
-
-      // Process the batch sets.
-      drush_backend_batch_process();
-
-      // Show some information.
-      $this->logger()->notice("Batch operations end.");
+      $batch_id++;
+      $num_operations++;
     }
+
+    // Create the batch.
+    $batch = [
+      'title' => $this->t('Updating @num node aliases', ['@num' => $num_operations]),
+      'operations' => $operations,
+      'finished' => '\Drupal\asu_content\BatchService::processContentAliasUpdateFinished',
+    ];
+
+    // Add batch operations as new batch sets.
+    batch_set($batch);
+
+    // Process the batch sets.
+    drush_backend_batch_process();
+
+    // Show some information.
+    $this->logger()->notice("Batch operations end.");
   }
 
 }
