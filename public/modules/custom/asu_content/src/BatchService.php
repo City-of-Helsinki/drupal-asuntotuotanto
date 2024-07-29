@@ -141,7 +141,8 @@ class BatchService {
             if ($new_field_value) {
               $apartment->set('field_haso_fee', $new_field_value);
             }
-            // If the new_field_value gives back null then we can calculate the field_haso_fee from given data.
+            // If the new_field_value gives back null then we can
+            // calculate the field_haso_fee from given data.
             if (!$apartment->get('field_right_of_occupancy_payment')->isEmpty() &&
               !$apartment->get('field_index_adjusted_right_of_oc')->isEmpty() &&
               ($apartment->get('field_right_of_occupancy_payment')->first()->getValue()['value'] <
