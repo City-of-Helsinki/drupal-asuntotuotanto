@@ -138,7 +138,21 @@ class BatchService {
 
           // Set a new HASO fee field value.
           if ($apartment->get('field_haso_fee')->isEmpty() && !$apartment->get('field_release_payment')->isEmpty()) {
-            $apartment->set('field_haso_fee', $new_field_value);
+            if ($new_field_value) {
+              $apartment->set('field_haso_fee', $new_field_value);
+            }
+            // If the new_field_value gives back null then we can calculate the field_haso_fee from given data.
+            if (!$apartment->get('field_right_of_occupancy_payment')->isEmpty() &&
+              !$apartment->get('field_index_adjusted_right_of_oc')->isEmpty() &&
+              ($apartment->get('field_right_of_occupancy_payment')->first()->getValue()['value'] <
+              $apartment->get('field_index_adjusted_right_of_oc')->first()->getValue()['value'])
+            ) {
+              $right_of_occupancy_payment = $apartment->get('field_right_of_occupancy_payment')->first()->getValue()['value'];
+              $index_adjusted_right_of_oc = $apartment->get('field_index_adjusted_right_of_oc')->first()->getValue()['value'];
+              // Calculating the haso_fee.
+              $corrected_haso_fee = $index_adjusted_right_of_oc - $right_of_occupancy_payment;
+              $apartment->set('field_haso_fee', $corrected_haso_fee);
+            }
           }
 
           // In cases where field_right_of_occupancy_payment has gotten the
@@ -161,6 +175,16 @@ class BatchService {
 
             $apartment->set('field_index_adjusted_right_of_oc', $corrected_index_adjusted_right_of_oc);
             $apartment->set('field_right_of_occupancy_payment', $corrected_right_of_occupancy_payment);
+          }
+
+          // In case where haso_fee and right_of_occupancy_payment are the same
+          // null the value of right_of_occupancy_payment.
+          if (!$apartment->get('field_haso_fee')->isEmpty() &&
+            !$apartment->get('field_right_of_occupancy_payment')->isEmpty() &&
+            $apartment->get('field_haso_fee')->first()->getValue()['value'] ==
+            $apartment->get('field_right_of_occupancy_payment')->first()->getValue()['value']
+          ) {
+            $apartment->set('field_right_of_occupancy_payment', NULL);
           }
 
           $apartment->save();
