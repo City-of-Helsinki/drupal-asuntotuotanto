@@ -12,7 +12,7 @@ dependencies:
     - hdbt_admin_tools
     - paragraphs
 _core:
-  default_config_hash: UdB9StYRd1ami-k28GJOyZFqzuZGdc6LZ7CHyx4rNYg
+  default_config_hash: GGLYkRZVxu180g2tXdafXs0O5EMPywt5qwqg2L8YHjg
 id: paragraph.columns.default
 targetEntityType: paragraph
 bundle: columns

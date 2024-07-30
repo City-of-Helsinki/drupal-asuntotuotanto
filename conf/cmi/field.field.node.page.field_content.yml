@@ -25,12 +25,12 @@ dependencies:
   module:
     - entity_reference_revisions
 _core:
-  default_config_hash: G8uqVofIIeSPJSEW4FPnQrwefO2xMZGnwlbcHrbpZ48
+  default_config_hash: 6ObVx71DtZm2Bwbo4phVPA-nauJ8lld2GdbvT9iFIcw
 id: node.page.field_content
 field_name: field_content
 entity_type: node
 bundle: page
-label: 'Upper content region'
+label: 'Ylempi sisältöalue'
 description: ''
 required: false
 translatable: true

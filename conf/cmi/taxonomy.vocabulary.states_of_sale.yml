@@ -2,7 +2,8 @@ uuid: 061d8316-6301-4c24-a7c5-f343b87f0a78
 langcode: en
 status: true
 dependencies: {  }
-name: 'States of sale'
+name: 'Myynnin tila'
 vid: states_of_sale
-description: ''
+description: null
 weight: 0
+new_revision: false

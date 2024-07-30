@@ -6,7 +6,7 @@ dependencies:
     - field.storage.paragraph.field_remote_events
     - paragraphs.paragraphs_type.event_list
 _core:
-  default_config_hash: FDxBxbAJWFx6CgcYVHtJc0CDYvMvy04Xqib_pWDlUhA
+  default_config_hash: MlPqj3UK1sh8Q_ocrr9beEo5ZuLzzeXXDn4QPV5EGbg
 id: paragraph.event_list.field_remote_events
 field_name: field_remote_events
 entity_type: paragraph

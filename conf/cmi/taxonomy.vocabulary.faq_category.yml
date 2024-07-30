@@ -2,7 +2,8 @@ uuid: 03825daa-a4d6-489b-bd2a-5359369e665d
 langcode: en
 status: true
 dependencies: {  }
-name: 'FAQ Category'
+name: 'FAQ Kategoria'
 vid: faq_category
-description: ''
+description: null
 weight: 0
+new_revision: false

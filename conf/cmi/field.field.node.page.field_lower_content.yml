@@ -25,12 +25,12 @@ dependencies:
   module:
     - entity_reference_revisions
 _core:
-  default_config_hash: AejXN443GE3b159k_6fsqDyZ_BHs68SU9wBMY24Ueog
+  default_config_hash: v3n3ZeAjQ22N3kPPeDCIlFFcOuTiJ9F1CB0Gf4HQ6ZI
 id: node.page.field_lower_content
 field_name: field_lower_content
 entity_type: node
 bundle: page
-label: 'Lower content region'
+label: 'Alempi sisältöalue'
 description: ''
 required: false
 translatable: true

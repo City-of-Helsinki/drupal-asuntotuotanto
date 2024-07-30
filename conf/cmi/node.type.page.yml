@@ -24,11 +24,11 @@ third_party_settings:
     unpublish_required: false
     unpublish_revision: false
 _core:
-  default_config_hash: A1XVcWETFW22MWUdDTxkOE331kBoYUWPQILECfHoBfk
-name: 'Standard page'
+  default_config_hash: TxNxs_Yq3TzOPE9lwS4hArqiWBve9F-de3Lm12Hbm9U
+name: Perussivu
 type: page
-description: 'Content type for standard web content.'
-help: ''
+description: 'Sisältötyyppi tavalliselle verkkosisällölle.'
+help: null
 new_revision: true
 preview_mode: 1
 display_submitted: false

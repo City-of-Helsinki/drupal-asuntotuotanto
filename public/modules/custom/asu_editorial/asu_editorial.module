@@ -38,4 +38,5 @@ function asu_editorial_theme() {
  */
 function asu_editorial_helfi_hero_design_alter(array &$designs): void {
   $designs['background-image-with-text-box'] = t('Background image with text box');
+  $designs['split-text-with-wavy-koro'] = t('Split text with wavy koro');
 }

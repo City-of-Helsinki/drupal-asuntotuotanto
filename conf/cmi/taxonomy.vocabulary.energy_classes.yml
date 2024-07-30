@@ -2,7 +2,8 @@ uuid: b9d54013-1b32-4005-b386-cda3f10bc283
 langcode: en
 status: true
 dependencies: {  }
-name: 'Energy classes'
+name: Energialuokat
 vid: energy_classes
-description: ''
+description: null
 weight: 0
+new_revision: false

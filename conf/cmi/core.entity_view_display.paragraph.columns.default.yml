@@ -12,7 +12,7 @@ dependencies:
     - entity_reference_revisions
     - options
 _core:
-  default_config_hash: oQ9EzPJq8Rcj5hcS7lZMEIpr0l8pOXml5eyN7ZD2Zy4
+  default_config_hash: '-AkkL5g2BQxDQbfHFwyk118zIq434wWSUizrqBrWKIQ'
 id: paragraph.columns.default
 targetEntityType: paragraph
 bundle: columns

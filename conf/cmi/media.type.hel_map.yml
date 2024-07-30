@@ -4,9 +4,11 @@ status: true
 dependencies:
   module:
     - helfi_media_map
+_core:
+  default_config_hash: OB5k_X6K68L9iLDiJXdzRy5LAmgVYhkNJjwnQNAQKS4
 id: hel_map
 label: 'Map (kartta.hel.fi, palvelukartta.hel.fi)'
-description: null
+description: 'Media type Map can be used to present interactive maps.'
 source: hel_map
 queue_thumbnail_downloads: false
 new_revision: false

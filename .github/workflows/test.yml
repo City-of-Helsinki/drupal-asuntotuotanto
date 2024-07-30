@@ -1,7 +1,7 @@
 on:
   pull_request:
   push:
-    branches: ['main', 'develop']
+    branches: ['master', 'develop']
 name: CI
 env:
   SYMFONY_DEPRECATIONS_HELPER: disabled
@@ -15,12 +15,12 @@ jobs:
   tests:
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/city-of-helsinki/drupal-php-docker:8.2-alpine
+      image: ghcr.io/city-of-helsinki/drupal-php-docker:8.3-alpine
       options: --hostname app
 
     services:
       db:
-        image: mariadb
+        image: mysql:8
         env:
           MYSQL_USER: drupal
           MYSQL_PASSWORD: drupal
@@ -42,9 +42,11 @@ jobs:
           - 9200:9200
 
     steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 1
+      - uses: actions/checkout@v4
+
+      - name: Set browsertest output folder
+        run: |
+          echo "BROWSERTEST_OUTPUT_DIRECTORY=$GITHUB_WORKSPACE/public/sites/simpletest" >> $GITHUB_ENV
 
       - name: Build project
         run: composer install --no-interaction
@@ -76,10 +78,7 @@ jobs:
       - name: Start services
         run: |
           drush runserver $SIMPLETEST_BASE_URL --dns > /dev/null 2>&1 &
-          chromedriver --port=4444 > /dev/null 2>&1 &
-          # Chromium browser is required to run 'functional-javascript' and
-          # 'existing-site-javascript' tests.
-          chromium-browser --headless --disable-gpu --no-sandbox --remote-debugging-port=9222 &
+
           # Wait for drush server to start.
           for i in {1..5}; do RESPONSE_CODE=$(curl -s -o /dev/null -w "%{http_code}" "$SIMPLETEST_BASE_URL" || true); if [ "$RESPONSE_CODE" -gt "301" ] || [ "$RESPONSE_CODE" -lt "200" ]; then sleep 2; fi; done
 
@@ -87,3 +86,11 @@ jobs:
         run: |
           composer test-php public/modules/custom
           if [ -d "tests/" ]; then composer test-php tests/; else echo "No DTT tests found. Ignoring..."; fi
+
+      - name: Create an artifact from test report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: results
+          path: ${{ env.BROWSERTEST_OUTPUT_DIRECTORY }}
+          retention-days: 1

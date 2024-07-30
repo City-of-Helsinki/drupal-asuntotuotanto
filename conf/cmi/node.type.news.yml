@@ -22,10 +22,10 @@ third_party_settings:
     unpublish_enable: true
     unpublish_required: false
     unpublish_revision: false
-name: News
+name: Uutiset
 type: news
 description: 'Content type for news content with rich editing capabilities.'
-help: ''
+help: null
 new_revision: true
 preview_mode: 0
 display_submitted: false

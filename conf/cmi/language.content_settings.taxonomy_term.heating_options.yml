@@ -12,5 +12,5 @@ third_party_settings:
 id: taxonomy_term.heating_options
 target_entity_type_id: taxonomy_term
 target_bundle: heating_options
-default_langcode: fi
+default_langcode: en
 language_alterable: true

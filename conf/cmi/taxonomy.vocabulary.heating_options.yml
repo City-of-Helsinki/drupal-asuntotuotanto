@@ -2,7 +2,8 @@ uuid: 0ee4d5e1-40b4-4387-a54d-4de1fb8362ff
 langcode: en
 status: true
 dependencies: {  }
-name: 'Heating options'
+name: 'Lämmitys vaihtoehdot'
 vid: heating_options
-description: ''
+description: null
 weight: 0
+new_revision: false

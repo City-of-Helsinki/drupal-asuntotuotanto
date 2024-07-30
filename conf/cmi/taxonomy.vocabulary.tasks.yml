@@ -2,7 +2,8 @@ uuid: 79782167-ce98-4b26-931d-48b368b28218
 langcode: en
 status: true
 dependencies: {  }
-name: Tasks
+name: Tehtävät
 vid: tasks
-description: ''
+description: null
 weight: 0
+new_revision: false

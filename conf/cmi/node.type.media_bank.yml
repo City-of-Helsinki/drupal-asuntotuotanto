@@ -25,7 +25,7 @@ third_party_settings:
 name: 'Media bank'
 type: media_bank
 description: 'Content type for project attachments'
-help: ''
+help: null
 new_revision: false
 preview_mode: 0
 display_submitted: false

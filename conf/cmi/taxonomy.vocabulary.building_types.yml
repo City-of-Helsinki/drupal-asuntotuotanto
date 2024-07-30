@@ -2,7 +2,8 @@ uuid: 5294a958-85dc-4dbb-8c01-26847b68b2df
 langcode: en
 status: true
 dependencies: {  }
-name: 'Building types'
+name: 'Rakennuksen tyyppi'
 vid: building_types
-description: ''
+description: null
 weight: 0
+new_revision: false

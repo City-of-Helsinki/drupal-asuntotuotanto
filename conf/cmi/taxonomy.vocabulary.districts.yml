@@ -2,7 +2,8 @@ uuid: 89f217d8-d60c-46fa-8c55-ea6db0f1887a
 langcode: en
 status: true
 dependencies: {  }
-name: Districts
+name: 'Kaupunginosa / alue'
 vid: districts
-description: ''
+description: null
 weight: 0
+new_revision: false

@@ -11,5 +11,5 @@ page:
   front: /node/126
 admin_compact_mode: false
 weight_select_max: 100
-default_langcode: fi
+default_langcode: en
 mail_notification: ''
