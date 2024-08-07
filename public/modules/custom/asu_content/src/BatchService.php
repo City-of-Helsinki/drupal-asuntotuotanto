@@ -107,13 +107,14 @@ class BatchService {
             !$apartment->get('field_right_of_occupancy_payment')->isEmpty() &&
             !$apartment->get('field_release_payment')->isEmpty() &&
             (!empty($field_alteration_work) ||
-            !empty($field_index_adjusted_right_of_oc))
+              !empty($field_index_adjusted_right_of_oc))
           ) {
             $occupancy_payment = floatval($apartment->get('field_right_of_occupancy_payment')->first()->getValue()['value']);
             $field_release_payment = $apartment->get('field_release_payment')->first()->getValue()['value'];
             $calculate_release_payment = floatval($field_release_payment - $field_index_adjusted_right_of_oc - $field_alteration_work);
+            $epsilon = 0.00001;
 
-            if ($occupancy_payment === $calculate_release_payment) {
+            if (abs($occupancy_payment - $calculate_release_payment) < $epsilon) {
               $new_field_value = $occupancy_payment;
             }
 
@@ -146,7 +147,7 @@ class BatchService {
             if (!$apartment->get('field_right_of_occupancy_payment')->isEmpty() &&
               !$apartment->get('field_index_adjusted_right_of_oc')->isEmpty() &&
               ($apartment->get('field_right_of_occupancy_payment')->first()->getValue()['value'] <
-              $apartment->get('field_index_adjusted_right_of_oc')->first()->getValue()['value'])
+                $apartment->get('field_index_adjusted_right_of_oc')->first()->getValue()['value'])
             ) {
               $right_of_occupancy_payment = $apartment->get('field_right_of_occupancy_payment')->first()->getValue()['value'];
               $index_adjusted_right_of_oc = $apartment->get('field_index_adjusted_right_of_oc')->first()->getValue()['value'];
