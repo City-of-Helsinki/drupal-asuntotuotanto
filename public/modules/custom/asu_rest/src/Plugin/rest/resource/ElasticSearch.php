@@ -153,13 +153,13 @@ class ElasticSearch extends ResourceBase {
         'project_url',
         'project_uuid',
         'release_payment',
+        'right_of_occupancy_payment',
         'title',
         'url',
         'uuid',
         'sales_price',
         'room_count',
         'sales_price',
-        'haso_fee',
       ];
 
       foreach ($resultItems as $item) {
@@ -295,7 +295,7 @@ class ElasticSearch extends ResourceBase {
 
     if ($value = $parameters->get('price')) {
       $field = strtolower($parameters->get('project_ownership_type')) == 'hitas' ?
-        'debt_free_sales_price' : 'field_haso_fee';
+        'debt_free_sales_price' : 'right_of_occupancy_payment';
       $baseConditionGroup->addCondition($field, $value, '<');
     }
   }
