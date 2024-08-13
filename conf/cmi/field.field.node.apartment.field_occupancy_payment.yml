@@ -1,0 +1,23 @@
+uuid: 5a802c13-01f4-473a-989a-fc925842f6cc
+langcode: fi
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_occupancy_payment
+    - node.type.apartment
+id: node.apartment.field_occupancy_payment
+field_name: field_occupancy_payment
+entity_type: node
+bundle: apartment
+label: 'Indeksikorotuksen määrä'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: null
+  max: null
+  prefix: ''
+  suffix: €
+field_type: decimal

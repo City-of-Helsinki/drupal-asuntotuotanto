@@ -1,0 +1,20 @@
+uuid: 2dc5a6e1-690d-48b4-b225-258f3eeb2c76
+langcode: fi
+status: true
+dependencies:
+  module:
+    - node
+id: node.field_occupancy_payment
+field_name: field_occupancy_payment
+entity_type: node
+type: decimal
+settings:
+  precision: 10
+  scale: 2
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false
