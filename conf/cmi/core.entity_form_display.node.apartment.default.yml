@@ -122,10 +122,10 @@ third_party_settings:
         - field_sales_price
         - field_debt_free_sales_price
         - field_release_payment
-        - field_haso_fee
+        - field_right_of_occupancy_payment
         - field_right_of_occupancy_fee
         - field_right_of_occupancy_deposit
-        - field_right_of_occupancy_payment
+        - field_occupancy_payment_adjust
         - field_index_adjusted_right_of_oc
         - field_alteration_work
         - field_loan_share
@@ -342,7 +342,7 @@ content:
     third_party_settings: {  }
   field_occupancy_payment_adjust:
     type: number
-    weight: 59
+    weight: 47
     region: content
     settings:
       placeholder: ''
@@ -407,7 +407,7 @@ content:
     third_party_settings: {  }
   field_right_of_occupancy_payment:
     type: number
-    weight: 47
+    weight: 44
     region: content
     settings:
       placeholder: ''
