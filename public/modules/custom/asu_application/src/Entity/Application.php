@@ -288,6 +288,19 @@ class Application extends EditorialContentEntityBase implements ContentEntityInt
         'settings' => [],
       ]);
 
+    $fields['created_admin'] = BaseFieldDefinition::create('boolean')
+      ->setLabel(t('Created by admin'))
+      ->setDescription(t('A boolean indicating whether application is created by admin.'))
+      ->setDefaultValue(FALSE);
+
+    $fields['created_by'] = BaseFieldDefinition::create('entity_reference')
+      ->setLabel(t('Created by'))
+      ->setDescription(t('The creator ID of author of the application entity.'))
+      ->setSetting('target_type', 'user')
+      ->setSetting('handler', 'default')
+      ->setRequired(TRUE)
+      ->setReadOnly(TRUE);
+
     $fields['created'] = BaseFieldDefinition::create('created')
       ->setLabel(t('Created'))
       ->setDescription(t('The time that the entity was created.'));
@@ -327,6 +340,8 @@ class Application extends EditorialContentEntityBase implements ContentEntityInt
 
     $user = User::load(\Drupal::currentUser()->id());
     if ($user->bundle() == 'sales') {
+      $created_admin = TRUE;
+
       if (\Drupal::request()->get('user_id')) {
         $user_id = \Drupal::request()->get('user_id');
       }
@@ -336,12 +351,15 @@ class Application extends EditorialContentEntityBase implements ContentEntityInt
     }
     else {
       $user_id = $user->id();
+      $created_admin = FALSE;
     }
 
     $values += [
       'uid' => $user_id,
       'project_id' => $project_id,
       'project' => $project_id,
+      'created_admin' => $created_admin,
+      'created_by' => $user->id(),
     ];
 
   }
