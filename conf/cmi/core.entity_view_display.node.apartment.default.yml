@@ -79,7 +79,7 @@ content:
       scale: 2
       prefix_suffix: true
     third_party_settings: {  }
-    weight: 42
+    weight: 43
     region: content
   field_apartment_attachments:
     type: file_default
@@ -296,7 +296,7 @@ content:
       scale: 2
       prefix_suffix: true
     third_party_settings: {  }
-    weight: 41
+    weight: 42
     region: content
   field_kitchen_appliances:
     type: basic_string
@@ -343,7 +343,7 @@ content:
       scale: 2
       prefix_suffix: true
     third_party_settings: {  }
-    weight: 50
+    weight: 41
     region: content
   field_other_fees:
     type: basic_string
@@ -399,7 +399,7 @@ content:
       scale: 2
       prefix_suffix: true
     third_party_settings: {  }
-    weight: 43
+    weight: 44
     region: content
   field_right_of_occupancy_deposit:
     type: number_decimal
@@ -427,7 +427,7 @@ content:
     type: number_decimal
     label: above
     settings:
-      thousand_separator: ''
+      thousand_separator: ' '
       decimal_separator: .
       scale: 2
       prefix_suffix: true
