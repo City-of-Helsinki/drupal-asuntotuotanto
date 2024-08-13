@@ -1,15 +1,15 @@
-uuid: 5a802c13-01f4-473a-989a-fc925842f6cc
-langcode: fi
+uuid: 5ca79bcd-9f9a-4ac0-ad64-360bc66b1cc2
+langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.node.field_occupancy_payment
+    - field.storage.node.field_occupancy_payment_adjust
     - node.type.apartment
-id: node.apartment.field_occupancy_payment
-field_name: field_occupancy_payment
+id: node.apartment.field_occupancy_payment_adjust
+field_name: field_occupancy_payment_adjust
 entity_type: node
 bundle: apartment
-label: 'Indeksikorotuksen määrä'
+label: 'Occupancy payment adjustment'
 description: ''
 required: false
 translatable: false

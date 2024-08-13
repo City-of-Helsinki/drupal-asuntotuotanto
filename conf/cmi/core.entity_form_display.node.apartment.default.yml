@@ -28,7 +28,7 @@ dependencies:
     - field.field.node.apartment.field_living_area
     - field.field.node.apartment.field_loan_share
     - field.field.node.apartment.field_maintenance_fee
-    - field.field.node.apartment.field_occupancy_payment
+    - field.field.node.apartment.field_occupancy_payment_adjust
     - field.field.node.apartment.field_other_fees
     - field.field.node.apartment.field_parking_fee
     - field.field.node.apartment.field_parking_fee_explanation
@@ -340,9 +340,9 @@ content:
     settings:
       placeholder: ''
     third_party_settings: {  }
-  field_occupancy_payment:
+  field_occupancy_payment_adjust:
     type: number
-    weight: 58
+    weight: 59
     region: content
     settings:
       placeholder: ''
