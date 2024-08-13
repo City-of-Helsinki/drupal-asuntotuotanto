@@ -1,6 +1,6 @@
 uuid: 8fb8536e-9148-4a35-b313-e041b377e272
 langcode: en
-status: false
+status: true
 dependencies:
   config:
     - field.storage.node.field_apartment_number
