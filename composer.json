@@ -175,9 +175,9 @@
             "type": "package",
             "package": {
                 "name": "asuntomyynti/react",
-                "version": "1.4.1",
+                "version": "1.4.2",
                 "dist": {
-                    "url": "https://github.com/City-of-Helsinki/asuntomyynti-react/releases/download/v.1.4.1/asuntomyynti-react-1.4.1.zip",
+                    "url": "https://github.com/City-of-Helsinki/asuntomyynti-react/releases/download/v.1.4.2/asuntomyynti-react-1.4.2.zip",
                     "type": "zip"
                 }
             }
