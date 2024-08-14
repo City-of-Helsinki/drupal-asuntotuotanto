@@ -23,13 +23,13 @@ dependencies:
     - field.field.node.apartment.field_has_balcony
     - field.field.node.apartment.field_has_terrace
     - field.field.node.apartment.field_has_yard
-    - field.field.node.apartment.field_haso_fee
     - field.field.node.apartment.field_images
     - field.field.node.apartment.field_index_adjusted_right_of_oc
     - field.field.node.apartment.field_kitchen_appliances
     - field.field.node.apartment.field_living_area
     - field.field.node.apartment.field_loan_share
     - field.field.node.apartment.field_maintenance_fee
+    - field.field.node.apartment.field_occupancy_payment_adjust
     - field.field.node.apartment.field_other_fees
     - field.field.node.apartment.field_parking_fee
     - field.field.node.apartment.field_parking_fee_explanation
@@ -106,7 +106,6 @@ hidden:
   field_has_balcony: true
   field_has_terrace: true
   field_has_yard: true
-  field_haso_fee: true
   field_housing_company_fee: true
   field_housing_manager: true
   field_images: true
@@ -117,6 +116,7 @@ hidden:
   field_main_image: true
   field_maintenance_fee: true
   field_material_choice_dl: true
+  field_occupancy_payment_adjust: true
   field_other_fees: true
   field_parking_fee: true
   field_parking_fee_explanation: true
