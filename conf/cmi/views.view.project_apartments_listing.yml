@@ -831,7 +831,7 @@ display:
           group_type: group
           admin_label: ''
           plugin_id: string
-          operator: not
+          operator: '!='
           value: A0
           group: 1
           exposed: false
