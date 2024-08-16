@@ -31,6 +31,7 @@ jobs:
         run: composer install --no-interaction
 
       - name: Setup drupal and save database dump
+        continue-on-error: true
         run: |
           drush si -y && drush cr
           drush si --existing-config -y
