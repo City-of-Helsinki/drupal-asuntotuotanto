@@ -153,7 +153,7 @@ class AuthService extends SamlService {
 
     $account = $this->externalAuth->load($unique_id, 'samlauth') ?: NULL;
 
-    try{
+    try {
       $this->doLogin($unique_id, $account);
     }
     catch (UserVisibleException $e) {

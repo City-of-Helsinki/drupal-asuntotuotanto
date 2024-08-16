@@ -130,9 +130,9 @@ class AuthController extends SamlController {
    * after authenticating the user.
    *
    * @param bool $force_auth
-   *    (optional) Tell the IdP to force authentication. This should present an
-   *    authentication mechanism to the user even if they are logged in already
-   *    from the IdP's viewpoint. It's up to the IdP to actually implement this.
+   *   (optional) Tell the IdP to force authentication. This should present an
+   *   authentication mechanism to the user even if they are logged in already
+   *   from the IdP's viewpoint. It's up to the IdP to actually implement this.
    *
    * @return \Drupal\Core\Routing\TrustedRedirectResponse
    *   The HTTP response to send back.
