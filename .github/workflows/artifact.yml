@@ -23,7 +23,7 @@ jobs:
           - 3306:3306
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 1
 
@@ -38,7 +38,7 @@ jobs:
           drush sql-dump --result-file=${GITHUB_WORKSPACE}/latest.sql
 
       - name: Upload latest database dump
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v3
         with:
           name: latest.sql
           path: latest.sql
