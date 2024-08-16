@@ -119,3 +119,26 @@ function asu_application_grant_permissions() : void {
 
   helfi_platform_config_grant_permissions($permissions);
 }
+
+/**
+ * Add created admin and created by fields to application.
+ */
+function asu_application_update_9007() : void {
+  $fields['created_admin'] = BaseFieldDefinition::create('boolean')
+    ->setLabel(t('Created by admin'))
+    ->setDescription(t('A boolean indicating whether application is created by admin.'))
+    ->setDefaultValue(FALSE);
+
+  $fields['created_by'] = BaseFieldDefinition::create('entity_reference')
+    ->setLabel(t('Created by'))
+    ->setDescription(t('The creator ID of author of the application entity.'))
+    ->setSetting('target_type', 'user')
+    ->setSetting('handler', 'default')
+    ->setRequired(TRUE)
+    ->setReadOnly(TRUE);
+
+  foreach ($fields as $name => $field) {
+    \Drupal::entityDefinitionUpdateManager()
+      ->installFieldStorageDefinition($name, 'asu_application', 'asu_application', $field);
+  }
+}
