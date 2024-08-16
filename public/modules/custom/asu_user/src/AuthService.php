@@ -152,24 +152,18 @@ class AuthService extends SamlService {
     }
 
     $account = $this->externalAuth->load($unique_id, 'samlauth') ?: NULL;
-    $this->doLogin($unique_id, $account);
 
-    // Remember SAML session values that may be necessary for logout.
-    $auth = $this->getSamlAuth('acs');
-    $values = [
-      'session_index' => $auth->getSessionIndex(),
-      'session_expiration' => $auth->getSessionExpiration(),
-      'name_id' => $auth->getNameId(),
-      'name_id_format' => $auth->getNameIdFormat(),
-    ];
-    foreach ($values as $key => $value) {
-      if (isset($value)) {
-        $this->privateTempStore->set($key, $value);
-      }
-      else {
-        $this->privateTempStore->delete($key);
-      }
+    try{
+      $this->doLogin($unique_id, $account);
     }
+    catch (UserVisibleException $e) {
+      if ($config->get('login_error_keep_session')) {
+        $this->saveSamlSession();
+      }
+      throw $e;
+    }
+
+    $this->saveSamlSession();
 
     return TRUE;
   }

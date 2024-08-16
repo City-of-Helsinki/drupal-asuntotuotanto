@@ -129,20 +129,25 @@ class AuthController extends SamlController {
    * service on the IdP, which should be redirecting back to our ACS endpoint
    * after authenticating the user.
    *
+   * @param bool $force_auth
+   *    (optional) Tell the IdP to force authentication. This should present an
+   *    authentication mechanism to the user even if they are logged in already
+   *    from the IdP's viewpoint. It's up to the IdP to actually implement this.
+   *
    * @return \Drupal\Core\Routing\TrustedRedirectResponse
    *   The HTTP response to send back.
    */
-  public function login() {
-    $function = function () {
+  public function login($force_auth = FALSE) {
+    $function = function () use ($force_auth) {
       global $base_url;
       $config = $this->configFactory->get('samlauth.authentication');
       $return_to = $config->get('login_redirect_url') ?? $base_url . '/user';
 
-      return $this->saml->login($return_to);
+      return $this->saml->login($return_to, [], $force_auth);
     };
     // This response redirects to an external URL in all/common cases. We count
     // on the routing.yml to specify that it's not cacheable.
-    return $this->getShortenedRedirectResponse($function, 'initiating SAML login', '<front>');
+    return $this->getShortenedRedirectResponse($function, $force_auth ? $this->t('initiating SAML login with forced authentication') : $this->t('initiating SAML login'), '<front>');
   }
 
   /**
