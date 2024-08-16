@@ -14,9 +14,9 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 /**
  * Implements hook_install().
  */
-//function asu_application_install() : void {
-//  asu_application_grant_permissions();
-//}
+function asu_application_install() : void {
+  asu_application_grant_permissions();
+}
 
 /**
  * Installs error field to application.
@@ -103,22 +103,22 @@ function asu_application_update_9006() {
 /**
  * Grants required permissions.
  */
-//function asu_application_grant_permissions() : void {
-//  $permissions = [
-//    'admin' => [
-//      'administer applications',
-//    ],
-//    'anonymous' => [
-//      'create application',
-//    ],
-//    'authenticated' => [
-//      'create application',
-//      'view application',
-//    ],
-//  ];
-//
-//  helfi_platform_config_grant_permissions($permissions);
-//}
+function asu_application_grant_permissions() : void {
+  $permissions = [
+    'admin' => [
+      'administer applications',
+    ],
+    'anonymous' => [
+      'create application',
+    ],
+    'authenticated' => [
+      'create application',
+      'view application',
+    ],
+  ];
+
+  helfi_platform_config_grant_permissions($permissions);
+}
 
 /**
  * Add created admin and created by fields to application.
