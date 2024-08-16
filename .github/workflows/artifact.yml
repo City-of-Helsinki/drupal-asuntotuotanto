@@ -13,7 +13,7 @@ jobs:
 
     services:
       db:
-        image: mysql:8
+        image: mariadb
         env:
           MYSQL_USER: drupal
           MYSQL_PASSWORD: drupal
