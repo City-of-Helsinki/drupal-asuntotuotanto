@@ -57,7 +57,7 @@ class CollectReverseEntity {
     EntityTypeManagerInterface $entityTypeManager,
     EntityFieldManagerInterface $entityFieldManager,
     FieldTypePluginManagerInterface $fieldTypeManager,
-    LoggerChannelInterface $logger
+    LoggerChannelInterface $logger,
   ) {
     $this->entityTypeManager = $entityTypeManager;
     $this->entityFieldManager = $entityFieldManager;
