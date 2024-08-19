@@ -5,7 +5,8 @@
  * Contains installation tasks for asu_editorial module.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
+
 use Drupal\Core\Entity\Exception\FieldStorageDefinitionUpdateForbiddenException;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\paragraphs\Entity\Paragraph;

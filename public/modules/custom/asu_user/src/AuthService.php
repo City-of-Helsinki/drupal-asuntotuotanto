@@ -52,7 +52,7 @@ class AuthService extends SamlService {
     MessengerInterface $messenger,
     TranslationInterface $translation,
     BackendApi $backendApi,
-    Connection $database
+    Connection $database,
   ) {
     $this->externalAuth = $external_auth;
     $this->authmap = $authmap;

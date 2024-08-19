@@ -84,7 +84,7 @@ class ResultController extends ControllerBase {
     BackendApi $backendApi,
     EntityRepositoryInterface $entity_repository,
     RequestStack $requestStack,
-    CacheBackendInterface $cache
+    CacheBackendInterface $cache,
   ) {
     $this->entityTypeManager = $entityTypeManager;
     $this->currentUser = $current_user;

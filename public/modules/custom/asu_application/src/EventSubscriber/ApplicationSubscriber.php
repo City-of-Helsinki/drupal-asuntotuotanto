@@ -90,7 +90,7 @@ class ApplicationSubscriber implements EventSubscriberInterface {
     QueueFactory $queueFactory,
     EntityTypeManagerInterface $entity_type_manager,
     ErrorCodeService $error_code_service,
-    LanguageManager $languageManager
+    LanguageManager $languageManager,
   ) {
     $this->logger = $logger;
     $this->backendApi = $backendApi;
