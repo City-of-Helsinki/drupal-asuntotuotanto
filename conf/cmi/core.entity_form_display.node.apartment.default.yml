@@ -22,13 +22,13 @@ dependencies:
     - field.field.node.apartment.field_has_balcony
     - field.field.node.apartment.field_has_terrace
     - field.field.node.apartment.field_has_yard
-    - field.field.node.apartment.field_haso_fee
     - field.field.node.apartment.field_images
     - field.field.node.apartment.field_index_adjusted_right_of_oc
     - field.field.node.apartment.field_kitchen_appliances
     - field.field.node.apartment.field_living_area
     - field.field.node.apartment.field_loan_share
     - field.field.node.apartment.field_maintenance_fee
+    - field.field.node.apartment.field_occupancy_payment_adjust
     - field.field.node.apartment.field_other_fees
     - field.field.node.apartment.field_parking_fee
     - field.field.node.apartment.field_parking_fee_explanation
@@ -122,10 +122,10 @@ third_party_settings:
         - field_sales_price
         - field_debt_free_sales_price
         - field_release_payment
-        - field_haso_fee
+        - field_right_of_occupancy_payment
         - field_right_of_occupancy_fee
         - field_right_of_occupancy_deposit
-        - field_right_of_occupancy_payment
+        - field_occupancy_payment_adjust
         - field_index_adjusted_right_of_oc
         - field_alteration_work
         - field_loan_share
@@ -296,13 +296,6 @@ content:
     settings:
       display_label: true
     third_party_settings: {  }
-  field_haso_fee:
-    type: number
-    weight: 44
-    region: content
-    settings:
-      placeholder: ''
-    third_party_settings: {  }
   field_images:
     type: image_image
     weight: 26
@@ -343,6 +336,13 @@ content:
   field_maintenance_fee:
     type: number
     weight: 52
+    region: content
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+  field_occupancy_payment_adjust:
+    type: number
+    weight: 47
     region: content
     settings:
       placeholder: ''
@@ -407,7 +407,7 @@ content:
     third_party_settings: {  }
   field_right_of_occupancy_payment:
     type: number
-    weight: 47
+    weight: 44
     region: content
     settings:
       placeholder: ''

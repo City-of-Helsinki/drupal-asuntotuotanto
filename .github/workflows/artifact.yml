@@ -5,6 +5,11 @@ on:
   schedule:
     - cron:  '0 0 * * 0'
 name: Build artifacts
+env:
+  APP_ENV: "test"
+  ASU_ELASTICSEARCH_ADDRESS: "http://elastic:9200"
+  ASU_ELASTICSEARCH_USERNAME: "test"
+  ASU_ELASTICSEARCH_PASSWORD: "pass"
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -22,6 +27,18 @@ jobs:
         ports:
           - 3306:3306
 
+      elastic:
+        image: docker.elastic.co/elasticsearch/elasticsearch:7.9.2
+        env:
+          discovery.type: single-node
+        options: >-
+          --health-cmd "curl http://localhost:9200/_cluster/health"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 10
+        ports:
+          - 9200:9200
+
     steps:
       - uses: actions/checkout@v4
 
@@ -29,6 +46,7 @@ jobs:
         run: composer install --no-interaction
 
       - name: Setup drupal and save database dump
+        continue-on-error: true
         run: |
           drush si -y && drush cr
           drush si --existing-config -y
