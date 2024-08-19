@@ -110,7 +110,7 @@ foreach ($routes as $route) {
 
 $settings['config_sync_directory'] = '../conf/cmi';
 $settings['file_public_path'] = getenv('DRUPAL_FILES_PUBLIC') ?: 'sites/default/files';
-$settings['file_private_path'] = getenv('DRUPAL_FILES_PRIVATE') ?: 'sites/default/files/private';
+$settings['file_private_path'] = getenv('DRUPAL_FILES_PRIVATE');
 $settings['file_temp_path'] = getenv('DRUPAL_TMP_PATH') ?: '/tmp';
 
 if ($reverse_proxy_address = getenv('DRUPAL_REVERSE_PROXY_ADDRESS')) {
@@ -151,20 +151,6 @@ if ($blob_storage_name = getenv('AZURE_BLOB_STORAGE_NAME')) {
 }
 
 
-if ($varnish_host = getenv('DRUPAL_VARNISH_HOST')) {
-  $config['varnish_purger.settings.default']['hostname'] = $varnish_host;
-  $config['varnish_purger.settings.varnish_purge_all']['hostname'] = $varnish_host;
-
-  if (!isset($config['system.performance']['cache']['page']['max_age'])) {
-    $config['system.performance']['cache']['page']['max_age'] = 86400;
-  }
-}
-
-if ($varnish_port = getenv('DRUPAL_VARNISH_PORT')) {
-  $config['varnish_purger.settings.default']['port'] = $varnish_port;
-  $config['varnish_purger.settings.varnish_purge_all']['port'] = $varnish_port;
-}
-
 if ($navigation_authentication_key = getenv('DRUPAL_NAVIGATION_API_KEY')) {
   $config['helfi_navigation.api']['key'] = $navigation_authentication_key;
 }
@@ -182,53 +168,91 @@ if ($github_repository = getenv('GITHUB_REPOSITORY')) {
 $config['helfi_api_base.environment_resolver.settings']['environment_name'] = getenv('APP_ENV');
 $config['helfi_api_base.environment_resolver.settings']['project_name'] = getenv('PROJECT_NAME');
 
-// settings.php doesn't know about existing configuration yet so we can't
-// just append new headers to an already existing headers array here.
-// If you have configured any extra headers in your purge settings
-// you must add them in your all.settings.php as well.
-// @todo Replace this with config override service?
-$config['varnish_purger.settings.default']['headers'] = [
-  [
-    'field' => 'Cache-Tags',
-    'value' => '[invalidation:expression]',
-  ],
-];
+if ($varnish_host = getenv('DRUPAL_VARNISH_HOST')) {
+  // Cache everything for 1 year by default.
+  $config['system.performance']['cache']['page']['max_age'] = 31536000;
 
-$config['varnish_purger.settings.varnish_purge_all']['headers'] = [
-  [
-    'field' => 'X-VC-Purge-Method',
-    'value' => 'regex',
-  ],
-];
+  $varnish_backend = parse_url($drush_options_uri, PHP_URL_HOST);
 
-if ($varnish_purge_key = getenv('VARNISH_PURGE_KEY')) {
-  $config['varnish_purger.settings.default']['headers'][] = [
-    'field' => 'X-VC-Purge-Key',
-    'value' => $varnish_purge_key,
+  if (getenv('APP_ENV') === 'local') {
+    // Varnish backend is something like varnish-helfi-kymp.docker.so on
+    // local env.
+    $varnish_backend = 'varnish-' . $varnish_backend;
+  }
+
+  // settings.php doesn't know about existing configuration yet so we can't
+  // just append new headers to an already existing headers array here.
+  // If you have configured any extra headers in your purge settings
+  // you must add them in your all.settings.php as well.
+  // @todo Replace this with config override service?
+  $varnishConfiguration = [
+    'default' => [
+      [
+        'field' => 'Cache-Tags',
+        'value' => '[invalidation:expression]',
+      ],
+    ],
+    'assets' => [
+      [
+        'field' => 'X-VC-Purge-Method',
+        'value' => 'regex',
+      ],
+      [
+        'field' => 'Host',
+        'value' => $varnish_backend,
+      ],
+    ],
+    'varnish_purge_all' => [
+      [
+        'field' => 'X-VC-Purge-Method',
+        'value' => 'regex',
+      ],
+    ],
   ];
-  $config['varnish_purger.settings.varnish_purge_all']['headers'][] = [
-    'field' => 'X-VC-Purge-Key',
-    'value' => $varnish_purge_key,
-  ];
+
+  foreach ($varnishConfiguration as $name => $headers) {
+    $config['varnish_purger.settings.' . $name]['hostname'] = $varnish_host;
+
+    if ($varnish_port = getenv('DRUPAL_VARNISH_PORT')) {
+      $config['varnish_purger.settings.' . $name]['port'] = $varnish_port;
+    }
+
+    foreach ($headers as $header) {
+      $config['varnish_purger.settings.' . $name]['headers'][] = $header;
+    }
+
+    if ($varnish_purge_key = getenv('VARNISH_PURGE_KEY')) {
+      $config['varnish_purger.settings.' . $name]['headers'][] = [
+        'field' => 'X-VC-Purge-Key',
+        'value' => $varnish_purge_key,
+      ];
+    }
+  }
 }
+$stage_file_proxy_origin = getenv('STAGE_FILE_PROXY_ORIGIN');
+$stage_file_proxy_dir = getenv('STAGE_FILE_PROXY_ORIGIN_DIR');
 
-if ($stage_file_proxy_origin = getenv('STAGE_FILE_PROXY_ORIGIN')) {
-  $config['stage_file_proxy.settings']['origin'] = $stage_file_proxy_origin;
-  $config['stage_file_proxy.settings']['origin_dir'] = getenv('STAGE_FILE_PROXY_ORIGIN_DIR') ?: 'test';
+if ($stage_file_proxy_origin || $stage_file_proxy_dir) {
+  $config['stage_file_proxy.settings']['origin'] = $stage_file_proxy_origin ?: 'https://stplattaprod.blob.core.windows.net';
+  $config['stage_file_proxy.settings']['origin_dir'] = $stage_file_proxy_dir;
   $config['stage_file_proxy.settings']['hotlink'] = FALSE;
   $config['stage_file_proxy.settings']['use_imagecache_root'] = FALSE;
 }
 
-// Map API accounts. The value should be a base64 encoded JSON string.
-// @see https://github.com/City-of-Helsinki/drupal-module-helfi-api-base/blob/main/documentation/api-accounts.md.
-if ($api_accounts = getenv('DRUPAL_API_ACCOUNTS')) {
-  $config['helfi_api_base.api_accounts']['accounts'] = json_decode(base64_decode($api_accounts), TRUE);
+if ($drupal_pubsub_vault = getenv('DRUPAL_PUBSUB_VAULT')) {
+  $config['helfi_api_base.api_accounts']['vault'][] = [
+    'id' => 'pubsub',
+    'plugin' => 'json',
+    'data' => trim($drupal_pubsub_vault),
+  ];
 }
 
-// Map vault accounts. The value should be a base64 encoded JSON string.
-// @see https://github.com/City-of-Helsinki/drupal-module-helfi-api-base/blob/main/documentation/api-accounts.md.
-if ($vault_accounts = getenv('DRUPAL_VAULT_ACCOUNTS')) {
-  $config['helfi_api_base.api_accounts']['vault'] = json_decode(base64_decode($vault_accounts), TRUE);
+if ($drupal_navigation_vault = getenv('DRUPAL_NAVIGATION_VAULT')) {
+  $config['helfi_api_base.api_accounts']['vault'][] = [
+    'id' => 'helfi_navigation',
+    'plugin' => 'authorization_token',
+    'data' => trim($drupal_navigation_vault),
+  ];
 }
 
 // Override session suffix when present.
@@ -310,6 +334,11 @@ if (
 
 $settings['is_azure'] = FALSE;
 
+if ($tfa_key = getenv('TFA_ENCRYPTION_KEY')) {
+  $config['key.key.tfa']['key_provider_settings']['key_value'] = $tfa_key;
+  $config['key.key.tfa']['key_provider_settings']['base64_encoded'] = TRUE;
+}
+
 /**
  * Deployment preflight checks.
  *
@@ -353,138 +382,6 @@ if ($env = getenv('APP_ENV')) {
     // phpcs:ignore
     include_once __DIR__ . '/azure.settings.php'; // NOSONAR
   }
-}
-
-if ($env = getenv('APP_ENV')) {
-  $settings['ASU_ELASTICSEARCH_ADDRESS'] = getenv('ASU_ELASTICSEARCH_ADDRESS')  ?? 'http://elastic:9200';
-
-  $settings['ASU_ELASTICSEARCH_USERNAME'] = getenv('ASU_ELASTICSEARCH_USERNAME');
-  $settings['ASU_ELASTICSEARCH_PASSWORD'] = getenv('ASU_ELASTICSEARCH_PASSWORD');
-
-  // Email settings.
-  $config['mailsystem.settings']['defaults']['sender'] = 'symfony_mailer_lite';
-  $config['mailsystem.settings']['defaults']['formatter'] = 'symfony_mailer_lite';
-  $config['mailsystem.settings']['modules']['symfony_mailer_lite']['none']['formatter'] = 'symfony_mailer_lite';
-  $config['mailsystem.settings']['modules']['symfony_mailer_lite']['none']['sender'] = 'symfony_mailer_lite';
-  $config['symfony_mailer_lite.settings']['default_transport'] = 'smtp';
-
-  $settings['ASU_DJANGO_BACKEND_URL'] = getenv('ASU_DJANGO_BACKEND_URL');
-
-  $config['elasticsearch_connector.cluster.asuntotuotanto']['url'] = getenv('ASU_ELASTICSEARCH_ADDRESS') ?? 'http://localhost:9200';
-
-  if ($env === 'dev') {
-    $orbstack = str_contains(php_uname('r'), 'orbstack');
-    $config['elasticsearch_connector.cluster.asuntotuotanto']['url'] = $orbstack ? 'http://elastic.asuntotuotanto.orb.local' : 'http://elastic:9200';
-
-    if ($orbstack) {
-      // Mailer settings.
-      $config['symfony_mailer_lite.symfony_mailer_lite_transport.smtp']['configuration']['host'] = 'host.docker.internal';
-      $config['symfony_mailer_lite.symfony_mailer_lite_transport.smtp']['configuration']['port'] = '1025';
-    }
-  }
-
-  if ($env === 'test') {
-    $config['elasticsearch_connector.cluster.asuntotuotanto']['url'] = 'http://elastic:9200';
-  }
-
-  // Development environment.
-  if ($env === 'development') {
-    $config['elasticsearch_connector.cluster.asuntotuotanto']['options']['use_authentication'] = 1;
-    $config['elasticsearch_connector.cluster.asuntotuotanto']['options']['authentication_type'] = 'Basic';
-    $config['elasticsearch_connector.cluster.asuntotuotanto']['options']['username'] = getenv('ASU_ELASTICSEARCH_USERNAME');
-    $config['elasticsearch_connector.cluster.asuntotuotanto']['options']['password'] = getenv('ASU_ELASTICSEARCH_PASSWORD');
-    $config['elasticsearch_connector.cluster.asuntotuotanto']['options']['rewrite']['rewrite_index'] = 1;
-    $config['elasticsearch_connector.cluster.asuntotuotanto']['options']['rewrite']['index']['prefix'] = 'asuntotuotanto';
-
-
-    $config['elasticsearch_connector.index.apartments']['index_id'] = 'asuntotuotanto_apartment';
-    $config['elasticsearch_connector.index.apartments']['server'] = 'asuntotuotanto';
-    $config['elasticsearch_connector.cluster.asuntotuotanto']['status'] = '1';
-    $config['elasticsearch_connector.cluster.asuntotuotanto']['cluster_id'] = 'asuntotuotanto';
-
-    $config['search_api.server.asuntotuotanto']['backend_config']['scheme'] = 'https';
-    $config['search_api.server.asuntotuotanto']['backend_config']['host'] = getenv('ASU_ELASTICSEARCH_ADDRESS') ? str_replace(['https://', ':443'], '', getenv('ASU_ELASTICSEARCH_ADDRESS')) : '';
-    $config['search_api.server.asuntotuotanto']['backend_config']['port'] = '443';
-
-    $config['raven.settings']['environment'] = 'development';
-
-  }
-
-  // Testing environment.
-  if ($env === 'testing') {
-    $config['elasticsearch_connector.cluster.asuntotuotanto']['options']['use_authentication'] = 1;
-    $config['elasticsearch_connector.cluster.asuntotuotanto']['options']['authentication_type'] = 'Basic';
-    $config['elasticsearch_connector.cluster.asuntotuotanto']['options']['username'] = getenv('ASU_ELASTICSEARCH_USERNAME');
-    $config['elasticsearch_connector.cluster.asuntotuotanto']['options']['password'] = getenv('ASU_ELASTICSEARCH_PASSWORD');
-    $config['elasticsearch_connector.cluster.asuntotuotanto']['options']['rewrite']['rewrite_index'] = 1;
-    $config['elasticsearch_connector.cluster.asuntotuotanto']['options']['rewrite']['index']['prefix'] = 'asuntotuotanto';
-
-
-    $config['elasticsearch_connector.index.apartments']['index_id'] = 'asuntotuotanto_apartment';
-    $config['elasticsearch_connector.index.apartments']['server'] = 'asuntotuotanto';
-    $config['elasticsearch_connector.cluster.asuntotuotanto']['status'] = '1';
-    $config['elasticsearch_connector.cluster.asuntotuotanto']['cluster_id'] = 'asuntotuotanto';
-
-    $config['search_api.server.asuntotuotanto']['backend_config']['scheme'] = 'https';
-    $config['search_api.server.asuntotuotanto']['backend_config']['host'] = getenv('ASU_ELASTICSEARCH_ADDRESS') ? str_replace(['https://', ':443'], '', getenv('ASU_ELASTICSEARCH_ADDRESS')) : '';
-    $config['search_api.server.asuntotuotanto']['backend_config']['port'] = '443';
-
-    $config['raven.settings']['environment'] = 'testing';
-  }
-
-  // Staging environment.
-  if ($env === 'stg') {
-    $config['elasticsearch_connector.cluster.asuntotuotanto']['options']['use_authentication'] = 1;
-    $config['elasticsearch_connector.cluster.asuntotuotanto']['options']['authentication_type'] = 'Basic';
-    $config['elasticsearch_connector.cluster.asuntotuotanto']['options']['username'] = getenv('ASU_ELASTICSEARCH_USERNAME');
-    $config['elasticsearch_connector.cluster.asuntotuotanto']['options']['password'] = getenv('ASU_ELASTICSEARCH_PASSWORD');
-    $config['elasticsearch_connector.cluster.asuntotuotanto']['options']['rewrite']['rewrite_index'] = 1;
-    $config['elasticsearch_connector.cluster.asuntotuotanto']['options']['rewrite']['index']['prefix'] = 'asuntotuotanto';
-
-
-    $config['elasticsearch_connector.index.apartments']['index_id'] = 'asuntotuotanto_apartment';
-    $config['elasticsearch_connector.index.apartments']['server'] = 'asuntotuotanto';
-    $config['elasticsearch_connector.cluster.asuntotuotanto']['status'] = '1';
-    $config['elasticsearch_connector.cluster.asuntotuotanto']['cluster_id'] = 'asuntotuotanto';
-
-    $config['search_api.server.asuntotuotanto']['backend_config']['scheme'] = 'https';
-    $config['search_api.server.asuntotuotanto']['backend_config']['host'] = getenv('ASU_ELASTICSEARCH_ADDRESS') ? str_replace(['https://', ':443'], '', getenv('ASU_ELASTICSEARCH_ADDRESS')) : '';
-    $config['search_api.server.asuntotuotanto']['backend_config']['port'] = '443';
-
-    $config['raven.settings']['environment'] = 'staging';
-  }
-
-  // Production environment.
-  if ($env === 'prod') {
-    $config['elasticsearch_connector.cluster.asuntotuotanto']['options']['use_authentication'] = 1;
-    $config['elasticsearch_connector.cluster.asuntotuotanto']['options']['authentication_type'] = 'Basic';
-    $config['elasticsearch_connector.cluster.asuntotuotanto']['options']['username'] = getenv('ASU_ELASTICSEARCH_USERNAME');
-    $config['elasticsearch_connector.cluster.asuntotuotanto']['options']['password'] = getenv('ASU_ELASTICSEARCH_PASSWORD');
-    $config['elasticsearch_connector.cluster.asuntotuotanto']['options']['rewrite']['rewrite_index'] = 1;
-    $config['elasticsearch_connector.cluster.asuntotuotanto']['options']['rewrite']['index']['prefix'] = 'asuntotuotanto';
-
-
-    $config['elasticsearch_connector.index.apartments']['index_id'] = 'asuntotuotanto_apartment';
-    $config['elasticsearch_connector.index.apartments']['server'] = 'asuntotuotanto';
-    $config['elasticsearch_connector.cluster.asuntotuotanto']['status'] = '1';
-    $config['elasticsearch_connector.cluster.asuntotuotanto']['cluster_id'] = 'asuntotuotanto';
-
-    $config['search_api.server.asuntotuotanto']['backend_config']['scheme'] = 'https';
-    $config['search_api.server.asuntotuotanto']['backend_config']['host'] = getenv('ASU_ELASTICSEARCH_ADDRESS') ? str_replace(['https://', ':443'], '', getenv('ASU_ELASTICSEARCH_ADDRESS')) : '';
-    $config['search_api.server.asuntotuotanto']['backend_config']['port'] = '443';
-
-    $config['raven.settings']['environment'] = 'production';
-  }
-
-  // CI environment.
-  if ($env === 'ci') {
-    $config['search_api.server.asuntotuotanto']['backend_config']['scheme'] = 'https';
-    $config['search_api.server.asuntotuotanto']['backend_config']['host'] = 'localhost';
-    $config['search_api.server.asuntotuotanto']['backend_config']['port'] = '443';
-  }
-
-  // Saml Authentication.
-  include 'saml.settings.php';
 }
 
 /**

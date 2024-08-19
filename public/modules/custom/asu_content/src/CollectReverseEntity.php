@@ -53,7 +53,12 @@ class CollectReverseEntity {
   /**
    * Constructs a StreetAddressField object.
    */
-  public function __construct(EntityTypeManagerInterface $entityTypeManager, EntityFieldManagerInterface $entityFieldManager, FieldTypePluginManagerInterface $fieldTypeManager, LoggerChannelInterface $logger) {
+  public function __construct(
+    EntityTypeManagerInterface $entityTypeManager,
+    EntityFieldManagerInterface $entityFieldManager,
+    FieldTypePluginManagerInterface $fieldTypeManager,
+    LoggerChannelInterface $logger
+  ) {
     $this->entityTypeManager = $entityTypeManager;
     $this->entityFieldManager = $entityFieldManager;
     $this->fieldTypeManager = $fieldTypeManager;
