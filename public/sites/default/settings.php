@@ -476,6 +476,13 @@ if ($env = getenv('APP_ENV')) {
     $config['raven.settings']['environment'] = 'production';
   }
 
+  // CI environment.
+  if ($env === 'ci') {
+    $config['search_api.server.asuntotuotanto']['backend_config']['scheme'] = 'https';
+    $config['search_api.server.asuntotuotanto']['backend_config']['host'] = 'localhost';
+    $config['search_api.server.asuntotuotanto']['backend_config']['port'] = '443';
+  }
+
   // Saml Authentication.
   include 'saml.settings.php';
 }
