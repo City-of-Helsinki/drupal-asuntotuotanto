@@ -5,11 +5,16 @@ on:
   schedule:
     - cron:  '0 0 * * 0'
 name: Build artifacts
+env:
+  APP_ENV: "test"
+  ASU_ELASTICSEARCH_ADDRESS: "http://elastic:9200"
+  ASU_ELASTICSEARCH_USERNAME: "test"
+  ASU_ELASTICSEARCH_PASSWORD: "pass"
 jobs:
   build:
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/city-of-helsinki/drupal-php-docker:8.2-alpine
+      image: ghcr.io/city-of-helsinki/drupal-php-docker:8.3-alpine
 
     services:
       db:
@@ -22,10 +27,20 @@ jobs:
         ports:
           - 3306:3306
 
+    elastic:
+      image: docker.elastic.co/elasticsearch/elasticsearch:7.9.2
+      env:
+        discovery.type: single-node
+      options: >-
+        --health-cmd "curl http://localhost:9200/_cluster/health"
+        --health-interval 10s
+        --health-timeout 5s
+        --health-retries 10
+      ports:
+        - 9200:9200
+
     steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 1
+      - uses: actions/checkout@v4
 
       - name: Build project
         run: composer install --no-interaction
@@ -39,7 +54,7 @@ jobs:
           drush sql-dump --result-file=${GITHUB_WORKSPACE}/latest.sql
 
       - name: Upload latest database dump
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: latest.sql
           path: latest.sql
