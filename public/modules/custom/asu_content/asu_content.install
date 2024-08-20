@@ -238,8 +238,7 @@ function asu_content_update_9007(): void {
 }
 
 /**
- * Warns helfi_global_announcement orphaned entries
- * in the system.schema key/value storage.
+ * Delete helfi_global_announcement system.schema key/value storage.
  */
 function asu_content_update_9008(): void {
   \Drupal::keyValue('system.schema')
