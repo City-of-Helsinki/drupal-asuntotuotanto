@@ -15,7 +15,7 @@ dependencies:
     - options
     - text
 _core:
-  default_config_hash: 1S-v2cW15vF64vx-PC3OHbjsxRvtChTWcgepFJ_tKAw
+  default_config_hash: b7aWqy27zvIiOUxzstnlmUkuXpLDdEBEqfresW9tUz8
 id: paragraph.hero.default
 targetEntityType: paragraph
 bundle: hero
@@ -72,5 +72,4 @@ content:
     weight: 1
     region: content
 hidden:
-  field_hero_bg_color: true
   search_api_excerpt: true
