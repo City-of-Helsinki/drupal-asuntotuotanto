@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f4fd47f11cb8c4ade8386134640ff2f8",
+    "content-hash": "828288f0d49b4bc01ed9fbae026d1bc7",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -5107,16 +5107,16 @@
         },
         {
             "name": "drupal/hdbt",
-            "version": "6.6.4",
+            "version": "6.6.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/City-of-Helsinki/drupal-hdbt.git",
-                "reference": "d8e011aa97b4449d3c7eaca723fff9d2111c6db4"
+                "reference": "2d3d31c00aef4c89402cb4af9f8a234ae1c894aa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/City-of-Helsinki/drupal-hdbt/zipball/d8e011aa97b4449d3c7eaca723fff9d2111c6db4",
-                "reference": "d8e011aa97b4449d3c7eaca723fff9d2111c6db4",
+                "url": "https://api.github.com/repos/City-of-Helsinki/drupal-hdbt/zipball/2d3d31c00aef4c89402cb4af9f8a234ae1c894aa",
+                "reference": "2d3d31c00aef4c89402cb4af9f8a234ae1c894aa",
                 "shasum": ""
             },
             "require": {
@@ -5134,10 +5134,10 @@
                 "Drupal"
             ],
             "support": {
-                "source": "https://github.com/City-of-Helsinki/drupal-hdbt/tree/6.6.4",
+                "source": "https://github.com/City-of-Helsinki/drupal-hdbt/tree/6.6.6",
                 "issues": "https://github.com/City-of-Helsinki/drupal-hdbt/issues"
             },
-            "time": "2024-08-15T08:46:48+00:00"
+            "time": "2024-08-20T08:03:47+00:00"
         },
         {
             "name": "drupal/hdbt_admin",

@@ -140,6 +140,9 @@
                 "Custom patch based on https://www.drupal.org/files/issues/2020-03-03/8.x-7.x-2977537-13-array-vs-scalar_0.patch": "patches/elasticsearch_connector_indexfactory_v3.patch",
                 "https://www.drupal.org/project/elasticsearch_connector/issues/2850749": "https://www.drupal.org/files/issues/2021-12-01/cannot-load-cluster-exception-2850749-10.patch"
             },
+            "drupal/field_group": {
+                "https://www.drupal.org/project/field_group/issues/3395375": "https://www.drupal.org/files/issues/2024-08-06/3395375-6.patch"
+            },
             "drupal/helfi_platform_config": {
                 "Catch exception during hero paragraphs allowed values update": "patches/helfi_platform_config_hero_paragraph_fix.patch"
             },
