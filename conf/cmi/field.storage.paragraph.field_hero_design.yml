@@ -6,34 +6,13 @@ dependencies:
     - options
     - paragraphs
 _core:
-  default_config_hash: qGel2F-fciDzT6Jjy6u0MvZv_ZPV24Q6-q0d42YrxHU
+  default_config_hash: eR5T_645_WpW-B9q71XJWRCi75KL2UKnaqKtqx3gZ3I
 id: paragraph.field_hero_design
 field_name: field_hero_design
 entity_type: paragraph
 type: list_string
 settings:
-  allowed_values:
-    -
-      value: without-image-left
-      label: 'Without image, align left'
-    -
-      value: with-image-right
-      label: 'Image on the right'
-    -
-      value: with-image-left
-      label: 'Image on the left'
-    -
-      value: with-image-bottom
-      label: 'Image on the bottom'
-    -
-      value: diagonal
-      label: Diagonal
-    -
-      value: background-image-with-text-box
-      label: 'Background image with text box'
-    -
-      value: split-text-with-wavy-koro
-      label: 'Split text with wavy koro'
+  allowed_values: {  }
   allowed_values_function: helfi_paragraphs_hero_design_allowed_values
 module: options
 locked: false

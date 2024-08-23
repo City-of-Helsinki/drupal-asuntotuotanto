@@ -18,7 +18,7 @@ class ApplicationEvent extends Event {
     protected $applicationId,
     protected string $projectName,
     protected string $projectUuid,
-    protected Application $application
+    protected Application $application,
   ) {
   }
 

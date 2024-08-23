@@ -4,3 +4,4 @@ escape: true
 dependencies:
   config:
     - node.type.apartment
+new_content_behavior: 1

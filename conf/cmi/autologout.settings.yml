@@ -1,5 +1,6 @@
 _core:
   default_config_hash: j-ZIPT_JseG1aLxuAdzS-NomYUmBK3OUOjP53Pg8uA8
+langcode: en
 timeout: 1800
 max_timeout: 172800
 padding: 20
@@ -8,7 +9,7 @@ role_logout: true
 role_logout_max: false
 redirect_url: /user/login
 no_dialog: false
-message: 'Your session is about to expire. Do you want to reset it?'
+message: 'We are about to log you out for inactivity. If we do, you will lose any unsaved work. Do you need more time?'
 inactivity_message: 'You have been logged out due to inactivity.'
 inactivity_message_type: status
 enforce_admin: false
@@ -21,3 +22,4 @@ disable_buttons: false
 yes_button: ''
 no_button: ''
 whitelisted_ip_addresses: ''
+include_destination: true

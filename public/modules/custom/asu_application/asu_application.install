@@ -5,7 +5,7 @@
  * Application install functions.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 use Drupal\asu_application\Entity\Application;
 use Drupal\Core\Field\BaseFieldDefinition;

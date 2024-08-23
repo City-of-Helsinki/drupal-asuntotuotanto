@@ -33,6 +33,7 @@ permissions:
   - 'restful post mailinglist'
   - 'view application'
   - 'view helfi_announcements external entity'
+  - 'view helfi_surveys external entity'
   - 'view media'
   - 'view paragraph content accordion'
   - 'view paragraph content accordion_item'

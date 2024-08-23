@@ -8,6 +8,8 @@ dependencies:
   enforced:
     config:
       - paragraphs.paragraphs_type.list_of_links
+_core:
+  default_config_hash: 1lEuqH9MsawJsxi8xH5cU7w5X-zaomugzu-hu5i7zGw
 id: paragraph.field_list_of_links_links
 field_name: field_list_of_links_links
 entity_type: paragraph

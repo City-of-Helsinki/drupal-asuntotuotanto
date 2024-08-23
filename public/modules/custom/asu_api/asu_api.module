@@ -5,7 +5,7 @@
  * Contains hooks for ASU API.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 use Drupal\asu_api\Api\BackendApi\Request\GetApartmentRevaluationsRequest;
 use Drupal\asu_api\Api\BackendApi\Request\GetApartmentStatusRequest;

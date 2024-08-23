@@ -77,8 +77,8 @@ module:
   helfi_azure_fs: 0
   helfi_base_content: 0
   helfi_ckeditor: 0
+  helfi_etusivu_entities: 0
   helfi_eu_cookie_compliance: 0
-  helfi_global_announcement: 0
   helfi_image_styles: 0
   helfi_media: 0
   helfi_media_chart: 0
@@ -87,6 +87,7 @@ module:
   helfi_node_announcement: 0
   helfi_node_landing_page: 0
   helfi_node_page: 0
+  helfi_node_survey: 0
   helfi_paragraphs_accordion: 0
   helfi_paragraphs_banner: 0
   helfi_paragraphs_chart: 0
@@ -111,6 +112,7 @@ module:
   helfi_toc: 0
   helfi_tunnistamo: 0
   helfi_user_roles: 0
+  help: 0
   honeypot: 0
   image: 0
   image_style_quality: 0
@@ -141,6 +143,7 @@ module:
   metatag_twitter_cards: 0
   metatag_views: 0
   migrate: 0
+  monolog: 0
   mysql: 0
   nocurrent_pass: 0
   node: 0
@@ -156,6 +159,7 @@ module:
   phpass: 0
   rabbit_hole: 0
   raven: 0
+  readonly_field_widget: 0
   rebuild_cache_access: 0
   redirect: 0
   redirect_404: 0

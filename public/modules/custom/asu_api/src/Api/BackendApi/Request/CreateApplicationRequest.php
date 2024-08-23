@@ -37,7 +37,7 @@ class CreateApplicationRequest extends Request {
   public function __construct(
     UserInterface $sender,
     Application $application,
-    string $projectUuid
+    string $projectUuid,
   ) {
     $this->sender = $sender;
     $this->application = $application;

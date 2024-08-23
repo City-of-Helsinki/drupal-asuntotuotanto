@@ -13,4 +13,4 @@ id: node.project
 target_entity_type_id: node
 target_bundle: project
 default_langcode: fi
-language_alterable: true
+language_alterable: false

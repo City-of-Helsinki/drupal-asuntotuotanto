@@ -5,7 +5,7 @@
  * Contains installation functions for asu content.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -235,4 +235,12 @@ function asu_content_update_9007(): void {
   if (!\Drupal::moduleHandler()->moduleExists('external_entities')) {
     $module_installer->install(['external_entities']);
   }
+}
+
+/**
+ * Delete helfi_global_announcement system.schema key/value storage.
+ */
+function asu_content_update_9008(): void {
+  \Drupal::keyValue('system.schema')
+    ->delete('helfi_global_announcement');
 }

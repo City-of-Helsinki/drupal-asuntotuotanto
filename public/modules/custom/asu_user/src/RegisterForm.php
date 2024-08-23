@@ -43,7 +43,7 @@ class RegisterForm extends TypedRegisterForm {
     LanguageManagerInterface $language_manager,
     EntityTypeBundleInfoInterface $entity_type_bundle_info = NULL,
     TimeInterface $time = NULL,
-    BackendApi $backendApi
+    BackendApi $backendApi,
   ) {
     parent::__construct($entity_repository, $language_manager, $entity_type_bundle_info, $time);
     $this->backendApi = $backendApi;

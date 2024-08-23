@@ -38,7 +38,7 @@ class ApplyTheme implements ThemeNegotiatorInterface {
    */
   public function __construct(
     EntityTypeManagerInterface $entityTypeManager,
-    AccountInterface $current_user
+    AccountInterface $current_user,
   ) {
     $this->entityTypeManager = $entityTypeManager;
     $this->currentUser = $current_user;

@@ -6,13 +6,13 @@ dependencies:
     - field.storage.paragraph.field_event_location
     - paragraphs.paragraphs_type.event_list
 _core:
-  default_config_hash: qn_ofDevCfu_ZKP8n6kRAQFTmy0cRAXNJUvxS6mU-6Q
+  default_config_hash: 7Hs1O1Q80jl_WCj7YdTHGtJJGN_UIzP6FFe1h7EEZ8I
 id: paragraph.event_list.field_event_location
 field_name: field_event_location
 entity_type: paragraph
 bundle: event_list
 label: 'Event location'
-description: 'Show "event location" filter. Do not use at the same time with the "Remote events" filter.'
+description: 'Show "event location" filter. Do not use at the same time with the "Remote events" filter. The API URL field should include all location IDs, otherwise this list will display all active locations.'
 required: false
 translatable: false
 default_value:
