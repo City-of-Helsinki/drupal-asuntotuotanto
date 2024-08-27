@@ -9,6 +9,8 @@ services:
     environment:
       APP_ENV: "${APP_ENV:-dev}"
       DRUPAL_ROUTES: "https://varnish-${DRUPAL_HOSTNAME},https://helfi-proxy.docker.so,http://${COMPOSE_PROJECT_NAME}-varnish"
+      STAGE_FILE_PROXY_ORIGIN: "${STAGE_FILE_PROXY_ORIGIN}"
+      STAGE_FILE_PROXY_ORIGIN_DIR: "${STAGE_FILE_PROXY_ORIGIN_DIR}"
       DRUSH_OPTIONS_URI: "https://${DRUPAL_HOSTNAME}"
       # XDEBUG_ENABLE: "true"
       # DOCKERHOST: host.docker.internal
