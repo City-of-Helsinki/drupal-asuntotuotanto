@@ -404,7 +404,6 @@ if ($env = getenv('APP_ENV')) {
   if ($env === 'dev') {
     $orbstack = str_contains(php_uname('r'), 'orbstack');
     $config['elasticsearch_connector.cluster.asuntotuotanto']['url'] = $orbstack ? 'http://elastic.asuntotuotanto.orb.local' : 'http://elastic:9200';
-    $config['stage_file_proxy.settings']['origin'] = 'https://asuntotuotanto.hel.fi/';
 
     if ($orbstack) {
       // Mailer settings.
@@ -459,7 +458,6 @@ if ($env = getenv('APP_ENV')) {
     $config['search_api.server.asuntotuotanto']['backend_config']['port'] = '443';
 
     $config['raven.settings']['environment'] = 'testing';
-    $config['stage_file_proxy.settings']['origin'] = 'https://asuntotuotanto.hel.fi/';
   }
 
   // Staging environment.
@@ -504,9 +502,6 @@ if ($env = getenv('APP_ENV')) {
     $config['search_api.server.asuntotuotanto']['backend_config']['port'] = '443';
 
     $config['raven.settings']['environment'] = 'production';
-    // Disabling stage_file_proxy on production, with that the module can be enabled even on production
-    $config['stage_file_proxy_origin'] = FALSE;
-    $config['stage_file_proxy_origin_dir'] = FALSE;
   }
 
   // CI environment.
