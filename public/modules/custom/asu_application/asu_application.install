@@ -147,3 +147,35 @@ function asu_application_update_9007() : void {
       ->installFieldStorageDefinition($name, 'asu_application', 'asu_application', $field);
   }
 }
+
+/**
+ * Clear main_applicant and applicant information on application.
+ */
+function asu_application_update_9008() : void {
+  $fields = [
+    'main_applicant__first_name' => NULL,
+    'main_applicant__last_name' => NULL,
+    'main_applicant__date_of_birth' => NULL,
+    'main_applicant__personal_id' => NULL,
+    'main_applicant__address' => NULL,
+    'main_applicant__city' => NULL,
+    'main_applicant__phone' => NULL,
+    'main_applicant__email' => NULL,
+    'applicant__first_name' => NULL,
+    'applicant__last_name' => NULL,
+    'applicant__date_of_birth' => NULL,
+    'applicant__personal_id' => NULL,
+    'applicant__address' => NULL,
+    'applicant__city' => NULL,
+    'applicant__phone' => NULL,
+    'applicant__email' => NULL,
+  ];
+
+  \Drupal::database()
+    ->update('asu_application')
+    ->fields(
+      $fields
+    )
+    ->condition('field_locked', 1)
+    ->execute();
+}

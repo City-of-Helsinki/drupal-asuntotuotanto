@@ -146,6 +146,8 @@ class ApplicationSubscriber implements EventSubscriberInterface {
       $application->set('field_locked', 1);
       $application->set('error', NULL);
       $application->save();
+      // Clean sensitive data from application.
+      $application->cleanSensitiveInformation();
 
       $this->logger->notice(
         'User sent an application to backend successfully'
@@ -252,6 +254,8 @@ class ApplicationSubscriber implements EventSubscriberInterface {
       $application->set('field_locked', 1);
       $application->set('error', NULL);
       $application->save();
+      // Clean sensitive data from application.
+      $application->cleanSensitiveInformation();
 
       $this->messenger()->addStatus($this->t('The application has been submitted successfully.
      You can no longer edit the application.'));

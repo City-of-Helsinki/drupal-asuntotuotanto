@@ -364,4 +364,22 @@ class Application extends EditorialContentEntityBase implements ContentEntityInt
 
   }
 
+  /**
+   * Clean sensitive applicant information from application.
+   */
+  public function cleanSensitiveInformation(): void {
+    if ($this->hasField('main_applicant')) {
+      // Clear main applicant information.
+      $this->set('main_applicant', NULL);
+    }
+
+    if ($this->hasField('applicant')) {
+      // Clear sub applicant information.
+      $this->set('applicant', NULL);
+    }
+
+    // Save application changes.
+    $this->save();
+  }
+
 }
