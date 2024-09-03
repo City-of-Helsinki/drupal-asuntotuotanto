@@ -14,7 +14,7 @@
         "druidfi/omen": "^0.2.0",
         "drupal/api_tools": "^1.0",
         "drupal/auto_entitylabel": "^3.0",
-        "drupal/autologout": "^1.4",
+        "drupal/autologout": "^2.0",
         "drupal/better_exposed_filters": "^6.0.3",
         "drupal/better_passwords": "^2.2",
         "drupal/better_social_sharing_buttons": "^4.0",
@@ -38,6 +38,7 @@
         "drupal/inline_entity_form": "^1.0@RC",
         "drupal/jquery_ui_slider": "^2.0.0",
         "drupal/jquery_ui_touch_punch": "^1.1",
+        "drupal/js_cookie": "^1.0",
         "drupal/key": "^1.17",
         "drupal/login_history": "^2.0@alpha",
         "drupal/mailsystem": "^4.4",
@@ -131,6 +132,9 @@
             ]
         },
         "patches": {
+            "drupal/autologout": {
+                "JS Cookie needs to be enabled automatically when updating": "https://www.drupal.org/files/issues/2024-05-24/multiple_warnings_after_upgrading-3449275-5.patch"
+            },
             "drupal/core": {
                 "https://www.drupal.org/project/drupal/issues/3054641#comment-13385850": "https://www.drupal.org/files/issues/2019-12-10/3054641-14.patch",
                 "Views attachments are not rendered in the specified order [https://www.drupal.org/project/drupal/issues/2943293]": "https://www.drupal.org/files/issues/2019-05-25/2943293-17.patch",
