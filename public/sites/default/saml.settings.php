@@ -40,8 +40,8 @@ $config['samlauth.authentication']['sp_x509_certificate'] = getenv('ASU_SAML_CER
 $config['samlauth.authentication']['sp_entity_id'] = getenv('ASU_SP_ENTITY_ID');
 // Metadata: https://tunnistus.suomi.fi/static/metadata/idp-metadata-tunnistaminen.xml
 // Test metadata https://static.apro.tunnistus.fi/static/metadata/idp-metadata.xml
-$config['samlauth.authentication']['idp_certs'][] = getenv('ASU_IPD_CERT');
-$config['samlauth.authentication']['idp_certs'][] = getenv('ASU_IPD_CERT_2');
+$config['samlauth.authentication']['idp_certs'][] = getenv('ASU_IDP_CERT');
+$config['samlauth.authentication']['idp_certs'][] = getenv('ASU_IDP_CERT_2');
 
 if (getenv('APP_ENV') == 'dev' || getenv('APP_ENV') == 'testing' || getenv('APP_ENV') =='development') {
   // pitää mätsätä idp:n päässä olevan arvon kanssa.
