@@ -113,6 +113,7 @@ class ReservedApartmentContactForm extends FormBase {
     $form['field_date_of_birth'] = [
       '#type' => 'date',
       '#title' => $this->t('Date of birth'),
+      '#date_date_format' => 'dd-mm-yy',
       '#required' => TRUE,
     ];
 
