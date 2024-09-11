@@ -236,7 +236,7 @@ class ApplicationSubscriber implements EventSubscriberInterface {
           $customer->save();
         }
         catch (\Exception $e) {
-          $this->logger('asu_backend_api')->emergency(
+          $this->logger->emergency(
             'Exception while creating user to backend: ' . $e->getMessage()
           );
         }
