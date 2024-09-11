@@ -113,6 +113,7 @@ class MainApplicantWidget extends WidgetBase {
       '#type' => 'date',
       '#title' => $this->t('Date of birth'),
       '#size' => 30,
+      '#date_date_format' => 'dd-mm-yy',
       '#default_value' => $items->getValue()[$delta]['date_of_birth'] ?? $userInformation['date_of_birth'],
       '#required' => TRUE,
     ];
