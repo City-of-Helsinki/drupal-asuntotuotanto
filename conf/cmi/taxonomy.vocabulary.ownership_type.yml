@@ -2,7 +2,8 @@ uuid: f5f8638e-f85f-4a52-9648-be8ba3aeeaae
 langcode: en
 status: true
 dependencies: {  }
-name: 'Ownership type'
+name: 'Asunnon omistusmuoto'
 vid: ownership_type
-description: ''
+description: null
 weight: 0
+new_revision: false

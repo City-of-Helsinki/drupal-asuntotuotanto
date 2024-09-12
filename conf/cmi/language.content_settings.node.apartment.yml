@@ -13,4 +13,4 @@ id: node.apartment
 target_entity_type_id: node
 target_bundle: apartment
 default_langcode: fi
-language_alterable: true
+language_alterable: false

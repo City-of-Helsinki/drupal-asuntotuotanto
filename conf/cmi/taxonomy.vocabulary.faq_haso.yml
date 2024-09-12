@@ -4,5 +4,6 @@ status: true
 dependencies: {  }
 name: 'FAQ Haso'
 vid: faq_haso
-description: ''
+description: null
 weight: 0
+new_revision: false

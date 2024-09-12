@@ -1,0 +1,20 @@
+uuid: 6032e15f-b24d-4f6d-a8dd-d8079bae2f2d
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: node.field_occupancy_payment_adjust
+field_name: field_occupancy_payment_adjust
+entity_type: node
+type: decimal
+settings:
+  precision: 10
+  scale: 2
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

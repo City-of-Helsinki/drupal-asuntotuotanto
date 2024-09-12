@@ -53,7 +53,7 @@ class UploadFileHandler {
   public function __construct(
     EntityTypeManagerInterface $entityTypeManager,
     EntityFieldManagerInterface $entity_field_manager,
-    AccountInterface $current_user
+    AccountInterface $current_user,
   ) {
     $this->entityTypeManager = $entityTypeManager;
     $this->entityFieldManager = $entity_field_manager;

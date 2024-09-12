@@ -12,5 +12,5 @@ third_party_settings:
 id: taxonomy_term.construction_materials
 target_entity_type_id: taxonomy_term
 target_bundle: construction_materials
-default_langcode: fi
+default_langcode: en
 language_alterable: true

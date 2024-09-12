@@ -2,7 +2,8 @@ uuid: bf97eee3-6e93-4ab3-90be-8b5e731c73e2
 langcode: en
 status: true
 dependencies: {  }
-name: 'Apartment state of sale'
+name: 'Huoneiston myynnin tila'
 vid: apartment_state_of_sale
-description: ''
+description: null
 weight: 0
+new_revision: false

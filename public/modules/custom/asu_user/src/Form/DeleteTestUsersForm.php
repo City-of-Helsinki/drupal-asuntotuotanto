@@ -40,7 +40,7 @@ class DeleteTestUsersForm extends FormBase {
   public function buildForm(
     array $form,
     FormStateInterface $form_state,
-    string $id = NULL
+    string $id = NULL,
   ) {
     $form['submit'] = [
       '#type' => 'submit',

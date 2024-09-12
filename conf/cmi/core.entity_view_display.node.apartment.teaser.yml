@@ -29,6 +29,7 @@ dependencies:
     - field.field.node.apartment.field_living_area
     - field.field.node.apartment.field_loan_share
     - field.field.node.apartment.field_maintenance_fee
+    - field.field.node.apartment.field_occupancy_payment_adjust
     - field.field.node.apartment.field_other_fees
     - field.field.node.apartment.field_parking_fee
     - field.field.node.apartment.field_parking_fee_explanation
@@ -115,6 +116,7 @@ hidden:
   field_main_image: true
   field_maintenance_fee: true
   field_material_choice_dl: true
+  field_occupancy_payment_adjust: true
   field_other_fees: true
   field_parking_fee: true
   field_parking_fee_explanation: true

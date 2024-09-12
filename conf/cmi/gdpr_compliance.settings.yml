@@ -1,5 +1,6 @@
 _core:
   default_config_hash: P6YjZQN0wv2MHVDNRVc46Plx_OiZFESe-I78R-ovdVQ
+langcode: en
 from-morelink: /cookie-information-and-settings
 popup-morelink: /cookie-information-and-settings
 popup-text-cookies: ''

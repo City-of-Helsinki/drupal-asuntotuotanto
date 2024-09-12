@@ -14,5 +14,5 @@ _core:
 id: taxonomy_term.keywords
 target_entity_type_id: taxonomy_term
 target_bundle: keywords
-default_langcode: fi
+default_langcode: en
 language_alterable: true

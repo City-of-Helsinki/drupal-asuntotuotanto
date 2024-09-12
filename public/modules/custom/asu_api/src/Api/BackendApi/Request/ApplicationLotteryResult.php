@@ -21,7 +21,7 @@ class ApplicationLotteryResult extends Request {
    *   Project uuid.
    */
   public function __construct(
-    private string $projectUuid
+    private string $projectUuid,
   ) {
   }
 

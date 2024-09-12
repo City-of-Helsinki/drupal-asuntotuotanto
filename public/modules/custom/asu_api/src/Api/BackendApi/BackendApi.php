@@ -197,14 +197,14 @@ class BackendApi {
   /**
    * Handle exceptions thrown by guzzle.
    *
-   * @param \Exception $e
+   * @param \GuzzleHttp\Exception\RequestException $e
    *   The exception.
    * @param \Drupal\asu_api\Api\Request $request
    *   The request.
    *
    * @throws \Drupal\asu_api\Exception\IllegalApplicationException
    */
-  private function handleRequestError(\Exception $e, Request $request) {
+  private function handleRequestError(RequestException $e, Request $request) {
     switch (TRUE) {
       case $e instanceof ServerException:
         $this->handle500($e, $request);

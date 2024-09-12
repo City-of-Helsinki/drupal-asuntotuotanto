@@ -342,7 +342,7 @@ display:
             thousand_separator: ' '
             decimal_separator: ','
             scale: 2
-            prefix_suffix: false
+            prefix_suffix: true
           group_column: value
           group_columns: {  }
           group_rows: true
@@ -405,7 +405,7 @@ display:
           click_sort_column: value
           type: number_decimal
           settings:
-            thousand_separator: ''
+            thousand_separator: ' '
             decimal_separator: .
             scale: 2
             prefix_suffix: true
@@ -556,7 +556,7 @@ display:
           group_type: group
           admin_label: ''
           plugin_id: field
-          label: 'Indeksikorotuksen määrä'
+          label: ''
           exclude: false
           alter:
             alter_text: false
@@ -589,7 +589,7 @@ display:
           element_class: ''
           element_label_type: ''
           element_label_class: ''
-          element_label_colon: true
+          element_label_colon: false
           element_wrapper_type: ''
           element_wrapper_class: ''
           element_default_classes: true
@@ -600,7 +600,7 @@ display:
           click_sort_column: value
           type: number_decimal
           settings:
-            thousand_separator: ''
+            thousand_separator: ' '
             decimal_separator: .
             scale: 2
             prefix_suffix: true
@@ -831,7 +831,7 @@ display:
           group_type: group
           admin_label: ''
           plugin_id: string
-          operator: not
+          operator: '!='
           value: A0
           group: 1
           exposed: false

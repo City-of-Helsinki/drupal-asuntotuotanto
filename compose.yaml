@@ -1,5 +1,3 @@
-version: '3.7'
-
 services:
   app:
     hostname: "${DRUPAL_HOSTNAME}"

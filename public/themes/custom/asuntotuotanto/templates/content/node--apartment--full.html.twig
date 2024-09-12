@@ -89,15 +89,15 @@
 {% set images = content.field_images %}
 {% set floor = content.field_floor.0 %}
 {% set sales_price = content.field_sales_price.0 %}
-{% set adjusted_price = content.field_index_adjusted_right_of_oc.0 %}
+{% set right_of_occupancy_payment = content.field_right_of_occupancy_payment.0 %}
 {% set alteration_price = content.field_alteration_work.0 %}
+{% set adjusted_price = content.field_occupancy_payment_adjust.0 %}
 {% set release_payment = content.field_release_payment.0 %}
 {% set loan_share = content.field_loan_share.0 %}
 {% set debt_free_sales_price = content.field_debt_free_sales_price.0 %}
 {% set apartment_number = content.field_apartment_number.0 %}
 {% set maintenance_fee = content.field_maintenance_fee.0 %}
 {% set right_of_occupancy_fee = content.field_right_of_occupancy_fee.0 %}
-{% set right_of_occupancy_payment = content.field_right_of_occupancy_payment.0 %}
 
 <article{{attributes.addClass(classes)}}>
   <div class="sticky-navigation is-hidden" aria-hidden="true" id="sticky_navigation">
@@ -415,15 +415,14 @@
                     </p>
                   </li>
                 {% endif %}
-                {% if adjusted_price|render and adjusted_price|render != '0,00€' and adjusted_price|render != null %}
-                  <li class="apartment__details-item">
+                {% if adjusted_price|render and adjusted_price|render != '0,00€' and adjusted_price|render != null %}                  <li class="apartment__details-item">
                     <p>
                       <span>{% trans %}Index adjustment{% endtrans %}</span>
                       <span>{{ adjusted_price }}</span>
                     </p>
                   </li>
                 {% endif %}
-                {% if alteration_price|render and alteration_price|render != '0,00€' and alteration_price|render != null %}
+                {% if alteration_price|render and alteration_price|render != '0.00€' and alteration_price|render != null %}
                   <li class="apartment__details-item">
                     <p>
                       <span>{% trans %}Alteration work{% endtrans %}</span>
