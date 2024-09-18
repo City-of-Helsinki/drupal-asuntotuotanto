@@ -12,5 +12,6 @@ services:
       - '@entity_type.manager'
       - '@asu_api.error_code_service'
       - '@language_manager'
+      - '@datetime.time'
     tags:
       - { name: event_subscriber }
