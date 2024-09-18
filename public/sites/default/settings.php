@@ -502,6 +502,8 @@ if ($env = getenv('APP_ENV')) {
     $config['search_api.server.asuntotuotanto']['backend_config']['port'] = '443';
 
     $config['raven.settings']['environment'] = 'production';
+    $config['metatag.metatag_defaults.global']['tags']['robots'] = 'index, follow';
+    $config['helfi_api_base.features']['disable_email_sending'] = FALSE;
   }
 
   // CI environment.
