@@ -1,12 +1,12 @@
 uuid: null
 langcode: en
-status: true
+status: false
 dependencies:
   theme:
     - asu_admin
 id: asu_admin_primary_local_tasks
 theme: asu_admin
-region: header
+region: ''
 weight: -5
 provider: null
 plugin: local_tasks_block
