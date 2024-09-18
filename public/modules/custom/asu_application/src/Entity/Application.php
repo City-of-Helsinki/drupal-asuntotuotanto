@@ -301,6 +301,11 @@ class Application extends EditorialContentEntityBase implements ContentEntityInt
       ->setRequired(TRUE)
       ->setReadOnly(TRUE);
 
+    $fields['create_to_django'] = BaseFieldDefinition::create('datetime')
+      ->setLabel(t('Created to Django'))
+      ->setDescription(t('A datetime value when application is sent to Django.'))
+      ->setReadOnly(TRUE);
+
     $fields['created'] = BaseFieldDefinition::create('created')
       ->setLabel(t('Created'))
       ->setDescription(t('The time that the entity was created.'));
@@ -360,6 +365,7 @@ class Application extends EditorialContentEntityBase implements ContentEntityInt
       'project' => $project_id,
       'created_admin' => $created_admin,
       'created_by' => $user->id(),
+      'create_to_django' => NULL,
     ];
 
   }

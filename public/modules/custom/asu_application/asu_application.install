@@ -149,9 +149,24 @@ function asu_application_update_9007() : void {
 }
 
 /**
- * Clear main_applicant and applicant information on application.
+ * Add created to Django field to application.
  */
 function asu_application_update_9008() : void {
+  $fields['create_to_django'] = BaseFieldDefinition::create('datetime')
+    ->setLabel(t('Created to Django'))
+    ->setDescription(t('A datetime value when application is sent to Django.'))
+    ->setDefaultValue(FALSE);
+
+  foreach ($fields as $name => $field) {
+    \Drupal::entityDefinitionUpdateManager()
+      ->installFieldStorageDefinition($name, 'asu_application', 'asu_application', $field);
+  }
+}
+
+/**
+ * Clear main_applicant and applicant information on application.
+ */
+function asu_application_update_9009() : void {
   $fields = [
     'main_applicant__first_name' => NULL,
     'main_applicant__last_name' => NULL,

@@ -145,6 +145,7 @@ class ApplicationSubscriber implements EventSubscriberInterface {
 
       $application->set('field_locked', 1);
       $application->set('error', NULL);
+      $application->set('create_to_django', \Drupal::time()->getCurrentTime());
       $application->save();
       // Clean sensitive data from application.
       $application->cleanSensitiveInformation();
@@ -238,7 +239,7 @@ class ApplicationSubscriber implements EventSubscriberInterface {
           $customer->save();
         }
         catch (\Exception $e) {
-          $this->logger('asu_backend_api')->emergency(
+          $this->logger->emergency(
             'Exception while creating user to backend: ' . $e->getMessage()
           );
         }
@@ -253,6 +254,7 @@ class ApplicationSubscriber implements EventSubscriberInterface {
 
       $application->set('field_locked', 1);
       $application->set('error', NULL);
+      $application->set('create_to_django', \Drupal::time()->getCurrentTime());
       $application->save();
       // Clean sensitive data from application.
       $application->cleanSensitiveInformation();

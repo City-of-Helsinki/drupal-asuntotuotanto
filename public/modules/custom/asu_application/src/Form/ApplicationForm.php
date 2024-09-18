@@ -251,6 +251,8 @@ class ApplicationForm extends ContentEntityForm {
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
     $formValues = $form_state->cleanValues()->getValues();
+
+    // Main applicant fields.
     foreach ($formValues['main_applicant'][0] as $field => $value) {
       if (empty($value) || $value == '-' || strlen($value) < 2) {
         $fieldTitle = (string) $form["main_applicant"]['widget'][0][$field]['#title'];
@@ -266,6 +268,11 @@ class ApplicationForm extends ContentEntityForm {
         $fieldTitle = (string) $form["main_applicant"]['widget'][0][$field]['#title'];
         $form_state->setErrorByName($field, $this->t('Check @field', ['@field' => $fieldTitle]));
       }
+
+      if ($field == 'postal_code' && (!is_int($value) || strlen($value) != 5)) {
+        $fieldTitle = (string) $form["main_applicant"]['widget'][0][$field]['#title'];
+        $form_state->setErrorByName($field, $this->t('Check @field', ['@field' => $fieldTitle]));
+      }
     }
 
     if (count($formValues['apartment']) <= 1 && isset($formValues['apartment'][0])) {
@@ -276,6 +283,7 @@ class ApplicationForm extends ContentEntityForm {
 
     $has_additional_applicant = (!empty($formValues['applicant'][0]['has_additional_applicant'])) ? (bool) $formValues['applicant'][0]['has_additional_applicant'] : FALSE;
 
+    // Additional applicant fields.
     if ($has_additional_applicant) {
       foreach ($formValues['applicant'][0] as $applicant_field => $applicant_value) {
         if ($applicant_field == 'has_additional_applicant') {
@@ -291,7 +299,18 @@ class ApplicationForm extends ContentEntityForm {
           $fieldTitle = (string) $form["applicant"]['widget'][0][$applicant_field]['#title'];
           $form_state->setErrorByName($applicant_field, $this->t('Field @field cannot be empty', ['@field' => $fieldTitle]));
         }
+
+        if ($applicant_field == 'postal_code' && (!is_int($applicant_value) || strlen($applicant_value) != 5)) {
+          $fieldTitle = (string) $form["main_applicant"]['widget'][0][$applicant_field]['#title'];
+          $form_state->setErrorByName($applicant_field, $this->t('Check @field', ['@field' => $fieldTitle]));
+        }
       }
+    }
+
+    // Residence number check.
+    if (!is_int($formValues['field_right_of_residence_number'])) {
+      $fieldTitle = (string) $form["field_right_of_residence_number"]['widget'][0]['#title'];
+      $form_state->setErrorByName($applicant_field, $this->t('Check @field', ['@field' => $fieldTitle]));
     }
 
     $triggerName = $form_state->getTriggeringElement()['#name'];
