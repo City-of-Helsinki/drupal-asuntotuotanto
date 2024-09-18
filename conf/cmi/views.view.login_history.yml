@@ -1,4 +1,5 @@
 uuid: 47823646-4ba1-405a-ba16-41fbc1d9cb10
+langcode: en
 status: true
 dependencies:
   module:
@@ -248,6 +249,7 @@ display:
         type: full
         options:
           offset: 0
+          pagination_heading_level: h4
           items_per_page: 50
           total_pages: null
           id: 0
