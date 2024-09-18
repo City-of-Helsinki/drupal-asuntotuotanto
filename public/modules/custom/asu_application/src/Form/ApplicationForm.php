@@ -269,7 +269,7 @@ class ApplicationForm extends ContentEntityForm {
         $form_state->setErrorByName($field, $this->t('Check @field', ['@field' => $fieldTitle]));
       }
 
-      if ($field == 'postal_code' && (!is_int($value) || strlen($value) != 5)) {
+      if ($field == 'postal_code' && (!is_numeric($value) || strlen($value) != 5)) {
         $fieldTitle = (string) $form["main_applicant"]['widget'][0][$field]['#title'];
         $form_state->setErrorByName($field, $this->t('Check @field', ['@field' => $fieldTitle]));
       }
@@ -300,7 +300,7 @@ class ApplicationForm extends ContentEntityForm {
           $form_state->setErrorByName($applicant_field, $this->t('Field @field cannot be empty', ['@field' => $fieldTitle]));
         }
 
-        if ($applicant_field == 'postal_code' && (!is_int($applicant_value) || strlen($applicant_value) != 5)) {
+        if ($applicant_field == 'postal_code' && (!is_numeric($applicant_value) || strlen($applicant_value) != 5)) {
           $fieldTitle = (string) $form["main_applicant"]['widget'][0][$applicant_field]['#title'];
           $form_state->setErrorByName($applicant_field, $this->t('Check @field', ['@field' => $fieldTitle]));
         }
@@ -308,7 +308,7 @@ class ApplicationForm extends ContentEntityForm {
     }
 
     // Residence number check.
-    if (!is_int($formValues['field_right_of_residence_number'])) {
+    if (isset($formValues['field_right_of_residence_number'][0]) && !is_numeric($formValues['field_right_of_residence_number'][0]['value'])) {
       $fieldTitle = (string) $form["field_right_of_residence_number"]['widget'][0]['#title'];
       $form_state->setErrorByName($applicant_field, $this->t('Check @field', ['@field' => $fieldTitle]));
     }
