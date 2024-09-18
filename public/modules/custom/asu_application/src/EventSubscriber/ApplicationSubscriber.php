@@ -145,6 +145,7 @@ class ApplicationSubscriber implements EventSubscriberInterface {
 
       $application->set('field_locked', 1);
       $application->set('error', NULL);
+      $application->set('create_to_django', \Drupal::time()->getCurrentTime());
       $application->save();
 
       $this->logger->notice(
@@ -251,6 +252,7 @@ class ApplicationSubscriber implements EventSubscriberInterface {
 
       $application->set('field_locked', 1);
       $application->set('error', NULL);
+      $application->set('create_to_django', \Drupal::time()->getCurrentTime());
       $application->save();
 
       $this->messenger()->addStatus($this->t('The application has been submitted successfully.
