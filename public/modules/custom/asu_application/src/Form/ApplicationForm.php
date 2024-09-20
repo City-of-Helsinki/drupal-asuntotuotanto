@@ -308,7 +308,9 @@ class ApplicationForm extends ContentEntityForm {
     }
 
     // Residence number check.
-    if (isset($formValues['field_right_of_residence_number'][0]) && !is_numeric($formValues['field_right_of_residence_number'][0]['value'])) {
+    if (isset($formValues['field_right_of_residence_number'][0]) &&
+      !is_numeric($formValues['field_right_of_residence_number'][0]['value']) ||
+      (int) $formValues['field_right_of_residence_number'][0]['value'] > 2147483647) {
       $fieldTitle = (string) $form["field_right_of_residence_number"]['widget'][0]['#title'];
       $form_state->setErrorByName($applicant_field, $this->t('Check @field', ['@field' => $fieldTitle]));
     }
