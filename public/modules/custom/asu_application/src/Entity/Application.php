@@ -301,6 +301,11 @@ class Application extends EditorialContentEntityBase implements ContentEntityInt
       ->setRequired(TRUE)
       ->setReadOnly(TRUE);
 
+    $fields['create_to_django'] = BaseFieldDefinition::create('datetime')
+      ->setLabel(t('Created to Django'))
+      ->setDescription(t('A datetime value when application is sent to Django.'))
+      ->setReadOnly(TRUE);
+
     $fields['created'] = BaseFieldDefinition::create('created')
       ->setLabel(t('Created'))
       ->setDescription(t('The time that the entity was created.'));
@@ -360,8 +365,27 @@ class Application extends EditorialContentEntityBase implements ContentEntityInt
       'project' => $project_id,
       'created_admin' => $created_admin,
       'created_by' => $user->id(),
+      'create_to_django' => NULL,
     ];
 
+  }
+
+  /**
+   * Clean sensitive applicant information from application.
+   */
+  public function cleanSensitiveInformation(): void {
+    if ($this->hasField('main_applicant')) {
+      // Clear main applicant information.
+      $this->set('main_applicant', NULL);
+    }
+
+    if ($this->hasField('applicant')) {
+      // Clear sub applicant information.
+      $this->set('applicant', NULL);
+    }
+
+    // Save application changes.
+    $this->save();
   }
 
 }

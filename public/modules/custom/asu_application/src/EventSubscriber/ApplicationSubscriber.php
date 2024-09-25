@@ -10,6 +10,7 @@ use Drupal\asu_api\ErrorCodeService;
 use Drupal\asu_api\Exception\IllegalApplicationException;
 use Drupal\asu_application\Event\ApplicationEvent;
 use Drupal\asu_application\Event\SalesApplicationEvent;
+use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Language\LanguageManager;
 use Drupal\Core\Messenger\MessengerTrait;
@@ -69,6 +70,13 @@ class ApplicationSubscriber implements EventSubscriberInterface {
   protected $languageManager;
 
   /**
+   * The datetime.time service.
+   *
+   * @var \Drupal\Component\Datetime\TimeInterface
+   */
+  protected $timeService;
+
+  /**
    * Constructor.
    *
    * @param \Psr\Log\LoggerInterface $logger
@@ -83,6 +91,8 @@ class ApplicationSubscriber implements EventSubscriberInterface {
    *   Asu error service.
    * @param \Drupal\Core\Language\LanguageManager $languageManager
    *   Language manager.
+   * @param \Drupal\Component\Datetime\TimeInterface $time_service
+   *   The datetime.time service.
    */
   public function __construct(
     LoggerInterface $logger,
@@ -91,6 +101,7 @@ class ApplicationSubscriber implements EventSubscriberInterface {
     EntityTypeManagerInterface $entity_type_manager,
     ErrorCodeService $error_code_service,
     LanguageManager $languageManager,
+    TimeInterface $time_service,
   ) {
     $this->logger = $logger;
     $this->backendApi = $backendApi;
@@ -98,6 +109,7 @@ class ApplicationSubscriber implements EventSubscriberInterface {
     $this->entityTypeManager = $entity_type_manager;
     $this->errorCodeService = $error_code_service;
     $this->languageManager = $languageManager;
+    $this->timeService = $time_service;
   }
 
   /**
@@ -145,7 +157,10 @@ class ApplicationSubscriber implements EventSubscriberInterface {
 
       $application->set('field_locked', 1);
       $application->set('error', NULL);
+      $application->set('create_to_django', $this->timeService->getRequestTime());
       $application->save();
+      // Clean sensitive data from application.
+      $application->cleanSensitiveInformation();
 
       $this->logger->notice(
         'User sent an application to backend successfully'
@@ -236,7 +251,7 @@ class ApplicationSubscriber implements EventSubscriberInterface {
           $customer->save();
         }
         catch (\Exception $e) {
-          $this->logger('asu_backend_api')->emergency(
+          $this->logger->emergency(
             'Exception while creating user to backend: ' . $e->getMessage()
           );
         }
@@ -251,7 +266,10 @@ class ApplicationSubscriber implements EventSubscriberInterface {
 
       $application->set('field_locked', 1);
       $application->set('error', NULL);
+      $application->set('create_to_django', $this->timeService->getRequestTime());
       $application->save();
+      // Clean sensitive data from application.
+      $application->cleanSensitiveInformation();
 
       $this->messenger()->addStatus($this->t('The application has been submitted successfully.
      You can no longer edit the application.'));

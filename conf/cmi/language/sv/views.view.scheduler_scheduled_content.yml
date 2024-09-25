@@ -1,4 +1,4 @@
-label: 'Scheduled content'
+label: 'Schemalagt innehåll'
 display:
   default:
     display_options:
@@ -12,10 +12,10 @@ display:
       pager:
         options:
           tags:
-            previous: '‹ previous'
-            next: 'next ›'
-            first: '« first'
-            last: 'last »'
+            previous: '‹ föregående'
+            next: 'nästa ›'
+            first: '« första'
+            last: 'sista »'
       fields:
         node_bulk_form:
           action_title: Åtgärd
@@ -62,7 +62,10 @@ display:
         langcode:
           expose:
             label: Språk
-      title: 'Scheduled Content'
+      title: 'Schemalagt innehåll'
+      empty:
+        area_text_custom:
+          content: 'Inget schemalagt innehåll.'
     display_title: Förvald
   overview:
     display_options:
@@ -70,7 +73,7 @@ display:
         title: Schemalagd
       tab_options:
         title: Innehåll
-    display_title: 'Content Overview'
+    display_title: Innehållsöversikt
   user_page:
     display_options:
       menu:
@@ -81,3 +84,4 @@ display:
         uid:
           exception:
             title: Alla
+description: 'Hitta och hantera schemalagt innehåll.'

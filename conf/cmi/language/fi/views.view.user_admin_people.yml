@@ -14,13 +14,15 @@ display:
           label: Tila
           settings:
             format_custom_false: Suljettu
-            format_custom_true: Aktiivinen
+            format_custom_true: Voimassa
         roles_target_id:
           label: Käyttäjäroolit
         created:
           label: 'Käyttäjä jo'
         access:
           label: 'Viimeksi paikalla'
+          settings:
+            past_format: '@interval sitten'
         operations:
           label: Toimenpiteet
         mail:
@@ -55,7 +57,7 @@ display:
             label: Tila
             group_items:
               1:
-                title: Aktiivinen
+                title: Voimassa
               2:
                 title: Suljettu
         roles_target_id:
