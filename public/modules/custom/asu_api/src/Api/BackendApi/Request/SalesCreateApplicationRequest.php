@@ -2,27 +2,14 @@
 
 namespace Drupal\asu_api\Api\BackendApi\Request;
 
-use Drupal\asu_api\Api\BackendApi\Response\SalesCreateApplicationResponse;
-use Drupal\asu_api\Api\Request;
 use Drupal\asu_application\Entity\Application;
-use Drupal\node\Entity\Node;
 use Drupal\user\UserInterface;
-use Psr\Http\Message\ResponseInterface;
 
 /**
  * A request to create an application.
  */
-class SalesCreateApplicationRequest extends Request {
+class SalesCreateApplicationRequest extends CreateApplicationRequest {
   protected const PATH = '/v1/sales/applications/';
-  protected const METHOD = 'POST';
-  protected const AUTHENTICATED = TRUE;
-
-  /**
-   * Application object.
-   *
-   * @var Drupal\asu_application\Entity\Application
-   */
-  private Application $application;
 
   /**
    * Project uuid.
@@ -59,7 +46,7 @@ class SalesCreateApplicationRequest extends Request {
       'profile' => $owner->uuid(),
       'application_uuid' => $this->application->uuid(),
       'application_type' => $this->application->bundle(),
-      'ssn_suffix' => $this->application->main_applicant[0]->personal_id,
+      'applicant' => $this->getMainApplicant(),
       'has_children' => $this->application->getHasChildren(),
       'additional_applicant' => $this->getAdditionalApplicant(),
       'right_of_residence' => NULL,
@@ -84,60 +71,6 @@ class SalesCreateApplicationRequest extends Request {
     }
 
     return $values;
-  }
-
-  /**
-   * Get apartments.
-   *
-   * @return array
-   *   Array of apartments.
-   */
-  private function getApartments() {
-    $apartments = [];
-    foreach ($this->application->getApartments()->getValue() as $key => $value) {
-      if (isset($value['id'])) {
-        $apartmentUuid = Node::load($value['id'])->uuid();
-        $apartments[$key] = [
-          'priority' => $key + 1,
-          'identifier' => $apartmentUuid,
-        ];
-      }
-    }
-    if (empty($apartments)) {
-      throw new \InvalidArgumentException('Application apartments cannot be empty.');
-    }
-    return $apartments;
-  }
-
-  /**
-   * Get primary applicant.
-   *
-   * @return array
-   *   Applicant information.
-   */
-  private function getAdditionalApplicant() {
-    if (!$this->application->hasAdditionalApplicant()) {
-      return NULL;
-    }
-    $applicant = $this->application->getAdditionalApplicants()[0];
-    return [
-      'first_name' => $applicant['first_name'],
-      'last_name' => $applicant['last_name'],
-      'email' => $applicant['email'],
-      'phone_number' => $applicant['phone'],
-      'street_address' => $applicant['address'],
-      'city' => $applicant['city'],
-      'postal_code' => $applicant['postal_code'],
-      'date_of_birth' => $applicant['date_of_birth'],
-      'ssn_suffix' => $applicant['personal_id'],
-    ];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getResponse(ResponseInterface $response): SalesCreateApplicationResponse {
-    return SalesCreateApplicationResponse::createFromHttpResponse($response);
   }
 
 }
