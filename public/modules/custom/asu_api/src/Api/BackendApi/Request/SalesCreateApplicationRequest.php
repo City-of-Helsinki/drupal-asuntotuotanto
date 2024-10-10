@@ -2,12 +2,8 @@
 
 namespace Drupal\asu_api\Api\BackendApi\Request;
 
-use Drupal\asu_api\Api\BackendApi\Response\SalesCreateApplicationResponse;
-use Drupal\asu_api\Api\Request;
 use Drupal\asu_application\Entity\Application;
-use Drupal\node\Entity\Node;
 use Drupal\user\UserInterface;
-use Psr\Http\Message\ResponseInterface;
 
 /**
  * A request to create an application.
