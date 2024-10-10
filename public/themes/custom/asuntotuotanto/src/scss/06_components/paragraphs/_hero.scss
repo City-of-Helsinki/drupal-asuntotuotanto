@@ -89,6 +89,10 @@ line-height: $lineheight-m;
     overflow: hidden;
     position: relative;
 
+    img {
+      max-width: 100%;
+    }
+
     @media screen and (min-width: $breakpoint-xs) {
       height: 300px;
     }
