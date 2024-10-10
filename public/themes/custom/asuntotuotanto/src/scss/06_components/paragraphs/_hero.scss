@@ -89,10 +89,6 @@ line-height: $lineheight-m;
     overflow: hidden;
     position: relative;
 
-    img {
-      max-width: 100%;
-    }
-
     @media screen and (min-width: $breakpoint-xs) {
       height: 300px;
     }
@@ -235,4 +231,9 @@ line-height: $lineheight-xl; // Was 27px.
       margin-bottom: -2px !important;
     }
   }
+}
+
+.hero__image-container img {
+  max-width: 100%;
+  height: auto;
 }
