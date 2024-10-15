@@ -913,15 +913,15 @@ function format_date_to_unix_timestamp($string) {
  */
 function get_apartment_application_status($application_status) {
   $application_status_mapping = [
-    "NONE" => t('Few applicants'),
-    "LOW" => t('Few applicants'),
-    "MEDIUM" => t('A little applicants'),
-    "HIGH" => t('A lot of applicants'),
+    "none" => t('Few applicants'),
+    "low" => t('Few applicants'),
+    "medium" => t('A little applicants'),
+    "high" => t('A lot of applicants'),
   ];
 
   return [
     "status" => strtolower($application_status),
-    "label" => $application_status_mapping[$application_status],
+    "label" => $application_status_mapping[strtolower($application_status)],
   ];
 }
 
