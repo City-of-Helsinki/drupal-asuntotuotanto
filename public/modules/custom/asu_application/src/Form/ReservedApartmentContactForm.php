@@ -68,10 +68,11 @@ class ReservedApartmentContactForm extends FormBase {
         $contact_person_value = $salesperson->getEmail();
       }
     }
-
-    // If no project is found present error message to the client and redirect to page they came from
+    $project = NULL;
+    // If no project is found present error message to the client
+    // and redirect to page they came from.
     if (!$project) {
-      $this->messenger()->addError($this->t('No project found. Try again or contact asuntomyynti@hel.fi'));
+      $this->messenger()->addError($this->t('No project found. Try again or contact asuntomyynti@hel.fi.'));
       $referer = $this->requestStack->getCurrentRequest()->headers->get('referer');
       if ($referer) {
         return new RedirectResponse($referer);
