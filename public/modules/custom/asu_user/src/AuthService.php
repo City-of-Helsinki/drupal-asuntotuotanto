@@ -38,20 +38,20 @@ class AuthService extends SamlService {
    * {@inheritDoc}
    */
   public function __construct(
-    protected                         $externalAuth,
-    protected                         $authmap,
-    protected                         $configFactory,
-    protected                         $entityTypeManager,
-    protected                         $logger,
-    protected                         $eventDispatcher,
-    protected                         $requestStack,
+    protected $externalAuth,
+    protected $authmap,
+    protected $configFactory,
+    protected $entityTypeManager,
+    protected $logger,
+    protected $eventDispatcher,
+    protected $requestStack,
     protected PrivateTempStoreFactory $tempStoreFactory,
-    protected                         $flood,
-    protected                         $currentUser,
-    protected                         $messenger,
-    protected TranslationInterface    $translation,
-    protected BackendApi              $backendApi,
-    protected Connection              $database,
+    protected $flood,
+    protected $currentUser,
+    protected $messenger,
+    protected TranslationInterface $translation,
+    protected BackendApi $backendApi,
+    protected Connection $database,
   ) {
     $this->privateTempStore = $tempStoreFactory->get('samlauth');
     $this->privateTempCustomer = $tempStoreFactory->get('customer');
