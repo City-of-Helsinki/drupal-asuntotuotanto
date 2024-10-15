@@ -5,6 +5,7 @@ namespace Drupal\asu_application\Form;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Reserved apartment contact form.
@@ -66,6 +67,16 @@ class ReservedApartmentContactForm extends FormBase {
       if ($salesperson = $project->getSalesPerson()) {
         $contact_person_value = $salesperson->getEmail();
       }
+    }
+
+    // If no project is found present error message to the client and redirect to page they came from
+    if (!$project) {
+      $this->messenger()->addError($this->t('No project found. Try again or contact asuntomyynti@hel.fi'));
+      $referer = $this->requestStack->getCurrentRequest()->headers->get('referer');
+      if ($referer) {
+        return new RedirectResponse($referer);
+      }
+      return $this->redirect('<front>');
     }
 
     $form['#contact_form_title'] = $this->t('Apply for an apartment');
