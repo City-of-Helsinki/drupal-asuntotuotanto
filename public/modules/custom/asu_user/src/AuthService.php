@@ -5,22 +5,14 @@ namespace Drupal\asu_user;
 use Drupal\asu_api\Api\BackendApi\BackendApi;
 use Drupal\asu_api\Api\BackendApi\Request\CreateUserRequest;
 use Drupal\Component\Utility\Crypt;
-use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Database\Connection;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\Flood\FloodInterface;
-use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\TranslationInterface;
+use Drupal\Core\TempStore\PrivateTempStore;
 use Drupal\Core\TempStore\PrivateTempStoreFactory;
-use Drupal\externalauth\Authmap;
-use Drupal\externalauth\ExternalAuth;
 use Drupal\samlauth\SamlService;
 use Drupal\samlauth\UserVisibleException;
 use OneLogin\Saml2\Utils as SamlUtils;
-use Psr\Log\LoggerInterface;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Exception\TooManyRequestsHttpException;
 
 /**
@@ -36,39 +28,33 @@ use Symfony\Component\HttpKernel\Exception\TooManyRequestsHttpException;
 class AuthService extends SamlService {
 
   /**
+   * Private store for user session data.
+   *
+   * @var \Drupal\Core\TempStore\PrivateTempStore
+   */
+  protected PrivateTempStore $privateTempCustomer;
+
+  /**
    * {@inheritDoc}
    */
   public function __construct(
-    ExternalAuth $external_auth,
-    Authmap $authmap,
-    ConfigFactoryInterface $config_factory,
-    EntityTypeManagerInterface $entity_type_manager,
-    LoggerInterface $logger,
-    EventDispatcherInterface $event_dispatcher,
-    RequestStack $request_stack,
-    PrivateTempStoreFactory $temp_store_factory,
-    FloodInterface $flood,
-    AccountInterface $current_user,
-    MessengerInterface $messenger,
-    TranslationInterface $translation,
-    BackendApi $backendApi,
-    Connection $database,
+    protected                         $externalAuth,
+    protected                         $authmap,
+    protected                         $configFactory,
+    protected                         $entityTypeManager,
+    protected                         $logger,
+    protected                         $eventDispatcher,
+    protected                         $requestStack,
+    protected PrivateTempStoreFactory $tempStoreFactory,
+    protected                         $flood,
+    protected                         $currentUser,
+    protected                         $messenger,
+    protected TranslationInterface    $translation,
+    protected BackendApi              $backendApi,
+    protected Connection              $database,
   ) {
-    $this->externalAuth = $external_auth;
-    $this->authmap = $authmap;
-    $this->configFactory = $config_factory;
-    $this->entityTypeManager = $entity_type_manager;
-    $this->logger = $logger;
-    $this->eventDispatcher = $event_dispatcher;
-    $this->requestStack = $request_stack;
-    $this->privateTempStore = $temp_store_factory->get('samlauth');
-    $this->privateTempCustomer = $temp_store_factory->get('customer');
-    $this->flood = $flood;
-    $this->currentUser = $current_user;
-    $this->messenger = $messenger;
-    $this->setStringTranslation($translation);
-    $this->backendApi = $backendApi;
-    $this->database = $database;
+    $this->privateTempStore = $tempStoreFactory->get('samlauth');
+    $this->privateTempCustomer = $tempStoreFactory->get('customer');
 
     $config = $this->configFactory->get('samlauth.authentication');
     // setProxyVars lets the SAML PHP Toolkit use 'X-Forwarded-*' HTTP headers
@@ -209,6 +195,7 @@ class AuthService extends SamlService {
 
     // If we haven't found an account to link, create one from the SAML
     // attributes.
+    /** @var \Drupal\user\UserInterface $account */
     if (!$account) {
       throw new UserVisibleException('No existing user account matches the SAML ID provided. This authentication service is not configured to create new accounts.');
     }
@@ -261,14 +248,14 @@ class AuthService extends SamlService {
     );
 
     try {
-      /** @var \Drupal\asu_api\Api\BackendApi\BackendApi $backendApi */
+      /** @var \Drupal\asu_api\Api\BackendApi\Response\CreateUserResponse $response */
       $response = $this->backendApi->send($request);
       $account->field_backend_profile = $response->getProfileId();
       $account->field_backend_password = $response->getPassword();
       $account->save();
     }
     catch (\Exception $e) {
-      $this->logger('asu_backend_api')->emergency(
+      $this->logger->emergency(
         'Exception while creating user to backend: ' . $e->getMessage()
       );
     }
@@ -311,7 +298,8 @@ class AuthService extends SamlService {
     $result_count = count($result);
 
     if ($result_count > 0) {
-      return $user_name . '_' . $result_count + 1;
+      $result_count = $result_count + 1;
+      return $user_name . '_' . $result_count;
     }
 
     return $user_name;
