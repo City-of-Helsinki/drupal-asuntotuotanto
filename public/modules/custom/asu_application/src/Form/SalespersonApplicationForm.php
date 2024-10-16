@@ -18,13 +18,6 @@ class SalespersonApplicationForm extends FormBase {
   use MessengerTrait;
 
   /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected EntityTypeManagerInterface $entityTypeManager;
-
-  /**
    * Constructs a FieldMapperBase object.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
@@ -35,13 +28,10 @@ class SalespersonApplicationForm extends FormBase {
    *   The date service.
    */
   public function __construct(
-    EntityTypeManagerInterface $entityTypeManager,
-    ParseModePluginManager $parseModeManager,
-    DateFormatterInterface $date,
+    protected EntityTypeManagerInterface $entityTypeManager,
+    protected ParseModePluginManager $parseModeManager,
+    protected DateFormatterInterface $date,
   ) {
-    $this->entityTypeManager = $entityTypeManager;
-    $this->parseModeManager = $parseModeManager;
-    $this->date = $date;
   }
 
   /**
