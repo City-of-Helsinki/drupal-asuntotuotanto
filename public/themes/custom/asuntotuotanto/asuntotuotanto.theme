@@ -50,7 +50,7 @@ function asuntotuotanto_theme_suggestions_alter(array &$suggestions, array $vari
     $white_list = ['asu_application_haso_form', 'asu_application_hitas_form'];
     $suggestions[] = 'form__' . str_replace('-', '_', $variables['element']['#id']);
 
-    if(in_array($variables['element']['#form_id'], $white_list)) {
+    if (in_array($variables['element']['#form_id'], $white_list)) {
       $suggestions[] = 'form__' . str_replace('-', '_', $variables['element']['#form_id']);
     }
   }
