@@ -232,3 +232,8 @@ line-height: $lineheight-xl; // Was 27px.
     }
   }
 }
+
+.hero__image-container img {
+  max-width: 100%;
+  height: auto;
+}

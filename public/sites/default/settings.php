@@ -110,7 +110,7 @@ foreach ($routes as $route) {
 
 $settings['config_sync_directory'] = '../conf/cmi';
 $settings['file_public_path'] = getenv('DRUPAL_FILES_PUBLIC') ?: 'sites/default/files';
-$settings['file_private_path'] = getenv('DRUPAL_FILES_PRIVATE');
+$settings['file_private_path'] = getenv('DRUPAL_FILES_PRIVATE') ?: 'sites/default/files/private';
 $settings['file_temp_path'] = getenv('DRUPAL_TMP_PATH') ?: '/tmp';
 
 if ($reverse_proxy_address = getenv('DRUPAL_REVERSE_PROXY_ADDRESS')) {
@@ -512,6 +512,8 @@ if ($env = getenv('APP_ENV')) {
     $config['search_api.server.asuntotuotanto']['backend_config']['host'] = 'localhost';
     $config['search_api.server.asuntotuotanto']['backend_config']['port'] = '443';
   }
+
+  $config['helfi_api_base.features']['user_expire'] = FALSE;
 
   // Saml Authentication.
   include 'saml.settings.php';
