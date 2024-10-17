@@ -320,11 +320,11 @@ class ApplicationForm extends ContentEntityForm {
     }
 
     // Residence number check.
-    if (isset($formValues['field_right_of_residence_number'][0]) &&
+    if (isset($formValues['field_right_of_residence_number'][0]['value']) &&
       !is_numeric($formValues['field_right_of_residence_number'][0]['value']) ||
       (int) $formValues['field_right_of_residence_number'][0]['value'] > 2147483647) {
       $fieldTitle = (string) $form["field_right_of_residence_number"]['widget'][0]['#title'];
-      $form_state->setErrorByName($applicant_field, $this->t('Check @field', ['@field' => $fieldTitle]));
+      $form_state->setErrorByName($fieldTitle, $this->t('Check @field', ['@field' => $fieldTitle]));
     }
 
     $triggerName = $form_state->getTriggeringElement()['#name'];
@@ -406,7 +406,7 @@ class ApplicationForm extends ContentEntityForm {
     }
 
     // Individual number cannot be 000 or 001.
-    if ($individual_number == '000' || $individual_number == '001') {
+    if ($individual_number == '000' || $individual_number == '001' || !is_numeric($individual_number)) {
       return FALSE;
     }
 
