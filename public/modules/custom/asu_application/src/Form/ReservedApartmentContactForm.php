@@ -72,7 +72,7 @@ class ReservedApartmentContactForm extends FormBase {
     // If no project is found present error message to the client
     // and redirect to page they came from.
     if (!$project) {
-      $this->messenger()->addError($this->t('No project found. Try again or contact @email',['@email' => getenv('DRUPAL_DEFAULT_FORM_EMAIL')]));
+      $this->messenger()->addError($this->t('No project found. Try again or contact @email', ['@email' => getenv('DRUPAL_DEFAULT_FORM_EMAIL')]));
       $referer = $this->requestStack->getCurrentRequest()->headers->get('referer');
       if ($referer) {
         return new RedirectResponse($referer);
