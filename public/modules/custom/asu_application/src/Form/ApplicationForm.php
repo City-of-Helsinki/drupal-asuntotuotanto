@@ -9,6 +9,7 @@ use Drupal\asu_content\Entity\Project;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Ajax\UpdateBuildIdCommand;
+use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Entity\ContentEntityForm;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Messenger\MessengerTrait;
@@ -275,6 +276,11 @@ class ApplicationForm extends ContentEntityForm {
       }
     }
 
+    if (!$this->validatePersonalId($formValues['main_applicant'][0]['date_of_birth'], $formValues['main_applicant'][0]['personal_id'])) {
+      $fieldTitle = (string) $form["main_applicant"]['widget'][0]['personal_id']['#title'];
+      $form_state->setErrorByName('personal_id', $this->t('Check @field', ['@field' => $fieldTitle]));
+    }
+
     if (count($formValues['apartment']) <= 1 && isset($formValues['apartment'][0])) {
       if ($formValues['apartment'][0]['id'] == '0' || empty($formValues['apartment'][0]['id'])) {
         $form_state->setErrorByName('apartment', $this->t('Field @field cannot be empty', ['@field' => 'apartment']));
@@ -292,27 +298,33 @@ class ApplicationForm extends ContentEntityForm {
 
         if ($applicant_field == 'personal_id' && strlen($applicant_value) != 4) {
           $fieldTitle = (string) $form["applicant"]['widget'][0][$applicant_field]['#title'];
-          $form_state->setErrorByName($field, $this->t('Check @field', ['@field' => $fieldTitle]));
+          $form_state->setErrorByName($field, $this->t('Check additional applicant @field', ['@field' => $fieldTitle]));
         }
 
         if (empty($applicant_value) || $applicant_value == '-' || strlen($applicant_value) < 2) {
           $fieldTitle = (string) $form["applicant"]['widget'][0][$applicant_field]['#title'];
-          $form_state->setErrorByName($applicant_field, $this->t('Field @field cannot be empty', ['@field' => $fieldTitle]));
+          $form_state->setErrorByName($applicant_field, $this->t('Additional applicant field @field cannot be empty', ['@field' => $fieldTitle]));
         }
 
         if ($applicant_field == 'postal_code' && (!is_numeric($applicant_value) || strlen($applicant_value) != 5)) {
           $fieldTitle = (string) $form["main_applicant"]['widget'][0][$applicant_field]['#title'];
-          $form_state->setErrorByName($applicant_field, $this->t('Check @field', ['@field' => $fieldTitle]));
+          $form_state->setErrorByName($applicant_field, $this->t('Check additional applicant @field', ['@field' => $fieldTitle]));
         }
+      }
+
+      // Additional applicant personal id check.
+      if (!$this->validatePersonalId($formValues['applicant'][0]['date_of_birth'], $formValues['applicant'][0]['personal_id'])) {
+        $fieldTitle = (string) $form["applicant"]['widget'][0]['personal_id']['#title'];
+        $form_state->setErrorByName('personal_id', $this->t('Check additional applicant @field', ['@field' => $fieldTitle]));
       }
     }
 
     // Residence number check.
-    if (isset($formValues['field_right_of_residence_number'][0]) &&
+    if (isset($formValues['field_right_of_residence_number'][0]['value']) &&
       !is_numeric($formValues['field_right_of_residence_number'][0]['value']) ||
       (int) $formValues['field_right_of_residence_number'][0]['value'] > 2147483647) {
       $fieldTitle = (string) $form["field_right_of_residence_number"]['widget'][0]['#title'];
-      $form_state->setErrorByName($applicant_field, $this->t('Check @field', ['@field' => $fieldTitle]));
+      $form_state->setErrorByName($fieldTitle, $this->t('Check @field', ['@field' => $fieldTitle]));
     }
 
     $triggerName = $form_state->getTriggeringElement()['#name'];
@@ -323,6 +335,90 @@ class ApplicationForm extends ContentEntityForm {
       parent::validateForm($form, $form_state);
       $form_state->clearErrors();
     }
+  }
+
+  /**
+   * Validate personal id values.
+   *
+   * @param string $birthDate
+   *   Birth date value.
+   * @param string $personalId
+   *   Personal id value.
+   *
+   * @return bool
+   *   Is personal id validate.
+   */
+  private function validatePersonalId($birthDate, $personalId): bool {
+    $date = new DrupalDateTime($birthDate);
+    $control_character = substr($personalId, -1);
+    $divider = $this->getPersonalIdDivider($birthDate);
+    $alphabet = [
+      '0',
+      '1',
+      '2',
+      '3',
+      '4',
+      '5',
+      '6',
+      '7',
+      '8',
+      '9',
+      'A',
+      'B',
+      'C',
+      'D',
+      'E',
+      'F',
+      'H',
+      'J',
+      'K',
+      'L',
+      'M',
+      'N',
+      'P',
+      'R',
+      'S',
+      'T',
+      'U',
+      'V',
+      'W',
+      'X',
+      'Y',
+    ];
+
+    // Check that perosnal id has value and divider is not null.
+    if (empty($personalId) || !$divider) {
+      return FALSE;
+    }
+
+    // Some case personal divider can be in string.
+    // Remove divider value on individual number.
+    if (strlen($personalId) == 5 && $divider == substr($personalId, 0, 1)) {
+      $individual_number = substr($personalId, 1, 3);
+    }
+    else {
+      $individual_number = substr($personalId, 0, 3);
+    }
+
+    // Validate birthdate.
+    if (!checkdate($date->format('m'), $date->format('d'), $date->format('Y'))) {
+      return FALSE;
+    }
+
+    // Individual number cannot be 000 or 001.
+    if ($individual_number == '000' || $individual_number == '001' || !is_numeric($individual_number)) {
+      return FALSE;
+    }
+
+    // Checking 9 number integer validation letter.
+    $number = $date->format('dmy') . $individual_number;
+    $ref = $number % 31;
+
+    if (!str_contains(strtoupper($control_character), $alphabet[$ref])) {
+      return FALSE;
+    }
+
+    return TRUE;
   }
 
   /**

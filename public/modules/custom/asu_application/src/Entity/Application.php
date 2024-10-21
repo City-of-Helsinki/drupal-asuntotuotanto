@@ -169,6 +169,20 @@ class Application extends EditorialContentEntityBase implements ContentEntityInt
   }
 
   /**
+   * Application last timestamp.
+   *
+   * @return int
+   *   Application updated or sent timestamp.
+   */
+  public function getLatestTimestamp(): int {
+    if (!reset($this->values["create_to_django"])) {
+      return reset($this->values["changed"]);
+    }
+
+    return reset($this->values["create_to_django"]);
+  }
+
+  /**
    * Has there been an error while sending api request to backend.
    *
    * @return bool

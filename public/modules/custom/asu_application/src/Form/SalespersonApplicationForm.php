@@ -2,6 +2,7 @@
 
 namespace Drupal\asu_application\Form;
 
+use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -30,13 +31,17 @@ class SalespersonApplicationForm extends FormBase {
    *   The entity type manager service.
    * @param \Drupal\search_api\ParseMode\ParseModePluginManager $parseModeManager
    *   The parse mode manager.
+   * @param \Drupal\Core\Datetime\DateFormatterInterface $date
+   *   The date service.
    */
   public function __construct(
     EntityTypeManagerInterface $entityTypeManager,
     ParseModePluginManager $parseModeManager,
+    DateFormatterInterface $date,
   ) {
     $this->entityTypeManager = $entityTypeManager;
     $this->parseModeManager = $parseModeManager;
+    $this->date = $date;
   }
 
   /**
@@ -46,6 +51,7 @@ class SalespersonApplicationForm extends FormBase {
     return new static(
       $container->get('entity_type.manager'),
       $container->get('plugin.manager.search_api.parse_mode'),
+      $container->get('date.formatter'),
     );
   }
 
@@ -90,9 +96,10 @@ class SalespersonApplicationForm extends FormBase {
 
       if (!empty($userApplications)) {
         foreach ($userApplications as $key => $application) {
-          $status = $application->isLocked() ? $this->t('Already sent:') : $this->t('Draft:');
+          $status = $application->isLocked() ? $this->t('Already sent') : $this->t('Draft');
+          $latest_change = $this->date->format($application->getLatestTimestamp(), 'long');
           $form['user_applications_' . $key] = [
-            '#markup' => $status . ' ' . $projects[$application->getProjectId()]['title'] . '<br>',
+            '#markup' => $status . ' ( ' . $latest_change . ' ): ' . $projects[$application->getProjectId()]['title'] . '<br>',
           ];
         }
       }
