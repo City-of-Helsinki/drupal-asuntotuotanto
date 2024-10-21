@@ -18,13 +18,6 @@ class SalespersonApplicationForm extends FormBase {
   use MessengerTrait;
 
   /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected EntityTypeManagerInterface $entityTypeManager;
-
-  /**
    * Constructs a FieldMapperBase object.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
@@ -35,13 +28,10 @@ class SalespersonApplicationForm extends FormBase {
    *   The date service.
    */
   public function __construct(
-    EntityTypeManagerInterface $entityTypeManager,
-    ParseModePluginManager $parseModeManager,
-    DateFormatterInterface $date,
+    protected EntityTypeManagerInterface $entityTypeManager,
+    protected ParseModePluginManager $parseModeManager,
+    protected DateFormatterInterface $date,
   ) {
-    $this->entityTypeManager = $entityTypeManager;
-    $this->parseModeManager = $parseModeManager;
-    $this->date = $date;
   }
 
   /**
@@ -67,6 +57,7 @@ class SalespersonApplicationForm extends FormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state, string $user_id = NULL, string $project_id = NULL) {
     if ($user_id) {
+      $projects = [];
       $user = $this->entityTypeManager->getStorage('user')->load($user_id);
       try {
         $projects = $this->getProjects();
@@ -81,9 +72,10 @@ class SalespersonApplicationForm extends FormBase {
 
       $options = [];
       $ownership = [];
+      $key = NULL;
       foreach ($projects as $key => $project) {
         $options[$key] = $project['title'];
-        $ownership[$key] = strtolower($project['ownership_type']);
+        $ownership[$key] = (isset($project['ownership_type'])) ? strtolower($project['ownership_type']) : NULL;
       }
 
       $form['user'] = [
@@ -96,6 +88,7 @@ class SalespersonApplicationForm extends FormBase {
 
       if (!empty($userApplications)) {
         foreach ($userApplications as $key => $application) {
+          /** @var \Drupal\asu_application\Entity\Application $application  */
           $status = $application->isLocked() ? $this->t('Already sent') : $this->t('Draft');
           $latest_change = $this->date->format($application->getLatestTimestamp(), 'long');
           $form['user_applications_' . $key] = [
@@ -132,9 +125,9 @@ class SalespersonApplicationForm extends FormBase {
         '#type' => 'submit',
         '#value' => $this->t('Create application'),
       ];
-
-      return $form;
     }
+
+    return $form;
   }
 
   /**
@@ -190,11 +183,11 @@ class SalespersonApplicationForm extends FormBase {
 
     $projects = [];
     foreach ($projectData as $apartment) {
-      if (!empty($apartment->getField('project_id')->getValues()) && !empty($apartment->getField('project_housing_company')->getValues())) {
+      if (!empty($apartment->getField('project_id')->getValues()[0]) && !empty($apartment->getField('project_housing_company')->getValues()[0])) {
         if (!isset($projects[$apartment->getField('project_id')->getValues()[0]])) {
           $projects[$apartment->getField('project_id')->getValues()[0]] = [
-            'title' => $apartment->getField('project_housing_company')->getValues()[0],
-            'ownership_type' => $apartment->getField('project_ownership_type')->getValues()[0],
+            'title' => $apartment->getField('project_housing_company')->getValues()[0] ?? NULL,
+            'ownership_type' => $apartment->getField('project_ownership_type')->getValues()[0] ?? NULL,
           ];
         }
       }
