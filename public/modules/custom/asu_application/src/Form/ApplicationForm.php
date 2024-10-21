@@ -71,7 +71,7 @@ class ApplicationForm extends ContentEntityForm {
    *
    * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
    */
-  private EventDispatcherInterface $eventDispatcher;
+  private ?EventDispatcherInterface $eventDispatcher = NULL;
 
   /**
    * {@inheritdoc}
@@ -353,37 +353,10 @@ class ApplicationForm extends ContentEntityForm {
     $control_character = substr($personalId, -1);
     $divider = $this->getPersonalIdDivider($birthDate);
     $alphabet = [
-      '0',
-      '1',
-      '2',
-      '3',
-      '4',
-      '5',
-      '6',
-      '7',
-      '8',
-      '9',
-      'A',
-      'B',
-      'C',
-      'D',
-      'E',
-      'F',
-      'H',
-      'J',
-      'K',
-      'L',
-      'M',
-      'N',
-      'P',
-      'R',
-      'S',
-      'T',
-      'U',
-      'V',
-      'W',
-      'X',
-      'Y',
+      '0', '1', '2', '3', '4', '5', '6', '7',
+      '8', '9', 'A', 'B', 'C', 'D', 'E', 'F',
+      'H', 'J', 'K', 'L', 'M', 'N', 'P', 'R',
+      'S', 'T', 'U', 'V', 'W', 'X', 'Y',
     ];
 
     // Check that perosnal id has value and divider is not null.
