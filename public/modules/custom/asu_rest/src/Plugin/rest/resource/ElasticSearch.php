@@ -91,8 +91,7 @@ class ElasticSearch extends ResourceBase {
       $responseArray = $cached->data;
     }
     else {
-      $indexes = Index::loadMultiple();
-      $index = $indexes['apartment_listing'] ?? reset($indexes);
+      $index = Index::load('apartment_listing');
       $query = $index->query();
 
       $parse_mode = \Drupal::service('plugin.manager.search_api.parse_mode')
@@ -165,8 +164,11 @@ class ElasticSearch extends ResourceBase {
       foreach ($resultItems as $item) {
         $parsed = [];
 
-        $itemFields = $item->getFields();
+        $itemFields = $item->getFields(FALSE);
         foreach ($fields as $fieldName) {
+          if (!isset($itemFields[$fieldName])) {
+            continue;
+          }
           $parsed[$fieldName] = in_array($fieldName, $arrays) ? $itemFields[$fieldName]->getValues()
             : ($itemFields[$fieldName]->getValues()[0] ?? '');
         }
