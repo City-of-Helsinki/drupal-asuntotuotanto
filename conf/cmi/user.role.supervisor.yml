@@ -11,6 +11,7 @@ dependencies:
     - file
     - media
     - node
+    - raven
     - toolbar
 id: supervisor
 label: Supervisor
@@ -33,6 +34,7 @@ permissions:
   - 'edit own file media'
   - 'edit own image media'
   - 'edit own project content'
+  - 'send performance traces to sentry'
   - 'update any media'
   - 'update media'
   - 'view all revisions'

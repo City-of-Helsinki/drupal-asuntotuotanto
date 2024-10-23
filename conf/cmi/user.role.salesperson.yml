@@ -8,6 +8,7 @@ dependencies:
     - media.type.image
     - media.type.remote_video
     - node.type.apartment
+    - node.type.article
     - node.type.landing_page
     - node.type.news
     - node.type.page
@@ -46,6 +47,7 @@ dependencies:
     - paragraphs
     - paragraphs_type_permissions
     - path
+    - raven
     - redirect
     - role_delegation
     - system
@@ -238,6 +240,7 @@ permissions:
   - 'edit terms in site_owners'
   - 'edit terms in states_of_sale'
   - 'edit terms in tasks'
+  - 'send performance traces to sentry'
   - 'translate any entity'
   - 'translate apartment node'
   - 'translate apartment_state_of_sale taxonomy_term'
