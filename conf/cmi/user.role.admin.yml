@@ -61,6 +61,7 @@ dependencies:
     - path
     - pathauto
     - publication_date
+    - raven
     - rebuild_cache_access
     - redirect
     - role_delegation
@@ -253,6 +254,7 @@ permissions:
   - 'revert news revisions'
   - 'revert page revisions'
   - 'schedule publishing of nodes'
+  - 'send performance traces to sentry'
   - 'set announcement published on date'
   - 'set landing_page published on date'
   - 'set page published on date'
