@@ -5,6 +5,7 @@ namespace Drupal\asu_rest\Plugin\rest\resource;
 use Drupal\asu_application\Applications;
 use Drupal\asu_rest\UserDto;
 use Drupal\Core\Access\CsrfRequestHeaderAccessCheck;
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\rest\ModifiedResourceResponse;
 use Drupal\rest\Plugin\ResourceBase;
@@ -26,6 +27,8 @@ use Drupal\user\Entity\User;
 final class Initialize extends ResourceBase {
   use StringTranslationTrait;
 
+  protected const CACHE_TAG = ['search_api_list:apartment_listing'];
+
   /**
    * Return all data required by React to function properly.
    */
@@ -42,8 +45,7 @@ final class Initialize extends ResourceBase {
     else {
       $statuses = $this->getApartmentApplicationStatus();
       $response['apartment_application_status'] = $statuses;
-      \Drupal::cache()
-        ->set('application_statuses', $statuses, (time() + (60 * 10)));
+      \Drupal::cache()->set('application_statuses', $statuses, Cache::PERMANENT, self::CACHE_TAG);
     }
 
     $response['static_content'] = $this->getStaticContent();
@@ -192,8 +194,10 @@ final class Initialize extends ResourceBase {
    * Get all values used in React filter bar.
    */
   protected function getFilters() {
+    $cid = 'asu_initialize_filters';
+
     if ($cache = \Drupal::cache()
-      ->get('asu_initialize_filters')) {
+      ->get($cid)) {
       return $cache->data;
     }
 
@@ -251,8 +255,7 @@ final class Initialize extends ResourceBase {
       'suffix' => '€',
     ];
 
-    \Drupal::cache()
-      ->set('asu_initialize_filters', $responseData, (time() + 60 * 60));
+    \Drupal::cache()->set($cid, $responseData, Cache::PERMANENT, self::CACHE_TAG);
 
     return $responseData;
   }
@@ -267,8 +270,7 @@ final class Initialize extends ResourceBase {
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
   protected function getDistrictsByProjectOwnershipType() {
-    $indexes = Index::loadMultiple();
-    $index = $indexes['apartment'] ?? reset($indexes);
+    $index = Index::load('apartment_listing');
     $query = $index->query();
     $query->range(0, 10000);
 
