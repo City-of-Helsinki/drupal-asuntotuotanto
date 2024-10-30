@@ -9,6 +9,7 @@ use Drupal\asu_content\Entity\Project;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Ajax\UpdateBuildIdCommand;
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Entity\ContentEntityForm;
 use Drupal\Core\Form\FormStateInterface;
@@ -559,7 +560,8 @@ class ApplicationForm extends ContentEntityForm {
         $apartments[$apartment->id()] = $select_text;
       }
       ksort($apartments, SORT_NUMERIC);
-      $this->cache->set($cid, $apartments, (time() + 60 * 60));
+      $this->cache->set($cid, $apartments, Cache::PERMANENT, ['search_api_list:apartment_listing']);
+
       $values['apartments'] = $apartments;
     }
 
