@@ -15,6 +15,7 @@ dependencies:
     - media
     - paragraphs
     - paragraphs_type_permissions
+    - raven
     - rest
     - system
 _core:
@@ -31,6 +32,8 @@ permissions:
   - 'restful get asu_initialize'
   - 'restful post asu_elasticsearch'
   - 'restful post mailinglist'
+  - 'send javascript errors to sentry'
+  - 'send performance traces to sentry'
   - 'view application'
   - 'view helfi_announcements external entity'
   - 'view helfi_surveys external entity'

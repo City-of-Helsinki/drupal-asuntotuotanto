@@ -10,6 +10,7 @@ dependencies:
     - file
     - node
     - paragraphs
+    - raven
     - toolbar
     - view_unpublished
 id: read_only
@@ -19,6 +20,7 @@ is_admin: null
 permissions:
   - 'access toolbar'
   - 'delete own files'
+  - 'send performance traces to sentry'
   - 'view any unpublished announcement content'
   - 'view any unpublished landing_page content'
   - 'view any unpublished page content'

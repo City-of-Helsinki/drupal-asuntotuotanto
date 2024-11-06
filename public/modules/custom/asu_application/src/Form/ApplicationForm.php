@@ -9,6 +9,7 @@ use Drupal\asu_content\Entity\Project;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Ajax\UpdateBuildIdCommand;
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Entity\ContentEntityForm;
 use Drupal\Core\Form\FormStateInterface;
@@ -71,7 +72,7 @@ class ApplicationForm extends ContentEntityForm {
    *
    * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
    */
-  private EventDispatcherInterface $eventDispatcher;
+  private ?EventDispatcherInterface $eventDispatcher = NULL;
 
   /**
    * {@inheritdoc}
@@ -353,37 +354,10 @@ class ApplicationForm extends ContentEntityForm {
     $control_character = substr($personalId, -1);
     $divider = $this->getPersonalIdDivider($birthDate);
     $alphabet = [
-      '0',
-      '1',
-      '2',
-      '3',
-      '4',
-      '5',
-      '6',
-      '7',
-      '8',
-      '9',
-      'A',
-      'B',
-      'C',
-      'D',
-      'E',
-      'F',
-      'H',
-      'J',
-      'K',
-      'L',
-      'M',
-      'N',
-      'P',
-      'R',
-      'S',
-      'T',
-      'U',
-      'V',
-      'W',
-      'X',
-      'Y',
+      '0', '1', '2', '3', '4', '5', '6', '7',
+      '8', '9', 'A', 'B', 'C', 'D', 'E', 'F',
+      'H', 'J', 'K', 'L', 'M', 'N', 'P', 'R',
+      'S', 'T', 'U', 'V', 'W', 'X', 'Y',
     ];
 
     // Check that perosnal id has value and divider is not null.
@@ -586,7 +560,8 @@ class ApplicationForm extends ContentEntityForm {
         $apartments[$apartment->id()] = $select_text;
       }
       ksort($apartments, SORT_NUMERIC);
-      $this->cache->set($cid, $apartments, (time() + 60 * 60));
+      $this->cache->set($cid, $apartments, Cache::PERMANENT, ['search_api_list:apartment_listing']);
+
       $values['apartments'] = $apartments;
     }
 

@@ -51,7 +51,7 @@ class CreateApplicationRequest extends Request {
     $values = [
       'application_uuid' => $this->application->uuid(),
       'application_type' => $this->application->bundle(),
-      'ssn_suffix' => $this->application->main_applicant[0]->personal_id,
+      'applicant' => $this->getMainApplicant(),
       'has_children' => $this->application->getHasChildren(),
       'additional_applicant' => $this->getAdditionalApplicant(),
       'right_of_residence' => NULL,
@@ -97,6 +97,30 @@ class CreateApplicationRequest extends Request {
       throw new \InvalidArgumentException('Application apartments cannot be empty.');
     }
     return $apartments;
+  }
+
+  /**
+   * Get main applicant.
+   *
+   * @return object
+   *   Main applicant information.
+   */
+  protected function getMainApplicant(): ?object {
+    if (!$this->application->getMainApplicant()) {
+      return NULL;
+    }
+    $applicant = $this->application->getMainApplicant()[0];
+    return (object) [
+      'first_name' => $applicant['first_name'],
+      'last_name' => $applicant['last_name'],
+      'email' => $applicant['email'],
+      'phone_number' => $applicant['phone'],
+      'street_address' => $applicant['address'],
+      'city' => $applicant['city'],
+      'postal_code' => $applicant['postal_code'],
+      'date_of_birth' => $applicant['date_of_birth'],
+      'ssn_suffix' => $applicant['personal_id'],
+    ];
   }
 
   /**

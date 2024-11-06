@@ -5,6 +5,7 @@ dependencies:
   module:
     - eu_cookie_compliance
     - file
+    - raven
 id: customer
 label: Customer
 weight: -8
@@ -12,3 +13,4 @@ is_admin: null
 permissions:
   - 'delete own files'
   - 'display eu cookie compliance popup'
+  - 'send performance traces to sentry'
