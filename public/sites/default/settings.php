@@ -436,6 +436,7 @@ if ($env = getenv('APP_ENV')) {
     $config['search_api.server.asuntotuotanto']['backend_config']['port'] = '443';
 
     $config['raven.settings']['environment'] = 'development';
+    $config['raven.settings']['public_dsn'] = getenv('ASU_SENTRY_DNS') ?? '';
   }
 
   // Testing environment.
@@ -458,6 +459,7 @@ if ($env = getenv('APP_ENV')) {
     $config['search_api.server.asuntotuotanto']['backend_config']['port'] = '443';
 
     $config['raven.settings']['environment'] = 'testing';
+    $config['raven.settings']['public_dsn'] = getenv('ASU_SENTRY_DNS') ?? '';
   }
 
   // Staging environment.
@@ -480,6 +482,7 @@ if ($env = getenv('APP_ENV')) {
     $config['search_api.server.asuntotuotanto']['backend_config']['port'] = '443';
 
     $config['raven.settings']['environment'] = 'staging';
+    $config['raven.settings']['public_dsn'] = getenv('ASU_SENTRY_DNS') ?? '';
   }
 
   // Production environment.
@@ -502,6 +505,7 @@ if ($env = getenv('APP_ENV')) {
     $config['search_api.server.asuntotuotanto']['backend_config']['port'] = '443';
 
     $config['raven.settings']['environment'] = 'production';
+    $config['raven.settings']['public_dsn'] = getenv('ASU_SENTRY_DNS') ?? '';
     $config['metatag.metatag_defaults.global']['tags']['robots'] = 'index, follow';
     $config['helfi_api_base.features']['disable_email_sending'] = FALSE;
   }
