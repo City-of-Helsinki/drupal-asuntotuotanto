@@ -244,3 +244,13 @@ function asu_content_update_9008(): void {
   \Drupal::keyValue('system.schema')
     ->delete('helfi_global_announcement');
 }
+
+/**
+ * Mismatched entity and/or field definitions.
+ * The paragraph.field_load_more field needs to be uninstalled.
+ */
+function asu_content_update_9009(): void {
+  $manager = \Drupal::entityDefinitionUpdateManager();
+  $definition = $manager->getFieldStorageDefinition("field_load_more", "paragraph");
+  $manager->uninstallFieldStorageDefinition($definition);
+}

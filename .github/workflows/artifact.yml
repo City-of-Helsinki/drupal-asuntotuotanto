@@ -28,7 +28,7 @@ jobs:
           - 3306:3306
 
       elastic:
-        image: docker.elastic.co/elasticsearch/elasticsearch:7.9.2
+        image: docker.elastic.co/elasticsearch/elasticsearch:8.4.0
         env:
           discovery.type: single-node
         options: >-
