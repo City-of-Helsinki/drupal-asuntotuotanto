@@ -28,14 +28,10 @@ jobs:
           - 3306:3306
 
       elastic:
-        image: docker.elastic.co/elasticsearch/elasticsearch:8.4.0
+        image: docker.elastic.co/elasticsearch/elasticsearch:8.8.0
         env:
+          xpack.security.enabled: false
           discovery.type: single-node
-        options: >-
-          --health-cmd "curl http://localhost:9200/_cluster/health"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 10
         ports:
           - 9200:9200
 
