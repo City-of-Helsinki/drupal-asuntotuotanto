@@ -251,5 +251,8 @@ function asu_content_update_9008(): void {
 function asu_content_update_9009(): void {
   $manager = \Drupal::entityDefinitionUpdateManager();
   $definition = $manager->getFieldStorageDefinition("field_load_more", "paragraph");
-  $manager->uninstallFieldStorageDefinition($definition);
+
+  if ($definition) {
+    $manager->uninstallFieldStorageDefinition($definition);
+  }
 }
