@@ -246,7 +246,6 @@ function asu_content_update_9008(): void {
 }
 
 /**
- * Mismatched entity and/or field definitions.
  * The paragraph.field_load_more field needs to be uninstalled.
  */
 function asu_content_update_9009(): void {
