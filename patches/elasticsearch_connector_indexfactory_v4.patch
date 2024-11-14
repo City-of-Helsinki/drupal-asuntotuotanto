@@ -1,71 +1,42 @@
-diff --git a/src/ElasticSearch/Parameters/Factory/IndexFactory.php b/src/ElasticSearch/Parameters/Factory/IndexFactory.php
-index 8427984..37732d5 100644
---- a/src/ElasticSearch/Parameters/Factory/IndexFactory.php
-+++ b/src/ElasticSearch/Parameters/Factory/IndexFactory.php
-@@ -4,11 +4,15 @@ namespace Drupal\elasticsearch_connector\ElasticSearch\Parameters\Factory;
-
- use Drupal\elasticsearch_connector\Plugin\search_api\backend\SearchApiElasticsearchBackend;
- use Drupal\search_api\IndexInterface;
-+use Drupal\search_api\Processor\EntityProcessorProperty;
+diff --git a/src/SearchAPI/IndexParamBuilder.php b/src/SearchAPI/IndexParamBuilder.php
+index 9d84fe8..4deeb1d 100644
+--- a/src/SearchAPI/IndexParamBuilder.php
++++ b/src/SearchAPI/IndexParamBuilder.php
+@@ -7,7 +7,10 @@ use Drupal\search_api\IndexInterface;
+ use Drupal\search_api\Item\FieldInterface;
+ use Drupal\search_api\Item\ItemInterface;
+ use Drupal\search_api\Plugin\search_api\data_type\value\TextValue;
 +use Drupal\search_api\Utility\Utility;
- use Drupal\elasticsearch_connector\Event\PrepareIndexEvent;
- use Drupal\elasticsearch_connector\Event\PrepareIndexMappingEvent;
- use Drupal\elasticsearch_connector\Event\BuildIndexParamsEvent;
- use Drupal\search_api_autocomplete\Suggester\SuggesterInterface;
- use Drupal\elasticsearch_connector\Entity\Cluster;
+ use Drupal\search_api\Utility\FieldsHelperInterface;
 +use Drupal\Core\Field\FieldDefinitionInterface;
 +use Drupal\file\Entity\File;
+ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
  /**
-  * Create Elasticsearch Indices.
-@@ -113,28 +117,17 @@ class IndexFactory {
-       ];
+@@ -50,10 +53,18 @@ class IndexParamBuilder {
+       $this->addSpecialFields($index, $item);
        /** @var \Drupal\search_api\Item\FieldInterface $field */
-       foreach ($item as $name => $field) {
+       foreach ($item as $field) {
 -        $field_type = $field->getType();
          if (!empty($field->getValues())) {
--          $values = array();
--          foreach ($field->getValues() as $value) {
--            switch ($field_type) {
--              case 'string':
--                $values[] = (string) $value;
--                break;
--
--              case 'text':
--                $values[] = $value->toText();
--                break;
--
--              case 'boolean':
--                $values[] = (boolean) $value;
--                break;
--
--              default:
--                $values[] = $value;
+-          $values = $this->buildFieldValues($field, $field_type);
+-          $data[$field->getFieldIdentifier()] = $values;
 +          $value = [];
++
 +          foreach ($field->getValues() as $val) {
 +            if (self::isFieldList($index, $field)) {
 +              $value[] = self::getFieldValue($field, $val);
 +            }
 +            else {
 +              $value = self::getFieldValue($field, $val);
-             }
-           }
--          $data[$field->getFieldIdentifier()] = $values;
++            }
++          }
 +          $data[$field->getFieldIdentifier()] = $value;
          }
        }
-       $params['body'][] = ['index' => ['_id' => $id]];
-@@ -192,7 +185,7 @@ class IndexFactory {
-         // Collect autocompletion fields in an array keyed by field id.
-         $all_autocompletion_fields += array_flip($autocompletion_fields);
-       }
--     }
-+    }
-
-     // Map index fields.
-     foreach ($index->getFields() as $field_id => $field_data) {
-@@ -267,4 +260,112 @@ class IndexFactory {
-     ));
+       $params['body'][] = ['index' => ['_id' => $id, '_index' => $indexId]];
+@@ -115,4 +126,127 @@ class IndexParamBuilder {
+     return $values;
    }
 
 +  /**
@@ -78,37 +49,42 @@ index 8427984..37732d5 100644
 +   */
 +  protected static function getFieldValue($field, $raw) {
 +    $field_type = $field->getType();
++
 +    switch ($field_type) {
 +      case 'string':
 +        $value = (string) $raw;
 +        break;
-+
 +      case 'text':
 +        $value = $raw->toText();
 +        break;
-+
 +      case 'boolean':
 +        $value = (boolean) $raw;
 +        break;
 +      case 'object':
 +        $target = self::objectOfType($field);
 +        $value = '';
++
 +        if($target == 'taxonomy_term'){
 +          $term = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->load($raw);
 +          $value = $term ? $term->getName() : '';
 +        }
++
 +        if($target == 'file'){
 +          $value = '';
++
 +          if ($file = File::load($raw)){
 +            $value = $file->createFileUrl(FALSE);
 +          }
 +        }
++
 +        if($target == 'datetime' || $target == 'date'){
 +          $format = 'c';
-+          try{
++
++          try {
 +            $dt = new \DateTime($raw);
 +            $value = $dt->format($format);
-+          } catch(\Exception $e) {
++          }
++          catch(\Exception $e) {
 +            $value = '';
 +          }
 +        }
@@ -116,7 +92,6 @@ index 8427984..37732d5 100644
 +      case 'integer':
 +        $value = (integer) $raw;
 +        break;
-+
 +      case 'decimal':
 +        $value = (float) $raw;
 +        break;
@@ -126,6 +101,7 @@ index 8427984..37732d5 100644
 +      default:
 +        $value = $raw;
 +    }
++
 +    return $value;
 +  }
 +
@@ -140,6 +116,11 @@ index 8427984..37732d5 100644
 +  protected static function isFieldList($index, $field) {
 +    $is_list = FALSE;
 +
++    // Fix for search_api_id, search_api_datasource & search_api_language fields.
++    if (str_contains($field->getFieldIdentifier(), 'search_')) {
++      return FALSE;
++    }
++
 +    // Ensure we get the field definition for the root/parent field item (ie tags).
 +    $property_definitions =  $index->getPropertyDefinitions($field->getDatasourceId());
 +    $root_property = Utility::splitPropertyPath($field->getPropertyPath(), FALSE)[0];
@@ -149,13 +130,16 @@ index 8427984..37732d5 100644
 +    // check the fieldStorage cardinality !=1.
 +    if ($field_definition instanceof FieldDefinitionInterface) {
 +      $storage = $field_definition->getFieldStorageDefinition();
++
 +      if (1 != $storage->getCardinality()) {
 +        return TRUE;
 +      }
 +    }
-+    if($field->getDataDefinition()->getFieldDefinition()->getFieldStorageDefinition()->getCardinality() === -1){
++
++    if ($field->getDataDefinition()->getFieldDefinition()->getFieldStorageDefinition()->getCardinality() === -1) {
 +      return TRUE;
 +    }
++
 +    return $is_list;
 +  }
 +
@@ -168,9 +152,11 @@ index 8427984..37732d5 100644
 +   */
 +  protected static function objectOfType($field) {
 +    $field_settings = $field->getDataDefinition()->getFieldDefinition()->getSettings();
++
 +    if (isset($field_settings['target_type'])) {
 +      return $field_settings['target_type'];
 +    }
++
 +    if (isset($field_settings['datetime_type'])) {
 +      return $field_settings['datetime_type'];
 +    }

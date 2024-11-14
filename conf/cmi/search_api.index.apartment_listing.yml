@@ -3,32 +3,40 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.node.field_floor_max
     - field.storage.node.field_apartment_number
     - field.storage.node.field_apartment_state_of_sale
     - field.storage.node.field_apartment_structure
-    - field.storage.node.field_has_balcony
     - field.storage.node.field_debt_free_sales_price
     - field.storage.node.field_floor
-    - field.storage.node.field_right_of_occupancy_payment
-    - field.storage.node.field_living_area
-    - field.storage.node.field_release_payment
-    - field.storage.node.field_sales_price
+    - field.storage.node.field_floor_max
     - field.storage.node.field_has_apartment_sauna
+    - field.storage.node.field_has_balcony
     - field.storage.node.field_has_terrace
     - field.storage.node.field_has_yard
+    - field.storage.node.field_living_area
+    - field.storage.node.field_release_payment
+    - field.storage.node.field_right_of_occupancy_payment
+    - field.storage.node.field_sales_price
     - search_api.server.asuntotuotanto
   module:
-    - asu_elastic
     - node
     - computed_field_plugin
     - search_api
     - helfi_react_search
+    - asu_elastic
 id: apartment_listing
 name: 'Apartment listing'
 description: ''
 read_only: false
 field_settings:
+  _language:
+    label: 'Legacy Language'
+    datasource_id: 'entity:node'
+    property_path: langcode
+    type: string
+    dependencies:
+      module:
+        - node
   apartment_address:
     label: 'Street address'
     datasource_id: 'entity:node'
@@ -189,7 +197,7 @@ field_settings:
     label: District
     datasource_id: 'entity:node'
     property_path: 'search_api_reverse_entity_references_node__field_apartments:field_district'
-    type: object
+    type: asu_tidtotermname
   project_estimated_completion:
     label: 'Estimated completion'
     datasource_id: 'entity:node'
@@ -237,7 +245,7 @@ field_settings:
     label: 'Ownership type'
     datasource_id: 'entity:node'
     property_path: 'search_api_reverse_entity_references_node__field_apartments:field_ownership_type:entity:name'
-    type: string
+    type: asu_strtolower
   project_possession_transfer_date:
     label: 'Transfer of possession'
     datasource_id: 'entity:node'
@@ -359,6 +367,7 @@ processor_settings:
   project_plan_schedule: {  }
   rendered_item: {  }
   reverse_entity_references: {  }
+  search_api_exclude_apartments_from_index: {  }
 tracker_settings:
   default:
     indexing_order: fifo
