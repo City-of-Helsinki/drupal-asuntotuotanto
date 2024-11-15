@@ -2,14 +2,14 @@
 
 namespace Drupal\asu_api\Api\BackendApi;
 
+use Drupal\Core\TempStore\PrivateTempStore;
+use Drupal\Core\TempStore\PrivateTempStoreFactory;
 use Drupal\asu_api\Api\BackendApi\Request\AuthenticationRequest;
 use Drupal\asu_api\Api\Request;
 use Drupal\asu_api\Api\Response;
 use Drupal\asu_api\Exception\IllegalApplicationException;
 use Drupal\asu_api\Helper\AuthenticationHelper;
 use Drupal\asu_api\Helper\RequestHelper;
-use Drupal\Core\TempStore\PrivateTempStore;
-use Drupal\Core\TempStore\PrivateTempStoreFactory;
 use Drupal\user\UserInterface;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
@@ -131,7 +131,7 @@ class BackendApi {
    *
    * @throws \GuzzleHttp\Exception\GuzzleException
    */
-  private function handleAuthentication(UserInterface $account = NULL): ?string {
+  private function handleAuthentication(?UserInterface $account = NULL): ?string {
     if ($account) {
       $token = $this->store->get('asu_api_token');
     }

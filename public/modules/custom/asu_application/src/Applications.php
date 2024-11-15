@@ -29,7 +29,7 @@ class Applications {
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
-  public function __construct(string $userId = NULL) {
+  public function __construct(?string $userId = NULL) {
     $applicationStorage = \Drupal::entityTypeManager()
       ->getStorage('asu_application');
 

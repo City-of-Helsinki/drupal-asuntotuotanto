@@ -2,10 +2,10 @@
 
 namespace Drupal\asu_user\Form;
 
-use Drupal\asu_user\DeleteTestUsers;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Messenger\MessengerTrait;
+use Drupal\asu_user\DeleteTestUsers;
 
 /**
  * Form which allows deleting all users that start with "test_".
@@ -40,7 +40,7 @@ class DeleteTestUsersForm extends FormBase {
   public function buildForm(
     array $form,
     FormStateInterface $form_state,
-    string $id = NULL,
+    ?string $id = NULL,
   ) {
     $form['submit'] = [
       '#type' => 'submit',
