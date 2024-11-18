@@ -2,13 +2,13 @@
 
 namespace Drupal\asu_user;
 
-use Drupal\asu_api\Helper\AuthenticationHelper;
-use Drupal\asu_user\Helper\StoreHelper;
 use Drupal\Core\Config\ImmutableConfig;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Session\AccountProxy;
 use Drupal\Core\TempStore\PrivateTempStore;
 use Drupal\Core\TempStore\PrivateTempStoreFactory;
+use Drupal\asu_api\Helper\AuthenticationHelper;
+use Drupal\asu_user\Helper\StoreHelper;
 use Drupal\user\Entity\User;
 
 /**

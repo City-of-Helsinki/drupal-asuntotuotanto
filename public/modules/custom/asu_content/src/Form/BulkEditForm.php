@@ -44,7 +44,7 @@ class BulkEditForm extends FormBase {
   /**
    * {@inheritDoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, string $id = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, ?string $id = NULL) {
     // Build the form for route without a project id.
     if (!$id) {
       $projects = $this->entityTypeManager

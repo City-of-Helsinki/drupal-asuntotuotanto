@@ -2,13 +2,13 @@
 
 namespace Drupal\asu_user;
 
-use Drupal\asu_api\Api\BackendApi\BackendApi;
-use Drupal\asu_api\Api\BackendApi\Request\CreateUserRequest;
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
+use Drupal\asu_api\Api\BackendApi\BackendApi;
+use Drupal\asu_api\Api\BackendApi\Request\CreateUserRequest;
 use Drupal\user\UserInterface;
 use Drupal\user_bundle\TypedRegisterForm;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -41,8 +41,8 @@ class RegisterForm extends TypedRegisterForm {
   public function __construct(
     EntityRepositoryInterface $entity_repository,
     LanguageManagerInterface $language_manager,
-    EntityTypeBundleInfoInterface $entity_type_bundle_info = NULL,
-    TimeInterface $time = NULL,
+    ?EntityTypeBundleInfoInterface $entity_type_bundle_info = NULL,
+    ?TimeInterface $time = NULL,
     BackendApi $backendApi,
   ) {
     parent::__construct($entity_repository, $language_manager, $entity_type_bundle_info, $time);
