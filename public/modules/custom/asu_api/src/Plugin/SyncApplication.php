@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Drupal\asu_api\Plugin\QueueWorker;
 
-use Drupal\asu_api\Api\BackendApi\BackendApi;
-use Drupal\asu_api\Api\BackendApi\Request\CreateApplicationRequest;
-use Drupal\asu_application\Entity\Application;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Queue\QueueWorkerBase;
+use Drupal\asu_api\Api\BackendApi\BackendApi;
+use Drupal\asu_api\Api\BackendApi\Request\CreateApplicationRequest;
+use Drupal\asu_application\Entity\Application;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**

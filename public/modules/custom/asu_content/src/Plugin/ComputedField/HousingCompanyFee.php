@@ -2,8 +2,8 @@
 
 namespace Drupal\asu_content\Plugin\ComputedField;
 
-use Drupal\computed_field_plugin\Traits\ComputedSingleItemTrait;
 use Drupal\Core\Field\FieldItemList;
+use Drupal\computed_field_plugin\Traits\ComputedSingleItemTrait;
 
 /**
  * Computed field HousingCompanyFee.

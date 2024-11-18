@@ -2,9 +2,9 @@
 
 namespace Drupal\asu_content\Plugin\Field\FieldType;
 
-use Drupal\computed_field_plugin\Plugin\Field\FieldType\ComputedRenderArrayItem;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\TypedData\DataDefinition;
+use Drupal\computed_field_plugin\Plugin\Field\FieldType\ComputedRenderArrayItem;
 
 /**
  * Class ComputedRenderArrayItem.

@@ -2,11 +2,11 @@
 
 namespace Drupal\asu_rest\Plugin\rest\resource;
 
-use Drupal\asu_application\Applications;
-use Drupal\asu_rest\UserDto;
 use Drupal\Core\Access\CsrfRequestHeaderAccessCheck;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\asu_application\Applications;
+use Drupal\asu_rest\UserDto;
 use Drupal\rest\ModifiedResourceResponse;
 use Drupal\rest\Plugin\ResourceBase;
 use Drupal\search_api\Entity\Index;

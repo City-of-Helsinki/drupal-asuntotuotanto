@@ -55,7 +55,7 @@ class ReservedApartmentContactForm extends FormBase {
   /**
    * {@inheritDoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, string $user_id = NULL, string $project_id = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, ?string $user_id = NULL, ?string $project_id = NULL) {
     $project_id = $this->requestStack->getCurrentRequest()->get('project') ?? NULL;
     $apartment_id = $this->requestStack->getCurrentRequest()->get('apartment') ?? NULL;
     $project = NULL;

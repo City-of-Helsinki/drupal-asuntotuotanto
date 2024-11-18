@@ -2,9 +2,9 @@
 
 namespace Drupal\asu_api\Api\BackendApi\Request;
 
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\asu_api\Api\BackendApi\Response\UpdateUserResponse;
 use Drupal\asu_api\Api\Request;
-use Drupal\Core\Form\FormStateInterface;
 use Drupal\user\UserInterface;
 use Psr\Http\Message\ResponseInterface;
 

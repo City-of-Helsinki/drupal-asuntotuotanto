@@ -43,7 +43,7 @@ class ApartmentImages extends FieldItemList {
    *   (optional) The parent object of the data property, or NULL if it is the
    *   root of a typed data tree. Defaults to NULL.
    */
-  public function __construct(DataDefinitionInterface $definition, $name = NULL, TypedDataInterface $parent = NULL) {
+  public function __construct(DataDefinitionInterface $definition, $name = NULL, ?TypedDataInterface $parent = NULL) {
     parent::__construct($definition, $name, $parent);
     $this->reverseEntities = \Drupal::service('asu_content.collect_reverse_entity');
   }
