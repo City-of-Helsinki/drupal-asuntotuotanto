@@ -2,10 +2,10 @@
 
 namespace Drupal\asu_content\Plugin\ComputedField;
 
+use Drupal\computed_field_plugin\Traits\ComputedSingleItemTrait;
 use Drupal\Core\Field\FieldItemList;
 use Drupal\Core\TypedData\DataDefinitionInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
-use Drupal\computed_field_plugin\Traits\ComputedSingleItemTrait;
 use Drupal\node\Entity\Node;
 use Drupal\taxonomy\Entity\Term;
 
@@ -42,7 +42,7 @@ class NewDevelopmentStatus extends FieldItemList {
    *   (optional) The parent object of the data property, or NULL if it is the
    *   root of a typed data tree. Defaults to NULL.
    */
-  public function __construct(DataDefinitionInterface $definition, $name = NULL, ?TypedDataInterface $parent = NULL) {
+  public function __construct(DataDefinitionInterface $definition, $name = NULL, TypedDataInterface $parent = NULL) {
     parent::__construct($definition, $name, $parent);
     $this->reverseEntities = \Drupal::service('asu_content.collect_reverse_entity');
   }
@@ -57,8 +57,7 @@ class NewDevelopmentStatus extends FieldItemList {
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
   protected function singleComputeValue() {
-    $current_entity = $this->getEntity();
-    $reverse_references = $this->reverseEntities->getReverseReferences($current_entity);
+    $reverse_references = $this->reverseEntities->getReverseReferences($this->getEntity());
     $value = FALSE;
 
     foreach ($reverse_references as $reference) {
