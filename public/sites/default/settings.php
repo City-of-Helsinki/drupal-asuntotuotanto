@@ -401,6 +401,10 @@ if ($env = getenv('APP_ENV')) {
 
   $config['elasticsearch_connector.cluster.asuntotuotanto']['url'] = getenv('ASU_ELASTICSEARCH_ADDRESS') ?? 'http://localhost:9200';
 
+  // Supported values: https://github.com/Seldaek/monolog/blob/main/doc/01-usage.md#log-levels.
+  $default_log_level = getenv('APP_ENV') === 'production' ? 'info' : 'debug';
+  $settings['helfi_api_base.log_level'] = getenv('LOG_LEVEL') ?: $default_log_level;
+
   if ($env === 'dev') {
     $orbstack = str_contains(php_uname('r'), 'orbstack');
     $config['elasticsearch_connector.cluster.asuntotuotanto']['url'] = $orbstack ? 'http://elastic.asuntotuotanto.orb.local' : 'http://elastic:9200';
@@ -436,7 +440,7 @@ if ($env = getenv('APP_ENV')) {
     $config['search_api.server.asuntotuotanto']['backend_config']['port'] = '443';
 
     $config['raven.settings']['environment'] = 'development';
-    $config['raven.settings']['public_dsn'] = getenv('ASU_SENTRY_DNS') ?? '';
+    $config['raven.settings']['public_dsn'] = getenv('SENTRY_DSN') ?? '';
   }
 
   // Testing environment.
@@ -459,7 +463,7 @@ if ($env = getenv('APP_ENV')) {
     $config['search_api.server.asuntotuotanto']['backend_config']['port'] = '443';
 
     $config['raven.settings']['environment'] = 'testing';
-    $config['raven.settings']['public_dsn'] = getenv('ASU_SENTRY_DNS') ?? '';
+    $config['raven.settings']['public_dsn'] = getenv('SENTRY_DSN') ?? '';
   }
 
   // Staging environment.
@@ -482,7 +486,7 @@ if ($env = getenv('APP_ENV')) {
     $config['search_api.server.asuntotuotanto']['backend_config']['port'] = '443';
 
     $config['raven.settings']['environment'] = 'staging';
-    $config['raven.settings']['public_dsn'] = getenv('ASU_SENTRY_DNS') ?? '';
+    $config['raven.settings']['public_dsn'] = getenv('SENTRY_DSN') ?? '';
   }
 
   // Production environment.
@@ -505,7 +509,7 @@ if ($env = getenv('APP_ENV')) {
     $config['search_api.server.asuntotuotanto']['backend_config']['port'] = '443';
 
     $config['raven.settings']['environment'] = 'production';
-    $config['raven.settings']['public_dsn'] = getenv('ASU_SENTRY_DNS') ?? '';
+    $config['raven.settings']['public_dsn'] = getenv('SENTRY_DSN') ?? '';
     $config['metatag.metatag_defaults.global']['tags']['robots'] = 'index, follow';
     $config['helfi_api_base.features']['disable_email_sending'] = FALSE;
   }

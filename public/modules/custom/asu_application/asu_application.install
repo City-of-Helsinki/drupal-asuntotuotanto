@@ -7,9 +7,9 @@
 
 declare(strict_types=1);
 
-use Drupal\asu_application\Entity\Application;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\asu_application\Entity\Application;
 
 /**
  * Implements hook_install().

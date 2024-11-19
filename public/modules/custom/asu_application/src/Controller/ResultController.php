@@ -2,13 +2,13 @@
 
 namespace Drupal\asu_application\Controller;
 
+use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\asu_api\Api\BackendApi\BackendApi;
 use Drupal\asu_api\Api\BackendApi\Request\ApplicationLotteryResult;
 use Drupal\asu_api\Api\BackendApi\Request\TriggerProjectLotteryRequest;
 use Drupal\asu_application\Entity\Application;
-use Drupal\Core\Ajax\AjaxResponse;
-use Drupal\Core\Controller\ControllerBase;
-use Drupal\Core\Entity\EntityRepositoryInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;

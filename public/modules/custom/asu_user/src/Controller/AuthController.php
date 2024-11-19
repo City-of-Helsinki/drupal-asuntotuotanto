@@ -7,12 +7,12 @@ namespace Drupal\asu_user\Controller;
  * Contains \Drupal\asu_user\Controller\AuthController.
  */
 
-use Drupal\asu_user\AuthService;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Path\PathValidatorInterface;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Utility\Token;
+use Drupal\asu_user\AuthService;
 use Drupal\samlauth\Controller\ExecuteInRenderContextTrait;
 use Drupal\samlauth\Controller\SamlController;
 use Psr\Log\LoggerInterface;
