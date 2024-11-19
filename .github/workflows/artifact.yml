@@ -28,7 +28,7 @@ jobs:
           - 3306:3306
 
       elastic:
-        image: docker.elastic.co/elasticsearch/elasticsearch:8.8.0
+        image: docker.elastic.co/elasticsearch/elasticsearch:8.11.0
         env:
           xpack.security.enabled: false
           discovery.type: single-node
