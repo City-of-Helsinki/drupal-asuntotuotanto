@@ -8,20 +8,20 @@ use Drupal\search_api\DataType\DataTypePluginBase;
  * Parse string to number.
  *
  * @SearchApiDataType(
- *   id = "asu_number",
- *   label = @Translation("string to numeric value"),
- *   description = @Translation("Parse number from string"),
+ *   id = "asu_strtolower",
+ *   label = @Translation("Lowercase string"),
+ *   description = @Translation("Strtolower string"),
  *   default = "true",
  *   fallback_type = "string",
  * )
  */
-class StringToNumber extends DataTypePluginBase {
+class LowercaseString extends DataTypePluginBase {
 
   /**
    * {@inheritdoc}
    */
   public function getValue($string) {
-    return ($string && is_string($string)) ? (int) filter_var($string, FILTER_SANITIZE_NUMBER_INT) : 0;
+    return strtolower($string);
   }
 
 }

@@ -12,6 +12,7 @@ use Drupal\search_api\DataType\DataTypePluginBase;
  *   id = "asu_url",
  *   label = @Translation("Id to url"),
  *   description = @Translation("Turns node id to url"),
+ *   default = "true",
  *   fallback_type = "string",
  * )
  */

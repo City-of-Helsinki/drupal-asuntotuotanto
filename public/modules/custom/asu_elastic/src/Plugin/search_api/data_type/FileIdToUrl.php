@@ -13,6 +13,7 @@ use Drupal\search_api\DataType\DataTypePluginBase;
  *   id = "asu_file_url",
  *   label = @Translation("File id to url"),
  *   description = @Translation("Turns file id to url"),
+ *   default = "true",
  *   fallback_type = "string",
  * )
  */
@@ -39,8 +40,9 @@ class FileIdToUrl extends DataTypePluginBase {
    */
   private function getFileUrl($value) {
     if ($file = File::load((int) $value)) {
-      // File is image.
-      if (empty(file_validate_is_image($file))) {
+      /** @var \Drupal\file\Validation\FileValidatorInterface $file_validator */
+      $file_validator = \Drupal::service('file.validator');
+      if (empty($file_validator->validate($file, ['extensions' => 'png jpg jpeg']))) {
         $style = ImageStyle::load('original_m');
         return $style->buildUrl($file->getFileUri());
       }

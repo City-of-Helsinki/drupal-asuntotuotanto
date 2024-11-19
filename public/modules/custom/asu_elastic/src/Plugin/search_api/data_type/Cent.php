@@ -11,6 +11,7 @@ use Drupal\search_api\DataType\DataTypePluginBase;
  *   id = "cent",
  *   label = @Translation("Euros to cents"),
  *   description = @Translation("Turns price values from euros to cents"),
+ *   default = "true",
  *   fallback_type = "integer",
  * )
  */

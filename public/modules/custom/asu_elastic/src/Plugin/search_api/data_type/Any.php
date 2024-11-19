@@ -11,6 +11,7 @@ use Drupal\search_api\DataType\DataTypePluginBase;
  *   id = "any",
  *   label = @Translation("Any"),
  *   description = @Translation("Any field can be primarily used with computed fields."),
+ *   default = "true",
  *   fallback_type = "string",
  * )
  */

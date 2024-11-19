@@ -10,9 +10,6 @@ description: ''
 backend: elasticsearch
 backend_config:
   server_description: ''
-  cluster_settings:
-    cluster: asuntotuotanto
-  fuzziness: auto
   scheme: http
   host: localhost
   port: '9200'
@@ -23,3 +20,11 @@ backend_config:
   http_method: AUTO
   autocorrect_spell: true
   autocorrect_suggest_words: true
+  connector: standard
+  connector_config:
+    url: 'http://elastic:9200'
+    enable_debug_logging: false
+  advanced:
+    prefix: asuntotuotanto_
+    suffix: ''
+    fuzziness: auto
