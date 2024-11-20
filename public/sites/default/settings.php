@@ -438,8 +438,9 @@ if ($env = getenv('APP_ENV')) {
     $config['elasticsearch_connector.cluster.asuntotuotanto']['cluster_id'] = 'asuntotuotanto';
 
     $config['search_api.server.asuntotuotanto']['backend_config']['scheme'] = 'https';
-    $config['search_api.server.asuntotuotanto']['backend_config']['host'] = getenv('ASU_ELASTICSEARCH_ADDRESS') ?? '';
-    $config['search_api.server.asuntotuotanto']['backend_config']['port'] = getenv('ASU_ELASTICSEARCH_PORT') ?? '';
+    $config['search_api.server.asuntotuotanto']['backend_config']['host'] = getenv('ASU_ELASTICSEARCH_ADDRESS') ?? 'localhost';
+    $config['search_api.server.asuntotuotanto']['backend_config']['connector_config']['url'] = getenv('ASU_ELASTICSEARCH_URL') ?? 'http://elastic:9200';
+    $config['search_api.server.asuntotuotanto']['backend_config']['port'] = getenv('ASU_ELASTICSEARCH_PORT') ?? '9200';
 
     $config['raven.settings']['environment'] = $env;
     $config['raven.settings']['public_dsn'] = getenv('SENTRY_DSN') ?? '';
