@@ -424,23 +424,16 @@ if ($env = getenv('APP_ENV')) {
   $whitelist = ['development', 'testing', 'stg', 'prod'];
 
   if (in_array($env, $whitelist)) {
-    $config['elasticsearch_connector.cluster.asuntotuotanto']['options']['use_authentication'] = 1;
-    $config['elasticsearch_connector.cluster.asuntotuotanto']['options']['authentication_type'] = 'Basic';
-    $config['elasticsearch_connector.cluster.asuntotuotanto']['options']['username'] = getenv('ASU_ELASTICSEARCH_USERNAME');
-    $config['elasticsearch_connector.cluster.asuntotuotanto']['options']['password'] = getenv('ASU_ELASTICSEARCH_PASSWORD');
-    $config['elasticsearch_connector.cluster.asuntotuotanto']['options']['rewrite']['rewrite_index'] = 1;
-    $config['elasticsearch_connector.cluster.asuntotuotanto']['options']['rewrite']['index']['prefix'] = 'asuntotuotanto';
-
-
     $config['elasticsearch_connector.index.apartments']['index_id'] = 'asuntotuotanto_apartment';
     $config['elasticsearch_connector.index.apartments']['server'] = 'asuntotuotanto';
-    $config['elasticsearch_connector.cluster.asuntotuotanto']['status'] = '1';
-    $config['elasticsearch_connector.cluster.asuntotuotanto']['cluster_id'] = 'asuntotuotanto';
 
     $config['search_api.server.asuntotuotanto']['backend_config']['scheme'] = 'https';
     $config['search_api.server.asuntotuotanto']['backend_config']['host'] = getenv('ASU_ELASTICSEARCH_ADDRESS') ?? 'localhost';
     $config['search_api.server.asuntotuotanto']['backend_config']['connector_config']['url'] = getenv('ASU_ELASTICSEARCH_URL') ?? 'http://elastic:9200';
     $config['search_api.server.asuntotuotanto']['backend_config']['port'] = getenv('ASU_ELASTICSEARCH_PORT') ?? '9200';
+    $config['search_api.server.asuntotuotanto']['backend_config']['connector'] = 'basicauth';
+    $config['search_api.server.asuntotuotanto']['backend_config']['connector_config']['username'] = getenv('ASU_ELASTICSEARCH_USERNAME') ?? '';
+    $config['search_api.server.asuntotuotanto']['backend_config']['connector_config']['password'] = getenv('ASU_ELASTICSEARCH_PASSWORD') ?? '';
 
     $config['raven.settings']['environment'] = $env;
     $config['raven.settings']['public_dsn'] = getenv('SENTRY_DSN') ?? '';
