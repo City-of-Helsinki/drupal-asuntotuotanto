@@ -420,6 +420,16 @@ if ($env = getenv('APP_ENV')) {
   $whitelist = ['development', 'testing', 'stg', 'prod'];
 
   if (in_array($env, $whitelist)) {
+    // Elasticsearch settings.
+    if (getenv('ELASTICSEARCH_URL')) {
+      $config['search_api.server.asuntotuotanto']['backend_config']['connector_config']['url'] = getenv('ASU_ELASTICSEARCH_URL');
+
+      if (getenv('ELASTIC_USER') && getenv('ELASTIC_PASSWORD')) {
+        $config['search_api.server.asuntotuotanto']['backend_config']['connector'] = 'basicauth';
+        $config['search_api.server.asuntotuotanto']['backend_config']['connector_config']['username'] = getenv('ASU_ELASTICSEARCH_USERNAME');
+        $config['search_api.server.asuntotuotanto']['backend_config']['connector_config']['password'] = getenv('ASU_ELASTICSEARCH_PASSWORD');
+      }
+    }
     $config['raven.settings']['environment'] = $env;
     $config['raven.settings']['public_dsn'] = getenv('SENTRY_DSN') ?? '';
     $config['metatag.metatag_defaults.global']['tags']['robots'] = 'index, follow';
