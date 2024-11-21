@@ -9,22 +9,15 @@ name: Asuntotuotanto
 description: ''
 backend: elasticsearch
 backend_config:
-  server_description: ''
-  scheme: http
-  host: localhost
-  port: '9200'
-  path: ''
-  excerpt: false
-  retrieve_data: false
-  highlight_data: false
-  http_method: AUTO
-  autocorrect_spell: true
-  autocorrect_suggest_words: true
-  connector: standard
+  connector: basicauth
   connector_config:
-    url: 'http://elastic:9200'
+    url: 'https://elastic:9200'
     enable_debug_logging: false
+    username: elastic
+    password: ''
   advanced:
+    fuzziness: auto
     prefix: asuntotuotanto_
     suffix: ''
-    fuzziness: auto
+    synonyms:
+      - ''
