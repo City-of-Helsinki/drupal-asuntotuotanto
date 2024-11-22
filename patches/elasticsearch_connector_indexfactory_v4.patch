@@ -1,5 +1,5 @@
 diff --git a/src/SearchAPI/IndexParamBuilder.php b/src/SearchAPI/IndexParamBuilder.php
-index 9d84fe8..4deeb1d 100644
+index 9d84fe8..a20338f 100644
 --- a/src/SearchAPI/IndexParamBuilder.php
 +++ b/src/SearchAPI/IndexParamBuilder.php
 @@ -7,7 +7,10 @@ use Drupal\search_api\IndexInterface;
@@ -11,7 +11,7 @@ index 9d84fe8..4deeb1d 100644
 +use Drupal\Core\Field\FieldDefinitionInterface;
 +use Drupal\file\Entity\File;
  use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
-
+ 
  /**
 @@ -50,10 +53,18 @@ class IndexParamBuilder {
        $this->addSpecialFields($index, $item);
@@ -35,10 +35,10 @@ index 9d84fe8..4deeb1d 100644
          }
        }
        $params['body'][] = ['index' => ['_id' => $id, '_index' => $indexId]];
-@@ -115,4 +126,127 @@ class IndexParamBuilder {
+@@ -115,4 +126,137 @@ class IndexParamBuilder {
      return $values;
    }
-
+ 
 +  /**
 +   * Helper function. Returns the elasticsearch value for a given field.
 +   *
@@ -85,7 +85,7 @@ index 9d84fe8..4deeb1d 100644
 +            $value = $dt->format($format);
 +          }
 +          catch(\Exception $e) {
-+            $value = '';
++            $value = NULL;
 +          }
 +        }
 +        break;
@@ -96,7 +96,17 @@ index 9d84fe8..4deeb1d 100644
 +        $value = (float) $raw;
 +        break;
 +      case 'any':
-+        $value = $field->getValues();
++        // Fix which cause local search api for indexing index.
++        if (strtolower($field->getLabel()) == 'images') {
++          foreach ($field->getValues() as $image) {
++            if (file_exists($image)) {
++              $value[] = $image;
++            }
++          }
++        }
++        else {
++          $value = $field->getValues();
++        }
 +        break;
 +      default:
 +        $value = $raw;
