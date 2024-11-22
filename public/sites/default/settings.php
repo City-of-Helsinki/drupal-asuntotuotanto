@@ -399,15 +399,13 @@ if ($env = getenv('APP_ENV')) {
 
   $settings['ASU_DJANGO_BACKEND_URL'] = getenv('ASU_DJANGO_BACKEND_URL');
 
-  $config['elasticsearch_connector.cluster.asuntotuotanto']['url'] = getenv('ASU_ELASTICSEARCH_ADDRESS') ?? 'http://localhost:9200';
-
   // Supported values: https://github.com/Seldaek/monolog/blob/main/doc/01-usage.md#log-levels.
   $default_log_level = getenv('APP_ENV') === 'production' ? 'info' : 'debug';
   $settings['helfi_api_base.log_level'] = getenv('LOG_LEVEL') ?: $default_log_level;
 
   if ($env === 'dev') {
     $orbstack = str_contains(php_uname('r'), 'orbstack');
-    $config['elasticsearch_connector.cluster.asuntotuotanto']['url'] = $orbstack ? 'http://elastic.asuntotuotanto.orb.local' : 'http://elastic:9200';
+    $config['search_api.server.asuntotuotanto']['backend_config']['connector_config']['url'] = $orbstack ? 'http://elastic.asuntotuotanto.orb.local' : 'http://elastic:9200';
 
     if ($orbstack) {
       // Mailer settings.
