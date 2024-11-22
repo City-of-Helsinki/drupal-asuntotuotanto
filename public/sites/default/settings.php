@@ -419,10 +419,10 @@ if ($env = getenv('APP_ENV')) {
 
   if (in_array($env, $whitelist)) {
     // Elasticsearch settings.
-    if (getenv('ELASTICSEARCH_URL')) {
+    if (getenv('ASU_ELASTICSEARCH_URL')) {
       $config['search_api.server.asuntotuotanto']['backend_config']['connector_config']['url'] = getenv('ASU_ELASTICSEARCH_URL');
 
-      if (getenv('ELASTIC_USER') && getenv('ELASTIC_PASSWORD')) {
+      if (getenv('ASU_ELASTICSEARCH_USERNAME') && getenv('ASU_ELASTICSEARCH_PASSWORD')) {
         $config['search_api.server.asuntotuotanto']['backend_config']['connector'] = 'basicauth';
         $config['search_api.server.asuntotuotanto']['backend_config']['connector_config']['username'] = getenv('ASU_ELASTICSEARCH_USERNAME');
         $config['search_api.server.asuntotuotanto']['backend_config']['connector_config']['password'] = getenv('ASU_ELASTICSEARCH_PASSWORD');
