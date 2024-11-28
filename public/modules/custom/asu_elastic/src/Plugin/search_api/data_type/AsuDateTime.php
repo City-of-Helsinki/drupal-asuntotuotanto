@@ -11,6 +11,7 @@ use Drupal\search_api\DataType\DataTypePluginBase;
  *   id = "asu_date_time",
  *   label = @Translation("Date time"),
  *   description = @Translation("Covert real date time"),
+ *   default = "true",
  *   fallback_type = "string",
  * )
  */

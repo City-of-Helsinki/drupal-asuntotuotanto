@@ -11,6 +11,7 @@ use Drupal\search_api\DataType\DataTypePluginBase;
  *   id = "computed_array_string",
  *   label = @Translation("Computed array to string"),
  *   description = @Translation("Computed array to string fields are used for converting markup like render array to string."),
+ *   default = "true",
  *   fallback_type = "string",
  * )
  */

@@ -11,6 +11,7 @@ use Drupal\search_api\DataType\DataTypePluginBase;
  *   id = "asu_enum",
  *   label = @Translation("Enum"),
  *   description = @Translation("Enum"),
+ *   default = "true",
  *   fallback_type = "string",
  * )
  */

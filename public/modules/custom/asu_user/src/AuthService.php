@@ -2,14 +2,14 @@
 
 namespace Drupal\asu_user;
 
-use Drupal\asu_api\Api\BackendApi\BackendApi;
-use Drupal\asu_api\Api\BackendApi\Request\CreateUserRequest;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\Core\TempStore\PrivateTempStore;
 use Drupal\Core\TempStore\PrivateTempStoreFactory;
+use Drupal\asu_api\Api\BackendApi\BackendApi;
+use Drupal\asu_api\Api\BackendApi\Request\CreateUserRequest;
 use Drupal\samlauth\SamlService;
 use Drupal\samlauth\UserVisibleException;
 use OneLogin\Saml2\Utils as SamlUtils;
@@ -164,7 +164,7 @@ class AuthService extends SamlService {
    * @param \Drupal\Core\Session\AccountInterface|null $account
    *   The existing user account derived from the unique ID, if any.
    */
-  protected function doLogin($unique_id, AccountInterface $account = NULL) {
+  protected function doLogin($unique_id, ?AccountInterface $account = NULL) {
     $config = $this->configFactory->get('samlauth.authentication');
     $first_saml_login = FALSE;
 

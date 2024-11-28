@@ -58,8 +58,9 @@ class ApartmentUpdateWorker extends QueueWorkerBase implements ContainerFactoryP
    * {@inheritdoc}
    */
   public function processItem($data) {
-    $entity = $this->entityTypeManager->getStorage('node')->load($data->nid);
-    $entity->save();
+    if ($entity = $this->entityTypeManager->getStorage('node')->load($data->nid)) {
+      $entity->save();
+    }
   }
 
 }

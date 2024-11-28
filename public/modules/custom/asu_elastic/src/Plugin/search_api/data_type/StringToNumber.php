@@ -11,6 +11,7 @@ use Drupal\search_api\DataType\DataTypePluginBase;
  *   id = "asu_number",
  *   label = @Translation("string to numeric value"),
  *   description = @Translation("Parse number from string"),
+ *   default = "true",
  *   fallback_type = "string",
  * )
  */

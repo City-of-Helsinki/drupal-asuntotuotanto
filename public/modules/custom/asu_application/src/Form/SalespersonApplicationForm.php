@@ -55,7 +55,7 @@ class SalespersonApplicationForm extends FormBase {
   /**
    * {@inheritDoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, string $user_id = NULL, string $project_id = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, ?string $user_id = NULL, ?string $project_id = NULL) {
     if ($user_id) {
       $projects = [];
       $user = $this->entityTypeManager->getStorage('user')->load($user_id);
