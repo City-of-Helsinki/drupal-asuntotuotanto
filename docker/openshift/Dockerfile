@@ -21,4 +21,4 @@ RUN chmod +x /crons/* /usr/local/bin/cron-entrypoint
 COPY docker/openshift/custom.locations /etc/nginx/conf.d/custom.locations
 
 # Project-specific ini settings
-COPY ./php-ini-overrides.ini /etc/php83/conf.d/
+COPY docker/openshift/php-ini-overrides.ini /etc/php83/conf.d/
