@@ -336,6 +336,9 @@ class ApplicationForm extends ContentEntityForm {
       parent::validateForm($form, $form_state);
       $form_state->clearErrors();
     }
+    if ($form_state->hasAnyErrors()) {
+      unset($form['actions']['submit']['#attributes']['disabled']);
+    }
   }
 
   /**
