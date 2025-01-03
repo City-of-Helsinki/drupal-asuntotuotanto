@@ -1,6 +1,6 @@
-((Drupal) => {
+((Drupal, once) => {
   Drupal.behaviors.applicantFormToggle = {
-    attach: function attach() {
+    attach: function attach(context) {
       const applicantFormWrapperElement = document.getElementById('applicant-wrapper');
       const checkboxToggleElement = document.getElementById('edit-applicant-0-has-additional-applicant');
 
@@ -20,6 +20,19 @@
       if (pidField) {
         pidField.setAttribute('minlength', '4');
       }
+
+      once('disableSubmit', 'form', context).forEach((form) => {
+        form.addEventListener('submit', function (e) {
+          const submitButton = form.querySelector('input[type="submit"]');
+          if (submitButton.disabled) {
+            e.preventDefault();
+            return;
+          }
+          if (submitButton) {
+            submitButton.disabled = true;
+          }
+        });
+      });
     },
   };
-})(Drupal);
+})(Drupal, once);
