@@ -50,7 +50,7 @@ display:
             label: 'Typ av MIME'
         status:
           expose:
-            label: Tila
+            label: Status
       title: Filer
       empty:
         area_text_custom:
