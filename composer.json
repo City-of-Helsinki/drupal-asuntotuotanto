@@ -32,7 +32,7 @@
         "drupal/hdbt": "^6.0",
         "drupal/hdbt_admin": "^3.0",
         "drupal/helfi_azure_fs": "^2.0",
-        "drupal/helfi_drupal_tools": "dev-main",
+        "drupal/helfi_drupal_tools": "*",
         "drupal/helfi_platform_config": "^4.4",
         "drupal/helfi_tunnistamo": "^2.0",
         "drupal/honeypot": "<2.2",
@@ -88,7 +88,8 @@
             "drupal/core-composer-scaffold": true,
             "zaporylie/composer-drupal-optimizations": true,
             "php-http/discovery": true,
-            "phpstan/extension-installer": true
+            "phpstan/extension-installer": true,
+            "tbachert/spi": true
         },
         "audit": {
             "abandoned": "report",
@@ -143,10 +144,6 @@
                 "https://www.drupal.org/project/drupal/issues/3054641#comment-13385850": "https://www.drupal.org/files/issues/2019-12-10/3054641-14.patch",
                 "Views attachments are not rendered in the specified order [https://www.drupal.org/project/drupal/issues/2943293]": "https://www.drupal.org/files/issues/2019-05-25/2943293-17.patch",
                 "https://www.drupal.org/project/drupal/issues/3098307": "https://www.drupal.org/files/issues/2022-07-01/sql_mode_fullgroupby_issue-3098307-15.patch"
-            },
-            "drupal/elasticsearch_connector": {
-                "Custom patch based on https://www.drupal.org/files/issues/2020-03-03/8.x-7.x-2977537-13-array-vs-scalar_0.patch": "patches/elasticsearch_connector_indexfactory_v3.patch",
-                "https://www.drupal.org/project/elasticsearch_connector/issues/2850749": "https://www.drupal.org/files/issues/2021-12-01/cannot-load-cluster-exception-2850749-10.patch"
             },
             "drupal/field_group": {
                 "https://www.drupal.org/project/field_group/issues/3395375": "https://www.drupal.org/files/issues/2024-08-06/3395375-6.patch"
