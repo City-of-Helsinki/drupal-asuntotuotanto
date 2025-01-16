@@ -3,6 +3,71 @@
     "type": "drupal-drush",
     "description": "Helfi - Drupal tools",
     "license": "GPL-2.0-or-later",
-    "minimum-stability": "dev"
+    "minimum-stability": "dev",
+    "require": {
+        "drupal/helfi_api_base": "*",
+        "drush/drush": "^12 || ^13"
+    },
+    "conflict": {
+        "drush/drush": "< 12.5"
+    },
+    "require-dev": {
+        "composer/installers": "^2",
+        "drupal/core-recommended": "^10.2",
+        "drupal/core-dev": "^10.2",
+        "dealerdirect/phpcodesniffer-composer-installer": "^0.7.0",
+        "drupal/coder": "^8.3",
+        "phpspec/prophecy-phpunit": "^2",
+        "phpstan/phpstan": "^1.10",
+        "phpstan/phpstan-deprecation-rules": "^1.1",
+        "phpstan/extension-installer": "^1.3",
+        "jangregor/phpstan-prophecy": "^1.0",
+        "phpunit/phpunit": "^9.6"
+    },
+    "prefer-stable": true,
+    "autoload": {
+        "psr-4": {
+            "DrupalTools\\": "src"
+        },
+        "files": [ "src/Update/migrations.php" ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "DrupalToolsTest\\": "tests/fixtures"
+        },
+        "classmap": [
+            "sut/core",
+            "sut/modules/contrib"
+        ],
+        "files": [ "tests/fixtures/migration_fixture.php" ]
+    },
+    "repositories": {
+        "platform": {
+            "type": "composer",
+            "url": "https://repository.drupal.hel.ninja"
+        },
+        "drupal_org": {
+            "type": "composer",
+            "url": "https://packages.drupal.org/8"
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "composer/installers": true,
+            "dealerdirect/phpcodesniffer-composer-installer": true,
+            "phpstan/extension-installer": true,
+            "php-http/discovery": false,
+            "tbachert/spi": false
+        }
+    },
+    "extra": {
+        "installer-paths": {
+            "sut/core": ["type:drupal-core"],
+            "sut/libraries/{$name}": ["type:drupal-library"],
+            "sut/modules/contrib/{$name}": ["type:drupal-module"],
+            "sut/profiles/contrib/{$name}": ["type:drupal-profile"],
+            "sut/themes/contrib/{$name}": ["type:drupal-theme"],
+            "sut/drush/contrib/{$name}": ["type:drupal-drush"]
+        }
+    }
 }
-

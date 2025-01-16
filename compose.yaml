@@ -1,33 +1,39 @@
 services:
   app:
-    hostname: "${DRUPAL_HOSTNAME}"
     container_name: "${COMPOSE_PROJECT_NAME}-app"
     image: "${DRUPAL_IMAGE}"
+    hostname: "${COMPOSE_PROJECT_NAME}"
     volumes:
       - .:/app:delegated
-      - ssh:/tmp/druid_ssh-agent:ro
+    depends_on:
+      - db
     environment:
-      APP_ENV: "${APP_ENV:-dev}"
-      DRUPAL_ROUTES: "https://varnish-${DRUPAL_HOSTNAME},https://helfi-proxy.docker.so,http://${COMPOSE_PROJECT_NAME}-varnish"
+      WEBROOT: /app/public
       STAGE_FILE_PROXY_ORIGIN: "${STAGE_FILE_PROXY_ORIGIN}"
       STAGE_FILE_PROXY_ORIGIN_DIR: "${STAGE_FILE_PROXY_ORIGIN_DIR}"
+      APP_ENV: "${APP_ENV:-local}"
+      ELASTIC_PROXY_URL: ${ELASTIC_PROXY_URL:-""}
+      DRUPAL_ROUTES: "https://varnish-${DRUPAL_HOSTNAME},https://helfi-proxy.docker.so,http://${COMPOSE_PROJECT_NAME}-varnish,http://${COMPOSE_PROJECT_NAME}"
+      DRUPAL_REVERSE_PROXY_ADDRESS: helfi-proxy.docker.so
       DRUSH_OPTIONS_URI: "https://${DRUPAL_HOSTNAME}"
-      # XDEBUG_ENABLE: "true"
+      # To enable xdebug, run `export XDEBUG_ENABLE=true` before (re)starting your project.
+      # Optionally, you can add this to your default environments variables to enable or disable
+      # xdebug by default (like /etc/environments, ~/.bashrc, or ~/.zshrc).
+      XDEBUG_ENABLE: "${XDEBUG_ENABLE:-false}"
+      XDEBUG_CONFIG: "${XDEBUG_CONFIG:-}"
+      PHP_IDE_CONFIG: "${PHP_IDE_CONFIG:-serverName=${DRUPAL_HOSTNAME}}"
       # DOCKERHOST: host.docker.internal
-      # XDEBUG_CONFIG: "remote_port=9001 remote_host=host.docker.internal remote_connect_back=0"
-      # PHP_IDE_CONFIG: "${PHP_IDE_CONFIG:-serverName=${DRUPAL_HOSTNAME}}"
-      PHP_SENDMAIL_PATH: /usr/sbin/sendmail -S host.docker.internal:1025 -t
-
-      # permission issues.
-      DTT_BASE_URL: "http://app:8080"
-      SIMPLETEST_BASE_URL: "http://app:8080"
-      SIMPLETEST_DB: "mysql://drupal:drupal@db:3306/drupal"
-      DRUPAL_REVERSE_PROXY_ADDRESS: "https://asuntotuotanto.docker.so"
+      # Use drush server to run functional tests, so we don't have to care about
+      # permission or SSL issues.
       BROWSERTEST_OUTPUT_BASE_URL: "https://${DRUPAL_HOSTNAME}"
+      BROWSERTEST_OUTPUT_DIRECTORY: "/app/public/sites/default/files/simpletest"
       DRUPAL_VARNISH_HOST: "${COMPOSE_PROJECT_NAME}-varnish"
       DRUPAL_VARNISH_PORT: 6081
       REDIS_HOST: redis
-      ASU_ASUNTOTUOTANTO_URL: "https://asuntotuotanto.docker.so"
+      PROJECT_NAME: "${PROJECT_NAME}"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+      - "${DRUPAL_HOSTNAME}:host-gateway"
     networks:
       - internal
       - stonehenge-network
@@ -38,84 +44,138 @@ services:
       - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-app.tls=true"
       - "traefik.http.services.${COMPOSE_PROJECT_NAME}-app.loadbalancer.server.port=8080"
       - "traefik.docker.network=stonehenge-network"
-    #extra_hosts:
-      #- "host.docker.internal:host-gateway"
-      #- "${DRUPAL_HOSTNAME}:host-gateway"
-
+  redis:
+    container_name: "${COMPOSE_PROJECT_NAME}-redis"
+    image: redis:7-alpine
+    command: [sh, -c, "rm -f /data/dump.rdb && redis-server --save ''"]
+    networks:
+      - internal
   db:
     container_name: "${COMPOSE_PROJECT_NAME}-db"
-    image: druidfi/mariadb:10.6-drupal
+    image: mysql:8
+    command:
+      - --max_allowed_packet=512M
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_swedish_ci
+    environment:
+      MYSQL_DATABASE: drupal
+      MYSQL_USER: drupal
+      MYSQL_PASSWORD: drupal
+      MYSQL_INITDB_SKIP_TZINFO: 1
+      MYSQL_RANDOM_ROOT_PASSWORD: 1
     volumes:
-      - db_data:/var/lib/mysql
+      - db_volume:/var/lib/mysql
     ports:
       - 3306
     networks:
       - internal
-
+  varnish:
+    container_name: "${COMPOSE_PROJECT_NAME}-varnish"
+    image: druidfi/varnish:6-drupal
+    environment:
+      VARNISH_BACKEND_HOST: "${COMPOSE_PROJECT_NAME}-app"
+      VARNISH_CACHE_STATIC_FILES: "1"
+    depends_on:
+      - app
+    networks:
+      - internal
+      - stonehenge-network
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-varnish.entrypoints=https"
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-varnish.rule=Host(`varnish-${DRUPAL_HOSTNAME}`)"
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-varnish.tls=true"
+      - "traefik.http.services.${COMPOSE_PROJECT_NAME}-varnish.loadbalancer.server.port=6081"
+      - "traefik.docker.network=stonehenge-network"
+    profiles:
+      - varnish
+  elastic-proxy:
+    container_name: "${COMPOSE_PROJECT_NAME}-elastic-proxy"
+    image: nginxinc/nginx-unprivileged:alpine-perl
+    environment:
+      ELASTICSEARCH_URL: "http://elastic:9200"
+    volumes:
+      - ./docker/elastic-proxy/nginx.conf:/etc/nginx/nginx.conf
+      - ./docker/elastic-proxy/elastic.conf:/etc/nginx/templates/default.conf.template
+    networks:
+      - stonehenge-network
+      - internal
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-elastic-proxy.entrypoints=https"
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-elastic-proxy.rule=Host(`elastic-proxy-${DRUPAL_HOSTNAME}`)"
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-elastic-proxy.tls=true"
+      - "traefik.http.services.${COMPOSE_PROJECT_NAME}-elastic-proxy.loadbalancer.server.port=8080"
+      - "traefik.docker.network=stonehenge-network"
+      - "traefik.http.middlewares.cors-header.headers.accesscontrolallowmethods=GET,OPTIONS,POST"
+      - "traefik.http.middlewares.cors-header.headers.accesscontrolallowheaders=*"
+      - "traefik.http.middlewares.cors-header.headers.accesscontrolalloworiginlist=*"
+      - "traefik.http.middlewares.cors-header.headers.accesscontrolmaxage=100"
+      - "traefik.http.middlewares.cors-header.headers.addvaryheader=true"
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-elastic-proxy.middlewares=cors-header"
+    depends_on:
+      - elastic
+    profiles:
+      - search
   elastic:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.9.1
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.17.0
     container_name: "${COMPOSE_PROJECT_NAME}-elastic"
     environment:
       - node.name="${COMPOSE_PROJECT_NAME}-elastic"
+      - discovery.seed_hosts=elastic
       - cluster.name=es-docker-cluster
       - cluster.initial_master_nodes="${COMPOSE_PROJECT_NAME}-elastic"
       - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - "http.cors.allow-origin=\"*\""
+      - "http.cors.enabled=true"
+      - "http.cors.allow-headers=X-Requested-With,X-Auth-Token,Content-Type,Content-Length,Authorization"
+      - "http.cors.allow-credentials=true"
+      - xpack.security.enabled=false
     ulimits:
       memlock:
         soft: -1
         hard: -1
-    volumes:
-      - data01:/usr/share/elasticsearch/data
     ports:
-      - 9200:9200
+      - 9200-9220:9200
     networks:
       - internal
       - stonehenge-network
-  idp:
-    container_name: "${COMPOSE_PROJECT_NAME}-idp"
-    image: druidfi/saml-idp:1.19.1
-    environment:
-      SIMPLESAMLPHP_IDP_BASEURLPATH: "https://idp-${DRUPAL_HOSTNAME}/simplesaml/"
-      SIMPLESAMLPHP_SP_ENTITY_ID: "https://${DRUPAL_HOSTNAME}/saml/metadata"
-      SIMPLESAMLPHP_SP_ASSERTION_CONSUMER_SERVICE: "https://${DRUPAL_HOSTNAME}/saml/acs"
-      SIMPLESAMLPHP_SP_SINGLE_LOGOUT_SERVICE: "https://${DRUPAL_HOSTNAME}/saml/logout"
-    volumes:
-      - ./conf/local_idp_authsources.php:/var/www/simplesamlphp/config/authsources.php
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-idp.entrypoints=https"
-      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-idp.rule=Host(`idp-${DRUPAL_HOSTNAME}`)"
-      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-idp.tls=true"
-      - "traefik.http.services.${COMPOSE_PROJECT_NAME}-idp.loadbalancer.server.port=8080"
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-elastic.entrypoints=https"
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-elastic.rule=Host(`elastic-${DRUPAL_HOSTNAME}`)"
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-elastic.tls=true"
+      - "traefik.http.services.${COMPOSE_PROJECT_NAME}-elastic.loadbalancer.server.port=9200"
       - "traefik.docker.network=stonehenge-network"
+      - "traefik.port=9200"
+    profiles:
+      - search
+  artemis:
+    container_name: "${COMPOSE_PROJECT_NAME}-artemis"
+    image: apache/activemq-artemis
+    depends_on:
+      - app
     networks:
       - internal
       - stonehenge-network
-
-  redis:
-    container_name: "${COMPOSE_PROJECT_NAME}-redis"
-    image: redis:6-alpine
+    profiles:
+      - queue
+  chromium:
+    image: selenium/standalone-chromium
+    environment:
+      SE_NODE_OVERRIDE_MAX_SESSIONS: "true"
+      SE_NODE_MAX_SESSIONS: "16"
+      SE_START_XVFB: "false"
+      SE_START_VNC: "false"
+      SE_SESSION_RETRY_INTERVAL: "1"
+      SE_SESSION_REQUEST_TIMEOUT: "10"
+    depends_on:
+      - app
     networks:
       - internal
-#  varnish:
-#    container_name: "${COMPOSE_PROJECT_NAME}-varnish"
-#    image: druidfi/varnish:6-drupal
-#    environment:
-#      VARNISH_BACKEND_HOST: "${COMPOSE_PROJECT_NAME}-app"
-#    depends_on:
-#      - app
-#    networks:
-#      - internal
-#      - stonehenge-network
-#    labels:
-#      - "traefik.enable=true"
-#      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-varnish.entrypoints=https"
-#      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-varnish.rule=Host(`varnish-${DRUPAL_HOSTNAME}`)"
-#      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-varnish.tls=true"
-#      - "traefik.http.services.${COMPOSE_PROJECT_NAME}-varnish.loadbalancer.server.port=6081"
-#      - "traefik.docker.network=stonehenge-network"
-
+    profiles:
+      - testing
 
 networks:
   internal:
@@ -124,9 +184,7 @@ networks:
     external: true
 
 volumes:
-  data01:
-    driver: local
-  db_data:
+  db_volume:
   ssh:
     name: stonehenge-ssh
     external: true
