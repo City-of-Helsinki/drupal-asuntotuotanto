@@ -53,3 +53,4 @@ if [ ! -n "$OPENSHIFT_BUILD_NAME" ]; then
   output_error_message "Container start error: OPENSHIFT_BUILD_NAME is not defined. Exiting early."
   exit 1
 fi
+

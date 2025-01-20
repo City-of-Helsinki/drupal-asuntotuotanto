@@ -110,7 +110,7 @@ foreach ($routes as $route) {
 
 $settings['config_sync_directory'] = '../conf/cmi';
 $settings['file_public_path'] = getenv('DRUPAL_FILES_PUBLIC') ?: 'sites/default/files';
-$settings['file_private_path'] = getenv('DRUPAL_FILES_PRIVATE') ?: 'sites/default/files/private';
+$settings['file_private_path'] = getenv('DRUPAL_FILES_PRIVATE');
 $settings['file_temp_path'] = getenv('DRUPAL_TMP_PATH') ?: '/tmp';
 
 if ($reverse_proxy_address = getenv('DRUPAL_REVERSE_PROXY_ADDRESS')) {
@@ -260,24 +260,18 @@ if ($session_suffix = getenv('DRUPAL_SESSION_SUFFIX')) {
   $config['helfi_proxy.settings']['session_suffix'] = $session_suffix;
 }
 
-if ($robots_header_enabled = getenv('DRUPAL_X_ROBOTS_TAG_HEADER')) {
-  $config['helfi_proxy.settings']['robots_header_enabled'] = (bool) $robots_header_enabled;
-}
-
-$artemis_destination = drupal_get_env([
-  'ARTEMIS_DESTINATION',
+$amq_destination = drupal_get_env([
   'PROJECT_NAME',
 ]);
+$amq_brokers = getenv('AMQ_BROKERS');
 
-$artemis_brokers = getenv('ARTEMIS_BROKERS');
-
-if ($artemis_brokers && $artemis_destination) {
+if ($amq_brokers && $amq_destination) {
   $settings['stomp']['default'] = [
-    'clientId' => getenv('ARTEMIS_CLIENT_ID') ?: 'artemis',
-    'login' => getenv('ARTEMIS_LOGIN') ?: NULL,
-    'passcode' => getenv('ARTEMIS_PASSCODE') ?: NULL,
-    'destination' => sprintf('/queue/%s', $artemis_destination),
-    'brokers' => $artemis_brokers,
+    'clientId' => getenv('AMQ_CLIENT_ID') ?: 'client_ ' . $amq_destination,
+    'login' => getenv('AMQ_USER') ?: NULL,
+    'passcode' => getenv('AMQ_PASSWORD') ?: NULL,
+    'destination' => sprintf('/queue/%s', $amq_destination),
+    'brokers' => $amq_brokers,
     'timeout' => ['read' => 12000],
     'heartbeat' => [
       'send' => 20000,
@@ -289,7 +283,17 @@ if ($artemis_brokers && $artemis_destination) {
       ],
     ],
   ];
-  $settings['queue_default'] = 'queue.stomp.default';
+
+  $queues = [
+    'helfi_navigation_menu_queue',
+    'helfi_api_base_revision',
+  ];
+  foreach ($queues as $queue) {
+    // $settings['queue_service_' . $queue] = 'queue.stomp.default';
+  }
+  // You must configure project specific queues manually in 'all.settings.php'
+  // file.
+  // @see https://github.com/City-of-Helsinki/drupal-helfi-platform/blob/main/documentation/queue.md
 }
 
 $config['filelog.settings']['rotation']['schedule'] = 'never';
@@ -350,9 +354,31 @@ $preflight_checks = [
     'DRUPAL_DB_NAME',
     'DRUPAL_DB_PASS',
     'DRUPAL_DB_HOST',
+    'TFA_ENCRYPTION_KEY',
   ],
   'additionalFiles' => [],
 ];
+
+// Elasticsearch server config.
+if (getenv('ELASTICSEARCH_URL')) {
+  $config['search_api.server.default']['backend_config']['connector_config']['url'] = getenv('ELASTICSEARCH_URL');
+
+  if (getenv('ELASTIC_USER') && getenv('ELASTIC_PASSWORD')) {
+    $config['search_api.server.default']['backend_config']['connector'] = 'helfi_connector';
+    $config['search_api.server.default']['backend_config']['connector_config']['username'] = getenv('ELASTIC_USER');
+    $config['search_api.server.default']['backend_config']['connector_config']['password'] = getenv('ELASTIC_PASSWORD');
+  }
+}
+
+
+// Supported values: https://github.com/Seldaek/monolog/blob/main/doc/01-usage.md#log-levels.
+$default_log_level = getenv('APP_ENV') === 'production' ? 'info' : 'debug';
+$settings['helfi_api_base.log_level'] = getenv('LOG_LEVEL') ?: $default_log_level;
+
+// Turn sentry JS error tracking on if SENTRY_DSN_PUBLIC is defined.
+if (getenv('SENTRY_DSN_PUBLIC')) {
+  $config['raven.settings']['javascript_error_handler'] = TRUE;
+}
 
 // Environment specific overrides.
 if (file_exists(__DIR__ . '/all.settings.php')) {
@@ -382,69 +408,6 @@ if ($env = getenv('APP_ENV')) {
     // phpcs:ignore
     include_once __DIR__ . '/azure.settings.php'; // NOSONAR
   }
-}
-
-if ($env = getenv('APP_ENV')) {
-  // Elastic settings.
-  $settings['ASU_ELASTICSEARCH_ADDRESS'] = getenv('ASU_ELASTICSEARCH_ADDRESS')  ?? 'http://elastic:9200';
-  $settings['ASU_ELASTICSEARCH_USERNAME'] = getenv('ASU_ELASTICSEARCH_USERNAME');
-  $settings['ASU_ELASTICSEARCH_PASSWORD'] = getenv('ASU_ELASTICSEARCH_PASSWORD');
-
-  // Email settings.
-  $config['mailsystem.settings']['defaults']['sender'] = 'symfony_mailer_lite';
-  $config['mailsystem.settings']['defaults']['formatter'] = 'symfony_mailer_lite';
-  $config['mailsystem.settings']['modules']['symfony_mailer_lite']['none']['formatter'] = 'symfony_mailer_lite';
-  $config['mailsystem.settings']['modules']['symfony_mailer_lite']['none']['sender'] = 'symfony_mailer_lite';
-  $config['symfony_mailer_lite.settings']['default_transport'] = 'smtp';
-
-  $settings['ASU_DJANGO_BACKEND_URL'] = getenv('ASU_DJANGO_BACKEND_URL');
-
-  // Supported values: https://github.com/Seldaek/monolog/blob/main/doc/01-usage.md#log-levels.
-  $default_log_level = getenv('APP_ENV') === 'production' ? 'info' : 'debug';
-  $settings['helfi_api_base.log_level'] = getenv('LOG_LEVEL') ?: $default_log_level;
-
-  if ($env === 'dev') {
-    $orbstack = str_contains(php_uname('r'), 'orbstack');
-    $config['search_api.server.asuntotuotanto']['backend_config']['connector_config']['url'] = $orbstack ? 'http://elastic.asuntotuotanto.orb.local' : 'http://elastic:9200';
-
-    if ($orbstack) {
-      // Mailer settings.
-      $config['symfony_mailer_lite.symfony_mailer_lite_transport.smtp']['configuration']['host'] = 'host.docker.internal';
-      $config['symfony_mailer_lite.symfony_mailer_lite_transport.smtp']['configuration']['port'] = '1025';
-    }
-  }
-
-  // Whitelist azure environments.
-  $whitelist = ['development', 'testing', 'stg', 'prod'];
-
-  if (in_array($env, $whitelist)) {
-    // Elasticsearch settings.
-    if (getenv('ASU_ELASTICSEARCH_URL')) {
-      $config['search_api.server.asuntotuotanto']['backend_config']['connector_config']['url'] = getenv('ASU_ELASTICSEARCH_URL');
-
-      if (getenv('ASU_ELASTICSEARCH_USERNAME') && getenv('ASU_ELASTICSEARCH_PASSWORD')) {
-        $config['search_api.server.asuntotuotanto']['backend_config']['connector'] = 'basicauth';
-        $config['search_api.server.asuntotuotanto']['backend_config']['connector_config']['username'] = getenv('ASU_ELASTICSEARCH_USERNAME');
-        $config['search_api.server.asuntotuotanto']['backend_config']['connector_config']['password'] = getenv('ASU_ELASTICSEARCH_PASSWORD');
-      }
-    }
-    $config['raven.settings']['environment'] = $env;
-    $config['raven.settings']['public_dsn'] = getenv('SENTRY_DSN') ?? '';
-    $config['metatag.metatag_defaults.global']['tags']['robots'] = 'index, follow';
-    $config['helfi_api_base.features']['disable_email_sending'] = FALSE;
-  }
-
-  // CI environment.
-  if ($env === 'ci') {
-    $config['search_api.server.asuntotuotanto']['backend_config']['scheme'] = 'https';
-    $config['search_api.server.asuntotuotanto']['backend_config']['host'] = 'localhost';
-    $config['search_api.server.asuntotuotanto']['backend_config']['port'] = '443';
-  }
-
-  $config['helfi_api_base.features']['user_expire'] = FALSE;
-
-  // Saml Authentication.
-  include 'saml.settings.php';
 }
 
 /**
