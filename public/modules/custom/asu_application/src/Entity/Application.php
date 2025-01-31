@@ -92,7 +92,7 @@ class Application extends EditorialContentEntityBase implements ContentEntityInt
    *   Has children.
    */
   public function hasNewPermitNumber(): bool {
-    $permitValue = $this->field_is_new_permit_number->value ?? FALSE;
+    $permitValue = $this->field_is_new_permit_number->value ?? TRUE;
 
     if ($permitValue || $permitValue == '1') {
       return FALSE;
