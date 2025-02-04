@@ -228,13 +228,15 @@
           {% endtrans %}
         {% endif %}
       </p>
-      <p class="project__application-information">
-        {% if application_start_time != null and application_end_time != null  %}
+      {% set end_time_unix = application_end_time|date("U") %}
+      {% set now_unix = "now"|date("U") %}
+      {% if application_start_time != null and application_end_time != null and end_time_unix > now_unix %}
+        <p class="project__application-information">
           {% trans %}
             The application period for this project starts on {{ application_start_time }} and ends on {{ application_end_time }}.
           {% endtrans %}
-        {% endif %}
-      </p>
+        </p>
+      {% endif %}
     </aside>
     <div class="project__content">
       <div class="project__type-and-address">
