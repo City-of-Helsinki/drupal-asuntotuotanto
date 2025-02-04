@@ -1,0 +1,17 @@
+uuid: 4d409888-3ef7-44f5-b027-1b1619849b38
+langcode: en
+status: true
+dependencies:
+  module:
+    - helfi_platform_config
+title: 'Default cron handler'
+id: helfi_platform_config_cron
+weight: 0
+module: helfi_platform_config
+callback: helfi_platform_config_cron
+scheduler:
+  id: simple
+launcher:
+  id: serial
+logger:
+  id: database

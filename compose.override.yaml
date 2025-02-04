@@ -1,0 +1,27 @@
+services:
+  app:
+    environment:
+      PHP_SENDMAIL_PATH: /usr/sbin/sendmail -S host.docker.internal:1025 -t
+      ASU_ASUNTOTUOTANTO_URL: "https://asuntotuotanto.docker.so"
+
+  idp:
+    container_name: "${COMPOSE_PROJECT_NAME}-idp"
+    image: druidfi/saml-idp:1.19.1
+    environment:
+      SIMPLESAMLPHP_IDP_BASEURLPATH: "https://idp-${DRUPAL_HOSTNAME}/simplesaml/"
+      SIMPLESAMLPHP_SP_ENTITY_ID: "https://${DRUPAL_HOSTNAME}/saml/metadata"
+      SIMPLESAMLPHP_SP_ASSERTION_CONSUMER_SERVICE: "https://${DRUPAL_HOSTNAME}/saml/acs"
+      SIMPLESAMLPHP_SP_SINGLE_LOGOUT_SERVICE: "https://${DRUPAL_HOSTNAME}/saml/logout"
+    volumes:
+      - ./conf/local_idp_authsources.php:/var/www/simplesamlphp/config/authsources.php
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-idp.entrypoints=https"
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-idp.rule=Host(`idp-${DRUPAL_HOSTNAME}`)"
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-idp.tls=true"
+      - "traefik.http.services.${COMPOSE_PROJECT_NAME}-idp.loadbalancer.server.port=8080"
+      - "traefik.docker.network=stonehenge-network"
+    networks:
+      - internal
+      - stonehenge-network
+

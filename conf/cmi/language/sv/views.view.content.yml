@@ -48,7 +48,7 @@ display:
             label: Innehållstyp
         status:
           expose:
-            label: Tila
+            label: Status
           group_info:
             label: 'Status för publicering'
             group_items:
