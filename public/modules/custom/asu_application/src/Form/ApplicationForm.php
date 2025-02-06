@@ -92,11 +92,11 @@ class ApplicationForm extends ContentEntityForm {
     $instance->eventDispatcher = $container->get('event_dispatcher');
 
     if (!$instance->eventDispatcher) {
-      \Drupal::logger('asu_application')->error('ApplicationForm::create() - eventDispatcher is NULL for user_id={user}', [
-          'user' => \Drupal::currentUser()->id(),
-      ]);
+      $this->logger('asu_application')->critical('ApplicationForm::create() - eventDispatcher is NULL :');
+      $this->logger('asu_application')->critical('user_id={user} ' . currentUser()->id());
+      $this->logger('asu_application')->critical('Set eventDispatcher ' . \Drupal::service('event_dispatcher'));
       $instance->eventDispatcher = \Drupal::service('event_dispatcher');
-  }
+    }
 
     return $instance;
   }
