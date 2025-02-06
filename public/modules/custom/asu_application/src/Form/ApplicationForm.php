@@ -91,6 +91,13 @@ class ApplicationForm extends ContentEntityForm {
     $instance->routeMatch = $container->get('current_route_match');
     $instance->eventDispatcher = $container->get('event_dispatcher');
 
+    if (!$instance->eventDispatcher) {
+      \Drupal::logger('asu_application')->error('ApplicationForm::create() - eventDispatcher is NULL for user_id={user}', [
+          'user' => \Drupal::currentUser()->id(),
+      ]);
+      $instance->eventDispatcher = \Drupal::service('event_dispatcher');
+  }
+
     return $instance;
   }
 
