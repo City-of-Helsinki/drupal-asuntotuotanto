@@ -92,22 +92,15 @@ class ApplicationForm extends ContentEntityForm {
     $instance->eventDispatcher = $container->get('event_dispatcher');
 
     if ($instance->eventDispatcher) {      
-      \Drupal::logger('asu_application')->critical('ApplicationForm::create() - eventDispatcher is :');
-      \Drupal::logger('asu_application')->critical($instance->eventDispatcher);
-      \Drupal::logger('asu_application')->critical('user_id={user} ' . currentUser()->id());
-      $this->logger('asu_application')->critical('ApplicationForm::create() - eventDispatcher is :');
-      $this->logger('asu_application')->critical($instance->eventDispatcher);
-      $this->logger('asu_application')->critical('user_id={user} ' . currentUser()->id());
-    } else {
-      \Drupal::logger('asu_application')->critical('ApplicationForm::create() - eventDispatcher is NULL :');
-      \Drupal::logger('asu_application')->critical('user_id={user} ' . currentUser()->id());
-      \Drupal::logger('asu_application')->critical('Set eventDispatcher ' . \Drupal::service('event_dispatcher'));
+      \Drupal::logger('asu_application')->critical('ApplicationForm::create() - eventDispatcher is: ' . get_class($instance->eventDispatcher));
+      \Drupal::logger('asu_application')->critical('user_id=' . \Drupal::currentUser()->id());
+  } else {
+      \Drupal::logger('asu_application')->critical('ApplicationForm::create() - eventDispatcher is NULL');
+      \Drupal::logger('asu_application')->critical('user_id=' . \Drupal::currentUser()->id());
+      \Drupal::logger('asu_application')->critical('Set eventDispatcher to: ' . get_class(\Drupal::service('event_dispatcher')));
       $instance->eventDispatcher = \Drupal::service('event_dispatcher');
-      $this->logger('asu_application')->critical('ApplicationForm::create() - eventDispatcher is NULL :');
-      $this->logger('asu_application')->critical('user_id={user} ' . currentUser()->id());
-      $this->logger('asu_application')->critical('Set eventDispatcher ' . \Drupal::service('event_dispatcher'));
-      $instance->eventDispatcher = \Drupal::service('event_dispatcher');
-    }
+  }
+  
 
     return $instance;
   }
