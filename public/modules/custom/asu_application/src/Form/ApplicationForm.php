@@ -74,6 +74,18 @@ class ApplicationForm extends ContentEntityForm {
    */
   private ?EventDispatcherInterface $eventDispatcher = NULL;
 
+  protected $application;
+
+  protected function reloadApplication() {
+    $application_id = \Drupal::routeMatch()->getParameter('application')
+      ?: \Drupal::request()->get('application_id');
+    if ($application_id) {
+      return \Drupal::entityTypeManager()->getStorage('asu_application')->load($application_id);
+    }
+
+    return null;
+  }
+
   /**
    * {@inheritdoc}
    */
@@ -98,7 +110,11 @@ class ApplicationForm extends ContentEntityForm {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $form_state->setRebuild(TRUE);
+    if (is_null($this->application)) {
+      $this->application = $this->reloadApplication();
+    }
+
+    $form_state->setRebuild(true);
 
     $projectReference = $this->entity->project->first();
     $project = $projectReference->entity;
@@ -206,6 +222,11 @@ class ApplicationForm extends ContentEntityForm {
           '/contact/apply_for_free_apartment?project=' . $project_id;
         return new RedirectResponse($freeApplicationUrl);
       }
+
+      if (is_null($this->eventDispatcher)) {
+        $this->eventDispatcher = \Drupal::service('event_dispatcher');
+      }
+
       $this->entity->save();
 
       $url = $this->entity->toUrl()->toString();
@@ -484,6 +505,12 @@ class ApplicationForm extends ContentEntityForm {
         $this->entity
       );
     }
+
+    if (is_null($this->eventDispatcher)) {
+      $this->eventDispatcher = \Drupal::service('event_dispatcher');
+    }
+
+
     $this->eventDispatcher->dispatch($event, $eventName);
   }
 
@@ -572,7 +599,7 @@ class ApplicationForm extends ContentEntityForm {
       'application_start_date' => $project->field_application_start_time->value,
       'application_end_date' => $project->field_application_end_time->value,
     ]);
-
+    
   }
 
   /**
