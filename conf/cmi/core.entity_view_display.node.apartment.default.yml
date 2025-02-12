@@ -323,6 +323,17 @@ content:
     third_party_settings: {  }
     weight: 27
     region: content
+  field_financing_fee:
+    type: number_decimal
+    label: inline
+    settings:
+      thousand_separator: ''
+      decimal_separator: .
+      scale: 2
+      prefix_suffix: true
+    third_party_settings: {  }
+    weight: 45
+    region: content
   field_maintenance_fee:
     type: number_decimal
     label: inline
@@ -543,7 +554,6 @@ hidden:
   field_apartment_holding_type: true
   field_apartment_images: true
   field_apartment_url: true
-  field_financing_fee: true
   field_housing_company_fee: true
   field_price_m2: true
   field_project_url: true
