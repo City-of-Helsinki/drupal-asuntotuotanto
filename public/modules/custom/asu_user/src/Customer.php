@@ -93,7 +93,7 @@ class Customer {
   public function getUserExternalFieldData() {
     $values = [];
     foreach ($this->config as $field => $value) {
-      $values[$value['external_field']] = $this->store->get($field) ?? '-';
+      $values[$value['external_field']] = $this->store->get($field) ?? '';
     }
     return $values;
   }
