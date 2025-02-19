@@ -66,7 +66,7 @@ class Store {
   public function getExternalUserData(): array {
     $values = [];
     foreach ($this->config as $field => $value) {
-      $values[$value['external_field']] = $this->get($field) ?? '-';
+      $values[$value['external_field']] = $this->get($field) ?? '';
     }
     return $values;
   }
