@@ -86,7 +86,7 @@ class CreateUserRequest extends Request {
     $null_to_string = ['city', 'phone_number', 'postal_code', 'street_address'];
     foreach ($data as $field => $item) {
       if (in_array($field, $null_to_string) && empty($item)) {
-        $data[$field] = '__NULL__';
+        $data[$field] = '';
       }
     }
 
