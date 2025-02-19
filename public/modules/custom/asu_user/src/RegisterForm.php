@@ -286,12 +286,12 @@ class RegisterForm extends TypedRegisterForm {
     }
 
     $accountData = [
-      'first_name' => '',
-      'last_name' => '',
-      'address' => '',
+      'first_name' => '-',
+      'last_name' => '-',
+      'address' => '-',
       'phone_number' => $phone,
-      'postal_code' => '',
-      'city' => '',
+      'postal_code' => '-',
+      'city' => '-',
       'date_of_birth' => (new \Datetime())->format('Y-m-d'),
     ];
 
