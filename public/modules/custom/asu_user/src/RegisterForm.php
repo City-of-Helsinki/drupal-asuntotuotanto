@@ -114,6 +114,14 @@ class RegisterForm extends TypedRegisterForm {
    * {@inheritDoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
+    $fields_to_clean = ['postal_code', 'phone_number'];
+
+    foreach ($fields_to_clean as $field) {
+        $value = $form_state->getValue($field);
+        if (!empty($value)) {
+            $form_state->setValue($field, str_replace('-', '', $value));
+        }
+    }
     if (!filter_var($form_state->getUserInput()['mail'], FILTER_VALIDATE_EMAIL)) {
       $form_state->setErrorByName('mail', $this->t('Invalid email format'));
     }
