@@ -72,10 +72,10 @@ function asu_apartment_search_update_8001() {
  *   'title' => t('Kommande projekt'),
  * ]
  * );
+
+
+ * $hitas_second_level->save();
  */
-
-  $hitas_second_level->save();
-
   $haso = MenuLinkContent::create([
     'title' => 'Asumisoikeusasunnot',
     'link' => ['uri' => 'route:asu_apartment_search.haso'],
