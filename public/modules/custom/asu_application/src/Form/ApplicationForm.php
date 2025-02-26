@@ -458,7 +458,7 @@ class ApplicationForm extends ContentEntityForm {
             . "Hakemuksesi on voimassa koko rakennusajan.\n\n"
             . "Arvonnan / huoneistojaon jälkeen voit tarkastaa oman sijoituksesi kirjautumalla kotisivuillemme: asuntotuotanto.hel.fi.\n\n"
             . "------------------------------------------------------------\n\n"
-            . "Thank you - we have received your application for @project_name.\n\n"
+            . "\nThank you - we have received your application for @project_name.\n\n"
             . "Your application will remain valid throughout the construction period.\n\n"
             . "After the lottery / apartment distribution, you can check your position by logging into our website: asuntotuotanto.hel.fi.",
             ['@project_name' => $project_name]
