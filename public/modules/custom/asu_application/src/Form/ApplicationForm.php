@@ -454,13 +454,13 @@ class ApplicationForm extends ContentEntityForm {
         $key = 'application_submission';
         $params['subject'] = $this->t("Kiitos hakemuksestasi / Thank you for your application");
         $params['message'] = $this->t(
-            "Kiitos - olemme vastaanottaneet hakemuksesi kohteeseemme @project_name. Hakemuksesi on voimassa koko rakennusajan.
-            Arvonnan / huoneistojaon jälkeen voit tarkastaa oman sijoituksesi kirjautumalla kotisivuillemme asuntotuotanto.hel.fi.
-
-            ---
-
-            Thank you - we have received your application for @project_name. Your application will remain valid throughout the construction period.
-            After the lottery / apartment distribution, you can check your position by logging into our website asuntotuotanto.hel.fi.",
+            "Kiitos - olemme vastaanottaneet hakemuksesi kohteeseemme @project_name.\n\n"
+            . "Hakemuksesi on voimassa koko rakennusajan.\n\n"
+            . "Arvonnan / huoneistojaon jälkeen voit tarkastaa oman sijoituksesi kirjautumalla kotisivuillemme: asuntotuotanto.hel.fi.\n\n"
+            . "------------------------------------------------------------\n\n"
+            . "Thank you - we have received your application for @project_name.\n\n"
+            . "Your application will remain valid throughout the construction period.\n\n"
+            . "After the lottery / apartment distribution, you can check your position by logging into our website: asuntotuotanto.hel.fi.",
             ['@project_name' => $project_name]
         );
         $langcode = \Drupal::languageManager()->getDefaultLanguage()->getId();
