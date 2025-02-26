@@ -272,7 +272,7 @@ function asu_application_mail(string $key, array &$message, array $params) {
       asu_application_send_apply_for_free_apartment($message, $params);
       break;
     case 'application_submission':
-      $message['subject'] = t('Application Confirmation');
+      $message['subject'] = $params['subject'];
       $message['body'][] = $params['message'];
       break;
   }
