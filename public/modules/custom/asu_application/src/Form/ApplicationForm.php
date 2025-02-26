@@ -9,7 +9,9 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Entity\ContentEntityForm;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Mail\MailManagerInterface;
 use Drupal\Core\Messenger\MessengerTrait;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Url;
 use Drupal\asu_application\Entity\Application;
 use Drupal\asu_application\Event\ApplicationEvent;
@@ -440,6 +442,30 @@ class ApplicationForm extends ContentEntityForm {
   public function save(array $form, FormStateInterface $form_state) {
     $this->doSave($form, $form_state);
     $this->handleApplicationEvent($form, $form_state);
+    $email = $form_state->getValue(['main_applicant', 0, 'email']);
+    $project_name = $this->entity->get('project')->entity->label() ?? $this->t('Unknown project');
+
+    if (!empty($email)) {
+        $mailManager = \Drupal::service('plugin.manager.mail');
+        $module = 'asu_application';
+        $key = 'application_submission';
+        $params['subject'] = $this->t("Kiitos hakemuksestasi / Thank you for your application");
+        $params['message'] = $this->t(
+            "Kiitos - olemme vastaanottaneet hakemuksesi kohteeseemme @project_name. Hakemuksesi on voimassa koko rakennusajan.
+            Arvonnan / huoneistojaon jälkeen voit tarkastaa oman sijoituksesi kirjautumalla kotisivuillemme asuntotuotanto.hel.fi.
+
+            ---
+
+            Thank you - we have received your application for @project_name. Your application will remain valid throughout the construction period.
+            After the lottery / apartment distribution, you can check your position by logging into our website asuntotuotanto.hel.fi.",
+            ['@project_name' => $project_name]
+        );
+        $langcode = \Drupal::languageManager()->getDefaultLanguage()->getId();
+        $send = true;
+
+        $mailManager->mail($module, $key, $email, $langcode, $params, NULL, $send);
+    }
+
     $content_entity_id = $this->entity->getEntityType()->id();
     $form_state->setRedirect("entity.{$content_entity_id}.canonical", [$content_entity_id => $this->entity->id()]);
   }
@@ -599,7 +625,7 @@ class ApplicationForm extends ContentEntityForm {
       'application_start_date' => $project->field_application_start_time->value,
       'application_end_date' => $project->field_application_end_time->value,
     ]);
-    
+
   }
 
   /**
