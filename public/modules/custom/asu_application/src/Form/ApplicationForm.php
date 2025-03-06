@@ -454,10 +454,12 @@ class ApplicationForm extends ContentEntityForm {
             "Kiitos - olemme vastaanottaneet hakemuksesi kohteeseemme @project_name.\n\n"
             . "Hakemuksesi on voimassa koko rakennusajan.\n\n"
             . "Arvonnan / huoneistojaon jälkeen voit tarkastaa oman sijoituksesi kirjautumalla kotisivuillemme: asuntotuotanto.hel.fi.\n\n"
+            . "Tämä on automaattinen viesti – älä vastaa tähän sähköpostiin.\n\n"
             . "------------------------------------------------------------\n\n"
             . "\nThank you - we have received your application for @project_name.\n\n"
             . "Your application will remain valid throughout the construction period.\n\n"
-            . "After the lottery / apartment distribution, you can check your position by logging into our website: asuntotuotanto.hel.fi.",
+            . "After the lottery / apartment distribution, you can check your position by logging into our website: asuntotuotanto.hel.fi."
+            . "This is an automated message – please do not reply to this email.",
             ['@project_name' => $project_name]
         );
         $langcode = \Drupal::languageManager()->getDefaultLanguage()->getId();
