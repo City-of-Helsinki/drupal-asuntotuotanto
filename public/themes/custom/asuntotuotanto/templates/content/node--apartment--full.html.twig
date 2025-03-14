@@ -382,7 +382,7 @@
 						<li class="apartment__details-item">
 							<p>
 								<span>{% trans %}Sales price{% endtrans %}</span>
-								<span>{{ sales_price }}</span>
+								<span>{{ sales_price['#markup']|replace({'.': ','}) }}</span>
 							</p>
 						</li>
 					{% endif %}
@@ -390,7 +390,7 @@
             <li class="apartment__details-item">
               <p>
                 <span>{% trans %}Share of housing company loan{% endtrans %}</span>
-                <span>{{ loan_share }}€</span>
+                <span>{{ loan_share['#markup']|replace({'.': ','})|replace({'€': ''})|trim|number_format(2, ',', ' ') }}€</span>
               </p>
             </li>
           {% endif %}
@@ -398,7 +398,7 @@
 						<li class="apartment__details-item">
 							<p>
 								<span>{% trans %}Debt free sales price{% endtrans %}</span>
-								<span>{{ debt_free_sales_price }}</span>
+								<span>{{ debt_free_sales_price['#markup']|replace({'.': ','}) }}</span>
 							</p>
 						</li>
 					{% endif %}
@@ -406,21 +406,21 @@
             <li class="apartment__details-item">
               <p>
                 <span>{% trans %}Release payment{% endtrans %}</span>
-                <span>{{ release_payment }}</span>
+                <span>{{ release_payment['#markup']|replace({'.': ','}) }}</span>
               </p>
               <ul class="apartment__details-list sub__details-list">
                 {% if right_of_occupancy_payment|render and right_of_occupancy_payment|render != '0,00€' and right_of_occupancy_payment|render != null %}
                   <li class="apartment__details-item">
                     <p>
                       <span>{% trans %}Original right of occupancy payment{% endtrans %}</span>
-                      <span>{{ right_of_occupancy_payment }}</span>
+                      <span>{{ right_of_occupancy_payment['#markup']|replace({'.': ','}) }}</span>
                     </p>
                   </li>
                 {% endif %}
                 {% if adjusted_price|render and adjusted_price|render != '0,00€' and adjusted_price|render != null %}                  <li class="apartment__details-item">
                     <p>
                       <span>{% trans %}Index adjustment{% endtrans %}</span>
-                      <span>{{ adjusted_price }}</span>
+                      <span>{{ adjusted_price['#markup']|replace({'.': ','}) }}</span>
                     </p>
                   </li>
                 {% endif %}
@@ -428,7 +428,7 @@
                   <li class="apartment__details-item">
                     <p>
                       <span>{% trans %}Alteration work{% endtrans %}</span>
-                      <span>{{ alteration_price }}</span>
+                      <span>{{ alteration_price['#markup']|replace({'.': ','}) }}</span>
                     </p>
                   </li>
                 {% endif %}
@@ -439,7 +439,7 @@
               <li class="apartment__details-item">
                 <p>
                   <span>{% trans %}Right of occupancy payment{% endtrans %}</span>
-                  <span>{{ right_of_occupancy_payment }}</span>
+                  <span>{{ right_of_occupancy_payment['#markup']|replace({'.': ','}) }}</span>
                 </p>
               </li>
             {% endif %}
@@ -448,7 +448,7 @@
 						<li class="apartment__details-item">
 							<p>
 								<span>{% trans %}Right of occupancy fee{% endtrans %}</span>
-								<span>{{ right_of_occupancy_fee }}</span>
+								<span>{{ right_of_occupancy_fee['#markup']|replace({'.': ','})|replace({'€': ''})|trim|number_format(2, ',', ' ') }}€</span>
 							</p>
 						</li>
 					{% endif %}
@@ -456,7 +456,7 @@
 						<li class="apartment__details-item">
 							<p>
 								<span>{% trans %}Maintenance fee{% endtrans %}</span>
-								<span>{{ maintenance_fee }}</span>
+								<span>{{ maintenance_fee['#markup']|replace({'.': ','})|replace({'€': ''})|trim|number_format(2, ',', ' ') }}€</span>
 							</p>
 						</li>
 					{% endif %}
@@ -464,7 +464,7 @@
 						<li class="apartment__details-item">
 							<p>
 								<span>{% trans %}Financing fee{% endtrans %}</span>
-								<span>{{ financing_fee }}</span>
+								<span>{{ financing_fee['#markup']|replace({'.': ','})|replace({'€': ''})|trim|number_format(2, ',', ' ') }}€</span>
 							</p>
 						</li>
 					{% endif %}
@@ -496,7 +496,7 @@
             <li class="apartment__details-item">
               <p>
                 <span>{% trans %}Alteration work{% endtrans %}</span>
-                <span>{{ field_alteration_work }}</span>
+                <span>{{ field_alteration_work|replace({'.': ','})|replace({'€': ''})|trim|number_format(2, ',', ' ') }}€</span>
               </p>
             </li>
           {% endif %}
@@ -504,7 +504,7 @@
             <li class="apartment__details-item">
               <p>
                 <span>{% trans %}Water fee{% endtrans %}</span>
-                <span>{{ field_water_fee }}{% trans %}€ / month{% endtrans %}</span>
+                <span>{{ field_water_fee|replace({'.': ','})|replace({'€': ''})|trim|number_format(2, ',', ' ') }}{% trans %}€ / month{% endtrans %}</span>
               </p>
             </li>
           {% endif %}
@@ -520,7 +520,7 @@
             <li class="apartment__details-item">
               <p>
                 <span>{% trans %}Parking fee{% endtrans %}</span>
-                <span>{{ field_parking_fee }}{% trans %}€ / month{% endtrans %}</span>
+                <span>{{ field_parking_fee|replace({'.': ','})|replace({'€': ''})|trim|number_format(2, ',', ' ') }}{% trans %}€ / month{% endtrans %}</span>
               </p>
             </li>
           {% endif %}
