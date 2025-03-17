@@ -5,6 +5,7 @@
  * Contains asu apartment search module.
  */
 
+use Drupal\menu_link_content\Entity\MenuLinkContent;
 /**
  * Implements hook_theme().
  */
@@ -30,4 +31,20 @@ function asu_apartment_search_theme() {
       ],
     ],
   ];
+}
+
+
+function asu_apartment_search_entity_load(array &$entities, string $entity_type) {
+  if ($entity_type === 'menu_link_content') {
+    foreach ($entities as $entity) {
+      $disabled_routes = [
+        'route:asu_apartment_search.haso_upcoming',
+        'route:asu_apartment_search.hitas_upcoming',
+      ];
+
+      if (in_array($entity->get('link')->uri, $disabled_routes)) {
+        $entity->delete();
+      }
+    }
+  }
 }
