@@ -274,6 +274,12 @@ class Application extends EditorialContentEntityBase implements ContentEntityInt
         'settings' => [],
       ]);
 
+    $fields['field_backend_id'] = BaseFieldDefinition::create('string')
+      ->setLabel(t('Backend application ID'))
+      ->setDescription(t('Application UUID returned from Django backend.'))
+      ->setReadOnly(TRUE)
+      ->setDefaultValue(NULL);
+
     $fields['main_applicant'] = BaseFieldDefinition::create('asu_main_applicant')
       ->setLabel(t('Basic information'))
       ->setDescription(t('Basic information of the people who are applying'))
