@@ -12,7 +12,7 @@ use Psr\Http\Message\ResponseInterface;
 class DeleteApplicationRequest extends Request {
 
   protected const AUTHENTICATED = TRUE;
-  protected string $method = 'POST';
+  protected string $method = 'DELETE';
 
   protected string $applicationId;
   protected array $payload;
@@ -49,6 +49,6 @@ class DeleteApplicationRequest extends Request {
   }
 
   public function getMethod(): string {
-    return 'POST';
+    return 'DELETE';
   }
 }
