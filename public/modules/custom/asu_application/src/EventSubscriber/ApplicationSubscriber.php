@@ -153,7 +153,8 @@ class ApplicationSubscriber implements EventSubscriberInterface {
       );
 
       $request->setSender($user);
-      $this->backendApi->send($request);
+      $response = $this->backendApi->send($request);
+      $application->set('field_backend_id', $response->getContent()['application_uuid'] ?? NULL);
 
       $application->set('field_locked', 1);
       $application->set('error', NULL);
@@ -259,7 +260,8 @@ class ApplicationSubscriber implements EventSubscriberInterface {
 
       $request->setSender($sender);
 
-      $this->backendApi->send($request);
+      $response = $this->backendApi->send($request);
+      $application->set('field_backend_id', $response->getContent()['application_uuid'] ?? NULL);
       $this->logger->notice(
        'Sales sent application to backend successfully'
       );

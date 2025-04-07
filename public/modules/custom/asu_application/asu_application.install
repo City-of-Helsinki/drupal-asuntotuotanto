@@ -194,3 +194,17 @@ function asu_application_update_9009() : void {
     ->condition('field_locked', 1)
     ->execute();
 }
+
+/**
+ * Add backend_id field to asu_application entity.
+ */
+function asu_application_update_9011() {
+  $field = BaseFieldDefinition::create('string')
+    ->setLabel(t('Backend application ID'))
+    ->setDescription(t('UUID returned from Django backend when creating application.'))
+    ->setRequired(FALSE)
+    ->setReadOnly(FALSE);
+
+  $definition_update_manager = \Drupal::entityDefinitionUpdateManager();
+  $definition_update_manager->installFieldStorageDefinition('field_backend_application_id', 'asu_application', 'asu_application', $field);
+}

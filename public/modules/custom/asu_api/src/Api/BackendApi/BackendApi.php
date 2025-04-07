@@ -5,6 +5,7 @@ namespace Drupal\asu_api\Api\BackendApi;
 use Drupal\Core\TempStore\PrivateTempStore;
 use Drupal\Core\TempStore\PrivateTempStoreFactory;
 use Drupal\asu_api\Api\BackendApi\Request\AuthenticationRequest;
+use Drupal\asu_api\Api\BackendApi\Request\DeleteApplicationRequest;
 use Drupal\asu_api\Api\Request;
 use Drupal\asu_api\Api\Response;
 use Drupal\asu_api\Exception\IllegalApplicationException;
@@ -63,6 +64,12 @@ class BackendApi {
     $this->store = $storeFactory->get('customer');
   }
 
+  public function deleteApplication(UserInterface $sender, string $applicationId): void {
+    $request = new DeleteApplicationRequest($sender, $applicationId);
+    $this->send($request);
+  }
+
+
   /**
    * Send request.
    *
@@ -79,6 +86,7 @@ class BackendApi {
    */
   public function send(Request $request, array $options = []): ?Response {
     $options['headers'] = $options['headers'] ?? [];
+    $sender = $request->getSender();
     if ($request->requiresAuthentication()) {
       if ($token = $this->handleAuthentication($request->getSender())) {
         $options['headers']['Authorization'] = sprintf("Bearer %s", $token);

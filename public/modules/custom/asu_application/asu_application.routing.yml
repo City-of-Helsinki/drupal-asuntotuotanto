@@ -1,31 +1,42 @@
 asu_application.admin_create_application:
-  path: '/application/create/{user_id}'
+  path: "/application/create/{user_id}"
   defaults:
-    _title: 'Create application'
+    _title: "Create application"
     _form: '\Drupal\asu_application\Form\SalespersonApplicationForm'
   requirements:
-    _permission: 'administer applications'
+    _permission: "administer applications"
 
 asu_application.application_results:
-  path: '/user/application/results'
+  path: "/user/application/results"
   defaults:
     _controller: '\Drupal\asu_application\Controller\ResultController::getResults'
   methods: [POST]
   requirements:
-    _permission: 'create application'
+    _permission: "create application"
 
 asu_application.lottery_start:
-  path: '/lottery/start/{project_uuid}'
+  path: "/lottery/start/{project_uuid}"
   defaults:
     _controller: '\Drupal\asu_application\Controller\ResultController::startLottery'
   methods: [GET]
   requirements:
-    _permission: 'administer applications'
+    _permission: "administer applications"
 
 asu_application.apply_for_free_apartment:
-  path: '/contact/apply_for_free_apartment'
+  path: "/contact/apply_for_free_apartment"
   defaults:
     _form: 'Drupal\asu_application\Form\ReservedApartmentContactForm'
-    _title: 'Apply for an apartment'
+    _title: "Apply for an apartment"
   requirements:
-    _permission: 'access content'
+    _permission: "access content"
+
+asu_application.delete_secure:
+  path: "/asu/application/delete/{application}/{token}"
+  defaults:
+    _controller: '\Drupal\asu_application\Controller\AsuApplicationDeleteController::delete'
+    _title: "Delete application"
+  requirements:
+    _permission: "access content"
+    application: '\d+'
+    token: "[A-Za-z0-9-_]+"
+  methods: ["POST"]

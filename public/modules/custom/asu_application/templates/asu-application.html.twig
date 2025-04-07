@@ -106,6 +106,15 @@
               </span>
             </a>
           </div>
+          {% if content['#teaser_values'].is_application_period and content['#teaser_values'].delete_url %}
+          <div class="application--action">
+            <form method="post" action="{{ content['#teaser_values'].delete_url }}">
+              <button type="submit" class="hds-button hds-button--secondary">
+                <span class="hds-button__label">{% trans %}Delete{% endtrans %}</span>
+              </button>
+            </form>
+          </div>
+          {% endif %}
         </div>
       </div>
     </article>
