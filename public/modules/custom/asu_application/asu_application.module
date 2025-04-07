@@ -305,8 +305,8 @@ function asu_application_preprocess_asu_application(array &$variables) {
 
   $teaser_values = &$variables['content']['#teaser_values'];
 
-  if (!empty($teaser_values['application_id'])) {
-    $app_id = $teaser_values['application_id'];
+  if (!empty($teaser_values['backend_application_id'])) {
+    $app_id = $teaser_values['backend_application_id'];
     $token = \Drupal::service('csrf_token')->get("delete_application_{$app_id}");
     $teaser_values['delete_url'] = "/asu/application/delete/{$app_id}/{$token}";
   }
