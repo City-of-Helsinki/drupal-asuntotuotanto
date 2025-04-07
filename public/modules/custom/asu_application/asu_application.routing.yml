@@ -37,6 +37,6 @@ asu_application.delete_secure:
     _title: "Delete application"
   requirements:
     _permission: "access content"
-    application: '\d+'
+    application: '[A-Za-z0-9\-]+'
     token: "[A-Za-z0-9-_]+"
-  methods: ["POST"]
+  methods: ["POST", "DELETE"]

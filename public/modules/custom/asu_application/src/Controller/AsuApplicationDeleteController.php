@@ -36,12 +36,9 @@ class AsuApplicationDeleteController extends ControllerBase {
   }
 
   public function delete($application, $token): RedirectResponse {
-
     $storage = $this->entityTypeManager->getStorage('asu_application');
     $entity = $storage->load($application);
-    foreach ($entity->getFields() as $name => $field) {
-      $value = $field->isEmpty() ? 'EMPTY' : $field->first()->getValue();
-    }
+
     if (!$entity || $entity->getOwnerId() !== $this->currentUser->id()) {
       $this->messenger()->addError($this->t('Application not found or access denied.'));
       return new RedirectResponse('/user/applications');
@@ -53,10 +50,9 @@ class AsuApplicationDeleteController extends ControllerBase {
       return new RedirectResponse('/user/applications');
     }
 
-    $sender = \Drupal::entityTypeManager()->getStorage('user')->load($this->currentUser->id());
+    $user = $this->entityTypeManager->getStorage('user')->load($this->currentUser->id());
 
     try {
-      $user = \Drupal::entityTypeManager()->getStorage('user')->load($this->currentUser->id());
       $this->backendApi->deleteApplication($user, $externalId);
     }
     catch (\Exception $e) {
@@ -64,10 +60,9 @@ class AsuApplicationDeleteController extends ControllerBase {
       return new RedirectResponse('/user/applications');
     }
 
-    // Удаление из Drupal
     $entity->delete();
-
     $this->messenger()->addStatus($this->t('Your application has been successfully deleted.'));
     return new RedirectResponse('/user/applications');
   }
+
 }
