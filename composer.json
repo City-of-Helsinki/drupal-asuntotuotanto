@@ -9,7 +9,7 @@
     "require": {
         "asuntomyynti/react": "^1.4.3",
         "composer/installers": "^2.0",
-        "cweagans/composer-patches": "^1.6.7",
+        "cweagans/composer-patches": "^1.7.3",
         "dinbror/blazy": "^1.8",
         "druidfi/omen": "^0.2.0",
         "drupal/api_tools": "^1.0",
@@ -22,7 +22,7 @@
         "drupal/config_filter": "^2.6",
         "drupal/config_terms": "^1.9",
         "drupal/context": "^5.0@RC",
-        "drupal/core": "^10.2",
+        "drupal/core": "^10.4.6",
         "drupal/core-composer-scaffold": "^10.2",
         "drupal/email_registration": "^1.4",
         "drupal/externalauth": "^2.0",
@@ -30,9 +30,9 @@
         "drupal/gdpr_compliance": "^1.22",
         "drupal/gin_login": "^2.0",
         "drupal/hdbt": "^6.0",
-        "drupal/hdbt_admin": "^3.0",
+        "drupal/hdbt_admin": "^3.3",
         "drupal/helfi_azure_fs": "^2.0",
-        "drupal/helfi_platform_config": "^4.4",
+        "drupal/helfi_platform_config": "^4.12.35",
         "drupal/helfi_tunnistamo": "^2.0",
         "drupal/honeypot": "<2.2",
         "drupal/inline_entity_form": "^1.0@RC",
@@ -42,7 +42,7 @@
         "drupal/key": "^1.17",
         "drupal/login_history": "^2.0@alpha",
         "drupal/mailsystem": "^4.4",
-        "drupal/matomo": "^1.23",
+        "drupal/matomo": "^1.24",
         "drupal/matomo_reports": "^1.4",
         "drupal/menu_block": "^1.10",
         "drupal/monolog": "^3.0",
@@ -136,11 +136,7 @@
             "drupal/autologout": {
                 "JS Cookie needs to be enabled automatically when updating": "https://www.drupal.org/files/issues/2024-05-24/multiple_warnings_after_upgrading-3449275-5.patch"
             },
-            "drupal/core": {
-                "https://www.drupal.org/project/drupal/issues/3054641#comment-13385850": "https://www.drupal.org/files/issues/2019-12-10/3054641-14.patch",
-                "Views attachments are not rendered in the specified order [https://www.drupal.org/project/drupal/issues/2943293]": "https://www.drupal.org/files/issues/2019-05-25/2943293-17.patch",
-                "https://www.drupal.org/project/drupal/issues/3098307": "https://www.drupal.org/files/issues/2022-07-01/sql_mode_fullgroupby_issue-3098307-15.patch"
-            },
+            "drupal/core": {},
             "drupal/elasticsearch_connector": {
                 "Custom patch based on https://www.drupal.org/files/issues/2020-03-03/8.x-7.x-2977537-13-array-vs-scalar_0.patch": "patches/elasticsearch_connector_indexfactory_v5.patch"
             },
