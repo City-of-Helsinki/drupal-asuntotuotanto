@@ -32,7 +32,7 @@
         "drupal/hdbt": "^6.0",
         "drupal/hdbt_admin": "^3.3",
         "drupal/helfi_azure_fs": "^2.0",
-        "drupal/helfi_platform_config": "4.12.32",
+        "drupal/helfi_platform_config": "4.12.14",
         "drupal/helfi_tunnistamo": "^2.0",
         "drupal/honeypot": "<2.2",
         "drupal/inline_entity_form": "^1.0@RC",
