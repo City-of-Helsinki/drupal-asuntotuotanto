@@ -230,7 +230,7 @@ function asu_content_update_9009(): void {
 /**
  * UHF-XXXX: Safely drop removed unit fields if they still exist.
  */
-function asu_content_update_9010(): void {
+function asu_content_update_9011(): void {
   $drop_tables = [
     'node__field_unit_alternative_image',
     'node__field_unit_is_parent',
@@ -270,7 +270,7 @@ function asu_content_update_9010(): void {
 function asu_content_update_dependencies() {
   return [
     'asu_content' => [
-      9010 => [
+      9011 => [
         'helfi_platform_config' => 9320,
         'helfi_api_base' => 9022,
       ],
