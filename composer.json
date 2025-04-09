@@ -42,7 +42,7 @@
         "drupal/key": "^1.17",
         "drupal/login_history": "^2.0@alpha",
         "drupal/mailsystem": "^4.4",
-        "drupal/matomo": "^1.24",
+        "drupal/matomo": "^1.23",
         "drupal/matomo_reports": "^1.4",
         "drupal/menu_block": "^1.10",
         "drupal/monolog": "^3.0",
@@ -136,9 +136,7 @@
             "drupal/autologout": {
                 "JS Cookie needs to be enabled automatically when updating": "https://www.drupal.org/files/issues/2024-05-24/multiple_warnings_after_upgrading-3449275-5.patch"
             },
-            "drupal/core": {
-                "https://www.drupal.org/project/drupal/issues/3098307": "https://www.drupal.org/files/issues/2022-07-01/sql_mode_fullgroupby_issue-3098307-15.patch"
-            },
+            "drupal/core": {},
             "drupal/elasticsearch_connector": {
                 "Custom patch based on https://www.drupal.org/files/issues/2020-03-03/8.x-7.x-2977537-13-array-vs-scalar_0.patch": "patches/elasticsearch_connector_indexfactory_v5.patch"
             },
