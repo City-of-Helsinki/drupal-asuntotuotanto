@@ -114,44 +114,6 @@ function asu_content_update_9003(): void {
 }
 
 /**
- * Remove field_unit_ tables and update content & paragraphs field.
- */
-function asu_content_update_9004(): void {
-  $drop_tables = [
-    'node__field_unit_alternative_image',
-    'node__field_unit_is_parent',
-    'node__field_unit_long_description',
-    'node__field_unit_main_image_url',
-    'node__field_unit_parent_unit',
-    'node__field_unit_short_description',
-    'node__field_unit_visible_title',
-  ];
-
-  $schema = \Drupal::database()->schema();
-
-  foreach ($drop_tables as $drop_table) {
-    if ($schema->tableExists($drop_table)) {
-      $schema->dropTable($drop_table);
-    }
-
-    $revision_table = "node_revision__$drop_table";
-    if ($schema->tableExists($revision_table)) {
-      $schema->dropTable($revision_table);
-    }
-  }
-
-  \Drupal::entityTypeManager()->clearCachedDefinitions();
-
-  $change_summary = \Drupal::service('entity.definition_update_manager')->getChangeSummary();
-
-  foreach ($change_summary as $entity_type_id => $change_list) {
-    $entity_type = \Drupal::entityTypeManager()->getDefinition($entity_type_id);
-    \Drupal::entityDefinitionUpdateManager()->installEntityType($entity_type);
-  }
-}
-
-
-/**
  * Switch field type for the email paragraphs field.
  */
 function asu_content_update_9005(): void {
@@ -266,12 +228,49 @@ function asu_content_update_9009(): void {
 }
 
 /**
+ * UHF-XXXX: Safely drop removed unit fields if they still exist.
+ */
+function asu_content_update_9010(): void {
+  $drop_tables = [
+    'node__field_unit_alternative_image',
+    'node__field_unit_is_parent',
+    'node__field_unit_long_description',
+    'node__field_unit_main_image_url',
+    'node__field_unit_parent_unit',
+    'node__field_unit_short_description',
+    'node__field_unit_visible_title',
+  ];
+
+  $schema = \Drupal::database()->schema();
+
+  foreach ($drop_tables as $drop_table) {
+    if ($schema->tableExists($drop_table)) {
+      $schema->dropTable($drop_table);
+    }
+
+    $revision_table = "node_revision__$drop_table";
+    if ($schema->tableExists($revision_table)) {
+      $schema->dropTable($revision_table);
+    }
+  }
+
+  \Drupal::entityTypeManager()->clearCachedDefinitions();
+
+  $change_summary = \Drupal::service('entity.definition_update_manager')->getChangeSummary();
+
+  foreach ($change_summary as $entity_type_id => $change_list) {
+    $entity_type = \Drupal::entityTypeManager()->getDefinition($entity_type_id);
+    \Drupal::entityDefinitionUpdateManager()->installEntityType($entity_type);
+  }
+}
+
+/**
  * Implements hook_update_dependencies().
  */
 function asu_content_update_dependencies() {
   return [
     'asu_content' => [
-      9004 => [
+      9010 => [
         'helfi_platform_config' => 9320,
         'helfi_api_base' => 9022,
       ],
