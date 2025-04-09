@@ -256,3 +256,16 @@ function asu_content_update_9009(): void {
     $manager->uninstallFieldStorageDefinition($definition);
   }
 }
+/**
+ * Implements hook_update_dependencies().
+ */
+function asu_content_update_dependencies() {
+  return [
+    'asu_content' => [
+      9004 => [
+        'helfi_platform_config' => 9320,
+        'helfi_api_base' => 9022,
+      ],
+    ],
+  ];
+}
