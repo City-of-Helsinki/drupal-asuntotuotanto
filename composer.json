@@ -132,12 +132,6 @@
                 "type:drupal-drush"
             ]
         },
-        "patches-ignore": {
-            "drupal/core": [
-                "[#UHF-10716] Ensure consistent ordering when calculating library asset order (https://www.drupal.org/i/3467860)",
-                "https://raw.githubusercontent.com/City-of-Helsinki/drupal-helfi-platform-config/955e2fc9493c6574ab070187b8a5a8634da7daab/patches/drupal-3467860-optimized-js-assets-mismatch.patch"
-            ]
-        },
         "patches": {
             "drupal/autologout": {
                 "JS Cookie needs to be enabled automatically when updating": "https://www.drupal.org/files/issues/2024-05-24/multiple_warnings_after_upgrading-3449275-5.patch"
