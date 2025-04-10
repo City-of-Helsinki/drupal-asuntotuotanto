@@ -136,7 +136,11 @@
             "drupal/autologout": {
                 "JS Cookie needs to be enabled automatically when updating": "https://www.drupal.org/files/issues/2024-05-24/multiple_warnings_after_upgrading-3449275-5.patch"
             },
-            "drupal/core": {},
+            "drupal/core": {
+                "https://www.drupal.org/project/drupal/issues/3054641#comment-13385850": "https://www.drupal.org/files/issues/2019-12-10/3054641-14.patch",
+                "Views attachments are not rendered in the specified order [https://www.drupal.org/project/drupal/issues/2943293]": "https://www.drupal.org/files/issues/2019-05-25/2943293-17.patch",
+                "https://www.drupal.org/project/drupal/issues/3098307": "https://www.drupal.org/files/issues/2022-07-01/sql_mode_fullgroupby_issue-3098307-15.patch"
+            },
             "drupal/elasticsearch_connector": {
                 "Custom patch based on https://www.drupal.org/files/issues/2020-03-03/8.x-7.x-2977537-13-array-vs-scalar_0.patch": "patches/elasticsearch_connector_indexfactory_v5.patch"
             },
