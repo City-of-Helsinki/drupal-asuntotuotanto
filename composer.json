@@ -32,7 +32,7 @@
         "drupal/hdbt": "^6.0",
         "drupal/hdbt_admin": "^3.3",
         "drupal/helfi_azure_fs": "^2.0",
-        "drupal/helfi_platform_config": "4.12.14",
+        "drupal/helfi_platform_config": "^4.7.6",
         "drupal/helfi_tunnistamo": "^2.0",
         "drupal/honeypot": "<2.2",
         "drupal/inline_entity_form": "^1.0@RC",
@@ -130,6 +130,12 @@
             ],
             "drush/{$name}": [
                 "type:drupal-drush"
+            ]
+        },
+        "patches-ignore": {
+            "drupal/core": [
+                "[#UHF-10716] Ensure consistent ordering when calculating library asset order (https://www.drupal.org/i/3467860)",
+                "https://raw.githubusercontent.com/City-of-Helsinki/drupal-helfi-platform-config/955e2fc9493c6574ab070187b8a5a8634da7daab/patches/drupal-3467860-optimized-js-assets-mismatch.patch"
             ]
         },
         "patches": {
