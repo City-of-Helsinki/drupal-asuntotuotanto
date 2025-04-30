@@ -372,32 +372,25 @@
           {% endif %}
         </ul>
       </div>
-      {% if attachments|length > 0 %}
+      {% if attachments_with_dates is defined and attachments_with_dates|length > 0 %}
         <div class="project__attachments">
           <h2 class="project__attachments-label">
-            {% trans %}
-              Attachments
-            {% endtrans %}
+            {% trans %}Attachments{% endtrans %}
           </h2>
           <ul class="project__attachments-list">
-            {% for attachment in attachments %}
-              {% set description = attachment.description %}
-              {% set name = attachment.name %}
-              {% set size = attachment.size %}
-              {% set uri = attachment.uri %}
-
+            {% for attachment in attachments_with_dates %}
               <li class="project__attachment-item">
-                <a href="{{ uri }}" class="project__attachment-link">
+                <a href="{{ attachment.url }}" class="project__attachment-link" target="_blank" rel="noopener noreferrer">
                   {% include "@hdbt/misc/icon.twig" with {icon: 'document', label: ''} %}
                   <div class="project__attachment-content">
-                    <p class="project__attachment-description">{{ 'Open'|t }}</p>
                     <p class="project__attachment-name">
-                      <span class="visually-hidden">({{ 'File name'|t }})</span>
-                      {{ description ?: name }}
+                      {{ attachment.filename }}
                     </p>
                     <p class="project__attachment-size">
-                      <span class="visually-hidden">({{ 'File size'|t }})</span>
-                      {{ size }}
+                      {{ attachment.size }}
+                    </p>
+                    <p class="project__attachment-date">
+                      <small>{% trans %}File added{% endtrans %}: {{ attachment.created }}</small>
                     </p>
                   </div>
                 </a>

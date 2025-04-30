@@ -18,6 +18,7 @@ use Drupal\asu_content\ProjectUpdater;
 use Drupal\helfi_platform_config\DTO\ParagraphTypeCollection;
 use Drupal\node\Entity\Node;
 use Drupal\node\NodeForm;
+use Drupal\file\Entity\File;
 
 /**
  * Implements hook_entity_bundle_info_alter().
@@ -588,4 +589,30 @@ function asu_content_tokens($type, $tokens, array $data, array $options, Bubblea
   }
 
   return $replacements;
+}
+
+/**
+ * Implements hook_preprocess_node().
+ */
+function asu_content_preprocess_node(array &$variables) {
+  if ($variables['node'] instanceof \Drupal\node\NodeInterface && $variables['node']->bundle() === 'project') {
+    if ($variables['node']->hasField('field_project_attachments') && !$variables['node']->get('field_project_attachments')->isEmpty()) {
+      $attachments = [];
+
+      foreach ($variables['node']->get('field_project_attachments') as $item) {
+        /** @var \Drupal\file\Entity\File $file */
+        $file = File::load($item->target_id);
+        if ($file) {
+          $attachments[] = [
+            'filename' => $file->getFilename(),
+            'url' => \Drupal::service('file_url_generator')->generateAbsoluteString($file->getFileUri()),
+            'created' => \Drupal::service('date.formatter')->format($file->getCreatedTime(), 'custom', 'd.m.Y H:i'),
+            'size' => format_size($file->getSize()),
+          ];
+        }
+      }
+
+      $variables['attachments_with_dates'] = $attachments;
+    }
+  }
 }
