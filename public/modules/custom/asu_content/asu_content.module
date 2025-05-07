@@ -12,13 +12,14 @@ use Drupal\Core\Entity\EntityFormInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Field\FieldFilteredMarkup;
 use Drupal\Core\Render\BubbleableMetadata;
+use Drupal\Core\Render\Element;
+use Drupal\file\Entity\File;
 use Drupal\asu_content\Entity\Apartment;
 use Drupal\asu_content\Entity\Project;
 use Drupal\asu_content\ProjectUpdater;
 use Drupal\helfi_platform_config\DTO\ParagraphTypeCollection;
 use Drupal\node\Entity\Node;
 use Drupal\node\NodeForm;
-use Drupal\file\Entity\File;
 
 /**
  * Implements hook_entity_bundle_info_alter().
@@ -592,27 +593,24 @@ function asu_content_tokens($type, $tokens, array $data, array $options, Bubblea
 }
 
 /**
- * Implements hook_preprocess_node().
+ * Add file create date below each uploaded file in edit form.
  */
-function asu_content_preprocess_node(array &$variables) {
-  if ($variables['node'] instanceof \Drupal\node\NodeInterface && $variables['node']->bundle() === 'project') {
-    if ($variables['node']->hasField('field_project_attachments') && !$variables['node']->get('field_project_attachments')->isEmpty()) {
-      $attachments = [];
+function asu_content_form_node_project_edit_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
+  if (!empty($form['field_project_attachments']['widget']) && is_array($form['field_project_attachments']['widget'])) {
+    foreach (Element::children($form['field_project_attachments']['widget']) as $delta) {
+      $item = &$form['field_project_attachments']['widget'][$delta];
 
-      foreach ($variables['node']->get('field_project_attachments') as $item) {
-        /** @var \Drupal\file\Entity\File $file */
-        $file = File::load($item->target_id);
-        if ($file) {
-          $attachments[] = [
-            'filename' => $file->getFilename(),
-            'url' => \Drupal::service('file_url_generator')->generateAbsoluteString($file->getFileUri()),
-            'created' => \Drupal::service('date.formatter')->format($file->getCreatedTime(), 'custom', 'd.m.Y H:i'),
-            'size' => format_size($file->getSize()),
-          ];
-        }
+      if (
+        isset($item['#default_value']['fids'][0]) &&
+        $file = \Drupal\file\Entity\File::load($item['#default_value']['fids'][0])
+      ) {
+        $created = \Drupal::service('date.formatter')->format($file->getCreatedTime(), 'custom', 'd.m.Y H:i');
+
+        $item['custom_marker'] = [
+          '#markup' => '<div class="description" style="margin: 6px 0;">Lisätty: ' . $created . '</div>',
+          '#weight' => 100,
+        ];
       }
-
-      $variables['attachments_with_dates'] = $attachments;
     }
   }
 }
