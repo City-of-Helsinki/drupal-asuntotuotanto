@@ -614,3 +614,49 @@ function asu_content_form_node_project_edit_form_alter(&$form, \Drupal\Core\Form
     }
   }
 }
+
+function asu_content_preprocess_node(array &$variables) {
+  $node = $variables['node'];
+
+  if ($node->bundle() === 'media_bank' && $node->hasField('field_media_bank_file')) {
+    if (isset($variables['content']['field_media_bank_file']) && is_array($variables['content']['field_media_bank_file'])) {
+      foreach (Element::children($variables['content']['field_media_bank_file']) as $delta) {
+        $element = &$variables['content']['field_media_bank_file'][$delta];
+
+        if (
+          isset($element['#file']) &&
+          $element['#file'] instanceof \Drupal\file\FileInterface
+        ) {
+          $created = \Drupal::service('date.formatter')->format($element['#file']->getCreatedTime(), 'custom', 'd.m.Y H:i');
+
+          $element['#post_render'][] = function ($html, $element) use ($created) {
+            $date_markup = '<div class="media-file__added-date">Lisätty: ' . $created . '</div>';
+            return preg_replace('/<\/div>(?!.*<\/div>)/', $date_markup . '</div>', (string) $html, 1);
+          };
+        }
+      }
+    }
+  }
+}
+
+
+function asu_content_form_node_media_bank_edit_form_alter(array &$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
+  if (!empty($form['field_media_bank_file']['widget']) && is_array($form['field_media_bank_file']['widget'])) {
+    foreach (Element::children($form['field_media_bank_file']['widget']) as $delta) {
+      $item = &$form['field_media_bank_file']['widget'][$delta];
+
+      if (
+        isset($item['#default_value']['fids'][0]) &&
+        $file = \Drupal\file\Entity\File::load($item['#default_value']['fids'][0])
+      ) {
+        $created = \Drupal::service('date.formatter')->format($file->getCreatedTime(), 'custom', 'd.m.Y H:i');
+
+        $item['custom_marker'] = [
+          '#markup' => '<div class="description" style="margin: 6px 0;">Lisätty: ' . $created . '</div>',
+          '#weight' => 100,
+        ];
+      }
+    }
+  }
+}
+
