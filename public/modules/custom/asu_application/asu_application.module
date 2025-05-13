@@ -130,6 +130,7 @@ function template_preprocess_asu_application(array &$variables) {
     $application_teaser_values = [
       '#teaser_values' => [
         'application_id' => $application->id->value,
+        'backend_application_id' => $application->get('field_backend_id')->value,
         'project_uuid' => $project->uuid(),
         'language' => \Drupal::languageManager()->getCurrentLanguage()->getId(),
         'project_name' => $project->field_housing_company->value,
@@ -290,4 +291,23 @@ function asu_application_send_apply_for_free_apartment(array &$message, array $p
   $message['from'] = \Drupal::config('system.site')->get('mail');
   $message['subject'] = $params['subject'];
   $message['body'][] = $params['message'];
+}
+
+
+/**
+ * Implements hook_preprocess_HOOK() for asu_application templates.
+ */
+function asu_application_preprocess_asu_application(array &$variables) {
+  $view_mode = $variables['elements']['#view_mode'] ?? NULL;
+  if ($view_mode !== 'submitted_teaser') {
+    return;
+  }
+
+  $teaser_values = &$variables['content']['#teaser_values'];
+
+  if (!empty($teaser_values['backend_application_id'])) {
+    $app_id = $teaser_values['application_id'];
+    $token = \Drupal::service('csrf_token')->get("delete_application_{$app_id}");
+    $teaser_values['delete_url'] = "/asu/application/delete/{$app_id}/{$token}";
+  }
 }
