@@ -35,7 +35,7 @@ class AsuApplicationDeleteController extends ControllerBase {
     );
   }
 
-  public function delete($application, $token): RedirectResponse {
+  public function delete($application): RedirectResponse {
     $storage = $this->entityTypeManager->getStorage('asu_application');
     $entity = $storage->load($application);
 
@@ -57,10 +57,12 @@ class AsuApplicationDeleteController extends ControllerBase {
     }
     catch (\Exception $e) {
       $this->messenger()->addError($this->t('Failed to delete application from backend.'));
-      return new RedirectResponse('/user/applications');
     }
 
-    $entity->delete();
+    $entity->set('field_backend_id', NULL);
+    $entity->set('field_locked', FALSE);
+    $entity->set('error', NULL);
+    $entity->save();
     $this->messenger()->addStatus($this->t('Your application has been successfully deleted.'));
     return new RedirectResponse('/user/applications');
   }

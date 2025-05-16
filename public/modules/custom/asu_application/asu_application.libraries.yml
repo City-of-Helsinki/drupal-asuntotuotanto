@@ -2,3 +2,11 @@ additional-applicant:
   version: 1.x
   js:
     assets/js/additional-applicant.js: {}
+application-submit:
+  version: 1.x
+  js:
+    assets/js/application-submit.js: {}
+  dependencies:
+    - core/jquery
+    - core/jquery.ui.dialog
+    - core/drupal
