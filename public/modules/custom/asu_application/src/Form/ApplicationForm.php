@@ -109,26 +109,37 @@ class ApplicationForm extends ContentEntityForm implements TrustedCallbackInterf
     return $instance;
   }
 
-  public static function addConfirmDialogHtml($html, &$form) {
+/**
+ * Adds a localized confirmation dialog HTML snippet to the form render output.
+ *
+ * @param string $html
+ *   The rendered HTML output.
+ * @param array $form
+ *   The form array (not passed by reference in post_render context).
+ *
+ * @return string
+ *   Modified HTML with modal dialog markup.
+ */
+public static function addConfirmDialogHtml(string $html, array $form): string {
   $langcode = \Drupal::languageManager()->getCurrentLanguage()->getId();
 
-  if ($langcode === 'fi') {
-    $title = 'Vahvista hakemuksen korvaaminen';
-    $message = 'Sinulla on jo hakemus tähän projektiin. Se poistetaan ennen uuden lähettämistä. Jatketaanko?';
-  }
-  else {
-    $title = 'Confirm application replacement';
-    $message = 'You already have an application for this project. It will be deleted before sending a new one. Continue?';
-  }
+  $title = $langcode === 'fi'
+    ? 'Vahvista hakemuksen korvaaminen'
+    : 'Confirm application replacement';
 
-  $modal = '
-    <div id="asu-application-delete-confirm-dialog" title="' . $title . '" style="display:none;">
-      <div class="hds-modal__content">
-        <div class="hds-modal__body">
-          <p>' . $message . '</p>
-        </div>
-      </div>
-    </div>';
+  $message = $langcode === 'fi'
+    ? 'Sinulla on jo hakemus tähän projektiin. Se poistetaan ennen uuden lähettämistä. Jatketaanko?'
+    : 'You already have an application for this project. It will be deleted before sending a new one. Continue?';
+
+  $modal = <<<HTML
+<div id="asu-application-delete-confirm-dialog" title="{$title}" style="display:none; max-width: 700px;">
+  <div class="hds-modal__content">
+    <div class="hds-modal__body">
+      <p>{$message}</p>
+    </div>
+  </div>
+</div>
+HTML;
 
   return $html . $modal;
 }
