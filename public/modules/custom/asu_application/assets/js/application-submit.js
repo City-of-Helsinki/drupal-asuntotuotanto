@@ -1,10 +1,7 @@
 (function ($, Drupal, once) {
   Drupal.behaviors.applicationSubmit = {
     attach: function (context, settings) {
-      if (
-        !settings.asuApplication ||
-        !settings.asuApplication.hasExistingApplication
-      ) {
+      if (!settings.asuApplication?.hasExistingApplication) {
         return;
       }
 
@@ -14,32 +11,35 @@
         context
       ).forEach(function (button) {
         $(button).on("click", function (e) {
-          var $form = $(this).closest("form");
-          var backendId = $form.find(
+          const $form = $(this).closest("form");
+          const backendId = $form.find(
             'input[name="confirm_application_deletion"]'
           ).length;
-          var confirmValue = $form
-            .find('input[name="confirm_application_deletion"]')
-            .val();
+          const $confirmInput = $form.find(
+            'input[name="confirm_application_deletion"]'
+          );
+          const confirmValue = $confirmInput.val();
 
           if (backendId && confirmValue != "1") {
             e.preventDefault();
             e.stopImmediatePropagation();
 
-            var $dialog = $("#asu-application-delete-confirm-dialog");
+            const $dialog = $("#asu-application-delete-confirm-dialog");
+            const continueLabel = Drupal.t("Continue");
+            const cancelLabel = Drupal.t("Cancel");
 
             $dialog.dialog({
               modal: true,
               width: 450,
               buttons: {
-                [Drupal.t("Continue")]: function () {
+                [continueLabel]: function () {
                   $form
                     .find('input[name="confirm_application_deletion"]')
                     .val("1");
                   $(this).dialog("close");
                   $form.find('[name="submit-application"]').get(0).click();
                 },
-                [Drupal.t("Cancel")]: function () {
+                [cancelLabel]: function () {
                   $(this).dialog("close");
                 },
               },
