@@ -109,7 +109,7 @@
           {% if content['#teaser_values'].is_application_period and content['#teaser_values'].delete_url %}
           <div class="application--action">
             <form method="post" action="{{ content['#teaser_values'].delete_url }}">
-              <button type="submit" class="hds-button hds-button--secondary">
+              <button type="submit" class="hds-button hds-button--secondary application-delete-link">
                 <span class="hds-button__label">{% trans %}Delete{% endtrans %}</span>
               </button>
             </form>
@@ -755,4 +755,18 @@
       </div>
     </form>
   {% endif %}
+
+<div id="asu-application-delete-confirm-dialog" title="{% if language.getId == 'fi' %}Vahvista hakemuksen poistaminen{% else %}Confirm application deletion{% endif %}" style="display:none;">
+  <div class="hds-modal__content">
+    <div class="hds-modal__body">
+      <p>
+        {% if language.getId == 'fi' %}
+          Sinulla on jo hakemus tähän projektiin. Se poistetaan ennen uuden lähettämistä. Jatketaanko?
+        {% else %}
+          You already have an application for this project. It will be deleted before sending a new one. Continue?
+        {% endif %}
+      </p>
+    </div>
+  </div>
+</div>
 {% endif %}
