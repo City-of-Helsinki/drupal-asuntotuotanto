@@ -8,6 +8,6 @@ README.txt
 autoload.php
 example.gitignore
 index.php
-robots.txt
+#robots.txt
 update.php
 web.config
