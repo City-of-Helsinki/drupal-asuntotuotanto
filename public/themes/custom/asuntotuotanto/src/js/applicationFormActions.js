@@ -111,12 +111,14 @@
               ) {
                 if (
                   index === 0 &&
+                  item.nextElementSibling &&
+                  item.nextElementSibling.classList &&
                   !item.nextElementSibling.classList.contains(
                     "application-form__apartments-item--with-select"
                   )
                 ) {
-                  actionButtonElements[0].disabled = true;
-                  actionButtonElements[1].disabled = false;
+                  if (actionButtonElements[0]) actionButtonElements[0].disabled = true;
+                  if (actionButtonElements[1]) actionButtonElements[1].disabled = false;
                 }
 
                 if (
@@ -124,15 +126,17 @@
                   index < getApplicationFormApartmentListElementCount() - 1
                 ) {
                   if (
+                    item.nextElementSibling &&
+                    item.nextElementSibling.classList &&
                     item.nextElementSibling.classList.contains(
                       "application-form__apartments-item--with-select"
                     )
                   ) {
-                    actionButtonElements[0].disabled = false;
-                    actionButtonElements[1].disabled = true;
+                    if (actionButtonElements[0]) actionButtonElements[0].disabled = false;
+                    if (actionButtonElements[1]) actionButtonElements[1].disabled = true;
                   } else {
-                    actionButtonElements[0].disabled = false;
-                    actionButtonElements[1].disabled = false;
+                    if (actionButtonElements[0]) actionButtonElements[0].disabled = false;
+                    if (actionButtonElements[1]) actionButtonElements[1].disabled = false;
                   }
                 }
 
@@ -357,6 +361,8 @@
           }
 
           if (
+            targetParent.nextElementSibling &&
+            targetParent.nextElementSibling.classList &&
             targetParent.nextElementSibling.classList.contains(
               "application-form__apartments-item--with-select"
             )
@@ -441,7 +447,7 @@
           originalSelectElementTarget.change();
 
           setTimeout(() => {
-            if (target.disabled) {
+            if (target.disabled && target.nextElementSibling) {
               target.nextElementSibling.focus();
             } else {
               target.focus();
@@ -499,7 +505,7 @@
             originalSelectElementTarget.change();
 
             setTimeout(() => {
-              if (target.disabled) {
+              if (target.disabled && target.previousElementSibling) {
                 target.previousElementSibling.focus();
               } else {
                 target.focus();
@@ -544,10 +550,12 @@
 
         setTimeout(() => {
           jQuery(removeButton).trigger('mousedown');
-          parentLiElement.remove();
+          jQuery('#application_form_apartments_list').empty();
+          rebuildTable();
           jQuery('.application-form-apartment__apartment-delete-button').each((index, element) => {
             jQuery(element).prop("disabled", false);
           })
+
         }, 750);
       };
 
