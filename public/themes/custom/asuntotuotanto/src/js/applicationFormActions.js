@@ -90,68 +90,50 @@
           .filter((selectValue) => selectValue !== "0");
       };
 
+      function setActionButtonState(actionButtonElements, isFirst, isLast, isNextWithSelect) {
+        if (!actionButtonElements[0] || !actionButtonElements[1]) return;
+        if (isFirst && !isNextWithSelect) {
+          actionButtonElements[0].disabled = true;
+          actionButtonElements[1].disabled = false;
+        } else if (isLast) {
+          actionButtonElements[0].disabled = false;
+          actionButtonElements[1].disabled = true;
+        } else if (isNextWithSelect) {
+          actionButtonElements[0].disabled = false;
+          actionButtonElements[1].disabled = true;
+        } else {
+          actionButtonElements[0].disabled = false;
+          actionButtonElements[1].disabled = false;
+        }
+      }
+
       const detectMutations = (mutations) => {
         mutations.forEach((mutation) => {
-          if (mutation.type === "childList") {
-            const listItem = document.getElementsByClassName(
-              "application-form__apartments-item"
-            );
+          if (mutation.type !== "childList") return;
+          const listItem = document.getElementsByClassName("application-form__apartments-item");
+          const total = getApplicationFormApartmentListElementCount();
 
-            [...listItem].map((item) => {
-              const actionButtonElements = item.querySelectorAll(
-                "button[data-list-position-action-button]"
+          [...listItem].forEach((item, index) => {
+            if (item.classList.contains("application-form__apartments-item--with-select")) return;
+
+            const actionButtonElements = item.querySelectorAll(
+              "button[data-list-position-action-button]"
+            );
+            const isFirst = index === 0;
+            const isLast = index === total - 1;
+            const isNextWithSelect =
+              item.nextElementSibling &&
+              item.nextElementSibling.classList &&
+              item.nextElementSibling.classList.contains(
+                "application-form__apartments-item--with-select"
               );
 
-              const index = [...item.parentElement.children].indexOf(item);
-
-              if (
-                !item.classList.contains(
-                  "application-form__apartments-item--with-select"
-                )
-              ) {
-                if (
-                  index === 0 &&
-                  item.nextElementSibling &&
-                  item.nextElementSibling.classList &&
-                  !item.nextElementSibling.classList.contains(
-                    "application-form__apartments-item--with-select"
-                  )
-                ) {
-                  if (actionButtonElements[0]) actionButtonElements[0].disabled = true;
-                  if (actionButtonElements[1]) actionButtonElements[1].disabled = false;
-                }
-
-                if (
-                  index > 0 &&
-                  index < getApplicationFormApartmentListElementCount() - 1
-                ) {
-                  if (
-                    item.nextElementSibling &&
-                    item.nextElementSibling.classList &&
-                    item.nextElementSibling.classList.contains(
-                      "application-form__apartments-item--with-select"
-                    )
-                  ) {
-                    if (actionButtonElements[0]) actionButtonElements[0].disabled = false;
-                    if (actionButtonElements[1]) actionButtonElements[1].disabled = true;
-                  } else {
-                    if (actionButtonElements[0]) actionButtonElements[0].disabled = false;
-                    if (actionButtonElements[1]) actionButtonElements[1].disabled = false;
-                  }
-                }
-
-                if (
-                  index ===
-                  getApplicationFormApartmentListElementCount() - 1
-                ) {
-                  actionButtonElements[0].disabled = false;
-                  actionButtonElements[1].disabled = true;
-                }
-              }
-            });
-          }
+            setActionButtonState(actionButtonElements, isFirst, isLast, isNextWithSelect);
+          });
         });
       };
+
+
 
       const applicationFormApartmentListObserver = new MutationObserver(
         detectMutations
