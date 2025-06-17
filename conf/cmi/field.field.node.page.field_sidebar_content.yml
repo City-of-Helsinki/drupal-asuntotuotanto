@@ -1,5 +1,5 @@
 uuid: 185aae97-50d5-4f2d-9fe4-6878e0b3861a
-langcode: en
+langcode: fi
 status: true
 dependencies:
   config:
@@ -15,7 +15,7 @@ id: node.page.field_sidebar_content
 field_name: field_sidebar_content
 entity_type: node
 bundle: page
-label: Items
+label: 'Sivupalkin sisältö'
 description: ''
 required: false
 translatable: true

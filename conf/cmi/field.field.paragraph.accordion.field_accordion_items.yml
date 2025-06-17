@@ -1,5 +1,5 @@
 uuid: 94451108-7bd3-4561-bbc5-a1f93d9d48ff
-langcode: en
+langcode: fi
 status: true
 dependencies:
   config:
@@ -17,7 +17,7 @@ id: paragraph.accordion.field_accordion_items
 field_name: field_accordion_items
 entity_type: paragraph
 bundle: accordion
-label: Items
+label: Sisältö
 description: ''
 required: true
 translatable: false

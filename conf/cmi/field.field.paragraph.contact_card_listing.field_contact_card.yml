@@ -1,5 +1,5 @@
 uuid: 8ca0e967-4bc7-42c6-915d-62398901d1eb
-langcode: en
+langcode: fi
 status: true
 dependencies:
   config:
@@ -14,7 +14,7 @@ id: paragraph.contact_card_listing.field_contact_card
 field_name: field_contact_card
 entity_type: paragraph
 bundle: contact_card_listing
-label: 'Contact card'
+label: Yhteystietokortti
 description: ''
 required: false
 translatable: false
