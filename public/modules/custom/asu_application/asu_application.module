@@ -322,7 +322,7 @@ function asu_application_preprocess_asu_application(array &$variables) {
 }
 
 /**
- *
+ * asu_application_preprocess_views_view
  */
 function asu_application_preprocess_views_view(&$variables) {
   if ($variables['view']->id() == 'applications') {

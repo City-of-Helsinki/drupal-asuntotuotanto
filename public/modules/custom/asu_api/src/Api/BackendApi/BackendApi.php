@@ -64,11 +64,13 @@ class BackendApi {
     $this->store = $storeFactory->get('customer');
   }
 
+  /**
+   * deleteApplication
+   */
   public function deleteApplication(UserInterface $sender, string $applicationId): void {
     $request = new DeleteApplicationRequest($sender, $applicationId);
     $this->send($request);
   }
-
 
   /**
    * Send request.
@@ -86,7 +88,7 @@ class BackendApi {
    */
   public function send(Request $request, array $options = []): ?Response {
     $options['headers'] = $options['headers'] ?? [];
-    $sender = $request->getSender();
+
     if ($request->requiresAuthentication()) {
       if ($token = $this->handleAuthentication($request->getSender())) {
         $options['headers']['Authorization'] = sprintf("Bearer %s", $token);
