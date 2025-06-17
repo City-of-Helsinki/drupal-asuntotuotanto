@@ -618,7 +618,7 @@ function asu_content_form_node_project_edit_form_alter(&$form, FormStateInterfac
 }
 
 /**
- * asu_content_preprocess_node
+ * Preprocess node.
  */
 function asu_content_preprocess_node(array &$variables) {
   $node = $variables['node'];
@@ -645,7 +645,7 @@ function asu_content_preprocess_node(array &$variables) {
 }
 
 /**
- * asu_content_form_node_media_bank_edit_form_alter
+ * Alter media bank.
  */
 function asu_content_form_node_media_bank_edit_form_alter(array &$form, FormStateInterface $form_state, $form_id) {
   if (!empty($form['field_media_bank_file']['widget']) && is_array($form['field_media_bank_file']['widget'])) {

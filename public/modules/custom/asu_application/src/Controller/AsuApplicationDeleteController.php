@@ -10,12 +10,29 @@ use Drupal\asu_api\Api\BackendApi\BackendApi;
 use Drupal\Core\Session\AccountProxyInterface;
 
 /**
- *
+ * Controller for Application Deletion.
  */
 class AsuApplicationDeleteController extends ControllerBase {
 
+  /**
+   * Entity type manager.
+   *
+   * @var entityTypeManager
+   */
   protected $entityTypeManager;
+
+  /**
+   * Backend API that is used.
+   *
+   * @var \Drupal\asu_api\Api\BackendApi\BackendApi
+   */
   protected BackendApi $backendApi;
+
+  /**
+   * Current user.
+   *
+   * @var currentUser
+   */
   protected $currentUser;
 
   public function __construct(
@@ -29,7 +46,7 @@ class AsuApplicationDeleteController extends ControllerBase {
   }
 
   /**
-   *
+   * Factory method for new AsuDeleteApplicationController.
    */
   public static function create(ContainerInterface $container): self {
     return new static(
@@ -40,7 +57,7 @@ class AsuApplicationDeleteController extends ControllerBase {
   }
 
   /**
-   *
+   * Handles the application deletion request.
    */
   public function delete($application): RedirectResponse {
     $storage = $this->entityTypeManager->getStorage('asu_application');

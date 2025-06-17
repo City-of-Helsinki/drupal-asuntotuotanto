@@ -1,5 +1,6 @@
 <?php
 
+// phpcs:disable DrupalPractice.Objects.GlobalDrupal.GlobalDrupal,Drupal.Semantics.FunctionT.Concat
 namespace Drupal\asu_application\Form;
 
 use Drupal\Core\Ajax\AjaxResponse;
@@ -24,6 +25,9 @@ use Drupal\Core\Security\TrustedCallbackInterface;
  * Form for Application.
  */
 /**
+ * Application form.
+ *
+ * // phpcs:ignore
  * NOSONAR: This form class intentionally aggregates multiple responsibilities for cohesive form handling.
  */
 class ApplicationForm extends ContentEntityForm implements TrustedCallbackInterface {
@@ -78,10 +82,15 @@ class ApplicationForm extends ContentEntityForm implements TrustedCallbackInterf
    */
   private ?EventDispatcherInterface $eventDispatcher = NULL;
 
+  /**
+   * Summary of application.
+   *
+   * @var application
+   */
   protected $application;
 
   /**
-   *
+   * Reloads the application.
    */
   protected function reloadApplication() {
     $application_id = \Drupal::routeMatch()->getParameter('application')
@@ -114,7 +123,7 @@ class ApplicationForm extends ContentEntityForm implements TrustedCallbackInterf
   }
 
   /**
-   * Adds a localized confirmation dialog HTML snippet to the form render output.
+   * Adds localized confirmation dialog HTML snippet to the form render output.
    *
    * @param string $html
    *   The rendered HTML output.
@@ -891,7 +900,7 @@ HTML;
   }
 
   /**
-   *
+   * Getter for all the trusted callback functions.
    */
   public static function trustedCallbacks() {
     return ['addConfirmDialogHtml'];

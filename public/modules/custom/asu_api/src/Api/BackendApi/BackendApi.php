@@ -65,7 +65,7 @@ class BackendApi {
   }
 
   /**
-   * deleteApplication
+   * Performs the request to delete an application.
    */
   public function deleteApplication(UserInterface $sender, string $applicationId): void {
     $request = new DeleteApplicationRequest($sender, $applicationId);
