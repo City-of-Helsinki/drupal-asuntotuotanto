@@ -281,6 +281,7 @@ function asu_application_mail(string $key, array &$message, array $params) {
     case 'apply_for_free_apartment':
       asu_application_send_apply_for_free_apartment($message, $params);
       break;
+
     case 'application_submission':
       $message['subject'] = $params['subject'];
       $message['body'][] = $params['message'];
@@ -302,7 +303,6 @@ function asu_application_send_apply_for_free_apartment(array &$message, array $p
   $message['body'][] = $params['message'];
 }
 
-
 /**
  * Implements hook_preprocess_HOOK() for asu_application templates.
  */
@@ -321,6 +321,9 @@ function asu_application_preprocess_asu_application(array &$variables) {
   }
 }
 
+/**
+ * View for preprocessing application views.
+ */
 function asu_application_preprocess_views_view(&$variables) {
   if ($variables['view']->id() == 'applications') {
     $variables['#attached']['library'][] = 'asu_application/application-submit';

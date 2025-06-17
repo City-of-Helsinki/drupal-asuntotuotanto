@@ -117,10 +117,10 @@ class RegisterForm extends TypedRegisterForm {
     $fields_to_clean = ['postal_code', 'phone_number'];
 
     foreach ($fields_to_clean as $field) {
-        $value = $form_state->getValue($field);
-        if (!empty($value)) {
-            $form_state->setValue($field, str_replace('-', '', $value));
-        }
+      $value = $form_state->getValue($field);
+      if (!empty($value)) {
+        $form_state->setValue($field, str_replace('-', '', $value));
+      }
     }
     if (!filter_var($form_state->getUserInput()['mail'], FILTER_VALIDATE_EMAIL)) {
       $form_state->setErrorByName('mail', $this->t('Invalid email format'));

@@ -1,5 +1,5 @@
 uuid: a067f09c-1521-4c5b-af3a-355ad4708fc2
-langcode: en
+langcode: fi
 status: true
 dependencies:
   config:
@@ -14,7 +14,7 @@ id: paragraph.contact_card.field_contact_social_media
 field_name: field_contact_social_media
 entity_type: paragraph
 bundle: contact_card
-label: 'Social media'
+label: 'Sosiaalinen media'
 description: ''
 required: false
 translatable: false

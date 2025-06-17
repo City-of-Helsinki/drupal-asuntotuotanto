@@ -5,7 +5,6 @@
  * Contains asu apartment search module.
  */
 
-use Drupal\menu_link_content\Entity\MenuLinkContent;
 /**
  * Implements hook_theme().
  */
@@ -33,7 +32,9 @@ function asu_apartment_search_theme() {
   ];
 }
 
-
+/**
+ * Loads the apartment search entity.
+ */
 function asu_apartment_search_entity_load(array &$entities, string $entity_type) {
   if ($entity_type === 'menu_link_content') {
     foreach ($entities as $entity) {

@@ -155,7 +155,7 @@ class ApplicationSubscriber implements EventSubscriberInterface {
       $request->setSender($user);
       $response = $this->backendApi->send($request);
       $this->logger->notice('Django response application_uuid: @uuid', [
-        '@uuid' => $response->getContent()['application_uuid'] ?? 'NULL'
+        '@uuid' => $response->getContent()['application_uuid'] ?? 'NULL',
       ]);
       $application->set('field_backend_id', $response->getContent()['application_uuid'] ?? NULL);
 
