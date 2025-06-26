@@ -246,6 +246,7 @@ class AuthService extends SamlService {
       $accountData,
       'customer'
     );
+    $request->setSender($account);
 
     try {
       /** @var \Drupal\asu_api\Api\BackendApi\Response\CreateUserResponse $response */

@@ -176,6 +176,7 @@ class RegisterForm extends TypedRegisterForm {
       }
 
       $request = new CreateUserRequest($account, $form_state->getUserInput());
+      $request->setSender($account);
       $this->sendToBackend($account, $request);
 
       $form_state->set('user', $account);
@@ -241,6 +242,7 @@ class RegisterForm extends TypedRegisterForm {
     }
 
     $request = new CreateUserRequest($user, $form_state->getUserInput());
+    $request->setSender($user);
     $this->sendToBackend($user, $request);
 
     $form_state->set('user', $user);
@@ -296,6 +298,7 @@ class RegisterForm extends TypedRegisterForm {
     ];
 
     $request = new CreateUserRequest($account, $accountData, 'salesperson');
+    $request->setSender($account);
     $this->sendToBackend($account, $request);
 
     $form_state->set('user', $account);
