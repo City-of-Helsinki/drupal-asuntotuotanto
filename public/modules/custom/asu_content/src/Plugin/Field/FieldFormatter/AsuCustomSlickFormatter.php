@@ -4,6 +4,8 @@ namespace Drupal\asu_content\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\slick\Plugin\Field\FieldFormatter\SlickImageFormatter;
+use Drupal\Core\Field\FieldItemList;
+use Drupal\file\Entity\File;
 
 /**
  * Formatter used for project/apartment image field's combining.
@@ -32,8 +34,8 @@ class AsuCustomSlickFormatter extends SlickImageFormatter {
         $stack = array_merge($stack, $node->field_floorplan->getValue());
       }
       $stack = array_merge($stack, $items->getValue());
-      if ($project->field_shared_apartment_images) {
-        $stack = array_merge($stack, $project->field_shared_apartment_images->getValue());
+      if ($project->hasField('field_shared_apartment_images') && !$project->get('field_shared_apartment_images')->isEmpty()) {
+        $stack = array_merge($stack, $project->get('field_shared_apartment_images')->getValue());
       }
     }
 
@@ -44,11 +46,22 @@ class AsuCustomSlickFormatter extends SlickImageFormatter {
     }
 
     if ($stack) {
+      $new_items = [];
+
       foreach ($stack as $index => $item) {
         $item['_attributes'] = $item['_attributes'] ?? [];
+
+        $label = $node->label();
+        $alt_text = $label . ', kuva ' . ($index + 1);
+
+        $item['_attributes']['alt'] = $alt_text;
+        $item['alt'] = $alt_text;
+
         $item['_loaded'] = $item['_loaded'] ?? TRUE;
-        $items->set($index, $item);
+        $new_items[$index] = $item;
       }
+
+      $items->setValue($new_items);
     }
 
     return parent::viewElements($items, $langcode);

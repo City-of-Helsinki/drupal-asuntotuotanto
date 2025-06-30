@@ -52,10 +52,10 @@
   {% set phone = content.field_phone.0 %}
 
   <li{{ attributes.addClass(classes) }}>
-    <h3>
+    <h4>
       {% include "@hdbt/misc/icon.twig" with {icon: 'user', label: ''} %}
       {{ name }}
-    </h3>
+    </h4>
     <p class="contact-person__detail-item contact-person__detail-item--job-title">
       <span class="visually-hidden">{{ 'Job title'|t }}</span>
       {{ job_title }}
