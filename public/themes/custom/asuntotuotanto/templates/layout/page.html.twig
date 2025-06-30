@@ -27,6 +27,9 @@
 
   {% if page.messages %}
     {{ page.messages }}
+    <div class="visually-hidden" aria-live="polite" aria-atomic="true">
+      {{ page.messages }}
+    </div>
   {% endif %}
 
   {% if page.breadcrumb %}
