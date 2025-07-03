@@ -209,9 +209,13 @@ function asu_user_user_edit_submit(array $form, FormStateInterface &$form_state)
       'authentication failed while updating user information: ' . $e->getMessage()
     );
   }
+
   if (isset($_SESSION['messages']['status'])) {
     foreach ($_SESSION['messages']['status'] as $key => $msg) {
-      if ($msg == t('The changes have been saved.')) {
+      if (
+        $msg == t('The changes have been saved.') ||
+        $msg == t('Muutokset on tallennettu.')
+      ) {
         unset($_SESSION['messages']['status'][$key]);
       }
     }
@@ -219,12 +223,13 @@ function asu_user_user_edit_submit(array $form, FormStateInterface &$form_state)
       unset($_SESSION['messages']['status']);
     }
   }
+
   $link = \Drupal\Core\Link::fromTextAndUrl(
-    t('application url'),
+    t('Go to your applications'),
     \Drupal\Core\Url::fromUri('internal:/user/applications')
   )->toString();
   \Drupal::messenger()->addMessage([
-    '#markup' => t('Status message: Thank you – your information has been saved. You can now continue with your application. ') . $link
+    '#markup' => t('Thank you. You can now continue with your application') . ' ' . $link
   ], 'status');
 }
 
