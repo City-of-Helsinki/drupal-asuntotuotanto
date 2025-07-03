@@ -2527,6 +2527,9 @@ msgstr "julkaistu"
 msgid "The changes have been saved."
 msgstr "Muutokset on tallennettu."
 
+msgid "Status message: Thank you – your information has been saved. You can now continue with your application "
+msgstr "Tilanneviesti: Kiitos - tietosi on tallennettu. Voit nyt jatkaa hakemuksesi tekemistä "
+
 msgid "Undo"
 msgstr "Kumoa"
 
