@@ -63,6 +63,8 @@ final class Initialize extends ResourceBase {
       $user = User::load(\Drupal::currentUser()->id());
       $response['user'] = $this->getUser($user);
       $response['user']['applications'] = $this->getUserApplications($user);
+      $response['user']['application_project_pairs'] = Applications::applicationsByUser($user->id())
+        ->getApplicationsProjectPairs();
       // @todo Followed projects.
       $response['user']['followed_projects'][] = 15;
     }
