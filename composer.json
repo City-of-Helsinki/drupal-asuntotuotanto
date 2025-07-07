@@ -7,7 +7,7 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "require": {
-        "asuntomyynti/react": "^1.4.3",
+        "asuntomyynti/react": "^1.4.4",
         "composer/installers": "^2.0",
         "cweagans/composer-patches": "^1.7.3",
         "dinbror/blazy": "^1.8",
@@ -32,7 +32,7 @@
         "drupal/hdbt": "^6.0",
         "drupal/hdbt_admin": "^3.3",
         "drupal/helfi_azure_fs": "^2.0",
-        "drupal/helfi_platform_config": "^4.7.6",
+        "drupal/helfi_platform_config": "^4.8.0",
         "drupal/helfi_tunnistamo": "^2.0",
         "drupal/honeypot": "<2.2",
         "drupal/inline_entity_form": "^1.0@RC",
@@ -185,9 +185,9 @@
             "type": "package",
             "package": {
                 "name": "asuntomyynti/react",
-                "version": "1.4.3",
+                "version": "1.4.4",
                 "dist": {
-                    "url": "https://github.com/City-of-Helsinki/asuntomyynti-react/releases/download/v.1.4.3/asuntomyynti-react-1.4.3.zip",
+                    "url": "https://github.com/City-of-Helsinki/asuntomyynti-react/releases/download/v.1.4.4/asuntomyynti-react-1.4.4.zip",
                     "type": "zip"
                 }
             }
