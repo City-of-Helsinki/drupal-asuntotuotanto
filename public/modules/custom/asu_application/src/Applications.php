@@ -107,8 +107,8 @@ class Applications {
       $applicationId = $application->id();
       if ($projectId && $applicationId) {
         $result[] = [
-          'project_id' => (int)$projectId,
-          'application_id' => (int)$applicationId,
+          'project_id' => (int) $projectId,
+          'application_id' => (int) $applicationId,
         ];
       }
     }
