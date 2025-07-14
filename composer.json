@@ -57,6 +57,7 @@
         "drupal/samlauth": "^3.9",
         "drupal/slick": "^2.10",
         "drupal/symfony_mailer_lite": "^1.0.6",
+        "drupal/tfa": "1.11.0",
         "drupal/ultimate_cron": "^2.0@alpha",
         "drupal/user_bundle": "^1.2",
         "drupal/user_registrationpassword": "^2.0.0",
