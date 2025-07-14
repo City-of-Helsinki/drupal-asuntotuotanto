@@ -11,6 +11,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Drupal\asu_api\Api\BackendApi\Request\CreateUserRequest;
 use Drupal\asu_api\Api\BackendApi\Request\UpdateUserRequest;
@@ -224,12 +225,12 @@ function asu_user_user_edit_submit(array $form, FormStateInterface &$form_state)
     }
   }
 
-  $link = \Drupal\Core\Link::fromTextAndUrl(
+  $link = Link::fromTextAndUrl(
     t('Go to your applications'),
-    \Drupal\Core\Url::fromUri('internal:/user/applications')
+    Url::fromUri('internal:/user/applications')
   )->toString();
   \Drupal::messenger()->addMessage([
-    '#markup' => t('Thank you. You can now continue with your application') . ' ' . $link
+    '#markup' => t('Thank you. You can now continue with your application') . ' ' . $link,
   ], 'status');
 }
 
