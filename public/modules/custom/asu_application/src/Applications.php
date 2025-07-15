@@ -116,27 +116,6 @@ class Applications {
   }
 
   /**
-   * Returns pairs of project and application ids.
-   *
-   * @return array
-   *   Array of ['project_id' => ..., 'application_id' => ...]
-   */
-  public function getApplicationsProjectPairs(): array {
-    $result = [];
-    foreach ($this->applications as $application) {
-      $projectId = $application->getProjectId();
-      $applicationId = $application->id();
-      if ($projectId && $applicationId) {
-        $result[] = [
-          'project_id' => (int) $projectId,
-          'application_id' => (int) $applicationId,
-        ];
-      }
-    }
-    return $result;
-  }
-
-  /**
    * Get applications for single project.
    *
    * @param int|string $id
