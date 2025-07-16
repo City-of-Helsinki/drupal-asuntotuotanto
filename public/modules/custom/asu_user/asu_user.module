@@ -142,9 +142,9 @@ function asu_user_asu_get_user_external_field_data(UserInterface $account) {
  * Implements hook_form_formid_alter().
  */
 function asu_user_form_user_customer_form_alter(&$form, FormStateInterface &$form_state) {
-  $link = \Drupal\Core\Link::fromTextAndUrl(
+  $link = Link::fromTextAndUrl(
     t('Go to your applications'),
-    \Drupal\Core\Url::fromUri('internal:/user/applications')
+    Url::fromUri('internal:/user/applications')
   )->toString();
 
   $form['asu_customer_info_message'] = [
