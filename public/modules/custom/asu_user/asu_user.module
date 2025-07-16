@@ -150,8 +150,8 @@ function asu_user_form_user_customer_form_alter(&$form, FormStateInterface &$for
   $form['asu_customer_info_message'] = [
     '#type' => 'markup',
     '#markup' => '<div class="asu-user-profile-info" style="margin-bottom: 1em;">' .
-      t('Thank you. You can now continue with your application') . ' ' . $link .
-      '</div>',
+    t('Thank you. You can now continue with your application') . ' ' . $link .
+    '</div>',
     '#weight' => -100,
   ];
   if (in_array('customer', \Drupal::currentUser()->getRoles())) {
