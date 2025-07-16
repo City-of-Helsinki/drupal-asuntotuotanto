@@ -4,8 +4,6 @@ namespace Drupal\asu_content\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\slick\Plugin\Field\FieldFormatter\SlickImageFormatter;
-use Drupal\Core\Field\FieldItemList;
-use Drupal\file\Entity\File;
 
 /**
  * Formatter used for project/apartment image field's combining.
