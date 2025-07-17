@@ -798,6 +798,11 @@ field_settings:
     datasource_id: 'entity:node'
     property_path: 'search_api_reverse_entity_references_node__field_apartments:field_street_address'
     type: string
+  project_use_complete_contract:
+    label: 'Use complete apartment contract'
+    datasource_id: 'entity:node'
+    property_path: 'search_api_reverse_entity_references_node__field_apartments:field_use_complete_contract'
+    type: boolean
   project_upcoming_description:
     label: 'Upcoming description'
     datasource_id: 'entity:node'
@@ -808,6 +813,11 @@ field_settings:
     datasource_id: 'entity:node'
     property_path: 'search_api_reverse_entity_references_node__field_apartments:nid'
     type: asu_url
+  project_use_complete_contract:
+    label: 'Use complete apartment contract'
+    datasource_id: 'entity:node'
+    property_path: 'search_api_reverse_entity_references_node__field_apartments:field_use_complete_contract'
+    type: boolean
   project_uuid:
     label: 'Project UUID'
     datasource_id: 'entity:node'

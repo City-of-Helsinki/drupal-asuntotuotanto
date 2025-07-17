@@ -1,0 +1,23 @@
+uuid: f4e2a3aa-e97a-465a-8f12-52995cbc1023
+langcode: fi
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_use_complete_contract
+    - node.type.project
+id: node.project.field_use_complete_contract
+field_name: field_use_complete_contract
+entity_type: node
+bundle: project
+label: 'Käytä valmiin asunnon kauppakirjaa'
+description: ''
+required: true
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: Kyllä
+  off_label: Ei
+field_type: boolean

@@ -104,6 +104,7 @@ dependencies:
     - field.field.node.project.field_transfer_restriction
     - field.field.node.project.field_upcoming_description
     - field.field.node.project.field_usage_fees
+    - field.field.node.project.field_use_complete_contract
     - field.field.node.project.field_virtual_presentation_url
     - field.field.node.project.field_warranty_deposit_releas
     - field.field.node.project.field_zoning_info
@@ -885,6 +886,16 @@ content:
     settings: {  }
     third_party_settings: {  }
     weight: 48
+    region: content
+  field_use_complete_contract:
+    type: boolean
+    label: above
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    weight: 88
     region: content
   field_warranty_deposit_releas:
     type: datetime_default

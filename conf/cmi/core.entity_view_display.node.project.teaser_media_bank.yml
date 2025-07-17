@@ -105,6 +105,7 @@ dependencies:
     - field.field.node.project.field_transfer_restriction
     - field.field.node.project.field_upcoming_description
     - field.field.node.project.field_usage_fees
+    - field.field.node.project.field_use_complete_contract
     - field.field.node.project.field_virtual_presentation_url
     - field.field.node.project.field_warranty_deposit_releas
     - field.field.node.project.field_zoning_info
@@ -301,6 +302,7 @@ hidden:
   field_transfer_restriction: true
   field_upcoming_description: true
   field_usage_fees: true
+  field_use_complete_contract: true
   field_virtual_presentation_url: true
   field_warranty_deposit_releas: true
   field_zoning_info: true
