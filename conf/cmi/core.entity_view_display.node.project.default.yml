@@ -101,6 +101,7 @@ dependencies:
     - field.field.node.project.field_state_of_sale
     - field.field.node.project.field_street_address
     - field.field.node.project.field_tasks
+    - field.field.node.project.field_transfer_of_shares_date
     - field.field.node.project.field_transfer_restriction
     - field.field.node.project.field_upcoming_description
     - field.field.node.project.field_usage_fees
@@ -862,6 +863,15 @@ content:
     settings: {  }
     third_party_settings: {  }
     weight: 33
+    region: content
+  field_transfer_of_shares_date:
+    type: datetime_default
+    label: above
+    settings:
+      timezone_override: ''
+      format_type: medium
+    third_party_settings: {  }
+    weight: 89
     region: content
   field_transfer_restriction:
     type: boolean

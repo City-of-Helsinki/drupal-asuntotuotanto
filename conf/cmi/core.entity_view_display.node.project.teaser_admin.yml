@@ -102,6 +102,7 @@ dependencies:
     - field.field.node.project.field_state_of_sale
     - field.field.node.project.field_street_address
     - field.field.node.project.field_tasks
+    - field.field.node.project.field_transfer_of_shares_date
     - field.field.node.project.field_transfer_restriction
     - field.field.node.project.field_upcoming_description
     - field.field.node.project.field_usage_fees
@@ -258,6 +259,7 @@ hidden:
   field_site_renter: true
   field_state_of_sale: true
   field_tasks: true
+  field_transfer_of_shares_date: true
   field_transfer_restriction: true
   field_upcoming_description: true
   field_usage_fees: true
