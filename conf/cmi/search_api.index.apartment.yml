@@ -833,6 +833,11 @@ field_settings:
     datasource_id: 'entity:node'
     property_path: 'search_api_reverse_entity_references_node__field_apartments:field_zoning_status'
     type: string
+  project_transfer_of_shares_date:
+    label: 'Transfer of shares date'
+    datasource_id: 'entity:node'
+    property_path: 'search_api_reverse_entity_references_node__field_apartments:field_transfer_of_shares_date'
+    type: date
   publish_on_etuovi:
     label: 'Publish on etuovi'
     datasource_id: 'entity:node'
