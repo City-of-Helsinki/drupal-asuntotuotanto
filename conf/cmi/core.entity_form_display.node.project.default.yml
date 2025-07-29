@@ -354,6 +354,7 @@ third_party_settings:
         - field_documents_delivered
         - field_other_terms
         - field_transfer_of_shares_date
+        - field_use_complete_contract
       label: 'Kauppakirjan tiedot'
       region: content
       parent_name: group_project_tabs
@@ -1151,7 +1152,7 @@ content:
     third_party_settings: {  }
   field_use_complete_contract:
     type: boolean_checkbox
-    weight: 121
+    weight: 115
     region: content
     settings:
       display_label: true
