@@ -1,11 +1,11 @@
-name: 'ASU - Applications'
+name: "ASU - Applications"
 type: module
-description: 'Logic related to apartment applications'
+description: "Logic related to apartment applications"
 core: 8.x
 core_version_requirement: ^8 || ^9 || ^10
-package: 'ASU'
+package: "ASU"
 libraries:
-  - 'asu_application/application-results.js'
+  - "asu_application/application-results.js"
 dependencies:
   - drupal:node
   - helfi_api_base:helfi_api_base
