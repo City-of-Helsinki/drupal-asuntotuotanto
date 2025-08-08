@@ -1,5 +1,5 @@
 uuid: 705f5163-6930-4960-92b5-ce09f0389400
-langcode: en
+langcode: fi
 status: true
 dependencies:
   config:
@@ -8,7 +8,6 @@ dependencies:
     - rest.resource.mailinglist
   module:
     - asu_application
-    - eu_cookie_compliance
     - external_entities
     - helfi_api_base
     - media
@@ -19,13 +18,12 @@ dependencies:
 _core:
   default_config_hash: EDyVdaROG6pYzyEct43c01Wq4gpATszrk-qR6gqnQ84
 id: anonymous
-label: Anonymous
+label: 'Anonyymi käyttäjä'
 weight: -10
 is_admin: false
 permissions:
   - 'access content'
   - 'create application'
-  - 'display eu cookie compliance popup'
   - 'restful get asu_initialize'
   - 'restful post asu_elasticsearch'
   - 'restful post mailinglist'

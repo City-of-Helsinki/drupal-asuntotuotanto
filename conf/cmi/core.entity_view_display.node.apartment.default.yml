@@ -158,6 +158,17 @@ content:
     third_party_settings: {  }
     weight: 18
     region: content
+  field_financing_fee:
+    type: number_decimal
+    label: inline
+    settings:
+      thousand_separator: ''
+      decimal_separator: .
+      scale: 2
+      prefix_suffix: true
+    third_party_settings: {  }
+    weight: 45
+    region: content
   field_floor:
     type: number_integer
     label: hidden
@@ -322,17 +333,6 @@ content:
     settings: {  }
     third_party_settings: {  }
     weight: 27
-    region: content
-  field_financing_fee:
-    type: number_decimal
-    label: inline
-    settings:
-      thousand_separator: ''
-      decimal_separator: .
-      scale: 2
-      prefix_suffix: true
-    third_party_settings: {  }
-    weight: 45
     region: content
   field_maintenance_fee:
     type: number_decimal

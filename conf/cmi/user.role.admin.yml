@@ -46,9 +46,9 @@ dependencies:
     - content_translation
     - editoria11y
     - entity_usage
-    - eu_cookie_compliance
     - file
     - filter
+    - hdbt_cookie_banner
     - helfi_api_base
     - locale
     - media
@@ -76,7 +76,7 @@ dependencies:
 _core:
   default_config_hash: fnOpQQ5r1eprWvQPrJPWRfDqxozQiZnwIdYFPKb0lbM
 id: admin
-label: Administrator
+label: Pääkäyttäjä
 weight: -2
 is_admin: null
 permissions:
@@ -97,8 +97,7 @@ permissions:
   - 'administer block types'
   - 'administer blocks'
   - 'administer content translation'
-  - 'administer eu cookie compliance categories'
-  - 'administer eu cookie compliance popup'
+  - 'administer hdbt_cookie_banner'
   - 'administer menu'
   - 'administer nodes'
   - 'administer paragraphs library'
@@ -199,7 +198,6 @@ permissions:
   - 'delete terms in site_owners'
   - 'delete terms in states_of_sale'
   - 'delete terms in tasks'
-  - 'display eu cookie compliance popup'
   - 'edit any announcement content'
   - 'edit any apartment content'
   - 'edit any article content'

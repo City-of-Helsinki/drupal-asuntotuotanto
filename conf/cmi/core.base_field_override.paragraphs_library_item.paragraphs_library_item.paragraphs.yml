@@ -1,10 +1,11 @@
 uuid: 629ff5e2-b3d2-4479-abc0-a05140f441d7
-langcode: en
+langcode: fi
 status: true
 dependencies:
   config:
     - paragraphs.paragraphs_type.accordion
     - paragraphs.paragraphs_type.banner
+    - paragraphs.paragraphs_type.chart
     - paragraphs.paragraphs_type.columns
     - paragraphs.paragraphs_type.contact_card_listing
     - paragraphs.paragraphs_type.content_cards
@@ -47,12 +48,16 @@ settings:
       map: map
       sidebar_text: sidebar_text
       text: text
+      chart: chart
     negate: 0
     target_bundles_drag_drop:
       accordion:
         weight: 0
         enabled: true
       banner:
+        weight: 0
+        enabled: true
+      chart:
         weight: 0
         enabled: true
       columns:

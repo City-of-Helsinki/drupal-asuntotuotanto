@@ -1,5 +1,5 @@
 uuid: 21218519-c1de-430d-9211-fff36a32a1b1
-langcode: en
+langcode: fi
 status: true
 dependencies:
   config:
@@ -14,7 +14,7 @@ id: node.landing_page.field_hero
 field_name: field_hero
 entity_type: node
 bundle: landing_page
-label: Hero
+label: Hero-kansikuva
 description: ''
 required: false
 translatable: true

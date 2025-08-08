@@ -4,29 +4,50 @@ namespace Drupal\asu_application\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\asu_api\Api\BackendApi\BackendApi;
 use Drupal\Core\Session\AccountProxyInterface;
 
+/**
+ * Controller for Application Deletion.
+ */
 class AsuApplicationDeleteController extends ControllerBase {
 
+  /**
+   * Entity type manager.
+   *
+   * @var entityTypeManager
+   */
   protected $entityTypeManager;
+
+  /**
+   * Backend API that is used.
+   *
+   * @var \Drupal\asu_api\Api\BackendApi\BackendApi
+   */
   protected BackendApi $backendApi;
+
+  /**
+   * Current user.
+   *
+   * @var currentUser
+   */
   protected $currentUser;
 
   public function __construct(
     EntityTypeManagerInterface $entityTypeManager,
     BackendApi $backendApi,
-    AccountProxyInterface $currentUser
+    AccountProxyInterface $currentUser,
   ) {
     $this->entityTypeManager = $entityTypeManager;
     $this->backendApi = $backendApi;
     $this->currentUser = $currentUser;
   }
 
+  /**
+   * Factory method for new AsuDeleteApplicationController.
+   */
   public static function create(ContainerInterface $container): self {
     return new static(
       $container->get('entity_type.manager'),
@@ -35,6 +56,9 @@ class AsuApplicationDeleteController extends ControllerBase {
     );
   }
 
+  /**
+   * Handles the application deletion request.
+   */
   public function delete($application): RedirectResponse {
     $storage = $this->entityTypeManager->getStorage('asu_application');
     $entity = $storage->load($application);

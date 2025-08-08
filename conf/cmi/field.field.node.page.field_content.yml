@@ -1,5 +1,5 @@
 uuid: 422930e1-829b-4e2c-b4f9-65be84e2c274
-langcode: en
+langcode: fi
 status: true
 dependencies:
   config:
@@ -30,7 +30,7 @@ id: node.page.field_content
 field_name: field_content
 entity_type: node
 bundle: page
-label: 'Upper content region'
+label: 'Ylempi sisältöalue'
 description: ''
 required: false
 translatable: true
