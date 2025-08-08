@@ -1,5 +1,5 @@
 uuid: 635be050-31ba-423c-b63a-018d52bd47c5
-langcode: en
+langcode: fi
 status: true
 dependencies:
   config:
@@ -33,7 +33,7 @@ id: node.landing_page.field_content
 field_name: field_content
 entity_type: node
 bundle: landing_page
-label: 'Content region'
+label: Sisältöalue
 description: ''
 required: false
 translatable: true

@@ -1,5 +1,5 @@
 uuid: 3801f830-0233-43f3-927a-4ea55e4b7a60
-langcode: en
+langcode: fi
 status: true
 dependencies:
   config:
@@ -17,7 +17,7 @@ id: paragraph.accordion_item.field_accordion_item_content
 field_name: field_accordion_item_content
 entity_type: paragraph
 bundle: accordion_item
-label: Content
+label: Sisältö
 description: ''
 required: true
 translatable: false
@@ -34,13 +34,13 @@ settings:
     negate: 0
     target_bundles_drag_drop:
       columns:
-        weight: 0
+        weight: 3
         enabled: true
       image:
-        weight: 0
+        weight: 1
         enabled: true
       phasing:
-        weight: 0
+        weight: 2
         enabled: true
       text:
         weight: 0

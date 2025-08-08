@@ -1,5 +1,6 @@
 <?php
 
+// phpcs:disable DrupalPractice.Objects.GlobalDrupal.GlobalDrupal,Drupal.Semantics.FunctionT.Concat
 namespace Drupal\asu_application\Form;
 
 use Drupal\Core\Ajax\AjaxResponse;
@@ -9,9 +10,7 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Entity\ContentEntityForm;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Mail\MailManagerInterface;
 use Drupal\Core\Messenger\MessengerTrait;
-use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Url;
 use Drupal\asu_application\Entity\Application;
 use Drupal\asu_application\Event\ApplicationEvent;
@@ -20,11 +19,18 @@ use Drupal\asu_content\Entity\Project;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Drupal\Core\Security\TrustedCallbackInterface;
 
 /**
  * Form for Application.
  */
-class ApplicationForm extends ContentEntityForm {
+/**
+ * Application form.
+ *
+ * // phpcs:ignore
+ * NOSONAR: This form class intentionally aggregates multiple responsibilities for cohesive form handling.
+ */
+class ApplicationForm extends ContentEntityForm implements TrustedCallbackInterface {
   use MessengerTrait;
 
   /**
@@ -76,8 +82,16 @@ class ApplicationForm extends ContentEntityForm {
    */
   private ?EventDispatcherInterface $eventDispatcher = NULL;
 
+  /**
+   * Summary of application.
+   *
+   * @var application
+   */
   protected $application;
 
+  /**
+   * Reloads the application.
+   */
   protected function reloadApplication() {
     $application_id = \Drupal::routeMatch()->getParameter('application')
       ?: \Drupal::request()->get('application_id');
@@ -85,7 +99,7 @@ class ApplicationForm extends ContentEntityForm {
       return \Drupal::entityTypeManager()->getStorage('asu_application')->load($application_id);
     }
 
-    return null;
+    return NULL;
   }
 
   /**
@@ -109,14 +123,50 @@ class ApplicationForm extends ContentEntityForm {
   }
 
   /**
+   * Adds localized confirmation dialog HTML snippet to the form render output.
+   *
+   * @param string $html
+   *   The rendered HTML output.
+   * @param array $form
+   *   The form array (not passed by reference in post_render context).
+   *
+   * @return string
+   *   Modified HTML with modal dialog markup.
+   */
+  public static function addConfirmDialogHtml(string $html, array $form): string {
+    $langcode = \Drupal::languageManager()->getCurrentLanguage()->getId();
+
+    $title = $langcode === 'fi'
+    ? 'Vahvista hakemuksen korvaaminen'
+    : 'Confirm application replacement';
+
+    $message = $langcode === 'fi'
+    ? 'Sinulla on jo hakemus tähän projektiin. Se poistetaan ennen uuden lähettämistä. Jatketaanko?'
+    : 'You already have an application for this project. It will be deleted before sending a new one. Continue?';
+
+    $modal = <<<HTML
+<div id="asu-application-delete-confirm-dialog" title="{$title}" style="display:none; max-width: 700px;">
+  <div class="hds-modal__content">
+    <div class="hds-modal__body">
+      <p>{$message}</p>
+    </div>
+  </div>
+</div>
+HTML;
+
+    return $html . $modal;
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
+
     if (is_null($this->application)) {
       $this->application = $this->reloadApplication();
     }
 
-    $form_state->setRebuild(true);
+    $form_state->setRebuild(TRUE);
 
     $projectReference = $this->entity->project->first();
     $project = $projectReference->entity;
@@ -254,6 +304,7 @@ class ApplicationForm extends ContentEntityForm {
 
       $form['actions']['submit']['#value'] = $this->t('Send application');
       $form['actions']['submit']['#name'] = 'submit-application';
+      $form['actions']['submit']['#submit'] = ['::save'];
 
       // Show draft button only for customers.
       if ($currentUser->bundle() == 'customer') {
@@ -267,7 +318,17 @@ class ApplicationForm extends ContentEntityForm {
         ];
       }
     }
+    $backend_id = $this->entity->get('field_backend_id')->value;
+    if ($backend_id) {
+      $form['actions']['confirm_application_deletion'] = [
+        '#type' => 'hidden',
+        '#default_value' => '0',
+      ];
+      $form['#attached']['library'][] = 'asu_application/application_submit';
+      $form['#attached']['drupalSettings']['asuApplication']['hasExistingApplication'] = TRUE;
 
+      $form['#post_render'][] = [$this, 'addConfirmDialogHtml'];
+    }
     return $form;
   }
 
@@ -276,6 +337,12 @@ class ApplicationForm extends ContentEntityForm {
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
     $formValues = $form_state->cleanValues()->getValues();
+    $backend_id = $this->entity->get('field_backend_id')->value;
+    $triggerName = $form_state->getTriggeringElement()['#name'] ?? '';
+
+    if ($triggerName === 'submit-application' && $backend_id && $form_state->getValue('confirm_application_deletion') != '1') {
+      $form_state->setErrorByName('', $this->t('Please confirm action.'));
+    }
 
     // Main applicant fields.
     foreach ($formValues['main_applicant'][0] as $field => $value) {
@@ -311,9 +378,7 @@ class ApplicationForm extends ContentEntityForm {
       }
     }
 
-    $has_additional_applicant = (!empty($formValues['applicant'][0]['has_additional_applicant'])) ? (bool) $formValues['applicant'][0]['has_additional_applicant'] : FALSE;
-
-    // Additional applicant fields.
+    $has_additional_applicant = !empty($formValues['applicant'][0]['has_additional_applicant']);
     if ($has_additional_applicant) {
       foreach ($formValues['applicant'][0] as $applicant_field => $applicant_value) {
         if ($applicant_field == 'has_additional_applicant') {
@@ -322,7 +387,7 @@ class ApplicationForm extends ContentEntityForm {
 
         if ($applicant_field == 'personal_id' && strlen($applicant_value) != 4) {
           $fieldTitle = (string) $form["applicant"]['widget'][0][$applicant_field]['#title'];
-          $form_state->setErrorByName($field, $this->t('Check additional applicant @field', ['@field' => $fieldTitle]));
+          $form_state->setErrorByName($applicant_field, $this->t('Check additional applicant @field', ['@field' => $fieldTitle]));
         }
 
         if (empty($applicant_value) || $applicant_value == '-' || strlen($applicant_value) < 2) {
@@ -331,34 +396,33 @@ class ApplicationForm extends ContentEntityForm {
         }
 
         if ($applicant_field == 'postal_code' && (!is_numeric($applicant_value) || strlen($applicant_value) != 5)) {
-          $fieldTitle = (string) $form["main_applicant"]['widget'][0][$applicant_field]['#title'];
+          $fieldTitle = (string) $form["applicant"]['widget'][0][$applicant_field]['#title'];
           $form_state->setErrorByName($applicant_field, $this->t('Check additional applicant @field', ['@field' => $fieldTitle]));
         }
       }
 
-      // Additional applicant personal id check.
       if (!$this->validatePersonalId($formValues['applicant'][0]['date_of_birth'], $formValues['applicant'][0]['personal_id'])) {
         $fieldTitle = (string) $form["applicant"]['widget'][0]['personal_id']['#title'];
         $form_state->setErrorByName('personal_id', $this->t('Check additional applicant @field', ['@field' => $fieldTitle]));
       }
     }
 
-    // Residence number check.
     if (isset($formValues['field_right_of_residence_number'][0]['value']) &&
-      !is_numeric($formValues['field_right_of_residence_number'][0]['value']) ||
-      (int) $formValues['field_right_of_residence_number'][0]['value'] > 2147483647) {
+      (!is_numeric($formValues['field_right_of_residence_number'][0]['value']) ||
+      (int) $formValues['field_right_of_residence_number'][0]['value'] > 2147483647)) {
       $fieldTitle = (string) $form["field_right_of_residence_number"]['widget'][0]['#title'];
       $form_state->setErrorByName($fieldTitle, $this->t('Check @field', ['@field' => $fieldTitle]));
     }
 
-    $triggerName = $form_state->getTriggeringElement()['#name'];
-    if ($triggerName == 'submit-application') {
+    if ($triggerName === 'submit-application') {
       parent::validateForm($form, $form_state);
     }
-    if ($triggerName == 'submit-draft') {
+
+    if ($triggerName === 'submit-draft') {
       parent::validateForm($form, $form_state);
       $form_state->clearErrors();
     }
+
     if ($form_state->hasAnyErrors()) {
       unset($form['actions']['submit']['#attributes']['disabled']);
     }
@@ -449,11 +513,11 @@ class ApplicationForm extends ContentEntityForm {
     $project_name = $this->entity->get('project')->entity->label() ?? $this->t('Unknown project');
 
     if (!empty($email)) {
-        $mailManager = \Drupal::service('plugin.manager.mail');
-        $module = 'asu_application';
-        $key = 'application_submission';
-        $params['subject'] = $this->t("Kiitos hakemuksestasi / Thank you for your application");
-        $params['message'] = $this->t(
+      $mailManager = \Drupal::service('plugin.manager.mail');
+      $module = 'asu_application';
+      $key = 'application_submission';
+      $params['subject'] = $this->t("Kiitos hakemuksestasi / Thank you for your application");
+      $params['message'] = $this->t(
             "Kiitos - olemme vastaanottaneet hakemuksesi kohteeseemme @project_name.\n\n"
             . "Hakemuksesi on voimassa koko rakennusajan.\n\n"
             . "Arvonnan / huoneistojaon jälkeen voit tarkastaa oman sijoituksesi kirjautumalla kotisivuillemme: asuntotuotanto.hel.fi.\n\n"
@@ -465,10 +529,10 @@ class ApplicationForm extends ContentEntityForm {
             . "This is an automated message – please do not reply to this email.",
             ['@project_name' => $project_name]
         );
-        $langcode = \Drupal::languageManager()->getDefaultLanguage()->getId();
-        $send = true;
+      $langcode = \Drupal::languageManager()->getDefaultLanguage()->getId();
+      $send = TRUE;
 
-        $mailManager->mail($module, $key, $email, $langcode, $params, NULL, $send);
+      $mailManager->mail($module, $key, $email, $langcode, $params, NULL, $send);
     }
 
     $content_entity_id = $this->entity->getEntityType()->id();
@@ -489,10 +553,24 @@ class ApplicationForm extends ContentEntityForm {
    */
   private function doSave(array $form, FormStateInterface $form_state, $errors = TRUE) {
     $values = $form_state->getUserInput();
+    $oldBackendId = $this->entity->get('field_backend_id')->value ?? NULL;
+    $confirmDeletion = $form_state->getValue('confirm_application_deletion') ?? 'NOT SET';
+
+    if ($oldBackendId && $confirmDeletion == '1') {
+      try {
+        $user = \Drupal::entityTypeManager()->getStorage('user')->load(\Drupal::currentUser()->id());
+        \Drupal::service('asu_api.backendapi')->deleteApplication($user, $oldBackendId);
+      }
+      catch (\Exception $e) {
+        \Drupal::logger('asu_application')->error(
+          'Application Delete error: @error',
+          ['@error' => $e->getMessage()]
+              );
+      }
+    }
 
     $this->updateEntityFieldsWithUserInput($form_state);
     $this->updateApartments($form, $this->entity, $values['apartment']);
-
     $this->entity->save();
 
     // Validate additional applicant.
@@ -540,7 +618,6 @@ class ApplicationForm extends ContentEntityForm {
     if (is_null($this->eventDispatcher)) {
       $this->eventDispatcher = \Drupal::service('event_dispatcher');
     }
-
 
     $this->eventDispatcher->dispatch($event, $eventName);
   }
@@ -820,6 +897,13 @@ class ApplicationForm extends ContentEntityForm {
     }
 
     return $value;
+  }
+
+  /**
+   * Getter for all the trusted callback functions.
+   */
+  public static function trustedCallbacks() {
+    return ['addConfirmDialogHtml'];
   }
 
 }

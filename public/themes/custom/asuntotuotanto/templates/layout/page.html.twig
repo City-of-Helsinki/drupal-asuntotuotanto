@@ -27,6 +27,9 @@
 
   {% if page.messages %}
     {{ page.messages }}
+    <div class="visually-hidden" aria-live="polite" aria-atomic="true">
+      {{ page.messages }}
+    </div>
   {% endif %}
 
   {% if page.breadcrumb %}
@@ -66,7 +69,7 @@
   </main>
 </div>
 
-<footer class="page-footer" role="contentinfo">
+<footer class="page-footer footer" role="contentinfo">
   {% include '@hdbt/misc/koro.twig' with {koro: 'basic', color: 'var(--color-black-5)'} %}
   <div class="page-footer__content">
     <div class="page-footer__container wrapper wrapper--mw-1264">

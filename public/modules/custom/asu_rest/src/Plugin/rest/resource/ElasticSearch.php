@@ -283,23 +283,23 @@ class ElasticSearch extends ResourceBase {
     }
 
     if (!empty($parameters->get('living_area'))) {
-        $min = isset($parameters->get('living_area')[0]) && $parameters->get('living_area')[0] !== ""
+      $min = isset($parameters->get('living_area')[0]) && $parameters->get('living_area')[0] !== ""
             ? (int) $parameters->get('living_area')[0]
-            : null;
-        $max = isset($parameters->get('living_area')[1]) && $parameters->get('living_area')[1] !== ""
+            : NULL;
+      $max = isset($parameters->get('living_area')[1]) && $parameters->get('living_area')[1] !== ""
             ? (int) $parameters->get('living_area')[1]
-            : null;
+            : NULL;
 
-        if ($min !== null && $max !== null) {
-            $baseConditionGroup->addCondition('living_area', [$min, $max], 'BETWEEN');
-        } elseif ($min !== null) {
-            $baseConditionGroup->addCondition('living_area', [$min, 99999], 'BETWEEN');
-        } elseif ($max !== null) {
-            $baseConditionGroup->addCondition('living_area', [0, $max], 'BETWEEN');
-        }
+      if ($min !== NULL && $max !== NULL) {
+        $baseConditionGroup->addCondition('living_area', [$min, $max], 'BETWEEN');
+      }
+      elseif ($min !== NULL) {
+        $baseConditionGroup->addCondition('living_area', [$min, 99999], 'BETWEEN');
+      }
+      elseif ($max !== NULL) {
+        $baseConditionGroup->addCondition('living_area', [0, $max], 'BETWEEN');
+      }
     }
-
-
 
     // @todo Debt free sales price won't be needed in future.
     if ($value = $parameters->get('debt_free_sales_price')) {

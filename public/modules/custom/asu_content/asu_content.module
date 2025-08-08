@@ -7,11 +7,15 @@
 
 declare(strict_types=1);
 
+use Drupal\file\FileInterface;
+use Drupal\file\Entity\File;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Entity\EntityFormInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Field\FieldFilteredMarkup;
 use Drupal\Core\Render\BubbleableMetadata;
+use Drupal\Core\Render\Element;
 use Drupal\asu_content\Entity\Apartment;
 use Drupal\asu_content\Entity\Project;
 use Drupal\asu_content\ProjectUpdater;
@@ -588,4 +592,77 @@ function asu_content_tokens($type, $tokens, array $data, array $options, Bubblea
   }
 
   return $replacements;
+}
+
+/**
+ * Add file create date below each uploaded file in edit form.
+ */
+function asu_content_form_node_project_edit_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  if (!empty($form['field_project_attachments']['widget']) && is_array($form['field_project_attachments']['widget'])) {
+    foreach (Element::children($form['field_project_attachments']['widget']) as $delta) {
+      $item = &$form['field_project_attachments']['widget'][$delta];
+
+      if (
+        isset($item['#default_value']['fids'][0]) &&
+        $file = File::load($item['#default_value']['fids'][0])
+      ) {
+        $created = \Drupal::service('date.formatter')->format($file->getCreatedTime(), 'custom', 'd.m.Y H:i');
+
+        $item['custom_marker'] = [
+          '#markup' => '<div class="description" style="margin: 6px 0;">Lisätty: ' . $created . '</div>',
+          '#weight' => 100,
+        ];
+      }
+    }
+  }
+}
+
+/**
+ * Preprocess node.
+ */
+function asu_content_preprocess_node(array &$variables) {
+  $node = $variables['node'];
+
+  if ($node->bundle() === 'media_bank' && $node->hasField('field_media_bank_file')) {
+    if (isset($variables['content']['field_media_bank_file']) && is_array($variables['content']['field_media_bank_file'])) {
+      foreach (Element::children($variables['content']['field_media_bank_file']) as $delta) {
+        $element = &$variables['content']['field_media_bank_file'][$delta];
+
+        if (
+          isset($element['#file']) &&
+          $element['#file'] instanceof
+        FileInterface) {
+          $created = \Drupal::service('date.formatter')->format($element['#file']->getCreatedTime(), 'custom', 'd.m.Y H:i');
+
+          $element['#post_render'][] = function ($html, $element) use ($created) {
+            $date_markup = '<div class="media-file__added-date">Lisätty: ' . $created . '</div>';
+            return preg_replace('/<\/div>(?!.*<\/div>)/', $date_markup . '</div>', (string) $html, 1);
+          };
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Alter media bank.
+ */
+function asu_content_form_node_media_bank_edit_form_alter(array &$form, FormStateInterface $form_state, $form_id) {
+  if (!empty($form['field_media_bank_file']['widget']) && is_array($form['field_media_bank_file']['widget'])) {
+    foreach (Element::children($form['field_media_bank_file']['widget']) as $delta) {
+      $item = &$form['field_media_bank_file']['widget'][$delta];
+
+      if (
+        isset($item['#default_value']['fids'][0]) &&
+        $file = File::load($item['#default_value']['fids'][0])
+      ) {
+        $created = \Drupal::service('date.formatter')->format($file->getCreatedTime(), 'custom', 'd.m.Y H:i');
+
+        $item['custom_marker'] = [
+          '#markup' => '<div class="description" style="margin: 6px 0;">Lisätty: ' . $created . '</div>',
+          '#weight' => 100,
+        ];
+      }
+    }
+  }
 }

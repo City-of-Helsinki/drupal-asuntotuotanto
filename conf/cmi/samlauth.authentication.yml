@@ -1,6 +1,6 @@
 _core:
   default_config_hash: oDGEkhP0h5rXXqlDplxeBDre0goLigOJupHKMDMwcqM
-langcode: en
+langcode: fi
 login_menu_item_title: 'Samli logini'
 logout_menu_item_title: 'Samli logoutti'
 login_redirect_url: ''

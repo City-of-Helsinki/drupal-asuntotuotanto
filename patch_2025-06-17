@@ -1,0 +1,560 @@
+--- public/modules/custom/asu_user/src/RegisterForm.php
++++ PHP_CodeSniffer
+@@ -117,10 +117,10 @@
+     $fields_to_clean = ['postal_code', 'phone_number'];
+ 
+     foreach ($fields_to_clean as $field) {
+-        $value = $form_state->getValue($field);
+-        if (!empty($value)) {
+-            $form_state->setValue($field, str_replace('-', '', $value));
+-        }
++      $value = $form_state->getValue($field);
++      if (!empty($value)) {
++        $form_state->setValue($field, str_replace('-', '', $value));
++      }
+     }
+     if (!filter_var($form_state->getUserInput()['mail'], FILTER_VALIDATE_EMAIL)) {
+       $form_state->setErrorByName('mail', $this->t('Invalid email format'));
+--- public/modules/custom/asu_content/asu_content.module
++++ PHP_CodeSniffer
+@@ -7,13 +7,15 @@
+ 
+ declare(strict_types=1);
+ 
++use Drupal\file\FileInterface;
++use Drupal\file\Entity\File;
++use Drupal\Core\Form\FormStateInterface;
+ use Drupal\Core\Datetime\DrupalDateTime;
+ use Drupal\Core\Entity\EntityFormInterface;
+ use Drupal\Core\Entity\EntityInterface;
+ use Drupal\Core\Field\FieldFilteredMarkup;
+ use Drupal\Core\Render\BubbleableMetadata;
+ use Drupal\Core\Render\Element;
+-use Drupal\file\Entity\File;
+ use Drupal\asu_content\Entity\Apartment;
+ use Drupal\asu_content\Entity\Project;
+ use Drupal\asu_content\ProjectUpdater;
+@@ -595,14 +597,14 @@
+ /**
+  * Add file create date below each uploaded file in edit form.
+  */
+-function asu_content_form_node_project_edit_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
++function asu_content_form_node_project_edit_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+   if (!empty($form['field_project_attachments']['widget']) && is_array($form['field_project_attachments']['widget'])) {
+     foreach (Element::children($form['field_project_attachments']['widget']) as $delta) {
+       $item = &$form['field_project_attachments']['widget'][$delta];
+ 
+       if (
+         isset($item['#default_value']['fids'][0]) &&
+-        $file = \Drupal\file\Entity\File::load($item['#default_value']['fids'][0])
++        $file = File::load($item['#default_value']['fids'][0])
+       ) {
+         $created = \Drupal::service('date.formatter')->format($file->getCreatedTime(), 'custom', 'd.m.Y H:i');
+ 
+@@ -615,6 +617,9 @@
+   }
+ }
+ 
++/**
++ *
++ */
+ function asu_content_preprocess_node(array &$variables) {
+   $node = $variables['node'];
+ 
+@@ -625,8 +630,8 @@
+ 
+         if (
+           isset($element['#file']) &&
+-          $element['#file'] instanceof \Drupal\file\FileInterface
+-        ) {
++          $element['#file'] instanceof
++        FileInterface) {
+           $created = \Drupal::service('date.formatter')->format($element['#file']->getCreatedTime(), 'custom', 'd.m.Y H:i');
+ 
+           $element['#post_render'][] = function ($html, $element) use ($created) {
+@@ -639,15 +644,17 @@
+   }
+ }
+ 
+-
+-function asu_content_form_node_media_bank_edit_form_alter(array &$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
++/**
++ *
++ */
++function asu_content_form_node_media_bank_edit_form_alter(array &$form, FormStateInterface $form_state, $form_id) {
+   if (!empty($form['field_media_bank_file']['widget']) && is_array($form['field_media_bank_file']['widget'])) {
+     foreach (Element::children($form['field_media_bank_file']['widget']) as $delta) {
+       $item = &$form['field_media_bank_file']['widget'][$delta];
+ 
+       if (
+         isset($item['#default_value']['fids'][0]) &&
+-        $file = \Drupal\file\Entity\File::load($item['#default_value']['fids'][0])
++        $file = File::load($item['#default_value']['fids'][0])
+       ) {
+         $created = \Drupal::service('date.formatter')->format($file->getCreatedTime(), 'custom', 'd.m.Y H:i');
+ 
+@@ -659,4 +666,3 @@
+     }
+   }
+ }
+-
+--- public/modules/custom/asu_apartment_search/asu_apartment_search.module
++++ PHP_CodeSniffer
+@@ -5,7 +5,6 @@
+  * Contains asu apartment search module.
+  */
+ 
+-use Drupal\menu_link_content\Entity\MenuLinkContent;
+ /**
+  * Implements hook_theme().
+  */
+@@ -33,7 +32,9 @@
+   ];
+ }
+ 
+-
++/**
++ *
++ */
+ function asu_apartment_search_entity_load(array &$entities, string $entity_type) {
+   if ($entity_type === 'menu_link_content') {
+     foreach ($entities as $entity) {
+--- public/modules/custom/asu_application/asu_application.module
++++ PHP_CodeSniffer
+@@ -281,6 +281,7 @@
+     case 'apply_for_free_apartment':
+       asu_application_send_apply_for_free_apartment($message, $params);
+       break;
++
+     case 'application_submission':
+       $message['subject'] = $params['subject'];
+       $message['body'][] = $params['message'];
+@@ -302,7 +303,6 @@
+   $message['body'][] = $params['message'];
+ }
+ 
+-
+ /**
+  * Implements hook_preprocess_HOOK() for asu_application templates.
+  */
+@@ -321,6 +321,9 @@
+   }
+ }
+ 
++/**
++ *
++ */
+ function asu_application_preprocess_views_view(&$variables) {
+   if ($variables['view']->id() == 'applications') {
+     $variables['#attached']['library'][] = 'asu_application/application-submit';
+--- public/modules/custom/asu_application/src/Form/ApplicationForm.php
++++ PHP_CodeSniffer
+@@ -9,9 +9,7 @@
+ use Drupal\Core\Datetime\DrupalDateTime;
+ use Drupal\Core\Entity\ContentEntityForm;
+ use Drupal\Core\Form\FormStateInterface;
+-use Drupal\Core\Mail\MailManagerInterface;
+ use Drupal\Core\Messenger\MessengerTrait;
+-use Drupal\Core\Language\LanguageInterface;
+ use Drupal\Core\Url;
+ use Drupal\asu_application\Entity\Application;
+ use Drupal\asu_application\Event\ApplicationEvent;
+@@ -25,7 +23,9 @@
+ /**
+  * Form for Application.
+  */
+-// NOSONAR: This form class intentionally aggregates multiple responsibilities for cohesive form handling.
++/**
++ * NOSONAR: This form class intentionally aggregates multiple responsibilities for cohesive form handling.
++ */
+ class ApplicationForm extends ContentEntityForm implements TrustedCallbackInterface {
+   use MessengerTrait;
+ 
+@@ -80,6 +80,9 @@
+ 
+   protected $application;
+ 
++  /**
++   *
++   */
+   protected function reloadApplication() {
+     $application_id = \Drupal::routeMatch()->getParameter('application')
+       ?: \Drupal::request()->get('application_id');
+@@ -87,7 +90,7 @@
+       return \Drupal::entityTypeManager()->getStorage('asu_application')->load($application_id);
+     }
+ 
+-    return null;
++    return NULL;
+   }
+ 
+   /**
+@@ -110,29 +113,29 @@
+     return $instance;
+   }
+ 
+-/**
+- * Adds a localized confirmation dialog HTML snippet to the form render output.
+- *
+- * @param string $html
+- *   The rendered HTML output.
+- * @param array $form
+- *   The form array (not passed by reference in post_render context).
+- *
+- * @return string
+- *   Modified HTML with modal dialog markup.
+- */
+-public static function addConfirmDialogHtml(string $html, array $form): string {
+-  $langcode = \Drupal::languageManager()->getCurrentLanguage()->getId();
++  /**
++   * Adds a localized confirmation dialog HTML snippet to the form render output.
++   *
++   * @param string $html
++   *   The rendered HTML output.
++   * @param array $form
++   *   The form array (not passed by reference in post_render context).
++   *
++   * @return string
++   *   Modified HTML with modal dialog markup.
++   */
++  public static function addConfirmDialogHtml(string $html, array $form): string {
++    $langcode = \Drupal::languageManager()->getCurrentLanguage()->getId();
+ 
+-  $title = $langcode === 'fi'
++    $title = $langcode === 'fi'
+     ? 'Vahvista hakemuksen korvaaminen'
+     : 'Confirm application replacement';
+ 
+-  $message = $langcode === 'fi'
++    $message = $langcode === 'fi'
+     ? 'Sinulla on jo hakemus tähän projektiin. Se poistetaan ennen uuden lähettämistä. Jatketaanko?'
+     : 'You already have an application for this project. It will be deleted before sending a new one. Continue?';
+ 
+-  $modal = <<<HTML
++    $modal = <<<HTML
+ <div id="asu-application-delete-confirm-dialog" title="{$title}" style="display:none; max-width: 700px;">
+   <div class="hds-modal__content">
+     <div class="hds-modal__body">
+@@ -142,10 +145,9 @@
+ </div>
+ HTML;
+ 
+-  return $html . $modal;
+-}
++    return $html . $modal;
++  }
+ 
+-
+   /**
+    * {@inheritdoc}
+    */
+@@ -155,7 +157,7 @@
+       $this->application = $this->reloadApplication();
+     }
+ 
+-    $form_state->setRebuild(true);
++    $form_state->setRebuild(TRUE);
+ 
+     $projectReference = $this->entity->project->first();
+     $project = $projectReference->entity;
+@@ -309,14 +311,14 @@
+     }
+     $backend_id = $this->entity->get('field_backend_id')->value;
+     if ($backend_id) {
+-        $form['actions']['confirm_application_deletion'] = [
++      $form['actions']['confirm_application_deletion'] = [
+         '#type' => 'hidden',
+         '#default_value' => '0',
+-    ];
+-    $form['#attached']['library'][] = 'asu_application/application_submit';
+-    $form['#attached']['drupalSettings']['asuApplication']['hasExistingApplication'] = TRUE;
++      ];
++      $form['#attached']['library'][] = 'asu_application/application_submit';
++      $form['#attached']['drupalSettings']['asuApplication']['hasExistingApplication'] = TRUE;
+ 
+-    $form['#post_render'][] = [$this, 'addConfirmDialogHtml'];
++      $form['#post_render'][] = [$this, 'addConfirmDialogHtml'];
+     }
+     return $form;
+   }
+@@ -330,7 +332,7 @@
+     $triggerName = $form_state->getTriggeringElement()['#name'] ?? '';
+ 
+     if ($triggerName === 'submit-application' && $backend_id && $form_state->getValue('confirm_application_deletion') != '1') {
+-        $form_state->setErrorByName('', $this->t('Please confirm action.'));
++      $form_state->setErrorByName('', $this->t('Please confirm action.'));
+     }
+ 
+     // Main applicant fields.
+@@ -371,7 +373,7 @@
+     if ($has_additional_applicant) {
+       foreach ($formValues['applicant'][0] as $applicant_field => $applicant_value) {
+         if ($applicant_field == 'has_additional_applicant') {
+-            continue;
++          continue;
+         }
+ 
+         if ($applicant_field == 'personal_id' && strlen($applicant_value) != 4) {
+@@ -417,7 +419,6 @@
+     }
+   }
+ 
+-
+   /**
+    * Validate personal id values.
+    *
+@@ -503,11 +504,11 @@
+     $project_name = $this->entity->get('project')->entity->label() ?? $this->t('Unknown project');
+ 
+     if (!empty($email)) {
+-        $mailManager = \Drupal::service('plugin.manager.mail');
+-        $module = 'asu_application';
+-        $key = 'application_submission';
+-        $params['subject'] = $this->t("Kiitos hakemuksestasi / Thank you for your application");
+-        $params['message'] = $this->t(
++      $mailManager = \Drupal::service('plugin.manager.mail');
++      $module = 'asu_application';
++      $key = 'application_submission';
++      $params['subject'] = $this->t("Kiitos hakemuksestasi / Thank you for your application");
++      $params['message'] = $this->t(
+             "Kiitos - olemme vastaanottaneet hakemuksesi kohteeseemme @project_name.\n\n"
+             . "Hakemuksesi on voimassa koko rakennusajan.\n\n"
+             . "Arvonnan / huoneistojaon jälkeen voit tarkastaa oman sijoituksesi kirjautumalla kotisivuillemme: asuntotuotanto.hel.fi.\n\n"
+@@ -519,10 +520,10 @@
+             . "This is an automated message – please do not reply to this email.",
+             ['@project_name' => $project_name]
+         );
+-        $langcode = \Drupal::languageManager()->getDefaultLanguage()->getId();
+-        $send = true;
++      $langcode = \Drupal::languageManager()->getDefaultLanguage()->getId();
++      $send = TRUE;
+ 
+-        $mailManager->mail($module, $key, $email, $langcode, $params, NULL, $send);
++      $mailManager->mail($module, $key, $email, $langcode, $params, NULL, $send);
+     }
+ 
+     $content_entity_id = $this->entity->getEntityType()->id();
+@@ -550,11 +551,12 @@
+       try {
+         $user = \Drupal::entityTypeManager()->getStorage('user')->load(\Drupal::currentUser()->id());
+         \Drupal::service('asu_api.backendapi')->deleteApplication($user, $oldBackendId);
+-      } catch (\Exception $e) {
++      }
++      catch (\Exception $e) {
+         \Drupal::logger('asu_application')->error(
+           'Application Delete error: @error',
+           ['@error' => $e->getMessage()]
+-        );
++              );
+       }
+     }
+ 
+@@ -562,7 +564,6 @@
+     $this->updateApartments($form, $this->entity, $values['apartment']);
+     $this->entity->save();
+ 
+-
+     // Validate additional applicant.
+     if ($values['applicant'][0]['has_additional_applicant'] === "1") {
+       foreach ($values['applicant'][0] as $value) {
+@@ -609,7 +610,6 @@
+       $this->eventDispatcher = \Drupal::service('event_dispatcher');
+     }
+ 
+-
+     $this->eventDispatcher->dispatch($event, $eventName);
+   }
+ 
+@@ -889,7 +889,12 @@
+ 
+     return $value;
+   }
++
++  /**
++   *
++   */
+   public static function trustedCallbacks() {
+     return ['addConfirmDialogHtml'];
+   }
++
+ }
+--- public/modules/custom/asu_application/src/Controller/AsuApplicationDeleteController.php
++++ PHP_CodeSniffer
+@@ -4,13 +4,14 @@
+ 
+ use Drupal\Core\Controller\ControllerBase;
+ use Drupal\Core\Entity\EntityTypeManagerInterface;
+-use Symfony\Component\HttpFoundation\Request;
+ use Symfony\Component\HttpFoundation\RedirectResponse;
+-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+ use Symfony\Component\DependencyInjection\ContainerInterface;
+ use Drupal\asu_api\Api\BackendApi\BackendApi;
+ use Drupal\Core\Session\AccountProxyInterface;
+ 
++/**
++ *
++ */
+ class AsuApplicationDeleteController extends ControllerBase {
+ 
+   protected $entityTypeManager;
+@@ -20,13 +21,16 @@
+   public function __construct(
+     EntityTypeManagerInterface $entityTypeManager,
+     BackendApi $backendApi,
+-    AccountProxyInterface $currentUser
++    AccountProxyInterface $currentUser,
+   ) {
+     $this->entityTypeManager = $entityTypeManager;
+     $this->backendApi = $backendApi;
+     $this->currentUser = $currentUser;
+   }
+ 
++  /**
++   *
++   */
+   public static function create(ContainerInterface $container): self {
+     return new static(
+       $container->get('entity_type.manager'),
+@@ -35,6 +39,9 @@
+     );
+   }
+ 
++  /**
++   *
++   */
+   public function delete($application): RedirectResponse {
+     $storage = $this->entityTypeManager->getStorage('asu_application');
+     $entity = $storage->load($application);
+--- public/modules/custom/asu_application/src/EventSubscriber/ApplicationSubscriber.php
++++ PHP_CodeSniffer
+@@ -155,7 +155,7 @@
+       $request->setSender($user);
+       $response = $this->backendApi->send($request);
+       $this->logger->notice('Django response application_uuid: @uuid', [
+-        '@uuid' => $response->getContent()['application_uuid'] ?? 'NULL'
++        '@uuid' => $response->getContent()['application_uuid'] ?? 'NULL',
+       ]);
+       $application->set('field_backend_id', $response->getContent()['application_uuid'] ?? NULL);
+ 
+--- public/modules/custom/asu_rest/src/Plugin/rest/resource/ElasticSearch.php
++++ PHP_CodeSniffer
+@@ -283,23 +283,23 @@
+     }
+ 
+     if (!empty($parameters->get('living_area'))) {
+-        $min = isset($parameters->get('living_area')[0]) && $parameters->get('living_area')[0] !== ""
++      $min = isset($parameters->get('living_area')[0]) && $parameters->get('living_area')[0] !== ""
+             ? (int) $parameters->get('living_area')[0]
+-            : null;
+-        $max = isset($parameters->get('living_area')[1]) && $parameters->get('living_area')[1] !== ""
++            : NULL;
++      $max = isset($parameters->get('living_area')[1]) && $parameters->get('living_area')[1] !== ""
+             ? (int) $parameters->get('living_area')[1]
+-            : null;
++            : NULL;
+ 
+-        if ($min !== null && $max !== null) {
+-            $baseConditionGroup->addCondition('living_area', [$min, $max], 'BETWEEN');
+-        } elseif ($min !== null) {
+-            $baseConditionGroup->addCondition('living_area', [$min, 99999], 'BETWEEN');
+-        } elseif ($max !== null) {
+-            $baseConditionGroup->addCondition('living_area', [0, $max], 'BETWEEN');
+-        }
++      if ($min !== NULL && $max !== NULL) {
++        $baseConditionGroup->addCondition('living_area', [$min, $max], 'BETWEEN');
++      }
++      elseif ($min !== NULL) {
++        $baseConditionGroup->addCondition('living_area', [$min, 99999], 'BETWEEN');
++      }
++      elseif ($max !== NULL) {
++        $baseConditionGroup->addCondition('living_area', [0, $max], 'BETWEEN');
++      }
+     }
+-
+-
+ 
+     // @todo Debt free sales price won't be needed in future.
+     if ($value = $parameters->get('debt_free_sales_price')) {
+--- public/modules/custom/asu_api/src/Api/BackendApi/BackendApi.php
++++ PHP_CodeSniffer
+@@ -64,11 +64,13 @@
+     $this->store = $storeFactory->get('customer');
+   }
+ 
++  /**
++   *
++   */
+   public function deleteApplication(UserInterface $sender, string $applicationId): void {
+     $request = new DeleteApplicationRequest($sender, $applicationId);
+     $this->send($request);
+   }
+-
+ 
+   /**
+    * Send request.
+--- public/modules/custom/asu_api/src/Api/BackendApi/Request/DeleteApplicationRequest.php
++++ PHP_CodeSniffer
+@@ -5,10 +5,11 @@
+ use Drupal\asu_api\Api\Request;
+ use Drupal\asu_api\Api\BackendApi\Response\DeleteApplicationResponse;
+ use Drupal\user\UserInterface;
+-use GuzzleHttp\Exception\GuzzleException;
+-use GuzzleHttp\Client;
+ use Psr\Http\Message\ResponseInterface;
+ 
++/**
++ *
++ */
+ class DeleteApplicationRequest extends Request {
+ 
+   protected const AUTHENTICATED = TRUE;
+@@ -20,7 +21,7 @@
+   public function __construct(
+     ?UserInterface $sender,
+     string $applicationId,
+-    array $payload = []
++    array $payload = [],
+   ) {
+     if ($sender) {
+       $this->setSender($sender);
+@@ -32,23 +33,39 @@
+     ];
+   }
+ 
++  /**
++   *
++   */
+   public function getPath(): string {
+     return "/v1/applications/delete/{$this->applicationId}/";
+   }
+ 
++  /**
++   *
++   */
+   public static function getResponse(ResponseInterface $response): DeleteApplicationResponse {
+     return DeleteApplicationResponse::createFromHttpResponse($response);
+   }
+ 
++  /**
++   *
++   */
+   public function getPayload(): array {
+     return $this->payload;
+   }
+ 
++  /**
++   *
++   */
+   public function toArray(): array {
+     return $this->getPayload();
+   }
+ 
++  /**
++   *
++   */
+   public function getMethod(): string {
+     return 'DELETE';
+   }
++
+ }
+

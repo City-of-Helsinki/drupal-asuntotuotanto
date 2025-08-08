@@ -1,5 +1,5 @@
 uuid: dd4b6d7b-c24c-464c-8bac-598e6046c3bc
-langcode: en
+langcode: fi
 status: true
 dependencies:
   config:
@@ -8,7 +8,6 @@ dependencies:
     - rest.resource.mailinglist
   module:
     - asu_application
-    - eu_cookie_compliance
     - external_entities
     - file
     - helfi_api_base
@@ -21,14 +20,13 @@ dependencies:
 _core:
   default_config_hash: 83Nuup-6oYkkdAsvg3nrR2pBOgtTXEV1JrzpCCLkYLM
 id: authenticated
-label: 'Authenticated user'
+label: 'Sisäänkirjautunut käyttäjä'
 weight: -9
 is_admin: false
 permissions:
   - 'access content'
   - 'create application'
   - 'delete own files'
-  - 'display eu cookie compliance popup'
   - 'restful get asu_initialize'
   - 'restful post asu_elasticsearch'
   - 'restful post mailinglist'

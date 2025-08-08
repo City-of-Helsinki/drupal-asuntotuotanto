@@ -2527,6 +2527,12 @@ msgstr "julkaistu"
 msgid "The changes have been saved."
 msgstr "Muutokset on tallennettu."
 
+msgid "Thank you. You can now continue with your application"
+msgstr "Kiitos. Voit nyt jatkaa hakemuksesi tekemistä"
+
+msgid "Go to your applications"
+msgstr "Siirry hakemuksiisi"
+
 msgid "Undo"
 msgstr "Kumoa"
 
@@ -43260,3 +43266,5 @@ msgid "Composer"
 msgstr ""
 msgid "Tunnistamo"
 msgstr ""
+msgid "Helsinki Logo"
+msgstr "Helsingin kaupungin logo"

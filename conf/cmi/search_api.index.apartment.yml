@@ -372,11 +372,21 @@ field_settings:
     datasource_id: 'entity:node'
     property_path: 'search_api_reverse_entity_references_node__field_apartments:field_city'
     type: string
+  project_completion_date:
+    label: 'Completion date'
+    datasource_id: 'entity:node'
+    property_path: 'search_api_reverse_entity_references_node__field_apartments:field_completion_date'
+    type: asu_date_time
   project_construction_materials:
     label: 'Construction materials'
     datasource_id: 'entity:node'
     property_path: 'search_api_reverse_entity_references_node__field_apartments:field_construction_materials'
     type: asu_tidtotermname
+  project_construction_year:
+    label: 'Completion date'
+    datasource_id: 'entity:node'
+    property_path: 'search_api_reverse_entity_references_node__field_apartments:field_construction_year'
+    type: integer
   project_constructor:
     label: Constructor
     datasource_id: 'entity:node'
@@ -788,6 +798,11 @@ field_settings:
     datasource_id: 'entity:node'
     property_path: 'search_api_reverse_entity_references_node__field_apartments:field_street_address'
     type: string
+  project_transfer_of_shares_date:
+    label: 'Transfer of shares date'
+    datasource_id: 'entity:node'
+    property_path: 'search_api_reverse_entity_references_node__field_apartments:field_transfer_of_shares_date'
+    type: date
   project_upcoming_description:
     label: 'Upcoming description'
     datasource_id: 'entity:node'
@@ -798,6 +813,11 @@ field_settings:
     datasource_id: 'entity:node'
     property_path: 'search_api_reverse_entity_references_node__field_apartments:nid'
     type: asu_url
+  project_use_complete_contract:
+    label: 'Use complete apartment contract'
+    datasource_id: 'entity:node'
+    property_path: 'search_api_reverse_entity_references_node__field_apartments:field_use_complete_contract'
+    type: boolean
   project_uuid:
     label: 'Project UUID'
     datasource_id: 'entity:node'
