@@ -142,6 +142,27 @@ function asu_user_asu_get_user_external_field_data(UserInterface $account) {
  * Implements hook_form_formid_alter().
  */
 function asu_user_form_user_customer_form_alter(&$form, FormStateInterface &$form_state) {
+  $link = Link::fromTextAndUrl(
+    t('Go to your applications'),
+    Url::fromUri('internal:/user/applications'),
+    [
+      'attributes' => [
+        'class' => [
+          'hds-button',
+          'hds-button--primary',
+        ],
+        'tabindex' => '0',
+      ],
+    ]
+  )->toString();
+
+  $form['asu_customer_info_message'] = [
+    '#type' => 'markup',
+    '#markup' => '<div class="asu-user-profile-info" style="margin-bottom: 2em;">' .
+    t('Thank you. You can now continue with your application') . ' ' . $link .
+    '</div>',
+    '#weight' => -100,
+  ];
   if (in_array('customer', \Drupal::currentUser()->getRoles())) {
     $fieldMap = \Drupal::config('asu_user.external_user_fields')->get('external_data_map');
     $store = \Drupal::service('tempstore.private')->get('customer');
@@ -224,14 +245,6 @@ function asu_user_user_edit_submit(array $form, FormStateInterface &$form_state)
       unset($_SESSION['messages']['status']);
     }
   }
-
-  $link = Link::fromTextAndUrl(
-    t('Go to your applications'),
-    Url::fromUri('internal:/user/applications')
-  )->toString();
-  \Drupal::messenger()->addMessage([
-    '#markup' => t('Thank you. You can now continue with your application') . ' ' . $link,
-  ], 'status');
 }
 
 /**
