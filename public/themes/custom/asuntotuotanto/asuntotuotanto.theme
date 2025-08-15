@@ -62,6 +62,7 @@ function asuntotuotanto_theme_suggestions_alter(array &$suggestions, array $vari
  */
 function asuntotuotanto_preprocess_html(array &$variables) {
   $variables['#attached']['drupalSettings']['matomo_base_url'] = Settings::get('matomo_base_url') ?: 'https://matomo.hel.fi/';
+  $variables['#attached']['drupalSettings']['matomo_site_id'] = Settings::get('matomo_site_id') ?: '80';
   $variables['#attached']['library'][] = 'asuntotuotanto/matomo';
   $path = \Drupal::service('path.current')->getPath();
   $path_parts = explode('/', $path);
