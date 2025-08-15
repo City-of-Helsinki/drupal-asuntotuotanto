@@ -8,7 +8,11 @@
     _paq.push(['trackPageView']);
     _paq.push(['enableLinkTracking']);
 
-    var base = (drupalSettings.matomo_base_url || 'https://matomo.hel.fi/').replace(/\/+$/, '') + '/js/';
+    var baseUrl = drupalSettings.matomo_base_url || 'https://matomo.hel.fi/';
+    if (baseUrl.endsWith('/')) {
+      baseUrl = baseUrl.slice(0, -1);
+    }
+    var base = baseUrl + '/js/';
     _paq.push(['setTrackerUrl', base + 'tracker.php']);
     _paq.push(['setSiteId', String(drupalSettings.matomo_site_id)]);
 
