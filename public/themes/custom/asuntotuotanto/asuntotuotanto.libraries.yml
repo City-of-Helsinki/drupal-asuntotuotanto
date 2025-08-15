@@ -59,3 +59,14 @@ global-scripting:
   dependencies:
     - core/drupal
     - core/jquery
+
+matomo:
+  version: 1.x
+  header: true
+  js:
+    src/js/matomo-hel.js: { preprocess: false }
+  dependencies:
+    - core/drupal
+    - core/jquery
+    - core/drupalSettings
+    - eu_cookie_compliance/eu_cookie_compliance
