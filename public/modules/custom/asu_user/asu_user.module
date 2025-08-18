@@ -11,7 +11,6 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Drupal\asu_api\Api\BackendApi\Request\CreateUserRequest;
 use Drupal\asu_api\Api\BackendApi\Request\UpdateUserRequest;
@@ -144,11 +143,16 @@ function asu_user_asu_get_user_external_field_data(UserInterface $account) {
 function asu_user_form_user_customer_form_alter(&$form, FormStateInterface &$form_state) {
 
   $form['asu_customer_info_message'] = [
-    '#type' => 'markup',
-    '#markup' => '<div class="asu-user-profile-info" style="margin-bottom: 2em;">' .
-    t('Thank you. You can now continue with your application') . ' ' . $link .
-    '</div>',
+    '#type' => 'container',
+    '#attributes' => [
+      'class' => ['asu-user-profile-info'],
+      'style' => 'margin-bottom: 2em;',
+    ],
     '#weight' => -100,
+  ];
+
+  $form['asu_customer_info_message']['text'] = [
+    '#markup' => t('Thank you. You can now continue with your application') . ' ',
   ];
 
   $form['asu_customer_info_message']['link'] = [
@@ -157,7 +161,7 @@ function asu_user_form_user_customer_form_alter(&$form, FormStateInterface &$for
     '#url' => Url::fromUri('internal:/user/applications'),
     '#attributes' => [
       'class' => ['hds-button', 'hds-button--primary'],
-      'style' => 'margin-top:10px; margin-bottom:20px;',
+      'style' => 'display:table; margin-top:10px; margin-bottom:20px; padding-top: 10px;',
       'tabindex' => '0',
     ],
   ];
