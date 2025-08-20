@@ -49,7 +49,7 @@ global-styling:
   version: 1.x
   css:
     theme:
-      dist/css/asuntotuotanto-icons.css: { }
+      dist/css/asuntotuotanto-icons.css: {}
       dist/css/styles.min.css: {}
 
 global-scripting:
@@ -70,3 +70,14 @@ matomo:
     - core/jquery
     - core/drupalSettings
     - eu_cookie_compliance/eu_cookie_compliance
+
+project-apartments-filter:
+  css:
+    theme:
+      dist/css/projectApartmentsFilter.min.css: {}
+  js:
+    dist/js/projectApartmentsFilter.min.js: {}
+  dependencies:
+    - core/drupal
+    - core/once
+    - core/jquery
