@@ -77,8 +77,30 @@
       {% set application_url = row.application_url %}
       {% set application_url_title = row.application_url_title %}
       {% set is_free = row.is_free %}
+      {% set structure_raw = apartment_structure|striptags|trim %}
+      {% set structure_norm = structure_raw|upper|replace({' ': ''}) %}
+      {% set rooms_token = (structure_norm|split('H'))[0] %}
+      {% set _rooms = rooms_token matches '/^\\d+$/' ? rooms_token : '1' %}
+      {% set _area = living_area_size|replace({',': '.'}) %}
+      {% set ror = row.columns.field_right_of_occupancy_payment.content.0.field_output['#markup']|default('')|striptags|trim %}
+      {% set rel = row.columns.field_release_payment.content.0.field_output['#markup']|default('')|striptags|trim %}
+      {% set ror_clean = ror|replace({'€':'',' ': '','\u00A0':'', ',': '.'}) %}
+      {% set rel_clean = rel|replace({'€':'',' ': '','\u00A0':'', ',': '.'}) %}
+      {% set dfs_clean = dfs|replace({'€':'',' ': '','\u00A0':'', ',': '.'}) %}
+      {% set has_ror = ror_clean matches '/[1-9]/' %}
+      {% set has_rel = rel_clean matches '/[1-9]/' %}
+      {% set price_text = has_ror ? ror : (has_rel ? rel : dfs) %}
+      {% set price_euros = price_text|replace({'€':'',' ': '','\u00A0':'', ',': '.'}) %}
+      {% set _price_int = price_euros|split('.')|first %}
+      {% if right_of_occupancy_payment is not empty and right_of_occupancy_payment != '0.00€' %}
+        {% set debt_free_sales_price = right_of_occupancy_payment %}
+      {% endif %}
+      {% if release_payment_price is not empty and release_payment_price != '0.00€' %}
+        {% set debt_free_sales_price = release_payment_price %}
+      {% endif %}
 
-      <li class="project__apartments-item">
+
+      <li class="project__apartments-item" data-rooms="{{ _rooms }}" data-area="{{ _area }}" data-price="{{ _price_int }}">>
         <button
           aria-expanded="false"
           class="project__apartments-item-button"
@@ -246,6 +268,22 @@
         {% set nid = row.columns.nid.content.0.field_output['#markup']|striptags|trim %}
         {% set right_of_occupancy_payment = row.columns.field_right_of_occupancy_payment.content.0.field_output['#markup']|striptags|trim %}
         {% set price_title = 'Debt-free sales price'|t %}
+        {% set structure_raw = apartment_structure|striptags|trim %}
+        {% set structure_norm = structure_raw|upper|replace({' ': ''}) %}
+        {% set rooms_token = (structure_norm|split('H'))[0] %}
+        {% set _rooms = rooms_token matches '/^\\d+$/' ? rooms_token : '1' %}
+        {% set _area = living_area_size|replace({',': '.'}) %}
+        {% set dfs = debt_free_sales_price|default('')|striptags|trim %}
+        {% set ror = row.columns.field_right_of_occupancy_payment.content.0.field_output['#markup']|default('')|striptags|trim %}
+        {% set rel = row.columns.field_release_payment.content.0.field_output['#markup']|default('')|striptags|trim %}
+        {% set ror_clean = ror|replace({'€':'',' ': '','\u00A0':'', ',': '.'}) %}
+        {% set rel_clean = rel|replace({'€':'',' ': '','\u00A0':'', ',': '.'}) %}
+        {% set dfs_clean = dfs|replace({'€':'',' ': '','\u00A0':'', ',': '.'}) %}
+        {% set has_ror = ror_clean matches '/[1-9]/' %}
+        {% set has_rel = rel_clean matches '/[1-9]/' %}
+        {% set price_text = has_ror ? ror : (has_rel ? rel : dfs) %}
+        {% set price_euros = price_text|replace({'€':'',' ': '','\u00A0':'', ',': '.'}) %}
+        {% set _price_int = price_euros|split('.')|first %}
 
         {% if right_of_occupancy_payment is not empty and right_of_occupancy_payment != '0.00€' %}
           {% set debt_free_sales_price = right_of_occupancy_payment %}
@@ -262,7 +300,7 @@
         {% set application_url_title = row.application_url_title %}
         {% set is_free = row.is_free %}
 
-        <tr{{ row.attributes }}>
+        <tr{{ row.attributes.addClass().setAttribute('data-rooms', _rooms).setAttribute('data-area', _area).setAttribute('data-price', _price_int) }}>
           <td>
             <span>{{ apartment_number }}</span>
             <span>{{ apartment_structure }}</span>
