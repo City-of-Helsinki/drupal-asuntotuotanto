@@ -577,6 +577,11 @@ field_settings:
     datasource_id: 'entity:node'
     property_path: 'search_api_reverse_entity_references_node__field_apartments:field_warranty_deposit_releas'
     type: asu_date_time
+  project_control_transferred_when:
+    label: 'Control is transferred, when'
+    datasource_id: 'entity:node'
+    property_path: 'search_api_reverse_entity_references_node__field_apartments:field_control_transferred_when'
+    type: string
   project_coordinate_lat:
     label: 'Coordinate latitude'
     datasource_id: 'entity:node'
@@ -778,6 +783,11 @@ field_settings:
     datasource_id: 'entity:node'
     property_path: 'search_api_reverse_entity_references_node__field_apartments:field_shareholder_meeting_date'
     type: asu_date_time
+  project_shares_transferred_when:
+    label: 'Shares are transferred, when'
+    datasource_id: 'entity:node'
+    property_path: 'search_api_reverse_entity_references_node__field_apartments:field_shares_transferred_when'
+    type: string
   project_site_area:
     label: 'Site area'
     datasource_id: 'entity:node'
