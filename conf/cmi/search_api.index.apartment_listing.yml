@@ -175,6 +175,11 @@ field_settings:
     datasource_id: 'entity:node'
     property_path: 'search_api_reverse_entity_references_node__field_apartments:field_application_start_time'
     type: asu_date_time
+  project_can_apply_afterwards:
+    label: Can apply afterwards
+    datasource_id: 'entity:node'
+    property_path: 'search_api_reverse_entity_references_node__field_apartments:field_can_apply_afterwards'
+    type: boolean
   project_building_type:
     label: 'Building type'
     datasource_id: 'entity:node'

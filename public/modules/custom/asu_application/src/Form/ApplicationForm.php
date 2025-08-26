@@ -268,8 +268,12 @@ HTML;
         return new RedirectResponse($applicationsUrl);
       }
 
-      if ($this->isApplicationPeriod('after', $startDate, $endDate)) {
-        $this->messenger()->addMessage($this->t('The application period has ended. You can still apply for the apartment by contacting the responsible salesperson.'));
+      if (
+        strtolower($project_data['ownership_type']) != 'haso' &&
+        $this->isApplicationPeriod('after', $startDate, $endDate)
+      ) {
+        // $this->messenger()->addMessage($this->t('The application period has ended. You can still apply for the apartment by contacting the responsible salesperson.'));
+        $this->messenger()->addMessage('ownership_type is: '.$project_data["ownership_type"]);
         $freeApplicationUrl = $this->requestStack->getCurrentRequest()->getSchemeAndHttpHost() .
           '/contact/apply_for_free_apartment?project=' . $project_id;
         return new RedirectResponse($freeApplicationUrl);

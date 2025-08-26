@@ -197,19 +197,33 @@
 					label: 'Create an application'|t,
 					href: application_url
 					}
-        %}
+        		%}
+		{% elseif can_apply_afterwards == 1 %}
+		{% include '@asuntotuotanto/button/button.html.twig' with {
+							type: 'primary',
+							disabled: false,
+							label: 'Create an after-application'|t,
+							href: application_url
+							}
+						%}
       {% endif %}
-      {% if (is_application_period_in_the_past is same as(false)) and (application_start_time != null and application_end_time != null) %}
         <p class="apartment__application-information">
-          {% trans %}
-            The application period for the project starts on
-            {{ application_start_time }}
-            and ends on
-            {{ application_end_time }}.
-          {% endtrans %}
-        </p>
-      {% endif %}
-		</div>
+		{% if (is_application_period_in_the_past is same as(false)) and (application_start_time != null and application_end_time != null) %}
+			{% trans %}
+				The application period for the project starts on
+				{{ application_start_time }}
+				and ends on
+				{{ application_end_time }}.
+			{% endtrans %}
+		{% elseif can_apply_afterwards == 1 %}
+			{% trans %}
+			The application period for the project has ended on
+			{{ application_end_time }}
+			but you can still apply
+			{% endtrans %}
+		{% endif %}
+		</p>
+	</div>
 	</div>
 
 	<div class="apartment__images wrapper wrapper--mw-1264 showcase-gallery" id="showcase_gallery">
