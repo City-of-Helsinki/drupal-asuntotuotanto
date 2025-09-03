@@ -368,7 +368,7 @@ field_settings:
       module:
         - computed_field_plugin
   project_can_apply_afterwards:
-    label: Can apply afterwards
+    label: 'Can apply afterwards'
     datasource_id: 'entity:node'
     property_path: 'search_api_reverse_entity_references_node__field_apartments:field_can_apply_afterwards'
     type: boolean
