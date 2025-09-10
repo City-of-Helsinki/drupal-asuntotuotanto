@@ -683,7 +683,6 @@ function asuntotuotanto_preprocess_node(&$variables) {
         $project_area_description = $project->get('field_project_area_description')->value;
         $can_apply_afterwards = $project->get('field_can_apply_afterwards')->value;
 
-
         if (count($project->get('field_building_type')->getValue()) > 0) {
           $building_type = Term::load($project->get('field_building_type')->getValue()[0]['target_id'])->name->value ?? NULL;
         }
