@@ -88,7 +88,6 @@ class Project extends Node {
       $apartmentType = strtolower($this->field_ownership_type->referencedEntities()[0]->getName());
     }
 
-
     if ($this->isApplicationPeriod() || $this->isApplicationPeriod('before')) {
       if (!isset($this->field_ownership_type->referencedEntities()[0])) {
         return '';
@@ -99,7 +98,7 @@ class Project extends Node {
     if ($this->isApplicationPeriod('after')) {
       $queryParameter = $apartmentId ? "?apartment=$apartmentId" . '&project=' . $this->id() : '?project=' . $this->id();
 
-      if($this->getOwnershipType() == 'haso') {
+      if ($this->getOwnershipType() == 'haso') {
         return sprintf('%s/application/add/%s/%s', $baseurl, $apartmentType, $this->id());
       }
       return sprintf('%s/contact/apply_for_free_apartment%s', $baseurl, $queryParameter);
