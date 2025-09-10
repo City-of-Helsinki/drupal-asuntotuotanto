@@ -367,6 +367,11 @@ field_settings:
     dependencies:
       module:
         - computed_field_plugin
+  project_can_apply_afterwards:
+    label: 'Can apply afterwards'
+    datasource_id: 'entity:node'
+    property_path: 'search_api_reverse_entity_references_node__field_apartments:field_can_apply_afterwards'
+    type: boolean
   project_city:
     label: City
     datasource_id: 'entity:node'
