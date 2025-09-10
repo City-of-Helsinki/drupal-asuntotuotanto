@@ -95,7 +95,7 @@ class Project extends Node {
       }
       return sprintf('%s/application/add/%s/%s', $baseurl, $apartmentType, $this->id());
     }
-    // TODO: add HASO-specific handling for after-application form
+
     if ($this->isApplicationPeriod('after')) {
       $queryParameter = $apartmentId ? "?apartment=$apartmentId" . '&project=' . $this->id() : '?project=' . $this->id();
 
