@@ -210,10 +210,7 @@
         <p class="apartment__application-information">
 		{% if (is_application_period_in_the_past is same as(false)) and (application_start_time != null and application_end_time != null) %}
 			{% trans %}
-				The application period for the project starts on
-				{{ application_start_time }}
-				and ends on
-				{{ application_end_time }}.
+				The application period for the project starts on {{ application_start_time }} and ends on {{ application_end_time }}
 			{% endtrans %}
 		{% elseif can_apply_afterwards == 1 %}
 			{% trans %}
