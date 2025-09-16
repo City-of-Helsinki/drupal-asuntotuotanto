@@ -192,7 +192,11 @@ HTML;
       return (new RedirectResponse($redirect, 301));
     }
 
-    $limit = ['sold', 'reserved', 'reserved_haso'];
+    $limit = ['sold'];
+    if($project->can_apply_afterwards != true) {
+      array_push($limit, ['reserved', 'reserved_haso']);
+    }
+
     if (!$project_data = $this->getApartments($project, $limit)) {
       $this->logger('asu_application')->critical('User tried to access nonexistent project of id ' . $project_id);
       $this->messenger()->addMessage($this->t('Unfortunately the project you are trying to apply for is unavailable.'));
