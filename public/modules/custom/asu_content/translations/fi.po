@@ -38885,6 +38885,9 @@ msgid "Seuraava"
 msgstr ""
 msgid "The application period for the project ended on @application_end_time."
 msgstr "Kohteen hakuaika päättyi @application_end_time"
+msgid ""
+"The application period for the project has ended on @application_end_time but you can still apply.
+msgstr "Kohteen hakuaika päätty @application_end_time mutta voit silti tehdä jälkihakemuksen."
 
 msgid ""
 "The application period for the project starts on "
