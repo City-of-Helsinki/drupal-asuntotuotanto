@@ -189,7 +189,7 @@
 				</h2>
 			{% endif %}
 		</div>
-		<div class="apartment__header-section apartment__header-section--actions {{ is_application_period_active ? 'is-application-period-active' }}">
+		<div class="apartment__header-section apartment__header-section--actions {{ is_application_period_active or can_apply_afterwards ? 'is-application-period-active' }}">
 			{% if is_application_period_active %}
 				{% include '@asuntotuotanto/button/button.html.twig' with {
 					type: 'primary',
