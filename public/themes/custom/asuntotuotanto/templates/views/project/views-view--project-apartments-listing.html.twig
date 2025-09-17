@@ -52,6 +52,7 @@
   {{ attachment_before }}
 
   {% if rows %}
+    {{ attach_library('asuntotuotanto/project-apartments-filter') }}
     <div class="project-apartments-listing__header wrapper wrapper--mw-1264">
       <h2>
         {% trans %}
@@ -69,6 +70,115 @@
 
     <div class="project-apartments-listing__content">
       {% if rows -%}
+        <form class="project-apartments-filter" data-filter-form>
+          <div class="searchbar">
+
+            {# ROOMS #}
+            <div class="searchbar__item">
+              <div class="filter-dropdown" data-dropdown>
+                <button type="button"
+                        class="filter-dropdown__label"
+                        aria-expanded="false"
+                        aria-controls="filter-rooms-content"
+                        data-dropdown-toggle>
+                  {% include "@hdbt/misc/icon.twig" with {icon: 'home', label: ''} %}
+                  <span class="filter-dropdown__title">{% trans %}Huoneiden lukumäärä{% endtrans %}</span>
+                  {% include "@hdbt/misc/icon.twig" with {icon: 'angle-down', label: ''} %}
+                </button>
+
+                <div id="filter-rooms-content"
+                    class="filter-dropdown__content"
+                    aria-hidden="true"
+                    hidden>
+                  <fieldset class="filter-checklist" data-filter-rooms>
+                    <legend class="visually-hidden">{% trans %}Huoneiden lukumäärä{% endtrans %}</legend>
+                    <label class="filter-checklist__item"><input type="checkbox" value="1"> 1</label>
+                    <label class="filter-checklist__item"><input type="checkbox" value="2"> 2</label>
+                    <label class="filter-checklist__item"><input type="checkbox" value="3"> 3</label>
+                    <label class="filter-checklist__item"><input type="checkbox" value="4"> 4</label>
+                    <label class="filter-checklist__item"><input type="checkbox" value="5+"> 5+</label>
+                  </fieldset>
+                  <div class="filter-dropdown__footer">
+                    <button type="button" class="filter-dropdown__clear" data-rooms-clear disabled>
+                      {% trans %}Tyhjennä valinnat{% endtrans %}
+                      <span class="sr-only">, Huoneita</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {# AREA #}
+            <div class="searchbar__item">
+              <div class="filter-dropdown" data-dropdown>
+                <button type="button"
+                        class="filter-dropdown__label"
+                        aria-expanded="false"
+                        aria-controls="filter-area-content"
+                        data-dropdown-toggle>
+                  <span class="filter-dropdown__title">{% trans %}pinta-ala, m²{% endtrans %}</span>
+                  {% include "@hdbt/misc/icon.twig" with {icon: 'angle-down', label: ''} %}
+                </button>
+
+                <div id="filter-area-content"
+                    class="filter-dropdown__content"
+                    aria-hidden="true"
+                    hidden>
+                  <div class="filter-range">
+                    <input type="text" inputmode="decimal" pattern="[0-9,\.]*"
+                          placeholder="min" data-filter-area-min class="hds-text-input__input" />
+                    <span class="filter-range__dash">–</span>
+                    <input type="text" inputmode="decimal" pattern="[0-9,\.]*"
+                          placeholder="max" data-filter-area-max class="hds-text-input__input" />
+                  </div>
+                  <div class="filter-dropdown__footer">
+                    <button type="button" class="filter-dropdown__clear" data-area-clear disabled>
+                      {% trans %}Tyhjennä valinnat{% endtrans %}
+                      <span class="sr-only">, {% trans %}pinta-ala{% endtrans %}</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {# PRICE #}
+            <div class="searchbar__item">
+              <div class="filter-dropdown" data-dropdown>
+                <button type="button"
+                        class="filter-dropdown__label"
+                        aria-expanded="false"
+                        aria-controls="filter-price-content"
+                        data-dropdown-toggle>
+                  <span class="filter-dropdown__title">{% trans %}Hinta enintään{% endtrans %}</span>
+                  {% include "@hdbt/misc/icon.twig" with {icon: 'angle-down', label: ''} %}
+                </button>
+
+                <div id="filter-price-content"
+                    class="filter-dropdown__content"
+                    aria-hidden="true"
+                    hidden>
+                  <input type="text" inputmode="numeric" pattern="[0-9\s]*"
+                        placeholder="€" data-filter-price-max class="hds-text-input__input" />
+                  <div class="filter-dropdown__footer">
+                    <button type="button" class="filter-dropdown__clear" data-price-clear disabled>
+                      {% trans %}Tyhjennä valinnat{% endtrans %}
+                      <span class="sr-only">, {% trans %}Hinta{% endtrans %}</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {# SUBMIT #}
+            <div class="searchbar__item searchbar__item--submit">
+              <button type="button" class="hds-button hds-button--primary" data-filter-apply>
+                {% include "@hdbt/misc/icon.twig" with {icon: 'search', label: ''} %}
+                <span class="hds-button__label">{% trans %}Hae{% endtrans %}</span>
+              </button>
+            </div>
+
+          </div>
+        </form>
         {{ rows }}
       {% elseif empty -%}
         {{ empty }}
