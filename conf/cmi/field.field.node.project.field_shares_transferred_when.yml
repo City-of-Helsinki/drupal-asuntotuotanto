@@ -1,0 +1,19 @@
+uuid: 73c74348-66dc-479b-9630-4978a957e64d
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_shares_transferred_when
+    - node.type.project
+id: node.project.field_shares_transferred_when
+field_name: field_shares_transferred_when
+entity_type: node
+bundle: project
+label: 'Shares are transferred, when'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string
