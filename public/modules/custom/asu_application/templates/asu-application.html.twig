@@ -487,6 +487,15 @@
                   {% endtrans %}
                 </li>
               </ul> #}
+              {% if not content['#teaser_values'].is_locked %}
+                <div class="application__actions">
+                  {% include "@asuntotuotanto/button/button.html.twig" with {
+                    label: 'Edit application'|t,
+                    href: path('entity.asu_application.edit_form', {'asu_application': app_id}),
+                    type: 'primary'
+                  } %}
+                </div>
+              {% endif %}
             </div>
           </article>
           {# {% include "@asuntotuotanto/form/application/custom-apartment-list.html.twig" %} #}

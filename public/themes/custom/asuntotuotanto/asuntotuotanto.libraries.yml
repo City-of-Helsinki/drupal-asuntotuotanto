@@ -49,7 +49,7 @@ global-styling:
   version: 1.x
   css:
     theme:
-      dist/css/asuntotuotanto-icons.css: { }
+      dist/css/asuntotuotanto-icons.css: {}
       dist/css/styles.min.css: {}
 
 global-scripting:
@@ -58,4 +58,26 @@ global-scripting:
     dist/js/common.min.js: {}
   dependencies:
     - core/drupal
+    - core/jquery
+
+matomo:
+  version: 1.x
+  header: true
+  js:
+    src/js/matomo-hel.js: { preprocess: false }
+  dependencies:
+    - core/drupal
+    - core/jquery
+    - core/drupalSettings
+    - eu_cookie_compliance/eu_cookie_compliance
+
+project-apartments-filter:
+  css:
+    theme:
+      dist/css/projectApartmentsFilter.min.css: {}
+  js:
+    dist/js/projectApartmentsFilter.min.js: {}
+  dependencies:
+    - core/drupal
+    - core/once
     - core/jquery

@@ -11,7 +11,6 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Drupal\asu_api\Api\BackendApi\Request\CreateUserRequest;
 use Drupal\asu_api\Api\BackendApi\Request\UpdateUserRequest;
@@ -142,27 +141,31 @@ function asu_user_asu_get_user_external_field_data(UserInterface $account) {
  * Implements hook_form_formid_alter().
  */
 function asu_user_form_user_customer_form_alter(&$form, FormStateInterface &$form_state) {
-  $link = Link::fromTextAndUrl(
-    t('Go to your applications'),
-    Url::fromUri('internal:/user/applications'),
-    [
-      'attributes' => [
-        'class' => [
-          'hds-button',
-          'hds-button--primary',
-        ],
-        'tabindex' => '0',
-      ],
-    ]
-  )->toString();
 
   $form['asu_customer_info_message'] = [
-    '#type' => 'markup',
-    '#markup' => '<div class="asu-user-profile-info" style="margin-bottom: 2em;">' .
-    t('Thank you. You can now continue with your application') . ' ' . $link .
-    '</div>',
+    '#type' => 'container',
+    '#attributes' => [
+      'class' => ['asu-user-profile-info'],
+      'style' => 'margin-bottom: 2em;',
+    ],
     '#weight' => -100,
   ];
+
+  $form['asu_customer_info_message']['text'] = [
+    '#markup' => t('Thank you. You can now continue with your application') . ' ',
+  ];
+
+  $form['asu_customer_info_message']['link'] = [
+    '#type' => 'link',
+    '#title' => t('Go to your applications'),
+    '#url' => Url::fromUri('internal:/user/applications'),
+    '#attributes' => [
+      'class' => ['hds-button', 'hds-button--primary'],
+      'style' => 'display:table; margin-top:10px; margin-bottom:20px; padding-top: 10px;',
+      'tabindex' => '0',
+    ],
+  ];
+
   if (in_array('customer', \Drupal::currentUser()->getRoles())) {
     $fieldMap = \Drupal::config('asu_user.external_user_fields')->get('external_data_map');
     $store = \Drupal::service('tempstore.private')->get('customer');

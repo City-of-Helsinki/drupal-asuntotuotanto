@@ -1,0 +1,19 @@
+uuid: 150e3ea1-5e46-4a9c-8f9b-8aefcb963027
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_control_transferred_when
+    - node.type.project
+id: node.project.field_control_transferred_when
+field_name: field_control_transferred_when
+entity_type: node
+bundle: project
+label: 'Control is transferred, when'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

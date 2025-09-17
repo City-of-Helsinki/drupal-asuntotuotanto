@@ -39,6 +39,7 @@ dependencies:
     - field.field.node.project.field_construction_year
     - field.field.node.project.field_constructor
     - field.field.node.project.field_contract_other_terms
+    - field.field.node.project.field_control_transferred_when
     - field.field.node.project.field_coordinate_lat
     - field.field.node.project.field_coordinate_lon
     - field.field.node.project.field_customer_document_handover
@@ -96,13 +97,13 @@ dependencies:
     - field.field.node.project.field_services_url
     - field.field.node.project.field_shared_apartment_images
     - field.field.node.project.field_shareholder_meeting_date
+    - field.field.node.project.field_shares_transferred_when
     - field.field.node.project.field_site_area
     - field.field.node.project.field_site_owner
     - field.field.node.project.field_site_renter
     - field.field.node.project.field_state_of_sale
     - field.field.node.project.field_street_address
     - field.field.node.project.field_tasks
-    - field.field.node.project.field_transfer_of_shares_date
     - field.field.node.project.field_transfer_restriction
     - field.field.node.project.field_upcoming_description
     - field.field.node.project.field_usage_fees
@@ -160,6 +161,7 @@ hidden:
   field_construction_year: true
   field_constructor: true
   field_contract_other_terms: true
+  field_control_transferred_when: true
   field_coordinate_lat: true
   field_coordinate_lon: true
   field_customer_document_handover: true
@@ -217,13 +219,13 @@ hidden:
   field_services_url: true
   field_shared_apartment_images: true
   field_shareholder_meeting_date: true
+  field_shares_transferred_when: true
   field_site_area: true
   field_site_owner: true
   field_site_renter: true
   field_state_of_sale: true
   field_street_address: true
   field_tasks: true
-  field_transfer_of_shares_date: true
   field_transfer_restriction: true
   field_upcoming_description: true
   field_usage_fees: true
