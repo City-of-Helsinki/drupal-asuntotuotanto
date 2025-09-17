@@ -1,0 +1,182 @@
+<?php
+
+use Drupal\node\NodeInterface;
+
+/**
+ * Implements hook_mail().
+ */
+function asu_project_subscription_mail($key, &$message, $params) {
+  switch ($key) {
+    case 'confirm_subscription':
+      $message['subject'] = t('Confirm your subscription');
+      $message['body'][] = (string) t("Please confirm your subscription:\n@url", ['@url' => $params['confirm_url'] ?? '']);
+      break;
+
+    case 'status_pre_marketing':
+    case 'status_for_sale':
+      $message['subject'] = $params['subject'] ?? t('Project update');
+      if (!empty($params['message'])) {
+        $message['body'][] = \Drupal::service('renderer')->renderPlain($params['message']);
+      }
+      break;
+
+    case 'unsubscribe':
+      $message['subject'] = t('You have unsubscribed');
+      $message['body'][] = t('You have been unsubscribed from notifications.');
+      break;
+  }
+}
+
+/**
+ * Универсальная обработка смены статуса продажи.
+ *
+ * @param \Drupal\node\NodeInterface $node
+ */
+function _asu_ps_process_state_change(NodeInterface $node): void {
+  // Следим только за бандлом project (при желании подставь свой).
+  if ($node->bundle() !== 'project') {
+    return;
+  }
+
+  $field = 'field_state_of_sale';
+  if (!$node->hasField($field)) {
+    \Drupal::logger('asu_ps')->notice('Skip: node @nid has no @field', ['@nid' => $node->id(), '@field' => $field]);
+    return;
+  }
+
+  // "Старое" значение читаем из БД — надёжнее, чем $entity->original.
+  /** @var \Drupal\node\NodeInterface|null $unchanged */
+  $unchanged = \Drupal::entityTypeManager()->getStorage('node')->loadUnchanged($node->id());
+
+  $old_label = _asu_ps_state_label($unchanged, $field);
+  $new_label = _asu_ps_state_label($node, $field);
+
+  if ($old_label === $new_label) {
+    return;
+  }
+
+  \Drupal::logger('asu_ps')->notice(
+    'State changed on node @nid: @old => @new',
+    ['@nid' => $node->id(), '@old' => (string) $old_label, '@new' => (string) $new_label]
+  );
+
+  // Нормализация для сопоставления (учитывает диакритики).
+  $norm = static function (?string $s): string {
+    if ($s === NULL) { return ''; }
+    $s = trim($s);
+    return function_exists('mb_strtoupper') ? mb_strtoupper($s) : strtoupper($s);
+  };
+
+  // Карта триггеров (при необходимости расширяй).
+  $map = [
+    $norm('Ennakkomarkkinoinnissa') => 'status_pre_marketing',
+    $norm('Myynnissä')              => 'status_for_sale',
+  ];
+
+  $key = $norm($new_label);
+  if (!isset($map[$key])) {
+    \Drupal::logger('asu_ps')->notice('New state not in triggers: @state', ['@state' => $new_label]);
+    return;
+  }
+
+  // Кладём задачу в очередь.
+  \Drupal::queue('asu_project_subscription_notify')->createItem([
+    'project_nid' => (int) $node->id(),
+    'new_state'   => $new_label,       // для логов/шаблонов
+    'mail_key'    => $map[$key],       // какой шаблон письма слать
+  ]);
+
+  \Drupal::logger('asu_ps')->notice(
+    'Enqueued notify for node @nid, state @state, key @key',
+    ['@nid' => $node->id(), '@state' => $new_label, '@key' => $map[$key]]
+  );
+}
+
+/**
+ * Возвращает label статуса из поля (поддержка list_* и taxonomy term).
+ *
+ * @param \Drupal\Core\Entity\EntityInterface|null $e
+ * @param string $field
+ * @return string|null
+ */
+function _asu_ps_state_label($e, string $field): ?string {
+  if (!$e || !$e->hasField($field) || $e->get($field)->isEmpty()) {
+    return NULL;
+  }
+  $item = $e->get($field)->first();
+  $v = $item->getValue();
+
+  // list(text)
+  if (isset($v['value'])) {
+    return $v['value'];
+  }
+  // entity reference -> taxonomy term: берём label термина.
+  if (isset($v['target_id']) && $item->entity) {
+    return $item->entity->label();
+  }
+  // На всякий случай: строковое представление.
+  if (method_exists($item, 'getString')) {
+    $s = $item->getString();
+    return $s !== '' ? $s : NULL;
+  }
+  return NULL;
+}
+
+/**
+ * Implements hook_entity_update().
+ */
+function asu_project_subscription_entity_update(\Drupal\Core\Entity\EntityInterface $entity) {
+  if ($entity->getEntityTypeId() === 'node') {
+    _asu_ps_process_state_change($entity);
+  }
+}
+
+/**
+ * Implements hook_node_update().
+ * Подстраховка: на некоторых конфигурациях ловится именно этот хук.
+ */
+function asu_project_subscription_node_update(NodeInterface $node) {
+  _asu_ps_process_state_change($node);
+}
+
+/**
+ * Implements hook_entity_presave().
+ * Подстраховка для модерации/ревизий: сравниваем с loadUnchanged().
+ */
+function asu_project_subscription_entity_presave(\Drupal\Core\Entity\EntityInterface $entity) {
+  if ($entity->getEntityTypeId() === 'node') {
+    _asu_ps_process_state_change($entity);
+  }
+}
+
+/**
+ * Делаем наш mail_alter последним в цепочке.
+ */
+function asu_project_subscription_module_implements_alter(array &$implementations, $hook) {
+  if ($hook === 'mail_alter' && isset($implementations['asu_project_subscription'])) {
+    $ours = $implementations['asu_project_subscription'];
+    unset($implementations['asu_project_subscription']);
+    $implementations['asu_project_subscription'] = $ours; // в конец — переедем helfi_api_base
+  }
+}
+
+/**
+ * Форсим отправку писем нашего модуля (обходит helfi_api_base на dev).
+ * Если хочешь — оставь без условий; ниже пример «только когда helfi блокирует».
+ */
+function asu_project_subscription_mail_alter(array &$message) {
+  if (($message['module'] ?? '') !== 'asu_project_subscription') {
+    return;
+  }
+  // Форсить, только если helfi реально блокирует (аккуратно для прод).
+  $force = FALSE;
+  if (class_exists('\Drupal\helfi_api_base\Features\FeatureManager')) {
+    $fm = \Drupal::service(\Drupal\helfi_api_base\Features\FeatureManager::class);
+    if ($fm->isEnabled(\Drupal\helfi_api_base\Features\FeatureManager::DISABLE_EMAIL_SENDING)) {
+      $force = TRUE;
+    }
+  }
+  if ($force) {
+    $message['send'] = TRUE;
+  }
+}

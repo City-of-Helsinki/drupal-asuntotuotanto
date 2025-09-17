@@ -1,0 +1,4 @@
+administer asu project subscriptions:
+  title: "Administer project subscriptions"
+  description: "Manage ASU project subscriptions"
+  restrict access: true

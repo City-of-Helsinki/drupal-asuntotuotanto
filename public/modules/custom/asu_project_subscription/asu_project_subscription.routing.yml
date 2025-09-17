@@ -1,0 +1,15 @@
+asu_project_subscription.confirm:
+  path: "/subscribe/confirm/{token}"
+  defaults:
+    _controller: '\Drupal\asu_project_subscription\Controller\SubscriptionController::confirm'
+    _title: "Confirm subscription"
+  requirements:
+    _permission: "access content"
+
+asu_project_subscription.unsubscribe:
+  path: "/subscribe/unsubscribe/{token}"
+  defaults:
+    _controller: '\Drupal\asu_project_subscription\Controller\SubscriptionController::unsubscribe'
+    _title: "Unsubscribe"
+  requirements:
+    _permission: "access content"
