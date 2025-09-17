@@ -28,3 +28,6 @@ regions:
 libraries:
   - asuntotuotanto/global-styling
   - asuntotuotanto/global-scripting
+
+libraries-override:
+  hdbt/matomo: false
