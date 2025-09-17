@@ -281,6 +281,7 @@ function asuntotuotanto_preprocess_views_view_table(&$variables) {
       $variables['rows'][$key]['application_url'] = $project->getApplicationUrl($apartment->field_apartment_number->value);
       $variables['rows'][$key]['application_url_title'] = $apartment->getApplicationUrlTitle();
       $variables['rows'][$key]['is_free'] = $apartment->isFree();
+      $variables['rows'][$key]['can_apply_afterwards'] = $project->getCanApplyAfterwards();
     }
 
     usort($variables['rows'], function ($a, $b) {
