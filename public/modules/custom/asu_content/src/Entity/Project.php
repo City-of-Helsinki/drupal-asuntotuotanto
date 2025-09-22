@@ -60,10 +60,10 @@ class Project extends Node {
   }
 
   /**
-   * Get whether or not project accepts applications
-   * after `application_end_time`.
+   * Whether or not project accepts applications after `application_end_time`.
    *
-   * @return bool whether or not project accepts applications after application_end_time
+   * @return bool
+   *   whether or not project accepts applications after application_end_time
    */
   public function getCanApplyAfterwards(): string {
     $field_can_apply_afterwards = $this->get('field_can_apply_afterwards');
