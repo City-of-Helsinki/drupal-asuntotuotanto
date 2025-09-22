@@ -7,7 +7,7 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "require": {
-        "asuntomyynti/react": "^1.4.5",
+        "asuntomyynti/react": "1.4.5",
         "composer/installers": "^2.0",
         "cweagans/composer-patches": "^1.7.3",
         "dinbror/blazy": "^1.8",
