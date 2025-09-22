@@ -193,7 +193,7 @@ HTML;
     }
 
     $limit = ['sold'];
-    if($project->can_apply_afterwards != true) {
+    if ($project->can_apply_afterwards != TRUE) {
       array_push($limit, ['reserved', 'reserved_haso']);
     }
 
