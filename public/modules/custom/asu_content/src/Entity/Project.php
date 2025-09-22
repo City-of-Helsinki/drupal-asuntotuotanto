@@ -60,6 +60,21 @@ class Project extends Node {
   }
 
   /**
+   * Whether or not project accepts applications after `application_end_time`.
+   *
+   * @return bool
+   *   whether or not project accepts applications after application_end_time
+   */
+  public function getCanApplyAfterwards(): string {
+    $field_can_apply_afterwards = $this->get('field_can_apply_afterwards');
+    if ($field_can_apply_afterwards->isEmpty()) {
+      return "";
+    }
+    \Drupal::logger('asu_application')->info("field_can_apply_afterwards: " . $field_can_apply_afterwards->value);
+    return $field_can_apply_afterwards->value;
+  }
+
+  /**
    * Get ownership type entity reference as string.
    *
    * @return string
