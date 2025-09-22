@@ -323,24 +323,14 @@
               }
             %}
 
-            {% if (is_application_period_active or (is_free and not can_apply_afterwards)) %}
+            {% if (is_application_period_active or (is_free or can_apply_afterwards)) %}
               {% include '@asuntotuotanto/button/button.html.twig' with {
                 type: 'primary',
                 disabled: false,
                 size: 'small',
-                label: application_url_title|t,
+                label: can_apply_afterwards ? 'Create an after-application'|t : application_url_title|t,
                 href: application_url,
                 aria_label: 'Create an application'|t ~ ', ' ~ 'apartment'|t ~ ' ' ~ apartment_number
-                }
-              %}
-            {% elseif can_apply_afterwards == 1 %}
-              {% include '@asuntotuotanto/button/button.html.twig' with {
-                type: 'primary',
-                disabled: false,
-                size: 'small',
-                label: 'Create an after-application'|t,
-                href: application_url,
-                aria_label: 'Create an after application'|t ~ ', ' ~ 'apartment'|t ~ ' ' ~ apartment_number
                 }
               %}
             {% endif %}
