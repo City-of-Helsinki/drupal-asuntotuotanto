@@ -8,6 +8,7 @@ use Drupal\Core\Language\LanguageManager;
 use Drupal\Core\Messenger\MessengerTrait;
 use Drupal\Core\Queue\QueueFactory;
 use Drupal\Core\Queue\QueueInterface;
+use Drupal\node\Entity\Node;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\asu_api\Api\BackendApi\BackendApi;
 use Drupal\asu_api\Api\BackendApi\Request\CreateApplicationRequest;
@@ -163,26 +164,44 @@ class ApplicationSubscriber implements EventSubscriberInterface {
       $application->set('error', NULL);
       $application->set('create_to_django', $this->timeService->getRequestTime());
       $application->save();
+
       try {
         /** @var \Drupal\user\UserInterface|null $owner */
         $owner = $application->getOwner();
         $to = $owner ? $owner->getEmail() : NULL;
 
         if ($to) {
+          // 1) Получаем название проекта безопасно
+          $project_name = '';
+          if ($application->hasField('project') && ($proj = $application->get('project')->entity)) {
+            $project_name = $proj->label();
+          }
+          elseif ($application->hasField('project_id') && ($nid = (int) ($application->get('project_id')->value ?? 0))) {
+            if ($nid > 0) {
+              if ($node = Node::load($nid)) {
+                $project_name = $node->label();
+              }
+            }
+          }
+          if ($project_name === '' || $project_name === NULL) {
+            $project_name = $this->t('our project');
+          }
+
           /** @var \Drupal\Core\Mail\MailManagerInterface $mailManager */
           $mailManager = \Drupal::service('plugin.manager.mail');
           $langcode = \Drupal::languageManager()->getDefaultLanguage()->getId();
 
+          // 2) Инициализируем params и передаём тело письма строками (чтобы переносиы не "слипались")
           $params = [];
           $params['subject'] = $this->t('Kiitos hakemuksestasi / Thank you for your application');
-
           $params['message_lines'] = [
             // FI
             $this->t('Kiitos - olemme vastaanottaneet hakemuksesi kohteeseemme @project_name.', ['@project_name' => $project_name]),
             '',
             $this->t('Hakemuksesi on voimassa koko rakennusajan.'),
             '',
-            $this->t('Arvonnan / huoneistojaon jälkeen voit tarkastaa oman sijoituksesi kirjautumalla kotisivuillemme: asuntotuotanto.hel.fi.'),
+            $this->t('Arvonnan / huoneistojaon jälkeen voit tarkastaa oman sijoituksesi kirjautumalla kotisivuillemme:'),
+            'asuntotuotanto.hel.fi.',
             '',
             '------------------------------------------------------------',
             '',
@@ -191,19 +210,22 @@ class ApplicationSubscriber implements EventSubscriberInterface {
             '',
             $this->t('Your application will remain valid throughout the construction period.'),
             '',
-            $this->t('After the lottery / apartment distribution, you can check your position by logging into our website: asuntotuotanto.hel.fi.'),
+            $this->t('After the lottery / apartment distribution, you can check your position by logging into our website:'),
+            'asuntotuotanto.hel.fi.',
             '',
             $this->t('This is an automated message – please do not reply to this email.'),
           ];
 
           $mailManager->mail('asu_application', 'application_submission', $to, $langcode, $params, NULL, TRUE);
         }
-      } catch (\Throwable $e) {
+      }
+      catch (\Throwable $e) {
         \Drupal::logger('asu_application')->warning('Confirmation email was not sent for application @id: @err', [
           '@id' => $application->id(),
           '@err' => $e->getMessage(),
         ]);
       }
+
       // Clean sensitive data from application.
       $application->cleanSensitiveInformation();
 
