@@ -193,7 +193,7 @@ class ApplicationSubscriber implements EventSubscriberInterface {
           $params = [];
           $params['subject'] = $this->t('Kiitos hakemuksestasi / Thank you for your application');
           $params['message_lines'] = [
-            // FI
+            // FI.
             $this->t('Kiitos - olemme vastaanottaneet hakemuksesi kohteeseemme @project_name.', ['@project_name' => $project_name]),
             '',
             $this->t('Hakemuksesi on voimassa koko rakennusajan.'),
@@ -203,7 +203,7 @@ class ApplicationSubscriber implements EventSubscriberInterface {
             '',
             '------------------------------------------------------------',
             '',
-            // EN
+            // EN.
             $this->t('Thank you - we have received your application for @project_name.', ['@project_name' => $project_name]),
             '',
             $this->t('Your application will remain valid throughout the construction period.'),
