@@ -177,6 +177,7 @@ class ApplicationSubscriber implements EventSubscriberInterface {
           }
           elseif ($application->hasField('project_id') && ($nid = (int) ($application->get('project_id')->value ?? 0))) {
             if ($nid > 0) {
+              // phpcs:ignore DrupalPractice.Objects.StaticEntity
               if ($node = Node::load($nid)) {
                 $project_name = $node->label();
               }
@@ -187,7 +188,9 @@ class ApplicationSubscriber implements EventSubscriberInterface {
           }
 
           /** @var \Drupal\Core\Mail\MailManagerInterface $mailManager */
+          // phpcs:ignore DrupalPractice.Objects.GlobalDrupal
           $mailManager = \Drupal::service('plugin.manager.mail');
+          // phpcs:ignore DrupalPractice.Objects.GlobalDrupal
           $langcode = \Drupal::languageManager()->getDefaultLanguage()->getId();
 
           $params = [];
@@ -218,6 +221,7 @@ class ApplicationSubscriber implements EventSubscriberInterface {
         }
       }
       catch (\Throwable $e) {
+        // phpcs:ignore DrupalPractice.Objects.GlobalDrupal
         \Drupal::logger('asu_application')->warning('Confirmation email was not sent for application @id: @err', [
           '@id' => $application->id(),
           '@err' => $e->getMessage(),

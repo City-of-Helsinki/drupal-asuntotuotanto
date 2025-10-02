@@ -509,7 +509,6 @@ HTML;
   public function save(array $form, FormStateInterface $form_state) {
     $this->doSave($form, $form_state);
     $this->handleApplicationEvent($form, $form_state);
-    $project_name = $this->entity->get('project')->entity->label() ?? $this->t('Unknown project');
 
     $content_entity_id = $this->entity->getEntityType()->id();
     $form_state->setRedirect("entity.{$content_entity_id}.canonical", [$content_entity_id => $this->entity->id()]);
