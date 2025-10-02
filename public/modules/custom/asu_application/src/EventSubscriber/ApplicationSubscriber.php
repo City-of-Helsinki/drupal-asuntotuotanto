@@ -177,7 +177,7 @@ class ApplicationSubscriber implements EventSubscriberInterface {
           }
           elseif ($application->hasField('project_id') && ($nid = (int) ($application->get('project_id')->value ?? 0))) {
             if ($nid > 0) {
-              // phpcs:ignore DrupalPractice.Objects.StaticEntity
+              // phpcs:ignore DrupalPractice.Objects.StaticEntity.StaticEntity
               if ($node = Node::load($nid)) {
                 $project_name = $node->label();
               }
