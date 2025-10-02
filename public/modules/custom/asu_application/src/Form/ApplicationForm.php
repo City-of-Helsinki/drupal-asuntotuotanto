@@ -518,31 +518,6 @@ HTML;
   public function save(array $form, FormStateInterface $form_state) {
     $this->doSave($form, $form_state);
     $this->handleApplicationEvent($form, $form_state);
-    $email = $form_state->getValue(['main_applicant', 0, 'email']);
-    $project_name = $this->entity->get('project')->entity->label() ?? $this->t('Unknown project');
-
-    if (!empty($email)) {
-      $mailManager = \Drupal::service('plugin.manager.mail');
-      $module = 'asu_application';
-      $key = 'application_submission';
-      $params['subject'] = $this->t("Kiitos hakemuksestasi / Thank you for your application");
-      $params['message'] = $this->t(
-            "Kiitos - olemme vastaanottaneet hakemuksesi kohteeseemme @project_name.\n\n"
-            . "Hakemuksesi on voimassa koko rakennusajan.\n\n"
-            . "Arvonnan / huoneistojaon jälkeen voit tarkastaa oman sijoituksesi kirjautumalla kotisivuillemme: asuntotuotanto.hel.fi.\n\n"
-            . "Tämä on automaattinen viesti – älä vastaa tähän sähköpostiin.\n\n"
-            . "------------------------------------------------------------\n\n"
-            . "\nThank you - we have received your application for @project_name.\n\n"
-            . "Your application will remain valid throughout the construction period.\n\n"
-            . "After the lottery / apartment distribution, you can check your position by logging into our website: asuntotuotanto.hel.fi."
-            . "This is an automated message – please do not reply to this email.",
-            ['@project_name' => $project_name]
-        );
-      $langcode = \Drupal::languageManager()->getDefaultLanguage()->getId();
-      $send = TRUE;
-
-      $mailManager->mail($module, $key, $email, $langcode, $params, NULL, $send);
-    }
 
     $content_entity_id = $this->entity->getEntityType()->id();
     $form_state->setRedirect("entity.{$content_entity_id}.canonical", [$content_entity_id => $this->entity->id()]);
@@ -825,13 +800,18 @@ HTML;
       if (in_array($key, $form_state->getCleanValueKeys())) {
         continue;
       }
-      if ($key == 'main_applicant' || $key == 'applicant') {
-        if (!empty($value[0]['personal_id']) && strlen($value[0]['personal_id']) == 4) {
-          $value[0]['personal_id'] = $this->getPersonalIdDivider($value[0]['date_of_birth']) . $value[0]['personal_id'];
+      if (in_array($key, ['main_applicant', 'applicant'], TRUE)) {
+        $pid = $value[0]['personal_id'] ?? '';
+
+        if ($pid !== '' && strlen($pid) === 4) {
+          $pid = $this->getPersonalIdDivider($value[0]['date_of_birth']) . $pid;
         }
-      }
-      if ($this->entity->hasField($key)) {
-        $this->entity->set($key, $value);
+
+        if ($pid !== '' && strlen($pid) === 5) {
+          $pid = substr($pid, 0, 4) . strtoupper(substr($pid, 4, 1));
+        }
+
+        $value[0]['personal_id'] = $pid;
       }
     }
   }

@@ -283,8 +283,17 @@ function asu_application_mail(string $key, array &$message, array $params) {
       break;
 
     case 'application_submission':
-      $message['subject'] = $params['subject'];
-      $message['body'][] = $params['message'];
+      $message['from']    = \Drupal::config('system.site')->get('mail');
+      $message['subject'] = $params['subject'] ?? t('Kiitos hakemuksestasi / Thank you for your application');
+
+      if (!empty($params['message_lines']) && is_array($params['message_lines'])) {
+        foreach ($params['message_lines'] as $line) {
+          $message['body'][] = $line;
+        }
+      }
+      elseif (!empty($params['message'])) {
+        $message['body'][] = $params['message'];
+      }
       break;
   }
 }
