@@ -792,17 +792,18 @@ HTML;
       if (in_array($key, $form_state->getCleanValueKeys())) {
         continue;
       }
-      if ($key == 'main_applicant' || $key == 'applicant') {
-        if (!empty($value[0]['personal_id']) && strlen($value[0]['personal_id']) === 4) {
-          $value[0]['personal_id'] = $this->getPersonalIdDivider($value[0]['date_of_birth']) . $value[0]['personal_id'];
+      if (in_array($key, ['main_applicant', 'applicant'], true)) {
+        $pid = $value[0]['personal_id'] ?? '';
+
+        if ($pid !== '' && strlen($pid) === 4) {
+          $pid = $this->getPersonalIdDivider($value[0]['date_of_birth']) . $pid;
         }
-        if (!empty($value[0]['personal_id']) && strlen($value[0]['personal_id']) === 5) {
-          $pid = $value[0]['personal_id'];
-          $value[0]['personal_id'] = substr($pid, 0, 4) . strtoupper(substr($pid, 4, 1));
+
+        if ($pid !== '' && strlen($pid) === 5) {
+          $pid = substr($pid, 0, 4) . strtoupper(substr($pid, 4, 1));
         }
-      }
-      if ($this->entity->hasField($key)) {
-        $this->entity->set($key, $value);
+
+        $value[0]['personal_id'] = $pid;
       }
     }
   }
