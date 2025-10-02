@@ -792,7 +792,7 @@ HTML;
       if (in_array($key, $form_state->getCleanValueKeys())) {
         continue;
       }
-      if (in_array($key, ['main_applicant', 'applicant'], true)) {
+      if (in_array($key, ['main_applicant', 'applicant'], TRUE)) {
         $pid = $value[0]['personal_id'] ?? '';
 
         if ($pid !== '' && strlen($pid) === 4) {

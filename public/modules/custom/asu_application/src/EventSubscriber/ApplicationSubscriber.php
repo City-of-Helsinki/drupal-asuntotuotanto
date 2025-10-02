@@ -171,7 +171,6 @@ class ApplicationSubscriber implements EventSubscriberInterface {
         $to = $owner ? $owner->getEmail() : NULL;
 
         if ($to) {
-          // 1) Получаем название проекта безопасно
           $project_name = '';
           if ($application->hasField('project') && ($proj = $application->get('project')->entity)) {
             $project_name = $proj->label();
@@ -191,7 +190,6 @@ class ApplicationSubscriber implements EventSubscriberInterface {
           $mailManager = \Drupal::service('plugin.manager.mail');
           $langcode = \Drupal::languageManager()->getDefaultLanguage()->getId();
 
-          // 2) Инициализируем params и передаём тело письма строками (чтобы переносиы не "слипались")
           $params = [];
           $params['subject'] = $this->t('Kiitos hakemuksestasi / Thank you for your application');
           $params['message_lines'] = [
