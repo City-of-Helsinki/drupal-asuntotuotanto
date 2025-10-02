@@ -8,7 +8,6 @@ use Drupal\Core\Language\LanguageManager;
 use Drupal\Core\Messenger\MessengerTrait;
 use Drupal\Core\Queue\QueueFactory;
 use Drupal\Core\Queue\QueueInterface;
-use Drupal\node\Entity\Node;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\asu_api\Api\BackendApi\BackendApi;
 use Drupal\asu_api\Api\BackendApi\Request\CreateApplicationRequest;
@@ -177,12 +176,12 @@ class ApplicationSubscriber implements EventSubscriberInterface {
           }
           elseif ($application->hasField('project_id') && ($nid = (int) ($application->get('project_id')->value ?? 0))) {
            if ($nid > 0) {
-            // phpcs:ignore DrupalPractice.Objects.GlobalDrupal
-            $node = \Drupal::entityTypeManager()->getStorage('node')->load($nid);
-            if ($node) {
-              $project_name = $node->label();
+              // phpcs:ignore DrupalPractice.Objects.GlobalDrupal
+              $node = \Drupal::entityTypeManager()->getStorage('node')->load($nid);
+              if ($node) {
+                $project_name = $node->label();
+              }
             }
-          }
           }
           if ($project_name === '' || $project_name === NULL) {
             $project_name = $this->t('our project');
