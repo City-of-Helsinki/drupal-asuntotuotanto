@@ -797,21 +797,16 @@ HTML;
    */
   private function updateEntityFieldsWithUserInput(FormStateInterface $form_state) {
     foreach ($form_state->getUserInput() as $key => $value) {
-      if (in_array($key, $form_state->getCleanValueKeys())) {
+      if (in_array($key, $form_state->getCleanValueKeys(), TRUE)) {
         continue;
       }
+
       if (in_array($key, ['main_applicant', 'applicant'], TRUE)) {
-        $pid = $value[0]['personal_id'] ?? '';
+        $value = $this->normalizeApplicantPersonalId(is_array($value) ? $value : []);
+      }
 
-        if ($pid !== '' && strlen($pid) === 4) {
-          $pid = $this->getPersonalIdDivider($value[0]['date_of_birth']) . $pid;
-        }
-
-        if ($pid !== '' && strlen($pid) === 5) {
-          $pid = substr($pid, 0, 4) . strtoupper(substr($pid, 4, 1));
-        }
-
-        $value[0]['personal_id'] = $pid;
+      if ($this->entity->hasField($key)) {
+        $this->entity->set($key, $value);
       }
     }
   }
@@ -893,6 +888,34 @@ HTML;
    */
   public static function trustedCallbacks() {
     return ['addConfirmDialogHtml'];
+  }
+
+  /**
+   * Normalize applicant.
+   *
+   * @param array $value
+   *   Value array from user input for 'main_applicant' or 'applicant'.
+   *
+   * @return array
+   *   Normalized value array (same structure).
+   */
+  private function normalizeApplicantPersonalId(array $value): array {
+    $slot = is_array($value) ? $value : [];
+    $slot[0] = isset($slot[0]) && is_array($slot[0]) ? $slot[0] : [];
+
+    $pid = $slot[0]['personal_id'] ?? '';
+    $dob = $slot[0]['date_of_birth'] ?? NULL;
+
+    if ($pid !== '' && strlen($pid) === 4) {
+      $pid = $this->getPersonalIdDivider($dob) . $pid;
+    }
+
+    if ($pid !== '' && strlen($pid) === 5) {
+      $pid = substr($pid, 0, 4) . strtoupper(substr($pid, 4, 1));
+    }
+
+    $slot[0]['personal_id'] = $pid;
+    return $slot;
   }
 
 }
