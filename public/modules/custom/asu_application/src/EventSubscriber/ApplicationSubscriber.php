@@ -235,7 +235,11 @@ class ApplicationSubscriber implements EventSubscriberInterface {
         'User sent an application to backend successfully'
       );
 
-      $this->messenger()->addMessage($this->t('Your application has been received. We will contact you when all the application has been processed.'));
+      $this->messenger()->addMessage(
+      $this->t('The application period has ended.') . ' ' .
+      $this->t('You can still apply for the apartment by contacting the responsible salesperson.')
+    );
+
     }
     catch (IllegalApplicationException $e) {
       $code = $e->getApiErrorCode();
