@@ -238,7 +238,7 @@ class ApplicationSubscriber implements EventSubscriberInterface {
       $this->messenger()->addMessage(
       $this->t('The application period has ended.') . ' ' .
       $this->t('You can still apply for the apartment by contacting the responsible salesperson.')
-    );
+      );
 
     }
     catch (IllegalApplicationException $e) {

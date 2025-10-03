@@ -882,7 +882,7 @@ HTML;
   }
 
   /**
-   * Normalize applicant personal_id to 5 chars (century + NNN + control in upper-case).
+   * Normalize applicant.
    *
    * @param array $value
    *   Value array from user input for 'main_applicant' or 'applicant'.
@@ -908,6 +908,5 @@ HTML;
     $slot[0]['personal_id'] = $pid;
     return $slot;
   }
-
 
 }
