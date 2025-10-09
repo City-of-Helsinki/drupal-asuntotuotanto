@@ -222,6 +222,7 @@ class ApplicationSubscriber implements EventSubscriberInterface {
           $result = $mailManager->mail('asu_application', 'application_submission', $to, $langcode, $params, NULL, TRUE);
 
           if (!empty($result['result'])) {
+            // phpcs:ignore DrupalPractice.Objects.GlobalDrupal
             \Drupal::logger('asu_application')->notice(
               'Confirmation email sent for application @id to @to (lang: @lang). Subject: @subject. Project: @project.',
               [
@@ -234,6 +235,7 @@ class ApplicationSubscriber implements EventSubscriberInterface {
             );
           }
           else {
+            // phpcs:ignore DrupalPractice.Objects.GlobalDrupal
             \Drupal::logger('asu_application')->warning(
               'Confirmation email FAILED (no exception) for application @id to @to (lang: @lang). Subject: @subject. Project: @project.',
               [
