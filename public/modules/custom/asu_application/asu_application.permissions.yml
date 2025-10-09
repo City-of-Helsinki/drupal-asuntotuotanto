@@ -1,11 +1,15 @@
 create application:
-  title: 'Create application'
+  title: "Create application"
   restrict access: true
 
 administer applications:
-  title: 'Administer applications'
+  title: "Administer applications"
   restrict access: true
 
 view application:
-  title: 'View application'
+  title: "View application"
   restrict access: true
+
+view application sync summary:
+  title: "View application sync summary"
+  description: "View summary of applications sync state per project"

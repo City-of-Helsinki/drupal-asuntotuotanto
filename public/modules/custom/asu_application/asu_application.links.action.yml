@@ -1,0 +1,6 @@
+asu_application.summary_project_action:
+  route_name: asu_application.summary_project
+  title: "Vastaanotetut hakemukset (yhteenveto)"
+  appears_on:
+    - entity.node.canonical
+  weight: 20
