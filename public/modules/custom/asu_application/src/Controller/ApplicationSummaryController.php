@@ -108,7 +108,6 @@ class ApplicationSummaryController extends ControllerBase {
       '#attributes' => ['class' => ['category-legend']],
     ];
 
-
     return $build;
   }
 
