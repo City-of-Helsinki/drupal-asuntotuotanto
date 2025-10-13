@@ -266,8 +266,7 @@ class ApplicationSubscriber implements EventSubscriberInterface {
       );
 
       $this->messenger()->addMessage(
-      $this->t('The application period has ended.') . ' ' .
-      $this->t('You can still apply for the apartment by contacting the responsible salesperson.')
+      $this->t('Your application has been sent successfully. ')
       );
 
     }
@@ -374,9 +373,9 @@ class ApplicationSubscriber implements EventSubscriberInterface {
       $application->save();
       // Clean sensitive data from application.
       $application->cleanSensitiveInformation();
-
-      $this->messenger()->addStatus($this->t('The application has been submitted successfully.
-     You can no longer edit the application.'));
+      $this->messenger()->addMessage(
+        $this->t('The application has been submitted successfully.')
+      );
 
     }
     catch (IllegalApplicationException $e) {

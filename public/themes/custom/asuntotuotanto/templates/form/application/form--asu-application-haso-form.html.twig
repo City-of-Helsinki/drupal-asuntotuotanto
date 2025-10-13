@@ -32,9 +32,16 @@
       {{ element['#project_name'] }}
     </h1>
     <p>
-      {% trans %}
-        Submit an application during the application period. You can apply for up to 5 apartments. Apartments should be marked in the order in which you wish to be selected. If you are ranked 1st in the draw, you will only be offered the apartment that is on your highest list.
-      {% endtrans %}
+      {% if element.application_project_information['#teaser_values'].can_apply_afterwards == TRUE %}
+        {% trans %}
+          Submit an application after the application period. You can search for up to 5 apartments. Apartments should be marked in the order in which you wish to be selected. If you are ranked 1st in the draw, you will only be offered the apartment that is on your highest list.
+        {% endtrans %}
+      {% else %}
+        {% trans %}
+          Submit an application during the application period. You can apply for up to 5 apartments. Apartments should be marked in the order in which you wish to be selected. If you are ranked 1st in the draw, you will only be offered the apartment that is on your highest list.
+        {% endtrans %}
+      {% endif %}
+
     </p>
     <a href="/oppaat/haso">
       {% trans %}
