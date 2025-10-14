@@ -311,7 +311,6 @@ HTML;
 
       $form['#title'] = sprintf('%s %s', $this->t('Application for'), $projectName);
 
-
       $form['actions']['submit']['#value'] = $this->t('Send application');
       $form['actions']['submit']['#name'] = 'submit-application';
       $form['actions']['submit']['#submit'] = ['::save'];
