@@ -2530,7 +2530,7 @@ msgstr "Muutokset on tallennettu."
 msgid "Thank you. You can now continue with your application"
 msgstr "Kiitos. Voit nyt jatkaa hakemuksesi tekemistä"
 
-msgid "Your application has been sent successfully. "
+msgid "Your application has been sent successfully."
 msgstr "Hakemuksesi on lähetetty onnistuneesti."
 
 msgid "Go to your applications"

@@ -266,7 +266,7 @@ class ApplicationSubscriber implements EventSubscriberInterface {
       );
 
       $this->messenger()->addMessage(
-      $this->t('Your application has been sent successfully. ')
+      $this->t('Your application has been sent successfully.')
       );
 
     }
