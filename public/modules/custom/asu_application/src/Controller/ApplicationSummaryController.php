@@ -53,17 +53,7 @@ class ApplicationSummaryController extends ControllerBase {
 
     $rows = $this->buildSummaryRows((int) $node);
 
-    // Read sorting params from query.
-    $sort = (string) ($request->query->get('sort') ?? 'category');
-    $dir  = strtolower((string) ($request->query->get('dir') ?? 'asc'));
-    if (!isset(self::SORTABLE[$sort])) {
-      $sort = 'category';
-    }
-    if (!in_array($dir, ['asc', 'desc'], TRUE)) {
-      $dir = 'asc';
-    }
-
-    // Apply sorting.
+    [$sort, $dir] = $this->getSortParams();
     $this->applySort($rows, $sort, $dir);
 
 
@@ -175,14 +165,7 @@ class ApplicationSummaryController extends ControllerBase {
    */
   public function summaryCsv($node, Request $request) {
     $rows = $this->buildSummaryRows((int) $node);
-    $sort = (string) ($request->query->get('sort') ?? 'category');
-    $dir  = strtolower((string) ($request->query->get('dir') ?? 'asc'));
-    if (!isset(self::SORTABLE[$sort])) {
-      $sort = 'category';
-    }
-    if (!in_array($dir, ['asc', 'desc'], TRUE)) {
-      $dir = 'asc';
-    }
+    [$sort, $dir] = $this->getSortParams();
     $this->applySort($rows, $sort, $dir);
 
 
@@ -402,6 +385,30 @@ class ApplicationSummaryController extends ControllerBase {
     }
     return NULL;
   }
+
+  /**
+   * Get sanitized sort params from current request.
+   *
+   * @return array{0:string,1:string}
+   *   [$sort, $dir] where $dir is 'asc'|'desc'.
+   */
+  protected function getSortParams(): array {
+    /** @var \Symfony\Component\HttpFoundation\Request $request */
+    // phpcs:ignore DrupalPractice.Objects.GlobalDrupal
+    $request = \Drupal::requestStack()->getCurrentRequest();
+
+    $sort = (string) ($request->query->get('sort') ?? 'category');
+    $dir  = strtolower((string) ($request->query->get('dir') ?? 'asc'));
+
+    if (!isset(self::SORTABLE[$sort])) {
+      $sort = 'category';
+    }
+    if (!in_array($dir, ['asc', 'desc'], TRUE)) {
+      $dir = 'asc';
+    }
+    return [$sort, $dir];
+  }
+
 
   /**
    * Sort rows in-place by a whitelisted key and direction.
