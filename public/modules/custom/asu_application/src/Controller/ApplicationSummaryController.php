@@ -177,7 +177,6 @@ class ApplicationSummaryController extends ControllerBase {
    * @return \Symfony\Component\HttpFoundation\Response
    *   CSV response.
    */
-
   public function summaryCsv($node, Request $request) {
     $rows = $this->buildSummaryRows((int) $node);
     [$sort, $dir] = $this->getSortParams();
