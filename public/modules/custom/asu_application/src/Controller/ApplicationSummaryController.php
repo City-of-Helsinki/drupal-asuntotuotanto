@@ -45,6 +45,19 @@ class ApplicationSummaryController extends ControllerBase {
     'jalki' => 'jalki',
   ];
 
+  /**
+   * Summary table for a given project.
+   *
+   * Builds a sortable HTML table of applications for the given project.
+   *
+   * @param int $node
+   *   Node ID of the project.
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   Current request (reads 'sort' and 'dir' query parameters).
+   *
+   * @return array
+   *   Render array for the summary table.
+   */
   public function summary($node, Request $request) {
     $node_entity = $this->entityTypeManager()->getStorage('node')->load($node);
     if ($node_entity === NULL) {
@@ -55,8 +68,6 @@ class ApplicationSummaryController extends ControllerBase {
 
     [$sort, $dir] = $this->getSortParams();
     $this->applySort($rows, $sort, $dir);
-
-
     // Helper to build header link with toggle dir and arrow.
     $headerCell = function (string $key, string $label) use ($node, $sort, $dir) {
       $nextDir = ($sort === $key && $dir === 'asc') ? 'desc' : 'asc';
@@ -68,7 +79,10 @@ class ApplicationSummaryController extends ControllerBase {
         'query' => ['sort' => $key, 'dir' => $nextDir],
       ]);
 
-      return Link::fromTextAndUrl($this->t($label) . $arrow, $url)->toString();
+      return Link::fromTextAndUrl(
+        $this->t('@label@arrow', ['@label' => $label, '@arrow' => $arrow]),
+        $url
+      )->toString();
     };
 
     $header = [
@@ -86,8 +100,6 @@ class ApplicationSummaryController extends ControllerBase {
       $headerCell('jalki', 'Jälkihakemus'),
       $this->t('URL'),
     ];
-
-
     $build['actions'] = [
       '#type' => 'container',
       'csv' => [
@@ -159,16 +171,17 @@ class ApplicationSummaryController extends ControllerBase {
    *
    * @param int $node
    *   Node ID of the project.
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   Current request (used for sort params).
    *
    * @return \Symfony\Component\HttpFoundation\Response
    *   CSV response.
    */
+
   public function summaryCsv($node, Request $request) {
     $rows = $this->buildSummaryRows((int) $node);
     [$sort, $dir] = $this->getSortParams();
     $this->applySort($rows, $sort, $dir);
-
-
     $out = "\"id\";\"uid\";\"name\";\"email\";\"created_iso\";\"changed_iso\";\"create_to_django_iso\";\"locked\";\"backend_id\";\"error\";\"category\";\"jalkihakemus\";\"url\"\n";
     foreach ($rows as $r) {
       $line = [
@@ -409,7 +422,6 @@ class ApplicationSummaryController extends ControllerBase {
     return [$sort, $dir];
   }
 
-
   /**
    * Sort rows in-place by a whitelisted key and direction.
    *
@@ -418,7 +430,7 @@ class ApplicationSummaryController extends ControllerBase {
    * @param string $sort
    *   Public sort key, see self::SORTABLE.
    * @param string $dir
-   *   'asc' or 'desc'.
+   *   Type 'asc' or 'desc'.
    */
   protected function applySort(array &$rows, string $sort, string $dir): void {
     $key = self::SORTABLE[$sort] ?? 'category';
