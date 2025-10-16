@@ -99,24 +99,30 @@ function asu_api_get_apartment_status_request_cron() {
   $nids = $storage->getQuery()
     ->condition('type', 'apartment')
     ->condition('uuid', $apartment_uuids, 'IN')
-    ->accessCheck(FALSE) // важно: видеть и неопубликованные
+    ->accessCheck(FALSE)
     ->execute();
   if (!$nids) {
     return;
   }
 
-  $FREE_STATES = ['for_sale', 'free_for_reservations'];
+  $free_states = ['for_sale', 'free_for_reservations'];
 
   foreach ($nids as $nid) {
     /** @var \Drupal\node\Entity\Node $node */
     $node = Node::load($nid);
-    if (!$node) { continue; }
+    if (!$node) {
+      continue;
+    }
 
     $uuid = $node->uuid();
-    if (!isset($apartment_states[$uuid])) { continue; }
+    if (!isset($apartment_states[$uuid])) {
+      continue;
+    }
 
     $new = strtolower((string) $apartment_states[$uuid]);
-    if ($new === '') { continue; }
+    if ($new === '') {
+      continue;
+    }
 
     $dirty = FALSE;
 
@@ -133,7 +139,7 @@ function asu_api_get_apartment_status_request_cron() {
         $dirty = TRUE;
       }
     }
-    elseif ($current === 'sold' && in_array($new, $FREE_STATES, TRUE)) {
+    elseif ($current === 'sold' && in_array($new, $free_states, TRUE)) {
       if (!$node->isPublished()) {
         $node->setPublished(TRUE);
         $dirty = TRUE;
