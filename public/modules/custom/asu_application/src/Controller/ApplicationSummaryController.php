@@ -6,6 +6,7 @@ use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Drupal\node\NodeInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
@@ -23,7 +24,28 @@ class ApplicationSummaryController extends ControllerBase {
    * @return array
    *   Render array.
    */
-  public function summary($node) {
+
+  /**
+   * Map public sort keys -> row array keys.
+   *
+   * @var array<string,string>
+   */
+  private const SORTABLE = [
+    'id' => 'id',
+    'uid' => 'uid',
+    'name' => 'user_name',
+    'email' => 'user_mail',
+    'created' => 'created_iso',
+    'changed' => 'changed_iso',
+    'create_to_django' => 'create_to_django_iso',
+    'locked' => 'locked',
+    'backend_id' => 'backend_id',
+    'error' => 'error_preview',
+    'category' => 'category',
+    'jalki' => 'jalki',
+  ];
+
+  public function summary($node, Request $request) {
     $node_entity = $this->entityTypeManager()->getStorage('node')->load($node);
     if ($node_entity === NULL) {
       throw new AccessDeniedHttpException();
@@ -31,28 +53,59 @@ class ApplicationSummaryController extends ControllerBase {
 
     $rows = $this->buildSummaryRows((int) $node);
 
+    // Read sorting params from query.
+    $sort = (string) ($request->query->get('sort') ?? 'category');
+    $dir  = strtolower((string) ($request->query->get('dir') ?? 'asc'));
+    if (!isset(self::SORTABLE[$sort])) {
+      $sort = 'category';
+    }
+    if (!in_array($dir, ['asc', 'desc'], TRUE)) {
+      $dir = 'asc';
+    }
+
+    // Apply sorting.
+    $this->applySort($rows, $sort, $dir);
+
+
+    // Helper to build header link with toggle dir and arrow.
+    $headerCell = function (string $key, string $label) use ($node, $sort, $dir) {
+      $nextDir = ($sort === $key && $dir === 'asc') ? 'desc' : 'asc';
+      $arrow = '';
+      if ($sort === $key) {
+        $arrow = $dir === 'asc' ? ' ▲' : ' ▼';
+      }
+      $url = Url::fromRoute('asu_application.summary_project', ['node' => $node], [
+        'query' => ['sort' => $key, 'dir' => $nextDir],
+      ]);
+
+      return Link::fromTextAndUrl($this->t($label) . $arrow, $url)->toString();
+    };
+
     $header = [
-      $this->t('ID'),
-      $this->t('UID'),
-      $this->t('Name'),
-      $this->t('Email'),
-      $this->t('Created'),
-      $this->t('Changed'),
-      $this->t('Create→Django'),
-      $this->t('Locked'),
-      $this->t('Backend ID'),
-      $this->t('Error'),
-      $this->t('Category'),
-      $this->t('Jälkihakemus'),
+      $headerCell('id', 'ID'),
+      $headerCell('uid', 'UID'),
+      $headerCell('name', 'Name'),
+      $headerCell('email', 'Email'),
+      $headerCell('created', 'Created'),
+      $headerCell('changed', 'Changed'),
+      $headerCell('create_to_django', 'Create→Django'),
+      $headerCell('locked', 'Locked'),
+      $headerCell('backend_id', 'Backend ID'),
+      $headerCell('error', 'Error'),
+      $headerCell('category', 'Category'),
+      $headerCell('jalki', 'Jälkihakemus'),
       $this->t('URL'),
     ];
+
 
     $build['actions'] = [
       '#type' => 'container',
       'csv' => [
         '#type' => 'link',
         '#title' => $this->t('Export CSV'),
-        '#url' => Url::fromRoute('asu_application.summary_project_csv', ['node' => $node]),
+        '#url' => Url::fromRoute('asu_application.summary_project_csv', ['node' => $node], [
+          'query' => ['sort' => $sort, 'dir' => $dir],
+        ]),
         '#attributes' => ['class' => ['button', 'button--small']],
       ],
     ];
@@ -120,8 +173,18 @@ class ApplicationSummaryController extends ControllerBase {
    * @return \Symfony\Component\HttpFoundation\Response
    *   CSV response.
    */
-  public function summaryCsv($node) {
+  public function summaryCsv($node, Request $request) {
     $rows = $this->buildSummaryRows((int) $node);
+    $sort = (string) ($request->query->get('sort') ?? 'category');
+    $dir  = strtolower((string) ($request->query->get('dir') ?? 'asc'));
+    if (!isset(self::SORTABLE[$sort])) {
+      $sort = 'category';
+    }
+    if (!in_array($dir, ['asc', 'desc'], TRUE)) {
+      $dir = 'asc';
+    }
+    $this->applySort($rows, $sort, $dir);
+
 
     $out = "\"id\";\"uid\";\"name\";\"email\";\"created_iso\";\"changed_iso\";\"create_to_django_iso\";\"locked\";\"backend_id\";\"error\";\"category\";\"jalkihakemus\";\"url\"\n";
     foreach ($rows as $r) {
@@ -338,6 +401,47 @@ class ApplicationSummaryController extends ControllerBase {
       }
     }
     return NULL;
+  }
+
+  /**
+   * Sort rows in-place by a whitelisted key and direction.
+   *
+   * @param array $rows
+   *   Rows to sort (by reference).
+   * @param string $sort
+   *   Public sort key, see self::SORTABLE.
+   * @param string $dir
+   *   'asc' or 'desc'.
+   */
+  protected function applySort(array &$rows, string $sort, string $dir): void {
+    $key = self::SORTABLE[$sort] ?? 'category';
+    $mult = ($dir === 'desc') ? -1 : 1;
+
+    // Decide comparator by data type.
+    $numericKeys = ['id', 'locked', 'jalki'];
+    $tsKeys = ['created_iso', 'changed_iso', 'create_to_django_iso'];
+
+    usort($rows, function (array $a, array $b) use ($key, $mult, $numericKeys, $tsKeys) {
+      $va = $a[$key] ?? '';
+      $vb = $b[$key] ?? '';
+
+      // Numeric comparison for known numeric fields.
+      if (in_array($key, $numericKeys, TRUE)) {
+        $va = (int) $va;
+        $vb = (int) $vb;
+        return $mult * ($va <=> $vb);
+      }
+
+      // Timestamp comparison for ISO date strings.
+      if (in_array($key, $tsKeys, TRUE)) {
+        $ta = $va ? strtotime((string) $va) : 0;
+        $tb = $vb ? strtotime((string) $vb) : 0;
+        return $mult * ($ta <=> $tb);
+      }
+
+      // Fallback: case-insensitive string comparison.
+      return $mult * strcasecmp((string) $va, (string) $vb);
+    });
   }
 
 }
