@@ -38887,7 +38887,7 @@ msgid "The application period for the project ended on @application_end_time."
 msgstr "Kohteen hakuaika päättyi @application_end_time"
 msgid ""
 "The application period for the project has ended on @application_end_time but you can still apply.
-msgstr "Kohteen hakuaika päätty @application_end_time mutta voit silti tehdä jälkihakemuksen."
+msgstr "Kohteen hakuaika päättyi @application_end_time mutta voit silti tehdä jälkihakemuksen."
 
 msgid ""
 "The application period for the project starts on @application_start_time and ends on @application_end_time"
@@ -40396,6 +40396,9 @@ msgstr "Arvioitu valmistumisaika"
 msgid "The application period is open until @time on @date"
 msgstr "Hakuaika on voimassa @time @date asti"
 
+msgid "The application period has ended at @time on @date but you can still apply afterwards."
+msgstr "Kohteen hakuaika päättyi @time @date mutta voit silti tehdä jälkihakemuksen."
+
 msgid "Käännös tähän"
 msgstr ""
 msgid ""
@@ -40415,6 +40418,13 @@ msgid ""
 "Once we have drawn the apartments, we will notify you of your "
 "investment in the queue by email."
 msgstr "Kun arvonta on suoritettu, ilmoitamme sinulle arvonnan tuloksesta."
+
+msgid "Distribution"
+msgstr "Huoneistojako"
+
+msgid ""
+"Once the apartments are distributed you can see your position for the apartments you applied for by signing in to your account under applications. We will notify those who are first in queue for apartment by email."
+msgstr "Kun huoneistojako on suoritettu, voit tarkistaa paikkasi jonossa hakemiisi asuntoihin hakemukset-osiossa. Olemme yhteydessä kunkin asunnon sijanumeron 1 saaneeseen hakijaan sähköpostitse."
 
 msgid "Editing the application"
 msgstr "Muokkaa hakemusta"

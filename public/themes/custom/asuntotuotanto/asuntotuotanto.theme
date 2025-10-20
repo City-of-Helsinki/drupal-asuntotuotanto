@@ -1017,6 +1017,7 @@ function get_project_apartment_teaser_values($project_id) {
   $values['project_ownership_type'] = $project->field_ownership_type->entity ? $project->field_ownership_type->entity->name->value : '';
   $values['project_district'] = $project->field_district->entity ? $project->field_district->entity->name->value : '';
   $values['project_main_image_url'] = isset($project->field_main_image[0]) ? \Drupal::service('file_url_generator')->generateAbsoluteString($project->field_main_image[0]->entity->getFileUri()) : '';
+  $values['can_apply_afterwards'] = $project->getCanApplyAfterwards();
 
   foreach ($fields as $key => $field) {
     if ($project && $project->hasField($field)) {
