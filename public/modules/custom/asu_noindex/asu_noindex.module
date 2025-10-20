@@ -15,20 +15,25 @@ function asu_noindex_page_attachments_alter(array &$attachments): void {
     return;
   }
 
-  if (!empty($attachments['html_head']) && is_array($attachments['html_head'])) {
-    foreach ($attachments['html_head'] as $key => $element) {
-      if (
-        isset($element[0]['#tag']) &&
-        $element[0]['#tag'] === 'meta' &&
-        isset($element[0]['#attributes']['name']) &&
-        strtolower((string) $element[0]['#attributes']['name']) === 'robots'
-      ) {
-        unset($attachments['html_head'][$key]);
-      }
+  if (!isset($attachments['#attached'])) {
+    $attachments['#attached'] = [];
+  }
+  if (!isset($attachments['#attached']['html_head']) || !is_array($attachments['#attached']['html_head'])) {
+    $attachments['#attached']['html_head'] = [];
+  }
+
+  foreach ($attachments['#attached']['html_head'] as $k => $el) {
+    if (
+      is_array($el)
+      && isset($el[0]['#tag'], $el[0]['#attributes']['name'])
+      && $el[0]['#tag'] === 'meta'
+      && strtolower((string) $el[0]['#attributes']['name']) === 'robots'
+    ) {
+      unset($attachments['#attached']['html_head'][$k]);
     }
   }
 
-  $attachments['html_head']['asu_noindex_robots'] = [
+  $attachments['#attached']['html_head']['asu_noindex_robots'] = [
     [
       '#tag' => 'meta',
       '#attributes' => [
