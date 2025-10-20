@@ -1,10 +1,8 @@
 <?php
 
-use Drupal\Core\Language\LanguageInterface;
-
 /**
  * @file
- * Hook implementations for asu_noindex.
+ * Hook implementations for the asu_noindex module.
  */
 
 /**
