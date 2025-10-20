@@ -5,6 +5,9 @@ namespace Drupal\asu_application\Controller;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Link;
 use Drupal\Core\Url;
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\node\NodeInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -460,6 +463,43 @@ class ApplicationSummaryController extends ControllerBase {
       // Fallback: case-insensitive string comparison.
       return $mult * strcasecmp((string) $va, (string) $vb);
     });
+  }
+
+  /**
+   * Route access: only for 'project' nodes + permission.
+   *
+   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
+   *   Current route match.
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   Current user.
+   *
+   * @return \Drupal\Core\Access\AccessResult
+   *   Access result.
+   */
+  public function projectAccess(RouteMatchInterface $route_match, AccountInterface $account): AccessResult {
+    $param = $route_match->getParameter('node');
+    $node = NULL;
+
+    if ($param instanceof NodeInterface) {
+      $node = $param;
+    }
+    elseif (is_scalar($param) || $param === NULL) {
+      $nid = (int) $param;
+      if ($nid > 0) {
+        $node = $this->entityTypeManager()->getStorage('node')->load($nid);
+      }
+    }
+
+    if (!$node instanceof NodeInterface) {
+      return AccessResult::forbidden()->cachePerPermissions();
+    }
+
+    $is_project = ($node->bundle() === 'project');
+    $has_perm = $account->hasPermission('view application sync summary');
+
+    return AccessResult::allowedIf($is_project && $has_perm)
+      ->cachePerPermissions()
+      ->addCacheableDependency($node);
   }
 
 }
