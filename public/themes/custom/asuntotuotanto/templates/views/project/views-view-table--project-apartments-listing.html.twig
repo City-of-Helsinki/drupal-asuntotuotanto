@@ -42,7 +42,7 @@
   ]
 %}
 
-{# === Препроход: единый расчёт для mobile + desktop, чтобы не дублировать код === #}
+{# === Pre-pass: single calculation for mobile + desktop to avoid duplicating code === #}
 {% set _computed = [] %}
 {% for row in rows %}
   {% set apartment_structure = row.columns.field_apartment_structure.content.0.field_output['#markup']|striptags|trim %}
@@ -59,7 +59,7 @@
   {# area #}
   {% set _area = living_area_size|replace({',': '.'}) %}
 
-  {# выбор цены и нормализация для data-attr #}
+  {# price selection and normalization for data-attr #}
   {% set ror_clean = ror|replace({'€':'',' ': '','\u00A0':'', ',': '.'}) %}
   {% set rel_clean = rel|replace({'€':'',' ': '','\u00A0':'', ',': '.'}) %}
   {% set dfs_clean = dfs|replace({'€':'',' ': '','\u00A0':'', ',': '.'}) %}
@@ -103,9 +103,10 @@
       {% set reserved_or_sold = row.reserved_or_sold %}
       {% set application_url = row.application_url %}
       {% set application_url_title = row.application_url_title %}
+      {% set can_apply_afterwards = row.can_apply_afterwards %}
       {% set is_free = row.is_free %}
 
-      {# взять предрасчитанные значения по индексу #}
+      {# get pre-calculated values ​​by index #}
       {% set comp = _computed[loop.index0] %}
       {% set price_title = comp.price_title %}
       {% set debt_free_sales_price = comp.display_price %}
@@ -277,9 +278,10 @@
         {% set reserved_or_sold = row.reserved_or_sold %}
         {% set application_url = row.application_url %}
         {% set application_url_title = row.application_url_title %}
+        {% set can_apply_afterwards = row.can_apply_afterwards %}
         {% set is_free = row.is_free %}
 
-        {# предрасчитанные значения #}
+        {# pre-calculated values #}
         {% set comp = _computed[loop.index0] %}
         {% set debt_free_sales_price = comp.display_price %}
 
@@ -321,7 +323,7 @@
               }
             %}
 
-            {% if (is_application_period_active or is_free) %}
+            {% if (is_application_period_active or (is_free and not can_apply_afterwards)) %}
               {% include '@asuntotuotanto/button/button.html.twig' with {
                 type: 'primary',
                 disabled: false,
@@ -329,6 +331,16 @@
                 label: application_url_title|t,
                 href: application_url,
                 aria_label: 'Create an application'|t ~ ', ' ~ 'apartment'|t ~ ' ' ~ apartment_number
+                }
+              %}
+            {% elseif can_apply_afterwards == 1 %}
+              {% include '@asuntotuotanto/button/button.html.twig' with {
+                type: 'primary',
+                disabled: false,
+                size: 'small',
+                label: 'Create an after-application'|t,
+                href: application_url,
+                aria_label: 'Create an after application'|t ~ ', ' ~ 'apartment'|t ~ ' ' ~ apartment_number
                 }
               %}
             {% endif %}

@@ -192,7 +192,11 @@ HTML;
       return (new RedirectResponse($redirect, 301));
     }
 
-    $limit = ['sold', 'reserved', 'reserved_haso'];
+    $limit = ['sold'];
+    if($project->can_apply_afterwards != true) {
+      array_push($limit, ['reserved', 'reserved_haso']);
+    }
+
     if (!$project_data = $this->getApartments($project, $limit)) {
       $this->logger('asu_application')->critical('User tried to access nonexistent project of id ' . $project_id);
       $this->messenger()->addMessage($this->t('Unfortunately the project you are trying to apply for is unavailable.'));
@@ -268,8 +272,13 @@ HTML;
         return new RedirectResponse($applicationsUrl);
       }
 
-      if ($this->isApplicationPeriod('after', $startDate, $endDate)) {
-        $this->messenger()->addMessage($this->t('The application period has ended. You can still apply for the apartment by contacting the responsible salesperson.'));
+      if (
+        strtolower($project_data['ownership_type']) != 'haso' &&
+        $this->isApplicationPeriod('after', $startDate, $endDate)
+      ) {
+        $this->messenger()->addMessage(
+          'ownership_type is: ' . $project_data["ownership_type"]
+        );
         $freeApplicationUrl = $this->requestStack->getCurrentRequest()->getSchemeAndHttpHost() .
           '/contact/apply_for_free_apartment?project=' . $project_id;
         return new RedirectResponse($freeApplicationUrl);
