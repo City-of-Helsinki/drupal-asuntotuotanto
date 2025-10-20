@@ -1,0 +1,43 @@
+<?php
+
+use Drupal\Core\Language\LanguageInterface;
+
+/**
+ * @file
+ * Hook implementations for asu_noindex.
+ */
+
+/**
+ * Implements hook_page_attachments_alter().
+ */
+function asu_noindex_page_attachments_alter(array &$attachments): void {
+  $lang = \Drupal::languageManager()->getCurrentLanguage()?->getId();
+
+  if ($lang === 'fi') {
+    return;
+  }
+
+  if (!empty($attachments['html_head']) && is_array($attachments['html_head'])) {
+    foreach ($attachments['html_head'] as $key => $element) {
+      if (
+        isset($element[0]['#tag']) &&
+        $element[0]['#tag'] === 'meta' &&
+        isset($element[0]['#attributes']['name']) &&
+        strtolower((string) $element[0]['#attributes']['name']) === 'robots'
+      ) {
+        unset($attachments['html_head'][$key]);
+      }
+    }
+  }
+
+  $attachments['html_head']['asu_noindex_robots'] = [
+    [
+      '#tag' => 'meta',
+      '#attributes' => [
+        'name' => 'robots',
+        'content' => 'noindex, nofollow',
+      ],
+    ],
+    'asu_noindex_robots',
+  ];
+}
