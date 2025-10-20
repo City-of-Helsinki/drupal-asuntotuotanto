@@ -218,6 +218,36 @@ class ApplicationSubscriber implements EventSubscriberInterface {
           ];
 
           $mailManager->mail('asu_application', 'application_submission', $to, $langcode, $params, NULL, TRUE);
+
+          $result = $mailManager->mail('asu_application', 'application_submission', $to, $langcode, $params, NULL, TRUE);
+
+          if (!empty($result['result'])) {
+            // phpcs:ignore DrupalPractice.Objects.GlobalDrupal
+            \Drupal::logger('asu_application')->notice(
+              'Confirmation email sent for application @id to @to (lang: @lang). Subject: @subject. Project: @project.',
+              [
+                '@id' => $application->id(),
+                '@to' => $to,
+                '@lang' => $langcode,
+                '@subject' => $params['subject'],
+                '@project' => $project_name,
+              ]
+            );
+          }
+          else {
+            // phpcs:ignore DrupalPractice.Objects.GlobalDrupal
+            \Drupal::logger('asu_application')->warning(
+              'Confirmation email FAILED (no exception) for application @id to @to (lang: @lang). Subject: @subject. Project: @project.',
+              [
+                '@id' => $application->id(),
+                '@to' => $to,
+                '@lang' => $langcode,
+                '@subject' => $params['subject'],
+                '@project' => $project_name,
+              ]
+            );
+          }
+
         }
       }
       catch (\Throwable $e) {
@@ -236,8 +266,7 @@ class ApplicationSubscriber implements EventSubscriberInterface {
       );
 
       $this->messenger()->addMessage(
-      $this->t('The application period has ended.') . ' ' .
-      $this->t('You can still apply for the apartment by contacting the responsible salesperson.')
+      $this->t('Your application has been sent successfully.')
       );
 
     }
@@ -344,9 +373,9 @@ class ApplicationSubscriber implements EventSubscriberInterface {
       $application->save();
       // Clean sensitive data from application.
       $application->cleanSensitiveInformation();
-
-      $this->messenger()->addStatus($this->t('The application has been submitted successfully.
-     You can no longer edit the application.'));
+      $this->messenger()->addMessage(
+        $this->t('The application has been submitted successfully.')
+      );
 
     }
     catch (IllegalApplicationException $e) {

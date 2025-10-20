@@ -40,3 +40,20 @@ asu_application.delete_secure:
     application: '[A-Za-z0-9\-]+'
     token: "[A-Za-z0-9-_]+"
   methods: ["POST", "DELETE"]
+
+asu_application.summary_project:
+  path: "/admin/asu/project/{node}/applications/summary"
+  defaults:
+    _controller: '\Drupal\asu_application\Controller\ApplicationSummaryController::summary'
+    _title: "Application sync summary"
+  requirements:
+    _permission: "view application sync summary"
+    node: '\d+'
+
+asu_application.summary_project_csv:
+  path: "/admin/asu/project/{node}/applications/summary.csv"
+  defaults:
+    _controller: '\Drupal\asu_application\Controller\ApplicationSummaryController::summaryCsv'
+  requirements:
+    _permission: "view application sync summary"
+    node: '\d+'

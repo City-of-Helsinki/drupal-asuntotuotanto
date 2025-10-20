@@ -314,6 +314,7 @@ HTML;
       $form['actions']['submit']['#value'] = $this->t('Send application');
       $form['actions']['submit']['#name'] = 'submit-application';
       $form['actions']['submit']['#submit'] = ['::save'];
+      $form['actions']['submit']['#weight'] = 1;
 
       // Show draft button only for customers.
       if ($currentUser->bundle() == 'customer') {
@@ -324,6 +325,7 @@ HTML;
           '#limit_validation_errors' => [],
           '#name' => 'submit-draft',
           '#submit' => ['::submitDraft'],
+          '#weight' => 2,
         ];
       }
     }
