@@ -48,6 +48,7 @@ asu_application.summary_project:
     _title: "Application sync summary"
   requirements:
     _permission: "view application sync summary"
+    _custom_access: '\Drupal\asu_application\Controller\ApplicationSummaryController::projectAccess'
     node: '\d+'
 
 asu_application.summary_project_csv:
@@ -56,4 +57,5 @@ asu_application.summary_project_csv:
     _controller: '\Drupal\asu_application\Controller\ApplicationSummaryController::summaryCsv'
   requirements:
     _permission: "view application sync summary"
+    _custom_access: '\Drupal\asu_application\Controller\ApplicationSummaryController::projectAccess'
     node: '\d+'
