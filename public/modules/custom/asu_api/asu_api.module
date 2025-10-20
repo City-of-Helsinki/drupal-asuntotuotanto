@@ -95,22 +95,60 @@ function asu_api_get_apartment_status_request_cron() {
   $apartment_uuids = array_keys($apartment_states);
 
   // Get all apartments which state is not sold.
-  $query = \Drupal::entityTypeManager()->getStorage('node')->getQuery();
-  $query->condition('status', 1)
+  $storage = \Drupal::entityTypeManager()->getStorage('node');
+  $nids = $storage->getQuery()
     ->condition('type', 'apartment')
-    ->condition('uuid', $apartment_uuids, 'IN');
-  $apartments = $query->accessCheck(TRUE)->execute();
+    ->condition('uuid', $apartment_uuids, 'IN')
+    ->accessCheck(FALSE)
+    ->execute();
+  if (!$nids) {
+    return;
+  }
 
-  foreach ($apartments as $apartment) {
-    // Load node object by nid.
-    $node = Node::load($apartment);
-    // Node get uuid.
+  $free_states = ['for_sale', 'free_for_reservations'];
+
+  foreach ($nids as $nid) {
+    /** @var \Drupal\node\Entity\Node $node */
+    $node = Node::load($nid);
+    if (!$node) {
+      continue;
+    }
+
     $uuid = $node->uuid();
-    // Get apartment status from $apartment_states.
-    $state = strtolower($apartment_states[$uuid]);
-    // Update node apartment state of sale to sold.
-    $node->field_apartment_state_of_sale->target_id = $state;
-    // Save node.
-    $node->save();
+    if (!isset($apartment_states[$uuid])) {
+      continue;
+    }
+
+    $new = strtolower((string) $apartment_states[$uuid]);
+    if ($new === '') {
+      continue;
+    }
+
+    $dirty = FALSE;
+
+    $current = $node->get('field_apartment_state_of_sale')->target_id ?? NULL;
+
+    if ($current !== $new) {
+      $node->set('field_apartment_state_of_sale', ['target_id' => $new]);
+      $dirty = TRUE;
+    }
+
+    if ($new === 'sold') {
+      if ($node->isPublished()) {
+        $node->setPublished(FALSE);
+        $dirty = TRUE;
+      }
+    }
+    elseif ($current === 'sold' && in_array($new, $free_states, TRUE)) {
+      if (!$node->isPublished()) {
+        $node->setPublished(TRUE);
+        $dirty = TRUE;
+      }
+    }
+
+    if ($dirty) {
+      $node->setChangedTime(time());
+      $node->save();
+    }
   }
 }
