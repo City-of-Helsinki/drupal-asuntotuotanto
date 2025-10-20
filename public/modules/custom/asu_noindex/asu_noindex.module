@@ -7,9 +7,6 @@
 
 /**
  * Implements hook_page_attachments_alter().
- *
- * @param array $attachments
- *   A render array containing #attached and #cache keys to alter.
  */
 function asu_noindex_page_attachments_alter(array &$attachments): void {
   $lang = \Drupal::languageManager()->getCurrentLanguage()?->getId();
