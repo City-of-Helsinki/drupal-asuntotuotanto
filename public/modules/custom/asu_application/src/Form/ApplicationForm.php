@@ -141,7 +141,7 @@ class ApplicationForm extends ContentEntityForm implements TrustedCallbackInterf
     : 'Confirm application replacement';
 
     $message = $langcode === 'fi'
-    ? 'Sinulla on jo hakemus tähän projektiin. Se poistetaan ennen uuden lähettämistä. Jatketaanko?'
+    ? 'Sinulla on jo hakemus tähän kohteeseen. Se poistetaan ennen uuden lähettämistä. Jatketaanko?'
     : 'You already have an application for this project. It will be deleted before sending a new one. Continue?';
 
     $modal = <<<HTML
