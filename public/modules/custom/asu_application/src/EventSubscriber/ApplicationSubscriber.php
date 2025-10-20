@@ -163,6 +163,71 @@ class ApplicationSubscriber implements EventSubscriberInterface {
       $application->set('error', NULL);
       $application->set('create_to_django', $this->timeService->getRequestTime());
       $application->save();
+
+      try {
+        /** @var \Drupal\user\UserInterface|null $owner */
+        $owner = $application->getOwner();
+        $to = $owner ? $owner->getEmail() : NULL;
+
+        if ($to) {
+          $project_name = '';
+          if ($application->hasField('project') && ($proj = $application->get('project')->entity)) {
+            $project_name = $proj->label();
+          }
+          elseif ($application->hasField('project_id') && ($nid = (int) ($application->get('project_id')->value ?? 0))) {
+            if ($nid > 0) {
+              // phpcs:ignore DrupalPractice.Objects.GlobalDrupal
+              $node = \Drupal::entityTypeManager()->getStorage('node')->load($nid);
+              if ($node) {
+                $project_name = $node->label();
+              }
+            }
+          }
+          if ($project_name === '' || $project_name === NULL) {
+            $project_name = $this->t('our project');
+          }
+
+          /** @var \Drupal\Core\Mail\MailManagerInterface $mailManager */
+          // phpcs:ignore DrupalPractice.Objects.GlobalDrupal
+          $mailManager = \Drupal::service('plugin.manager.mail');
+          // phpcs:ignore DrupalPractice.Objects.GlobalDrupal
+          $langcode = \Drupal::languageManager()->getDefaultLanguage()->getId();
+
+          $params = [];
+          $params['subject'] = $this->t('Kiitos hakemuksestasi / Thank you for your application');
+          $params['message_lines'] = [
+            // FI.
+            $this->t('Kiitos - olemme vastaanottaneet hakemuksesi kohteeseemme @project_name.', ['@project_name' => $project_name]),
+            '',
+            $this->t('Hakemuksesi on voimassa koko rakennusajan.'),
+            '',
+            $this->t('Arvonnan / huoneistojaon jälkeen voit tarkastaa oman sijoituksesi kirjautumalla kotisivuillemme:'),
+            'asuntotuotanto.hel.fi.',
+            '',
+            '------------------------------------------------------------',
+            '',
+            // EN.
+            $this->t('Thank you - we have received your application for @project_name.', ['@project_name' => $project_name]),
+            '',
+            $this->t('Your application will remain valid throughout the construction period.'),
+            '',
+            $this->t('After the lottery / apartment distribution, you can check your position by logging into our website:'),
+            'asuntotuotanto.hel.fi.',
+            '',
+            $this->t('This is an automated message – please do not reply to this email.'),
+          ];
+
+          $mailManager->mail('asu_application', 'application_submission', $to, $langcode, $params, NULL, TRUE);
+        }
+      }
+      catch (\Throwable $e) {
+        // phpcs:ignore DrupalPractice.Objects.GlobalDrupal
+        \Drupal::logger('asu_application')->warning('Confirmation email was not sent for application @id: @err', [
+          '@id' => $application->id(),
+          '@err' => $e->getMessage(),
+        ]);
+      }
+
       // Clean sensitive data from application.
       $application->cleanSensitiveInformation();
 
@@ -170,7 +235,11 @@ class ApplicationSubscriber implements EventSubscriberInterface {
         'User sent an application to backend successfully'
       );
 
-      $this->messenger()->addMessage($this->t('Your application has been received. We will contact you when all the application has been processed.'));
+      $this->messenger()->addMessage(
+      $this->t('The application period has ended.') . ' ' .
+      $this->t('You can still apply for the apartment by contacting the responsible salesperson.')
+      );
+
     }
     catch (IllegalApplicationException $e) {
       $code = $e->getApiErrorCode();
