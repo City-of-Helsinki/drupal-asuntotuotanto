@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Event subscriber that adds noindex headers/meta for non-indexed languages.
- */
-
 namespace Drupal\asu_noindex\EventSubscriber;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
@@ -41,7 +36,7 @@ final class NoindexResponseSubscriber implements EventSubscriberInterface {
   /**
    * Adds X-Robots-Tag and a meta robots tag for non-indexed languages.
    *
-   * If the current language is not listed in asu_noindex.settings:indexed_langs,
+   * If current language isn't listed in asu_noindex.settings:indexed_langs,
    * sets the "X-Robots-Tag: noindex, nofollow" header on the response. For
    * HTML responses, also injects a corresponding
    * <meta name="robots" content="noindex, nofollow"> tag into the <head>.
