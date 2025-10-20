@@ -16,6 +16,7 @@ module:
   asu_elastic: 0
   asu_mailer: 0
   asu_migration: 0
+  asu_noindex: 0
   asu_rest: 0
   asu_tasklist: 0
   asu_translation: 0
