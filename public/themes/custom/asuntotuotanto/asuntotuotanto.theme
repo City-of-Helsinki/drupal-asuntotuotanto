@@ -281,6 +281,7 @@ function asuntotuotanto_preprocess_views_view_table(&$variables) {
       $variables['rows'][$key]['application_url'] = $project->getApplicationUrl($apartment->field_apartment_number->value);
       $variables['rows'][$key]['application_url_title'] = $apartment->getApplicationUrlTitle();
       $variables['rows'][$key]['is_free'] = $apartment->isFree();
+      $variables['rows'][$key]['can_apply_afterwards'] = $project->getCanApplyAfterwards();
     }
 
     usort($variables['rows'], function ($a, $b) {
@@ -681,6 +682,7 @@ function asuntotuotanto_preprocess_node(&$variables) {
 
         $project_description = $project->get('field_project_description')->value;
         $project_area_description = $project->get('field_project_area_description')->value;
+        $can_apply_afterwards = $project->get('field_can_apply_afterwards')->value;
 
         if (count($project->get('field_building_type')->getValue()) > 0) {
           $building_type = Term::load($project->get('field_building_type')->getValue()[0]['target_id'])->name->value ?? NULL;
@@ -802,6 +804,7 @@ function asuntotuotanto_preprocess_node(&$variables) {
         $variables['accessibility'] = $accessibility ?? NULL;
         $variables['project_description'] = $project_description ?? NULL;
         $variables['project_area_description'] = $project_area_description ?? NULL;
+        $variables['can_apply_afterwards'] = $can_apply_afterwards ?? NULL;
         $variables['building_type'] = $building_type ?? NULL;
         $variables['energy_class'] = $energy_class ?? NULL;
         $variables['services'] = $services_stack ?? NULL;
@@ -1014,6 +1017,7 @@ function get_project_apartment_teaser_values($project_id) {
   $values['project_ownership_type'] = $project->field_ownership_type->entity ? $project->field_ownership_type->entity->name->value : '';
   $values['project_district'] = $project->field_district->entity ? $project->field_district->entity->name->value : '';
   $values['project_main_image_url'] = isset($project->field_main_image[0]) ? \Drupal::service('file_url_generator')->generateAbsoluteString($project->field_main_image[0]->entity->getFileUri()) : '';
+  $values['can_apply_afterwards'] = $project->getCanApplyAfterwards();
 
   foreach ($fields as $key => $field) {
     if ($project && $project->hasField($field)) {

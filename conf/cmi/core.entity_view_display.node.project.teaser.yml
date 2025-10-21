@@ -19,6 +19,7 @@ dependencies:
     - field.field.node.project.field_building_flaw_attachement
     - field.field.node.project.field_building_type
     - field.field.node.project.field_business_id
+    - field.field.node.project.field_can_apply_afterwards
     - field.field.node.project.field_city
     - field.field.node.project.field_collateral_amount
     - field.field.node.project.field_collateral_amount_fixed
@@ -141,6 +142,7 @@ hidden:
   field_building_flaw_attachement: true
   field_building_type: true
   field_business_id: true
+  field_can_apply_afterwards: true
   field_city: true
   field_collateral_amount: true
   field_collateral_amount_fixed: true

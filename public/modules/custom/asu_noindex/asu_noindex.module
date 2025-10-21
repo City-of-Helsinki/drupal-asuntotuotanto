@@ -1,0 +1,46 @@
+<?php
+
+/**
+ * @file
+ * Hook implementations for the asu_noindex module.
+ */
+
+/**
+ * Implements hook_page_attachments_alter().
+ */
+function asu_noindex_page_attachments_alter(array &$attachments): void {
+  $lang = \Drupal::languageManager()->getCurrentLanguage()?->getId();
+
+  if ($lang === 'fi') {
+    return;
+  }
+
+  if (!isset($attachments['#attached'])) {
+    $attachments['#attached'] = [];
+  }
+  if (!isset($attachments['#attached']['html_head']) || !is_array($attachments['#attached']['html_head'])) {
+    $attachments['#attached']['html_head'] = [];
+  }
+
+  foreach ($attachments['#attached']['html_head'] as $k => $el) {
+    if (
+      is_array($el)
+      && isset($el[0]['#tag'], $el[0]['#attributes']['name'])
+      && $el[0]['#tag'] === 'meta'
+      && strtolower((string) $el[0]['#attributes']['name']) === 'robots'
+    ) {
+      unset($attachments['#attached']['html_head'][$k]);
+    }
+  }
+
+  $attachments['#attached']['html_head']['asu_noindex_robots'] = [
+    [
+      '#tag' => 'meta',
+      '#attributes' => [
+        'name' => 'robots',
+        'content' => 'noindex, nofollow',
+      ],
+    ],
+    'asu_noindex_robots',
+  ];
+}

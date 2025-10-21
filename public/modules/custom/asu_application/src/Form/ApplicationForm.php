@@ -141,7 +141,7 @@ class ApplicationForm extends ContentEntityForm implements TrustedCallbackInterf
     : 'Confirm application replacement';
 
     $message = $langcode === 'fi'
-    ? 'Sinulla on jo hakemus tähän projektiin. Se poistetaan ennen uuden lähettämistä. Jatketaanko?'
+    ? 'Sinulla on jo hakemus tähän kohteeseen. Se poistetaan ennen uuden lähettämistä. Jatketaanko?'
     : 'You already have an application for this project. It will be deleted before sending a new one. Continue?';
 
     $modal = <<<HTML
@@ -192,7 +192,11 @@ HTML;
       return (new RedirectResponse($redirect, 301));
     }
 
-    $limit = ['sold', 'reserved', 'reserved_haso'];
+    $limit = ['sold'];
+    if ($project->can_apply_afterwards != TRUE) {
+      array_push($limit, ['reserved', 'reserved_haso']);
+    }
+
     if (!$project_data = $this->getApartments($project, $limit)) {
       $this->logger('asu_application')->critical('User tried to access nonexistent project of id ' . $project_id);
       $this->messenger()->addMessage($this->t('Unfortunately the project you are trying to apply for is unavailable.'));
@@ -268,8 +272,13 @@ HTML;
         return new RedirectResponse($applicationsUrl);
       }
 
-      if ($this->isApplicationPeriod('after', $startDate, $endDate)) {
-        $this->messenger()->addMessage($this->t('The application period has ended. You can still apply for the apartment by contacting the responsible salesperson.'));
+      if (
+        strtolower($project_data['ownership_type']) != 'haso' &&
+        $this->isApplicationPeriod('after', $startDate, $endDate)
+      ) {
+        $this->messenger()->addMessage(
+          'ownership_type is: ' . $project_data["ownership_type"]
+        );
         $freeApplicationUrl = $this->requestStack->getCurrentRequest()->getSchemeAndHttpHost() .
           '/contact/apply_for_free_apartment?project=' . $project_id;
         return new RedirectResponse($freeApplicationUrl);
@@ -305,6 +314,7 @@ HTML;
       $form['actions']['submit']['#value'] = $this->t('Send application');
       $form['actions']['submit']['#name'] = 'submit-application';
       $form['actions']['submit']['#submit'] = ['::save'];
+      $form['actions']['submit']['#weight'] = 1;
 
       // Show draft button only for customers.
       if ($currentUser->bundle() == 'customer') {
@@ -315,6 +325,7 @@ HTML;
           '#limit_validation_errors' => [],
           '#name' => 'submit-draft',
           '#submit' => ['::submitDraft'],
+          '#weight' => 2,
         ];
       }
     }
@@ -509,31 +520,6 @@ HTML;
   public function save(array $form, FormStateInterface $form_state) {
     $this->doSave($form, $form_state);
     $this->handleApplicationEvent($form, $form_state);
-    $email = $form_state->getValue(['main_applicant', 0, 'email']);
-    $project_name = $this->entity->get('project')->entity->label() ?? $this->t('Unknown project');
-
-    if (!empty($email)) {
-      $mailManager = \Drupal::service('plugin.manager.mail');
-      $module = 'asu_application';
-      $key = 'application_submission';
-      $params['subject'] = $this->t("Kiitos hakemuksestasi / Thank you for your application");
-      $params['message'] = $this->t(
-            "Kiitos - olemme vastaanottaneet hakemuksesi kohteeseemme @project_name.\n\n"
-            . "Hakemuksesi on voimassa koko rakennusajan.\n\n"
-            . "Arvonnan / huoneistojaon jälkeen voit tarkastaa oman sijoituksesi kirjautumalla kotisivuillemme: asuntotuotanto.hel.fi.\n\n"
-            . "Tämä on automaattinen viesti – älä vastaa tähän sähköpostiin.\n\n"
-            . "------------------------------------------------------------\n\n"
-            . "\nThank you - we have received your application for @project_name.\n\n"
-            . "Your application will remain valid throughout the construction period.\n\n"
-            . "After the lottery / apartment distribution, you can check your position by logging into our website: asuntotuotanto.hel.fi."
-            . "This is an automated message – please do not reply to this email.",
-            ['@project_name' => $project_name]
-        );
-      $langcode = \Drupal::languageManager()->getDefaultLanguage()->getId();
-      $send = TRUE;
-
-      $mailManager->mail($module, $key, $email, $langcode, $params, NULL, $send);
-    }
 
     $content_entity_id = $this->entity->getEntityType()->id();
     $form_state->setRedirect("entity.{$content_entity_id}.canonical", [$content_entity_id => $this->entity->id()]);
@@ -813,14 +799,14 @@ HTML;
    */
   private function updateEntityFieldsWithUserInput(FormStateInterface $form_state) {
     foreach ($form_state->getUserInput() as $key => $value) {
-      if (in_array($key, $form_state->getCleanValueKeys())) {
+      if (in_array($key, $form_state->getCleanValueKeys(), TRUE)) {
         continue;
       }
-      if ($key == 'main_applicant' || $key == 'applicant') {
-        if (!empty($value[0]['personal_id']) && strlen($value[0]['personal_id']) == 4) {
-          $value[0]['personal_id'] = $this->getPersonalIdDivider($value[0]['date_of_birth']) . $value[0]['personal_id'];
-        }
+
+      if (in_array($key, ['main_applicant', 'applicant'], TRUE)) {
+        $value = $this->normalizeApplicantPersonalId(is_array($value) ? $value : []);
       }
+
       if ($this->entity->hasField($key)) {
         $this->entity->set($key, $value);
       }
@@ -904,6 +890,34 @@ HTML;
    */
   public static function trustedCallbacks() {
     return ['addConfirmDialogHtml'];
+  }
+
+  /**
+   * Normalize applicant.
+   *
+   * @param array $value
+   *   Value array from user input for 'main_applicant' or 'applicant'.
+   *
+   * @return array
+   *   Normalized value array (same structure).
+   */
+  private function normalizeApplicantPersonalId(array $value): array {
+    $slot = is_array($value) ? $value : [];
+    $slot[0] = isset($slot[0]) && is_array($slot[0]) ? $slot[0] : [];
+
+    $pid = $slot[0]['personal_id'] ?? '';
+    $dob = $slot[0]['date_of_birth'] ?? NULL;
+
+    if ($pid !== '' && strlen($pid) === 4) {
+      $pid = $this->getPersonalIdDivider($dob) . $pid;
+    }
+
+    if ($pid !== '' && strlen($pid) === 5) {
+      $pid = substr($pid, 0, 4) . strtoupper(substr($pid, 4, 1));
+    }
+
+    $slot[0]['personal_id'] = $pid;
+    return $slot;
   }
 
 }

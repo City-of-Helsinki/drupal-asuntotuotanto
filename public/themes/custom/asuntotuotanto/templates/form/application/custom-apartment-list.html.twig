@@ -1,6 +1,7 @@
 {{ attach_library('asuntotuotanto/application-form-actions') }}
 <div class="application-form__apartments">
   {% set project_type = element.application_project_information['#teaser_values'].project_ownership_type %}
+  {% set can_apply_afterwards = element.application_project_information['#teaser_values'].project_can_apply_afterwards %}
   {% set price_title = project_type == 'HASO' ? 'Right of occupancy payment'|t : 'Debt-free sales price'|t   %}
   {% set second_price_title = project_type == 'HASO' ? '' : 'Sales price'|t %}
   <h2>

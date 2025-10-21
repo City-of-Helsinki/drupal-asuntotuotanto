@@ -1,0 +1,6 @@
+services:
+  asu_noindex.response_subscriber:
+    class: Drupal\asu_noindex\EventSubscriber\NoindexResponseSubscriber
+    arguments: ["@language_manager", "@config.factory"]
+    tags:
+      - { name: event_subscriber }

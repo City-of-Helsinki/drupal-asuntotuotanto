@@ -32,9 +32,16 @@
       {{ element['#project_name'] }}
     </h1>
     <p>
-      {% trans %}
-        Submit an application during the application period. You can apply for up to 5 apartments. Apartments should be marked in the order in which you wish to be selected. If you are ranked 1st in the draw, you will only be offered the apartment that is on your highest list.
-      {% endtrans %}
+      {% if element.application_project_information['#teaser_values'].can_apply_afterwards == TRUE %}
+        {% trans %}
+          Submit an application after the application period. You can search for up to 5 apartments. Apartments should be marked in the order in which you wish to be selected. If you are ranked 1st in the draw, you will only be offered the apartment that is on your highest list.
+        {% endtrans %}
+      {% else %}
+        {% trans %}
+          Submit an application during the application period. You can apply for up to 5 apartments. Apartments should be marked in the order in which you wish to be selected. If you are ranked 1st in the draw, you will only be offered the apartment that is on your highest list.
+        {% endtrans %}
+      {% endif %}
+
     </p>
     <a href="/oppaat/haso">
       {% trans %}
@@ -94,9 +101,15 @@
               {% set date = element.application_project_information['#teaser_values'].application_end_time|date("d.m.Y") %}
               {% set time = element.application_project_information['#teaser_values'].application_end_time|date("H.i") %}
               {% include "@hdbt/misc/icon.twig" with {icon: 'check-circle-fill', label: ''} %}
-              {% trans %}
-                The application period is open until {{ time }} on {{ date }}
-              {% endtrans %}
+                {% if element.application_project_information['#teaser_values'].can_apply_afterwards == TRUE %}
+                  {% trans %}
+                      The application period has ended at {{ time }} on {{ date }} but you can still apply afterwards.
+                  {% endtrans %}
+                {% else %}
+                  {% trans %}
+                    The application period is open until {{ time }} on {{ date }}
+                  {% endtrans %}
+                {% endif %}
             </li>
           </ul>
         </div>
@@ -112,12 +125,12 @@
     <section class="application-form__section">
       <h3>
         {% trans %}
-          Draw
+          Distribution
         {% endtrans %}
       </h3>
       <p>
         {% trans %}
-          Once we have drawn the apartments, you can find your position from the account page.
+          Once the apartments are distributed you can see your position for the apartments you applied for by signing in to your account under applications. We will notify those who are first in queue for apartment by email.
         {% endtrans %}
       </p>
     </section>
@@ -171,7 +184,7 @@
     {{ element.form_token  }} {# required #}
     {{ element.field_agreement_policy }}
     {{ element.field_data_agreement_policy }}
-    <p>{% trans %} You cannot edit the application after it has been submitted.{% endtrans %}</p>
+
     {{ element.actions }}
   </div>
 </form>

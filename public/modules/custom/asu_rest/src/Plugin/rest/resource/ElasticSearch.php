@@ -134,6 +134,7 @@ class ElasticSearch extends ResourceBase {
         'nid',
         'project_application_end_time',
         'project_application_start_time',
+        'project_can_apply_afterwards',
         'project_building_type',
         'project_coordinate_lat',
         'project_coordinate_lon',

@@ -18,6 +18,7 @@ dependencies:
     - field.field.node.project.field_building_flaw_attachement
     - field.field.node.project.field_building_type
     - field.field.node.project.field_business_id
+    - field.field.node.project.field_can_apply_afterwards
     - field.field.node.project.field_city
     - field.field.node.project.field_collateral_amount
     - field.field.node.project.field_collateral_amount_fixed
@@ -244,6 +245,16 @@ content:
       link_to_entity: false
     third_party_settings: {  }
     weight: 49
+    region: content
+  field_can_apply_afterwards:
+    type: boolean
+    label: above
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    weight: 91
     region: content
   field_city:
     type: string

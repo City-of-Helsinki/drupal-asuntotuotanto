@@ -60,6 +60,21 @@ class Project extends Node {
   }
 
   /**
+   * Whether or not project accepts applications after `application_end_time`.
+   *
+   * @return bool
+   *   whether or not project accepts applications after application_end_time
+   */
+  public function getCanApplyAfterwards(): string {
+    $field_can_apply_afterwards = $this->get('field_can_apply_afterwards');
+    if ($field_can_apply_afterwards->isEmpty()) {
+      return "";
+    }
+    \Drupal::logger('asu_application')->info("field_can_apply_afterwards: " . $field_can_apply_afterwards->value);
+    return $field_can_apply_afterwards->value;
+  }
+
+  /**
    * Get ownership type entity reference as string.
    *
    * @return string
@@ -83,15 +98,24 @@ class Project extends Node {
     $baseurl = \Drupal::request()->getSchemeAndHttpHost();
     $langcode = \Drupal::languageManager()->getDefaultLanguage()->getId();
     $baseurl = $baseurl . '/' . $langcode;
+    $apartmentType = '';
+    if (isset($this->field_ownership_type->referencedEntities()[0])) {
+      $apartmentType = strtolower($this->field_ownership_type->referencedEntities()[0]->getName());
+    }
+
     if ($this->isApplicationPeriod() || $this->isApplicationPeriod('before')) {
       if (!isset($this->field_ownership_type->referencedEntities()[0])) {
         return '';
       }
-      $apartmentType = strtolower($this->field_ownership_type->referencedEntities()[0]->getName());
       return sprintf('%s/application/add/%s/%s', $baseurl, $apartmentType, $this->id());
     }
+
     if ($this->isApplicationPeriod('after')) {
       $queryParameter = $apartmentId ? "?apartment=$apartmentId" . '&project=' . $this->id() : '?project=' . $this->id();
+
+      if ($this->getOwnershipType() == 'haso') {
+        return sprintf('%s/application/add/%s/%s', $baseurl, $apartmentType, $this->id());
+      }
       return sprintf('%s/contact/apply_for_free_apartment%s', $baseurl, $queryParameter);
     }
     return '';

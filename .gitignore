@@ -28,3 +28,4 @@ public/sites/default/local.services.yml
 !*.gitkeep
 !*.keepme
 .phpunit.*
+compose-dev.yaml
