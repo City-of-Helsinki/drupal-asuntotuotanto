@@ -139,7 +139,7 @@ function asu_api_get_apartment_status_request_cron() {
         $dirty = TRUE;
       }
     }
-    elseif ($current === 'sold' && in_array($new, $free_states, TRUE)) {
+    elseif (in_array($new, $free_states, TRUE)) {
       if (!$node->isPublished()) {
         $node->setPublished(TRUE);
         $dirty = TRUE;
