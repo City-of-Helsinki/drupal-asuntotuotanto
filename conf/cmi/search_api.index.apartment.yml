@@ -718,6 +718,11 @@ field_settings:
     datasource_id: 'entity:node'
     property_path: 'search_api_reverse_entity_references_node__field_apartments:field_ownership_type:entity:name'
     type: asu_strtolower
+  project_payment_recipient:
+    label: 'Payment recipient'
+    datasource_id: 'entity:node'
+    property_path: 'search_api_reverse_entity_references_node__field_apartments:field_payment_recipient'
+    type: string
   project_possession_transfer_date:
     label: 'Transfer of possession'
     datasource_id: 'entity:node'
