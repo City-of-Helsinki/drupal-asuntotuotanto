@@ -1,0 +1,19 @@
+uuid: 1cb05780-e8ad-4368-b6a3-e3f409136211
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_payment_recipient_final
+    - node.type.project
+id: node.project.field_payment_recipient_final
+field_name: field_payment_recipient_final
+entity_type: node
+bundle: project
+label: 'Final payment recipient'
+description: 'Payment recipient name for the final payment.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string
