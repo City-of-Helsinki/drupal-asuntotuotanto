@@ -110,7 +110,7 @@ class Project extends Node {
       return sprintf('%s/application/add/%s/%s', $baseurl, $apartmentType, $this->id());
     }
 
-    if ($this->isApplicationPeriod('after')) {
+    if ($this->isApplicationPeriod('after') && $this->getCanApplyAfterwards() == TRUE) {
       $queryParameter = $apartmentId ? "?apartment=$apartmentId" . '&project=' . $this->id() : '?project=' . $this->id();
 
       if ($this->getOwnershipType() == 'haso') {
