@@ -71,6 +71,8 @@ dependencies:
     - field.field.node.project.field_new_housing
     - field.field.node.project.field_other_terms
     - field.field.node.project.field_ownership_type
+    - field.field.node.project.field_payment_recipient
+    - field.field.node.project.field_payment_recipient_final
     - field.field.node.project.field_payment_verification
     - field.field.node.project.field_plot_owner
     - field.field.node.project.field_possession_transfer_date
@@ -180,6 +182,8 @@ third_party_settings:
         - field_construction_start_date
         - field_construction_end_date
         - field_usage_fees
+        - field_payment_recipient
+        - field_payment_recipient_final
       label: Perustiedot
       region: content
       parent_name: group_project_tabs
@@ -904,6 +908,22 @@ content:
     weight: 5
     region: content
     settings: {  }
+    third_party_settings: {  }
+  field_payment_recipient:
+    type: string_textfield
+    weight: 26
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_payment_recipient_final:
+    type: string_textfield
+    weight: 27
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
     third_party_settings: {  }
   field_payment_verification:
     type: string_textarea

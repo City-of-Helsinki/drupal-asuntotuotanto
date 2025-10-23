@@ -1,0 +1,19 @@
+uuid: 9847f887-aac0-4564-9b19-a0e9c85e7394
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_payment_recipient
+    - node.type.project
+id: node.project.field_payment_recipient
+field_name: field_payment_recipient
+entity_type: node
+bundle: project
+label: 'Payment recipient'
+description: 'Payment recipient name for every payment but the final one.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string
