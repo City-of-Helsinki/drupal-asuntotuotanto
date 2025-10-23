@@ -59,10 +59,10 @@
         },
         {
             "name": "asuntomyynti/react",
-            "version": "1.4.6b",
+            "version": "1.4.7b",
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/City-of-Helsinki/asuntomyynti-react/releases/download/v1.4.6b/asuntomyynti-react-1.4.6b.zip"
+                "url": "https://github.com/City-of-Helsinki/asuntomyynti-react/releases/download/v1.4.7b/asuntomyynti-react-1.4.7b.zip"
             },
             "type": "library"
         },
