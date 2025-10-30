@@ -5,13 +5,15 @@
  * Functions to support theming in the HDBT Subtheme.
  */
 
+use Drupal;
 use Drupal\Core\Url;
 use Drupal\Core\Site\Settings;
 use Drupal\file\Entity\File;
 use Drupal\paragraphs\Entity\Paragraph;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\user\Entity\User;
-
+use Drupal\asu_application\Applications;
+use Drupal\asu_api\Api\BackendApi\Request\ApplicationLotteryResult;
 /**
  * Helper function to get the icons path.
  *
@@ -229,14 +231,17 @@ function asuntotuotanto_preprocess_views_view(&$variables) {
 }
 
 /**
+ * Passes variables to project-apartments-listing.html.twig
  * Implements hook_preprocess_HOOK().
  */
 function asuntotuotanto_preprocess_views_view_table(&$variables) {
+  \Drupal::logger('asu_application')->info('variables view id: '.$variables['view']->id());
+  
   if ($variables['view']->id() === 'project_apartments_listing') {
-
+    
     $results = $variables['result'];
     /** @var \Drupal\views\ResultRow $result */
-
+    
     if ($results) {
       $result = reset($results);
       /** @var \Drupal\asu_content\Entity\Project $project */
@@ -246,10 +251,19 @@ function asuntotuotanto_preprocess_views_view_table(&$variables) {
       $results = [];
       $project = FALSE;
     }
-
+    
     $price_title = $project->field_ownership_type->entity->name->value == 'HASO' ? t('Right of occupancy payment') : t('Debt-free sales price');
     $variables['header']['field_debt_free_sales_price']['content'] = $price_title;
     unset($variables['header']['field_release_payment']);
+
+    $userHasReservedOrSoldApartment = false;
+    if (\Drupal::currentUser()->isAuthenticated()) {
+      // check if user has offered, offer_accepted or sold reservations
+      $userHasReservedOrSoldApartment = $project->getUserHasReservedOrSoldApartments(
+        \Drupal::currentUser()->id()
+      );
+    }
+
 
     foreach ($results as $key => $row) {
       /** @var \Drupal\asu_content\Entity\Apartment $entity */
@@ -274,6 +288,8 @@ function asuntotuotanto_preprocess_views_view_table(&$variables) {
         continue;
       }
 
+
+
       $is_application_period_active = $project->isApplicationPeriod();
       $variables['rows'][$key]['is_application_period_active'] = $is_application_period_active;
       $variables['rows'][$key]['apartment_number'] = $apartment->field_apartment_number->value;
@@ -282,6 +298,7 @@ function asuntotuotanto_preprocess_views_view_table(&$variables) {
       $variables['rows'][$key]['application_url_title'] = $apartment->getApplicationUrlTitle();
       $variables['rows'][$key]['is_free'] = $apartment->isFree();
       $variables['rows'][$key]['can_apply_afterwards'] = $project->getCanApplyAfterwards();
+      $variables['rows'][$key]['user_has_reserved_or_sold_apartment'] = $userHasReservedOrSoldApartment;
     }
 
     usort($variables['rows'], function ($a, $b) {
@@ -589,6 +606,15 @@ function asuntotuotanto_preprocess_node(&$variables) {
         );
       }
 
+      $userHasReservedOrSoldApartment = false;
+      if (\Drupal::currentUser()->isAuthenticated()) {
+        // check if user has offered, offer_accepted or sold reservations
+        $userHasReservedOrSoldApartment = $project->getUserHasReservedOrSoldApartments(
+          \Drupal::currentUser()->id()
+        );
+      }
+
+
       if (!empty($node->field_street_address->value)) {
         $street_address_splitted = split_address_line($node->field_street_address->value);
 
@@ -618,6 +644,9 @@ function asuntotuotanto_preprocess_node(&$variables) {
       $variables['estimated_completion_date'] = $estimated_completion_date;
       $variables['is_application_period_active'] = $is_application_period_active;
       $variables['project_type'] = $project_type;
+      // shows up as null if it has the more sensible name of 'user_has_reserved_or_sold_apartment'
+      // no idea why
+      $variables['current_user_has_reserved_or_sold_apartment'] = $userHasReservedOrSoldApartment;
       $variables['apartment_prices'] = $prices_string;
       break;
 

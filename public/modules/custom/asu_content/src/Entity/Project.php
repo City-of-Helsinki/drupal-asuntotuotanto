@@ -4,6 +4,8 @@ namespace Drupal\asu_content\Entity;
 
 use Drupal\node\Entity\Node;
 use Drupal\user\UserInterface;
+use Drupal\user\Entity\User;
+use Drupal\asu_api\Api\BackendApi\Request\ApplicationLotteryResult;
 
 /**
  * Class for node's project bundle.
@@ -70,7 +72,7 @@ class Project extends Node {
     if ($field_can_apply_afterwards->isEmpty()) {
       return "";
     }
-    \Drupal::logger('asu_application')->info("field_can_apply_afterwards: " . $field_can_apply_afterwards->value);
+
     return $field_can_apply_afterwards->value;
   }
 
@@ -161,6 +163,52 @@ class Project extends Node {
       }
     }
     return TRUE;
+  }
+
+  /**
+   * Get reservations the given user has for the project's apartments.
+   * 
+   * @param int $userId
+   * 
+   * @return array
+   *    reservations
+   */
+  public function getUserReservations($userId): array {
+    $user = User::load(\Drupal::currentUser()->id());
+
+    // fetch reservations for this project
+    $request = new ApplicationLotteryResult($this->uuid());
+    $request->setSender($user);
+    $backendApi = \Drupal::service('asu_api.backendapi');
+
+    $userReservations = $backendApi
+      ->send($request)
+      ->getContent();
+    
+    return $userReservations;
+  }
+
+  /**
+   * Checks if the given user has a reservation with the state 'offered', 
+   * 'offer_accepted' or 'sold' on the project.
+   * @param int $userId
+   * @return bool
+   */
+  public function getUserHasReservedOrSoldApartments($userId): bool {
+    $userHasReservedOrSoldApartment = false;
+    $userReservations = $this->getUserReservations($userId);
+    $states = ['offered', 'offer_accepted', 'sold'];
+    \Drupal::logger("asu_application")->info("userReservations: " . $userReservations);
+    foreach ($userReservations as $key => $reservation) {
+      // TODO: remove! debug logging
+      \Drupal::logger('asu_application')->info(
+        'reservation apartment_uuid: ' . $reservation['apartment_uuid'] . " state: " . $reservation['state']
+      );
+      if (in_array($reservation['state'], $states)) {
+        $userHasReservedOrSoldApartment = true;
+      }
+    }
+    return $userHasReservedOrSoldApartment;
   }
 
   /**

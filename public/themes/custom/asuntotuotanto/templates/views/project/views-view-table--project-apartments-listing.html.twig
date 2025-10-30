@@ -41,7 +41,6 @@
     sticky ? 'sticky-enabled',
   ]
 %}
-
 {# === Pre-pass: single calculation for mobile + desktop to avoid duplicating code === #}
 {% set _computed = [] %}
 {% for row in rows %}
@@ -279,6 +278,7 @@
         {% set application_url_title = row.application_url_title %}
         {% set can_apply_afterwards = row.can_apply_afterwards %}
         {% set is_free = row.is_free %}
+        {% set user_has_reserved_or_sold_apartment = row.user_has_reserved_or_sold_apartment %}
 
         {# pre-calculated values #}
         {% set comp = _computed[loop.index0] %}
@@ -322,10 +322,9 @@
               }
             %}
 
-            {% if (is_application_period_active or (is_free or can_apply_afterwards)) %}
+            {% if (is_application_period_active or (is_free or can_apply_afterwards)) and not user_has_reserved_or_sold_apartment %}
               {% include '@asuntotuotanto/button/button.html.twig' with {
                 type: 'primary',
-                disabled: false,
                 size: 'small',
                 label: can_apply_afterwards ? 'Create an after-application'|t : application_url_title|t,
                 href: application_url,
