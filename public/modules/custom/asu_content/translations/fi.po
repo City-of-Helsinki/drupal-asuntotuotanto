@@ -43323,3 +43323,6 @@ msgid "Tunnistamo"
 msgstr ""
 msgid "Helsinki Logo"
 msgstr "Helsingin kaupungin logo"
+
+msgid "You already have an offer or have been sold an apartment in this project and cannot submit a new application."
+msgstr "Sinulla on jo myyty tai tarjottu asunto tässä kohteessa etkä siksi voi tehdä uutta hakemusta."
