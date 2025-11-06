@@ -322,7 +322,7 @@
               }
             %}
 
-            {# {% if (is_application_period_active or (is_free or can_apply_afterwards)) %}
+            {% if (is_application_period_active or (is_free or can_apply_afterwards)) %}
               {% include '@asuntotuotanto/button/button.html.twig' with {
                 type: 'primary',
                 disabled: false,
@@ -332,7 +332,7 @@
                 aria_label: 'Create an application'|t ~ ', ' ~ 'apartment'|t ~ ' ' ~ apartment_number
                 }
               %}
-            {% endif %} #}
+            {% endif %}
           </td>
         </tr>
       {% endfor %}
