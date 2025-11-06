@@ -1,0 +1,5 @@
+services:
+  asu_project_subscription.mail:
+    class: Drupal\Core\Mail\Plugin\Mail\PhpMail
+    tags:
+      - { name: mail, id: asu_project_subscription_mail }

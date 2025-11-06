@@ -403,6 +403,12 @@
           </ul>
         </div>
       {% endif %}
+      {# Project subscription (injected by asu_project_subscription_preprocess_node) #}
+      {% if asu_ps_subscription is defined %}
+        <div class="project__subscription">
+          {{ asu_ps_subscription }}
+        </div>
+      {% endif %}
     </div>
   </div>
 
