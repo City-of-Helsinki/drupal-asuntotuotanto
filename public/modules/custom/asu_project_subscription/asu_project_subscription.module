@@ -13,12 +13,7 @@ use Drupal\node\NodeInterface;
 /**
  * Implements hook_mail().
  *
- * @param string $key
- *   A key to identify the email.
- * @param array $message
- *   A message array to be passed to drupal_mail().
- * @param array $params
- *   Parameters used to build the email.
+ * @see hook_mail()
  */
 function asu_project_subscription_mail($key, array &$message, array $params) {
   $join_lines = static function (array $lines) {
@@ -179,8 +174,7 @@ function asu_project_subscription_state_label($e, string $field): ?string {
 /**
  * Implements hook_entity_update().
  *
- * @param \Drupal\Core\Entity\EntityInterface $entity
- *   The updated entity.
+ * @see hook_entity_update()
  */
 function asu_project_subscription_entity_update(EntityInterface $entity) {
   if ($entity->getEntityTypeId() === 'node') {
@@ -191,8 +185,7 @@ function asu_project_subscription_entity_update(EntityInterface $entity) {
 /**
  * Implements hook_node_update().
  *
- * @param \Drupal\node\NodeInterface $node
- *   Updated node.
+ * @see hook_node_update()
  */
 function asu_project_subscription_node_update(NodeInterface $node) {
   asu_project_subscription_process_state_change($node);
@@ -201,8 +194,7 @@ function asu_project_subscription_node_update(NodeInterface $node) {
 /**
  * Implements hook_entity_presave().
  *
- * @param \Drupal\Core\Entity\EntityInterface $entity
- *   Entity being saved.
+ * @see hook_entity_presave()
  */
 function asu_project_subscription_entity_presave(EntityInterface $entity) {
   if ($entity->getEntityTypeId() === 'node') {
@@ -213,12 +205,7 @@ function asu_project_subscription_entity_presave(EntityInterface $entity) {
 /**
  * Implements hook_module_implements_alter().
  *
- * Ensure mail_alter runs last.
- *
- * @param array $implementations
- *   Implementations.
- * @param string $hook
- *   Hook name.
+ * @see hook_module_implements_alter()
  */
 function asu_project_subscription_module_implements_alter(array &$implementations, $hook) {
   if ($hook === 'mail_alter' && isset($implementations['asu_project_subscription'])) {
@@ -231,8 +218,7 @@ function asu_project_subscription_module_implements_alter(array &$implementation
 /**
  * Implements hook_mail_alter().
  *
- * @param array $message
- *   Message array.
+ * @see hook_mail_alter()
  */
 function asu_project_subscription_mail_alter(array &$message) {
   if (($message['module'] ?? '') !== 'asu_project_subscription') {
@@ -254,10 +240,7 @@ function asu_project_subscription_mail_alter(array &$message) {
 /**
  * Implements hook_block_view_alter().
  *
- * @param array $build
- *   Build array.
- * @param \Drupal\Core\Block\BlockPluginInterface $block
- *   Block plugin.
+ * @see hook_block_view_alter()
  */
 function asu_project_subscription_block_view_alter(array &$build, BlockPluginInterface $block): void {
   if ($block->getPluginId() !== 'asu_project_subscription_block') {
@@ -273,8 +256,7 @@ function asu_project_subscription_block_view_alter(array &$build, BlockPluginInt
 /**
  * Implements hook_entity_extra_field_info().
  *
- * @return array
- *   Extra field info.
+ * @see hook_entity_extra_field_info()
  */
 function asu_project_subscription_entity_extra_field_info(): array {
   return [
@@ -296,12 +278,7 @@ function asu_project_subscription_entity_extra_field_info(): array {
 /**
  * Implements hook_entity_view_display_alter().
  *
- * Ensure extra field is near attachments.
- *
- * @param \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display
- *   Display.
- * @param array $context
- *   Context.
+ * @see hook_entity_view_display_alter()
  */
 function asu_project_subscription_entity_view_display_alter(EntityViewDisplayInterface $display, array $context): void {
   if ($display->getTargetEntityTypeId() !== 'node' || $display->getTargetBundle() !== 'project') {
@@ -332,16 +309,7 @@ function asu_project_subscription_entity_view_display_alter(EntityViewDisplayInt
 /**
  * Implements hook_entity_view().
  *
- * Render extra field on node.
- *
- * @param array $build
- *   Build array.
- * @param \Drupal\Core\Entity\EntityInterface $entity
- *   Entity.
- * @param \Drupal\Core\Entity\Display\EntityViewDisplayInterface|string $display
- *   Display or mode string.
- * @param string $view_mode
- *   View mode.
+ * @see hook_entity_view()
  */
 function asu_project_subscription_entity_view(array &$build, EntityInterface $entity, $display, $view_mode): void {
   if (!$entity instanceof NodeInterface || $entity->bundle() !== 'project') {
@@ -380,10 +348,7 @@ function asu_project_subscription_entity_view(array &$build, EntityInterface $en
 /**
  * Implements hook_preprocess_node().
  *
- * Put form to Twig-variable for node:project → {{ asu_ps_subscription }}.
- *
- * @param array $variables
- *   Template variables.
+ * @see hook_preprocess_node()
  */
 function asu_project_subscription_preprocess_node(array &$variables): void {
   $node = $variables['node'] ?? NULL;

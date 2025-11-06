@@ -25,7 +25,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @category Drupal
  * @package Asu_Project_Subscription
- * @author Helsinki Dev Team <dev@hel.fi>
  * @license https://www.gnu.org/licenses/gpl-2.0.html GPL-2.0-or-later
  * @link https://www.drupal.org
  */
@@ -116,11 +115,16 @@ class ProjectSubscriptionNotifier extends QueueWorkerBase implements ContainerFa
     $mail_key = (string) ($data['mail_key'] ?? '');
 
     if (!$project_nid || $new_state === '' || $mail_key === '') {
-      $this->loggerFactory->get('asu_ps')->notice('Skip item: missing nid/state/key. Data=@data', ['@data' => json_encode($data, JSON_UNESCAPED_UNICODE)]);
+      $this->loggerFactory->get('asu_ps')->notice(
+      'Skip item: missing nid/state/key. Data=@data',
+      [
+        '@data' => json_encode($data, JSON_UNESCAPED_UNICODE),
+      ]
+    );
       return;
     }
 
-    $node = Node::load($project_nid);
+    $node = $this->entityTypeManager->getStorage('node')->load($project_nid);
     $title = $node ? $node->label() : '';
     $escTitle = Html::escape($title);
 
@@ -146,7 +150,14 @@ class ProjectSubscriptionNotifier extends QueueWorkerBase implements ContainerFa
     $ids = $query->condition($or)->execute();
 
     if (!$ids) {
-      $this->loggerFactory->get('asu_ps')->notice('No recipients for nid @nid and state @state', ['@nid' => $project_nid, '@state' => $new_state]);
+      $this->loggerFactory->get('asu_ps')->notice(
+        'No recipients for nid @nid and state @state',
+        [
+          '@nid' => $project_nid,
+          '@state' => $new_state,
+        ]
+      );
+
       return;
     }
 

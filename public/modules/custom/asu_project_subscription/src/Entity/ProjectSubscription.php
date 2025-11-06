@@ -11,7 +11,6 @@ use Drupal\Core\Field\BaseFieldDefinition;
  *
  * @category Drupal
  * @package Asu_Project_Subscription
- * @author Helsinki Dev Team <dev@hel.fi>
  * @license https://www.gnu.org/licenses/gpl-2.0.html GPL-2.0-or-later
  * @link https://www.drupal.org
  *

@@ -51,6 +51,7 @@ class ProjectSubscriptionForm extends FormBase {
       '#value' => $project->id(),
     ];
 
+    // phpcs:ignore DrupalPractice.Objects.GlobalDrupal.GlobalDrupal
     $account = \Drupal::currentUser();
     $user_email = NULL;
     if ($account->isAuthenticated()) {
@@ -70,6 +71,7 @@ class ProjectSubscriptionForm extends FormBase {
     $existing_sub_id = NULL;
 
     if ($user_email) {
+      // phpcs:ignore DrupalPractice.Objects.GlobalDrupal.GlobalDrupal
       $ids = \Drupal::entityQuery('asu_project_subscription')
         ->accessCheck(FALSE)
         ->condition('project', $project->id())
@@ -161,11 +163,13 @@ class ProjectSubscriptionForm extends FormBase {
          *
          * @var \Drupal\asu_project_subscription\Entity\ProjectSubscription $subscription
          */
+        // phpcs:ignore DrupalPractice.Objects.GlobalDrupal.GlobalDrupal
         $subscription = \Drupal::entityTypeManager()
           ->getStorage('asu_project_subscription')
           ->load($sub_id);
 
         if ($subscription) {
+          // phpcs:ignore DrupalPractice.Objects.GlobalDrupal.GlobalDrupal
           $subscription->set('unsubscribed_at', \Drupal::time()->getRequestTime());
           $subscription->save();
 
@@ -186,7 +190,9 @@ class ProjectSubscriptionForm extends FormBase {
       return;
     }
 
+    // phpcs:ignore DrupalPractice.Objects.GlobalDrupal.GlobalDrupal
     $flood = \Drupal::service('flood');
+    // phpcs:ignore DrupalPractice.Objects.GlobalDrupal.GlobalDrupal
     $clientIp = \Drupal::request()->getClientIp();
     $emailKey = hash('sha256', $email);
 
@@ -210,10 +216,10 @@ class ProjectSubscriptionForm extends FormBase {
       $this->messenger()->addError($this->t('Too many attempts. Please try again later.'));
       return;
     }
-
+    // phpcs:ignore DrupalPractice.Objects.GlobalDrupal.GlobalDrupal
     $storage = \Drupal::entityTypeManager()
       ->getStorage('asu_project_subscription');
-
+    // phpcs:ignore DrupalPractice.Objects.GlobalDrupal.GlobalDrupal
     $ids = \Drupal::entityQuery('asu_project_subscription')
       ->accessCheck(FALSE)
       ->condition('project', $project_id)
@@ -313,6 +319,7 @@ class ProjectSubscriptionForm extends FormBase {
    *   Array with 'title', 'address', 'url'.
    */
   private function buildProjectMeta($project_id) {
+    // phpcs:ignore DrupalPractice.Objects.GlobalDrupal.GlobalDrupal
     $node = \Drupal\node\Entity\Node::load($project_id);
     $project_title = $node ? $node->label() : '';
 
@@ -354,7 +361,9 @@ class ProjectSubscriptionForm extends FormBase {
    *   TRUE on success, FALSE otherwise.
    */
   private function sendConfirmationEmail($email, $confirm_url, $unsub_url, array $meta) {
+    // phpcs:ignore DrupalPractice.Objects.GlobalDrupal.GlobalDrupal
     $mailManager = \Drupal::service('plugin.manager.mail');
+    // phpcs:ignore DrupalPractice.Objects.GlobalDrupal.GlobalDrupal
     $langcode = \Drupal::currentUser()->getPreferredLangcode();
 
     $result = $mailManager->mail(

@@ -10,7 +10,6 @@ use Drupal\node\NodeInterface;
  *
  * @category Drupal
  * @package Asu_Project_Subscription
- * @author Helsinki Dev Team <dev@hel.fi>
  * @license https://www.gnu.org/licenses/gpl-2.0.html GPL-2.0-or-later License
  * @link https://www.drupal.org
  *
@@ -28,13 +27,13 @@ class ProjectSubscriptionBlock extends BlockBase {
    *   A render array for the subscription form or a fallback markup.
    */
   public function build() {
-    $node = \Drupal::routeMatch()->getParameter('node');
+    $node = $this->routeMatch()->getParameter('node');
 
     $node_id = is_object($node) ? $node->id() : 'none';
-    \Drupal::logger('asu_project_subscription')->notice('Block build hit. Node: @id', ['@id' => $node_id]);
+    $this->logger('asu_project_subscription')->notice('Block build hit. Node: @id', ['@id' => $node_id]);
 
     if ($node instanceof NodeInterface) {
-      return \Drupal::formBuilder()->getForm('Drupal\asu_project_subscription\Form\ProjectSubscriptionForm', $node);
+      return $this->formBuilder()->getForm('Drupal\asu_project_subscription\Form\ProjectSubscriptionForm', $node);
     }
 
     return [
