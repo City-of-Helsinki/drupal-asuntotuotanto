@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Install and update hooks for the ASU Project Subscription module.
+ */
+
 use Drupal\Core\Database\SchemaObjectExistsException;
 use Drupal\Core\Field\BaseFieldDefinition;
 
@@ -11,8 +16,8 @@ function asu_project_subscription_install() {
 
   if ($schema->tableExists('asu_project_subscription')) {
     if (
-      $schema->fieldExists('asu_project_subscription', 'project') &&
-      !$schema->indexExists('asu_project_subscription', 'asu_sub_project_idx')
+      $schema->fieldExists('asu_project_subscription', 'project')
+      && !$schema->indexExists('asu_project_subscription', 'asu_sub_project_idx')
     ) {
       $schema->addIndex(
         'asu_project_subscription',
@@ -30,10 +35,10 @@ function asu_project_subscription_install() {
       );
     }
 
-    // UNIQUE(project, email)
+    // UNIQUE(project, email).
     if (
-      $schema->fieldExists('asu_project_subscription', 'project') &&
-      $schema->fieldExists('asu_project_subscription', 'email')
+      $schema->fieldExists('asu_project_subscription', 'project')
+      && $schema->fieldExists('asu_project_subscription', 'email')
     ) {
       try {
         $schema->addUniqueKey(
@@ -42,18 +47,22 @@ function asu_project_subscription_install() {
           ['project', 'email']
         );
       }
-      catch (\Drupal\Core\Database\SchemaObjectExistsException $e) {}
+      catch (SchemaObjectExistsException $e) {
+        // The unique key already exists.
+      }
     }
   }
 }
 
-
+/**
+ * Update 9001: Ensure base install tasks run on existing sites.
+ */
 function asu_project_subscription_update_9001() {
   asu_project_subscription_install();
 }
 
 /**
- * Add confirm_token / unsubscribe_token + indexes.
+ * Update 9002: Add confirm/unsubscribe tokens and related indexes.
  */
 function asu_project_subscription_update_9002() {
   $manager = \Drupal::entityDefinitionUpdateManager();
@@ -81,7 +90,14 @@ function asu_project_subscription_update_9002() {
         'asu_project_subscription',
         'asu_sub_confirm_token_idx',
         ['confirm_token'],
-        ['fields' => ['confirm_token' => ['type' => 'varchar', 'length' => 128]]]
+        [
+          'fields' => [
+            'confirm_token' => [
+              'type' => 'varchar',
+              'length' => 128,
+            ],
+          ],
+        ]
       );
     }
     if (!$schema->indexExists('asu_project_subscription', 'asu_sub_unsub_token_idx')) {
@@ -89,7 +105,14 @@ function asu_project_subscription_update_9002() {
         'asu_project_subscription',
         'asu_sub_unsub_token_idx',
         ['unsubscribe_token'],
-        ['fields' => ['unsubscribe_token' => ['type' => 'varchar', 'length' => 128]]]
+        [
+          'fields' => [
+            'unsubscribe_token' => [
+              'type' => 'varchar',
+              'length' => 128,
+            ],
+          ],
+        ]
       );
     }
   }

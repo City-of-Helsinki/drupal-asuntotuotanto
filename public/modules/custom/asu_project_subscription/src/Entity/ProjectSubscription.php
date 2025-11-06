@@ -1,17 +1,5 @@
 <?php
 
-/**
- * Defines the Project Subscription entity.
- *
- * PHP version 8.1
- *
- * @category Drupal
- * @package  Asu_Project_Subscription
- * @author   Helsinki Dev Team <dev@hel.fi>
- * @license  https://www.gnu.org/licenses/gpl-2.0.html GPL-2.0-or-later
- * @link     https://www.drupal.org
- */
-
 namespace Drupal\asu_project_subscription\Entity;
 
 use Drupal\Core\Entity\ContentEntityBase;
@@ -22,10 +10,10 @@ use Drupal\Core\Field\BaseFieldDefinition;
  * Defines the Project Subscription entity.
  *
  * @category Drupal
- * @package  Asu_Project_Subscription
- * @author   Helsinki Dev Team <dev@hel.fi>
- * @license  https://www.gnu.org/licenses/gpl-2.0.html GPL-2.0-or-later
- * @link     https://www.drupal.org
+ * @package Asu_Project_Subscription
+ * @author Helsinki Dev Team <dev@hel.fi>
+ * @license https://www.gnu.org/licenses/gpl-2.0.html GPL-2.0-or-later
+ * @link https://www.drupal.org
  *
  * @ContentEntityType(
  *   id = "asu_project_subscription",
@@ -39,75 +27,76 @@ use Drupal\Core\Field\BaseFieldDefinition;
  *   }
  * )
  */
-class ProjectSubscription extends ContentEntityBase
-{
-    /**
-     * Defines base field definitions for the entity.
-     *
-     * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type Entity type
-     *
-     * @return array
-     *   An array of base field definitions.
-     */
-    public static function baseFieldDefinitions(
-        EntityTypeInterface $entity_type
-    ): array {
-        $fields = parent::baseFieldDefinitions($entity_type);
+class ProjectSubscription extends ContentEntityBase {
 
-        $fields['id'] = BaseFieldDefinition::create('integer')
-            ->setLabel(t('ID'))
-            ->setReadOnly(true);
+  /**
+   * Defines base field definitions for the entity.
+   *
+   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
+   *   Entity type.
+   *
+   * @return array
+   *   An array of base field definitions.
+   */
+  public static function baseFieldDefinitions(EntityTypeInterface $entity_type): array {
+    $fields = parent::baseFieldDefinitions($entity_type);
 
-        $fields['uuid'] = BaseFieldDefinition::create('uuid')
-            ->setLabel(t('UUID'))
-            ->setReadOnly(true);
+    $fields['id'] = BaseFieldDefinition::create('integer')
+      ->setLabel(t('ID'))
+      ->setReadOnly(TRUE);
 
-        $fields['project'] = BaseFieldDefinition::create('entity_reference')
-            ->setLabel(t('Project node'))
-            ->setSetting('target_type', 'node')
-            ->setRequired(true);
+    $fields['uuid'] = BaseFieldDefinition::create('uuid')
+      ->setLabel(t('UUID'))
+      ->setReadOnly(TRUE);
 
-        $fields['email'] = BaseFieldDefinition::create('email')
-            ->setLabel(t('Email'))
-            ->setRequired(true);
+    $fields['project'] = BaseFieldDefinition::create('entity_reference')
+      ->setLabel(t('Project node'))
+      ->setSetting('target_type', 'node')
+      ->setRequired(TRUE);
 
-        $fields['uid'] = BaseFieldDefinition::create('entity_reference')
-            ->setLabel(t('User'))
-            ->setSetting('target_type', 'user')
-            ->setRequired(false);
+    $fields['email'] = BaseFieldDefinition::create('email')
+      ->setLabel(t('Email'))
+      ->setRequired(TRUE);
 
-        $fields['langcode']->setLabel(t('Language'));
+    $fields['uid'] = BaseFieldDefinition::create('entity_reference')
+      ->setLabel(t('User'))
+      ->setSetting('target_type', 'user')
+      ->setRequired(FALSE);
 
-        $fields['is_confirmed'] = BaseFieldDefinition::create('boolean')
-            ->setLabel(t('Confirmed'))
-            ->setDefaultValue(false);
+    $fields['langcode']
+      ->setLabel(t('Language'));
 
-        $fields['unsubscribed_at'] = BaseFieldDefinition::create('timestamp')
-            ->setLabel(t('Unsubscribed at'))
-            ->setDescription(t('If set, subscription is inactive.'))
-            ->setRequired(false);
+    $fields['is_confirmed'] = BaseFieldDefinition::create('boolean')
+      ->setLabel(t('Confirmed'))
+      ->setDefaultValue(FALSE);
 
-        $fields['last_notified_state'] = BaseFieldDefinition::create('string')
-            ->setLabel(t('Last notified state'))
-            ->setSettings(['max_length' => 64])
-            ->setRequired(false);
+    $fields['unsubscribed_at'] = BaseFieldDefinition::create('timestamp')
+      ->setLabel(t('Unsubscribed at'))
+      ->setDescription(t('If set, subscription is inactive.'))
+      ->setRequired(FALSE);
 
-        $fields['created'] = BaseFieldDefinition::create('created')
-        ->setLabel(t('Created'));
+    $fields['last_notified_state'] = BaseFieldDefinition::create('string')
+      ->setLabel(t('Last notified state'))
+      ->setSettings(['max_length' => 64])
+      ->setRequired(FALSE);
 
-        $fields['changed'] = BaseFieldDefinition::create('changed')
-        ->setLabel(t('Changed'));
+    $fields['created'] = BaseFieldDefinition::create('created')
+      ->setLabel(t('Created'));
 
-        $fields['confirm_token'] = BaseFieldDefinition::create('string')
-            ->setLabel(t('Confirm token'))
-            ->setSettings(['max_length' => 128])
-            ->setRequired(true);
+    $fields['changed'] = BaseFieldDefinition::create('changed')
+      ->setLabel(t('Changed'));
 
-        $fields['unsubscribe_token'] = BaseFieldDefinition::create('string')
-            ->setLabel(t('Unsubscribe token'))
-            ->setSettings(['max_length' => 128])
-            ->setRequired(true);
+    $fields['confirm_token'] = BaseFieldDefinition::create('string')
+      ->setLabel(t('Confirm token'))
+      ->setSettings(['max_length' => 128])
+      ->setRequired(TRUE);
 
-        return $fields;
-    }
+    $fields['unsubscribe_token'] = BaseFieldDefinition::create('string')
+      ->setLabel(t('Unsubscribe token'))
+      ->setSettings(['max_length' => 128])
+      ->setRequired(TRUE);
+
+    return $fields;
+  }
+
 }
