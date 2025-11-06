@@ -9,7 +9,8 @@ use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Url;
 use Drupal\node\NodeInterface;
 use Drupal\node\Entity\Node;
-use Drupal\user\Entity\User;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Defines the Project Subscription form.
@@ -22,6 +23,32 @@ use Drupal\user\Entity\User;
  * @link https://www.drupal.org
  */
 class ProjectSubscriptionForm extends FormBase {
+
+  /**
+   * The entity type manager service.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected EntityTypeManagerInterface $entityTypeManager;
+
+  /**
+   * Constructs a new ProjectSubscriptionForm object.
+   *
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
+   *   The entity type manager service.
+   */
+  public function __construct(EntityTypeManagerInterface $entityTypeManager) {
+    $this->entityTypeManager = $entityTypeManager;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('entity_type.manager')
+    );
+  }
 
   /**
    * {@inheritdoc}
@@ -177,7 +204,7 @@ class ProjectSubscriptionForm extends FormBase {
           $subscription->set('unsubscribed_at', \Drupal::time()->getRequestTime());
           $subscription->save();
 
-          $this->messenger()->addStatus($this->t('You have been unsubscribed.'));
+          $this->messenger()->addStatus($this->t('You have been unsubscribed from notifications'));
           return;
         }
       }
@@ -324,7 +351,7 @@ class ProjectSubscriptionForm extends FormBase {
    */
   private function buildProjectMeta($project_id) {
     // phpcs:ignore DrupalPractice.Objects.GlobalDrupal.GlobalDrupal
-    $node = Node::load($project_id);
+    $node = $this->entityTypeManager->getStorage('node')->load($project_id);
     $project_title = $node ? $node->label() : '';
 
     $address = '';

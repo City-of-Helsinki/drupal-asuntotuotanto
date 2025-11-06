@@ -287,8 +287,11 @@ class SubscriptionController extends ControllerBase {
     }
 
     // phpcs:ignore DrupalPractice.Objects.GlobalDrupal.GlobalDrupal
-    $connection->update('asu_project_subscription')
-      ->fields(['unsubscribed_at' => \Drupal::time()->getRequestTime()])
+    $ts = \Drupal::time()->getRequestTime();
+
+    $connection
+      ->update('asu_project_subscription')
+      ->fields(['unsubscribed_at' => $ts])
       ->condition('id', $subscription)
       ->execute();
 
