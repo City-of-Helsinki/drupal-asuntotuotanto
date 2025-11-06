@@ -11,7 +11,6 @@ use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Queue\QueueWorkerBase;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
-use Drupal\node\Entity\Node;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -120,7 +119,7 @@ class ProjectSubscriptionNotifier extends QueueWorkerBase implements ContainerFa
       [
         '@data' => json_encode($data, JSON_UNESCAPED_UNICODE),
       ]
-    );
+      );
       return;
     }
 

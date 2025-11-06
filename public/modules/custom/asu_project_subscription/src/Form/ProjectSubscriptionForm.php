@@ -7,6 +7,8 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\asu_project_subscription\Entity\ProjectSubscription;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Url;
+use Drupal\node\NodeInterface;
+use Drupal\node\Entity\Node;
 use Drupal\user\Entity\User;
 
 /**
@@ -48,16 +50,16 @@ class ProjectSubscriptionForm extends FormBase {
   ) {
     $form['project'] = [
       '#type' => 'hidden',
-      '#value' => $project->id(),
+      '#value' => ($project instanceof NodeInterface) ? (int) $project->id() : '',
     ];
+
+    $project_id = ($project instanceof NodeInterface) ? (int) $project->id() : 0;
 
     // phpcs:ignore DrupalPractice.Objects.GlobalDrupal.GlobalDrupal
     $account = \Drupal::currentUser();
     $user_email = NULL;
     if ($account->isAuthenticated()) {
-      if ($user = User::load((int) $account->id())) {
-        $user_email = $user->getEmail() ?: NULL;
-      }
+      $user_email = $account->getEmail() ? mb_strtolower($account->getEmail()) : NULL;
     }
 
     $form['hp_website'] = [
@@ -71,11 +73,12 @@ class ProjectSubscriptionForm extends FormBase {
     $existing_sub_id = NULL;
 
     if ($user_email) {
+      $normalized_email = mb_strtolower($user_email);
       // phpcs:ignore DrupalPractice.Objects.GlobalDrupal.GlobalDrupal
       $ids = \Drupal::entityQuery('asu_project_subscription')
         ->accessCheck(FALSE)
-        ->condition('project', $project->id())
-        ->condition('email', $user_email)
+        ->condition('project', $project_id)
+        ->condition('email', $normalized_email)
         ->condition('is_confirmed', 1)
         ->condition('unsubscribed_at', NULL, 'IS NULL')
         ->range(0, 1)
@@ -144,6 +147,7 @@ class ProjectSubscriptionForm extends FormBase {
    *   Form state.
    *
    * @return void
+   *   Nothing is returned.
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $mode = $form_state->getValue('mode');
@@ -320,7 +324,7 @@ class ProjectSubscriptionForm extends FormBase {
    */
   private function buildProjectMeta($project_id) {
     // phpcs:ignore DrupalPractice.Objects.GlobalDrupal.GlobalDrupal
-    $node = \Drupal\node\Entity\Node::load($project_id);
+    $node = Node::load($project_id);
     $project_title = $node ? $node->label() : '';
 
     $address = '';

@@ -9,6 +9,8 @@ use Drupal\Core\Block\BlockPluginInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\node\NodeInterface;
+use Drupal\asu_project_subscription\Form\ProjectSubscriptionForm;
+use Drupal\helfi_api_base\Features\FeatureManager;
 
 /**
  * Implements hook_mail().
@@ -224,14 +226,17 @@ function asu_project_subscription_mail_alter(array &$message) {
   if (($message['module'] ?? '') !== 'asu_project_subscription') {
     return;
   }
+
   $force = FALSE;
-  if (class_exists('\Drupal\helfi_api_base\Features\FeatureManager')) {
-    /** @var \Drupal\helfi_api_base\Features\FeatureManager $fm */
-    $fm = \Drupal::service(\Drupal\helfi_api_base\Features\FeatureManager::class);
-    if ($fm->isEnabled(\Drupal\helfi_api_base\Features\FeatureManager::DISABLE_EMAIL_SENDING)) {
+
+  if (class_exists(FeatureManager::class) && \Drupal::hasService(FeatureManager::class)) {
+    // phpcs:ignore DrupalPractice.Objects.GlobalDrupal.GlobalDrupal
+    $fm = \Drupal::service(FeatureManager::class);
+    if ($fm->isEnabled(FeatureManager::DISABLE_EMAIL_SENDING)) {
       $force = TRUE;
     }
   }
+
   if ($force) {
     $message['send'] = TRUE;
   }
@@ -357,7 +362,7 @@ function asu_project_subscription_preprocess_node(array &$variables): void {
   }
 
   $form = \Drupal::formBuilder()->getForm(
-    \Drupal\asu_project_subscription\Form\ProjectSubscriptionForm::class,
+    ProjectSubscriptionForm::class,
     $node
   );
   $flag = \Drupal::request()->query->get('ps');
