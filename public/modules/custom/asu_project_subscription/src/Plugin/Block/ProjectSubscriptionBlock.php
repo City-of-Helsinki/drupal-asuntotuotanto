@@ -1,42 +1,85 @@
 <?php
 
+/**
+ * Defines the Project Subscription block.
+ *
+ * PHP version 8.1
+ *
+ * @category Drupal
+ * @package  Asu_Project_Subscription
+ * @author   Helsinki Dev Team <dev@hel.fi>
+ * @license  https://www.gnu.org/licenses/gpl-2.0.html GPL-2.0-or-later License
+ * @link     https://www.drupal.org
+ */
+
 namespace Drupal\asu_project_subscription\Plugin\Block;
 
 use Drupal\Core\Block\BlockBase;
-use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\node\NodeInterface;
-use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\Core\Block\Annotation\Block;
 
 /**
- * Provides a block with project subscription form.
+ * Defines the Project Subscription block.
  *
- * @Block(
- *   id = "asu_project_subscription_block",
- *   admin_label = @Translation("ASU Project Subscription Block")
- * )
+ * @category Drupal
+ * @package  Asu_Project_Subscription
+ * @author   Helsinki Dev Team <dev@hel.fi>
+ * @license  https://www.gnu.org/licenses/gpl-2.0.html GPL-2.0-or-later
+ * @link     https://www.drupal.org
  */
-class ProjectSubscriptionBlock extends BlockBase {
 
-  public function build() {
-    $node = \Drupal::routeMatch()->getParameter('node');
-    \Drupal::logger('asu_project_subscription')->notice('Block build hit. Node: ' . (is_object($node) ? $node->id() : 'none'));
+class ProjectSubscriptionBlock extends BlockBase
+{
 
-    if ($node instanceof NodeInterface) {
-      return \Drupal::formBuilder()->getForm(
-        'Drupal\asu_project_subscription\Form\ProjectSubscriptionForm',
-        $node
-      );
+    /**
+     * {@inheritdoc}
+     *
+     * @return array
+     *   A render array for the subscription form or a fallback markup.
+     */
+    public function build()
+    {
+        $node = \Drupal::routeMatch()->getParameter('node');
+
+        $node_id = is_object($node) ? $node->id() : 'none';
+        \Drupal::logger('asu_project_subscription')->notice(
+            'Block build hit. Node: @id',
+            ['@id' => $node_id]
+        );
+
+        if ($node instanceof NodeInterface) {
+            return \Drupal::formBuilder()->getForm(
+                'Drupal\asu_project_subscription\Form\ProjectSubscriptionForm',
+                $node
+            );
+        }
+
+        return [
+        '#markup' => '<div class="asu-subscription-debug">'
+        . 'ASU subscription block (no node)'
+        . '</div>',
+        ];
     }
-    return ['#markup' => '<div class="asu-subscription-debug">ASU subscription block (no node)</div>'];
-  }
 
-  public function getCacheContexts() {
-    return ['route', 'url.path', 'languages:language_interface'];
-  }
+    /**
+     * {@inheritdoc}
+     *
+     * @return string[]
+     *   Cache contexts affecting the block.
+     */
+    public function getCacheContexts()
+    {
+        return ['route', 'url.path', 'languages:language_interface'];
+    }
 
-  public function getCacheMaxAge() {
-    return 0;
-  }
+    /**
+     * {@inheritdoc}
+     *
+     * @return int
+     *   The max-age for this block (zero = no caching).
+     */
+    public function getCacheMaxAge()
+    {
+        return 0;
+    }
+
 }

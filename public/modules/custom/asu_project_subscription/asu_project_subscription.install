@@ -10,7 +10,6 @@ function asu_project_subscription_install() {
   $schema = \Drupal::database()->schema();
 
   if ($schema->tableExists('asu_project_subscription')) {
-    // INDEX(project) — с указанием спецификации поля для MySQL.
     if (
       $schema->fieldExists('asu_project_subscription', 'project') &&
       !$schema->indexExists('asu_project_subscription', 'asu_sub_project_idx')
@@ -24,14 +23,14 @@ function asu_project_subscription_install() {
             'project' => [
               'type' => 'int',
               'unsigned' => TRUE,
-              'size' => 'normal', // соответствует int(10) unsigned
+              'size' => 'normal',
             ],
           ],
         ]
       );
     }
 
-    // UNIQUE(project, email) — опции не нужны.
+    // UNIQUE(project, email)
     if (
       $schema->fieldExists('asu_project_subscription', 'project') &&
       $schema->fieldExists('asu_project_subscription', 'email')
@@ -54,7 +53,7 @@ function asu_project_subscription_update_9001() {
 }
 
 /**
- * Add confirm_token / unsubscribe_token + indexes (у тебя уже есть колонки — ок).
+ * Add confirm_token / unsubscribe_token + indexes.
  */
 function asu_project_subscription_update_9002() {
   $manager = \Drupal::entityDefinitionUpdateManager();

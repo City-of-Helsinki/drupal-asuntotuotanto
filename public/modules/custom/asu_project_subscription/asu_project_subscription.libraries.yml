@@ -1,0 +1,5 @@
+block.styles:
+  version: 1.x
+  css:
+    theme:
+      css/asu_ps_block.css: {}

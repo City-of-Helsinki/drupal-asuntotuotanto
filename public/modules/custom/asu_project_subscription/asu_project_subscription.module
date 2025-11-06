@@ -1,39 +1,83 @@
 <?php
 
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Plugin\Context\Context;
+use Drupal\Core\Plugin\Context\EntityContext;
+use Drupal\Core\Plugin\ContextAwarePluginInterface;
+use Drupal\Core\Block\BlockPluginInterface;
 use Drupal\node\NodeInterface;
 
 /**
  * Implements hook_mail().
  */
 function asu_project_subscription_mail($key, &$message, $params) {
-  switch ($key) {
-    case 'confirm_subscription':
-      $message['subject'] = t('Confirm your subscription');
-      $message['body'][] = (string) t("Please confirm your subscription:\n@url", ['@url' => $params['confirm_url'] ?? '']);
-      break;
+  $L = function (array $lines) {
+    return implode("\n", array_map(function ($l) { return (string) $l; }, $lines));
+  };
 
+  $title   = $params['project_title'] ?? '';
+  $projUrl = $params['project_url'] ?? '';
+
+  switch ($key) {
+    // --- Double opt-in ---
+    case 'confirm_subscription': {
+      $confirmUrl = $params['confirm_url'] ?? '';
+      $message['subject'] = t('Confirm your subscription to @title', ['@title' => $title ?: t('the project')]);
+
+      $message['body'][] = $L([
+        t('Please confirm your subscription:'),
+        '',
+        t('Project: @title', ['@title' => $title]),
+        $confirmUrl,
+        '',
+        t('If you did not request this, you can ignore this email'),
+      ]);
+      break;
+    }
+
+    // --- Project updates ---
     case 'status_pre_marketing':
-    case 'status_for_sale':
-      $message['subject'] = $params['subject'] ?? t('Project update');
+    case 'status_for_sale': {
+      $message['subject'] = $params['subject']
+        ?? ($key === 'status_for_sale'
+          ? t('Sales started — @title', ['@title' => $title])
+          : t('Project update — @title', ['@title' => $title]));
+
+      $openUrl   = $params['project_url'] ?? $projUrl;
+      $newState  = $params['new_state_label'] ?? '';
+      $lead      = $params['lead'] ?? t('There is a new update for your subscription.');
+
       if (!empty($params['message'])) {
         $message['body'][] = \Drupal::service('renderer')->renderPlain($params['message']);
       }
+      else {
+        $message['body'][] = $L([
+          $lead,
+          '',
+          $newState ? t('New status: @state', ['@state' => $newState]) : '',
+          t('Project: @title', ['@title' => $title]),
+          '',
+          t('Open project page'),
+          $openUrl,
+        ]);
+      }
       break;
-
-    case 'unsubscribe':
+    }
+    case 'unsubscribe': {
       $message['subject'] = t('You have unsubscribed');
       $message['body'][] = t('You have been unsubscribed from notifications.');
       break;
+    }
   }
 }
 
 /**
- * Универсальная обработка смены статуса продажи.
+ * Sales status checking logic.
  *
  * @param \Drupal\node\NodeInterface $node
  */
 function _asu_ps_process_state_change(NodeInterface $node): void {
-  // Следим только за бандлом project (при желании подставь свой).
   if ($node->bundle() !== 'project') {
     return;
   }
@@ -44,7 +88,6 @@ function _asu_ps_process_state_change(NodeInterface $node): void {
     return;
   }
 
-  // "Старое" значение читаем из БД — надёжнее, чем $entity->original.
   /** @var \Drupal\node\NodeInterface|null $unchanged */
   $unchanged = \Drupal::entityTypeManager()->getStorage('node')->loadUnchanged($node->id());
 
@@ -60,14 +103,12 @@ function _asu_ps_process_state_change(NodeInterface $node): void {
     ['@nid' => $node->id(), '@old' => (string) $old_label, '@new' => (string) $new_label]
   );
 
-  // Нормализация для сопоставления (учитывает диакритики).
   $norm = static function (?string $s): string {
     if ($s === NULL) { return ''; }
     $s = trim($s);
     return function_exists('mb_strtoupper') ? mb_strtoupper($s) : strtoupper($s);
   };
 
-  // Карта триггеров (при необходимости расширяй).
   $map = [
     $norm('Ennakkomarkkinoinnissa') => 'status_pre_marketing',
     $norm('Myynnissä')              => 'status_for_sale',
@@ -79,11 +120,10 @@ function _asu_ps_process_state_change(NodeInterface $node): void {
     return;
   }
 
-  // Кладём задачу в очередь.
   \Drupal::queue('asu_project_subscription_notify')->createItem([
     'project_nid' => (int) $node->id(),
-    'new_state'   => $new_label,       // для логов/шаблонов
-    'mail_key'    => $map[$key],       // какой шаблон письма слать
+    'new_state'   => $new_label,
+    'mail_key'    => $map[$key],
   ]);
 
   \Drupal::logger('asu_ps')->notice(
@@ -93,7 +133,7 @@ function _asu_ps_process_state_change(NodeInterface $node): void {
 }
 
 /**
- * Возвращает label статуса из поля (поддержка list_* и taxonomy term).
+ * Return label status from field.
  *
  * @param \Drupal\Core\Entity\EntityInterface|null $e
  * @param string $field
@@ -110,11 +150,9 @@ function _asu_ps_state_label($e, string $field): ?string {
   if (isset($v['value'])) {
     return $v['value'];
   }
-  // entity reference -> taxonomy term: берём label термина.
   if (isset($v['target_id']) && $item->entity) {
     return $item->entity->label();
   }
-  // На всякий случай: строковое представление.
   if (method_exists($item, 'getString')) {
     $s = $item->getString();
     return $s !== '' ? $s : NULL;
@@ -133,7 +171,6 @@ function asu_project_subscription_entity_update(\Drupal\Core\Entity\EntityInterf
 
 /**
  * Implements hook_node_update().
- * Подстраховка: на некоторых конфигурациях ловится именно этот хук.
  */
 function asu_project_subscription_node_update(NodeInterface $node) {
   _asu_ps_process_state_change($node);
@@ -141,7 +178,6 @@ function asu_project_subscription_node_update(NodeInterface $node) {
 
 /**
  * Implements hook_entity_presave().
- * Подстраховка для модерации/ревизий: сравниваем с loadUnchanged().
  */
 function asu_project_subscription_entity_presave(\Drupal\Core\Entity\EntityInterface $entity) {
   if ($entity->getEntityTypeId() === 'node') {
@@ -150,25 +186,23 @@ function asu_project_subscription_entity_presave(\Drupal\Core\Entity\EntityInter
 }
 
 /**
- * Делаем наш mail_alter последним в цепочке.
+ * Make mail_alter last in queue.
  */
 function asu_project_subscription_module_implements_alter(array &$implementations, $hook) {
   if ($hook === 'mail_alter' && isset($implementations['asu_project_subscription'])) {
     $ours = $implementations['asu_project_subscription'];
     unset($implementations['asu_project_subscription']);
-    $implementations['asu_project_subscription'] = $ours; // в конец — переедем helfi_api_base
+    $implementations['asu_project_subscription'] = $ours;
   }
 }
 
 /**
- * Форсим отправку писем нашего модуля (обходит helfi_api_base на dev).
- * Если хочешь — оставь без условий; ниже пример «только когда helfi блокирует».
+ * Mail sending.
  */
 function asu_project_subscription_mail_alter(array &$message) {
   if (($message['module'] ?? '') !== 'asu_project_subscription') {
     return;
   }
-  // Форсить, только если helfi реально блокирует (аккуратно для прод).
   $force = FALSE;
   if (class_exists('\Drupal\helfi_api_base\Features\FeatureManager')) {
     $fm = \Drupal::service(\Drupal\helfi_api_base\Features\FeatureManager::class);
@@ -179,4 +213,171 @@ function asu_project_subscription_mail_alter(array &$message) {
   if ($force) {
     $message['send'] = TRUE;
   }
+}
+
+/**
+ * Module desing.
+ */
+function asu_project_subscription_block_view_alter(array &$build, \Drupal\Core\Block\BlockPluginInterface $block): void {
+  if ($block->getPluginId() !== 'asu_project_subscription_block') {
+    return;
+  }
+  $top = '<h2 class="asu-ps-topline">' . t('Subscribe to property updates') . '</h2>';
+  $build['#prefix'] = ($build['#prefix'] ?? '') . '<div class="asu-ps-wrapper">' . $top . '<div class="asu-ps-formline">';
+  $build['#suffix'] = ($build['#suffix'] ?? '') . '</div></div>';
+  $build['#attached']['library'][] = 'asu_project_subscription/block.styles';
+  $build['#cache']['max-age'] = 0;
+}
+
+/**
+ * Update display-only extra field for node.project.
+ */
+function asu_project_subscription_entity_extra_field_info(): array {
+  return [
+    'node' => [
+      'project' => [
+        'display' => [
+          'asu_ps_subscription' => [
+            'label' => t('Project subscription'),
+            'description' => t('ASU project subscription form (double opt-in).'),
+            'weight' => 1000,
+            'visible' => TRUE,
+          ],
+        ],
+      ],
+    ],
+  ];
+}
+
+/**
+ * Garantee that extra field include and under Liitteet/Attachments.
+ */
+function asu_project_subscription_entity_view_display_alter(EntityViewDisplayInterface $display, array $context): void {
+  if ($display->getTargetEntityTypeId() !== 'node' || $display->getTargetBundle() !== 'project') {
+    return;
+  }
+  if ($display->getOriginalMode() && $display->getOriginalMode() !== 'full') {
+    return;
+  }
+
+  $anchorCandidates = ['field_attachments', 'field_liitteet', 'field_liite', 'field_files'];
+  $components = $display->getComponents();
+
+  $anchorWeight = NULL;
+  foreach ($anchorCandidates as $a) {
+    if (isset($components[$a])) {
+      $anchorWeight = isset($components[$a]['weight']) ? (int) $components[$a]['weight'] : 0;
+      break;
+    }
+  }
+  $weight = $anchorWeight !== NULL ? ($anchorWeight + 1) : 1000;
+
+  $display->setComponent('asu_ps_subscription', [
+    'region' => 'content',
+    'weight' => $weight,
+  ]);
+}
+
+/**
+ * Render extra field on node.
+ */
+function asu_project_subscription_entity_view(array &$build, EntityInterface $entity, $display, $view_mode): void {
+  if (!$entity instanceof NodeInterface || $entity->bundle() !== 'project') {
+    return;
+  }
+
+  if (!$display || !$display->getComponent('asu_ps_subscription')) {
+    return;
+  }
+
+  $form = \Drupal::formBuilder()->getForm(
+    'Drupal\asu_project_subscription\Form\ProjectSubscriptionForm',
+    $entity
+  );
+
+  $build['asu_ps_subscription'] = [
+    '#type' => 'container',
+    '#attributes' => ['class' => ['asu-ps-wrapper']],
+    'topline' => [
+      '#type' => 'container',
+      '#attributes' => ['class' => ['asu-ps-topline']],
+      'text' => ['#markup' => t('Subscribe to project updates')],
+    ],
+    'formline' => [
+      '#type' => 'container',
+      '#attributes' => ['class' => ['asu-ps-formline']],
+      'form' => $form,
+    ],
+    '#attached' => [
+      'library' => ['asu_project_subscription/block.styles'],
+    ],
+    '#cache' => ['max-age' => 0],
+  ];
+}
+
+
+/**
+ * Put form to Twig-varible for node:project → {{ asu_ps_subscription }}.
+ */
+function asu_project_subscription_preprocess_node(array &$variables): void {
+  $node = $variables['node'] ?? NULL;
+  if (!$node instanceof NodeInterface || $node->bundle() !== 'project') {
+    return;
+  }
+
+  $form = \Drupal::formBuilder()->getForm(
+    \Drupal\asu_project_subscription\Form\ProjectSubscriptionForm::class,
+    $node
+  );
+  $flag = \Drupal::request()->query->get('ps');
+  $notice = NULL;
+  switch ($flag) {
+    case 'confirmed':
+      $notice = [
+        '#type' => 'container',
+        '#attributes' => ['class' => ['asu-ps-notice', 'asu-ps-notice--success']],
+        'text' => ['#markup' => t('Your subscription has been confirmed.')],
+      ];
+      break;
+
+    case 'unsubscribed':
+      $notice = [
+        '#type' => 'container',
+        '#attributes' => ['class' => ['asu-ps-notice', 'asu-ps-notice--info']],
+        'text' => ['#markup' => t('You have been unsubscribed from notifications.')],
+      ];
+      break;
+
+    case 'confirm_failed':
+    case 'unsub_failed':
+      $notice = [
+        '#type' => 'container',
+        '#attributes' => ['class' => ['asu-ps-notice', 'asu-ps-notice--error']],
+        'text' => ['#markup' => t('Action failed. Please try again.')],
+      ];
+      break;
+  }
+
+  $variables['asu_ps_subscription'] = [
+    '#type' => 'container',
+    '#attributes' => [
+      'id' => 'asu-ps-subscription',
+      'class' => ['asu-ps-wrapper'],
+    ],
+    'topline' => [
+      '#type' => 'container',
+      '#attributes' => ['class' => ['asu-ps-topline']],
+      'text' => ['#markup' => t('Subscribe to property updates')],
+    ],
+    'notice' => $notice ?: ['#markup' => ''],
+    'formline' => [
+      '#type' => 'container',
+      '#attributes' => ['class' => ['asu-ps-formline']],
+      'form' => $form,
+    ],
+    '#attached' => [
+      'library' => ['asu_project_subscription/block.styles'],
+    ],
+    '#cache' => ['max-age' => 0],
+  ];
 }

@@ -11604,6 +11604,81 @@ msgstr "Nouda asetukset"
 msgid "Site details"
 msgstr "Sivuston tiedot"
 
+msgid "Subscribe"
+msgstr "Tilaa"
+
+msgid "Subscriptions"
+msgstr "Tilaukset"
+
+msgid "Unsubscribe"
+msgstr "Peru tilaus"
+
+msgid "You have unsubscribed"
+msgstr "Ilmoitusten tilaus on peruttu."
+
+msgid "You have been unsubscribed from notifications"
+msgstr "Olet poistettu ilmoitusten tilaajista."
+
+msgid "Sales started — @title"
+msgstr "Myynti alkanut — @title"
+
+msgid "Project update — @title"
+msgstr "Hankkeen päivitys — @title"
+
+msgid "New status: @state"
+msgstr "Uusi tila: @state"
+
+msgid "Confirmed"
+msgstr "Vahvistettu"
+
+msgid "Subscribed"
+msgstr "Tilattu"
+
+msgid "Unsubcribed"
+msgstr "Peruutettu"
+
+msgid "Project: "
+msgstr "Kohde: "
+
+msgid "Please confirm your subscription:"
+msgstr "Vahvista tilauksesi:"
+
+msgid "If you did not request this, you can ignore this email"
+msgstr "Jos et pyytänyt tätä, voit jättää sähköpostin huomiotta"
+
+msgid "Project page: @url"
+msgstr "Avaa kohdesivu: @url"
+
+msgid "Project: @title"
+msgstr "Kohde:  @title"
+
+msgid "You are already subscribed to this project."
+msgstr "Olet jo tilannut tämän projektin."
+
+msgid "Confirm your subscription to @title"
+msgstr "Vahvista tilauksesi kohteeseen @title"
+
+msgid "Good news! The project has moved to sales."
+msgstr "Hyviä uutisia! Kohte on siirtynyt myyntivaiheeseen."
+
+msgid "The project status has been updated."
+msgstr "Kohden tila on päivitetty."
+
+msgid "You are subscribed to updates for this property."
+msgstr "Olet tilannut päivitykset tähän kohteeseen."
+
+msgid "Your subscription has been confirmed."
+msgstr "Tilauksesi on vahvistettu."
+
+msgid "We sent a confirmation email to %mail."
+msgstr "Lähetimme vahvistussähköpostin osoitteeseen %mail."
+
+msgid "Failed to send confirmation email. Please try again later."
+msgstr "Vahvistussähköpostin lähettäminen epäonnistui. Yritä myöhemmin uudelleen."
+
+msgid "Subscribe to property updates"
+msgstr "Tilaa kohteen päivitykset"
+
 msgid "Subscribe to @title"
 msgstr "Tilaa aihepiirin @title RSS-syöte"
 
