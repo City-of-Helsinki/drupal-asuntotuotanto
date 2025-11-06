@@ -190,14 +190,14 @@
                 </span>
               </td>
               <td>
-                {# {% include '@asuntotuotanto/button/button.html.twig' with {
+                {% include '@asuntotuotanto/button/button.html.twig' with {
                   type: 'supplementary',
                   disabled: false,
                   size: 'small',
                   label: 'Learn more'|t,
                   href: url('entity.node.canonical', { 'node': nid }),
                   }
-                %} #}
+                %}
                 {% if is_application_period_active %}
                   {% include '@asuntotuotanto/button/button.html.twig' with {
                     type: 'secondary',
