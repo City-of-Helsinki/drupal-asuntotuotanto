@@ -167,16 +167,16 @@ class Project extends Node {
 
   /**
    * Get reservations the given user has for the project's apartments.
-   * 
+   *
    * @param int $userId
-   * 
+   *
    * @return array
-   *    reservations
+   *   reservations
    */
   public function getUserReservations($userId): array {
     $user = User::load(\Drupal::currentUser()->id());
 
-    // fetch reservations for this project
+    // Fetch reservations for this project.
     $request = new ApplicationLotteryResult($this->uuid());
     $request->setSender($user);
     $backendApi = \Drupal::service('asu_api.backendapi');
@@ -184,28 +184,27 @@ class Project extends Node {
     $userReservations = $backendApi
       ->send($request)
       ->getContent();
-    
+
     return $userReservations;
   }
 
   /**
-   * Checks if the given user has a reservation with the state 'offered', 
+   * Checks if the given user has a reservation with the state 'offered',
    * 'offer_accepted' or 'sold' on the project.
+   *
    * @param int $userId
+   *
    * @return bool
    */
   public function getUserHasReservedOrSoldApartments($userId): bool {
-    $userHasReservedOrSoldApartment = false;
+    $userHasReservedOrSoldApartment = FALSE;
     $userReservations = $this->getUserReservations($userId);
     $states = ['offered', 'offer_accepted', 'sold'];
     \Drupal::logger("asu_application")->info("userReservations: " . $userReservations);
     foreach ($userReservations as $key => $reservation) {
-      // TODO: remove! debug logging
-      \Drupal::logger('asu_application')->info(
-        'reservation apartment_uuid: ' . $reservation['apartment_uuid'] . " state: " . $reservation['state']
-      );
+
       if (in_array($reservation['state'], $states)) {
-        $userHasReservedOrSoldApartment = true;
+        $userHasReservedOrSoldApartment = TRUE;
       }
     }
     return $userHasReservedOrSoldApartment;
