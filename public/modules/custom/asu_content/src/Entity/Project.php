@@ -169,6 +169,7 @@ class Project extends Node {
    * Get reservations the given user has for the project's apartments.
    *
    * @param int $userId
+   *   Id of the user to check.
    *
    * @return array
    *   reservations
@@ -189,18 +190,22 @@ class Project extends Node {
   }
 
   /**
-   * Checks if the given user has a reservation with the state 'offered',
+   * Checks if the given user has a reservation with the state 'offered'.
+   *
    * 'offer_accepted' or 'sold' on the project.
    *
    * @param int $userId
+   *   Id of the user to check.
    *
    * @return bool
+   *   If user has a reservation with those states.
    */
   public function getUserHasReservedOrSoldApartments($userId): bool {
     $userHasReservedOrSoldApartment = FALSE;
     $userReservations = $this->getUserReservations($userId);
     $states = ['offered', 'offer_accepted', 'sold'];
-    \Drupal::logger("asu_application")->info("userReservations: " . $userReservations);
+
+    // phpcs:ignore
     foreach ($userReservations as $key => $reservation) {
 
       if (in_array($reservation['state'], $states)) {
