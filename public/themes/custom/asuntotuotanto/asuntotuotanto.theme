@@ -791,6 +791,14 @@ function asuntotuotanto_preprocess_node(&$variables) {
           }
         }
 
+        $userHasReservedOrSoldApartment = FALSE;
+        if (\Drupal::currentUser()->isAuthenticated()) {
+          // Check if user has offered, offer_accepted or sold reservations.
+          $userHasReservedOrSoldApartment = $project->getUserHasReservedOrSoldApartments(
+            \Drupal::currentUser()->id()
+          );
+        }
+
         $street_address = $project->get('field_street_address')->value ?? NULL;
         $postal_code = $project->get('field_postal_code')->value ?? NULL;
         $city = $project->get('field_city')->value ?? NULL;
@@ -842,6 +850,7 @@ function asuntotuotanto_preprocess_node(&$variables) {
         $variables['field_parking_fee'] = $apartment->get('field_parking_fee')->getValue()[0]['value'] ?? NULL;
         $variables['field_parking_fee_explanation'] = $apartment->get('field_parking_fee_explanation')->getValue()[0]['value'] ?? NULL;
         $variables['field_other_fees'] = $apartment->get('field_other_fees')->getValue()[0]['value'] ?? NULL;
+        $variables['current_user_has_reserved_or_sold_apartment'] = $userHasReservedOrSoldApartment;
       }
       break;
   }
