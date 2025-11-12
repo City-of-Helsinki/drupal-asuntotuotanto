@@ -105,7 +105,7 @@ function asu_api_get_apartment_status_request_cron() {
     return;
   }
 
-  $free_states = ['for_sale', 'free_for_reservations'];
+  $free_states = ['for_sale', 'free_for_reservations', 'reserved', 'reserved_haso'];
 
   foreach ($nids as $nid) {
     /** @var \Drupal\node\Entity\Node $node */
@@ -139,7 +139,7 @@ function asu_api_get_apartment_status_request_cron() {
         $dirty = TRUE;
       }
     }
-    elseif ($current === 'sold' && in_array($new, $free_states, TRUE)) {
+    elseif (in_array($new, $free_states, TRUE)) {
       if (!$node->isPublished()) {
         $node->setPublished(TRUE);
         $dirty = TRUE;

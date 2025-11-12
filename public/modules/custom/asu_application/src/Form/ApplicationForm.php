@@ -197,6 +197,15 @@ HTML;
       array_push($limit, ['reserved', 'reserved_haso']);
     }
 
+    // Dont allow users who have a reservation with the state
+    // 'offered', 'offer_accepted' or 'sold' on the project to apply.
+    // This shouldn't normally be shown except if the user uses
+    // the application/add/<type>/<project> link directly.
+    if ($project->getUserHasReservedOrSoldApartments($this->currentUser->id())) {
+      $this->messenger()->addError($this->t('You already have an offer or have been sold an apartment in this project and cannot submit a new application.'));
+      return new RedirectResponse($form['#project_url']->toString());
+    }
+
     if (!$project_data = $this->getApartments($project, $limit)) {
       $this->logger('asu_application')->critical('User tried to access nonexistent project of id ' . $project_id);
       $this->messenger()->addMessage($this->t('Unfortunately the project you are trying to apply for is unavailable.'));
@@ -318,7 +327,7 @@ HTML;
         $form['actions']['draft'] = [
           '#type' => 'submit',
           '#value' => $this->t('Save as a draft'),
-          '#attributes' => ['class' => ['hds-button--secondary']],
+          '#attributes' => ['class' => ['hds-button--secondary application-as-draft-button']],
           '#limit_validation_errors' => [],
           '#name' => 'submit-draft',
           '#submit' => ['::submitDraft'],
@@ -525,6 +534,8 @@ HTML;
   /**
    * Handle saving the form values.
    *
+   * Deletes old application.
+   *
    * @param array $form
    *   Form array.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
@@ -539,7 +550,12 @@ HTML;
     $oldBackendId = $this->entity->get('field_backend_id')->value ?? NULL;
     $confirmDeletion = $form_state->getValue('confirm_application_deletion') ?? 'NOT SET';
 
-    if ($oldBackendId && $confirmDeletion == '1') {
+    $project_id = $this->entity->get('project_id')->value;
+    $project = $this->entityTypeManager->getStorage('node')->load($project_id);
+    $canApplyAfterwards = $project->get('field_can_apply_afterwards')->value;
+
+    // Applications made after shouldn't be deleted.
+    if ($oldBackendId && $confirmDeletion == '1' && !$canApplyAfterwards) {
       try {
         $user = \Drupal::entityTypeManager()->getStorage('user')->load(\Drupal::currentUser()->id());
         \Drupal::service('asu_api.backendapi')->deleteApplication($user, $oldBackendId);

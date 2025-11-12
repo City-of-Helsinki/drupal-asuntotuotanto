@@ -189,7 +189,9 @@
 				</h2>
 			{% endif %}
 		</div>
+
 		<div class="apartment__header-section apartment__header-section--actions {{ is_application_period_active or can_apply_afterwards ? 'is-application-period-active' }}">
+		{% if current_user_has_reserved_or_sold_apartment == FALSE %}
 			{% if is_application_period_active %}
 				{% include '@asuntotuotanto/button/button.html.twig' with {
 					type: 'primary',
@@ -197,16 +199,17 @@
 					label: 'Create an application'|t,
 					href: application_url
 					}
-        		%}
-		{% elseif can_apply_afterwards == 1 %}
-		{% include '@asuntotuotanto/button/button.html.twig' with {
-							type: 'primary',
-							disabled: false,
-							label: 'Create an after-application'|t,
-							href: application_url
-							}
-						%}
-      {% endif %}
+				%}
+			{% elseif can_apply_afterwards == 1 %}
+				{% include '@asuntotuotanto/button/button.html.twig' with {
+									type: 'primary',
+									disabled: false,
+									label: 'Create an after-application'|t,
+									href: application_url
+									}
+								%}
+			{% endif %}
+      	{% endif %}
         <p class="apartment__application-information">
 		{% if (is_application_period_in_the_past is same as(false)) and (application_start_time != null and application_end_time != null) %}
 			{% trans %}

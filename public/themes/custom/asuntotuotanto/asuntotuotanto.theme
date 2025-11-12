@@ -229,9 +229,12 @@ function asuntotuotanto_preprocess_views_view(&$variables) {
 }
 
 /**
+ * Passes variables to project-apartments-listing.html.twig.
+ *
  * Implements hook_preprocess_HOOK().
  */
 function asuntotuotanto_preprocess_views_view_table(&$variables) {
+
   if ($variables['view']->id() === 'project_apartments_listing') {
 
     $results = $variables['result'];
@@ -250,6 +253,14 @@ function asuntotuotanto_preprocess_views_view_table(&$variables) {
     $price_title = $project->field_ownership_type->entity->name->value == 'HASO' ? t('Right of occupancy payment') : t('Debt-free sales price');
     $variables['header']['field_debt_free_sales_price']['content'] = $price_title;
     unset($variables['header']['field_release_payment']);
+
+    $userHasReservedOrSoldApartment = FALSE;
+    if (\Drupal::currentUser()->isAuthenticated()) {
+      // Check if user has offered, offer_accepted or sold reservations.
+      $userHasReservedOrSoldApartment = $project->getUserHasReservedOrSoldApartments(
+        \Drupal::currentUser()->id()
+      );
+    }
 
     foreach ($results as $key => $row) {
       /** @var \Drupal\asu_content\Entity\Apartment $entity */
@@ -282,6 +293,7 @@ function asuntotuotanto_preprocess_views_view_table(&$variables) {
       $variables['rows'][$key]['application_url_title'] = $apartment->getApplicationUrlTitle();
       $variables['rows'][$key]['is_free'] = $apartment->isFree();
       $variables['rows'][$key]['can_apply_afterwards'] = $project->getCanApplyAfterwards();
+      $variables['rows'][$key]['user_has_reserved_or_sold_apartment'] = $userHasReservedOrSoldApartment;
     }
 
     usort($variables['rows'], function ($a, $b) {
@@ -589,6 +601,14 @@ function asuntotuotanto_preprocess_node(&$variables) {
         );
       }
 
+      $userHasReservedOrSoldApartment = FALSE;
+      if (\Drupal::currentUser()->isAuthenticated()) {
+        // Check if user has offered, offer_accepted or sold reservations.
+        $userHasReservedOrSoldApartment = $project->getUserHasReservedOrSoldApartments(
+          \Drupal::currentUser()->id()
+        );
+      }
+
       if (!empty($node->field_street_address->value)) {
         $street_address_splitted = split_address_line($node->field_street_address->value);
 
@@ -618,6 +638,9 @@ function asuntotuotanto_preprocess_node(&$variables) {
       $variables['estimated_completion_date'] = $estimated_completion_date;
       $variables['is_application_period_active'] = $is_application_period_active;
       $variables['project_type'] = $project_type;
+      // No idea why, but shows up as null if it has.
+      // The more sensible name of 'user_has_reserved_or_sold_apartment'.
+      $variables['current_user_has_reserved_or_sold_apartment'] = $userHasReservedOrSoldApartment;
       $variables['apartment_prices'] = $prices_string;
       break;
 
@@ -768,6 +791,14 @@ function asuntotuotanto_preprocess_node(&$variables) {
           }
         }
 
+        $userHasReservedOrSoldApartment = FALSE;
+        if (\Drupal::currentUser()->isAuthenticated()) {
+          // Check if user has offered, offer_accepted or sold reservations.
+          $userHasReservedOrSoldApartment = $project->getUserHasReservedOrSoldApartments(
+            \Drupal::currentUser()->id()
+          );
+        }
+
         $street_address = $project->get('field_street_address')->value ?? NULL;
         $postal_code = $project->get('field_postal_code')->value ?? NULL;
         $city = $project->get('field_city')->value ?? NULL;
@@ -819,6 +850,7 @@ function asuntotuotanto_preprocess_node(&$variables) {
         $variables['field_parking_fee'] = $apartment->get('field_parking_fee')->getValue()[0]['value'] ?? NULL;
         $variables['field_parking_fee_explanation'] = $apartment->get('field_parking_fee_explanation')->getValue()[0]['value'] ?? NULL;
         $variables['field_other_fees'] = $apartment->get('field_other_fees')->getValue()[0]['value'] ?? NULL;
+        $variables['current_user_has_reserved_or_sold_apartment'] = $userHasReservedOrSoldApartment;
       }
       break;
   }
@@ -1017,7 +1049,9 @@ function get_project_apartment_teaser_values($project_id) {
   $values['project_ownership_type'] = $project->field_ownership_type->entity ? $project->field_ownership_type->entity->name->value : '';
   $values['project_district'] = $project->field_district->entity ? $project->field_district->entity->name->value : '';
   $values['project_main_image_url'] = isset($project->field_main_image[0]) ? \Drupal::service('file_url_generator')->generateAbsoluteString($project->field_main_image[0]->entity->getFileUri()) : '';
-  $values['can_apply_afterwards'] = $project->getCanApplyAfterwards();
+  if ($project) {
+    $values['can_apply_afterwards'] = $project->get('field_can_apply_afterwards')->value;
+  }
 
   foreach ($fields as $key => $field) {
     if ($project && $project->hasField($field)) {
