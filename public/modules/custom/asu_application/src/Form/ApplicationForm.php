@@ -533,7 +533,7 @@ HTML;
 
   /**
    * Handle saving the form values.
-   * 
+   *
    * Deletes old application.
    *
    * @param array $form
@@ -554,7 +554,7 @@ HTML;
     $project = $this->entityTypeManager->getStorage('node')->load($project_id);
     $canApplyAfterwards = $project->get('field_can_apply_afterwards')->value;
 
-    // applications made after shouldn't be deleted
+    // Applications made after shouldn't be deleted.
     if ($oldBackendId && $confirmDeletion == '1' && !$canApplyAfterwards) {
       try {
         $user = \Drupal::entityTypeManager()->getStorage('user')->load(\Drupal::currentUser()->id());
