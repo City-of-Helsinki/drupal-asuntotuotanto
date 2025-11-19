@@ -200,7 +200,11 @@ function template_preprocess_asu_application(array &$variables) {
       }
 
       if ($application->hasField('field_hitas_owner')) {
-        $application_fields['hitas_owner'] = $application->get('field_hitas_owner')->getValue();
+        $hitas_field = $application->get('field_hitas_owner');
+
+        $application_fields['hitas_owner'] = $hitas_field->isEmpty()
+          ? NULL
+          : $hitas_field->value;
       }
 
       $application_teaser_values['application'] = $application_fields;
