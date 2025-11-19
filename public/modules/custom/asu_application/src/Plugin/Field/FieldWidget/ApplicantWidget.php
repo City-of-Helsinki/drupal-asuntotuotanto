@@ -77,13 +77,17 @@ class ApplicantWidget extends WidgetBase {
       '#default_value' => $items->getValue()[$delta]['date_of_birth'] ?? '',
     ];
 
+    $personal_id_default = !empty($items->getValue()[$delta]['personal_id'])
+      ? substr($items->getValue()[$delta]['personal_id'], -4)
+      : '';
+
     $element['personal_id'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Personal id'),
       '#description' => $this->t('last 4 characters'),
-      '#minlength' => 5,
-      '#maxlength' => 5,
-      '#default_value' => $items->getValue()[$delta]['personal_id'] ?? '',
+      '#minlength' => 4,
+      '#maxlength' => 4,
+      '#default_value' => $personal_id_default,
     ];
 
     $element['address'] = [
