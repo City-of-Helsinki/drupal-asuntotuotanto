@@ -186,14 +186,14 @@ class Project extends Node {
       $userReservations = $backendApi
         ->send($request)
         ->getContent();
-      if(!$userReservations) {
+      if (!$userReservations) {
         return [];
       }
       return $userReservations;
     }
     catch (\Exception $e) {
-        \Drupal::logger('asu_application')->error('Error when fetching reservations for user #'.$userId);
-        return [];
+      \Drupal::logger('asu_application')->error('Error when fetching reservations for user #' . $userId);
+      return [];
     }
 
     return $userReservations;
