@@ -182,9 +182,19 @@ class Project extends Node {
     $request->setSender($user);
     $backendApi = \Drupal::service('asu_api.backendapi');
 
-    $userReservations = $backendApi
-      ->send($request)
-      ->getContent();
+    try {
+      $userReservations = $backendApi
+        ->send($request)
+        ->getContent();
+      if (!$userReservations) {
+        return [];
+      }
+      return $userReservations;
+    }
+    catch (\Exception $e) {
+      \Drupal::logger('asu_application')->error('Error when fetching reservations for user #' . $userId);
+      return [];
+    }
 
     return $userReservations;
   }
