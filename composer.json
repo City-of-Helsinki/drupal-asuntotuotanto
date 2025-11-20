@@ -22,7 +22,7 @@
         "drupal/config_filter": "^2.6",
         "drupal/config_terms": "^1.9",
         "drupal/context": "^5.0@RC",
-        "drupal/core": "^10.4.6",
+        "drupal/core": "^10.5",
         "drupal/core-composer-scaffold": "^10.2",
         "drupal/email_registration": "^1.4",
         "drupal/externalauth": "^2.0",
@@ -65,6 +65,7 @@
         "drush/drush": "^12",
         "kenwheeler/slick": "^1.8",
         "symfony/console": "^6.3",
+        "symfony/http-foundation": "^6.4",
         "zaporylie/composer-drupal-optimizations": "^1.2"
     },
     "require-dev": {
