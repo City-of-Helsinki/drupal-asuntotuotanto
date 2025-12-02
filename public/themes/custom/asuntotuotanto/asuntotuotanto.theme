@@ -289,7 +289,7 @@ function asuntotuotanto_preprocess_views_view_table(&$variables) {
       $variables['rows'][$key]['is_application_period_active'] = $is_application_period_active;
       $variables['rows'][$key]['apartment_number'] = $apartment->field_apartment_number->value;
       $variables['rows'][$key]['reserved_or_sold'] = $reserved_or_sold;
-      $variables['rows'][$key]['application_url'] = $project->getApplicationUrl($apartment->field_apartment_number->value);
+      $variables['rows'][$key]['application_url'] = $project->getApplicationUrl($apartment->id());
       $variables['rows'][$key]['application_url_title'] = $apartment->getApplicationUrlTitle();
       $variables['rows'][$key]['is_free'] = $apartment->isFree();
       $variables['rows'][$key]['can_apply_afterwards'] = $project->getCanApplyAfterwards();
@@ -821,7 +821,7 @@ function asuntotuotanto_preprocess_node(&$variables) {
           $variables['street_number'] = $street_number ?? NULL;
         }
 
-        $variables['application_url'] = $project->getApplicationUrl();
+        $variables['application_url'] = $project->getApplicationUrl($apartment->id());
         $variables['coordinate_lat'] = $coordinate_lat;
         $variables['coordinate_lon'] = $coordinate_lon;
         $variables['city'] = $city;
