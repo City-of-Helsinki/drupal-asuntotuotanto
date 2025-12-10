@@ -18,8 +18,9 @@ use Symfony\Component\HttpFoundation\Response;
 function asu_api_cron() {
   // Update apartments adjusted_right_of_occupancy_payment and
   // alteration_work_total values.
-  asu_api_get_apartment_revaluation_cron();
   asu_api_get_apartment_status_request_cron();
+  asu_api_get_apartment_revaluation_cron();
+
 }
 
 /**
@@ -65,7 +66,7 @@ function asu_api_get_apartment_revaluation_cron() {
     }
   }
   catch (\Exception $e) {
-    Drupal::logger('asu_cron')->critical('Unable to fetch revaluations');
+    Drupal::logger('asu_cron')->critical('Unable to fetch revaluations: '.$e);
   }
 }
 
@@ -75,6 +76,7 @@ function asu_api_get_apartment_revaluation_cron() {
  * Update apartments state of sale sold status.
  */
 function asu_api_get_apartment_status_request_cron() {
+  Drupal::logger('asu_cron')->info('Test msg');
   try {
     /** @var \Drupal\asu_api\Api\BackendApi\BackendApi $api */
     $api = \Drupal::service('asu_api.backendapi');
@@ -82,12 +84,13 @@ function asu_api_get_apartment_status_request_cron() {
     /** @var \Drupal\asu_api\Api\BackendApi\Response\GetApartmentStatusResponse $response */
     $response = $api->send($request);
     $apartment_states = $response->getContent();
-
+    
     if (empty($apartment_states)) {
       return;
     }
   }
   catch (\Exception $e) {
+    Drupal::logger('asu_cron')->info('Problem with request '.$e);
     return new Response('problem with request.', 400);
   }
 
@@ -101,6 +104,7 @@ function asu_api_get_apartment_status_request_cron() {
     ->condition('uuid', $apartment_uuids, 'IN')
     ->accessCheck(FALSE)
     ->execute();
+  Drupal::logger('asu_cron')->info('Nids'.$nids);
   if (!$nids) {
     return;
   }
@@ -110,6 +114,7 @@ function asu_api_get_apartment_status_request_cron() {
   foreach ($nids as $nid) {
     /** @var \Drupal\node\Entity\Node $node */
     $node = Node::load($nid);
+    Drupal::logger('asu_cron')->info('Node '.$node);
     if (!$node) {
       continue;
     }
@@ -137,6 +142,15 @@ function asu_api_get_apartment_status_request_cron() {
       if ($node->isPublished()) {
         $node->setPublished(FALSE);
         $dirty = TRUE;
+      }
+
+      if ($node->field_publish_on_oikotie->value == TRUE) {
+        $node->field_publish_on_oikotie = FALSE;
+        Drupal::logger('asu_cron')->info('unpublish '.$node->id.' on oikotie');
+      }
+      if ($node->field_publish_on_etuovi->value == TRUE) {
+        $node->field_publish_on_oikotie = FALSE;
+        Drupal::logger('asu_cron')->info('unpublish '.$node->id.' on etuovi');
       }
     }
     elseif (in_array($new, $free_states, TRUE)) {
