@@ -1,0 +1,4 @@
+view integration summary:
+  title: 'View integration summary'
+  description: 'Access the custom integration summary dashboard.'
+  restrict access: false

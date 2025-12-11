@@ -25,3 +25,15 @@ asu_content.readiness:
     no_cache: TRUE
     default_url_options:
       path_processing: FALSE
+asu_content.summary_integrations:
+  path: '/integrationsummary'
+  defaults:
+    _controller: '\Drupal\asu_content\Controller\IntegrationSummaryController::summary'
+    _title: 'Integrations summary'
+  requirements:
+      _permission: 'view integration summary'
+
+  # requirements:
+  #   _permission: 'access content'
+    # _custom_access: '\Drupal\asu_content\Controller\IntegrationSummaryController::access'
+    # node: '\d+'
