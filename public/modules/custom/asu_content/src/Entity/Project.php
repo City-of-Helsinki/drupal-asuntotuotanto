@@ -125,7 +125,7 @@ class Project extends Node {
       return $addToApplicationUrl;
     }
 
-    if($isFreeForReservations && $this->getCanApplyAfterwards() == FALSE) {
+    if ($isFreeForReservations && $this->getCanApplyAfterwards() == FALSE) {
       return $this->getContactUrl($apartmentId);
     }
 
