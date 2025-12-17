@@ -54,7 +54,7 @@
         "drupal/registration_role": "^2.0.1",
         "drupal/restui": "^1.21",
         "drupal/route_condition": "^2.0.2",
-        "drupal/samlauth": "^3.12",
+        "drupal/samlauth": "^3.10",
         "drupal/slick": "^2.10",
         "drupal/symfony_mailer_lite": "^1.0.6",
         "drupal/tfa": "1.11.0",
