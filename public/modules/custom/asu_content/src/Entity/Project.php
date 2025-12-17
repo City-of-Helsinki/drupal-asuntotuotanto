@@ -93,34 +93,64 @@ class Project extends Node {
   /**
    * Get the application url for this project.
    *
+   * Return `application/add/...`-url if application period is ongoing and
+   * apartment_state_of_sale is `'OPEN_FOR_APPLICATIONS'`
+   * or if application period has passed if its a HASO project
+   * and after-applications are enabled.
+   *
+   * Return `contact/apply_for_free_apartment...`-url if
+   * apartment_state_of_sale is `'FREE_FOR_RESERVATIONS'`
+   * and after-apply isnt enabled
+   *
    * @return string
    *   Application url.
    */
-  public function getApplicationUrl($apartmentId = NULL): string {
+  public function getApplicationUrl($apartmentId = NULL, $apartmentStateOfSale = NULL): string {
     $baseurl = \Drupal::request()->getSchemeAndHttpHost();
     $langcode = \Drupal::languageManager()->getDefaultLanguage()->getId();
     $baseurl = $baseurl . '/' . $langcode;
     $apartmentType = '';
+    $isOpenForApplications = $apartmentStateOfSale == 'OPEN_FOR_APPLICATIONS';
+    $isFreeForReservations = $apartmentStateOfSale == 'FREE_FOR_RESERVATIONS';
+
     if (isset($this->field_ownership_type->referencedEntities()[0])) {
       $apartmentType = strtolower($this->field_ownership_type->referencedEntities()[0]->getName());
     }
 
-    if ($this->isApplicationPeriod() || $this->isApplicationPeriod('before')) {
-      if (!isset($this->field_ownership_type->referencedEntities()[0])) {
+    $addToApplicationUrl = sprintf('%s/application/add/%s/%s', $baseurl, $apartmentType, $this->id());
+    if ($isOpenForApplications && ($this->isApplicationPeriod() || $this->isApplicationPeriod('before'))) {
+      if ($apartmentType == '') {
         return '';
       }
-      return sprintf('%s/application/add/%s/%s', $baseurl, $apartmentType, $this->id());
+      return $addToApplicationUrl;
+    }
+
+    if($isFreeForReservations && $this->getCanApplyAfterwards() == FALSE) {
+      return $this->getContactUrl($apartmentId);
     }
 
     if ($this->isApplicationPeriod('after') && $this->getCanApplyAfterwards() == TRUE) {
-      $queryParameter = $apartmentId ? "?apartment=$apartmentId" . '&project=' . $this->id() : '?project=' . $this->id();
 
       if ($this->getOwnershipType() == 'haso') {
-        return sprintf('%s/application/add/%s/%s', $baseurl, $apartmentType, $this->id());
+        return $addToApplicationUrl;
       }
-      return sprintf('%s/contact/apply_for_free_apartment%s', $baseurl, $queryParameter);
+      return $this->getContactUrl($apartmentId);
     }
     return '';
+  }
+
+  /**
+   * Get the contact url for this project.
+   *
+   * @return string
+   *   Application url.
+   */
+  public function getContactUrl($apartmentId): string {
+    $baseurl = \Drupal::request()->getSchemeAndHttpHost();
+    $langcode = \Drupal::languageManager()->getDefaultLanguage()->getId();
+    $baseurl = $baseurl . '/' . $langcode;
+    $queryParameter = $apartmentId ? "?apartment=$apartmentId" . '&project=' . $this->id() : '?project=' . $this->id();
+    return sprintf('%s/contact/apply_for_free_apartment%s', $baseurl, $queryParameter);
   }
 
   /**
