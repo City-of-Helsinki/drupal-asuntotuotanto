@@ -1,6 +1,7 @@
 <?php
 namespace Drupal\asu_content\Controller;
 
+use Drupal\asu_api\Api\BackendApi\Request\GetIntegrationStatusRequest;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Link;
 use Drupal\Core\Url;
@@ -37,6 +38,13 @@ public function summary(Request $request) {
     //     Url::fromUri("")
     //   )->toString();
     // };
+
+    /** @var \Drupal\asu_api\Api\BackendApi\BackendApi $api */
+    $api = \Drupal::service('asu_api.backendapi');
+    $request = new GetIntegrationStatusRequest();
+    /** @var \Drupal\asu_api\Api\BackendApi\Response\GetApartmentStatusResponse $response */
+    $response = $api->send($request);
+    $apartment_states = $response->getContent();
 
     $header = [
       // $headerCell('id', 'ID'),
