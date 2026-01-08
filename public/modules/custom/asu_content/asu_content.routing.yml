@@ -37,3 +37,10 @@ asu_content.summary_integrations:
   #   _permission: 'access content'
     # _custom_access: '\Drupal\asu_content\Controller\IntegrationSummaryController::access'
     # node: '\d+'
+asu_content.summary_integrations_csv:
+  path: '/integrationsummary.csv'
+  defaults:
+    _controller: '\Drupal\asu_content\Controller\IntegrationSummaryController::summaryCsv'
+    _title: 'Integrations summary CSV'
+  requirements:
+    _permission: 'view integration summary'

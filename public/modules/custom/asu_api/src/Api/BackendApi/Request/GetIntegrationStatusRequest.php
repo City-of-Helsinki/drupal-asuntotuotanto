@@ -1,12 +1,8 @@
 <?php
 
-namespace Drupal\my_module\Api\Requests;
-
 namespace Drupal\asu_api\Api\BackendApi\Request;
 
-use Drupal\asu_api\Api\BackendApi\Response\GetApartmentStatusResponse;
 use Drupal\asu_api\Api\Request;
-
 use Drupal\asu_api\Api\BackendApi\Response\GetIntegrationStatusResponse;
 use Psr\Http\Message\ResponseInterface;
 
@@ -44,6 +40,7 @@ class GetIntegrationStatusRequest extends Request {
    * Optional filters (e.g., ['connection_id' => 123, 'active' => true]).
    */
   public function __construct(array $filters = []) {
+    $this->sender = NULL;
     $this->queryParams = $filters;
   }
 

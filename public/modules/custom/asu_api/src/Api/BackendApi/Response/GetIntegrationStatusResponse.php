@@ -7,7 +7,7 @@ use Drupal\asu_api\Exception\RequestException;
 use Psr\Http\Message\ResponseInterface;
 
 /**
- * Response for user creation request.
+ * Response for integration status request.
  */
 class GetIntegrationStatusResponse extends Response {
 
@@ -31,7 +31,7 @@ class GetIntegrationStatusResponse extends Response {
   /**
    * Get content.
    *
-   * @return string
+   * @return array
    *   Content.
    */
   public function getContent(): array {
@@ -39,13 +39,13 @@ class GetIntegrationStatusResponse extends Response {
   }
 
   /**
-   * Create new user response from http response.
+   * Create new integration status response from http response.
    *
    * @param \Psr\Http\Message\ResponseInterface $response
    *   Guzzle response.
    *
    * @return GetIntegrationStatusResponse
-   *   CreateUserResponse.
+   *   GetIntegrationStatusResponse.
    *
    * @throws \Exception
    */
