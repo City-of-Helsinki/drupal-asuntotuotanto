@@ -123,8 +123,16 @@ class BackendApi {
       );
       return $request::getResponse($response);
     }
-    catch (\Exception $e) {
+    catch (RequestException $e) {
       $this->handleRequestError($e, $request);
+    }
+    catch (\Exception $e) {
+      // Log non-RequestException errors and re-throw
+      $this->logger->error(
+        sprintf('Unexpected error in API request: %s', $e->getMessage()),
+        ['exception' => $e, 'request' => get_class($request)]
+      );
+      throw $e;
     }
 
     return NULL;

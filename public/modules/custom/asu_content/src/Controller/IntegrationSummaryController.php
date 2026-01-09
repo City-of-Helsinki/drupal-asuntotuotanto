@@ -25,6 +25,8 @@ class IntegrationSummaryController extends ControllerBase {
     'project_uuid' => 'project_uuid',
     'project_housing_company' => 'project_housing_company',
     'apartment_address' => 'apartment_address',
+    'project_url' => 'project_url',
+    'url' => 'url',
     'missing_fields' => 'missing_fields',
   ];
 
@@ -69,8 +71,8 @@ class IntegrationSummaryController extends ControllerBase {
       $headerCell('project_uuid', 'Project UUID'),
       $headerCell('project_housing_company', 'Project Housing Company'),
       $headerCell('apartment_address', 'Apartment Address'),
-      $this->t('Project URL'),
-      $this->t('URL'),
+      $headerCell('project_url', 'Project URL'),
+      $headerCell('url', 'URL'),
       $headerCell('missing_fields', 'Missing Fields'),
     ];
 
@@ -191,6 +193,10 @@ class IntegrationSummaryController extends ControllerBase {
       // Process success items
       if (isset($integration_data['success']) && is_array($integration_data['success'])) {
         foreach ($integration_data['success'] as $item) {
+          $missing_fields = '';
+          if (isset($item['missing_fields']) && is_array($item['missing_fields'])) {
+            $missing_fields = implode(', ', $item['missing_fields']);
+          }
           $rows[] = [
             'integration_name' => (string) $integration_name,
             'status' => 'Success',
@@ -200,7 +206,7 @@ class IntegrationSummaryController extends ControllerBase {
             'apartment_address' => (string) ($item['apartment_address'] ?? ''),
             'project_url' => (string) ($item['project_url'] ?? ''),
             'url' => (string) ($item['url'] ?? ''),
-            'missing_fields' => '',
+            'missing_fields' => $missing_fields,
           ];
         }
       }
