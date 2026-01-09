@@ -21,8 +21,6 @@ class IntegrationSummaryController extends ControllerBase {
   private const SORTABLE = [
     'integration' => 'integration_name',
     'status' => 'status',
-    'uuid' => 'uuid',
-    'project_uuid' => 'project_uuid',
     'project_housing_company' => 'project_housing_company',
     'apartment_address' => 'apartment_address',
     'project_url' => 'project_url',
@@ -65,15 +63,13 @@ class IntegrationSummaryController extends ControllerBase {
     };
 
     $header = [
-      $headerCell('integration', 'Integration'),
-      $headerCell('status', 'Status'),
-      $headerCell('uuid', 'UUID'),
-      $headerCell('project_uuid', 'Project UUID'),
-      $headerCell('project_housing_company', 'Project Housing Company'),
-      $headerCell('apartment_address', 'Apartment Address'),
-      $headerCell('project_url', 'Project URL'),
-      $headerCell('url', 'URL'),
-      $headerCell('missing_fields', 'Missing Fields'),
+      $headerCell('integration', $this->t('Integration')),
+      $headerCell('status', $this->t('Status')),
+      $headerCell('project_housing_company', $this->t('Project Name')),
+      $headerCell('apartment_address', $this->t('Apartment Address')),
+      $headerCell('project_url', $this->t('Project URL')),
+      $headerCell('url', $this->t('Apartment URL')),
+      $headerCell('missing_fields', $this->t('Missing Fields')),
     ];
 
     $build['actions'] = [
@@ -111,8 +107,6 @@ class IntegrationSummaryController extends ControllerBase {
         return [
           $r['integration_name'],
           $r['status'],
-          $r['uuid'],
-          $r['project_uuid'],
           $r['project_housing_company'] ?: '—',
           $r['apartment_address'] ?: '—',
           $project_url_link ?: '—',
@@ -140,13 +134,11 @@ class IntegrationSummaryController extends ControllerBase {
     [$sort, $dir] = $this->getSortParams();
     $this->applySort($rows, $sort, $dir);
 
-    $out = "\"integration\";\"status\";\"uuid\";\"project_uuid\";\"project_housing_company\";\"apartment_address\";\"project_url\";\"url\";\"missing_fields\"\n";
+    $out = "\"integration\";\"status\";\"project_housing_company\";\"apartment_address\";\"project_url\";\"url\";\"missing_fields\"\n";
     foreach ($rows as $r) {
       $line = [
         str_replace('"', '""', $r['integration_name']),
         str_replace('"', '""', $r['status']),
-        str_replace('"', '""', $r['uuid']),
-        str_replace('"', '""', $r['project_uuid']),
         str_replace('"', '""', $r['project_housing_company']),
         str_replace('"', '""', $r['apartment_address']),
         str_replace('"', '""', $r['project_url']),
@@ -199,7 +191,7 @@ class IntegrationSummaryController extends ControllerBase {
           }
           $rows[] = [
             'integration_name' => (string) $integration_name,
-            'status' => 'Success',
+            'status' => $this->t('Success'),
             'uuid' => (string) ($item['uuid'] ?? ''),
             'project_uuid' => (string) ($item['project_uuid'] ?? ''),
             'project_housing_company' => (string) ($item['project_housing_company'] ?? ''),
@@ -221,7 +213,7 @@ class IntegrationSummaryController extends ControllerBase {
 
           $rows[] = [
             'integration_name' => (string) $integration_name,
-            'status' => 'Fail',
+            'status' => $this->t('Fail'),
             'uuid' => (string) ($item['uuid'] ?? ''),
             'project_uuid' => (string) ($item['project_uuid'] ?? ''),
             'project_housing_company' => (string) ($item['project_housing_company'] ?? ''),

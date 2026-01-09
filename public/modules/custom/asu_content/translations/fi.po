@@ -43401,3 +43401,48 @@ msgstr "Helsingin kaupungin logo"
 
 msgid "You already have an offer or have been sold an apartment in this project and cannot submit a new application."
 msgstr "Sinulla on jo myyty tai tarjottu asunto tässä kohteessa etkä siksi voi tehdä uutta hakemusta."
+
+msgid "Integration"
+msgstr "Integraatio"
+
+msgid "Status"
+msgstr "Tila"
+
+msgid "UUID"
+msgstr "UUID"
+
+msgid "Project UUID"
+msgstr "Kohteen UUID"
+
+msgid "Project Name"
+msgstr "Kohteen nimi"
+
+msgid "Apartment Address"
+msgstr "Asunnon osoite"
+
+msgid "Project URL"
+msgstr "Kohteen URL"
+
+msgid "Apartment URL"
+msgstr "Asunnon URL"
+
+msgid "Missing Fields"
+msgstr "Puuttuvat kentät"
+
+msgid "Export CSV"
+msgstr "Vie CSV"
+
+msgid "Project"
+msgstr "Kohde"
+
+msgid "Apartment"
+msgstr "Asunto"
+
+msgid "No apartments found."
+msgstr "Asuntoja ei löytynyt."
+
+msgid "Success"
+msgstr "Onnistui"
+
+msgid "Fail"
+msgstr "Epäonnistui"
