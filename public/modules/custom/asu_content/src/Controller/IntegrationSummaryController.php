@@ -88,33 +88,65 @@ class IntegrationSummaryController extends ControllerBase {
       '#type' => 'table',
       '#header' => $header,
       '#rows' => array_map(function (array $r) {
+        // Format project URL link
         $project_url_link = '';
-        if (!empty($r['project_url'])) {
+        if (isset($r['project_url']) && $r['project_url'] !== '' && $r['project_url'] !== NULL) {
           $project_url_link = Link::fromTextAndUrl(
             $this->t('Project'),
             Url::fromUri($r['project_url'])
           )->toString();
         }
 
+        // Format apartment URL link
         $url_link = '';
-        if (!empty($r['url'])) {
+        if (isset($r['url']) && $r['url'] !== '' && $r['url'] !== NULL) {
           $url_link = Link::fromTextAndUrl(
             $this->t('Apartment'),
             Url::fromUri($r['url'])
           )->toString();
         }
 
+        // Format status with visual indicator
+        $status_display = $r['status'];
+        if (isset($r['status_key']) && $r['status_key'] === 'success') {
+          $status_display = '✓ ' . $status_display;
+        }
+        elseif (isset($r['status_key']) && $r['status_key'] === 'fail') {
+          $status_display = '✗ ' . $status_display;
+        }
+
+        // Format missing fields
+        $missing_fields_display = '—';
+        if (isset($r['missing_fields']) && $r['missing_fields'] !== '' && $r['missing_fields'] !== NULL) {
+          $fields = explode(', ', $r['missing_fields']);
+          $fields = array_filter(array_map('trim', $fields));
+          if (!empty($fields)) {
+            $missing_fields_display = implode(', ', $fields);
+          }
+        }
+
         return [
           $r['integration_name'],
-          $r['status'],
+          $status_display,
           $r['project_housing_company'] ?: '—',
           $r['apartment_address'] ?: '—',
           $project_url_link ?: '—',
           $url_link ?: '—',
-          $r['missing_fields'] ?: '—',
+          $missing_fields_display,
         ];
       }, $rows),
       '#empty' => $this->t('No apartments found.'),
+    ];
+
+    // Legend/help text
+    $build['legend'] = [
+      '#theme' => 'item_list',
+      '#title' => $this->t('Status legend'),
+      '#items' => [
+        ['#markup' => '<strong>' . $this->t('Success') . '</strong> — ' . $this->t('Apartment has all required fields and is ready for export')],
+        ['#markup' => '<strong>' . $this->t('Fail') . '</strong> — ' . $this->t('Apartment is missing required fields (listed in Missing Fields column)')],
+      ],
+      '#attributes' => ['class' => ['integration-legend']],
     ];
 
     return $build;
@@ -192,6 +224,7 @@ class IntegrationSummaryController extends ControllerBase {
           $rows[] = [
             'integration_name' => (string) $integration_name,
             'status' => $this->t('Success'),
+            'status_key' => 'success',
             'uuid' => (string) ($item['uuid'] ?? ''),
             'project_uuid' => (string) ($item['project_uuid'] ?? ''),
             'project_housing_company' => (string) ($item['project_housing_company'] ?? ''),
@@ -214,6 +247,7 @@ class IntegrationSummaryController extends ControllerBase {
           $rows[] = [
             'integration_name' => (string) $integration_name,
             'status' => $this->t('Fail'),
+            'status_key' => 'fail',
             'uuid' => (string) ($item['uuid'] ?? ''),
             'project_uuid' => (string) ($item['project_uuid'] ?? ''),
             'project_housing_company' => (string) ($item['project_housing_company'] ?? ''),
@@ -273,6 +307,30 @@ class IntegrationSummaryController extends ControllerBase {
       // Case-insensitive string comparison.
       return $mult * strcasecmp((string) $va, (string) $vb);
     });
+  }
+
+  /**
+   * Calculate statistics from rows.
+   *
+   * @param array $rows
+   *   Array of row data.
+   *
+   * @return array
+   *   Statistics array with 'success' and 'fail' counts.
+   */
+  protected function calculateStats(array $rows): array {
+    $stats = ['success' => 0, 'fail' => 0];
+    foreach ($rows as $row) {
+      if (isset($row['status_key'])) {
+        if ($row['status_key'] === 'success') {
+          $stats['success']++;
+        }
+        elseif ($row['status_key'] === 'fail') {
+          $stats['fail']++;
+        }
+      }
+    }
+    return $stats;
   }
 
 }

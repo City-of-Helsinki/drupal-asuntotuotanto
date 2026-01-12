@@ -43446,3 +43446,15 @@ msgstr "Onnistui"
 
 msgid "Fail"
 msgstr "Epäonnistui"
+
+msgid "Total apartments"
+msgstr "Asuntoja yhteensä"
+
+msgid "Status legend"
+msgstr "Tilan selitykset"
+
+msgid "Apartment has all required fields and is ready for export"
+msgstr "Asunnolla on kaikki vaaditut kentät ja se on valmis vientiin"
+
+msgid "Apartment is missing required fields (listed in Missing Fields column)"
+msgstr "Asunnolta puuttuu vaadittuja kenttiä (lueteltu Puuttuvat kentät -sarakkeessa)"
