@@ -5,6 +5,7 @@ use Drupal\asu_api\Api\BackendApi\Request\GetIntegrationStatusRequest;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Link;
 use Drupal\Core\Url;
+use Drupal\field\Entity\FieldConfig;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -27,6 +28,7 @@ class IntegrationSummaryController extends ControllerBase {
     'url' => 'url',
     'missing_fields' => 'missing_fields',
   ];
+
 
   /**
    * Summary table for integration status.
@@ -188,6 +190,48 @@ class IntegrationSummaryController extends ControllerBase {
   }
 
   /**
+   * Gets the translated field label from field configuration.
+   *
+   * @param string $machine_name
+   *   The field machine name from the backend (e.g., "project_holding_type" or "living_area").
+   *
+   * @return string
+   *   The translated field label, or the machine name if field config not found.
+   */
+  protected function getTranslatedFieldLabel(string $machine_name): string {
+    // Determine entity type, bundle, and Drupal field name from machine name
+    if (strpos($machine_name, 'project_') === 0) {
+      // Project field: remove 'project_' prefix, prepend 'field_'
+      $drupal_field_name = 'field_' . substr($machine_name, 8); // 8 = strlen('project_')
+      $entity_type = 'node';
+      $bundle = 'project';
+    }
+    elseif ($machine_name === 'url') {
+      // Special case: url maps to field_apartment_url
+      $drupal_field_name = 'field_apartment_url';
+      $entity_type = 'node';
+      $bundle = 'apartment';
+    }
+    else {
+      // Apartment field: prepend 'field_'
+      $drupal_field_name = 'field_' . $machine_name;
+      $entity_type = 'node';
+      $bundle = 'apartment';
+    }
+
+    // Load the field config
+    $field_config = FieldConfig::loadByName($entity_type, $bundle, $drupal_field_name);
+
+    if ($field_config) {
+      // getLabel() automatically returns the translated label based on current language
+      return $field_config->getLabel();
+    }
+
+    // Fallback: return machine name if field config not found
+    return $machine_name;
+  }
+
+  /**
    * Build raw rows for summary table and CSV.
    *
    * @return array
@@ -219,7 +263,10 @@ class IntegrationSummaryController extends ControllerBase {
         foreach ($integration_data['success'] as $item) {
           $missing_fields = '';
           if (isset($item['missing_fields']) && is_array($item['missing_fields'])) {
-            $missing_fields = implode(', ', $item['missing_fields']);
+            $translated_fields = array_map(function ($field) {
+              return $this->getTranslatedFieldLabel($field);
+            }, $item['missing_fields']);
+            $missing_fields = implode(', ', $translated_fields);
           }
           $rows[] = [
             'integration_name' => (string) $integration_name,
@@ -241,7 +288,10 @@ class IntegrationSummaryController extends ControllerBase {
         foreach ($integration_data['fail'] as $item) {
           $missing_fields = '';
           if (isset($item['missing_fields']) && is_array($item['missing_fields'])) {
-            $missing_fields = implode(', ', $item['missing_fields']);
+            $translated_fields = array_map(function ($field) {
+              return $this->getTranslatedFieldLabel($field);
+            }, $item['missing_fields']);
+            $missing_fields = implode(', ', $translated_fields);
           }
 
           $rows[] = [
