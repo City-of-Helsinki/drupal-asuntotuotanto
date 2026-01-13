@@ -137,9 +137,6 @@
             ]
         },
         "patches": {
-            "drupal/autologout": {
-                "JS Cookie needs to be enabled automatically when updating": "https://www.drupal.org/files/issues/2024-05-24/multiple_warnings_after_upgrading-3449275-5.patch"
-            },
             "drupal/core": {
                 "https://www.drupal.org/project/drupal/issues/3054641#comment-13385850": "https://www.drupal.org/files/issues/2019-12-10/3054641-14.patch",
                 "Views attachments are not rendered in the specified order [https://www.drupal.org/project/drupal/issues/2943293]": "https://www.drupal.org/files/issues/2019-05-25/2943293-17.patch",
@@ -153,9 +150,6 @@
             },
             "drupal/helfi_platform_config": {
                 "Catch exception during hero paragraphs allowed values update": "patches/helfi_platform_config_hero_paragraph_fix.patch"
-            },
-            "drupal/samlauth": {
-                "https://www.drupal.org/project/samlauth/issues/3424834": "https://git.drupalcode.org/project/samlauth/-/merge_requests/18.patch"
             },
             "drupal/user_bundle": {
                 "Custom patch prevents install from dying when trying to edit nonexisting admin configuration file.": "./patches/remove_editing_admin_configuration.patch"
