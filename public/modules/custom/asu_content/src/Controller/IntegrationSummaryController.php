@@ -69,8 +69,6 @@ class IntegrationSummaryController extends ControllerBase {
       $headerCell('status', $this->t('Status')),
       $headerCell('project_housing_company', $this->t('Project Name')),
       $headerCell('apartment_address', $this->t('Apartment Address')),
-      $headerCell('project_url', $this->t('Project URL')),
-      $headerCell('url', $this->t('Apartment URL')),
       $headerCell('missing_fields', $this->t('Missing Fields')),
     ];
 
@@ -94,7 +92,7 @@ class IntegrationSummaryController extends ControllerBase {
         $project_url_link = '';
         if (isset($r['project_url']) && $r['project_url'] !== '' && $r['project_url'] !== NULL) {
           $project_url_link = Link::fromTextAndUrl(
-            $this->t('Project'),
+            $r['project_housing_company'] ?: '—',
             Url::fromUri($r['project_url'])
           )->toString();
         }
@@ -103,7 +101,7 @@ class IntegrationSummaryController extends ControllerBase {
         $url_link = '';
         if (isset($r['url']) && $r['url'] !== '' && $r['url'] !== NULL) {
           $url_link = Link::fromTextAndUrl(
-            $this->t('Apartment'),
+            $r['apartment_address'] ?: '—',
             Url::fromUri($r['url'])
           )->toString();
         }
@@ -130,8 +128,6 @@ class IntegrationSummaryController extends ControllerBase {
         return [
           $r['integration_name'],
           $status_display,
-          $r['project_housing_company'] ?: '—',
-          $r['apartment_address'] ?: '—',
           $project_url_link ?: '—',
           $url_link ?: '—',
           $missing_fields_display,
