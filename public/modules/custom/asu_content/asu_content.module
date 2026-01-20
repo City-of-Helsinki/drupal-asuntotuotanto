@@ -43,53 +43,77 @@ function asu_content_form_node_form_alter(&$form, $form_state) {
   asu_content_show_computed_fields($form, $form_state);
   asu_content_project_add_archived_handling($form, $form_state);
   asu_content_hide_field_in_apartment_edit($form, $form_state);
-  // asu_content_validate_integration_fields($form, $form_state);
-  $form['#validate'][] = 'asu_content_validate_integration_fields';
+  asu_content_validate_integration_fields($form, $form_state);
 }
 
-function asu_content_validate_integration_fields(&$form, $form_state) {
-  // 1. Build a temporary entity object from the form state.
-  /** @var \Drupal\node\NodeInterface $node */
-  $node = $form_state->getFormObject()->buildEntity($form, $form_state);
-
-  // 2. Define mapping for integration fields to their required fields.
-  // Each key is the field to trigger validation, each value is an array of required field machine names.
+/**
+ * Validates integration fields on an apartment node entity.
+ *
+ * Use this for both IEF (inline entity form) or standalone form validation.
+ *
+ * @param \Drupal\Core\Entity\EntityInterface $entity
+ *   The apartment node entity to validate.
+ * @param bool $add_message
+ *   Whether to add warnings to the messenger service, default TRUE.
+ *
+ * @return array
+ *   An associative array where the keys are trigger field machine names,
+ *   and each value is a list of missing required field *labels*
+ *   for that integration trigger (empty array if none missing).
+ */
+function asu_content_check_apartment_integration_fields(\Drupal\Core\Entity\EntityInterface $entity, $add_message = TRUE) {
+  // Map of integration triggers to required field names.
   $integration_triggers = [
-    'field_publish_on_oikotie' => ['field_application_url',], // replace with real field names
-    'field_publish_on_etuovi' => ['field_application_url', ], // replace with real field names
+    'field_publish_on_oikotie' => ['field_application_url'], // adjust as real
+    'field_publish_on_etuovi' => ['field_application_url'],  // adjust as real
   ];
 
-  // 3. Loop through each integration trigger to check requirements individually.
+  $result = [];
+
   foreach ($integration_triggers as $trigger_field => $required_fields) {
+    // Optionally log, then check trigger field.
     \Drupal::logger('asu_content')->notice('Trigger field: @trigger_field', ['@trigger_field' => $trigger_field]);
     \Drupal::logger('asu_content')->debug('Checking trigger field "@trigger_field" on node ID @nid of type "@type"', [
       '@trigger_field' => $trigger_field,
-      '@nid' => $node->id(),
-      '@type' => $node->getType(),
+      '@nid' => $entity->id(),
+      '@type' => $entity->getType(),
     ]);
+    $missing_fields = [];
     if (
-      $node->hasField($trigger_field) &&
-      !$node->get($trigger_field)->isEmpty() &&
-      $node->get($trigger_field)->value == 1
+      $entity->hasField($trigger_field) &&
+      !$entity->get($trigger_field)->isEmpty() &&
+      $entity->get($trigger_field)->value == 1
     ) {
-      $missing_fields = [];
-      \Drupal::logger('asu_content')->notice('Required fields: @required_fields', ['@required_fields' => $required_fields]);
       foreach ($required_fields as $field_name) {
         \Drupal::logger('asu_content')->notice('Checking field: @field_name', ['@field_name' => $field_name]);
-        if ($node->hasField($field_name) && $node->get($field_name)->isEmpty()) {
-          $field_label = $node->get($field_name)->getFieldDefinition()->getLabel();
+        if ($entity->hasField($field_name) && $entity->get($field_name)->isEmpty()) {
+          $field_label = $entity->get($field_name)->getFieldDefinition()->getLabel();
           $missing_fields[] = $field_label;
         }
       }
-      if (!empty($missing_fields)) {
+    }
+    if (!empty($missing_fields)) {
+      if ($add_message) {
         $message = \Drupal::translation()->translate('<strong>Integration Warning:</strong> "@integration" is enabled, but the following fields are empty: @fields. The node was saved, but integration may fail.', [
-          '@integration' => $node->get($trigger_field)->getFieldDefinition()->getLabel(),
+          '@integration' => $entity->get($trigger_field)->getFieldDefinition()->getLabel(),
           '@fields' => implode(', ', $missing_fields),
         ]);
         \Drupal::messenger()->addWarning($message);
       }
     }
+    $result[$trigger_field] = $missing_fields;
   }
+
+  return $result;
+}
+
+/**
+ * Node form validation handler for apartment integration fields.
+ */
+function asu_content_validate_integration_fields(&$form, $form_state) {
+  /** @var \Drupal\node\NodeInterface $node */
+  $node = $form_state->getFormObject()->buildEntity($form, $form_state);
+  asu_content_check_apartment_integration_fields($node, TRUE);
 }
 
 /**
@@ -215,7 +239,12 @@ function asu_content_inline_entity_form_entity_form_alter(&$entity_form, &$form_
     if ($ownership_type && strtolower($ownership_type) == 'hitas') {
       asu_content_hide_fields_in_hitas($entity_form);
     }
+
+  if (isset($entity_form['#entity']) && $entity_form['#entity'] instanceof \Drupal\Core\Entity\EntityInterface) {
+    asu_content_check_apartment_integration_fields($entity_form['#entity']);
   }
+  }
+
 }
 
 /**
