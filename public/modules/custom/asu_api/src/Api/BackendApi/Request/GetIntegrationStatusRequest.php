@@ -37,7 +37,7 @@ class GetIntegrationStatusRequest extends Request {
    * Constructor.
    *
    * @param array $filters
-   * Optional filters (e.g., ['connection_id' => 123, 'active' => true]).
+   *   Optional filters (e.g., ['connection_id' => 123, 'active' => true]).
    */
   public function __construct(array $filters = []) {
     $this->sender = NULL;
@@ -48,25 +48,26 @@ class GetIntegrationStatusRequest extends Request {
    * Returns the query parameters for the HTTP client.
    *
    * @return array
-   * The array of query parameters.
+   *   The array of query parameters.
    */
   public function getQuery(): array {
     return $this->queryParams;
   }
 
   /**
-   * (Optional) specific overrides for the default timeout.
-   * * Useful if this specific status check is known to be slow.
+   * Specific overrides for the default timeout.
+   *
+   * Useful if this specific status check is known to be slow.
    */
   public function getTimeout(): int {
     return 10;
   }
 
-    /**
-     * {@inheritdoc}
-     */
-    public static function getResponse(ResponseInterface $response): GetIntegrationStatusResponse
-    {
-        return GetIntegrationStatusResponse::createFromHttpResponse($response);
-    }
+  /**
+   * {@inheritdoc}
+   */
+  public static function getResponse(ResponseInterface $response): GetIntegrationStatusResponse {
+    return GetIntegrationStatusResponse::createFromHttpResponse($response);
+  }
+
 }

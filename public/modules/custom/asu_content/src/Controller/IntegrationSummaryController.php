@@ -1,4 +1,5 @@
 <?php
+
 namespace Drupal\asu_content\Controller;
 
 use Drupal\asu_api\Api\BackendApi\Request\GetIntegrationStatusRequest;
@@ -28,7 +29,6 @@ class IntegrationSummaryController extends ControllerBase {
     'url' => 'url',
     'missing_fields' => 'missing_fields',
   ];
-
 
   /**
    * Summary table for integration status.
@@ -88,7 +88,7 @@ class IntegrationSummaryController extends ControllerBase {
       '#type' => 'table',
       '#header' => $header,
       '#rows' => array_map(function (array $r) {
-        // Format project URL link
+        // Format project URL link.
         $project_url_link = '';
         if (isset($r['project_url']) && $r['project_url'] !== '' && $r['project_url'] !== NULL) {
           $project_url_link = Link::fromTextAndUrl(
@@ -97,7 +97,7 @@ class IntegrationSummaryController extends ControllerBase {
           )->toString();
         }
 
-        // Format apartment URL link
+        // Format apartment URL link.
         $url_link = '';
         if (isset($r['url']) && $r['url'] !== '' && $r['url'] !== NULL) {
           $url_link = Link::fromTextAndUrl(
@@ -106,7 +106,7 @@ class IntegrationSummaryController extends ControllerBase {
           )->toString();
         }
 
-        // Format status with visual indicator
+        // Format status with visual indicator.
         $status_display = $r['status'];
         if (isset($r['status_key']) && $r['status_key'] === 'success') {
           $status_display = '✓ ' . $status_display;
@@ -115,7 +115,7 @@ class IntegrationSummaryController extends ControllerBase {
           $status_display = '✗ ' . $status_display;
         }
 
-        // Format missing fields
+        // Format missing fields.
         $missing_fields_display = '—';
         if (isset($r['missing_fields']) && $r['missing_fields'] !== '' && $r['missing_fields'] !== NULL) {
           $fields = explode(', ', $r['missing_fields']);
@@ -136,16 +136,16 @@ class IntegrationSummaryController extends ControllerBase {
       '#empty' => $this->t('No apartments found.'),
     ];
 
-    // Legend/help text
-    $build['legend'] = [
-      '#theme' => 'item_list',
-      '#title' => $this->t('Status legend'),
-      '#items' => [
-        ['#markup' => '<strong>' . $this->t('Success') . '</strong> — ' . $this->t('Apartment has all required fields and is ready for export')],
-        ['#markup' => '<strong>' . $this->t('Fail') . '</strong> — ' . $this->t('Apartment is missing required fields (listed in Missing Fields column)')],
-      ],
-      '#attributes' => ['class' => ['integration-legend']],
-    ];
+    // Legend/help text.
+    // $build['legend'] = [
+    //   '#theme' => 'item_list',
+    //   '#title' => $this->t('Status legend'),
+    //   '#items' => [
+    //     ['#markup' => '<strong>' . $this->t('Success') . '</strong> — ' . $this->t('Apartment has all required fields and is ready for export')],
+    //     ['#markup' => '<strong>' . $this->t('Fail') . '</strong> — ' . $this->t('Apartment is missing required fields (listed in Missing Fields column)')],
+    //   ],
+    //   '#attributes' => ['class' => ['integration-legend']],
+    // ];
 
     return $build;
   }
@@ -195,35 +195,36 @@ class IntegrationSummaryController extends ControllerBase {
    *   The translated field label, or the machine name if field config not found.
    */
   protected function getTranslatedFieldLabel(string $machine_name): string {
-    // Determine entity type, bundle, and Drupal field name from machine name
+    // Determine entity type, bundle, and Drupal field name from machine name.
     if (strpos($machine_name, 'project_') === 0) {
-      // Project field: remove 'project_' prefix, prepend 'field_'
-      $drupal_field_name = 'field_' . substr($machine_name, 8); // 8 = strlen('project_')
+      // Project field: remove 'project_' prefix, prepend 'field_'.
+      // 8 = strlen('project_')
+      $drupal_field_name = 'field_' . substr($machine_name, 8);
       $entity_type = 'node';
       $bundle = 'project';
     }
     elseif ($machine_name === 'url') {
-      // Special case: url maps to field_apartment_url
+      // Special case: url maps to field_apartment_url.
       $drupal_field_name = 'field_apartment_url';
       $entity_type = 'node';
       $bundle = 'apartment';
     }
     else {
-      // Apartment field: prepend 'field_'
+      // Apartment field: prepend 'field_'.
       $drupal_field_name = 'field_' . $machine_name;
       $entity_type = 'node';
       $bundle = 'apartment';
     }
 
-    // Load the field config
+    // Load the field config.
     $field_config = FieldConfig::loadByName($entity_type, $bundle, $drupal_field_name);
 
     if ($field_config) {
-      // getLabel() automatically returns the translated label based on current language
+      // getLabel() automatically returns the translated label based on current language.
       return $field_config->getLabel();
     }
 
-    // Fallback: return machine name if field config not found
+    // Fallback: return machine name if field config not found.
     return $machine_name;
   }
 
@@ -254,7 +255,7 @@ class IntegrationSummaryController extends ControllerBase {
         continue;
       }
 
-      // Process success items
+      // Process success items.
       if (isset($integration_data['success']) && is_array($integration_data['success'])) {
         foreach ($integration_data['success'] as $item) {
           $missing_fields = '';
@@ -279,7 +280,7 @@ class IntegrationSummaryController extends ControllerBase {
         }
       }
 
-      // Process fail items
+      // Process fail items.
       if (isset($integration_data['fail']) && is_array($integration_data['fail'])) {
         foreach ($integration_data['fail'] as $item) {
           $missing_fields = '';

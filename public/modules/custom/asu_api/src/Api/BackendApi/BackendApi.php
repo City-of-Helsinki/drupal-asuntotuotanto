@@ -127,7 +127,7 @@ class BackendApi {
       $this->handleRequestError($e, $request);
     }
     catch (\Exception $e) {
-      // Log non-RequestException errors and re-throw
+      // Log non-RequestException errors and re-throw.
       $this->logger->error(
         sprintf('Unexpected error in API request: %s', $e->getMessage()),
         ['exception' => $e, 'request' => get_class($request)]

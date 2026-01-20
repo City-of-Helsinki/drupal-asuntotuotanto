@@ -43,6 +43,53 @@ function asu_content_form_node_form_alter(&$form, $form_state) {
   asu_content_show_computed_fields($form, $form_state);
   asu_content_project_add_archived_handling($form, $form_state);
   asu_content_hide_field_in_apartment_edit($form, $form_state);
+  // asu_content_validate_integration_fields($form, $form_state);
+  $form['#validate'][] = 'asu_content_validate_integration_fields';
+}
+
+function asu_content_validate_integration_fields(&$form, $form_state) {
+  // 1. Build a temporary entity object from the form state.
+  /** @var \Drupal\node\NodeInterface $node */
+  $node = $form_state->getFormObject()->buildEntity($form, $form_state);
+
+  // 2. Define mapping for integration fields to their required fields.
+  // Each key is the field to trigger validation, each value is an array of required field machine names.
+  $integration_triggers = [
+    'field_publish_on_oikotie' => ['field_application_url',], // replace with real field names
+    'field_publish_on_etuovi' => ['field_application_url', ], // replace with real field names
+  ];
+
+  // 3. Loop through each integration trigger to check requirements individually.
+  foreach ($integration_triggers as $trigger_field => $required_fields) {
+    \Drupal::logger('asu_content')->notice('Trigger field: @trigger_field', ['@trigger_field' => $trigger_field]);
+    \Drupal::logger('asu_content')->debug('Checking trigger field "@trigger_field" on node ID @nid of type "@type"', [
+      '@trigger_field' => $trigger_field,
+      '@nid' => $node->id(),
+      '@type' => $node->getType(),
+    ]);
+    if (
+      $node->hasField($trigger_field) &&
+      !$node->get($trigger_field)->isEmpty() &&
+      $node->get($trigger_field)->value == 1
+    ) {
+      $missing_fields = [];
+      \Drupal::logger('asu_content')->notice('Required fields: @required_fields', ['@required_fields' => $required_fields]);
+      foreach ($required_fields as $field_name) {
+        \Drupal::logger('asu_content')->notice('Checking field: @field_name', ['@field_name' => $field_name]);
+        if ($node->hasField($field_name) && $node->get($field_name)->isEmpty()) {
+          $field_label = $node->get($field_name)->getFieldDefinition()->getLabel();
+          $missing_fields[] = $field_label;
+        }
+      }
+      if (!empty($missing_fields)) {
+        $message = \Drupal::translation()->translate('<strong>Integration Warning:</strong> "@integration" is enabled, but the following fields are empty: @fields. The node was saved, but integration may fail.', [
+          '@integration' => $node->get($trigger_field)->getFieldDefinition()->getLabel(),
+          '@fields' => implode(', ', $missing_fields),
+        ]);
+        \Drupal::messenger()->addWarning($message);
+      }
+    }
+  }
 }
 
 /**
