@@ -92,12 +92,13 @@ function asu_content_check_apartment_integration_fields(EntityInterface $entity,
     }
     if (!empty($missing_fields)) {
       if ($add_message) {
-        $message = \Drupal::translation()->translate('<strong>Integration Warning:</strong> "@integration" is enabled, but the following fields are empty: @fields. The node was saved, but integration may fail.', [
-          '@integration' => $entity->get($trigger_field)->getFieldDefinition()->getLabel(),
+        $message = \Drupal::translation()->translate('<strong>Integration Warning:</strong> "@integration"-integration is enabled, but the following required fields are empty: @fields.', [
+          '@integration' => str_replace('field_publish_on_', '', $trigger_field),
           '@fields' => implode(', ', $missing_fields),
         ]);
         \Drupal::messenger()->addWarning($message);
       }
+
     }
     $result[$trigger_field] = $missing_fields;
   }

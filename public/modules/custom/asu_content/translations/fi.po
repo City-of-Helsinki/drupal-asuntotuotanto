@@ -43458,3 +43458,7 @@ msgstr "Asunnolla on kaikki vaaditut kentät ja se on valmis vientiin"
 
 msgid "Apartment is missing required fields (listed in Missing Fields column)"
 msgstr "Asunnolta puuttuu vaadittuja kenttiä (lueteltu Puuttuvat kentät -sarakkeessa)"
+
+msgid "<strong>Integration Warning:</strong> "@integration"-integration is enabled, but the following required fields are empty: @fields."
+msgstr "<strong>Integraatiovaroitus:</strong> \"@integration\"-integraatio on käytössä, mutta seuraavat pakolliset kentät ovat tyhjiä: @fields."
+
