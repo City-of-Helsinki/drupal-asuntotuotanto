@@ -136,17 +136,6 @@ class IntegrationSummaryController extends ControllerBase {
       '#empty' => $this->t('No apartments found.'),
     ];
 
-    // Legend/help text.
-    // $build['legend'] = [
-    //   '#theme' => 'item_list',
-    //   '#title' => $this->t('Status legend'),
-    //   '#items' => [
-    //     ['#markup' => '<strong>' . $this->t('Success') . '</strong> — ' . $this->t('Apartment has all required fields and is ready for export')],
-    //     ['#markup' => '<strong>' . $this->t('Fail') . '</strong> — ' . $this->t('Apartment is missing required fields (listed in Missing Fields column)')],
-    //   ],
-    //   '#attributes' => ['class' => ['integration-legend']],
-    // ];
-
     return $build;
   }
 
@@ -189,10 +178,12 @@ class IntegrationSummaryController extends ControllerBase {
    * Gets the translated field label from field configuration.
    *
    * @param string $machine_name
-   *   The field machine name from the backend (e.g., "project_holding_type" or "living_area").
+   *   The field machine name from the backend
+   *   (e.g., "project_holding_type" or "living_area").
    *
    * @return string
-   *   The translated field label, or the machine name if field config not found.
+   *   The translated field label,
+   *   or the machine name if field config not found.
    */
   protected function getTranslatedFieldLabel(string $machine_name): string {
     // Determine entity type, bundle, and Drupal field name from machine name.
@@ -220,7 +211,6 @@ class IntegrationSummaryController extends ControllerBase {
     $field_config = FieldConfig::loadByName($entity_type, $bundle, $drupal_field_name);
 
     if ($field_config) {
-      // getLabel() automatically returns the translated label based on current language.
       return $field_config->getLabel();
     }
 

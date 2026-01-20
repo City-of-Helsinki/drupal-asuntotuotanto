@@ -22,6 +22,7 @@ use Drupal\asu_content\ProjectUpdater;
 use Drupal\helfi_platform_config\DTO\ParagraphTypeCollection;
 use Drupal\node\Entity\Node;
 use Drupal\node\NodeForm;
+use Drupal\asu_content\IntegrationConstants;
 
 /**
  * Implements hook_entity_bundle_info_alter().
@@ -61,12 +62,9 @@ function asu_content_form_node_form_alter(&$form, $form_state) {
  *   and each value is a list of missing required field *labels*
  *   for that integration trigger (empty array if none missing).
  */
-function asu_content_check_apartment_integration_fields(\Drupal\Core\Entity\EntityInterface $entity, $add_message = TRUE) {
+function asu_content_check_apartment_integration_fields(EntityInterface $entity, $add_message = TRUE) {
   // Map of integration triggers to required field names.
-  $integration_triggers = [
-    'field_publish_on_oikotie' => ['field_application_url'], // adjust as real
-    'field_publish_on_etuovi' => ['field_application_url'],  // adjust as real
-  ];
+  $integration_triggers = IntegrationConstants::INTEGRATION_TRIGGERS;
 
   $result = [];
 
@@ -240,9 +238,9 @@ function asu_content_inline_entity_form_entity_form_alter(&$entity_form, &$form_
       asu_content_hide_fields_in_hitas($entity_form);
     }
 
-  if (isset($entity_form['#entity']) && $entity_form['#entity'] instanceof \Drupal\Core\Entity\EntityInterface) {
-    asu_content_check_apartment_integration_fields($entity_form['#entity']);
-  }
+    if (isset($entity_form['#entity']) && $entity_form['#entity'] instanceof EntityInterface) {
+      asu_content_check_apartment_integration_fields($entity_form['#entity']);
+    }
   }
 
 }
