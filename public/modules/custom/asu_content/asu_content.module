@@ -71,7 +71,7 @@ function asu_content_check_apartment_integration_fields(EntityInterface $entity,
 
   $result = [];
 
-  foreach ($integration_triggers as $trigger_field => $required_fields) {
+  foreach ($integration_triggers as $trigger_field => $base_fields) {
     // Optionally log, then check trigger field.
     \Drupal::logger('asu_content')->notice('Trigger field: @trigger_field', ['@trigger_field' => $trigger_field]);
     \Drupal::logger('asu_content')->debug('Checking trigger field "@trigger_field" on node ID @nid of type "@type"', [
@@ -85,12 +85,14 @@ function asu_content_check_apartment_integration_fields(EntityInterface $entity,
       !$entity->get($trigger_field)->isEmpty() &&
       $entity->get($trigger_field)->value == 1
     ) {
+
+      $required_fields = IntegrationConstants::getRequiredFieldsForIntegration($trigger_field, asu_content_get_ownershiptype());
+      \Drupal::logger('asu_content')->notice('Required fields: @required_fields, ownership type: @ownership_type', ['@required_fields' => $required_fields, '@ownership_type' => asu_content_get_ownershiptype()]);
       foreach ($required_fields as $field_name) {
-        \Drupal::logger('asu_content')->notice('Checking field: @field_name with value @value', ['@field_name' => $field_name, '@value' => $entity->get($field_name)->getValue()[0]['value'] ?? 'empty']);
+
         if ($entity->hasField($field_name) && $entity->get($field_name)->isEmpty()) {
           $field_label = $entity->get($field_name)->getFieldDefinition()->getLabel();
           $missing_fields[] = $field_label;
-          \Drupal::logger('asu_content')->notice('Field @field_name is empty', ['@field_name' => $field_name]);
         }
       }
     }
