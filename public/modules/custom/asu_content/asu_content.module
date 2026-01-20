@@ -47,6 +47,9 @@ function asu_content_form_node_form_alter(&$form, $form_state) {
   asu_content_validate_integration_fields($form, $form_state);
 }
 
+
+
+
 /**
  * Validates integration fields on an apartment node entity.
  *
@@ -83,10 +86,11 @@ function asu_content_check_apartment_integration_fields(EntityInterface $entity,
       $entity->get($trigger_field)->value == 1
     ) {
       foreach ($required_fields as $field_name) {
-        \Drupal::logger('asu_content')->notice('Checking field: @field_name', ['@field_name' => $field_name]);
+        \Drupal::logger('asu_content')->notice('Checking field: @field_name with value @value', ['@field_name' => $field_name, '@value' => $entity->get($field_name)->getValue()[0]['value'] ?? 'empty']);
         if ($entity->hasField($field_name) && $entity->get($field_name)->isEmpty()) {
           $field_label = $entity->get($field_name)->getFieldDefinition()->getLabel();
           $missing_fields[] = $field_label;
+          \Drupal::logger('asu_content')->notice('Field @field_name is empty', ['@field_name' => $field_name]);
         }
       }
     }
@@ -293,11 +297,13 @@ function asu_content_hide_fields_in_hitas(&$form) {
  * Implements hook_entity_presave().
  */
 function asu_content_entity_presave(EntityInterface $entity) {
+
   if (
     $entity instanceof EntityInterface &&
     method_exists($entity, 'getType')
   ) {
     if ($entity->getType() == 'apartment') {
+      asu_content_check_apartment_integration_fields($entity, TRUE);
       // Apartment title is generated using project information.
       if (!$entity->isNew()) {
         $title = $entity->getTitle() ?? t('Apartment');

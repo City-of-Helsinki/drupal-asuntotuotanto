@@ -9,8 +9,7 @@ class IntegrationConstants {
   ];
 
   public const ETUOVI_REQUIRED_FIELDS = [
-    'field_application_url',
-    'field_stock_start_number',
+    'field_room_count'
   ];
 
   public const OIKOTIE_REQUIRED_FIELDS = [
