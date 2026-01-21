@@ -44,11 +44,47 @@ function asu_content_form_node_form_alter(&$form, $form_state) {
   asu_content_show_computed_fields($form, $form_state);
   asu_content_project_add_archived_handling($form, $form_state);
   asu_content_hide_field_in_apartment_edit($form, $form_state);
-  asu_content_validate_integration_fields($form, $form_state);
+
+
+  // Only show this when editing the form
+  if (!$form_state->isSubmitted()) {
+
+    \Drupal::logger('asu_content')->notice('Checking integration fields on node form, form state is @form_state', ['@form_state' => $form_state->isSubmitted() ? 'submitted' : 'not submitted']);
+    $missing_fields = asu_content_check_apartment_integration_fields($form_state->getFormObject()->getEntity(), false);
+
+    // check if either one of the integrations has missing fields
+    $has_missing_fields = array_filter($missing_fields, function($value) {
+      return !empty($value);
+    });
+
+    if (!empty($has_missing_fields)) {
+      $weight = -1000;
+      foreach ($has_missing_fields as $integration_name => $fields) {
+
+        
+        if (!empty($fields)) {
+          $warning_message_text = asu_content_get_integration_warning_message_text($integration_name, $fields);
+          \Drupal::logger('asu_content')->notice('Warning message for @integration: @warning_message_text', [
+            '@integration' => $integration_name,
+            '@warning_message_text' => $warning_message_text,
+          ]);
+          $form['custom_warning_message_' . $integration_name] = [
+            '#markup' => '<div role="contentinfo" class="messages messages--warning">' . $warning_message_text . '</div>',
+            '#weight' => $weight++,
+          ];
+        }
+      }
+    }
+  }
 }
 
-
-
+function asu_content_get_integration_warning_message_text($integration_name, array $missing_fields) {
+  $integration_name = preg_replace('/^field_publish_on_/', '', $integration_name);
+  return \Drupal::translation()->translate('<strong>Integration Warning:</strong> "@integration"-integration is enabled, but the following required fields are empty: @fields.', [
+    '@integration' => $integration_name,
+    '@fields' => implode(', ', $missing_fields),
+  ])->render();
+}
 
 /**
  * Validates integration fields on an apartment node entity.
@@ -98,13 +134,10 @@ function asu_content_check_apartment_integration_fields(EntityInterface $entity,
     }
     if (!empty($missing_fields)) {
       if ($add_message) {
-        $message = \Drupal::translation()->translate('<strong>Integration Warning:</strong> "@integration"-integration is enabled, but the following required fields are empty: @fields.', [
-          '@integration' => str_replace('field_publish_on_', '', $trigger_field),
-          '@fields' => implode(', ', $missing_fields),
-        ]);
-        \Drupal::messenger()->addWarning($message);
+        $warning_message_text = asu_content_get_integration_warning_message_text($trigger_field, $missing_fields);
+        \Drupal::logger('asu_content')->notice('Adding warning message with missing fields: @missing_fields', ['@missing_fields' => $warning_message_text]);
+        \Drupal::messenger()->addWarning(['#markup' => $warning_message_text, '#allowed_tags' => ['strong', 'em', 'div', 'span', 'br']]);
       }
-
     }
     $result[$trigger_field] = $missing_fields;
   }
@@ -118,7 +151,6 @@ function asu_content_check_apartment_integration_fields(EntityInterface $entity,
 function asu_content_validate_integration_fields(&$form, $form_state) {
   /** @var \Drupal\node\NodeInterface $node */
   $node = $form_state->getFormObject()->buildEntity($form, $form_state);
-  asu_content_check_apartment_integration_fields($node, TRUE);
 }
 
 /**
@@ -245,9 +277,9 @@ function asu_content_inline_entity_form_entity_form_alter(&$entity_form, &$form_
       asu_content_hide_fields_in_hitas($entity_form);
     }
 
-    if (isset($entity_form['#entity']) && $entity_form['#entity'] instanceof EntityInterface) {
-      asu_content_check_apartment_integration_fields($entity_form['#entity']);
-    }
+    // if (isset($entity_form['#entity']) && $entity_form['#entity'] instanceof EntityInterface) {
+    //   asu_content_check_apartment_integration_fields($entity_form['#entity'], TRUE);
+    // }
   }
 
 }
@@ -299,13 +331,18 @@ function asu_content_hide_fields_in_hitas(&$form) {
  * Implements hook_entity_presave().
  */
 function asu_content_entity_presave(EntityInterface $entity) {
-
+  \Drupal::logger('asu_content')->info(
+    'field_publish_on_etuovi: @etuovi, field_publish_on_oikotie: @oikotie',
+    [
+      '@etuovi' => $entity->hasField('field_publish_on_etuovi') ? $entity->get('field_publish_on_etuovi')->value : 'N/A',
+      '@oikotie' => $entity->hasField('field_publish_on_oikotie') ? $entity->get('field_publish_on_oikotie')->value : 'N/A',
+    ]
+  );
   if (
     $entity instanceof EntityInterface &&
     method_exists($entity, 'getType')
   ) {
     if ($entity->getType() == 'apartment') {
-      asu_content_check_apartment_integration_fields($entity, TRUE);
       // Apartment title is generated using project information.
       if (!$entity->isNew()) {
         $title = $entity->getTitle() ?? t('Apartment');
@@ -406,19 +443,23 @@ function asu_content_entity_presave(EntityInterface $entity) {
 }
 
 /**
- * Implements hook_entity_update().
+ * Implements hook_entity_update(). Post-save hook.
  *
  * Makes sure to update referred apartments after project node save.
  */
 function asu_content_entity_update($entity) {
   if (
-    $entity instanceof EntityInterface &&
-    method_exists($entity, 'getType') &&
-    $entity->getType() == 'project' &&
-    $entity->hasField('field_apartments')
+    $entity instanceof EntityInterface
   ) {
-    asu_content_asu_queue_worker($entity);
+    if ($entity->getEntityTypeId() == 'node' && $entity->bundle() == 'project' && $entity->hasField('field_apartments')) {
+      asu_content_asu_queue_worker($entity);
+    }
+    if ($entity->getEntityTypeId() == 'node' && $entity->bundle() == 'apartment') {
+      asu_content_check_apartment_integration_fields($entity);
+    }
   }
+
+
 }
 
 /**
