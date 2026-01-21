@@ -45,15 +45,14 @@ function asu_content_form_node_form_alter(&$form, $form_state) {
   asu_content_project_add_archived_handling($form, $form_state);
   asu_content_hide_field_in_apartment_edit($form, $form_state);
 
-
-  // Only show this when editing the form
+  // Only show this when editing the form.
   if (!$form_state->isSubmitted()) {
 
     \Drupal::logger('asu_content')->notice('Checking integration fields on node form, form state is @form_state', ['@form_state' => $form_state->isSubmitted() ? 'submitted' : 'not submitted']);
-    $missing_fields = asu_content_check_apartment_integration_fields($form_state->getFormObject()->getEntity(), false);
+    $missing_fields = asu_content_check_apartment_integration_fields($form_state->getFormObject()->getEntity(), FALSE);
 
-    // check if either one of the integrations has missing fields
-    $has_missing_fields = array_filter($missing_fields, function($value) {
+    // Check if either one of the integrations has missing fields.
+    $has_missing_fields = array_filter($missing_fields, function ($value) {
       return !empty($value);
     });
 
@@ -61,7 +60,6 @@ function asu_content_form_node_form_alter(&$form, $form_state) {
       $weight = -1000;
       foreach ($has_missing_fields as $integration_name => $fields) {
 
-        
         if (!empty($fields)) {
           $warning_message_text = asu_content_get_integration_warning_message_text($integration_name, $fields);
           \Drupal::logger('asu_content')->notice('Warning message for @integration: @warning_message_text', [
@@ -78,6 +76,17 @@ function asu_content_form_node_form_alter(&$form, $form_state) {
   }
 }
 
+/**
+ * Get integration warning message text.
+ *
+ * @param string $integration_name
+ *   The integration name.
+ * @param array $missing_fields
+ *   The missing fields.
+ *
+ * @return string
+ *   The integration warning message text.
+ */
 function asu_content_get_integration_warning_message_text($integration_name, array $missing_fields) {
   $integration_name = preg_replace('/^field_publish_on_/', '', $integration_name);
   return \Drupal::translation()->translate('<strong>Integration Warning:</strong> "@integration"-integration is enabled, but the following required fields are empty: @fields.', [
@@ -109,7 +118,6 @@ function asu_content_check_apartment_integration_fields(EntityInterface $entity,
 
   foreach ($integration_triggers as $trigger_field => $base_fields) {
     // Optionally log, then check trigger field.
-
     $missing_fields = [];
     if (
       $entity->hasField($trigger_field) &&
@@ -131,21 +139,16 @@ function asu_content_check_apartment_integration_fields(EntityInterface $entity,
       if ($add_message) {
         $warning_message_text = asu_content_get_integration_warning_message_text($trigger_field, $missing_fields);
 
-        \Drupal::messenger()->addWarning(['#markup' => $warning_message_text, '#allowed_tags' => ['strong', 'em', 'div', 'span', 'br']]);
+        \Drupal::messenger()->addWarning([
+          '#markup' => $warning_message_text,
+          '#allowed_tags' => ['strong', 'em', 'div', 'span', 'br'],
+        ]);
       }
     }
     $result[$trigger_field] = $missing_fields;
   }
 
   return $result;
-}
-
-/**
- * Node form validation handler for apartment integration fields.
- */
-function asu_content_validate_integration_fields(&$form, $form_state) {
-  /** @var \Drupal\node\NodeInterface $node */
-  $node = $form_state->getFormObject()->buildEntity($form, $form_state);
 }
 
 /**
@@ -438,8 +441,9 @@ function asu_content_entity_presave(EntityInterface $entity) {
 }
 
 /**
- * Implements hook_entity_update(). Post-save hook.
+ * Implements hook_entity_update().
  *
+ * Post-save hook.
  * Makes sure to update referred apartments after project node save.
  */
 function asu_content_entity_update($entity) {
@@ -453,7 +457,6 @@ function asu_content_entity_update($entity) {
       asu_content_check_apartment_integration_fields($entity);
     }
   }
-
 
 }
 
