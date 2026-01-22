@@ -9,11 +9,48 @@ use Drupal\Core\Url;
 use Drupal\field\Entity\FieldConfig;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\asu_api\Api\BackendApi\BackendApi;
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 
 /**
  * Renders integration status summary (UI + CSV export).
  */
-class IntegrationSummaryController extends ControllerBase {
+class IntegrationSummaryController extends ControllerBase implements ContainerInjectionInterface {
+
+  /**
+   * The backend API service.
+   *
+   * @var \Drupal\asu_api\Api\BackendApi\BackendApi
+   */
+  private readonly BackendApi $backendApi;
+
+  /**
+   * Constructs a new IntegrationSummaryController object.
+   *
+   * Injects the backend API service dependency.
+   *
+   * @param \Drupal\asu_api\Api\BackendApi\BackendApi $backendApi
+   *   The backend API service.
+   */
+  public function __construct(BackendApi $backendApi) {
+    $this->backendApi = $backendApi;
+  }
+
+  /**
+   * Creates a new IntegrationSummaryController object.
+   *
+   * Injects the backend API service dependency.
+   *
+   * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
+   *   The container interface.
+   *
+   * @return \Drupal\asu_content\Controller\IntegrationSummaryController
+   *   The IntegrationSummaryController object.
+   */
+  public static function create(ContainerInterface $container) {
+    return new static($container->get('asu_api.backendapi'));
+  }
 
   /**
    * Map public sort keys -> row array keys.
@@ -225,11 +262,9 @@ class IntegrationSummaryController extends ControllerBase {
    *   Rows with normalized values for UI/CSV.
    */
   protected function buildSummaryRows(): array {
-    /** @var \Drupal\asu_api\Api\BackendApi\BackendApi $api */
-    $api = \Drupal::service('asu_api.backendapi');
     $request = new GetIntegrationStatusRequest();
     /** @var \Drupal\asu_api\Api\BackendApi\Response\GetIntegrationStatusResponse $response */
-    $response = $api->send($request);
+    $response = $this->backendApi->send($request);
     $data = $response->getContent();
 
     $rows = [];
