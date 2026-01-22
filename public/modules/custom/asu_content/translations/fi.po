@@ -11649,6 +11649,9 @@ msgstr "Peruutettu"
 msgid "Project: "
 msgstr "Kohde: "
 
+msgid "Project: @field_label"
+msgstr "Kohde: @field_label"
+
 msgid "Please confirm your subscription:"
 msgstr "Vahvista tilauksesi:"
 

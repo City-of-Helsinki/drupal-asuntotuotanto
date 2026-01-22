@@ -16,6 +16,11 @@ class IntegrationConstants {
     'field_publish_on_etuovi' => self::ETUOVI_REQUIRED_FIELDS_APARTMENT,
   ];
 
+  public const INTEGRATION_TRIGGERS_PROJECT = [
+    'field_publish_on_oikotie' => self::OIKOTIE_REQUIRED_FIELDS_PROJECT,
+    'field_publish_on_etuovi' => self::ETUOVI_REQUIRED_FIELDS_PROJECT,
+  ];
+
   /**
    * Get required fields for integration.
    *
@@ -27,7 +32,7 @@ class IntegrationConstants {
    * @return array
    *   An array of required fields for the integration.
    */
-  public static function getRequiredFieldsForIntegration(string $integration_trigger, string $ownership_type) {
+  public static function getRequiredApartmentFieldsForIntegration(string $integration_trigger, string $ownership_type) {
     $required_fields = self::INTEGRATION_TRIGGERS[$integration_trigger];
     $ownership_type_fields = match (strtolower($ownership_type)) {
       'hitas' => self::HITAS_PRICE_FIELDS,
@@ -38,12 +43,42 @@ class IntegrationConstants {
     return $required_fields;
   }
 
+  public static function getRequiredProjectFieldsForIntegration(string $integration_trigger) {
+    $required_fields = self::INTEGRATION_TRIGGERS_PROJECT[$integration_trigger];
+    return $required_fields;
+  }
+
+  public const ETUOVI_REQUIRED_FIELDS_PROJECT = [
+    'field_holding_type',
+    'field_building_type',
+    'field_postal_code',
+    'field_city',
+  ];
+
+  public const OIKOTIE_REQUIRED_FIELDS_PROJECT = [
+    'field_housing_company',
+    'field_estate_agent_email',
+    'field_street_address',
+    'field_postal_code',
+    'field_city',
+    'field_coordinate_lat',
+    'field_coordinate_lon',
+    'field_new_development_status',
+    'field_building_type',
+    'field_holding_type',
+  ];
+
   public const ETUOVI_REQUIRED_FIELDS_APARTMENT = [
     'field_room_count',
   ];
 
   public const OIKOTIE_REQUIRED_FIELDS_APARTMENT = [
-    'field_application_url',
+    'field_living_area',
+    'field_financing_fee',
+    'field_maintenance_fee',
+    'field_water_fee',
+    'field_parking_fee',
+    'field_url',
   ];
 
   public const HITAS_PRICE_FIELDS = [
