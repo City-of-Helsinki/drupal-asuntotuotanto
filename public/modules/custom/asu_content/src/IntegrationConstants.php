@@ -43,9 +43,17 @@ class IntegrationConstants {
     return $required_fields;
   }
 
+  /**
+   * Get required fields for project integration.
+   *
+   * @param string $integration_trigger
+   *   The field machine name of the integration boolean.
+   *
+   * @return array
+   *   An array of required fields for the integration.
+   */
   public static function getRequiredProjectFieldsForIntegration(string $integration_trigger) {
-    $required_fields = self::INTEGRATION_TRIGGERS_PROJECT[$integration_trigger];
-    return $required_fields;
+    return self::INTEGRATION_TRIGGERS_PROJECT[$integration_trigger];
   }
 
   public const ETUOVI_REQUIRED_FIELDS_PROJECT = [

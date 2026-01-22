@@ -50,7 +50,7 @@ function asu_content_form_node_form_alter(&$form, $form_state) {
 
     \Drupal::logger('asu_content')->notice('Checking integration fields on node form, form state is @form_state', ['@form_state' => $form_state->isSubmitted() ? 'submitted' : 'not submitted']);
     $entity = $form_state->getFormObject()->getEntity();
-    $missing_fields = asu_content_check_apartment_integration_fields($form, $entity, "form");
+    asu_content_check_apartment_integration_fields($form, $entity, "form");
   }
 }
 
@@ -73,6 +73,16 @@ function asu_content_get_integration_warning_message_text($integration_name, arr
   ])->render();
 }
 
+/**
+ * Add integration warning message to form.
+ *
+ * @param array $form
+ *   The form array.
+ * @param string $integration_name
+ *   The integration name.
+ * @param array $missing_fields
+ *   The missing fields.
+ */
 function asu_content_add_integration_warning_message_to_form(&$form, string $integration_name, array $missing_fields) {
   $warning_message_text = asu_content_get_integration_warning_message_text($integration_name, $missing_fields);
   \Drupal::logger('asu_content')->notice('Warning message for @integration: @warning_message_text', [
@@ -85,6 +95,14 @@ function asu_content_add_integration_warning_message_to_form(&$form, string $int
   ];
 }
 
+/**
+ * Push an integration warning message to Drupal's messenger service.
+ *
+ * @param string $integration_name
+ *   The integration name.
+ * @param array $missing_fields
+ *   The missing fields.
+ */
 function asu_content_add_integration_warning_message_to_messenger(string $integration_name, array $missing_fields) {
   $warning_message_text = asu_content_get_integration_warning_message_text($integration_name, $missing_fields);
 
@@ -101,8 +119,8 @@ function asu_content_add_integration_warning_message_to_messenger(string $integr
  *
  * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The apartment node entity to validate.
- * @param bool $add_message
- *   Whether to add warnings to the messenger service, default TRUE.
+ * @param string $add_message_to
+ *   Whether to add warnings to the "messenger" or "form", default "messenger".
  *
  * @return array
  *   An associative array where the keys are trigger field machine names,
@@ -127,7 +145,6 @@ function asu_content_check_apartment_integration_fields(&$form, EntityInterface 
       $required_apartment_fields = IntegrationConstants::getRequiredApartmentFieldsForIntegration($trigger_field, asu_content_get_ownershiptype());
       $required_project_fields = IntegrationConstants::getRequiredProjectFieldsForIntegration($trigger_field);
 
-
       $project = $entity->getProject();
       // Validate project fields.
       foreach ($required_project_fields as $field_name) {
@@ -144,19 +161,20 @@ function asu_content_check_apartment_integration_fields(&$form, EntityInterface 
           $missing_fields[] = $field_label;
         }
       }
-      
+
       // Validate apartment fields.
       foreach ($required_apartment_fields as $field_name) {
         if ($entity->hasField($field_name) && $entity->get($field_name)->isEmpty()) {
           $field_label = $entity->get($field_name)->getFieldDefinition()->getLabel();
           $missing_fields[] = $field_label;
-        } 
+        }
       }
     }
     if (!empty($missing_fields)) {
       if ($add_message_to == "messenger") {
         asu_content_add_integration_warning_message_to_messenger($trigger_field, $missing_fields);
-      } elseif ($add_message_to == "form") {
+      }
+      elseif ($add_message_to == "form") {
         asu_content_add_integration_warning_message_to_form($form, $trigger_field, $missing_fields);
       }
     }
