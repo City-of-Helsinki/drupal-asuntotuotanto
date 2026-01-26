@@ -60,6 +60,7 @@ class IntegrationSummaryController extends ControllerBase implements ContainerIn
   private const SORTABLE = [
     'integration' => 'integration_name',
     'status' => 'status',
+    'last_mapped' => 'last_mapped',
     'project_housing_company' => 'project_housing_company',
     'apartment_address' => 'apartment_address',
     'project_url' => 'project_url',
@@ -104,6 +105,7 @@ class IntegrationSummaryController extends ControllerBase implements ContainerIn
     $header = [
       $headerCell('integration', $this->t('Integration')),
       $headerCell('status', $this->t('Status')),
+      $headerCell('last_mapped', $this->t('Last successful export')),
       $headerCell('project_housing_company', $this->t('Project Name')),
       $headerCell('apartment_address', $this->t('Apartment Address')),
       $headerCell('missing_fields', $this->t('Missing Fields')),
@@ -121,6 +123,7 @@ class IntegrationSummaryController extends ControllerBase implements ContainerIn
       ],
     ];
 
+    
     $build['table'] = [
       '#type' => 'table',
       '#header' => $header,
@@ -162,9 +165,19 @@ class IntegrationSummaryController extends ControllerBase implements ContainerIn
           }
         }
 
+
+        $formatted_last_mapped_dt = (isset($r['last_mapped']) && $r['last_mapped'])
+            ? (
+                ($dt = strtotime($r['last_mapped']))
+                  ? date('Y-m-d H:i', $dt)
+                  : $r['last_mapped']
+              )
+            : '—';
+
         return [
           $r['integration_name'],
           $status_display,
+          $formatted_last_mapped_dt,
           $project_url_link ?: '—',
           $url_link ?: '—',
           $missing_fields_display,
@@ -190,11 +203,12 @@ class IntegrationSummaryController extends ControllerBase implements ContainerIn
     [$sort, $dir] = $this->getSortParams();
     $this->applySort($rows, $sort, $dir);
 
-    $out = "\"integration\";\"status\";\"project_housing_company\";\"apartment_address\";\"project_url\";\"url\";\"missing_fields\"\n";
+    $out = "\"integration\";\"status\";\"last_mapped\";\"project_housing_company\";\"apartment_address\";\"project_url\";\"url\";\"missing_fields\"\n";
     foreach ($rows as $r) {
       $line = [
         str_replace('"', '""', $r['integration_name']),
         str_replace('"', '""', $r['status']),
+        str_replace('"', '""', $r['last_mapped']),
         str_replace('"', '""', $r['project_housing_company']),
         str_replace('"', '""', $r['apartment_address']),
         str_replace('"', '""', $r['project_url']),
@@ -294,6 +308,7 @@ class IntegrationSummaryController extends ControllerBase implements ContainerIn
             'integration_name' => (string) $integration_name,
             'status' => $this->t('Success'),
             'status_key' => 'success',
+            'last_mapped' => (string) ($item['last_mapped'] ?? ''),
             'uuid' => (string) ($item['uuid'] ?? ''),
             'project_uuid' => (string) ($item['project_uuid'] ?? ''),
             'project_housing_company' => (string) ($item['project_housing_company'] ?? ''),

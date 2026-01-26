@@ -43465,3 +43465,5 @@ msgstr "Asunnolta puuttuu vaadittuja kenttiä (lueteltu Puuttuvat kentät -sarak
 msgid "<strong>Integration Warning:</strong> "@integration"-integration is enabled, but the following required fields are empty: @fields."
 msgstr "<strong>Integraatiovaroitus:</strong> \"@integration\"-integraatio on käytössä, mutta seuraavat pakolliset kentät ovat tyhjiä: @fields."
 
+msgid "Last successful export"
+msgstr "Viimeksi viety onnistuneesti"
