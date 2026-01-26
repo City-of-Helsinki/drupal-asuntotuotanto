@@ -1,6 +1,6 @@
-name: 'ASU - Translation'
+name: "ASU - Translation"
 type: module
-description: 'ASU - Translation creates translation files for ElasticSearch index keys.'
+description: "ASU - Translation creates translation files for ElasticSearch index keys."
 core: 8.x
-core_version_requirement: ^8 || ^9 || ^10
-package: 'ASU'
+core_version_requirement: ^8 || ^9 || ^10 || ^11
+package: "ASU"

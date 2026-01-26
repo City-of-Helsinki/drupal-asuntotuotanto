@@ -42,9 +42,18 @@ class FileIdToUrl extends DataTypePluginBase {
     if ($file = File::load((int) $value)) {
       /** @var \Drupal\file\Validation\FileValidatorInterface $file_validator */
       $file_validator = \Drupal::service('file.validator');
-      if (empty($file_validator->validate($file, ['extensions' => 'png jpg jpeg']))) {
-        $style = ImageStyle::load('original_m');
-        return $style->buildUrl($file->getFileUri());
+      try {
+        $violations = $file_validator->validate($file, [
+          'FileExtension' => ['extensions' => 'png jpg jpeg'],
+        ]);
+
+        if (count($violations) === 0) {
+          $style = ImageStyle::load('original_m');
+          return $style->buildUrl($file->getFileUri());
+       }
+      }
+      catch (\Throwable $e) {
+        // Never fail indexing because of file validation/constraint issues.
       }
       return $file->createFileUrl(FALSE);
     }

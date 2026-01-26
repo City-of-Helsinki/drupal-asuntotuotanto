@@ -1,7 +1,7 @@
 name: "ASU Project Subscription"
 type: module
 description: "Subscriptions for project status change notifications"
-core_version_requirement: ^10 || ^9
+core_version_requirement: ^10 || ^9  || ^11
 package: "ASU"
 dependencies:
   - drupal:node

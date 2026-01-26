@@ -10,3 +10,5 @@ services:
     arguments: ['@entity_type.manager']
     tags:
       - { name: queue_worker }
+  monolog.processor.asu_context_sanitizer:
+    class: Drupal\asu_content\Logger\ContextSanitizerProcessor
