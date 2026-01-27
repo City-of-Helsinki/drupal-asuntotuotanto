@@ -123,7 +123,6 @@ class IntegrationSummaryController extends ControllerBase implements ContainerIn
       ],
     ];
 
-    
     $build['table'] = [
       '#type' => 'table',
       '#header' => $header,
@@ -164,7 +163,6 @@ class IntegrationSummaryController extends ControllerBase implements ContainerIn
             $missing_fields_display = implode(', ', $fields);
           }
         }
-
 
         $formatted_last_mapped_dt = (isset($r['last_mapped']) && $r['last_mapped'])
             ? (
