@@ -59,7 +59,7 @@ class IntegrationSummaryController extends ControllerBase implements ContainerIn
    */
   private const SORTABLE = [
     'integration' => 'integration_name',
-    'status' => 'status',
+    'can_be_exported' => 'status',
     'last_mapped' => 'last_mapped',
     'project_housing_company' => 'project_housing_company',
     'apartment_address' => 'apartment_address',
@@ -103,11 +103,11 @@ class IntegrationSummaryController extends ControllerBase implements ContainerIn
     };
 
     $header = [
-      $headerCell('integration', $this->t('Integration')),
-      $headerCell('status', $this->t('Status')),
+      $headerCell('integration', $this->t('Name')),
+      $headerCell('can_be_exported', $this->t('Can be exported')),
       $headerCell('last_mapped', $this->t('Last successful export')),
-      $headerCell('project_housing_company', $this->t('Project Name')),
-      $headerCell('apartment_address', $this->t('Apartment Address')),
+      $headerCell('project_housing_company', $this->t('Project')),
+      $headerCell('apartment_address', $this->t('Apartment')),
       $headerCell('missing_fields', $this->t('Missing Fields')),
     ];
 
@@ -148,10 +148,10 @@ class IntegrationSummaryController extends ControllerBase implements ContainerIn
         // Format status with visual indicator.
         $status_display = $r['status'];
         if (isset($r['status_key']) && $r['status_key'] === 'success') {
-          $status_display = '✓ ' . $status_display;
+          $status_display = '✓';
         }
         elseif (isset($r['status_key']) && $r['status_key'] === 'fail') {
-          $status_display = '✗ ' . $status_display;
+          $status_display = '✗';
         }
 
         // Format missing fields.
