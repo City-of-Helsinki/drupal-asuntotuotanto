@@ -39,8 +39,8 @@ msgstr "Tallenna asetukset"
 msgid "delete"
 msgstr "poista"
 
-msgid "Status"
-msgstr "Tila"
+msgid "Can be exported"
+msgstr "Voidaan viedä"
 
 msgid "Register"
 msgstr "Rekisteröidy"
@@ -35920,6 +35920,9 @@ msgstr ""
 msgid "Integrations"
 msgstr "Integraatiot"
 
+msgid "Integrations summary"
+msgstr "Integraatioiden yhteenveto"
+
 msgid "Integrations"
 msgstr ""
 msgid "Add new context"
@@ -43405,9 +43408,6 @@ msgstr "Helsingin kaupungin logo"
 msgid "You already have an offer or have been sold an apartment in this project and cannot submit a new application."
 msgstr "Sinulla on jo myyty tai tarjottu asunto tässä kohteessa etkä siksi voi tehdä uutta hakemusta."
 
-msgid "Integration"
-msgstr "Integraatio"
-
 msgid "Status"
 msgstr "Tila"
 
@@ -43417,11 +43417,8 @@ msgstr "UUID"
 msgid "Project UUID"
 msgstr "Kohteen UUID"
 
-msgid "Project Name"
-msgstr "Kohteen nimi"
-
-msgid "Apartment Address"
-msgstr "Asunnon osoite"
+msgid "Apartment"
+msgstr "Asunto"
 
 msgid "Project URL"
 msgstr "Kohteen URL"
