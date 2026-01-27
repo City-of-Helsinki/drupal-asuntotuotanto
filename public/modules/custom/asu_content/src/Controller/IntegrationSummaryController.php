@@ -349,7 +349,7 @@ class IntegrationSummaryController extends ControllerBase implements ContainerIn
   }
 
   /**
-   * Get sanitized sort params from current request.
+   * Get sanitized sorting params from current request.
    *
    * @return array{0:string,1:string}
    *   [$sort, $dir] where $dir is 'asc'|'desc'.
