@@ -13,7 +13,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\asu_api\Api\BackendApi\BackendApi;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 
-// NOSONAR.
 /**
  * Renders integration status summary (UI + CSV export).
  */
