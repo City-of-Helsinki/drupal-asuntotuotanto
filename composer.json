@@ -168,6 +168,14 @@
             },
             "drupal/big_pipe_sessionless": {
                 "Drupal 11 compatibility (issue #3428235, patch #22)": "https://www.drupal.org/files/issues/2025-10-02/3428235-big_pipe_sessionless-22.d11.patch"
+            },
+            "drupal/core": {
+                "[#UHF-12709] Patch 'Deleted and replaced ...' error messages": "patches/uhf-12709-skip-deleted-log.patch"
+            }
+        },
+        "patches-ignore": {
+            "drupal/helfi_platform_config": {
+                "[#UHF-12709] Patch 'Deleted and replaced ...' error messages": true
             }
         },
         "drupal-lenient": {
