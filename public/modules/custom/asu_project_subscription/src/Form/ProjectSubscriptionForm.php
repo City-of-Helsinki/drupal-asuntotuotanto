@@ -188,10 +188,9 @@ class ProjectSubscriptionForm extends FormBase {
       $sub_id = $form_state->getValue('existing_sub_id');
 
       if ($sub_id) {
-        /**
-         * Subscription entity being updated.
+        /* Subscription entity being updated.
          *
-         * @var \Drupal\asu_project_subscription\Entity\ProjectSubscription $subscription
+         * \Drupal\asu_project_subscription\Entity\ProjectSubscription\$subscription
          */
         // phpcs:ignore DrupalPractice.Objects.GlobalDrupal.GlobalDrupal
         $subscription = \Drupal::entityTypeManager()
@@ -261,11 +260,8 @@ class ProjectSubscriptionForm extends FormBase {
     $meta = $this->buildProjectMeta($project_id);
 
     if ($ids) {
-      /**
-       * Loaded subscription for re-confirmation flow.
-       *
-       * @var \Drupal\asu_project_subscription\Entity\ProjectSubscription $subscription
-       */
+      /* Loaded subscription for re-confirmation flow.
+      \Drupal\asu_project_subscription\Entity\ProjectSubscription $subscription */
       $subscription = $storage->load(reset($ids));
 
       $was_unsubscribed_at = (int) ($subscription->get('unsubscribed_at')->value ?? 0);
@@ -307,10 +303,10 @@ class ProjectSubscriptionForm extends FormBase {
     $confirm = Crypt::randomBytesBase64(32);
     $unsub = Crypt::randomBytesBase64(32);
 
-    /**
-     * New subscription entity to be created.
+    /* New subscription entity to be created.
      *
-     * @var \Drupal\asu_project_subscription\Entity\ProjectSubscription $subscription
+     * \Drupal\asu_project_subscription\Entity\ProjectSubscription\
+     * $subscription
      */
     $subscription = ProjectSubscription::create([
       'project' => $project_id,

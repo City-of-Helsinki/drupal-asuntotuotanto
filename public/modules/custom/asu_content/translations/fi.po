@@ -11649,6 +11649,9 @@ msgstr "Peruutettu"
 msgid "Project: "
 msgstr "Kohde: "
 
+msgid "Project: @field_label"
+msgstr "Kohde: @field_label"
+
 msgid "Please confirm your subscription:"
 msgstr "Vahvista tilauksesi:"
 
@@ -43401,3 +43404,66 @@ msgstr "Helsingin kaupungin logo"
 
 msgid "You already have an offer or have been sold an apartment in this project and cannot submit a new application."
 msgstr "Sinulla on jo myyty tai tarjottu asunto tässä kohteessa etkä siksi voi tehdä uutta hakemusta."
+
+msgid "Integration"
+msgstr "Integraatio"
+
+msgid "Status"
+msgstr "Tila"
+
+msgid "UUID"
+msgstr "UUID"
+
+msgid "Project UUID"
+msgstr "Kohteen UUID"
+
+msgid "Project Name"
+msgstr "Kohteen nimi"
+
+msgid "Apartment Address"
+msgstr "Asunnon osoite"
+
+msgid "Project URL"
+msgstr "Kohteen URL"
+
+msgid "Apartment URL"
+msgstr "Asunnon URL"
+
+msgid "Missing Fields"
+msgstr "Puuttuvat kentät"
+
+msgid "Export CSV"
+msgstr "Vie CSV"
+
+msgid "Project"
+msgstr "Kohde"
+
+msgid "Apartment"
+msgstr "Asunto"
+
+msgid "No apartments found."
+msgstr "Asuntoja ei löytynyt."
+
+msgid "Success"
+msgstr "Onnistui"
+
+msgid "Fail"
+msgstr "Epäonnistui"
+
+msgid "Total apartments"
+msgstr "Asuntoja yhteensä"
+
+msgid "Status legend"
+msgstr "Tilan selitykset"
+
+msgid "Apartment has all required fields and is ready for export"
+msgstr "Asunnolla on kaikki vaaditut kentät ja se on valmis vientiin"
+
+msgid "Apartment is missing required fields (listed in Missing Fields column)"
+msgstr "Asunnolta puuttuu vaadittuja kenttiä (lueteltu Puuttuvat kentät -sarakkeessa)"
+
+msgid "<strong>Integration Warning:</strong> "@integration"-integration is enabled, but the following required fields are empty: @fields."
+msgstr "<strong>Integraatiovaroitus:</strong> \"@integration\"-integraatio on käytössä, mutta seuraavat pakolliset kentät ovat tyhjiä: @fields."
+
+msgid "Last successful export"
+msgstr "Viimeksi viety onnistuneesti"

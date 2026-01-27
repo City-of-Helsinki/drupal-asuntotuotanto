@@ -164,10 +164,8 @@ class ProjectSubscriptionNotifier extends QueueWorkerBase implements ContainerFa
 
     foreach ($subs as $sub) {
       /**
-       * Loaded subscription entity.
-       *
        * @var \Drupal\asu_project_subscription\Entity\ProjectSubscription $sub
-       */
+       * */
       $to = (string) $sub->get('email')->value;
       if (!$to) {
         continue;

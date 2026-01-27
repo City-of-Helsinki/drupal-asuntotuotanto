@@ -25,3 +25,22 @@ asu_content.readiness:
     no_cache: TRUE
     default_url_options:
       path_processing: FALSE
+asu_content.summary_integrations:
+  path: '/admin/asu/integrations/summary'
+  defaults:
+    _controller: '\Drupal\asu_content\Controller\IntegrationSummaryController::summary'
+    _title: 'Integrations summary'
+  requirements:
+    _permission: 'view integration summary'
+  options:
+    _admin_route: TRUE
+
+asu_content.summary_integrations_csv:
+  path: '/admin/asu/integrations/summary.csv'
+  defaults:
+    _controller: '\Drupal\asu_content\Controller\IntegrationSummaryController::summaryCsv'
+    _title: 'Integrations summary CSV'
+  requirements:
+    _permission: 'view integration summary'
+  options:
+    _admin_route: TRUE
