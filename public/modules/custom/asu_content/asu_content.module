@@ -362,13 +362,7 @@ function asu_content_hide_fields_in_hitas(&$form) {
  * Implements hook_entity_presave().
  */
 function asu_content_entity_presave(EntityInterface $entity) {
-  \Drupal::logger('asu_content')->info(
-    'field_publish_on_etuovi: @etuovi, field_publish_on_oikotie: @oikotie',
-    [
-      '@etuovi' => $entity->hasField('field_publish_on_etuovi') ? $entity->get('field_publish_on_etuovi')->value : 'N/A',
-      '@oikotie' => $entity->hasField('field_publish_on_oikotie') ? $entity->get('field_publish_on_oikotie')->value : 'N/A',
-    ]
-  );
+
   if (
     $entity instanceof EntityInterface &&
     method_exists($entity, 'getType')
