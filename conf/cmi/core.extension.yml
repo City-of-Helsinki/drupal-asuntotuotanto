@@ -41,6 +41,7 @@ module:
   config_rewrite: 0
   config_terms: 0
   config_translation: 0
+  consumers: 0
   content_lock: 0
   content_lock_timeout: 0
   context: 0
@@ -179,6 +180,7 @@ module:
   search_api: 0
   select2: 0
   serialization: 0
+  simple_oauth: 0
   simple_sitemap: 0
   slick: 0
   social_media: 0

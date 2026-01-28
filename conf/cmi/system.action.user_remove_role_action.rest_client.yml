@@ -1,0 +1,14 @@
+uuid: f26a97fd-a694-4bb6-9fad-2500bdc615d7
+langcode: fi
+status: true
+dependencies:
+  config:
+    - user.role.rest_client
+  module:
+    - user
+id: user_remove_role_action.rest_client
+label: 'Remove the REST api client role from the selected user(s)'
+type: user
+plugin: user_remove_role_action
+configuration:
+  rid: rest_client
