@@ -1,0 +1,14 @@
+uuid: 4a32f96d-cb21-41b7-9693-64e950f660c7
+langcode: fi
+status: true
+dependencies:
+  config:
+    - user.role.rest_client
+  module:
+    - user
+id: user_add_role_action.rest_client
+label: 'Add the REST api client role to the selected user(s)'
+type: user
+plugin: user_add_role_action
+configuration:
+  rid: rest_client
