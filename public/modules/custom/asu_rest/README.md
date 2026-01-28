@@ -35,6 +35,26 @@ Returns: Success/error message with appropriate status code.
 
 ```
 
+### Elasticsearch-compatible search
+
+The following endpoints return Elasticsearch-style JSON responses and are
+secured with OAuth2 (Simple OAuth). Use the client credentials grant to obtain
+an access token and send `Authorization: Bearer <token>` on requests.
+
+- Token endpoint: `POST /oauth/token`
+ - Configure Simple OAuth keys and a consumer with client credentials.
+
+Endpoints:
+- `GET /projects`
+- `GET /projects/{project_id}`
+- `GET /projects/{project_id}/apartments`
+- `GET /apartments`
+- `GET /apartments/{apartment_id}`
+
+Search params match the legacy `/elasticsearch` endpoint (e.g.
+`project_ownership_type`, `project_district`, `project_state_of_sale`,
+`room_count`, `living_area`, `price`, `properties`).
+
 ### Mailing list
 - Not done in MVP
 

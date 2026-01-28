@@ -1,0 +1,18 @@
+uuid: e4afcf76-3e0d-4183-8acb-d359a80fedb4
+langcode: en
+status: true
+dependencies:
+  module:
+    - asu_rest
+    - serialization
+    - simple_oauth
+id: asu_projects
+plugin_id: asu_projects
+granularity: resource
+configuration:
+  methods:
+    - GET
+  formats:
+    - json
+  authentication:
+    - oauth2
