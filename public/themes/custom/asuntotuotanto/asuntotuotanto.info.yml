@@ -1,9 +1,9 @@
 name: City of Helsinki - Asuntotuotanto
 description: Subtheme for Helsinki Drupal instances.
 type: theme
+core_version_requirement: ^11
 base theme: hdbt
 tags: sub-theme
-core_version_requirement: ^10
 screenshot: hdbt_subtheme.png
 
 # Regions
