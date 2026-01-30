@@ -123,8 +123,11 @@ class BackendApi {
       );
       return $request::getResponse($response);
     }
-    catch (\Exception $e) {
+    catch (RequestException|ConnectException $e) {
       $this->handleRequestError($e, $request);
+    }
+    catch (\Exception $e) {
+      throw $e;
     }
 
     return NULL;
@@ -197,8 +200,11 @@ class BackendApi {
         ]
       );
     }
-    catch (\Exception $e) {
+    catch (RequestException|ConnectException $e) {
       $this->handleRequestError($e, $request);
+    }
+    catch (\Exception $e) {
+      throw $e;
     }
 
     return $request::getResponse($response);
@@ -207,14 +213,14 @@ class BackendApi {
   /**
    * Handle exceptions thrown by guzzle.
    *
-   * @param \GuzzleHttp\Exception\RequestException $e
+   * @param \GuzzleHttp\Exception\RequestException|\GuzzleHttp\Exception\ConnectException $e
    *   The exception.
    * @param \Drupal\asu_api\Api\Request $request
    *   The request.
    *
    * @throws \Drupal\asu_api\Exception\IllegalApplicationException
    */
-  private function handleRequestError(RequestException $e, Request $request) {
+  private function handleRequestError(RequestException|ConnectException $e, Request $request) {
     switch (TRUE) {
       case $e instanceof ServerException:
         $this->handle500($e, $request);

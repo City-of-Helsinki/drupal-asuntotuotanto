@@ -154,15 +154,6 @@ parameters:
     - webcal
     - rtsp
 
-  monolog.processors:
-    - message_placeholder
-    - current_user
-    - request_uri
-    - ip
-    - referer
-    - filter_backtrace
-    - asu_context_sanitizer
-
    # Configure Cross-Site HTTP requests (CORS).
    # Read https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS
    # for more information about the topic in general.
@@ -181,30 +172,3 @@ parameters:
     maxAge: false
     # Sets the Access-Control-Allow-Credentials header.
     supportsCredentials: false
-
-services:
-  monolog.formatter.simple_line:
-    class: Monolog\Formatter\LineFormatter
-    arguments:
-      - "%%message%%\n"
-      - null
-      - true
-      - true
-
-  monolog.handler.php:
-    class: Monolog\Handler\StreamHandler
-    arguments:
-      - 'php://stderr'
-      - 400
-    calls:
-      - [setFormatter, ['@monolog.formatter.simple_line']]
-
-  monolog.formatter.json:
-    class: Monolog\Formatter\JsonFormatter
-    arguments:
-      - 1
-      - true
-      - true
-    calls:
-      - [setMaxNormalizeDepth, [3]]
-      - [setMaxNormalizeItemCount, [50]]

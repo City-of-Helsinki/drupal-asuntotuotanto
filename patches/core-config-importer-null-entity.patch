@@ -1,0 +1,26 @@
+diff --git a/lib/Drupal/Core/Config/ConfigImporter.php b/lib/Drupal/Core/Config/ConfigImporter.php
+--- a/lib/Drupal/Core/Config/ConfigImporter.php
++++ b/lib/Drupal/Core/Config/ConfigImporter.php
+@@ -973,13 +973,15 @@ protected function checkOp($collection, $op, $name) {
+         }
+         break;
+
+       case 'create':
+         if ($target_exists) {
+           // If the target already exists, use the entity storage to delete it
+           // again, if is a simple config, delete it directly.
+           if ($entity_type_id = $this->configManager->getEntityTypeIdByName($name)) {
+             $entity_storage = $this->configManager->getEntityTypeManager()->getStorage($entity_type_id);
+             $entity_type = $this->configManager->getEntityTypeManager()->getDefinition($entity_type_id);
+             $entity = $entity_storage->load($entity_storage->getIDFromConfigName($name, $entity_type->getConfigPrefix()));
+-            $entity->delete();
++            if ($entity) {
++              $entity->delete();
++            }
+           }
+           else {
+             $this->storageComparer->getTargetStorage($collection)->delete($name);
+           }
+           return TRUE;
+         }
+         break;

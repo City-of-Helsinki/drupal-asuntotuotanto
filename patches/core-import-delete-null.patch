@@ -1,0 +1,15 @@
+diff --git a/core/lib/Drupal/Core/Config/Entity/ConfigEntityStorage.php b/core/lib/Drupal/Core/Config/Entity/ConfigEntityStorage.php
+index 0c9b7e1..5cdefa3 100644
+--- a/core/lib/Drupal/Core/Config/Entity/ConfigEntityStorage.php
++++ b/core/lib/Drupal/Core/Config/Entity/ConfigEntityStorage.php
+@@ -372,6 +372,9 @@ public function importDelete($name, Config $new_config, Config $old_config) {
+   public function importDelete($name, Config $new_config, Config $old_config) {
+     $id = static::getIDFromConfigName($name, $this->entityType->getConfigPrefix());
+     $entity = $this->load($id);
++    if (!$entity) {
++      return TRUE;
++    }
+     $entity->setSyncing(TRUE);
+     $entity->delete();
+     return TRUE;
+   }

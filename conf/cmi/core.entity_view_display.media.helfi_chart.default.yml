@@ -33,7 +33,7 @@ content:
     weight: 2
     region: content
   field_helfi_chart_url:
-    type: helfi_chart
+    type: helfi_chart_media_library
     label: hidden
     settings: {  }
     third_party_settings: {  }

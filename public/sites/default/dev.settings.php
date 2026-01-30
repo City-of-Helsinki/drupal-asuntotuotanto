@@ -33,8 +33,8 @@
  * @see https://wiki.php.net/rfc/expectations
  */
 assert_options(ASSERT_ACTIVE, TRUE);
-if (class_exists('\\Drupal\\Component\\Assertion\\Handle')) {
-  \Drupal\Component\Assertion\Handle::register();
+if (class_exists('\Drupal\Component\Assertion\Handle')) {
+	\Drupal\Component\Assertion\Handle::register();
 }
 
 /**

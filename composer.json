@@ -161,22 +161,25 @@
                 "Drupal 11 compatibility fixes": "https://www.drupal.org/files/issues/2024-06-02/config_terms.1.x-dev.rector.patch"
             },
             "drupal/computed_field_plugin": {
-                "Drupal 11 compatibility fixes": "https://www.drupal.org/files/issues/2025-06-03/computed_field_plugin-3429438-d11.patch"
-            },
-            "kenwheeler/slick": {
-                "jQuery 4 compatibility (fix $.type)": "https://www.drupal.org/files/issues/2025-09-19/slick-carousel-1-8-0--jquery-4-compatibility--3467129-27.patch"
-            },
-            "drupal/big_pipe_sessionless": {
-                "Drupal 11 compatibility (issue #3428235, patch #22)": "https://www.drupal.org/files/issues/2025-10-02/3428235-big_pipe_sessionless-22.d11.patch"
+                "Drupal 11 compatibility fixes": "patches/computed_field_plugin-d11.patch"
             },
             "drupal/core": {
-                "[#UHF-12709] Patch 'Deleted and replaced ...' error messages": "patches/uhf-12709-skip-deleted-log.patch"
+                "[#UHF-12709] Patch 'Deleted and replaced ...' error messages": "patches/uhf-12709-skip-deleted-log.patch",
+                "[#3452852] Add create() factory method with autowired parameters to PluginBase": "patches/3452852.patch",
+                "[D11] Skip delete when config entity missing": "patches/core-import-delete-null.patch",
+                "[D11] Skip delete in checkOp when entity missing": "patches/core-config-importer-null-entity.patch",
+                "[D11] Skip countFieldData when table missing": "patches/core-count-field-data-missing-table.patch",
+                "[D11] Skip delete when field table missing": "patches/core-skip-delete-missing-field-table.patch"
+            },
+            "drupal/elasticsearch_connector": {
+                "[Local] Disable reopen parameter for ES": "patches/elasticsearch-connector-disable-reopen.patch"
             }
         },
-        "patches-ignore": {
-            "drupal/helfi_platform_config": {
-                "[#UHF-12709] Patch 'Deleted and replaced ...' error messages": true
-            }
+        "composer-patches": {
+            "ignore-dependency-patches": [
+                "drupal/helfi_platform_config",
+                "drupal/big_pipe_sessionless"
+            ]
         },
         "drupal-lenient": {
             "allowed-list": [
@@ -189,6 +192,54 @@
         }
     },
     "repositories": [
+        {
+            "type": "package",
+            "package": {
+                "name": "drupal/big_pipe_sessionless",
+                "version": "2.2.0",
+                "type": "drupal-module",
+                "source": {
+                    "url": "https://git.drupalcode.org/project/big_pipe_sessionless.git",
+                    "type": "git",
+                    "reference": "2.2.0"
+                },
+                "require": {
+                    "drupal/core": "^10 || ^11"
+                }
+            }
+        },
+        {
+            "type": "package",
+            "package": {
+                "name": "drupal/computed_field_plugin",
+                "version": "1.4.0",
+                "type": "drupal-module",
+                "source": {
+                    "url": "https://git.drupalcode.org/project/computed_field_plugin.git",
+                    "type": "git",
+                    "reference": "8.x-1.4"
+                },
+                "require": {
+                    "drupal/core": "^10 || ^11"
+                }
+            }
+        },
+        {
+            "type": "package",
+            "package": {
+                "name": "drupal/config_terms",
+                "version": "1.9.0",
+                "type": "drupal-module",
+                "source": {
+                    "url": "https://git.drupalcode.org/project/config_terms.git",
+                    "type": "git",
+                    "reference": "8.x-1.9"
+                },
+                "require": {
+                    "drupal/core": "^10 || ^11"
+                }
+            }
+        },
         {
             "type": "composer",
             "url": "https://repository.drupal.hel.ninja"
