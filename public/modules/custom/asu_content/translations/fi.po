@@ -43464,3 +43464,6 @@ msgstr "<strong>Integraatiovaroitus:</strong> \"@integration\"-integraatio on k�
 
 msgid "Last successful export"
 msgstr "Viimeksi viety onnistuneesti"
+
+msgid "Show all"
+msgstr "Näytä kaikki"

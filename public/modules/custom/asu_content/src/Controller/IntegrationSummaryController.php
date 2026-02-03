@@ -85,15 +85,18 @@ class IntegrationSummaryController extends ControllerBase implements ContainerIn
     [$sort, $dir] = $this->getSortParams();
     $this->applySort($rows, $sort, $dir);
 
+    $filtered_rows = $this->getFilteredRows($rows, $request);
+
+    $filter_value = \Drupal::request()->query->get('filter_value', '');
     // Helper to build header link with toggle dir and arrow.
-    $headerCell = function (string $key, string $label) use ($sort, $dir) {
+    $headerCell = function (string $key, string $label) use ($sort, $dir, $filter_value) {
       $nextDir = ($sort === $key && $dir === 'asc') ? 'desc' : 'asc';
       $arrow = '';
       if ($sort === $key) {
         $arrow = $dir === 'asc' ? ' ▲' : ' ▼';
       }
       $url = Url::fromRoute('asu_content.summary_integrations', [], [
-        'query' => ['sort' => $key, 'dir' => $nextDir],
+        'query' => ['sort' => $key, 'dir' => $nextDir, 'filter_value' => $filter_value],
       ]);
 
       return Link::fromTextAndUrl(
@@ -111,17 +114,51 @@ class IntegrationSummaryController extends ControllerBase implements ContainerIn
       $headerCell('missing_fields', $this->t('Missing Fields')),
     ];
 
-    $build['actions'] = [
+    $options = $this->getFilterOptions();
+
+    $build['filter_form'] = \Drupal::formBuilder()->getForm('Drupal\asu_content\Form\IntegrationSummaryFilterForm', $options);
+    $build['filter_form']['#prefix'] = '<div class="asu-content-integration-summary-filter-form">';
+    $build['filter_form']['#suffix'] = '</div>';
+    $build['filter_form']['#weight'] = 0;
+
+
+    $build['actions']['csv'] = [
       '#type' => 'container',
       'csv' => [
         '#type' => 'link',
         '#title' => $this->t('Export CSV'),
         '#url' => Url::fromRoute('asu_content.summary_integrations_csv', [], [
-          'query' => ['sort' => $sort, 'dir' => $dir],
+          'query' => ['sort' => $sort, 'dir' => $dir, 'filter_value' => $filter_value],
         ]),
         '#attributes' => ['class' => ['button', 'button--small']],
       ],
     ];
+    
+    $filter_name = isset($options[$filter_value]) ? $options[$filter_value] : '';
+    $filtered_rows = $this->filterRowsByColumnValue(
+      $rows,
+      'project_housing_company',
+      $filter_name
+    );
+
+
+    // empty("0") evaluates to true, so we need to check like this
+    if ($filter_value === '' || $filter_value === NULL) {
+      $filtered_rows = $rows;
+    }
+
+    if ($filter_value === '' || $filter_value === NULL) {
+      $filtered_rows = $rows;
+      $filter_value = '';
+    }
+
+    if (empty($filtered_rows)) {
+      $build['empty'] = [
+        '#type' => 'markup',
+        '#markup' => $this->t('No apartments found.'),
+      ];
+      return $build;
+    }
 
     $build['table'] = [
       '#type' => 'table',
@@ -180,7 +217,7 @@ class IntegrationSummaryController extends ControllerBase implements ContainerIn
           $url_link ?: '—',
           $missing_fields_display,
         ];
-      }, $rows),
+      }, $filtered_rows),
       '#empty' => $this->t('No apartments found.'),
     ];
 
@@ -198,23 +235,52 @@ class IntegrationSummaryController extends ControllerBase implements ContainerIn
    */
   public function summaryCsv(Request $request) {
     $rows = $this->buildSummaryRows();
+    $filtered_rows = $this->getFilteredRows($rows, $request);
     [$sort, $dir] = $this->getSortParams();
     $this->applySort($rows, $sort, $dir);
 
-    $out = "\"integration\";\"status\";\"last_mapped\";\"project_housing_company\";\"apartment_address\";\"project_url\";\"url\";\"missing_fields\"\n";
-    foreach ($rows as $r) {
-      $line = [
+    
+    $out = [
+      [
+        $this->t('Name'),
+        $this->t('Can be exported'),
+        $this->t('Last successful export'),
+        $this->t('Project'),
+        $this->t('Apartment'),
+        $this->t('Missing Fields'),
+      ],
+    ];
+    // Log the number of filtered rows and the current request query parameters.
+    $logger = \Drupal::logger('asu_content');
+    $row_count = is_array($filtered_rows) ? count($filtered_rows) : 0;
+
+    // Safely get the current request and query params.
+    $request = \Drupal::requestStack()->getCurrentRequest();
+    $query_params = $request ? $request->query->all() : [];
+
+    $logger->debug(
+      'Exported CSV with @row_count rows. Query params: @params',
+      [
+        '@row_count' => $row_count,
+        '@params' => json_encode($query_params),
+      ]
+    );
+    foreach ($filtered_rows as $r) {
+      $out[] = [
         str_replace('"', '""', $r['integration_name']),
-        str_replace('"', '""', $r['status']),
+        str_replace('"', '""', (isset($r['status_key']) && $r['status_key'] === 'success' ? 'X' : '')),
         str_replace('"', '""', $r['last_mapped']),
         str_replace('"', '""', $r['project_housing_company']),
         str_replace('"', '""', $r['apartment_address']),
-        str_replace('"', '""', $r['project_url']),
-        str_replace('"', '""', $r['url']),
         str_replace('"', '""', $r['missing_fields']),
       ];
-      $out .= '"' . implode('";"', $line) . '"' . "\n";
     }
+
+    $csv_string = '';
+    foreach ($out as $line) {
+      $csv_string .= '"' . implode('";"', $line) . '"' . "\n";
+    }
+    $out = $csv_string;
 
     $resp = new Response($out);
     $resp->headers->set('Content-Type', 'text/csv; charset=UTF-8');
@@ -346,6 +412,64 @@ class IntegrationSummaryController extends ControllerBase implements ContainerIn
     }
 
     return $rows;
+  }
+
+  /**
+   * Get filter options for the summary. Unique project names.
+   *
+   * @return array
+   *   Filter options for the summary.
+   */
+  protected function getFilterOptions(): array {
+    $projects = $this->getProjects();
+
+    $options = array_unique($projects);
+    asort($options, SORT_STRING);
+    return $options;
+  }
+
+protected function getFilteredRows(array $rows, Request $request): array {
+  $options = $this->getFilterOptions();
+  $filter_value = $request->query->get('filter_value', '');
+  $filter_name = isset($options[$filter_value]) ? $options[$filter_value] : '';
+
+  return $this->filterRowsByColumnValue($rows, 'project_housing_company', $filter_name);
+}
+
+  /**
+   * Filter rows by a specific column value.
+   *
+   * @param array $rows
+   *   Rows to filter.
+   * @param string $column
+   *   Column key to filter by.
+   * @param string $value
+   *   Value to filter for.
+   *
+   * @return array
+   *   Filtered rows.
+   */
+  protected function filterRowsByColumnValue(array $rows, string $column, string $value): array {
+    if (empty($value)) {
+      return $rows;
+    }
+    return array_filter($rows, function (array $row) use ($column, $value) {
+      return isset($row[$column]) && $row[$column] === $value;
+    });
+  }
+
+  /**
+   * Get projects for the summary.
+   *
+   * @return array
+   *   Projects for the summary.
+   */
+  protected function getProjects(): array {
+    $projects = [];
+    foreach ($this->buildSummaryRows() as $row) {
+      $projects[] = $row['project_housing_company'];
+    }
+    return array_unique($projects);
   }
 
   /**
