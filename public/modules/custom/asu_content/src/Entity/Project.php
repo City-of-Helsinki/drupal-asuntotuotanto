@@ -110,7 +110,9 @@ class Project extends Node {
     $langcode = \Drupal::languageManager()->getDefaultLanguage()->getId();
     $baseurl = $baseurl . '/' . $langcode;
     $apartmentType = '';
-    $isOpenForApplications = $apartmentStateOfSale == 'OPEN_FOR_APPLICATIONS';
+    if ($apartmentStateOfSale) {
+      $apartmentStateOfSale = strtoupper($apartmentStateOfSale);
+    }
     $isFreeForReservations = $apartmentStateOfSale == 'FREE_FOR_RESERVATIONS';
 
     if (isset($this->field_ownership_type->referencedEntities()[0])) {
@@ -118,7 +120,7 @@ class Project extends Node {
     }
 
     $addToApplicationUrl = sprintf('%s/application/add/%s/%s', $baseurl, $apartmentType, $this->id());
-    if ($isOpenForApplications && ($this->isApplicationPeriod() || $this->isApplicationPeriod('before'))) {
+    if ($this->isApplicationPeriod() || $this->isApplicationPeriod('before')) {
       if ($apartmentType == '') {
         return '';
       }
