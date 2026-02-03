@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\asu_api\Api\BackendApi\BackendApi;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+use Drupal\Core\Form\FormBuilderInterface;
 
 /**
  * Renders integration status summary (UI + CSV export).
@@ -26,15 +27,25 @@ class IntegrationSummaryController extends ControllerBase implements ContainerIn
   private readonly BackendApi $backendApi;
 
   /**
+   * The form builder service.
+   *
+   * @var \Drupal\Core\Form\FormBuilderInterface
+   */
+  protected $formBuilder;
+
+  /**
    * Constructs a new IntegrationSummaryController object.
    *
    * Injects the backend API service dependency.
    *
    * @param \Drupal\asu_api\Api\BackendApi\BackendApi $backendApi
    *   The backend API service.
+   * @param \Drupal\Core\Form\FormBuilderInterface $formBuilder
+   *   The form builder service.
    */
-  public function __construct(BackendApi $backendApi) {
+  public function __construct(BackendApi $backendApi, FormBuilderInterface $formBuilder) {
     $this->backendApi = $backendApi;
+    $this->formBuilder = $formBuilder;
   }
 
   /**
@@ -49,7 +60,10 @@ class IntegrationSummaryController extends ControllerBase implements ContainerIn
    *   The IntegrationSummaryController object.
    */
   public static function create(ContainerInterface $container) {
-    return new static($container->get('asu_api.backendapi'));
+    return new static(
+      $container->get('asu_api.backendapi'),
+      $container->get('form_builder')
+    );
   }
 
   /**
@@ -87,7 +101,7 @@ class IntegrationSummaryController extends ControllerBase implements ContainerIn
 
     $filtered_rows = $this->getFilteredRows($rows, $request);
 
-    $filter_value = \Drupal::request()->query->get('filter_value', '');
+    $filter_value = $request->query->get('filter_value', '');
     // Helper to build header link with toggle dir and arrow.
     $headerCell = function (string $key, string $label) use ($sort, $dir, $filter_value) {
       $nextDir = ($sort === $key && $dir === 'asc') ? 'desc' : 'asc';
@@ -116,11 +130,13 @@ class IntegrationSummaryController extends ControllerBase implements ContainerIn
 
     $options = $this->getFilterOptions();
 
-    $build['filter_form'] = \Drupal::formBuilder()->getForm('Drupal\asu_content\Form\IntegrationSummaryFilterForm', $options);
+    $build['filter_form'] = $this->formBuilder->getForm(
+      'Drupal\asu_content\Form\IntegrationSummaryFilterForm',
+      $options,
+    );
     $build['filter_form']['#prefix'] = '<div class="asu-content-integration-summary-filter-form">';
     $build['filter_form']['#suffix'] = '</div>';
     $build['filter_form']['#weight'] = 0;
-
 
     $build['actions']['csv'] = [
       '#type' => 'container',
@@ -133,16 +149,15 @@ class IntegrationSummaryController extends ControllerBase implements ContainerIn
         '#attributes' => ['class' => ['button', 'button--small']],
       ],
     ];
-    
-    $filter_name = isset($options[$filter_value]) ? $options[$filter_value] : '';
+
+    $filter_name = $options[$filter_value] ?? '';
     $filtered_rows = $this->filterRowsByColumnValue(
       $rows,
       'project_housing_company',
       $filter_name
     );
 
-
-    // empty("0") evaluates to true, so we need to check like this
+    // empty("0") evaluates to true, so we need to check like this.
     if ($filter_value === '' || $filter_value === NULL) {
       $filtered_rows = $rows;
     }
@@ -239,7 +254,6 @@ class IntegrationSummaryController extends ControllerBase implements ContainerIn
     [$sort, $dir] = $this->getSortParams();
     $this->applySort($rows, $sort, $dir);
 
-    
     $out = [
       [
         $this->t('Name'),
@@ -250,21 +264,7 @@ class IntegrationSummaryController extends ControllerBase implements ContainerIn
         $this->t('Missing Fields'),
       ],
     ];
-    // Log the number of filtered rows and the current request query parameters.
-    $logger = \Drupal::logger('asu_content');
-    $row_count = is_array($filtered_rows) ? count($filtered_rows) : 0;
 
-    // Safely get the current request and query params.
-    $request = \Drupal::requestStack()->getCurrentRequest();
-    $query_params = $request ? $request->query->all() : [];
-
-    $logger->debug(
-      'Exported CSV with @row_count rows. Query params: @params',
-      [
-        '@row_count' => $row_count,
-        '@params' => json_encode($query_params),
-      ]
-    );
     foreach ($filtered_rows as $r) {
       $out[] = [
         str_replace('"', '""', $r['integration_name']),
@@ -428,13 +428,24 @@ class IntegrationSummaryController extends ControllerBase implements ContainerIn
     return $options;
   }
 
-protected function getFilteredRows(array $rows, Request $request): array {
-  $options = $this->getFilterOptions();
-  $filter_value = $request->query->get('filter_value', '');
-  $filter_name = isset($options[$filter_value]) ? $options[$filter_value] : '';
+  /**
+   * Get filtered rows based on filter_value query parameter.
+   *
+   * @param array $rows
+   *   The summary rows.
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The current request.
+   *
+   * @return array
+   *   Filtered rows.
+   */
+  protected function getFilteredRows(array $rows, Request $request): array {
+    $options = $this->getFilterOptions();
+    $filter_value = $request->query->get('filter_value', '');
+    $filter_name = $options[$filter_value] ?? '';
 
-  return $this->filterRowsByColumnValue($rows, 'project_housing_company', $filter_name);
-}
+    return $this->filterRowsByColumnValue($rows, 'project_housing_company', $filter_name);
+  }
 
   /**
    * Filter rows by a specific column value.
