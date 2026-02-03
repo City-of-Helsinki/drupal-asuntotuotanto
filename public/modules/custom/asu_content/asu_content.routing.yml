@@ -29,7 +29,7 @@ asu_content.summary_integrations:
   path: '/admin/asu/integrations/summary'
   defaults:
     _controller: '\Drupal\asu_content\Controller\IntegrationSummaryController::summary'
-    _title: 'Integrations summary'
+    _title: 'Etuovi and Oikotie summary'
   requirements:
     _permission: 'view integration summary'
   options:

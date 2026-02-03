@@ -35920,8 +35920,8 @@ msgstr ""
 msgid "Integrations"
 msgstr "Integraatiot"
 
-msgid "Integrations summary"
-msgstr "Integraatioiden yhteenveto"
+msgid "Etuovi and Oikotie summary"
+msgstr "Etuovi- ja Oikotie-yhteenveto"
 
 msgid "Integrations"
 msgstr ""
