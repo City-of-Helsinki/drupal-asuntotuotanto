@@ -110,6 +110,9 @@ class Project extends Node {
     $langcode = \Drupal::languageManager()->getDefaultLanguage()->getId();
     $baseurl = $baseurl . '/' . $langcode;
     $apartmentType = '';
+    if ($apartmentStateOfSale) {
+      $apartmentStateOfSale = strtoupper($apartmentStateOfSale);
+    }
     $isOpenForApplications = $apartmentStateOfSale == 'OPEN_FOR_APPLICATIONS';
     $isFreeForReservations = $apartmentStateOfSale == 'FREE_FOR_RESERVATIONS';
 
