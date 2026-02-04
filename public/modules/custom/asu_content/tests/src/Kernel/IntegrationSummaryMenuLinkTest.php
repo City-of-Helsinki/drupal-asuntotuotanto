@@ -34,7 +34,7 @@ final class IntegrationSummaryMenuLinkTest extends KernelTestBase {
     $definition = $definitions["asu_content.summary_integrations"];
     $this->assertSame("asu_content.summary_integrations", $definition["route_name"]);
     $this->assertSame("hdbt_admin_tools.overview", $definition["parent"]);
-    $this->assertSame("Integration summary", (string) $definition["title"]);
+    $this->assertSame("Etuovi and Oikotie summary", (string) $definition["title"]);
   }
 
 }
