@@ -43467,3 +43467,9 @@ msgstr "Viimeksi viety onnistuneesti"
 
 msgid "Show all"
 msgstr "Näytä kaikki"
+
+msgid "Integration summary"
+msgstr "Integraatioiden yhteenveto"
+
+msgid "View Etuovi and Oikotie integration summary."
+msgstr "Näytä Etuovi- ja Oikotie-integraatioiden yhteenveto."

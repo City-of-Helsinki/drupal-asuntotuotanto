@@ -27,6 +27,7 @@ This project supports multi-lingual content.
       msgid "Luo hakemus"
       msgstr "Create an application"
       ```
+3. Update translations after modifying translation file by running `make drush-locale-update`
 
 ## Development & Environment
 The project runs inside Docker containers.
@@ -35,12 +36,15 @@ The project runs inside Docker containers.
 * **Interactive Shell:** To open a shell inside the development container:
   `make shell`
 * **Single Command Execution:** To run a specific command inside the container from the host:
-  `docker exec -it asuntotuotanto-app sh -c "<command>"`
+  `docker exec asuntotuotanto-app sh -c "<command>"`
+* `make help` gives a list of commands 
+* **NEVER** use the following `make` commands: `make new` and `make fresh`
 
 ### Quality Assurance
 * **Linting:** All code must adhere to Drupal coding standards.
   * Run `make lint-drupal` to verify code style.
   * If linting errors occur, fix them before finalizing the solution.
+  * Run tests with `docker exec asuntotuotanto-app sh -c "composer test-php public/modules/custom"`
 
 ## Architecture Notes
 * **Django Microservice:** Be aware that complex business logic regarding application handling may reside in the connected Django microservice, not within Drupal.
