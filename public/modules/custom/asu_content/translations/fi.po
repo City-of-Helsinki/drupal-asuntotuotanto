@@ -35920,8 +35920,8 @@ msgstr ""
 msgid "Integrations"
 msgstr "Integraatiot"
 
-msgid "Integrations summary"
-msgstr "Integraatioiden yhteenveto"
+msgid "Etuovi and Oikotie summary"
+msgstr "Etuovi- ja Oikotie-yhteenveto"
 
 msgid "Integrations"
 msgstr ""
@@ -43464,3 +43464,12 @@ msgstr "<strong>Integraatiovaroitus:</strong> \"@integration\"-integraatio on k�
 
 msgid "Last successful export"
 msgstr "Viimeksi viety onnistuneesti"
+
+msgid "Show all"
+msgstr "Näytä kaikki"
+
+msgid "Integration summary"
+msgstr "Integraatioiden yhteenveto"
+
+msgid "View Etuovi and Oikotie integration summary."
+msgstr "Näytä Etuovi- ja Oikotie-integraatioiden yhteenveto."
