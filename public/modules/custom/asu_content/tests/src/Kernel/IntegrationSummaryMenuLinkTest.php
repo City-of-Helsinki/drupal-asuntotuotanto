@@ -22,6 +22,9 @@ final class IntegrationSummaryMenuLinkTest extends KernelTestBase {
     "asu_content",
   ];
 
+  /**
+   * Verifies the integrations summary menu link definition.
+   */
   public function testMenuLinkDefinitionExists(): void {
     $menu_link_manager = $this->container->get("plugin.manager.menu.link");
     $definitions = $menu_link_manager->getDefinitions();
