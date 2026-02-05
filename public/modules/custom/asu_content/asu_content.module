@@ -819,4 +819,3 @@ function asu_content_form_node_media_bank_edit_form_alter(array &$form, FormStat
     }
   }
 }
-

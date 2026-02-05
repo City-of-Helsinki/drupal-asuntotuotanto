@@ -50,7 +50,7 @@ class FileIdToUrl extends DataTypePluginBase {
         if (count($violations) === 0) {
           $style = ImageStyle::load('original_m');
           return $style->buildUrl($file->getFileUri());
-       }
+        }
       }
       catch (\Throwable $e) {
         // Never fail indexing because of file validation/constraint issues.

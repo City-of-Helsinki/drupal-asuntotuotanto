@@ -205,7 +205,7 @@ class BackendApi {
         ]
       );
     }
-    catch (RequestException|ConnectException $e) {
+    catch (RequestException | ConnectException $e) {
       $this->handleRequestError($e, $request);
     }
     catch (\Exception $e) {

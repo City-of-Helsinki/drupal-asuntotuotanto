@@ -52,7 +52,7 @@ class ScalarFieldSubscriber implements EventSubscriberInterface {
     EntityTypeManagerInterface $entityTypeManager,
     array $scalarTypeWhitelist = [],
     array $forcedScalarFields = [],
-    array $forcedMultiFields = []
+    array $forcedMultiFields = [],
   ) {
     $this->entityTypeManager = $entityTypeManager;
     $this->scalarTypeWhitelist = array_fill_keys($scalarTypeWhitelist, TRUE);
