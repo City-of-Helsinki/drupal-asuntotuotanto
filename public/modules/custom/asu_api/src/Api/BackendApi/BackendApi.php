@@ -123,10 +123,15 @@ class BackendApi {
       );
       return $request::getResponse($response);
     }
-    catch (RequestException|ConnectException $e) {
+    catch (RequestException $e) {
       $this->handleRequestError($e, $request);
     }
     catch (\Exception $e) {
+      // Log non-RequestException errors and re-throw.
+      $this->logger->error(
+        sprintf('Unexpected error in API request: %s', $e->getMessage()),
+        ['exception' => $e, 'request' => get_class($request)]
+      );
       throw $e;
     }
 
@@ -149,7 +154,7 @@ class BackendApi {
       $token = $this->store->get('asu_api_token');
     }
     else {
-      $token = getenv('DRUPAL_AUTH_TOKEN');
+      $token = getenv('DRUPAL_SERVER_AUTH_TOKEN');
     }
 
     if ($account && (!$token || !AuthenticationHelper::isTokenAlive($token))) {

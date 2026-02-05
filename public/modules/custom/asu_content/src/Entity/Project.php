@@ -113,7 +113,6 @@ class Project extends Node {
     if ($apartmentStateOfSale) {
       $apartmentStateOfSale = strtoupper($apartmentStateOfSale);
     }
-    $isOpenForApplications = $apartmentStateOfSale == 'OPEN_FOR_APPLICATIONS';
     $isFreeForReservations = $apartmentStateOfSale == 'FREE_FOR_RESERVATIONS';
 
     if (isset($this->field_ownership_type->referencedEntities()[0])) {
@@ -121,7 +120,7 @@ class Project extends Node {
     }
 
     $addToApplicationUrl = sprintf('%s/application/add/%s/%s', $baseurl, $apartmentType, $this->id());
-    if ($isOpenForApplications && ($this->isApplicationPeriod() || $this->isApplicationPeriod('before'))) {
+    if ($this->isApplicationPeriod() || $this->isApplicationPeriod('before')) {
       if ($apartmentType == '') {
         return '';
       }
