@@ -127,7 +127,10 @@ final class SearchService {
     }
 
     $restrictApartmentIds = NULL;
-    $projectUuids = $this->normalizeArrayParam($params['project_uuid'] ?? NULL, TRUE);
+    $projectUuids = $this->normalizeArrayParam(
+      $this->getParam($params, 'project_uuid'),
+      TRUE
+    );
     if ($projectUuids) {
       $projects = $this->loadProjectsByUuid($projectUuids);
       if (!$projects) {
@@ -356,7 +359,10 @@ final class SearchService {
    *   Matched projects.
    */
   private function filterProjects(array $params): array {
-    $projectUuids = $this->normalizeArrayParam($params['project_uuid'] ?? NULL, TRUE);
+    $projectUuids = $this->normalizeArrayParam(
+      $this->getParam($params, 'project_uuid'),
+      TRUE
+    );
     if ($projectUuids) {
       $projects = $this->loadProjectsByUuid($projectUuids);
     }
@@ -591,6 +597,17 @@ final class SearchService {
       $value = array_map(static fn ($item) => strtolower((string) $item), $value);
     }
     return $value;
+  }
+
+  /**
+   * Get a request param, supporting hyphen/underscore variants.
+   */
+  private function getParam(array $params, string $key): mixed {
+    if (array_key_exists($key, $params)) {
+      return $params[$key];
+    }
+    $hyphenKey = str_replace('_', '-', $key);
+    return $params[$hyphenKey] ?? NULL;
   }
 
   /**
