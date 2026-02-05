@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\asu_rest\Plugin\rest\resource;
 
 use Drupal\asu_rest\Service\SearchMapper;
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\asu_rest\Service\SearchService;
 use Drupal\rest\ModifiedResourceResponse;
 use Drupal\rest\Plugin\ResourceBase;
@@ -64,7 +65,11 @@ abstract class AsuSearchResourceBase extends ResourceBase {
    */
   protected function buildResponse(array $sources, int $total, string $indexName): ResourceResponse {
     $payload = $this->searchMapper->buildSearchResponse($sources, $total, $indexName);
-    return new ResourceResponse($payload, 200, $this->getTestingHeaders());
+    $response = new ResourceResponse($payload, 200, $this->getTestingHeaders());
+    $cache = (new CacheableMetadata())
+      ->setCacheContexts(['url.query_args']);
+    $response->addCacheableDependency($cache);
+    return $response;
   }
 
   /**
