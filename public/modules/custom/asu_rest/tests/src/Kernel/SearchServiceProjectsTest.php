@@ -82,6 +82,21 @@ final class SearchServiceProjectsTest extends KernelTestBase {
     $this->assertSame($projectOne->uuid(), $result['items'][0]->uuid());
   }
 
+  public function testSearchProjectsFiltersByProjectUuidHyphenated(): void {
+    $projectOne = $this->createProject('Project One');
+    $this->createProject('Project Two');
+
+    $result = $this->searchService->searchProjects(
+      ['project-uuid' => $projectOne->uuid()],
+      0,
+      1000
+    );
+
+    $this->assertSame(1, $result['total']);
+    $this->assertCount(1, $result['items']);
+    $this->assertSame($projectOne->uuid(), $result['items'][0]->uuid());
+  }
+
   private function createProject(string $title): Node {
     $project = Node::create([
       'type' => 'project',
