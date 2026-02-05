@@ -67,7 +67,8 @@ abstract class AsuSearchResourceBase extends ResourceBase {
     $payload = $this->searchMapper->buildSearchResponse($sources, $total, $indexName);
     $response = new ResourceResponse($payload, 200, $this->getTestingHeaders());
     $cache = (new CacheableMetadata())
-      ->setCacheContexts(['url.query_args']);
+      ->setCacheContexts(['url.query_args'])
+      ->setCacheMaxAge(0);
     $response->addCacheableDependency($cache);
     return $response;
   }
