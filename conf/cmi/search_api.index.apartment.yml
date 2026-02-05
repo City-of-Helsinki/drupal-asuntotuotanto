@@ -823,6 +823,11 @@ field_settings:
     datasource_id: 'entity:node'
     property_path: 'search_api_reverse_entity_references_node__field_apartments:field_street_address'
     type: string
+  project_transfer_of_shares_date:
+    label: 'Transfer of shares date'
+    datasource_id: 'entity:node'
+    property_path: 'search_api_reverse_entity_references_node__field_apartments:field_transfer_of_shares_date'
+    type: date
   project_upcoming_description:
     label: 'Upcoming description'
     datasource_id: 'entity:node'

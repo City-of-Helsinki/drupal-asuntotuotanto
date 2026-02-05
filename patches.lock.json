@@ -11,6 +11,16 @@
                 "extra": {
                     "provenance": "root"
                 }
+            },
+            {
+                "package": "drupal/helfi_platform_config",
+                "description": "Skip update_9400 on Drupal 11 (HAL/RDF modules removed)",
+                "url": "patches/helfi_platform_config-d11-update-9400.patch",
+                "sha256": "e13a1ddf7d33fc5027e7be3e8726a4be9515a2106fa0c11dbb07abfbde8e6551",
+                "depth": 1,
+                "extra": {
+                    "provenance": "root"
+                }
             }
         ],
         "drupal/config_terms": [
