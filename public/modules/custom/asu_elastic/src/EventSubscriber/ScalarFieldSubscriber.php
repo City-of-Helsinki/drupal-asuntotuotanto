@@ -48,7 +48,12 @@ class ScalarFieldSubscriber implements EventSubscriberInterface {
   /**
    * ScalarFieldSubscriber constructor.
    */
-  public function __construct(EntityTypeManagerInterface $entityTypeManager, array $scalarTypeWhitelist = [], array $forcedScalarFields = [], array $forcedMultiFields = []) {
+  public function __construct(
+    EntityTypeManagerInterface $entityTypeManager,
+    array $scalarTypeWhitelist = [],
+    array $forcedScalarFields = [],
+    array $forcedMultiFields = []
+  ) {
     $this->entityTypeManager = $entityTypeManager;
     $this->scalarTypeWhitelist = array_fill_keys($scalarTypeWhitelist, TRUE);
     $this->forcedScalarFields = array_fill_keys($forcedScalarFields, TRUE);

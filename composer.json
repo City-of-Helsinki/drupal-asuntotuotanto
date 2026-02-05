@@ -187,7 +187,8 @@
                 "drupal/computed_field_plugin",
                 "drupal/config_terms",
                 "drupal/computed_field_plugin",
-                "drupal/big_pipe_sessionless"
+                "drupal/big_pipe_sessionless",
+                "doctrine/annotations"
             ]
         }
     },
