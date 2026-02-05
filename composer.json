@@ -90,6 +90,7 @@
         "dealerdirect/phpcodesniffer-composer-installer": "^1.0.0",
         "drupal/coder": "^8.3",
         "drupal/devel": "^5.0",
+        "mikey179/vfsstream": "^1.6",
         "phpspec/prophecy-phpunit": "^2",
         "phpunit/phpunit": "^10.5",
         "rector/rector": "^1.2",
