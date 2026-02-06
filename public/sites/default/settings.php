@@ -58,6 +58,7 @@ $databases['default']['default'] = [
   'collation' => 'utf8mb4_swedish_ci',
   'init_commands' => [
     'isolation_level' => 'SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED',
+    'sql_mode' => "SET SESSION sql_mode = (SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''))",
   ],
 ];
 
