@@ -11,6 +11,7 @@ use Drupal\file\Entity\File;
 use Drupal\paragraphs\Entity\Paragraph;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\user\Entity\User;
+use Drupal\Core\StringTranslation\ByteSizeMarkup;
 
 /**
  * Helper function to get the icons path.
@@ -564,7 +565,7 @@ function asuntotuotanto_preprocess_node(&$variables) {
           $file = File::load($target_id);
           $description = $attachment['description'];
           $file_name = $file->getFilename();
-          $file_size = format_size($file->getSize());
+          $file_size = ByteSizeMarkup::create($file->getSize())->__toString();
           $file_uri = \Drupal::service('file_url_generator')->generateAbsoluteString($file->getFileUri());
 
           $attachments_stack[$key] = [
