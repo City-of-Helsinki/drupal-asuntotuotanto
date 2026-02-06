@@ -1,0 +1,144 @@
+# Schema for the configuration files of the ASU Content module.
+
+# ASU Custom Slick Formatter settings.
+field.formatter.settings.asu_custom_slick_formatter:
+  type: mapping
+  label: 'ASU Custom Slick Formatter'
+  mapping:
+    caption:
+      type: mapping
+      label: 'Captions'
+      mapping:
+        title:
+          type: string
+          label: 'Title'
+        alt:
+          type: string
+          label: 'Alt'
+    optionset:
+      type: string
+      label: 'Optionset'
+    layout:
+      type: string
+      label: 'Layout'
+    view_mode:
+      type: string
+      label: 'View mode'
+    cache:
+      type: integer
+      label: 'Cache'
+    skin:
+      type: string
+      label: 'Skin'
+    style:
+      type: string
+      label: 'Style'
+    background:
+      type: boolean
+      label: 'Background'
+    box_caption:
+      type: string
+      label: 'Box caption'
+    box_caption_custom:
+      type: string
+      label: 'Box caption custom'
+    box_media_style:
+      type: string
+      label: 'Box media style'
+    responsive_image_style:
+      type: string
+      label: 'Responsive image style'
+    box_style:
+      type: string
+      label: 'Box style'
+    image_style:
+      type: string
+      label: 'Image style'
+    media_switch:
+      type: string
+      label: 'Media switch'
+    ratio:
+      type: string
+      label: 'Ratio'
+    thumbnail_style:
+      type: string
+      label: 'Thumbnail style'
+    grid:
+      type: integer
+      label: 'Grid'
+    grid_medium:
+      type: integer
+      label: 'Grid medium'
+    grid_small:
+      type: integer
+      label: 'Grid small'
+    overridables:
+      type: mapping
+      label: 'Overridables'
+      mapping:
+        arrows:
+          type: string
+          label: 'Arrows'
+        autoplay:
+          type: string
+          label: 'Autoplay'
+        dots:
+          type: string
+          label: 'Dots'
+        draggable:
+          type: string
+          label: 'Draggable'
+        infinite:
+          type: string
+          label: 'Infinite'
+        mouseWheel:
+          type: string
+          label: 'Mouse wheel'
+        randomize:
+          type: string
+          label: 'Randomize'
+        variableWidth:
+          type: string
+          label: 'Variable width'
+    optionset_thumbnail:
+      type: string
+      label: 'Optionset thumbnail'
+    skin_thumbnail:
+      type: string
+      label: 'Skin thumbnail'
+    thumbnail_caption:
+      type: string
+      label: 'Thumbnail caption'
+    thumbnail_effect:
+      type: string
+      label: 'Thumbnail effect'
+    thumbnail_position:
+      type: string
+      label: 'Thumbnail position'
+    override:
+      type: boolean
+      label: 'Override'
+    skin_arrows:
+      type: string
+      label: 'Skin arrows'
+    skin_dots:
+      type: string
+      label: 'Skin dots'
+    use_theme_field:
+      type: boolean
+      label: 'Use theme field'
+    preserve_keys:
+      type: boolean
+      label: 'Preserve keys'
+    visible_items:
+      type: integer
+      label: 'Visible items'
+    lazy:
+      type: string
+      label: 'Lazy'
+    loading:
+      type: string
+      label: 'Loading'
+    preload:
+      type: boolean
+      label: 'Preload'

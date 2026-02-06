@@ -280,14 +280,18 @@ function asu_content_get_ownershiptype() {
   $node = \Drupal::routeMatch()->getParameter('node');
 
   if ($node instanceof Apartment || $node instanceof Project) {
-    if ($node instanceof Apartment) {
-      $project = $node->getProject();
-    }
-    else {
-      $project = $node;
-    }
+    $project = $node instanceof Apartment ? $node->getProject() : $node;
 
-    $ownership_type = $project->get('field_ownership_type')->referencedEntities()[0]->getName() ?? NULL;
+    if ($project instanceof Project && $project->hasField('field_ownership_type')) {
+      $ownership_term = $project->get('field_ownership_type')->entity;
+      if (!$ownership_term) {
+        $references = $project->get('field_ownership_type')->referencedEntities();
+        $ownership_term = reset($references) ?: NULL;
+      }
+      if ($ownership_term && method_exists($ownership_term, 'getName')) {
+        $ownership_type = $ownership_term->getName();
+      }
+    }
   }
 
   return $ownership_type;

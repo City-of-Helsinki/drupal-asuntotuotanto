@@ -39,7 +39,7 @@ use Drupal\user\EntityOwnerTrait;
  *     "form" = {
  *       "default" = "Drupal\asu_application\Form\ApplicationForm",
  *       "add" = "Drupal\asu_application\Form\ApplicationForm",
- *       "delete" = "Drupal\Core\Entity\ContentEntityDeleteForm",
+ *       "delete" = "Drupal\asu_application\Form\ApplicationDeleteForm",
  *     },
  *     "route_provider" = {
  *       "html" = "Drupal\Core\Entity\Routing\DefaultHtmlRouteProvider",
@@ -64,6 +64,25 @@ use Drupal\user\EntityOwnerTrait;
  */
 class Application extends EditorialContentEntityBase implements ContentEntityInterface, EntityOwnerInterface {
   use EntityOwnerTrait;
+
+  /**
+   * {@inheritdoc}
+   *
+   * Drupal 11 route titles escape `%label` strictly, so make sure we always
+   * return a non-empty string even when the entity has no title field.
+   */
+  public function label(): string {
+    $backend_id = $this->get('field_backend_id')->value ?? NULL;
+    $id = $this->id();
+
+    if ($backend_id) {
+      return 'Application ' . $backend_id;
+    }
+    if ($id) {
+      return 'Application ' . $id;
+    }
+    return 'Application';
+  }
 
   /**
    * Gets project id.

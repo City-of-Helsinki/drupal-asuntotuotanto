@@ -1,0 +1,33 @@
+--- a/helfi_platform_config.install	2026-02-05 15:41:52.360113827 +0200
++++ b/helfi_platform_config.install	2026-02-05 15:42:09.991883176 +0200
+@@ -499,6 +499,12 @@
+  * UHF-11501: Remove deprecated modules.
+  */
+ function helfi_platform_config_update_9400(): void {
++  // HAL and RDF modules were removed from Drupal core in Drupal 10.
++  // Skip this update on Drupal 11+.
++  if (version_compare(\Drupal::VERSION, '11.0', '>=')) {
++    return;
++  }
++
+   $uninstall = [
+     'hal',
+     'rdf',
+@@ -507,7 +513,16 @@
+   $module_installer = \Drupal::service('module_installer');
+   foreach ($uninstall as $module) {
+     if (\Drupal::moduleHandler()->moduleExists($module)) {
+-      $module_installer->uninstall([$module]);
++      try {
++        $module_installer->uninstall([$module]);
++      }
++      catch (\Exception $e) {
++        \Drupal::logger('helfi_platform_config')
++          ->warning('Failed to uninstall @module: @message', [
++            '@module' => $module,
++            '@message' => $e->getMessage(),
++          ]);
++      }
+     }
+   }
+ }

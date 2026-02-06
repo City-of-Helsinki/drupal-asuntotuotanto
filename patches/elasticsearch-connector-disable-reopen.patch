@@ -1,0 +1,143 @@
+--- a/src/SearchAPI/BackendClient.php	2026-01-28 21:48:30.906773654 +0200
++++ b/src/SearchAPI/BackendClient.php	2026-01-28 22:05:01.763205351 +0200
+@@ -103,6 +103,17 @@
+     $indexId = $this->getIndexId($index);
+ 
+     $params = $this->indexParamBuilder->buildIndexParams($indexId, $index, $items);
++    $idToDocument = [];
++    if (!empty($params['body'])) {
++      for ($i = 0, $count = count($params['body']); $i < $count; $i += 2) {
++        $meta = $params['body'][$i] ?? [];
++        $doc = $params['body'][$i + 1] ?? NULL;
++        $id = $meta['index']['_id'] ?? NULL;
++        if ($id !== NULL && $doc !== NULL) {
++          $idToDocument[$id] = $doc;
++        }
++      }
++    }
+ 
+     try {
+       $response = $this->client->bulk($params);
+@@ -115,6 +126,13 @@
+               '%caused_by' => $item['index']['error']['caused_by']['reason'] ?? '',
+               '%id' => $item['index']['_id'],
+             ]);
++            $id = $item['index']['_id'] ?? NULL;
++            if ($id !== NULL && isset($idToDocument[$id])) {
++              $this->logger->error('Document for %id: @document', [
++                '%id' => $id,
++                '@document' => json_encode($idToDocument[$id]),
++              ]);
++            }
+           }
+         }
+         throw new SearchApiException('An error occurred indexing items.');
+@@ -351,15 +369,41 @@
+     try {
+       $this->client->indices()->putSettings([
+         'index' => $indexId,
+-        'reopen' => TRUE,
+         'body' => $settings,
+       ]);
+     }
+     catch (ElasticSearchException | TransportException $e) {
++      if ($this->isNonDynamicSettingsException($e)) {
++        try {
++          $this->client->indices()->close([
++            'index' => $indexId,
++          ]);
++          $this->client->indices()->putSettings([
++            'index' => $indexId,
++            'body' => $settings,
++          ]);
++          $this->client->indices()->open([
++            'index' => $indexId,
++          ]);
++          return;
++        }
++        catch (ElasticSearchException | TransportException $closeException) {
++          throw new SearchApiException(sprintf('An error occurred updating settings for index %s.', $indexId), 0, $closeException);
++        }
++      }
+       throw new SearchApiException(sprintf('An error occurred updating settings for index %s.', $indexId), 0, $e);
+     }
+   }
+ 
++
++  /**
++   * Detect errors caused by updating non-dynamic settings on open indices.
++   */
++  private function isNonDynamicSettingsException(\Throwable $exception): bool {
++    $message = $exception->getMessage();
++    return str_contains($message, 'non dynamic settings') || str_contains($message, 'index.analysis');
++  }
++
+   /**
+    * Determine if a pending change to an index requires the index to be rebuilt.
+    *
+--- a/src/SearchAPI/IndexParamBuilder.php	2026-01-28 21:48:30.906773654 +0200
++++ b/src/SearchAPI/IndexParamBuilder.php	2026-01-28 22:05:01.763205351 +0200
+@@ -103,16 +103,49 @@
+     $values = [];
+     foreach ($field->getValues() as $value) {
+       if ($value instanceof TextValue) {
+-        $values[] = $value->toText();
+-        continue;
++        $value = $value->toText();
+       }
+-      $values[] = match ($field_type) {
++      $normalized = match ($field_type) {
+         'string' => (string) $value,
+         'boolean' => (boolean) $value,
++        'integer', 'cent', 'asu_number' => $this->normalizeNumericValue($value, TRUE),
++        'decimal', 'float', 'double', 'number', 'computed_array_decimal' => $this->normalizeNumericValue($value, FALSE),
+         default => $value,
+       };
++      if ($normalized === NULL) {
++        $value_display = is_scalar($value) ? (string) $value : json_encode($value);
++        \Drupal::logger('elasticsearch_connector')->warning('Skipping non-numeric value for field %field (%type): %value', [
++          '%field' => $field->getFieldIdentifier(),
++          '%type' => $field_type,
++          '%value' => $value_display,
++        ]);
++        continue;
++      }
++      $values[] = $normalized;
+     }
+     return $values;
+   }
+ 
++  /**
++   * Normalizes numeric values for Elasticsearch.
++   *
++   * @param mixed $value
++   *   The raw value.
++   * @param bool $asInt
++   *   Whether to cast to integer.
++   *
++   * @return int|float|null
++   *   The normalized numeric value or NULL if invalid.
++   */
++  protected function normalizeNumericValue(mixed $value, bool $asInt): int|float|null {
++    if (is_string($value)) {
++      $value = str_replace(["\u{00A0}", ' '], '', $value);
++      $value = str_replace(',', '.', $value);
++    }
++    if (!is_numeric($value)) {
++      return NULL;
++    }
++    return $asInt ? (int) $value : (float) $value;
++  }
++
+ }
+--- a/src/SearchAPI/FieldMapper.php	2026-01-28 22:13:42.740770040 +0200
++++ b/src/SearchAPI/FieldMapper.php	2026-01-28 22:13:12.843020225 +0200
+@@ -123,7 +123,7 @@
+           ],
+         ],
+       ],
+-      'uri', 'string', 'token' => ['type' => 'keyword'],
++      'uri', 'string', 'token', 'any', 'asu_file_url', 'computed_array_string' => ['type' => 'keyword'],
+       'integer', 'duration' => ['type' => 'integer'],
+       'boolean' => ['type' => 'boolean'],
+       'decimal' => ['type' => 'float'],

@@ -1,81 +1,99 @@
 {
     "name": "city-of-helsinki/asuntotuotanto",
-    "description": "Drupal 9 Asuntotuotanto created by helfi drupal platform",
+    "description": "Drupal 11 Asuntotuotanto created by helfi drupal platform",
     "type": "project",
     "license": "MIT",
     "homepage": "https://druid.fi",
     "minimum-stability": "dev",
     "prefer-stable": true,
     "require": {
-        "asuntomyynti/react": "1.5.0",
-        "composer/installers": "^2.0",
-        "cweagans/composer-patches": "^1.7.3",
+        "asuntomyynti/react": "^1.5",
+        "composer/installers": "^2.3",
+        "cweagans/composer-patches": "^2.0",
         "dinbror/blazy": "^1.8",
-        "druidfi/omen": "^0.2.0",
+        "druidfi/omen": "^0.9.0",
         "drupal/api_tools": "^1.0",
-        "drupal/auto_entitylabel": "^3.0",
+        "drupal/auto_entitylabel": "^3.4",
         "drupal/autologout": "^2.0",
-        "drupal/better_exposed_filters": "^6.0.3",
+        "drupal/better_exposed_filters": "^7.1",
         "drupal/better_passwords": "^2.2",
-        "drupal/better_social_sharing_buttons": "^4.0",
+        "drupal/better_social_sharing_buttons": "^4.1",
+        "drupal/big_pipe_sessionless": "^2.2",
         "drupal/computed_field_plugin": "^1.4",
-        "drupal/config_filter": "^2.6",
+        "drupal/config_filter": "^2.7",
         "drupal/config_terms": "^1.9",
         "drupal/context": "^5.0@RC",
-        "drupal/core": "^10.5",
-        "drupal/core-composer-scaffold": "^10.2",
+        "drupal/core": "~11.2.0",
+        "drupal/core-composer-scaffold": "~11.2.0",
+        "drupal/core-recommended": "~11.2.0",
+        "drupal/ctools": "^4.1",
+        "drupal/default_content": "^2.0@alpha",
         "drupal/email_registration": "^1.4",
+        "drupal/encrypt": "^3.2",
         "drupal/externalauth": "^2.0",
-        "drupal/field_group": "^3.1",
-        "drupal/gdpr_compliance": "^1.22",
-        "drupal/gin_login": "^2.0",
-        "drupal/hdbt": "^6.0",
-        "drupal/hdbt_admin": "^3.3",
-        "drupal/helfi_azure_fs": "^2.0",
-        "drupal/helfi_platform_config": "^4.8.0",
-        "drupal/helfi_tunnistamo": "^2.0",
-        "drupal/honeypot": "<2.2",
-        "drupal/inline_entity_form": "^1.0@RC",
-        "drupal/jquery_ui_slider": "^2.0.0",
+        "drupal/field_group": "^4.0",
+        "drupal/flysystem": "^2.3",
+        "drupal/gdpr_compliance": "^1.25",
+        "drupal/gin": "^5.0",
+        "drupal/gin_login": "^2.1",
+        "drupal/gin_toolbar": "^3.0",
+        "drupal/hal": "^2.0",
+        "drupal/hdbt": "^6.16",
+        "drupal/hdbt_admin": "^3.4",
+        "drupal/helfi_api_base": "^2.8",
+        "drupal/helfi_azure_fs": "^2.2",
+        "drupal/helfi_platform_config": "^5.0",
+        "drupal/helfi_tunnistamo": "^3.1",
+        "drupal/honeypot": "^2.2",
+        "drupal/imagemagick": "^4.0",
+        "drupal/inline_entity_form": "^3.0@RC",
+        "drupal/jquery_ui_datepicker": "^2.1",
+        "drupal/jquery_ui_slider": "^2.1",
         "drupal/jquery_ui_touch_punch": "^1.1",
         "drupal/js_cookie": "^1.0",
-        "drupal/key": "^1.17",
-        "drupal/login_history": "^2.0@alpha",
-        "drupal/mailsystem": "^4.4",
-        "drupal/matomo": "^1.23",
-        "drupal/matomo_reports": "^1.4",
-        "drupal/menu_block": "^1.10",
+        "drupal/key": "^1.21",
+        "drupal/login_history": "^2.0",
+        "drupal/mailsystem": "^4.5",
+        "drupal/matomo": "^1.26",
+        "drupal/matomo_reports": "^1.6",
+        "drupal/menu_block": "^1.14",
         "drupal/monolog": "^3.0",
-        "drupal/nocurrent_pass": "^1.3",
-        "drupal/rabbit_hole": "^1.0-beta11",
-        "drupal/raven": "^6.0",
-        "drupal/rebuild_cache_access": "^1.9",
-        "drupal/redis": "^1.7",
-        "drupal/registration_role": "^2.0.1",
-        "drupal/restui": "^1.21",
-        "drupal/route_condition": "^2.0.2",
-        "drupal/samlauth": "^3.10",
-        "drupal/slick": "^2.10",
-        "drupal/symfony_mailer_lite": "^1.0.6",
-        "drupal/tfa": "1.11.0",
-        "drupal/ultimate_cron": "^2.0@alpha",
-        "drupal/user_bundle": "^1.2",
-        "drupal/user_registrationpassword": "^2.0.0",
+        "drupal/nocurrent_pass": "^2.0",
+        "drupal/publication_date": "^3.1",
+        "drupal/rabbit_hole": "^1.0",
+        "drupal/raven": "^6.3",
+        "drupal/rdf": "^3.0@beta",
+        "drupal/rebuild_cache_access": "^1.12",
+        "drupal/redis": "^1.11",
+        "drupal/registration_role": "^2.0",
+        "drupal/restui": "^1.22",
+        "drupal/route_condition": "^2.0",
+        "drupal/samlauth": "^3.13",
+        "drupal/siteimprove": "^3.0",
+        "drupal/slick": "^3.0",
+        "drupal/symfony_mailer_lite": "^2.0",
+        "drupal/tfa": "^1.12",
+        "drupal/ultimate_cron": "^2.0@beta",
+        "drupal/upgrade_status": "^4.3",
+        "drupal/user_bundle": "^1.4",
+        "drupal/user_registrationpassword": "^2.0",
+        "drupal/views_bulk_edit": "^3.0",
         "drupal/yearonly": "^9.1",
-        "drush/drush": "^12",
+        "drush/drush": "^13.7",
         "kenwheeler/slick": "^1.8",
-        "onelogin/php-saml": "4.3.1",
-        "symfony/console": "^6.3",
-        "symfony/http-foundation": "^6.4",
+        "mglaman/composer-drupal-lenient": "^1.0",
+        "onelogin/php-saml": "^4.3",
         "zaporylie/composer-drupal-optimizations": "^1.2"
     },
     "require-dev": {
+        "behat/mink": "^1.11",
         "dealerdirect/phpcodesniffer-composer-installer": "^1.0.0",
         "drupal/coder": "^8.3",
-        "drupal/core-dev": "^10.2.2",
         "drupal/devel": "^5.0",
+        "mikey179/vfsstream": "^1.6",
         "phpspec/prophecy-phpunit": "^2",
-        "phpunit/phpunit": "^9.5",
+        "phpunit/phpunit": "^10.5",
+        "rector/rector": "^1.2",
         "weitzman/drupal-test-traits": "^2.0"
     },
     "conflict": {
@@ -92,7 +110,8 @@
             "php-http/discovery": true,
             "phpstan/extension-installer": true,
             "tbachert/spi": true,
-            "zaporylie/composer-drupal-optimizations": true
+            "zaporylie/composer-drupal-optimizations": true,
+            "mglaman/composer-drupal-lenient": true
         }
     },
     "extra": {
@@ -137,32 +156,92 @@
             ]
         },
         "patches": {
-            "drupal/autologout": {
-                "JS Cookie needs to be enabled automatically when updating": "https://www.drupal.org/files/issues/2024-05-24/multiple_warnings_after_upgrading-3449275-5.patch"
+            "drupal/helfi_platform_config": {
+                "Catch exception during hero paragraphs update": "patches/helfi_platform_config_hero_paragraph_fix.patch",
+                "Skip update_9400 on Drupal 11 (HAL/RDF modules removed)": "patches/helfi_platform_config-d11-update-9400.patch"
+            },
+            "drupal/config_terms": {
+                "Drupal 11 compatibility fixes": "https://www.drupal.org/files/issues/2024-06-02/config_terms.1.x-dev.rector.patch"
+            },
+            "drupal/computed_field_plugin": {
+                "Drupal 11 compatibility fixes": "patches/computed_field_plugin-d11.patch"
             },
             "drupal/core": {
-                "https://www.drupal.org/project/drupal/issues/3054641#comment-13385850": "https://www.drupal.org/files/issues/2019-12-10/3054641-14.patch",
-                "Views attachments are not rendered in the specified order [https://www.drupal.org/project/drupal/issues/2943293]": "https://www.drupal.org/files/issues/2019-05-25/2943293-17.patch",
-                "https://www.drupal.org/project/drupal/issues/3098307": "https://www.drupal.org/files/issues/2022-07-01/sql_mode_fullgroupby_issue-3098307-15.patch"
+                "[#UHF-12709] Patch 'Deleted and replaced ...' error messages": "patches/uhf-12709-skip-deleted-log.patch",
+                "[#3452852] Add create() factory method with autowired parameters to PluginBase": "patches/3452852.patch",
+                "[D11] Skip delete when config entity missing": "patches/core-import-delete-null.patch",
+                "[D11] Skip delete in checkOp when entity missing": "patches/core-config-importer-null-entity.patch",
+                "[D11] Skip countFieldData when table missing": "patches/core-count-field-data-missing-table.patch",
+                "[D11] Skip delete when field table missing": "patches/core-skip-delete-missing-field-table.patch"
             },
             "drupal/elasticsearch_connector": {
-                "Custom patch based on https://www.drupal.org/files/issues/2020-03-03/8.x-7.x-2977537-13-array-vs-scalar_0.patch": "patches/elasticsearch_connector_indexfactory_v5.patch"
-            },
-            "drupal/field_group": {
-                "https://www.drupal.org/project/field_group/issues/3395375": "https://www.drupal.org/files/issues/2024-08-06/3395375-6.patch"
-            },
-            "drupal/helfi_platform_config": {
-                "Catch exception during hero paragraphs allowed values update": "patches/helfi_platform_config_hero_paragraph_fix.patch"
-            },
-            "drupal/samlauth": {
-                "https://www.drupal.org/project/samlauth/issues/3424834": "https://git.drupalcode.org/project/samlauth/-/merge_requests/18.patch"
-            },
-            "drupal/user_bundle": {
-                "Custom patch prevents install from dying when trying to edit nonexisting admin configuration file.": "./patches/remove_editing_admin_configuration.patch"
+                "[Local] Disable reopen parameter for ES": "patches/elasticsearch-connector-disable-reopen.patch"
             }
+        },
+        "composer-patches": {
+            "ignore-dependency-patches": [
+                "drupal/helfi_platform_config",
+                "drupal/big_pipe_sessionless"
+            ]
+        },
+        "drupal-lenient": {
+            "allowed-list": [
+                "drupal/config_terms",
+                "drupal/computed_field_plugin",
+                "drupal/big_pipe_sessionless",
+                "doctrine/annotations"
+            ]
         }
     },
     "repositories": [
+        {
+            "type": "package",
+            "package": {
+                "name": "drupal/big_pipe_sessionless",
+                "version": "2.2.0",
+                "type": "drupal-module",
+                "source": {
+                    "url": "https://git.drupalcode.org/project/big_pipe_sessionless.git",
+                    "type": "git",
+                    "reference": "2.2.0"
+                },
+                "require": {
+                    "drupal/core": "^10 || ^11"
+                }
+            }
+        },
+        {
+            "type": "package",
+            "package": {
+                "name": "drupal/computed_field_plugin",
+                "version": "1.4.0",
+                "type": "drupal-module",
+                "source": {
+                    "url": "https://git.drupalcode.org/project/computed_field_plugin.git",
+                    "type": "git",
+                    "reference": "8.x-1.4"
+                },
+                "require": {
+                    "drupal/core": "^10 || ^11"
+                }
+            }
+        },
+        {
+            "type": "package",
+            "package": {
+                "name": "drupal/config_terms",
+                "version": "1.9.0",
+                "type": "drupal-module",
+                "source": {
+                    "url": "https://git.drupalcode.org/project/config_terms.git",
+                    "type": "git",
+                    "reference": "8.x-1.9"
+                },
+                "require": {
+                    "drupal/core": "^10 || ^11"
+                }
+            }
+        },
         {
             "type": "composer",
             "url": "https://repository.drupal.hel.ninja"
@@ -211,7 +290,7 @@
     ],
     "scripts": {
         "test-php": "vendor/bin/phpunit -c $PWD/phpunit.xml.dist",
-        "copy-commit-message-script": "make copy-commit-message-script",
+        "copy-commit-message-script": "make copy-commit-message-script || true",
         "post-install-cmd": [
             "rsync -a vendor/asuntomyynti/react public/modules/custom/asu_apartment_search/assets || true",
             "@copy-commit-message-script"
