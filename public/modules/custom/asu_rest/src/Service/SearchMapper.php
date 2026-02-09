@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace Drupal\asu_rest\Service;
 
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Entity\FieldableEntityInterface;
+use Drupal\Core\Entity\TranslatableInterface;
+use Drupal\Core\Field\EntityReferenceFieldItemListInterface;
 use Drupal\Core\File\FileUrlGeneratorInterface;
 use Drupal\node\Entity\Node;
-use Drupal\taxonomy\Entity\Term;
 use Drupal\file\Entity\File;
 use Drupal\image\Entity\ImageStyle;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -240,9 +242,12 @@ final class SearchMapper {
     if (!$entity->hasField($fieldName) || $entity->get($fieldName)->isEmpty()) {
       return '';
     }
-    $term = $this->entityTypeManager->getStorage('taxonomy_term')
-      ->load($entity->get($fieldName)->target_id);
-    return $term instanceof Term ? $term->label() : '';
+    $field = $entity->get($fieldName);
+    $referenced = $field instanceof EntityReferenceFieldItemListInterface
+      ? $field->referencedEntities()
+      : [];
+    $term = reset($referenced);
+    return $term ? $term->label() : '';
   }
 
   /**
@@ -252,15 +257,13 @@ final class SearchMapper {
     if (!$entity->hasField($fieldName) || $entity->get($fieldName)->isEmpty()) {
       return [];
     }
+    $field = $entity->get($fieldName);
+    if (!$field instanceof EntityReferenceFieldItemListInterface) {
+      return [];
+    }
     $labels = [];
-    foreach ($entity->get($fieldName)->getValue() as $item) {
-      if (!isset($item['target_id'])) {
-        continue;
-      }
-      $term = $this->entityTypeManager->getStorage('taxonomy_term')->load($item['target_id']);
-      if ($term instanceof Term) {
-        $labels[] = $term->label();
-      }
+    foreach ($field->referencedEntities() as $term) {
+      $labels[] = $term->label();
     }
     return $labels;
   }
@@ -269,15 +272,27 @@ final class SearchMapper {
    * Get enum value from term field.
    */
   private function getEnumFromTermField(Node $entity, string $fieldName): string {
-    if (!$entity->hasField($fieldName) || $entity->get($fieldName)->isEmpty()) {
+    $source = $entity instanceof TranslatableInterface
+      ? $entity->getUntranslated()
+      : $entity;
+    if (!$source->hasField($fieldName) || $source->get($fieldName)->isEmpty()) {
       return '';
     }
-    $term = $this->entityTypeManager->getStorage('taxonomy_term')
-      ->load($entity->get($fieldName)->target_id);
-    if (!$term instanceof Term) {
+    $field = $source->get($fieldName);
+    if (!$field instanceof EntityReferenceFieldItemListInterface) {
       return '';
     }
-    $value = $term->hasField('field_machine_readable_name') && !$term->get('field_machine_readable_name')->isEmpty()
+    $referenced = $field->referencedEntities();
+    $term = reset($referenced);
+    if (!$term) {
+      return '';
+    }
+    if ($term instanceof TranslatableInterface) {
+      $term = $term->getUntranslated();
+    }
+    $value = $term instanceof FieldableEntityInterface
+      && $term->hasField('field_machine_readable_name')
+      && !$term->get('field_machine_readable_name')->isEmpty()
       ? $term->get('field_machine_readable_name')->value
       : $term->label();
 
@@ -291,9 +306,13 @@ final class SearchMapper {
     if (!$entity->hasField($fieldName) || $entity->get($fieldName)->isEmpty()) {
       return '';
     }
-    $term = $this->entityTypeManager->getStorage('taxonomy_term')
-      ->load($entity->get($fieldName)->target_id);
-    if (!$term instanceof Term) {
+    $field = $entity->get($fieldName);
+    if (!$field instanceof EntityReferenceFieldItemListInterface) {
+      return '';
+    }
+    $referenced = $field->referencedEntities();
+    $term = reset($referenced);
+    if (!$term) {
       return '';
     }
     $value = $term->label();
