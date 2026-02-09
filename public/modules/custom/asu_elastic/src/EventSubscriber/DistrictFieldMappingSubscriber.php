@@ -41,7 +41,8 @@ class DistrictFieldMappingSubscriber implements EventSubscriberInterface {
   }
 
   /**
-   * Modifies Elasticsearch query to use .keyword sub-field for project_district.
+   * Modifies Elasticsearch query to use .keyword sub-field
+   * for project_district.
    *
    * Also expands base district names (without hyphen) to include sub-districts.
    * For example: "Pasila" will match both "Pasila" and "Pohjois-Pasila".
@@ -58,7 +59,9 @@ class DistrictFieldMappingSubscriber implements EventSubscriberInterface {
     }
 
     // Recursively replace project_district with enhanced matching logic.
-    $params['body']['query'] = $this->replaceDistrictField($params['body']['query']);
+    $params['body']['query'] = $this->replaceDistrictField(
+      $params['body']['query']
+    );
 
     $event->setParams($params);
   }
@@ -86,11 +89,16 @@ class DistrictFieldMappingSubscriber implements EventSubscriberInterface {
         && isset($value['project_district'])
       ) {
         // Replace this entire element with enhanced district query.
-        return $this->createDistrictQuery($value['project_district'], $key === 'terms');
+        return $this->createDistrictQuery(
+          $value['project_district'],
+          $key === 'terms'
+        );
       }
       else {
         // Recursively process nested arrays.
-        $result[$key] = is_array($value) ? $this->replaceDistrictField($value) : $value;
+        $result[$key] = is_array($value)
+          ? $this->replaceDistrictField($value)
+          : $value;
       }
     }
 
@@ -108,7 +116,10 @@ class DistrictFieldMappingSubscriber implements EventSubscriberInterface {
    * @return array
    *   The enhanced query structure.
    */
-  protected function createDistrictQuery($districts, bool $isTerms = TRUE): array {
+  protected function createDistrictQuery(
+    $districts,
+    bool $isTerms = TRUE
+  ): array {
     $shouldClauses = [];
 
     // Normalize to array.
@@ -119,12 +130,18 @@ class DistrictFieldMappingSubscriber implements EventSubscriberInterface {
     foreach ($districts as $district) {
       if (strpos($district, '-') === FALSE) {
         // Base district (no hyphen): match exact OR sub-districts.
-        $shouldClauses[] = ['term' => ['project_district.keyword' => $district]];
-        $shouldClauses[] = ['wildcard' => ['project_district.keyword' => '*-' . $district]];
+        $shouldClauses[] = [
+          'term' => ['project_district.keyword' => $district],
+        ];
+        $shouldClauses[] = [
+          'wildcard' => ['project_district.keyword' => '*-' . $district],
+        ];
       }
       else {
         // Sub-district (has hyphen): exact match only.
-        $shouldClauses[] = ['term' => ['project_district.keyword' => $district]];
+        $shouldClauses[] = [
+          'term' => ['project_district.keyword' => $district],
+        ];
       }
     }
 
