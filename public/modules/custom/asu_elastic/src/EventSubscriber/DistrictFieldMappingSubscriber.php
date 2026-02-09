@@ -41,8 +41,7 @@ class DistrictFieldMappingSubscriber implements EventSubscriberInterface {
   }
 
   /**
-   * Modifies Elasticsearch query to use .keyword sub-field
-   * for project_district.
+   * Modifies Elasticsearch query to use .keyword sub-field for project_district.
    *
    * Also expands base district names (without hyphen) to include sub-districts.
    * For example: "Pasila" will match both "Pasila" and "Pohjois-Pasila".
@@ -118,7 +117,7 @@ class DistrictFieldMappingSubscriber implements EventSubscriberInterface {
    */
   protected function createDistrictQuery(
     $districts,
-    bool $isTerms = TRUE
+    bool $isTerms = TRUE,
   ): array {
     $shouldClauses = [];
 
