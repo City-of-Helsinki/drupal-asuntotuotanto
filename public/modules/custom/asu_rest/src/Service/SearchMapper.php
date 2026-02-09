@@ -193,6 +193,7 @@ final class SearchMapper {
       'project_material_choice_dl' => $this->getScalar($project, 'field_material_choice_dl'),
       'project_premarketing_start_time' => $this->formatDateTime($this->getScalar($project, 'field_premarketing_start_time')),
       'project_premarketing_end_time' => $this->formatDateTime($this->getScalar($project, 'field_premarketing_end_time')),
+      'project_published' => $project->isPublished(),
     ];
 
     if ($apartment) {
@@ -294,7 +295,7 @@ final class SearchMapper {
       && $term->hasField('field_machine_readable_name')
       && !$term->get('field_machine_readable_name')->isEmpty()
       ? $term->get('field_machine_readable_name')->value
-      : $term->label();
+      : $term->id();
 
     return $this->normalizeEnum((string) $value);
   }
