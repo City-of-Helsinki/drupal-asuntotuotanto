@@ -80,7 +80,11 @@ class DistrictFieldMappingSubscriber implements EventSubscriberInterface {
     $result = [];
     foreach ($query as $key => $value) {
       // Check if this is a terms/term query with project_district.
-      if (($key === 'terms' || $key === 'term') && is_array($value) && isset($value['project_district'])) {
+      if (
+        ($key === 'terms' || $key === 'term')
+        && is_array($value)
+        && isset($value['project_district'])
+      ) {
         // Replace this entire element with enhanced district query.
         return $this->createDistrictQuery($value['project_district'], $key === 'terms');
       }
