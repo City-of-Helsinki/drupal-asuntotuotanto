@@ -41,9 +41,9 @@ class DistrictFieldMappingSubscriber implements EventSubscriberInterface {
   }
 
   /**
-   * Modifies Elasticsearch query to use .keyword sub-field for project_district.
+   * Modifies Elasticsearch query use .keyword sub-field for project_district.
    *
-   * Also expands base district names (without hyphen) to include sub-districts.
+   * Also expands base district names to include sub-districts.
    * For example: "Pasila" will match both "Pasila" and "Pohjois-Pasila".
    *
    * @param \Drupal\elasticsearch_connector\Event\QueryParamsEvent $event
