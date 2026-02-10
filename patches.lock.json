@@ -1,6 +1,18 @@
 {
-    "_hash": "5fa7682911872f124b729ec6566e3d24c306009cccde0f3f3bec5a6706679f85",
+    "_hash": "e8d4f3774e1343629f06f9cecffc4fca51077dc9327f11437bdb71f264e6986d",
     "patches": {
+        "drupal/simple_oauth": [
+            {
+                "package": "drupal/simple_oauth",
+                "description": "Fix League v9 compatibility (Issue #3508777)",
+                "url": "https://git.drupalcode.org/project/simple_oauth/-/merge_requests/174.diff",
+                "sha256": "3cc2afa4b7a037b0e47037b4115919efbbaac5ad8dc5d3ee3db46b430ff55fa6",
+                "depth": 1,
+                "extra": {
+                    "provenance": "root"
+                }
+            }
+        ],
         "drupal/helfi_platform_config": [
             {
                 "package": "drupal/helfi_platform_config",
@@ -63,16 +75,6 @@
                 "description": "[#UHF-12709] Patch 'Deleted and replaced ...' error messages",
                 "url": "patches/uhf-12709-skip-deleted-log.patch",
                 "sha256": "36995dc96842aa819510f6265b3c62af976c4e558f5a960b914cf8b2b3da9a84",
-                "depth": 2,
-                "extra": {
-                    "provenance": "root"
-                }
-            },
-            {
-                "package": "drupal/core",
-                "description": "[#3452852] Add create() factory method with autowired parameters to PluginBase",
-                "url": "patches/3452852.patch",
-                "sha256": "35e072a541b5617ac2b17fddc3dc95747dc9e641eefeb12db93ef9c0db7bb811",
                 "depth": 2,
                 "extra": {
                     "provenance": "root"
