@@ -1,10 +1,22 @@
 {
-    "_hash": "51b14d312ccd5409f73e3d6a10dd01b7b2cfe700a0cbf9b4647d3bf1ccd72365",
+    "_hash": "e8d4f3774e1343629f06f9cecffc4fca51077dc9327f11437bdb71f264e6986d",
     "patches": {
+        "drupal/simple_oauth": [
+            {
+                "package": "drupal/simple_oauth",
+                "description": "Fix League v9 compatibility (Issue #3508777)",
+                "url": "https://git.drupalcode.org/project/simple_oauth/-/merge_requests/174.diff",
+                "sha256": "3cc2afa4b7a037b0e47037b4115919efbbaac5ad8dc5d3ee3db46b430ff55fa6",
+                "depth": 1,
+                "extra": {
+                    "provenance": "root"
+                }
+            }
+        ],
         "drupal/helfi_platform_config": [
             {
                 "package": "drupal/helfi_platform_config",
-                "description": "Catch exception during hero paragraphs allowed values update",
+                "description": "Catch exception during hero paragraphs update",
                 "url": "patches/helfi_platform_config_hero_paragraph_fix.patch",
                 "sha256": "1162f594afac7fd9617725f64ae8f55d3da8ad8d94ed666e598699fb036f3875",
                 "depth": 1,
@@ -60,16 +72,6 @@
             },
             {
                 "package": "drupal/core",
-                "description": "[#3452852] Add create() factory method with autowired parameters to PluginBase",
-                "url": "patches/3452852.patch",
-                "sha256": "35e072a541b5617ac2b17fddc3dc95747dc9e641eefeb12db93ef9c0db7bb811",
-                "depth": 2,
-                "extra": {
-                    "provenance": "root"
-                }
-            },
-            {
-                "package": "drupal/core",
                 "description": "[D11] Skip delete when config entity missing",
                 "url": "patches/core-import-delete-null.patch",
                 "sha256": "5bf0a22f458a0122448648f0847e51c9b585d7e442c2f4f8cd226e39267bf559",
@@ -83,7 +85,7 @@
                 "description": "[D11] Skip delete in checkOp when entity missing",
                 "url": "patches/core-config-importer-null-entity.patch",
                 "sha256": "b276daec9f375bba9f9f4a4c43539cfc2d0ae30e993f5db5a95c008961917336",
-                "depth": 1,
+                "depth": 2,
                 "extra": {
                     "provenance": "root"
                 }
@@ -93,7 +95,7 @@
                 "description": "[D11] Skip countFieldData when table missing",
                 "url": "patches/core-count-field-data-missing-table.patch",
                 "sha256": "67294a7d6862b00ea3a0a004255fdaac182fc33b4f7ea9f0a33f461e7924d00a",
-                "depth": 1,
+                "depth": 2,
                 "extra": {
                     "provenance": "root"
                 }
@@ -103,6 +105,18 @@
                 "description": "[D11] Skip delete when field table missing",
                 "url": "patches/core-skip-delete-missing-field-table.patch",
                 "sha256": "b275f0ac34052fdb644eacb08643a90c372773d60483b95164bdb97ece755059",
+                "depth": 2,
+                "extra": {
+                    "provenance": "root"
+                }
+            }
+        ],
+        "drupal/elasticsearch_connector": [
+            {
+                "package": "drupal/elasticsearch_connector",
+                "description": "[Local] Disable reopen parameter for ES",
+                "url": "patches/elasticsearch-connector-disable-reopen.patch",
+                "sha256": "3ae36c53076dbe007e3f6d68cb47eb2f158cb44c17f88b68f2834a56512a216c",
                 "depth": 1,
                 "extra": {
                     "provenance": "root"
@@ -130,18 +144,6 @@
                 "depth": 1,
                 "extra": {
                     "provenance": "dependency:drupal/flysystem"
-                }
-            }
-        ],
-        "drupal/elasticsearch_connector": [
-            {
-                "package": "drupal/elasticsearch_connector",
-                "description": "[Local] Disable reopen parameter for ES",
-                "url": "patches/elasticsearch-connector-disable-reopen.patch",
-                "sha256": "3ae36c53076dbe007e3f6d68cb47eb2f158cb44c17f88b68f2834a56512a216c",
-                "depth": 1,
-                "extra": {
-                    "provenance": "root"
                 }
             }
         ]
