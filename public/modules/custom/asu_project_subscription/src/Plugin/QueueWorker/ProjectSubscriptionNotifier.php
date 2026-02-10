@@ -189,7 +189,15 @@ class ProjectSubscriptionNotifier extends QueueWorkerBase implements ContainerFa
       }
 
       $lines[] = '<br />';
-      $lines[] = (string) $this->t('New status: @state', ['@state' => $new_state], ['langcode' => $langcode]);
+      if ($new_state === 'Myynnissä') {
+        $lines[] = (string) $this->t('Application period has started.', [], ['langcode' => $langcode]);
+      }
+      elseif ($new_state === 'Ennakkomarkkinoinnissa') {
+        $lines[] = (string) $this->t('Pre-marketing', [], ['langcode' => $langcode]);
+      }
+      else {
+        $lines[] = (string) $this->t('New status: @state', ['@state' => $new_state], ['langcode' => $langcode]);
+      }
 
       if ($title) {
         $lines[] = (string) $this->t('Project: @title', ['@title' => $escTitle], ['langcode' => $langcode]);

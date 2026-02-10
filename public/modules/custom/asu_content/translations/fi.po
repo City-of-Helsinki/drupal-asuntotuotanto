@@ -11626,7 +11626,10 @@ msgid "You have unsubscribed"
 msgstr "Ilmoitusten tilaus on peruttu."
 
 msgid "You have been unsubscribed from notifications"
-msgstr "Olet poistettu ilmoitusten tilaajista."
+msgstr "Olet perunut ilmoitusten tilauksen."
+
+msgid "You have been unsubscribed from notifications."
+msgstr "Olet perunut ilmoitusten tilauksen."
 
 msgid "Sales started — @title"
 msgstr "Myynti alkanut — @title"
@@ -11673,6 +11676,12 @@ msgstr "Vahvista tilauksesi kohteeseen @title"
 msgid "Good news! The project has moved to sales."
 msgstr "Hyviä uutisia! Kohte on siirtynyt myyntivaiheeseen."
 
+msgid "Application period has started."
+msgstr "Kohteen hakuaika on alkanut."
+
+msgid "Pre-marketing"
+msgstr "Ennakkomarkkinoinnissa"
+
 msgid "The project status has been updated."
 msgstr "Kohden tila on päivitetty."
 
@@ -11689,7 +11698,10 @@ msgid "Failed to send confirmation email. Please try again later."
 msgstr "Vahvistussähköpostin lähettäminen epäonnistui. Yritä myöhemmin uudelleen."
 
 msgid "Subscribe to property updates"
-msgstr "Tilaa kohteen päivitykset"
+msgstr "Ilmoitusvahti"
+
+msgid "Open project page"
+msgstr "Avaa kohdesivu"
 
 msgid "Subscribe to @title"
 msgstr "Tilaa aihepiirin @title RSS-syöte"
