@@ -69,7 +69,7 @@
         "drupal/restui": "^1.22",
         "drupal/route_condition": "^2.0.2",
         "drupal/samlauth": "^3.13",
-        "drupal/simple_oauth": "^6.1",
+        "drupal/simple_oauth": "6.1.0",
         "drupal/siteimprove": "^3.0",
         "drupal/slick": "^3.0",
         "drupal/symfony_mailer_lite": "^2.0",
@@ -87,6 +87,7 @@
         "mglaman/composer-drupal-lenient": "^1.0",
         "onelogin/php-saml": "^4.3",
         "psr/http-message": "^1.1",
+        "steverhoades/oauth2-openid-connect-server": "^3.0",
         "zaporylie/composer-drupal-optimizations": "^1.2"
     },
     "require-dev": {
@@ -160,6 +161,9 @@
             ]
         },
         "patches": {
+            "drupal/simple_oauth": {
+                "Fix League v9 compatibility (Issue #3508777)": "https://git.drupalcode.org/project/simple_oauth/-/merge_requests/174.diff"
+            },
             "drupal/helfi_platform_config": {
                 "Catch exception during hero paragraphs update": "patches/helfi_platform_config_hero_paragraph_fix.patch",
                 "Skip update_9400 on Drupal 11 (HAL/RDF modules removed)": "patches/helfi_platform_config-d11-update-9400.patch"
