@@ -79,6 +79,7 @@
         "drupal/user_bundle": "^1.4",
         "drupal/user_registrationpassword": "^2.0",
         "drupal/views_bulk_edit": "^3.0",
+        "drupal/views_infinite_scroll": "^2.0",
         "drupal/yearonly": "^9.1",
         "drush/drush": "^13.7",
         "kenwheeler/slick": "^1.8",

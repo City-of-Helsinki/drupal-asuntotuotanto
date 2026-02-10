@@ -430,8 +430,14 @@ final class SearchMapper {
     if (!$file) {
       return NULL;
     }
+
+    // The 'extensions' property must be a string, not an array.
+    // Validates file extension as a string of extensions separated by spaces.
     $fileValidator = \Drupal::service('file.validator');
-    if (empty($fileValidator->validate($file, ['extensions' => 'png jpg jpeg']))) {
+    $extensions = 'png jpg jpeg';
+    $validationResult = $fileValidator->validate($file, ['FileExtension' => ['extensions' => $extensions]]);
+
+    if (empty($validationResult)) {
       $style = ImageStyle::load('original_m');
       return $style ? $style->buildUrl($file->getFileUri()) : $file->createFileUrl(FALSE);
     }
