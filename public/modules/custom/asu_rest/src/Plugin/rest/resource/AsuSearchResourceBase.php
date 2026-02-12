@@ -68,7 +68,7 @@ abstract class AsuSearchResourceBase extends ResourceBase {
     $response = new ResourceResponse($payload, 200, $this->getTestingHeaders());
     $cache = (new CacheableMetadata())
       ->setCacheContexts(['url.query_args'])
-      ->setCacheMaxAge(0);
+      ->setCacheMaxAge(getenv('ASU_REST_API_CACHE_MAX_AGE') ?: 0);
     $response->addCacheableDependency($cache);
     return $response;
   }
