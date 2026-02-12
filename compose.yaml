@@ -30,6 +30,7 @@ services:
       DRUPAL_VARNISH_PORT: 6081
       REDIS_HOST: redis
       ASU_ASUNTOTUOTANTO_URL: "https://asuntotuotanto.docker.so"
+      ASU_REST_API_CACHE_MAX_AGE: "${ASU_REST_API_CACHE_MAX_AGE:-300}"
     networks:
       - internal
       - stonehenge-network
