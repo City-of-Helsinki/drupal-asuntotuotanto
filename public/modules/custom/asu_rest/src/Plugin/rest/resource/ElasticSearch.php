@@ -13,7 +13,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
- * Provides a resource to get user applications.
+ * Provides a resource to get user applications. Used by asuntomyynti-react project.
  *
  * @RestResource(
  *   id = "asu_elasticsearch",
