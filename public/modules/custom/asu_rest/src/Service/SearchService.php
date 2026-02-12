@@ -116,10 +116,13 @@ final class SearchService {
    *   Matched apartments.
    */
   private function filterApartments(array $params, ?int $projectId): array {
+
     $storage = $this->entityTypeManager->getStorage('node');
     $query = $storage->getQuery()->accessCheck(TRUE);
     $query->condition('type', 'apartment');
-    $query->condition('status', 1);
+    \Drupal::logger('asu_rest')->debug('params are <pre>@params</pre>', [
+      '@params' => print_r($params, TRUE),
+    ]);
 
     $apartmentUuids = $this->normalizeArrayParam($params['uuid'] ?? NULL, TRUE);
     if ($apartmentUuids) {
@@ -133,7 +136,7 @@ final class SearchService {
     );
     if ($projectUuids) {
       $projects = $this->loadProjectsByUuid($projectUuids);
-      if (!$projects) {
+      if (!$projects) {         
         return [];
       }
       $restrictApartmentIds = $this->getApartmentIdsForProjects(...$projects);
@@ -163,7 +166,8 @@ final class SearchService {
     if ($restrictApartmentIds !== NULL) {
       $query->condition('nid', $restrictApartmentIds, 'IN');
     }
-
+    
+    
     $apartmentIds = $query->execute();
     if (!$apartmentIds) {
       return [];
@@ -208,7 +212,7 @@ final class SearchService {
       }
 
       $project = $this->getProjectForApartment($apartment);
-      if (!$project || !$project->isPublished()) {
+      if (!$project) {
         continue;
       }
       if ($project->hasField('field_archived') && (bool) $project->get('field_archived')->value) {
@@ -371,7 +375,6 @@ final class SearchService {
       $projectIds = $storage->getQuery()
         ->accessCheck(TRUE)
         ->condition('type', 'project')
-        ->condition('status', 1)
         ->execute();
       $projects = $projectIds ? $storage->loadMultiple($projectIds) : [];
     }
@@ -408,9 +411,7 @@ final class SearchService {
       if (!$project instanceof Node) {
         continue;
       }
-      if (!$project->isPublished()) {
-        continue;
-      }
+
       if ($project->hasField('field_archived') && (bool) $project->get('field_archived')->value) {
         continue;
       }
