@@ -281,15 +281,29 @@ final class Initialize extends ResourceBase {
         'type' => 'project',
         'status' => 1,
       ]);
-    $districts_by_ownership = [];
+    $districts_by_ownership = [
+      'hitas' => [],
+      'haso' => [],
+    ];
 
     foreach ($project_nodes as $project) {
-      $ownership_type = $project->get('field_ownership_type')->value;
-      $district = $project->get('field_district')->entity->name->value;
-      if ($ownership_type && $district) {
-        if (!isset($districts_by_ownership[$ownership_type])) {
-          $districts_by_ownership[$ownership_type] = [];
+      $ownership_type = '';
+      if ($project->hasField('field_ownership_type') && !$project->get('field_ownership_type')->isEmpty()) {
+        $ownership_term = $project->get('field_ownership_type')->entity;
+        if ($ownership_term) {
+          $ownership_type = strtolower((string) $ownership_term->label());
         }
+      }
+
+      $district = '';
+      if ($project->hasField('field_district') && !$project->get('field_district')->isEmpty()) {
+        $district_term = $project->get('field_district')->entity;
+        if ($district_term) {
+          $district = (string) $district_term->label();
+        }
+      }
+
+      if (in_array($ownership_type, ['hitas', 'haso'], true) && $district !== '') {
         if (!in_array($district, $districts_by_ownership[$ownership_type], true)) {
           $districts_by_ownership[$ownership_type][] = $district;
         }

@@ -3,6 +3,8 @@
 namespace Drupal\asu_rest\Plugin\rest\resource;
 
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\Field\EntityReferenceFieldItemListInterface;
+use Drupal\node\Entity\Node;
 use Drupal\rest\ModifiedResourceResponse;
 use Drupal\rest\Plugin\ResourceBase;
 use Drupal\rest\ResourceResponse;
@@ -45,27 +47,27 @@ class ElasticSearch extends ResourceBase {
    * @return \Drupal\rest\ModifiedResourceResponse
    *   The HTTP response object.
    */
-  public function post(array $data) : ModifiedResourceResponse | ResourceResponse {
-    $parameters = new ParameterBag($data);
+  public function post(array $data): ModifiedResourceResponse | ResourceResponse {
+    $request_data = isset($data['query']) && is_array($data['query']) ? $data['query'] : $data;
+    $parameters = new ParameterBag($request_data);
 
-    $headers = getenv('APP_ENV') == 'testing' ? [
+    $appEnv = getenv('APP_ENV');
+    $headers = (in_array($appEnv, ['testing', 'dev'], true)) ? [
       'Access-Control-Allow-Origin' => '*',
       'Access-Control-Allow-Methods' => '*',
       'Access-Control-Allow-Headers' => '*',
     ] : [];
 
     if ($parameters->get('price') && !$parameters->get('project_ownership_type')) {
-      $message = "Field project_ownership_type must be set
-       if the 'price' parameter is set.";
+      $message = "Field project_ownership_type must be set if the 'price' parameter is set.";
       $this->logger->critical(sprintf('Apartment request failed: %s.', $message));
       return new ModifiedResourceResponse(['message' => $message], 500, $headers);
     }
 
-    $ownership_type = $data['project_ownership_type'];
+    $ownership_type = $parameters->get('project_ownership_type') ?? 'all';
     $url_params = [];
-
-    foreach ($data as $param => $value) {
-      if ($param == 'project_ownership_type') {
+    foreach ($request_data as $param => $value) {
+      if ($param === 'project_ownership_type') {
         continue;
       }
       elseif (is_array($value)) {
@@ -75,115 +77,250 @@ class ElasticSearch extends ResourceBase {
         $url_params[] = "$param:{$value}";
       }
     }
-
     $url_params = ($url_params) ? implode('_', $url_params) : '';
-    // Setup a cache ID.
     $cid = 'asu_rest:apartment_list:' . $ownership_type . $url_params;
 
     $account = User::load(\Drupal::currentUser()->id());
-    $debug = FALSE;
-    if ($account->id() == 1) {
-      $debug = TRUE;
-    }
+    $debug = $account && $account->id() == 1;
 
-    // If a cached entry exists, return it.
-    if (!$debug && $cached = \Drupal::cache()->get($cid)) {
+    if (!$debug && ($cached = \Drupal::cache()->get($cid))) {
       $responseArray = $cached->data;
     }
     else {
-      $index = Index::load('apartment_listing');
-      $query = $index->query();
+      $language = \Drupal::languageManager()->getCurrentLanguage()->getId();
 
-      $parse_mode = \Drupal::service('plugin.manager.search_api.parse_mode')
-        ->createInstance('direct');
-      $parse_mode->setConjunction('AND');
-      $query->setParseMode($parse_mode);
+      // Build entity query for published apartments in current language
+      $entity_query = \Drupal::entityQuery('node')
+        ->condition('type', 'apartment')
+        ->condition('status', 1)
+        ->condition('langcode', $language);
 
-      $query->range(0, 1000);
+      // Filter: apartment state of sale
+      if ($parameters->get('apartment_state_of_sale')) {
+        $entity_query->condition('field_state_of_sale.entity.name', $parameters->get('apartment_state_of_sale'));
+      }
 
-      $this->addConditions($query, $parameters);
+      // Filter: room_count (allow array or int)
+      if ($parameters->has('room_count')) {
+        $room_count_val = $parameters->get('room_count');
+        if (is_array($room_count_val)) {
+          $entity_query->condition('field_room_count.value', $room_count_val, 'IN');
+        } else {
+          $entity_query->condition('field_room_count.value', $room_count_val);
+        }
+      }
+
+      // Filter: price range
+      if ($parameters->has('price_min')) {
+        $entity_query->condition('field_sales_price.value', $parameters->get('price_min'), '>=');
+      }
+      if ($parameters->has('price_max')) {
+        $entity_query->condition('field_sales_price.value', $parameters->get('price_max'), '<=');
+      }
+
+      // Further allow for more filters here as needed
+
+      // Get max 1000 apartments
+      $entity_query->range(0, 1000);
+
+      // Query nids
       try {
-        $results = $query->execute();
-        $resultItems = $results->getResultItems();
+        $entity_query->accessCheck(TRUE);
+        \Drupal::logger('asu_rest')->debug('entity_query: @query', ['@query' => $entity_query]);
+        $nids = $entity_query->execute();
+      } catch (\Exception $e) {
+        $this->logger->critical('Could not fetch apartments from entity_query: ' . $e->getMessage());
+        return new ModifiedResourceResponse(['message' => 'Apartment query failed.'], 500, $headers);
       }
-      catch (\Exception $e) {
-        $this->logger->critical('Could not fetch apartments for react search component: ' . $e->getMessage());
-        return new ModifiedResourceResponse(['message' => 'Apartment query failed.'], 500);
-      }
-      // These values must be returned inside array.
-      $arrays = [
-        'image_urls',
-        'project_image_urls',
-        'services',
-        'project_construction_materials',
-      ];
 
       $apartments = [];
-      $fields = [
-        '_language',
-        'apartment_address',
-        'apartment_number',
-        'apartment_state_of_sale',
-        'apartment_structure',
-        'application_url',
-        'debt_free_sales_price',
-        'floor',
-        'floor_max',
-        'housing_company_fee',
-        'living_area',
-        'nid',
-        'project_application_end_time',
-        'project_application_start_time',
-        'project_can_apply_afterwards',
-        'project_building_type',
-        'project_coordinate_lat',
-        'project_coordinate_lon',
-        'project_district',
-        'project_estimated_completion',
-        'project_housing_company',
-        'project_id',
-        'project_image_urls',
-        'project_main_image_url',
-        'project_new_development_status',
-        'project_ownership_type',
-        'project_possession_transfer_date',
-        'project_state_of_sale',
-        'project_street_address',
-        'project_upcoming_description',
-        'project_url',
-        'project_uuid',
-        'release_payment',
-        'right_of_occupancy_payment',
-        'title',
-        'url',
-        'uuid',
-        'sales_price',
-        'room_count',
-        'sales_price',
-      ];
+      if (!empty($nids)) {
+        /** @var \Drupal\node\Entity\Node[] $nodes */
+        $nodes = Node::loadMultiple($nids);
 
-      foreach ($resultItems as $item) {
-        $parsed = [];
+        // Apartments are related from project.field_apartments, not apartment.field_project.
+        // Build a project lookup once and map apartment ID => project node.
+        $project_query = \Drupal::entityQuery('node')
+          ->condition('type', 'project')
+          ->condition('status', 1)
+          ->condition('field_apartments', array_values($nids), 'IN')
+          ->accessCheck(TRUE);
 
-        $itemFields = $item->getFields(FALSE);
-        foreach ($fields as $fieldName) {
-          if (!isset($itemFields[$fieldName])) {
-            continue;
-          }
-          $parsed[$fieldName] = in_array($fieldName, $arrays) ? $itemFields[$fieldName]->getValues()
-            : ($itemFields[$fieldName]->getValues()[0] ?? '');
+        if ($parameters->get('project_ownership_type')) {
+          $project_query->condition('field_ownership_type.entity.name', $parameters->get('project_ownership_type'));
         }
 
-        $apartments[] = $parsed;
+        if ($parameters->get('project_district')) {
+          $project_query->condition('field_district.value', $parameters->get('project_district'));
+        }
+
+        if ($parameters->get('project_building_type')) {
+          $project_query->condition('field_building_type.value', $parameters->get('project_building_type'));
+        }
+
+        if ($parameters->get('project_state_of_sale')) {
+          $project_query->condition('field_state_of_sale.entity.name', $parameters->get('project_state_of_sale'));
+        }
+
+        $project_nids = $project_query->execute();
+        $projects = Node::loadMultiple($project_nids);
+
+        $apartment_project_map = [];
+        foreach ($projects as $project) {
+          if (!$project->hasField('field_apartments') || $project->get('field_apartments')->isEmpty()) {
+            continue;
+          }
+          foreach ($project->get('field_apartments')->getValue() as $reference) {
+            if (!empty($reference['target_id'])) {
+              $apartment_project_map[(int) $reference['target_id']] = $project;
+            }
+          }
+        }
+
+        foreach ($nodes as $apartment_node) {
+          $apartment_id = (int) $apartment_node->id();
+          $project_node = $apartment_project_map[$apartment_id] ?? NULL;
+          if (!$project_node || !$project_node->isPublished()) {
+            continue;
+          }
+
+          $project_image_urls = [];
+          $project_image_field = NULL;
+          if ($project_node->hasField('field_images')) {
+            $project_image_field = $project_node->get('field_images');
+          }
+          if ($project_image_field instanceof EntityReferenceFieldItemListInterface) {
+            foreach ($project_image_field as $item) {
+              if ($item->entity) {
+                $project_image_urls[] = $item->entity->getFileUri();
+              }
+            }
+          }
+
+          $project_main_image_url = '';
+          if ($project_node->hasField('field_main_image_url') && !$project_node->get('field_main_image_url')->isEmpty()) {
+            $project_main_image_url = (string) $project_node->get('field_main_image_url')->value;
+          }
+          elseif ($project_node->hasField('field_main_image') && !$project_node->get('field_main_image')->isEmpty() && $project_node->get('field_main_image')->entity) {
+            $project_main_image_url = $project_node->get('field_main_image')->entity->getFileUri();
+          }
+
+          $project_application_end_time = '';
+          if ($project_node->hasField('field_project_application_end_time') && !$project_node->get('field_project_application_end_time')->isEmpty()) {
+            $project_application_end_time = (string) $project_node->get('field_project_application_end_time')->value;
+          }
+          elseif ($project_node->hasField('field_application_end_time') && !$project_node->get('field_application_end_time')->isEmpty()) {
+            $project_application_end_time = (string) $project_node->get('field_application_end_time')->value;
+          }
+
+          $project_application_start_time = '';
+          if ($project_node->hasField('field_project_application_start_time') && !$project_node->get('field_project_application_start_time')->isEmpty()) {
+            $project_application_start_time = (string) $project_node->get('field_project_application_start_time')->value;
+          }
+          elseif ($project_node->hasField('field_application_start_time') && !$project_node->get('field_application_start_time')->isEmpty()) {
+            $project_application_start_time = (string) $project_node->get('field_application_start_time')->value;
+          }
+
+          $project_can_apply_afterwards = FALSE;
+          if ($project_node->hasField('field_project_can_apply_afterwards') && !$project_node->get('field_project_can_apply_afterwards')->isEmpty()) {
+            $project_can_apply_afterwards = (bool) $project_node->get('field_project_can_apply_afterwards')->value;
+          }
+          elseif ($project_node->hasField('field_can_apply_afterwards') && !$project_node->get('field_can_apply_afterwards')->isEmpty()) {
+            $project_can_apply_afterwards = (bool) $project_node->get('field_can_apply_afterwards')->value;
+          }
+
+          $get_scalar = static function (Node $node, string $field): string {
+            return $node->hasField($field) && !$node->get($field)->isEmpty()
+              ? (string) $node->get($field)->value
+              : '';
+          };
+          $get_term_label = static function (Node $node, string $field): string {
+            if (!$node->hasField($field) || $node->get($field)->isEmpty()) {
+              return '';
+            }
+            $entity = $node->get($field)->entity;
+            return $entity ? (string) $entity->label() : '';
+          };
+
+          $apartment_state_of_sale = $get_term_label($apartment_node, 'field_apartment_state_of_sale');
+          if ($apartment_state_of_sale === '') {
+            $apartment_state_of_sale = $get_term_label($apartment_node, 'field_state_of_sale');
+          }
+
+          $apartment_structure = $get_scalar($apartment_node, 'field_apartment_structure');
+          if ($apartment_structure === '') {
+            $apartment_structure = $get_scalar($apartment_node, 'field_structure');
+          }
+
+          $project_building_type = $get_term_label($project_node, 'field_building_type');
+          if ($project_building_type === '') {
+            $project_building_type = $get_scalar($project_node, 'field_building_type');
+          }
+
+          $project_district = $get_term_label($project_node, 'field_district');
+          if ($project_district === '') {
+            $project_district = $get_scalar($project_node, 'field_district');
+          }
+
+          $project_ownership_type = strtolower($get_term_label($project_node, 'field_ownership_type'));
+          $project_state_of_sale = $get_term_label($project_node, 'field_state_of_sale');
+
+          $room_count = NULL;
+          if ($get_scalar($apartment_node, 'field_room_count') !== '') {
+            $room_count = intval($get_scalar($apartment_node, 'field_room_count'));
+          }
+
+          // Build apartment structure (keep in sync with drupal_elasticsearch_endpoint_example.json)
+          $apartment = [
+            '_language' => $apartment_node->language()->getId(),
+            'apartment_address' => $get_scalar($apartment_node, 'field_apartment_address'),
+            'apartment_number' => $get_scalar($apartment_node, 'field_apartment_number'),
+            'apartment_state_of_sale' => $apartment_state_of_sale,
+            'apartment_structure' => $apartment_structure,
+            'application_url' => "/application/{$apartment_node->id()}",
+            'debt_free_sales_price' => floatval($get_scalar($apartment_node, 'field_debt_free_sales_price') ?: 0),
+            'floor' => $get_scalar($apartment_node, 'field_floor') !== '' ? intval($get_scalar($apartment_node, 'field_floor')) : null,
+            'floor_max' => $get_scalar($apartment_node, 'field_floor_max') !== '' ? intval($get_scalar($apartment_node, 'field_floor_max')) : null,
+            'housing_company_fee' => floatval($get_scalar($apartment_node, 'field_housing_company_fee') ?: 0),
+            'living_area' => floatval($get_scalar($apartment_node, 'field_living_area') ?: 0),
+            'nid' => intval($apartment_node->id()),
+            'project_application_end_time' => $project_application_end_time,
+            'project_application_start_time' => $project_application_start_time,
+            'project_can_apply_afterwards' => $project_can_apply_afterwards,
+            'project_building_type' => $project_building_type,
+            'project_coordinate_lat' => $get_scalar($project_node, 'field_coordinate_lat'),
+            'project_coordinate_lon' => $get_scalar($project_node, 'field_coordinate_lon'),
+            'project_district' => $project_district,
+            'project_estimated_completion' => $get_scalar($project_node, 'field_estimated_completion'),
+            'project_housing_company' => $project_node->label(),
+            'project_id' => intval($project_node->id()),
+            'project_image_urls' => $project_image_urls,
+            'project_main_image_url' => $project_main_image_url,
+            'project_new_development_status' => $get_scalar($project_node, 'field_new_development_status'),
+            'project_ownership_type' => $project_ownership_type,
+            'project_possession_transfer_date' => $get_scalar($project_node, 'field_possession_transfer_date'),
+            'project_state_of_sale' => $project_state_of_sale,
+            'project_street_address' => $get_scalar($project_node, 'field_street_address'),
+            'project_upcoming_description' => $get_scalar($project_node, 'field_upcoming_description'),
+            'project_url' => "/node/{$project_node->id()}",
+            'project_uuid' => $project_node->uuid(),
+            'release_payment' => floatval($get_scalar($apartment_node, 'field_release_payment') ?: 0),
+            'right_of_occupancy_payment' => floatval($get_scalar($apartment_node, 'field_right_of_occupancy_payment') ?: 0),
+            'title' => $apartment_node->label(),
+            'url' => $get_scalar($apartment_node, 'field_apartment_url'),
+            'uuid' => $apartment_node->uuid(),
+            'sales_price' => floatval($get_scalar($apartment_node, 'field_sales_price') ?: 0),
+            'room_count' => $room_count,
+            // For accurate FE structure, add more fields as needed
+          ];
+          $project_id = $apartment['project_id'];
+          $apartments[$project_id][] = $apartment;
+        }
       }
 
-      $responseArray = [];
-      foreach ($apartments as $apartment) {
-        $responseArray[$apartment['project_id']][] = $apartment;
-      }
-
+      $responseArray = $apartments;
       if (count($responseArray) > 0) {
-        \Drupal::cache()->set($cid, $responseArray, Cache::PERMANENT, ['search_api_list:apartment_listing']);
+        \Drupal::cache()->set($cid, $responseArray, Cache::PERMANENT, ['apartment_entity_list']);
       }
     }
 
@@ -245,7 +382,7 @@ class ElasticSearch extends ResourceBase {
     }
     else {
       $states = array_map('strtolower', $parameters->get('project_state_of_sale'));
-      $upcoming = array_search('upcoming', $states, 'IN');
+      $upcoming = array_search('upcoming', $states, TRUE);
       // Exclude upcoming apartments unless requested.
       if ($upcoming === FALSE) {
         $group = $query->createConditionGroup('OR');
