@@ -147,15 +147,18 @@ class ElasticSearch extends ResourceBase {
           ->accessCheck(TRUE);
 
         if ($parameters->get('project_ownership_type')) {
-          $project_query->condition('field_ownership_type.entity.name', $parameters->get('project_ownership_type'));
+          $ownership_type = $parameters->get('project_ownership_type');
+          $project_query->condition('field_ownership_type.entity.name', $ownership_type, is_array($ownership_type) ? 'IN' : '=');
         }
 
         if ($parameters->get('project_district')) {
-          $project_query->condition('field_district.value', $parameters->get('project_district'));
+          $district = $parameters->get('project_district');
+          $project_query->condition('field_district.entity.name', $district, is_array($district) ? 'IN' : '=');
         }
 
         if ($parameters->get('project_building_type')) {
-          $project_query->condition('field_building_type.value', $parameters->get('project_building_type'));
+          $building_type = $parameters->get('project_building_type');
+          $project_query->condition('field_building_type.entity.name', $building_type, is_array($building_type) ? 'IN' : '=');
         }
 
         if ($parameters->get('project_state_of_sale')) {
