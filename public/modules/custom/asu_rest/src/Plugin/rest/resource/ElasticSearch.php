@@ -58,13 +58,13 @@ class ElasticSearch extends ResourceBase {
       'Access-Control-Allow-Headers' => '*',
     ] : [];
 
-    if ($parameters->get('price') && !$parameters->get('project_ownership_type')) {
-      $message = "Field project_ownership_type must be set if the 'price' parameter is set.";
+    if (!$parameters->get('project_ownership_type')) {
+      $message = "Field project_ownership_type must be set.";
       $this->logger->critical(sprintf('Apartment request failed: %s.', $message));
       return new ModifiedResourceResponse(['message' => $message], 500, $headers);
     }
 
-    $ownership_type = $parameters->get('project_ownership_type') ?? 'all';
+    $ownership_type = strtolower($parameters->get('project_ownership_type'));
     $url_params = [];
     foreach ($request_data as $param => $value) {
       if ($param === 'project_ownership_type') {
@@ -78,7 +78,8 @@ class ElasticSearch extends ResourceBase {
       }
     }
     $url_params = ($url_params) ? implode('_', $url_params) : '';
-    $cid = 'asu_rest:apartment_list:' . $ownership_type . $url_params;
+    // Bump cache namespace when response enum serialization changes.
+    $cid = 'asu_rest:apartment_list:v3:' . $ownership_type . $url_params;
 
     $account = User::load(\Drupal::currentUser()->id());
     $debug = $account && $account->id() == 1;
@@ -89,101 +90,110 @@ class ElasticSearch extends ResourceBase {
     else {
       $language = \Drupal::languageManager()->getCurrentLanguage()->getId();
 
-      // Build entity query for published apartments in current language
-      $entity_query = \Drupal::entityQuery('node')
-        ->condition('type', 'apartment')
+      // Query projects first, then apartments from those projects. This avoids
+      // excluding projects when apartment count exceeds arbitrary limits.
+      $project_query = \Drupal::entityQuery('node')
+        ->condition('type', 'project')
         ->condition('status', 1)
-        ->condition('langcode', $language);
+        ->accessCheck(TRUE);
 
-      // Filter: apartment state of sale
-      if ($parameters->get('apartment_state_of_sale')) {
-        $entity_query->condition('field_state_of_sale.entity.name', $parameters->get('apartment_state_of_sale'));
+      if ($parameters->get('project_ownership_type')) {
+        $ownership_type = $parameters->get('project_ownership_type');
+        $project_query->condition('field_ownership_type.entity.name', $ownership_type, is_array($ownership_type) ? 'IN' : '=');
       }
 
-      // Filter: room_count (allow array or int)
-      if ($parameters->has('room_count')) {
-        $room_count_val = $parameters->get('room_count');
-        if (is_array($room_count_val)) {
-          $entity_query->condition('field_room_count.value', $room_count_val, 'IN');
-        } else {
-          $entity_query->condition('field_room_count.value', $room_count_val);
+      if ($parameters->get('project_district')) {
+        $district = $parameters->get('project_district');
+        $project_query->condition('field_district.entity.name', $district, is_array($district) ? 'IN' : '=');
+      }
+
+      if ($parameters->get('project_building_type')) {
+        $building_type = $parameters->get('project_building_type');
+        $project_query->condition('field_building_type.entity.name', $building_type, is_array($building_type) ? 'IN' : '=');
+      }
+
+      // Project state filter. field_state_of_sale references config_terms_term.
+      if ($parameters->get('project_state_of_sale')) {
+        $states = $parameters->get('project_state_of_sale');
+        $states = is_array($states) ? $states : [$states];
+        $states = array_map('strtolower', $states);
+        $project_query->condition('field_state_of_sale', $states, 'IN');
+      }
+      else {
+        // No filter: return all except upcoming and sold.
+        $project_query->condition('field_state_of_sale', ['upcoming', 'sold'], 'NOT IN');
+      }
+
+      $project_nids = $project_query->execute();
+      $projects = Node::loadMultiple($project_nids);
+
+      // Collect apartment IDs from matching projects.
+      $apartment_project_map = [];
+      $apartment_ids = [];
+      foreach ($projects as $project) {
+        foreach ($project->get('field_apartments')->getValue() as $reference) {
+          if (!empty($reference['target_id'])) {
+            $aid = (int) $reference['target_id'];
+            $apartment_ids[$aid] = $aid;
+            $apartment_project_map[$aid] = $project;
+          }
         }
-      }
-
-      // Filter: price range
-      if ($parameters->has('price_min')) {
-        $entity_query->condition('field_sales_price.value', $parameters->get('price_min'), '>=');
-      }
-      if ($parameters->has('price_max')) {
-        $entity_query->condition('field_sales_price.value', $parameters->get('price_max'), '<=');
-      }
-
-      // Further allow for more filters here as needed
-
-      // Get max 1000 apartments
-      $entity_query->range(0, 1000);
-
-      // Query nids
-      try {
-        $entity_query->accessCheck(TRUE);
-        \Drupal::logger('asu_rest')->debug('entity_query: @query', ['@query' => $entity_query]);
-        $nids = $entity_query->execute();
-      } catch (\Exception $e) {
-        $this->logger->critical('Could not fetch apartments from entity_query: ' . $e->getMessage());
-        return new ModifiedResourceResponse(['message' => 'Apartment query failed.'], 500, $headers);
       }
 
       $apartments = [];
-      if (!empty($nids)) {
+      if (empty($apartment_ids)) {
+        $nids = [];
+        $nodes = [];
+      }
+      else {
+        // Query apartments that belong to our projects and pass apartment filters.
+        $entity_query = \Drupal::entityQuery('node')
+          ->condition('type', 'apartment')
+          ->condition('status', 1)
+          ->condition('nid', array_values($apartment_ids), 'IN');
+
+        if ($parameters->has('room_count')) {
+          $room_count_val = $parameters->get('room_count');
+          if (is_array($room_count_val)) {
+            $entity_query->condition('field_room_count.value', $room_count_val, 'IN');
+          }
+          else {
+            $entity_query->condition('field_room_count.value', $room_count_val);
+          }
+        }
+
+        if ($parameters->has('price_min')) {
+          $entity_query->condition('field_sales_price.value', $parameters->get('price_min'), '>=');
+        }
+        if ($parameters->has('price_max')) {
+          $entity_query->condition('field_sales_price.value', $parameters->get('price_max'), '<=');
+        }
+
+        try {
+          $entity_query->accessCheck(TRUE);
+          $nids = $entity_query->execute();
+        }
+        catch (\Exception $e) {
+          $this->logger->critical('Could not fetch apartments from entity_query: ' . $e->getMessage());
+          return new ModifiedResourceResponse(['message' => 'Apartment query failed.'], 500, $headers);
+        }
+
         /** @var \Drupal\node\Entity\Node[] $nodes */
         $nodes = Node::loadMultiple($nids);
+      }
 
-        // Apartments are related from project.field_apartments, not apartment.field_project.
-        // Build a project lookup once and map apartment ID => project node.
-        $project_query = \Drupal::entityQuery('node')
-          ->condition('type', 'project')
-          ->condition('status', 1)
-          ->condition('field_apartments', array_values($nids), 'IN')
-          ->accessCheck(TRUE);
+      \Drupal::logger('asu_rest')->debug('elasticsearch projects:@p apartments:@a', [
+        '@p' => count($projects),
+        '@a' => count($nodes),
+      ]);
 
-        if ($parameters->get('project_ownership_type')) {
-          $ownership_type = $parameters->get('project_ownership_type');
-          $project_query->condition('field_ownership_type.entity.name', $ownership_type, is_array($ownership_type) ? 'IN' : '=');
-        }
-
-        if ($parameters->get('project_district')) {
-          $district = $parameters->get('project_district');
-          $project_query->condition('field_district.entity.name', $district, is_array($district) ? 'IN' : '=');
-        }
-
-        if ($parameters->get('project_building_type')) {
-          $building_type = $parameters->get('project_building_type');
-          $project_query->condition('field_building_type.entity.name', $building_type, is_array($building_type) ? 'IN' : '=');
-        }
-
-        if ($parameters->get('project_state_of_sale')) {
-          $project_query->condition('field_state_of_sale.entity.name', $parameters->get('project_state_of_sale'));
-        }
-
-        $project_nids = $project_query->execute();
-        $projects = Node::loadMultiple($project_nids);
-
-        $apartment_project_map = [];
-        foreach ($projects as $project) {
-          if (!$project->hasField('field_apartments') || $project->get('field_apartments')->isEmpty()) {
-            continue;
-          }
-          foreach ($project->get('field_apartments')->getValue() as $reference) {
-            if (!empty($reference['target_id'])) {
-              $apartment_project_map[(int) $reference['target_id']] = $project;
-            }
-          }
-        }
-
+      if (!empty($nodes)) {
         foreach ($nodes as $apartment_node) {
           $apartment_id = (int) $apartment_node->id();
           $project_node = $apartment_project_map[$apartment_id] ?? NULL;
+          // if (!$project_node) {
           if (!$project_node || !$project_node->isPublished()) {
+            // \Drupal::logger('asu_rest')->debug('project_node not found or not published: @apartment_node', ['@apartment_node' => $apartment_node->label()]);
             continue;
           }
 
@@ -237,17 +247,57 @@ class ElasticSearch extends ResourceBase {
               ? (string) $node->get($field)->value
               : '';
           };
-          $get_term_label = static function (Node $node, string $field): string {
+          $get_term_label = static function (Node $node, string $field, bool $use_untranslated = FALSE): string {
             if (!$node->hasField($field) || $node->get($field)->isEmpty()) {
               return '';
             }
             $entity = $node->get($field)->entity;
-            return $entity ? (string) $entity->label() : '';
+            if (!$entity) {
+              return '';
+            }
+            if ($use_untranslated && method_exists($entity, 'getUntranslated')) {
+              $entity = $entity->getUntranslated();
+            }
+            return (string) $entity->label();
+          };
+          $normalize_enum = static function (string $value): string {
+            if ($value === '') {
+              return '';
+            }
+            $value = str_replace('apartment_for_sale', 'for_sale', $value);
+            return strtoupper(str_replace([' ', '-'], '_', $value));
+          };
+          $get_term_enum = static function (Node $node, string $field) use ($normalize_enum): string {
+            if (!$node->hasField($field) || $node->get($field)->isEmpty()) {
+              return '';
+            }
+            $item = $node->get($field)->first();
+            if (!$item) {
+              return '';
+            }
+            $entity = $item->entity;
+            if (!$entity) {
+              return '';
+            }
+            if (method_exists($entity, 'getUntranslated')) {
+              $entity = $entity->getUntranslated();
+            }
+            $value = '';
+            if (method_exists($entity, 'hasField')
+              && $entity->hasField('field_machine_readable_name')
+              && !$entity->get('field_machine_readable_name')->isEmpty()) {
+              $value = (string) $entity->get('field_machine_readable_name')->value;
+            }
+            if ($value === '' && isset($item->target_id)) {
+              $value = (string) $item->target_id;
+            }
+            return $normalize_enum($value);
           };
 
-          $apartment_state_of_sale = $get_term_label($apartment_node, 'field_apartment_state_of_sale');
+          // Keep state enums in canonical form for FE logic.
+          $apartment_state_of_sale = $get_term_enum($apartment_node, 'field_apartment_state_of_sale');
           if ($apartment_state_of_sale === '') {
-            $apartment_state_of_sale = $get_term_label($apartment_node, 'field_state_of_sale');
+            $apartment_state_of_sale = $get_term_enum($apartment_node, 'field_state_of_sale');
           }
 
           $apartment_structure = $get_scalar($apartment_node, 'field_apartment_structure');
@@ -266,16 +316,18 @@ class ElasticSearch extends ResourceBase {
           }
 
           $project_ownership_type = strtolower($get_term_label($project_node, 'field_ownership_type'));
-          $project_state_of_sale = $get_term_label($project_node, 'field_state_of_sale');
+          $project_state_of_sale = $get_term_enum($project_node, 'field_state_of_sale');
 
           $room_count = NULL;
           if ($get_scalar($apartment_node, 'field_room_count') !== '') {
             $room_count = intval($get_scalar($apartment_node, 'field_room_count'));
           }
 
-          // Build apartment structure (keep in sync with drupal_elasticsearch_endpoint_example.json)
+
           $apartment = [
             '_language' => $apartment_node->language()->getId(),
+            'apartment_published' => $apartment_node->isPublished(),
+            'project_published' => $project_node->isPublished(),
             'apartment_address' => $get_scalar($apartment_node, 'field_apartment_address'),
             'apartment_number' => $get_scalar($apartment_node, 'field_apartment_number'),
             'apartment_state_of_sale' => $apartment_state_of_sale,
@@ -305,7 +357,7 @@ class ElasticSearch extends ResourceBase {
             'project_state_of_sale' => $project_state_of_sale,
             'project_street_address' => $get_scalar($project_node, 'field_street_address'),
             'project_upcoming_description' => $get_scalar($project_node, 'field_upcoming_description'),
-            'project_url' => "/node/{$project_node->id()}",
+            'project_url' => $project_node->toUrl('canonical', ['absolute' => TRUE])->toString(),
             'project_uuid' => $project_node->uuid(),
             'release_payment' => floatval($get_scalar($apartment_node, 'field_release_payment') ?: 0),
             'right_of_occupancy_payment' => floatval($get_scalar($apartment_node, 'field_right_of_occupancy_payment') ?: 0),
