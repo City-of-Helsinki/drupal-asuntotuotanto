@@ -19,6 +19,13 @@ use Symfony\Component\HttpFoundation\RequestStack;
  */
 final class SearchMapper {
 
+  /**
+   * In-request cache for apartment to project mapping.
+   *
+   * @var array<int,\Drupal\node\Entity\Node|null>
+   */
+  private array $apartmentProjectMap = [];
+
   public function __construct(
     private readonly EntityTypeManagerInterface $entityTypeManager,
     private readonly FileUrlGeneratorInterface $fileUrlGenerator,
@@ -108,6 +115,63 @@ final class SearchMapper {
    */
   public function mapProject(Node $project): array {
     return $this->mapProjectFields($project, NULL);
+  }
+
+  /**
+   * Prime apartment to project lookups for current page items.
+   *
+   * @param \Drupal\node\Entity\Node[] $apartments
+   *   Apartments to preload project relations for.
+   */
+  public function primeProjectLookup(array $apartments): void {
+    $apartmentIds = [];
+    foreach ($apartments as $apartment) {
+      if (!$apartment instanceof Node) {
+        continue;
+      }
+      $id = (int) $apartment->id();
+      if (!array_key_exists($id, $this->apartmentProjectMap)) {
+        $apartmentIds[] = $id;
+      }
+    }
+
+    if (!$apartmentIds) {
+      return;
+    }
+
+    $storage = $this->entityTypeManager->getStorage('node');
+    $projectIds = $storage->getQuery()
+      ->accessCheck(FALSE)
+      ->condition('type', 'project')
+      ->condition('field_apartments', $apartmentIds, 'IN')
+      ->execute();
+
+    foreach ($apartmentIds as $apartmentId) {
+      $this->apartmentProjectMap[$apartmentId] = NULL;
+    }
+    if (!$projectIds) {
+      return;
+    }
+
+    $apartmentIdSet = array_fill_keys($apartmentIds, TRUE);
+    $projects = $storage->loadMultiple($projectIds);
+    foreach ($projects as $project) {
+      if (!$project instanceof Node) {
+        continue;
+      }
+      if (!$project->hasField('field_apartments') || $project->get('field_apartments')->isEmpty()) {
+        continue;
+      }
+      foreach ($project->get('field_apartments')->getValue() as $item) {
+        if (!isset($item['target_id'])) {
+          continue;
+        }
+        $targetId = (int) $item['target_id'];
+        if (isset($apartmentIdSet[$targetId])) {
+          $this->apartmentProjectMap[$targetId] = $project;
+        }
+      }
+    }
   }
 
   /**
@@ -207,12 +271,11 @@ final class SearchMapper {
    * Resolve the project for an apartment.
    */
   private function getProjectForApartment(Node $apartment): ?Node {
-    $storage = $this->entityTypeManager->getStorage('node');
-    $projects = $storage->loadByProperties([
-      'type' => 'project',
-      'field_apartments' => $apartment->id(),
-    ]);
-    $project = reset($projects);
+    $apartmentId = (int) $apartment->id();
+    if (!array_key_exists($apartmentId, $this->apartmentProjectMap)) {
+      $this->primeProjectLookup([$apartment]);
+    }
+    $project = $this->apartmentProjectMap[$apartmentId] ?? NULL;
     return $project instanceof Node ? $project : NULL;
   }
 

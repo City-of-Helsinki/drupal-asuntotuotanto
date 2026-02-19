@@ -42,12 +42,26 @@ final class Apartments extends AsuSearchResourceBase {
    */
   public function get(Request $request): ResourceResponse {
     $params = $request->query->all();
-    if ($error = $this->validatePriceParams($params)) {
+    $error = $this->validatePriceParams($params);
+    if ($error instanceof ResourceResponse) {
       return $error;
     }
 
-    ['offset' => $offset, 'limit' => $limit] = $this->getPagination($request);
-    $result = $this->searchService->searchApartments($params, NULL, $offset, $limit);
+    $limit = (int) $request->query->get('size', 100);
+    if ($limit <= 0) {
+      $limit = 100;
+    }
+    // Keep response time stable for internal client polling.
+    $limit = min($limit, 250);
+
+    $offset = max(0, (int) $request->query->get('from', 0));
+    if (!$request->query->has('from') && $request->query->has('page')) {
+      $page = max(1, (int) $request->query->get('page', 1));
+      $offset = ($page - 1) * $limit;
+    }
+
+    $result = $this->searchService->searchApartments($params, NULL, $offset, $limit, FALSE);
+    $this->searchMapper->primeProjectLookup($result['items']);
     $sources = array_map(
       fn (Node $apartment) => $this->searchMapper->mapApartmentListing($apartment),
       $result['items']
