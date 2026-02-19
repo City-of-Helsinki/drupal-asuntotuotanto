@@ -130,16 +130,16 @@ class DistrictFieldMappingSubscriber implements EventSubscriberInterface {
       if (strpos($district, '-') === FALSE) {
         // Base district (no hyphen): match exact OR sub-districts.
         $shouldClauses[] = [
-          'term' => ['project_district.keyword' => $district],
+          'term' => ['project_district' => $district],
         ];
         $shouldClauses[] = [
-          'wildcard' => ['project_district.keyword' => '*-' . $district],
+          'wildcard' => ['project_district' => '*-' . $district],
         ];
       }
       else {
         // Sub-district (has hyphen): exact match only.
         $shouldClauses[] = [
-          'term' => ['project_district.keyword' => $district],
+          'term' => ['project_district' => $district],
         ];
       }
     }
