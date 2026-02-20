@@ -7,7 +7,7 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "require": {
-        "asuntomyynti/react": "^1.5.1",
+        "asuntomyynti/react": "^1.5.2",
         "composer/installers": "^2.3",
         "cweagans/composer-patches": "^2.0",
         "dinbror/blazy": "^1.8",
@@ -267,9 +267,9 @@
             "type": "package",
             "package": {
                 "name": "asuntomyynti/react",
-                "version": "1.5.1",
+                "version": "1.5.2",
                 "dist": {
-                    "url": "https://github.com/City-of-Helsinki/asuntomyynti-react/releases/download/v1.5.1/asuntomyynti-react-1.5.1.zip",
+                    "url": "https://github.com/City-of-Helsinki/asuntomyynti-react/releases/download/v1.5.2/asuntomyynti-react-1.5.2.zip",
                     "type": "zip"
                 }
             }
