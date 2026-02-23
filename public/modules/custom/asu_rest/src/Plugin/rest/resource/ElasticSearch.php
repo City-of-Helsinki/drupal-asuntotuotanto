@@ -220,10 +220,22 @@ class ElasticSearch extends ResourceBase {
         $isBool = filter_var($parameters->get($field), FILTER_VALIDATE_BOOL);
 
         if (is_string($parameters->get($field)) && !$isBool) {
-          $value = array_map('strtolower', [$parameters->get($field)]);
+          // Keep original case for project_district to match exact names.
+          if ($field === 'project_district') {
+            $value = [$parameters->get($field)];
+          }
+          else {
+            $value = array_map('strtolower', [$parameters->get($field)]);
+          }
         }
         elseif (is_array($parameters->get($field))) {
-          $value = array_map('strtolower', $parameters->get($field));
+          // Keep original case for project_district to match exact names.
+          if ($field === 'project_district') {
+            $value = $parameters->get($field);
+          }
+          else {
+            $value = array_map('strtolower', $parameters->get($field));
+          }
         }
         elseif ($isBool) {
           $baseConditionGroup->addCondition($field, $parameters->get($field), '=');
