@@ -6,6 +6,9 @@ application_submit:
   version: 1.x
   js:
     assets/js/application-submit.js: {}
+  css:
+    component:
+      assets/css/application-submit.css: {}
   dependencies:
     - core/jquery
     - core/drupal.dialog
