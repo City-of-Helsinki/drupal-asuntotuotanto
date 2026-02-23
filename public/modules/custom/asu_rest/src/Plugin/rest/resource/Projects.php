@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\asu_rest\Plugin\rest\resource;
 
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\node\Entity\Node;
 use Drupal\rest\ResourceResponse;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -46,12 +47,28 @@ final class Projects extends AsuSearchResourceBase {
       return $error;
     }
 
+    $cid = $this->buildCacheKey('projects', $params);
+    if (!$this->isCacheBypass()) {
+      $cached = $this->getCachedPayload($cid);
+      if ($cached !== NULL) {
+        $response = new ResourceResponse($cached, 200, $this->getTestingHeaders());
+        $response->addCacheableDependency(
+          (new CacheableMetadata())->setCacheContexts(['url.query_args'])
+            ->setCacheMaxAge((int) (getenv('ASU_REST_API_CACHE_MAX_AGE') ?: 0))
+        );
+        return $response;
+      }
+    }
+
     ['offset' => $offset, 'limit' => $limit] = $this->getPagination($request);
     $result = $this->searchService->searchProjects($params, $offset, $limit);
     $sources = array_map(
       fn (Node $project) => $this->searchMapper->mapProject($project),
       $result['items']
     );
+
+    $payload = $this->searchMapper->buildSearchResponse($sources, $result['total'], 'project');
+    $this->setCachedPayload($cid, $payload);
 
     return $this->buildResponse($sources, $result['total'], 'project');
   }

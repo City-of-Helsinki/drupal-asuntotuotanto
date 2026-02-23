@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\asu_rest\Plugin\rest\resource;
 
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\node\Entity\Node;
 use Drupal\rest\ResourceResponse;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -47,6 +48,19 @@ final class Apartments extends AsuSearchResourceBase {
       return $error;
     }
 
+    $cid = $this->buildCacheKey('apartments', $params);
+    if (!$this->isCacheBypass()) {
+      $cached = $this->getCachedPayload($cid);
+      if ($cached !== NULL) {
+        $response = new ResourceResponse($cached, 200, $this->getTestingHeaders());
+        $response->addCacheableDependency(
+          (new CacheableMetadata())->setCacheContexts(['url.query_args'])
+            ->setCacheMaxAge((int) (getenv('ASU_REST_API_CACHE_MAX_AGE') ?: 0))
+        );
+        return $response;
+      }
+    }
+
     $limit = (int) $request->query->get('size', 100);
     if ($limit <= 0) {
       $limit = 100;
@@ -66,6 +80,9 @@ final class Apartments extends AsuSearchResourceBase {
       fn (Node $apartment) => $this->searchMapper->mapApartmentListing($apartment),
       $result['items']
     );
+
+    $payload = $this->searchMapper->buildSearchResponse($sources, $result['total'], 'apartment_listing');
+    $this->setCachedPayload($cid, $payload);
 
     return $this->buildResponse($sources, $result['total'], 'apartment_listing');
   }
