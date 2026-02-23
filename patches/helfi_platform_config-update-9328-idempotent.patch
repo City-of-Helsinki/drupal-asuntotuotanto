@@ -1,0 +1,65 @@
+diff --git a/helfi_platform_config.install b/helfi_platform_config.install
+index 37e8a45d..b7aab1fe 100644
+--- a/helfi_platform_config.install
++++ b/helfi_platform_config.install
+@@ -459,22 +459,38 @@ function helfi_platform_config_update_9328(): void {
+   // Redirect implemented EntityPublishableInterface:
+   // https://www.drupal.org/project/redirect/issues/3424962.
+   // We implemented similar field in UHF-10539.
+   $db = \Drupal::database();
++  $schema = $db->schema();
+ 
+-  // Migrate our data to the redirect module format:
+-  $db->update('redirect')
+-    ->expression('enabled', 'status')
+-    ->execute();
++  // Migrate our data to the redirect module format when both columns exist.
++  if ($schema->fieldExists('redirect', 'status') && $schema->fieldExists('redirect', 'enabled')) {
++    $db->update('redirect')
++      ->expression('enabled', 'status')
++      ->execute();
+ 
+-  // Verify the data was copied successfully.
+-  $status_count = $db->select('redirect', 'r')
+-    ->fields('r', ['rid'])
+-    ->where('r.status != r.enabled')
+-    ->countQuery()
+-    ->execute()
+-    ->fetchField();
++    // Verify the data was copied successfully.
++    $status_count = $db->select('redirect', 'r')
++      ->fields('r', ['rid'])
++      ->where('r.status != r.enabled')
++      ->countQuery()
++      ->execute()
++      ->fetchField();
+ 
+-  if ($status_count > 0) {
+-    throw new UpdateException("Data migration failed: {$status_count} records have mismatched status/enabled values.");
++    if ($status_count > 0) {
++      throw new UpdateException("Data migration failed: {$status_count} records have mismatched status/enabled values.");
++    }
+   }
+ 
+   // Remove the status field.
+   $fieldStorageDefinition = \Drupal::entityDefinitionUpdateManager()
+     ->getFieldStorageDefinition('status', 'redirect');
+ 
+   if ($fieldStorageDefinition instanceof FieldStorageDefinitionInterface) {
+-    \Drupal::entityDefinitionUpdateManager()->uninstallFieldStorageDefinition($fieldStorageDefinition);
++    try {
++      \Drupal::entityDefinitionUpdateManager()->uninstallFieldStorageDefinition($fieldStorageDefinition);
++    }
++    catch (\Exception $e) {
++      if (str_contains($e->getMessage(), 'already been deleted') || str_contains($e->getMessage(), 'process of being purged')) {
++        \Drupal::logger('helfi_platform_config')
++          ->notice('Skipping redirect status field uninstall in update 9328: @message', [
++            '@message' => $e->getMessage(),
++          ]);
++      }
++      else {
++        throw $e;
++      }
++    }
+   }
+ }

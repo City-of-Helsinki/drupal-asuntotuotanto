@@ -158,7 +158,8 @@
         "patches": {
             "drupal/helfi_platform_config": {
                 "Catch exception during hero paragraphs update": "patches/helfi_platform_config_hero_paragraph_fix.patch",
-                "Skip update_9400 on Drupal 11 (HAL/RDF modules removed)": "patches/helfi_platform_config-d11-update-9400.patch"
+                "Skip update_9400 on Drupal 11 (HAL/RDF modules removed)": "patches/helfi_platform_config-d11-update-9400.patch",
+                "Make update_9328 idempotent when status field is already deleting/purging": "patches/helfi_platform_config-update-9328-idempotent.patch"
             },
             "drupal/config_terms": {
                 "Drupal 11 compatibility fixes": "https://www.drupal.org/files/issues/2024-06-02/config_terms.1.x-dev.rector.patch"
