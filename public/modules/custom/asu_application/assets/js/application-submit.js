@@ -1,4 +1,13 @@
 (function ($, Drupal, once) {
+  const decorateDialogButtons = function (dialogElement) {
+    const $buttons = $(dialogElement)
+      .closest(".ui-dialog")
+      .find(".ui-dialog-buttonset button");
+
+    $buttons.eq(0).addClass("hds-button hds-button--primary");
+    $buttons.eq(1).addClass("hds-button hds-button--secondary");
+  };
+
   Drupal.behaviors.applicationSubmit = {
     attach: function (context, settings) {
       if (!settings.asuApplication?.hasExistingApplication) {
@@ -34,6 +43,10 @@
             $dialog.dialog({
               modal: true,
               width: 450,
+              dialogClass: "asu-application-confirm-dialog",
+              open: function () {
+                decorateDialogButtons(this);
+              },
               buttons: {
                 [continueLabel]: function () {
                   $confirmInput.val("1");
@@ -58,6 +71,10 @@
             $dialog.dialog({
               modal: true,
               width: 450,
+              dialogClass: "asu-application-confirm-dialog",
+              open: function () {
+                decorateDialogButtons(this);
+              },
               buttons: {
                 [continueLabel]: function () {
                   $(this).dialog("close");
