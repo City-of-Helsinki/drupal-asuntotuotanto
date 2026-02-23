@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace Drupal\asu_rest\Plugin\rest\resource;
 
 use Drupal\asu_rest\Service\SearchMapper;
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\asu_rest\Service\SearchService;
 use Drupal\rest\ModifiedResourceResponse;
 use Drupal\rest\Plugin\ResourceBase;
 use Drupal\rest\ResourceResponse;
+use Drupal\user\Entity\User;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -17,6 +19,8 @@ use Symfony\Component\HttpFoundation\Request;
  * Base class for Elasticsearch-compatible REST resources.
  */
 abstract class AsuSearchResourceBase extends ResourceBase {
+
+  private const CACHE_TAG = 'apartment_entity_list';
 
   public function __construct(
     array $configuration,
@@ -68,9 +72,53 @@ abstract class AsuSearchResourceBase extends ResourceBase {
     $response = new ResourceResponse($payload, 200, $this->getTestingHeaders());
     $cache = (new CacheableMetadata())
       ->setCacheContexts(['url.query_args'])
-      ->setCacheMaxAge(getenv('ASU_REST_API_CACHE_MAX_AGE') ?: 0);
+      ->setCacheMaxAge((int) (getenv('ASU_REST_API_CACHE_MAX_AGE') ?: 0));
     $response->addCacheableDependency($cache);
     return $response;
+  }
+
+  /**
+   * Build a cache key from endpoint prefix and query params.
+   */
+  protected function buildCacheKey(string $prefix, array $params): string {
+    $parts = [];
+    ksort($params);
+    foreach ($params as $key => $value) {
+      if (is_array($value)) {
+        $parts[] = $key . ':' . implode(',', array_map('strval', $value));
+      }
+      else {
+        $parts[] = $key . ':' . (string) $value;
+      }
+    }
+    $paramString = $parts ? implode('_', $parts) : '';
+    return 'asu_rest:' . $prefix . ':v1:' . $paramString;
+  }
+
+  /**
+   * Whether to bypass cache (e.g. for uid 1 debug).
+   */
+  protected function isCacheBypass(): bool {
+    $account = User::load(\Drupal::currentUser()->id());
+    return $account && (int) $account->id() === 1;
+  }
+
+  /**
+   * Get cached payload if present.
+   *
+   * @return array|null
+   *   Cached payload or NULL on miss.
+   */
+  protected function getCachedPayload(string $cid): ?array {
+    $cached = \Drupal::cache()->get($cid);
+    return $cached ? $cached->data : NULL;
+  }
+
+  /**
+   * Store payload in cache.
+   */
+  protected function setCachedPayload(string $cid, array $payload): void {
+    \Drupal::cache()->set($cid, $payload, Cache::PERMANENT, [self::CACHE_TAG]);
   }
 
   /**
