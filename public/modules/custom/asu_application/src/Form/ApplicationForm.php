@@ -146,11 +146,7 @@ class ApplicationForm extends ContentEntityForm implements TrustedCallbackInterf
 
     $modal = <<<HTML
 <div id="asu-application-delete-confirm-dialog" title="{$title}" style="display:none; max-width: 700px;">
-  <div class="hds-modal__content">
-    <div class="hds-modal__body">
-      <p>{$message}</p>
-    </div>
-  </div>
+  <p class="asu-application-confirm-dialog__message">{$message}</p>
 </div>
 HTML;
 

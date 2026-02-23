@@ -20,15 +20,60 @@
 
 .asu-application-confirm-dialog .ui-dialog-content {
   padding: 20px 24px;
+  position: relative;
+  z-index: 2;
+}
+
+.asu-application-confirm-dialog #asu-application-delete-confirm-dialog .hds-modal__content,
+.asu-application-confirm-dialog #asu-application-delete-confirm-dialog .hds-modal__body {
+  background: transparent;
+  display: block;
+  margin: 0;
+  max-width: none;
+  padding: 0;
+  position: static;
+  width: auto;
+}
+
+.asu-application-confirm-dialog__message {
+  margin: 0;
+  line-height: 1.5;
 }
 
 .asu-application-confirm-dialog .ui-dialog-buttonpane {
   border-top: 1px solid var(--color-black-10, #e5e8eb);
   margin: 0;
   padding: 12px 24px;
+  position: relative;
+  z-index: 3;
 }
 
 .asu-application-confirm-dialog .ui-dialog-buttonset {
   display: flex;
   gap: 8px;
+}
+
+.asu-application-confirm-dialog .ui-dialog-buttonpane button {
+  border: 1px solid #000;
+  background: #fff;
+  color: #000;
+  padding: 10px 16px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.asu-application-confirm-dialog .ui-dialog-buttonpane .hds-button {
+  align-items: center;
+  display: inline-flex;
+  justify-content: center;
+  min-height: 0;
+  pointer-events: auto;
+  position: relative;
+  width: auto;
+  z-index: 4;
+}
+
+.asu-application-confirm-dialog .ui-dialog-buttonpane button:first-child {
+  background: #000;
+  color: #fff;
 }
