@@ -1,9 +1,9 @@
-name: 'ASU - USER'
+name: "ASU - USER"
 type: module
-description: 'ASU - USER provides user specific functionalities'
+description: "ASU - USER provides user specific functionalities"
 core: 8.x
-core_version_requirement: ^8 || ^9 || ^10
-package: 'ASU'
+core_version_requirement: ^8 || ^9 || ^10 || ^11
+package: "ASU"
 
 dependencies:
   - samlauth:samlauth

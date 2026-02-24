@@ -1,0 +1,19 @@
+uuid: 727a4372-80e2-4cba-becd-7d0e8d00fed8
+langcode: en
+status: true
+dependencies:
+  module:
+    - asu_project_subscription
+  theme:
+    - asuntotuotanto
+id: asu_project_subscription_block
+theme: asuntotuotanto
+region: before_content
+weight: 0
+provider: null
+plugin: asu_project_subscription_block
+settings:
+  id: asu_project_subscription_block
+  label: "ASU Project Subscription"
+  provider: asu_project_subscription
+  label_display: "0"

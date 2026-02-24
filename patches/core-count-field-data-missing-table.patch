@@ -1,0 +1,26 @@
+diff --git a/lib/Drupal/Core/Entity/Sql/SqlContentEntityStorage.php b/lib/Drupal/Core/Entity/Sql/SqlContentEntityStorage.php
+index f7a3a7b4a1..2c4d1d4c7d 100644
+--- a/lib/Drupal/Core/Entity/Sql/SqlContentEntityStorage.php
++++ b/lib/Drupal/Core/Entity/Sql/SqlContentEntityStorage.php
+@@ -1716,6 +1716,10 @@ public function countFieldData($storage_definition, $as_bool = FALSE) {
+       else {
+         $table_name = $table_mapping->getDedicatedDataTableName($storage_definition, $is_deleted);
+       }
++      $schema = $this->database->schema();
++      if (!$schema->tableExists($table_name)) {
++        return $as_bool ? FALSE : 0;
++      }
+       $query = $this->database->select($table_name, 't');
+       $or = $query->orConditionGroup();
+       foreach ($storage_definition->getColumns() as $column_name => $data) {
+@@ -1731,6 +1735,10 @@ public function countFieldData($storage_definition, $as_bool = FALSE) {
+       // Ascertain the table this field is mapped too.
+       $field_name = $storage_definition->getName();
+       $table_name = $table_mapping->getFieldTableName($field_name);
++      $schema = $this->database->schema();
++      if (!$schema->tableExists($table_name)) {
++        return $as_bool ? FALSE : 0;
++      }
+       $query = $this->database->select($table_name, 't');
+       $or = $query->orConditionGroup();
+       foreach (array_keys($storage_definition->getColumns()) as $property_name) {

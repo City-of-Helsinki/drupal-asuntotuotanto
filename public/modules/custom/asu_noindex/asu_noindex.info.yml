@@ -1,5 +1,5 @@
 name: ASU Noindex for non-fi
 type: module
 description: Adds noindex,nofollow for non-indexed languages via HTTP header and meta tag.
-core_version_requirement: ^9 || ^10
+core_version_requirement: ^9 || ^10 || ^11
 package: ASU

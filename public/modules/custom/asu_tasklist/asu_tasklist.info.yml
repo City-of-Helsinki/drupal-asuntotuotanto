@@ -1,6 +1,6 @@
-name: 'ASU - Tasklist'
+name: "ASU - Tasklist"
 type: module
-description: 'ASU - Tasklist implementation'
+description: "ASU - Tasklist implementation"
 core: 8.x
-core_version_requirement: ^8 || ^9 || ^10
-package: 'ASU'
+core_version_requirement: ^8 || ^9 || ^10 || ^11
+package: "ASU"

@@ -78,16 +78,13 @@ class AsuApplicationDeleteController extends ControllerBase {
 
     try {
       $this->backendApi->deleteApplication($user, $externalId);
+      $entity->delete();
+      $this->messenger()->addStatus($this->t('Your application has been successfully deleted.'));
     }
     catch (\Exception $e) {
       $this->messenger()->addError($this->t('Failed to delete application from backend.'));
     }
 
-    $entity->set('field_backend_id', NULL);
-    $entity->set('field_locked', FALSE);
-    $entity->set('error', NULL);
-    $entity->save();
-    $this->messenger()->addStatus($this->t('Your application has been successfully deleted.'));
     return new RedirectResponse('/user/applications');
   }
 

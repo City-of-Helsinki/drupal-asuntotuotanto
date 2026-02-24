@@ -1,0 +1,149 @@
+{
+    "_hash": "51b14d312ccd5409f73e3d6a10dd01b7b2cfe700a0cbf9b4647d3bf1ccd72365",
+    "patches": {
+        "drupal/helfi_platform_config": [
+            {
+                "package": "drupal/helfi_platform_config",
+                "description": "Catch exception during hero paragraphs allowed values update",
+                "url": "patches/helfi_platform_config_hero_paragraph_fix.patch",
+                "sha256": "1162f594afac7fd9617725f64ae8f55d3da8ad8d94ed666e598699fb036f3875",
+                "depth": 1,
+                "extra": {
+                    "provenance": "root"
+                }
+            },
+            {
+                "package": "drupal/helfi_platform_config",
+                "description": "Skip update_9400 on Drupal 11 (HAL/RDF modules removed)",
+                "url": "patches/helfi_platform_config-d11-update-9400.patch",
+                "sha256": "e13a1ddf7d33fc5027e7be3e8726a4be9515a2106fa0c11dbb07abfbde8e6551",
+                "depth": 1,
+                "extra": {
+                    "provenance": "root"
+                }
+            }
+        ],
+        "drupal/config_terms": [
+            {
+                "package": "drupal/config_terms",
+                "description": "Drupal 11 compatibility fixes",
+                "url": "https://www.drupal.org/files/issues/2024-06-02/config_terms.1.x-dev.rector.patch",
+                "sha256": "90d0eb224ad4e1eef9f7f51c317e1850fb4554cd891da7288fdb4abf2620151f",
+                "depth": 1,
+                "extra": {
+                    "provenance": "root"
+                }
+            }
+        ],
+        "drupal/computed_field_plugin": [
+            {
+                "package": "drupal/computed_field_plugin",
+                "description": "Drupal 11 compatibility fixes",
+                "url": "patches/computed_field_plugin-d11.patch",
+                "sha256": "47404e77fcce9bfbb7bf9fa645d4206d4333bbcdf5de2d4c8c57f09cb90dad17",
+                "depth": 1,
+                "extra": {
+                    "provenance": "root"
+                }
+            }
+        ],
+        "drupal/core": [
+            {
+                "package": "drupal/core",
+                "description": "[#UHF-12709] Patch 'Deleted and replaced ...' error messages",
+                "url": "patches/uhf-12709-skip-deleted-log.patch",
+                "sha256": "36995dc96842aa819510f6265b3c62af976c4e558f5a960b914cf8b2b3da9a84",
+                "depth": 2,
+                "extra": {
+                    "provenance": "root"
+                }
+            },
+            {
+                "package": "drupal/core",
+                "description": "[#3452852] Add create() factory method with autowired parameters to PluginBase",
+                "url": "patches/3452852.patch",
+                "sha256": "35e072a541b5617ac2b17fddc3dc95747dc9e641eefeb12db93ef9c0db7bb811",
+                "depth": 2,
+                "extra": {
+                    "provenance": "root"
+                }
+            },
+            {
+                "package": "drupal/core",
+                "description": "[D11] Skip delete when config entity missing",
+                "url": "patches/core-import-delete-null.patch",
+                "sha256": "5bf0a22f458a0122448648f0847e51c9b585d7e442c2f4f8cd226e39267bf559",
+                "depth": 2,
+                "extra": {
+                    "provenance": "root"
+                }
+            },
+            {
+                "package": "drupal/core",
+                "description": "[D11] Skip delete in checkOp when entity missing",
+                "url": "patches/core-config-importer-null-entity.patch",
+                "sha256": "b276daec9f375bba9f9f4a4c43539cfc2d0ae30e993f5db5a95c008961917336",
+                "depth": 1,
+                "extra": {
+                    "provenance": "root"
+                }
+            },
+            {
+                "package": "drupal/core",
+                "description": "[D11] Skip countFieldData when table missing",
+                "url": "patches/core-count-field-data-missing-table.patch",
+                "sha256": "67294a7d6862b00ea3a0a004255fdaac182fc33b4f7ea9f0a33f461e7924d00a",
+                "depth": 1,
+                "extra": {
+                    "provenance": "root"
+                }
+            },
+            {
+                "package": "drupal/core",
+                "description": "[D11] Skip delete when field table missing",
+                "url": "patches/core-skip-delete-missing-field-table.patch",
+                "sha256": "b275f0ac34052fdb644eacb08643a90c372773d60483b95164bdb97ece755059",
+                "depth": 1,
+                "extra": {
+                    "provenance": "root"
+                }
+            }
+        ],
+        "drupal/big_pipe_sessionless": [
+            {
+                "package": "drupal/big_pipe_sessionless",
+                "description": "Drupal 11 support (https://drupal.org/i/3428235)",
+                "url": "https://www.drupal.org/files/issues/2025-05-07/3428235.d11.patch",
+                "sha256": "5b59bfe5c291076f251b87baa736e17789a553c7c7bfbc67b596b6e694fc1ee2",
+                "depth": 1,
+                "extra": {
+                    "provenance": "dependency:drupal/big_pipe_sessionless"
+                }
+            }
+        ],
+        "drupal/flysystem": [
+            {
+                "package": "drupal/flysystem",
+                "description": "[#3525203] Remove duplicated Add content button (https://www.drupal.org/i/3525203)",
+                "url": "./public/modules/contrib/helfi_azure_fs/patches/3525203.patch",
+                "sha256": "d0ae42c0919e7eda3dae191f3dd5b83fc38ea99dd6f428c5eb57cf4fe0e0d166",
+                "depth": 1,
+                "extra": {
+                    "provenance": "dependency:drupal/flysystem"
+                }
+            }
+        ],
+        "drupal/elasticsearch_connector": [
+            {
+                "package": "drupal/elasticsearch_connector",
+                "description": "[Local] Disable reopen parameter for ES",
+                "url": "patches/elasticsearch-connector-disable-reopen.patch",
+                "sha256": "3ae36c53076dbe007e3f6d68cb47eb2f158cb44c17f88b68f2834a56512a216c",
+                "depth": 1,
+                "extra": {
+                    "provenance": "root"
+                }
+            }
+        ]
+    }
+}

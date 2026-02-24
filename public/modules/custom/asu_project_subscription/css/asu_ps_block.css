@@ -1,0 +1,72 @@
+.asu-ps-wrapper {
+  margin: 1rem 0;
+}
+
+.asu-ps-topline {
+  font-size: 2.25rem;
+  margin-top: 3rem;
+  font-weight: 600;
+  line-height: 1.2;
+  margin-bottom: 24px;
+}
+
+.asu-ps-formline {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.asu-ps-formline .form-item {
+  margin: 0;
+}
+.asu-ps-formline .form-actions {
+  margin: 0;
+}
+
+.asu-ps-formline form {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.asu-ps-formline .form-item,
+.asu-ps-formline .form-actions {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex: 0 0 auto;
+  align-items: flex-end;
+}
+
+.asu-ps-formline .form-item input[type="email"] {
+  width: auto;
+}
+
+.asu-ps-formline .form-actions .button {
+  margin: 0;
+}
+
+.asu-ps-notice {
+  margin: 0.5rem 0 1rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 4px;
+  border: 1px solid;
+}
+.asu-ps-notice--success {
+  background: #f3fdf6;
+  border-color: #b7e3c0;
+}
+.asu-ps-notice--info {
+  background: #f6faff;
+  border-color: #c7ddff;
+}
+.asu-ps-notice--error {
+  background: #fff6f6;
+  border-color: #f0c2c2;
+}
+
+#edit-status--2 {
+  padding: 16px 16px 16px 0;
+}
