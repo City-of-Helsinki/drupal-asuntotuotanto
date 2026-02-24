@@ -34,6 +34,10 @@
             $dialog.dialog({
               modal: true,
               width: 450,
+              dialogClass: "asu-application-confirm-dialog",
+              classes: {
+                "ui-dialog": "asu-application-confirm-dialog",
+              },
               buttons: {
                 [continueLabel]: function () {
                   $confirmInput.val("1");
@@ -45,6 +49,11 @@
                 },
               },
             });
+
+            $dialog
+              .dialog("widget")
+              .addClass("asu-application-confirm-dialog")
+              .attr("data-asu-application-confirm-dialog", "1");
           }
 
           if (isDeleteAction) {
@@ -58,6 +67,10 @@
             $dialog.dialog({
               modal: true,
               width: 450,
+              dialogClass: "asu-application-confirm-dialog",
+              classes: {
+                "ui-dialog": "asu-application-confirm-dialog",
+              },
               buttons: {
                 [continueLabel]: function () {
                   $(this).dialog("close");
@@ -68,6 +81,11 @@
                 },
               },
             });
+
+            $dialog
+              .dialog("widget")
+              .addClass("asu-application-confirm-dialog")
+              .attr("data-asu-application-confirm-dialog", "1");
           }
         });
       });
