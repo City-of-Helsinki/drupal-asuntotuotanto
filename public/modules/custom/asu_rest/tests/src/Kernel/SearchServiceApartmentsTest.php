@@ -29,6 +29,11 @@ final class SearchServiceApartmentsTest extends KernelTestBase {
     'asu_rest',
   ];
 
+  /**
+   * The search service under test.
+   *
+   * @var \Drupal\asu_rest\Service\SearchService
+   */
   private SearchService $searchService;
 
   /**
@@ -49,6 +54,9 @@ final class SearchServiceApartmentsTest extends KernelTestBase {
     $this->searchService = $this->container->get('asu_rest.search_service');
   }
 
+  /**
+   * Tests that searchApartments filters results by UUID.
+   */
   public function testSearchApartmentsFiltersByUuid(): void {
     $apartmentOne = $this->createApartment('Apartment One');
     $this->createApartment('Apartment Two');
@@ -65,6 +73,15 @@ final class SearchServiceApartmentsTest extends KernelTestBase {
     $this->assertSame($apartmentOne->uuid(), $result['items'][0]->uuid());
   }
 
+  /**
+   * Creates an apartment node for testing.
+   *
+   * @param string $title
+   *   The apartment title.
+   *
+   * @return \Drupal\node\Entity\Node
+   *   The created apartment node.
+   */
   private function createApartment(string $title): Node {
     $apartment = Node::create([
       'type' => 'apartment',
@@ -76,4 +93,3 @@ final class SearchServiceApartmentsTest extends KernelTestBase {
   }
 
 }
-

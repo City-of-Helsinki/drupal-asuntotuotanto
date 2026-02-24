@@ -29,6 +29,11 @@ final class SearchServiceProjectsTest extends KernelTestBase {
     'asu_rest',
   ];
 
+  /**
+   * The search service under test.
+   *
+   * @var \Drupal\asu_rest\Service\SearchService
+   */
   private SearchService $searchService;
 
   /**
@@ -49,6 +54,9 @@ final class SearchServiceProjectsTest extends KernelTestBase {
     $this->searchService = $this->container->get('asu_rest.search_service');
   }
 
+  /**
+   * Tests that searchProjects returns all projects when no filters are applied.
+   */
   public function testSearchProjectsReturnsAllProjectsWhenNoFilters(): void {
     $projectOne = $this->createProject('Project One');
     $projectTwo = $this->createProject('Project Two');
@@ -67,6 +75,9 @@ final class SearchServiceProjectsTest extends KernelTestBase {
     $this->assertSame($expectedUuids, $actualUuids);
   }
 
+  /**
+   * Tests that searchProjects filters results by project UUID.
+   */
   public function testSearchProjectsFiltersByProjectUuid(): void {
     $projectOne = $this->createProject('Project One');
     $this->createProject('Project Two');
@@ -82,6 +93,9 @@ final class SearchServiceProjectsTest extends KernelTestBase {
     $this->assertSame($projectOne->uuid(), $result['items'][0]->uuid());
   }
 
+  /**
+   * Tests that searchProjects accepts hyphenated project-uuid parameter.
+   */
   public function testSearchProjectsFiltersByProjectUuidHyphenated(): void {
     $projectOne = $this->createProject('Project One');
     $this->createProject('Project Two');
@@ -97,6 +111,15 @@ final class SearchServiceProjectsTest extends KernelTestBase {
     $this->assertSame($projectOne->uuid(), $result['items'][0]->uuid());
   }
 
+  /**
+   * Creates a project node for testing.
+   *
+   * @param string $title
+   *   The project title.
+   *
+   * @return \Drupal\node\Entity\Node
+   *   The created project node.
+   */
   private function createProject(string $title): Node {
     $project = Node::create([
       'type' => 'project',
@@ -108,4 +131,3 @@ final class SearchServiceProjectsTest extends KernelTestBase {
   }
 
 }
-

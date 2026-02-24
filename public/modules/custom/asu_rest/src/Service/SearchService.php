@@ -7,7 +7,6 @@ namespace Drupal\asu_rest\Service;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\node\Entity\Node;
-use Exception;
 
 /**
  * Search service to filter apartments and projects for REST endpoints.
@@ -30,6 +29,8 @@ final class SearchService {
    *   Offset for pagination.
    * @param int $limit
    *   Maximum number of results.
+   * @param bool $returnAll
+   *   If TRUE, return all apartments without filtering (bypasses params).
    *
    * @return array{total:int,items:\Drupal\node\Entity\Node[]}
    *   Filtered and paginated results.
@@ -39,14 +40,12 @@ final class SearchService {
     ?int $projectId,
     int $offset,
     int $limit,
-    bool $returnAll = FALSE
+    bool $returnAll = FALSE,
   ): array {
-
 
     if ($returnAll) {
       return $this->loadAllApartmentsPage($offset, $limit);
     }
-
 
     $matches = $this->filterApartments($params, $projectId);
     $total = count($matches);
@@ -312,7 +311,6 @@ final class SearchService {
       }
     }
 
-
     $debtFreeSalesPrice = isset($params['debt_free_sales_price']) ? (int) $params['debt_free_sales_price'] : NULL;
     $price = isset($params['price']) ? (int) $params['price'] : NULL;
 
@@ -367,10 +365,10 @@ final class SearchService {
   }
 
   /**
-   * Get project IDs matching all project-level filters used for apartment search.
+   * Get project IDs matching all project-level filters for apartment search.
    *
-   * Always applies archived=0 and state-of-sale (exclude upcoming by default).
-   * Returns IDs so we restrict apartments to those in matching projects.
+   * Applies archived=0 and state-of-sale (exclude upcoming by default).
+   * Returns IDs to restrict apartments to matching projects.
    *
    * @return int[]
    *   Project IDs.
