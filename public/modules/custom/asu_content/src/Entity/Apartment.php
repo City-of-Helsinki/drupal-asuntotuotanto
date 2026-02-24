@@ -10,6 +10,26 @@ use Drupal\node\Entity\Node;
 class Apartment extends Node {
 
   /**
+   * Load an apartment by its UUID.
+   *
+   * @param string $uuid
+   *   The apartment entity UUID.
+   *
+   * @return \Drupal\asu_content\Entity\Apartment|null
+   *   The apartment entity, or NULL if not found.
+   */
+  public static function loadByUuid(string $uuid): ?Apartment {
+    $nodes = \Drupal::entityTypeManager()
+      ->getStorage('node')
+      ->loadByProperties([
+        'type' => 'apartment',
+        'uuid' => $uuid,
+      ]);
+    $apartment = $nodes ? reset($nodes) : NULL;
+    return $apartment instanceof Apartment ? $apartment : NULL;
+  }
+
+  /**
    * Get the parent project for this apartment.
    *
    * @return Drupal\asu_content\Entity\Project|null
