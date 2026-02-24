@@ -14,7 +14,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   id = "asu_project",
  *   label = @Translation("Project (ES compatible)"),
  *   uri_paths = {
- *     "canonical" = "/projects/{project_id}"
+ *     "canonical" = "/projects/{uuid}"
  *   }
  * )
  */
@@ -37,9 +37,12 @@ final class Project extends AsuSearchResourceBase {
 
   /**
    * Responds to GET requests.
+   *
+   * @param string $uuid
+   *   Project UUID (or node ID for backward compatibility) from the URL.
    */
-  public function get(int $project_id): ResourceResponse {
-    $project = $this->searchService->loadProject($project_id);
+  public function get(string $uuid): ResourceResponse {
+    $project = $this->searchService->loadProject($uuid);
     if (!$project) {
       return new ResourceResponse(['message' => 'Project not found.'], 404, $this->getTestingHeaders());
     }

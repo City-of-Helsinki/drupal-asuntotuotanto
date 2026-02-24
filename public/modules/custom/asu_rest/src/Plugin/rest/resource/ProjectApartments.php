@@ -15,7 +15,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   id = "asu_project_apartments",
  *   label = @Translation("Project apartments (ES compatible)"),
  *   uri_paths = {
- *     "canonical" = "/projects/{project_id}/apartments"
+ *     "canonical" = "/projects/{uuid}/apartments"
  *   }
  * )
  */
@@ -38,16 +38,24 @@ final class ProjectApartments extends AsuSearchResourceBase {
 
   /**
    * Responds to GET requests.
+   *
+   * @param string $uuid
+   *   Project UUID (or node ID for backward compatibility) from the URL.
    */
-  public function get(int $project_id): ResourceResponse {
+  public function get(string $uuid): ResourceResponse {
     $request = \Drupal::request();
     $params = $request->query->all();
     if ($error = $this->validatePriceParams($params)) {
       return $error;
     }
 
+    $project = $this->searchService->loadProject($uuid);
+    if (!$project) {
+      return new ResourceResponse(['message' => 'Project not found.'], 404, $this->getTestingHeaders());
+    }
+
     ['offset' => $offset, 'limit' => $limit] = $this->getPagination($request);
-    $result = $this->searchService->searchApartments($params, $project_id, $offset, $limit);
+    $result = $this->searchService->searchApartments($params, (int) $project->id(), $offset, $limit);
     $sources = array_map(
       fn (Node $apartment) => $this->searchMapper->mapApartmentListing($apartment),
       $result['items']
