@@ -1,0 +1,5 @@
+asu_content.summary_integrations:
+  title: "Etuovi and Oikotie summary"
+  description: "View Etuovi and Oikotie integration summary."
+  parent: hdbt_admin_tools.overview
+  route_name: asu_content.summary_integrations

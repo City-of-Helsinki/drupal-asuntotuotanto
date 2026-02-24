@@ -1,0 +1,46 @@
+parameters:
+  asu_elastic.scalar_field_types:
+    - asu_date_time
+    - asu_enum
+    - asu_number
+    - asu_strtolower
+    - asu_tidtotermname
+    - asu_url
+    - boolean
+    - cent
+    - date
+    - decimal
+    - integer
+    - string
+    - text
+  asu_elastic.force_scalar_fields:
+    - apartment_address
+    - apartment_number
+    - housing_company_fee
+    - project_id
+    - project_main_image_url
+    - project_uuid
+    - search_api_datasource
+    - search_api_id
+    - search_api_language
+    - uuid
+  asu_elastic.force_multi_fields:
+    - image_urls
+    - project_image_urls
+    - services
+
+services:
+  asu_elastic.scalar_field_subscriber:
+    class: Drupal\asu_elastic\EventSubscriber\ScalarFieldSubscriber
+    arguments:
+      - '@entity_type.manager'
+      - '%asu_elastic.scalar_field_types%'
+      - '%asu_elastic.force_scalar_fields%'
+      - '%asu_elastic.force_multi_fields%'
+    tags:
+      - { name: event_subscriber }
+
+  asu_elastic.district_field_mapping_subscriber:
+    class: Drupal\asu_elastic\EventSubscriber\DistrictFieldMappingSubscriber
+    tags:
+      - { name: event_subscriber }

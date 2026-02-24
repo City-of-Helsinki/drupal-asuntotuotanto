@@ -123,8 +123,16 @@ class BackendApi {
       );
       return $request::getResponse($response);
     }
-    catch (\Exception $e) {
+    catch (RequestException $e) {
       $this->handleRequestError($e, $request);
+    }
+    catch (\Exception $e) {
+      // Log non-RequestException errors and re-throw.
+      $this->logger->error(
+        sprintf('Unexpected error in API request: %s', $e->getMessage()),
+        ['exception' => $e, 'request' => get_class($request)]
+      );
+      throw $e;
     }
 
     return NULL;
@@ -146,7 +154,7 @@ class BackendApi {
       $token = $this->store->get('asu_api_token');
     }
     else {
-      $token = getenv('DRUPAL_AUTH_TOKEN');
+      $token = getenv('DRUPAL_SERVER_AUTH_TOKEN');
     }
 
     if ($account && (!$token || !AuthenticationHelper::isTokenAlive($token))) {
@@ -197,8 +205,11 @@ class BackendApi {
         ]
       );
     }
-    catch (\Exception $e) {
+    catch (RequestException | ConnectException $e) {
       $this->handleRequestError($e, $request);
+    }
+    catch (\Exception $e) {
+      throw $e;
     }
 
     return $request::getResponse($response);
@@ -207,14 +218,14 @@ class BackendApi {
   /**
    * Handle exceptions thrown by guzzle.
    *
-   * @param \GuzzleHttp\Exception\RequestException $e
+   * @param \GuzzleHttp\Exception\RequestException|\GuzzleHttp\Exception\ConnectException $e
    *   The exception.
    * @param \Drupal\asu_api\Api\Request $request
    *   The request.
    *
    * @throws \Drupal\asu_api\Exception\IllegalApplicationException
    */
-  private function handleRequestError(RequestException $e, Request $request) {
+  private function handleRequestError(RequestException|ConnectException $e, Request $request) {
     switch (TRUE) {
       case $e instanceof ServerException:
         $this->handle500($e, $request);

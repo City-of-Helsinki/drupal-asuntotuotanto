@@ -1,0 +1,70 @@
+diff --git a/lib/Drupal/Core/Entity/Sql/SqlContentEntityStorage.php b/lib/Drupal/Core/Entity/Sql/SqlContentEntityStorage.php
+--- a/lib/Drupal/Core/Entity/Sql/SqlContentEntityStorage.php
++++ b/lib/Drupal/Core/Entity/Sql/SqlContentEntityStorage.php
+@@ -1546,14 +1546,19 @@ public function onFieldStorageDefinitionDelete(FieldStorageDefinitionInterface $storage_definition) {
+     $table_mapping = $this->getTableMapping();
+     if ($table_mapping->requiresDedicatedTableStorage($storage_definition)) {
+       // Mark all data associated with the field for deletion.
+       $table = $table_mapping->getDedicatedDataTableName($storage_definition);
+       $revision_table = $table_mapping->getDedicatedRevisionTableName($storage_definition);
+-      $this->database->update($table)
+-        ->fields(['deleted' => 1])
+-        ->execute();
++      $schema = $this->database->schema();
++      if ($schema->tableExists($table)) {
++        $this->database->update($table)
++          ->fields(['deleted' => 1])
++          ->execute();
++      }
+       if ($this->entityType->isRevisionable()) {
+-        $this->database->update($revision_table)
+-          ->fields(['deleted' => 1])
+-          ->execute();
++        if ($schema->tableExists($revision_table)) {
++          $this->database->update($revision_table)
++            ->fields(['deleted' => 1])
++            ->execute();
++        }
+       }
+     }
+@@ -1595,16 +1595,21 @@ public function onFieldDefinitionDelete(FieldDefinitionInterface $field_definition) {
+     $storage_definition = $field_definition->getFieldStorageDefinition();
+     // Mark field data as deleted.
+     if ($table_mapping->requiresDedicatedTableStorage($storage_definition)) {
+       $table_name = $table_mapping->getDedicatedDataTableName($storage_definition);
+       $revision_name = $table_mapping->getDedicatedRevisionTableName($storage_definition);
+-      $this->database->update($table_name)
+-        ->fields(['deleted' => 1])
+-        ->condition('bundle', $field_definition->getTargetBundle())
+-        ->execute();
++      $schema = $this->database->schema();
++      if ($schema->tableExists($table_name)) {
++        $this->database->update($table_name)
++          ->fields(['deleted' => 1])
++          ->condition('bundle', $field_definition->getTargetBundle())
++          ->execute();
++      }
+       if ($this->entityType->isRevisionable()) {
+-        $this->database->update($revision_name)
+-          ->fields(['deleted' => 1])
+-          ->condition('bundle', $field_definition->getTargetBundle())
+-          ->execute();
++        if ($schema->tableExists($revision_name)) {
++          $this->database->update($revision_name)
++            ->fields(['deleted' => 1])
++            ->condition('bundle', $field_definition->getTargetBundle())
++            ->execute();
++        }
+       }
+     }
+@@ -1622,6 +1622,10 @@ protected function readFieldItemsToPurge(FieldDefinitionInterface $field_definition, $batch_size) {
+     $storage_definition = $field_definition->getFieldStorageDefinition();
+     $table_mapping = $this->getTableMapping();
+     $table_name = $table_mapping->getDedicatedDataTableName($storage_definition, $storage_definition->isDeleted());
++    $schema = $this->database->schema();
++    if (!$schema->tableExists($table_name)) {
++      return [];
++    }
+ 
+     // Get the entities which we want to purge first.
+     $entity_query = $this->database->select($table_name, 't', ['fetch' => FetchAs::Associative]);

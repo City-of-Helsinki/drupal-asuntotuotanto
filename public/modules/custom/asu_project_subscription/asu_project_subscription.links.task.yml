@@ -1,0 +1,5 @@
+asu_project_subscription.subscriptions_local_task:
+  route_name: asu_project_subscription.project_subscriptions
+  base_route: entity.node.canonical
+  title: "Subscriptions"
+  weight: 35

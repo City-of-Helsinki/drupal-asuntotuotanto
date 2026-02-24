@@ -1,0 +1,37 @@
+asu_project_subscription.confirm:
+  path: "/subscribe/confirm/{token}"
+  defaults:
+    _controller: '\Drupal\asu_project_subscription\Controller\SubscriptionController::confirm'
+    _title: "Confirm subscription"
+  requirements:
+    _permission: "access content"
+
+asu_project_subscription.unsubscribe:
+  path: "/subscribe/unsubscribe/{token}"
+  defaults:
+    _controller: '\Drupal\asu_project_subscription\Controller\SubscriptionController::unsubscribe'
+    _title: "Unsubscribe"
+  requirements:
+    _permission: "access content"
+
+asu_project_subscription.project_subscriptions:
+  path: "/project/{node}/subscriptions"
+  defaults:
+    _controller: '\Drupal\asu_project_subscription\Controller\SubscriptionController::view'
+    _title_callback: '\Drupal\asu_project_subscription\Controller\SubscriptionController::title'
+  requirements:
+    _permission: "view project subscriptions"
+    node: \d+
+  options:
+    _admin_route: TRUE
+
+asu_project_subscription.unsubscribe_manual:
+  path: "/project/subscription/{subscription}/unsubscribe"
+  defaults:
+    _controller: '\Drupal\asu_project_subscription\Controller\SubscriptionController::unsubscribeManual'
+    _title: "Unsubscribe user"
+  requirements:
+    _permission: "administer nodes"
+    subscription: \d+
+  options:
+    _admin_route: TRUE

@@ -1,0 +1,119 @@
+<?php
+
+/**
+ * @file
+ * Install and update hooks for the ASU Project Subscription module.
+ */
+
+use Drupal\Core\Database\SchemaObjectExistsException;
+use Drupal\Core\Field\BaseFieldDefinition;
+
+/**
+ * Implements hook_install().
+ */
+function asu_project_subscription_install() {
+  $schema = \Drupal::database()->schema();
+
+  if ($schema->tableExists('asu_project_subscription')) {
+    if (
+      $schema->fieldExists('asu_project_subscription', 'project')
+      && !$schema->indexExists('asu_project_subscription', 'asu_sub_project_idx')
+    ) {
+      $schema->addIndex(
+        'asu_project_subscription',
+        'asu_sub_project_idx',
+        ['project'],
+        [
+          'fields' => [
+            'project' => [
+              'type' => 'int',
+              'unsigned' => TRUE,
+              'size' => 'normal',
+            ],
+          ],
+        ]
+      );
+    }
+
+    // UNIQUE(project, email).
+    if (
+      $schema->fieldExists('asu_project_subscription', 'project')
+      && $schema->fieldExists('asu_project_subscription', 'email')
+    ) {
+      try {
+        $schema->addUniqueKey(
+          'asu_project_subscription',
+          'asu_sub_project_email_u',
+          ['project', 'email']
+        );
+      }
+      catch (SchemaObjectExistsException $e) {
+        // The unique key already exists.
+      }
+    }
+  }
+}
+
+/**
+ * Update 9001: Ensure base install tasks run on existing sites.
+ */
+function asu_project_subscription_update_9001() {
+  asu_project_subscription_install();
+}
+
+/**
+ * Update 9002: Add confirm/unsubscribe tokens and related indexes.
+ */
+function asu_project_subscription_update_9002() {
+  $manager = \Drupal::entityDefinitionUpdateManager();
+
+  if (!$manager->getFieldStorageDefinition('confirm_token', 'asu_project_subscription')) {
+    $field = BaseFieldDefinition::create('string')
+      ->setLabel(t('Confirm token'))
+      ->setSettings(['max_length' => 128])
+      ->setRequired(TRUE);
+    $manager->installFieldStorageDefinition('confirm_token', 'asu_project_subscription', 'asu_project_subscription', $field);
+  }
+
+  if (!$manager->getFieldStorageDefinition('unsubscribe_token', 'asu_project_subscription')) {
+    $field = BaseFieldDefinition::create('string')
+      ->setLabel(t('Unsubscribe token'))
+      ->setSettings(['max_length' => 128])
+      ->setRequired(TRUE);
+    $manager->installFieldStorageDefinition('unsubscribe_token', 'asu_project_subscription', 'asu_project_subscription', $field);
+  }
+
+  $schema = \Drupal::database()->schema();
+  if ($schema->tableExists('asu_project_subscription')) {
+    if (!$schema->indexExists('asu_project_subscription', 'asu_sub_confirm_token_idx')) {
+      $schema->addIndex(
+        'asu_project_subscription',
+        'asu_sub_confirm_token_idx',
+        ['confirm_token'],
+        [
+          'fields' => [
+            'confirm_token' => [
+              'type' => 'varchar',
+              'length' => 128,
+            ],
+          ],
+        ]
+      );
+    }
+    if (!$schema->indexExists('asu_project_subscription', 'asu_sub_unsub_token_idx')) {
+      $schema->addIndex(
+        'asu_project_subscription',
+        'asu_sub_unsub_token_idx',
+        ['unsubscribe_token'],
+        [
+          'fields' => [
+            'unsubscribe_token' => [
+              'type' => 'varchar',
+              'length' => 128,
+            ],
+          ],
+        ]
+      );
+    }
+  }
+}

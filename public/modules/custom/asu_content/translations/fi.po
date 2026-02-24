@@ -39,8 +39,8 @@ msgstr "Tallenna asetukset"
 msgid "delete"
 msgstr "poista"
 
-msgid "Status"
-msgstr "Tila"
+msgid "Can be exported"
+msgstr "Voidaan viedä"
 
 msgid "Register"
 msgstr "Rekisteröidy"
@@ -11612,6 +11612,96 @@ msgstr "Nouda asetukset"
 
 msgid "Site details"
 msgstr "Sivuston tiedot"
+
+msgid "Subscribe"
+msgstr "Tilaa"
+
+msgid "Subscriptions"
+msgstr "Tilaukset"
+
+msgid "Unsubscribe"
+msgstr "Peru tilaus"
+
+msgid "You have unsubscribed"
+msgstr "Ilmoitusten tilaus on peruttu."
+
+msgid "You have been unsubscribed from notifications"
+msgstr "Olet perunut ilmoitusten tilauksen."
+
+msgid "You have been unsubscribed from notifications."
+msgstr "Olet perunut ilmoitusten tilauksen."
+
+msgid "Sales started — @title"
+msgstr "Myynti alkanut — @title"
+
+msgid "Project update — @title"
+msgstr "Hankkeen päivitys — @title"
+
+msgid "New status: @state"
+msgstr "Uusi tila: @state"
+
+msgid "Confirmed"
+msgstr "Vahvistettu"
+
+msgid "Subscribed"
+msgstr "Tilattu"
+
+msgid "Unsubcribed"
+msgstr "Peruutettu"
+
+msgid "Project: "
+msgstr "Kohde: "
+
+msgid "Project: @field_label"
+msgstr "Kohde: @field_label"
+
+msgid "Please confirm your subscription:"
+msgstr "Vahvista tilauksesi:"
+
+msgid "If you did not request this, you can ignore this email"
+msgstr "Jos et pyytänyt tätä, voit jättää sähköpostin huomiotta"
+
+msgid "Project page: @url"
+msgstr "Avaa kohdesivu: @url"
+
+msgid "Project: @title"
+msgstr "Kohde:  @title"
+
+msgid "You are already subscribed to this project."
+msgstr "Olet jo tilannut tämän projektin."
+
+msgid "Confirm your subscription to @title"
+msgstr "Vahvista tilauksesi kohteeseen @title"
+
+msgid "Good news! The project has moved to sales."
+msgstr "Hyviä uutisia! Kohte on siirtynyt myyntivaiheeseen."
+
+msgid "Application period has started."
+msgstr "Kohteen hakuaika on alkanut."
+
+msgid "Pre-marketing"
+msgstr "Ennakkomarkkinoinnissa"
+
+msgid "The project status has been updated."
+msgstr "Kohden tila on päivitetty."
+
+msgid "You are subscribed to updates for this property."
+msgstr "Olet tilannut päivitykset tähän kohteeseen."
+
+msgid "Your subscription has been confirmed."
+msgstr "Tilauksesi on vahvistettu."
+
+msgid "We sent a confirmation email to %mail."
+msgstr "Lähetimme vahvistussähköpostin osoitteeseen %mail."
+
+msgid "Failed to send confirmation email. Please try again later."
+msgstr "Vahvistussähköpostin lähettäminen epäonnistui. Yritä myöhemmin uudelleen."
+
+msgid "Subscribe to property updates"
+msgstr "Ilmoitusvahti"
+
+msgid "Open project page"
+msgstr "Avaa kohdesivu"
 
 msgid "Subscribe to @title"
 msgstr "Tilaa aihepiirin @title RSS-syöte"
@@ -35842,6 +35932,9 @@ msgstr ""
 msgid "Integrations"
 msgstr "Integraatiot"
 
+msgid "Etuovi and Oikotie summary"
+msgstr "Etuovi- ja Oikotie-yhteenveto"
+
 msgid "Integrations"
 msgstr ""
 msgid "Add new context"
@@ -43326,3 +43419,69 @@ msgstr "Helsingin kaupungin logo"
 
 msgid "You already have an offer or have been sold an apartment in this project and cannot submit a new application."
 msgstr "Sinulla on jo myyty tai tarjottu asunto tässä kohteessa etkä siksi voi tehdä uutta hakemusta."
+
+msgid "Status"
+msgstr "Tila"
+
+msgid "UUID"
+msgstr "UUID"
+
+msgid "Project UUID"
+msgstr "Kohteen UUID"
+
+msgid "Apartment"
+msgstr "Asunto"
+
+msgid "Project URL"
+msgstr "Kohteen URL"
+
+msgid "Apartment URL"
+msgstr "Asunnon URL"
+
+msgid "Missing Fields"
+msgstr "Puuttuvat kentät"
+
+msgid "Export CSV"
+msgstr "Vie CSV"
+
+msgid "Project"
+msgstr "Kohde"
+
+msgid "Apartment"
+msgstr "Asunto"
+
+msgid "No apartments found."
+msgstr "Asuntoja ei löytynyt."
+
+msgid "Success"
+msgstr "Onnistui"
+
+msgid "Fail"
+msgstr "Epäonnistui"
+
+msgid "Total apartments"
+msgstr "Asuntoja yhteensä"
+
+msgid "Status legend"
+msgstr "Tilan selitykset"
+
+msgid "Apartment has all required fields and is ready for export"
+msgstr "Asunnolla on kaikki vaaditut kentät ja se on valmis vientiin"
+
+msgid "Apartment is missing required fields (listed in Missing Fields column)"
+msgstr "Asunnolta puuttuu vaadittuja kenttiä (lueteltu Puuttuvat kentät -sarakkeessa)"
+
+msgid "<strong>Integration Warning:</strong> "@integration"-integration is enabled, but the following required fields are empty: @fields."
+msgstr "<strong>Integraatiovaroitus:</strong> \"@integration\"-integraatio on käytössä, mutta seuraavat pakolliset kentät ovat tyhjiä: @fields."
+
+msgid "Last successful export"
+msgstr "Viimeksi viety onnistuneesti"
+
+msgid "Show all"
+msgstr "Näytä kaikki"
+
+msgid "Integration summary"
+msgstr "Integraatioiden yhteenveto"
+
+msgid "View Etuovi and Oikotie integration summary."
+msgstr "Näytä Etuovi- ja Oikotie-integraatioiden yhteenveto."

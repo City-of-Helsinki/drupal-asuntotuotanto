@@ -1,0 +1,9 @@
+administer asu project subscriptions:
+  title: "Administer project subscriptions"
+  description: "Manage ASU project subscriptions"
+  restrict access: true
+
+view project subscriptions:
+  title: "View project subscriptions table"
+  description: "View list of all project subscriptions for administrators and salespersons."
+  restrict: TRUE
