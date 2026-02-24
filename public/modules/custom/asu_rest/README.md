@@ -19,7 +19,7 @@ Example:
 POST /{fi/en/sv}/elasticsearch
 
 Parameters: (* = mandatory field)
-- project_ownership_type: string - "hitas"
+- project_ownership_type: * string - "hitas" or "haso" (mandatory for all requests)
 - project_district      : array  - ["Kaarela", "Käpylä"]
 - project_state_of_sale : array  - ["FOR_SALE", "READY", "UPCOMING"]
 - room_count            : array  - [2,3,5]
@@ -30,7 +30,7 @@ Parameters: (* = mandatory field)
 
 Returns: Success/error message with appropriate status code.
 200 : OK
-500 : price field without project ownership type
+500 : project_ownership_type is required
 500 : parameter is of wrong type
 
 ```
@@ -43,6 +43,27 @@ an access token and send `Authorization: Bearer <token>` on requests.
 
 - Token endpoint: `POST /oauth/token`
  - Configure Simple OAuth keys and a consumer with client credentials.
+
+#### OAuth2 setup
+
+Simple OAuth expects RSA keys at the paths configured in `simple_oauth.settings.yml`:
+- `public_key`: `/app/keys/public.key`
+- `private_key`: `/app/keys/private.key`
+
+Generate keys (e.g. for local development):
+```bash
+openssl genrsa -out private.key 2048
+openssl rsa -in private.key -pubout -out public.key
+```
+
+Create the `/app/keys` directory and place the keys there. In Docker, mount the
+keys directory or copy keys into the container. Keys are gitignored (`/keys`, `*.key`).
+
+#### CORS and APP_ENV
+
+When `APP_ENV` is `testing` or `dev`, permissive CORS headers are added for local
+development. **Never use `APP_ENV=dev` in production**; it allows cross-origin
+requests from any origin.
 
 Endpoints:
 - `GET /projects`

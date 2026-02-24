@@ -11,8 +11,6 @@ use Drupal\rest\ModifiedResourceResponse;
 use Drupal\rest\Plugin\ResourceBase;
 use Drupal\user\Entity\User;
 
-use Drupal\asu_rest\Plugin\rest\resource\Projects;
-
 /**
  * Provides a resource to get user applications.
  *
@@ -38,9 +36,6 @@ final class Initialize extends ResourceBase {
 
     // Gets filters cached if possible.
     $response['filters'] = $this->getFilters();
-    /** @var \Symfony\Component\HttpFoundation\Request $request */
-    $request = \Drupal::request();
-    $params = $request->query->all();
 
     if ($applicationCache = \Drupal::cache()->get('application_statuses')) {
       $response['apartment_application_status'] = $applicationCache->data;
@@ -116,8 +111,7 @@ final class Initialize extends ResourceBase {
    * @return array
    *   Array of application statuses by apartment.
    */
-  private function getApartmentApplicationStatus(): array 
-  {
+  private function getApartmentApplicationStatus(): array {
     $states = ['processing', 'ready', 'for_sale'];
     $reservedStates = ['processing', 'ready'];
     $projects = \Drupal::entityTypeManager()
@@ -171,6 +165,7 @@ final class Initialize extends ResourceBase {
     }
     return $return;
   }
+
   /**
    * Get the static content.
    */
@@ -304,14 +299,14 @@ final class Initialize extends ResourceBase {
         }
       }
 
-      if (in_array($ownership_type, ['hitas', 'haso'], true) && $district !== '') {
-        if (!in_array($district, $districts_by_ownership[$ownership_type], true)) {
+      if (in_array($ownership_type, ['hitas', 'haso'], TRUE) && $district !== '') {
+        if (!in_array($district, $districts_by_ownership[$ownership_type], TRUE)) {
           $districts_by_ownership[$ownership_type][] = $district;
         }
       }
     }
 
-    // Optionally sort each district list alphabetically
+    // Optionally sort each district list alphabetically.
     foreach ($districts_by_ownership as &$districts) {
       sort($districts, SORT_LOCALE_STRING);
     }
