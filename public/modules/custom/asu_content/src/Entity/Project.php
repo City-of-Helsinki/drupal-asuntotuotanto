@@ -13,6 +13,26 @@ use Drupal\asu_api\Api\BackendApi\Request\ApplicationLotteryResult;
 class Project extends Node {
 
   /**
+   * Load a project by its UUID.
+   *
+   * @param string $uuid
+   *   The project entity UUID.
+   *
+   * @return \Drupal\asu_content\Entity\Project|null
+   *   The project entity, or NULL if not found.
+   */
+  public static function loadByUuid(string $uuid): ?Project {
+    $nodes = \Drupal::entityTypeManager()
+      ->getStorage('node')
+      ->loadByProperties([
+        'type' => 'project',
+        'uuid' => $uuid,
+      ]);
+    $project = $nodes ? reset($nodes) : NULL;
+    return $project instanceof Project ? $project : NULL;
+  }
+
+  /**
    * Get apartment entities.
    *
    * @return mixed

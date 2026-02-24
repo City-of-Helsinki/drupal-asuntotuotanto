@@ -14,7 +14,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   id = "asu_apartment",
  *   label = @Translation("Apartment (ES compatible)"),
  *   uri_paths = {
- *     "canonical" = "/apartments/{apartment_id}"
+ *     "canonical" = "/apartments/{uuid}"
  *   }
  * )
  */
@@ -37,9 +37,12 @@ final class Apartment extends AsuSearchResourceBase {
 
   /**
    * Responds to GET requests.
+   *
+   * @param string $uuid
+   *   Apartment UUID (or node ID for backward compatibility) from the URL.
    */
-  public function get(int $apartment_id): ResourceResponse {
-    $apartment = $this->searchService->loadApartment($apartment_id);
+  public function get(string $uuid): ResourceResponse {
+    $apartment = $this->searchService->loadApartment($uuid);
     if (!$apartment) {
       return new ResourceResponse(['message' => 'Apartment not found.'], 404, $this->getTestingHeaders());
     }

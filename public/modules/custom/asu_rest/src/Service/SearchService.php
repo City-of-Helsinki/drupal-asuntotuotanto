@@ -97,10 +97,19 @@ final class SearchService {
   }
 
   /**
-   * Load a single apartment.
+   * Load a single apartment by node ID or UUID.
+   *
+   * @param int|string $idOrUuid
+   *   Node ID (nid) or apartment UUID.
+   *
+   * @return \Drupal\node\Entity\Node|null
+   *   The apartment node, or NULL if not found.
    */
-  public function loadApartment(int $apartmentId): ?Node {
-    $apartment = $this->entityTypeManager->getStorage('node')->load($apartmentId);
+  public function loadApartment(int|string $idOrUuid): ?Node {
+    if ($this->isUuid((string) $idOrUuid)) {
+      return $this->loadApartmentByUuid((string) $idOrUuid);
+    }
+    $apartment = $this->entityTypeManager->getStorage('node')->load((int) $idOrUuid);
     if ($apartment instanceof Node && $apartment->bundle() === 'apartment') {
       return $apartment;
     }
@@ -108,14 +117,57 @@ final class SearchService {
   }
 
   /**
-   * Load a single project.
+   * Load a single apartment by UUID.
    */
-  public function loadProject(int $projectId): ?Node {
-    $project = $this->entityTypeManager->getStorage('node')->load($projectId);
+  public function loadApartmentByUuid(string $uuid): ?Node {
+    $nodes = $this->entityTypeManager->getStorage('node')->loadByProperties([
+      'type' => 'apartment',
+      'uuid' => $uuid,
+    ]);
+    $apartment = $nodes ? reset($nodes) : NULL;
+    return $apartment instanceof Node ? $apartment : NULL;
+  }
+
+  /**
+   * Check if a string matches UUID format.
+   */
+  private function isUuid(string $value): bool {
+    return (bool) preg_match(
+      '/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i',
+      $value
+    );
+  }
+
+  /**
+   * Load a single project by node ID or UUID.
+   *
+   * @param int|string $idOrUuid
+   *   Node ID (nid) or project UUID.
+   *
+   * @return \Drupal\node\Entity\Node|null
+   *   The project node, or NULL if not found.
+   */
+  public function loadProject(int|string $idOrUuid): ?Node {
+    if ($this->isUuid((string) $idOrUuid)) {
+      return $this->loadProjectByUuid((string) $idOrUuid);
+    }
+    $project = $this->entityTypeManager->getStorage('node')->load((int) $idOrUuid);
     if ($project instanceof Node && $project->bundle() === 'project') {
       return $project;
     }
     return NULL;
+  }
+
+  /**
+   * Load a single project by UUID.
+   */
+  public function loadProjectByUuid(string $uuid): ?Node {
+    $nodes = $this->entityTypeManager->getStorage('node')->loadByProperties([
+      'type' => 'project',
+      'uuid' => $uuid,
+    ]);
+    $project = $nodes ? reset($nodes) : NULL;
+    return $project instanceof Node ? $project : NULL;
   }
 
   /**
