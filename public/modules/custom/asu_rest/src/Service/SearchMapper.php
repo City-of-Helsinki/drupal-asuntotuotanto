@@ -39,6 +39,15 @@ final class SearchMapper {
   public function mapApartmentListing(Node $apartment): array {
     $project = $this->getProjectForApartment($apartment);
 
+    // When project is known, bypass expensive computed fields that use
+    // getReverseReferences (asu_computed_apartment_images, multiple_values_field).
+    $imageUrls = $project
+      ? $this->getApartmentImageUrlsFromProject($apartment, $project)
+      : $this->getComputedList($apartment, 'asu_computed_apartment_images');
+    $services = $project
+      ? $this->getServicesFromProject($project)
+      : $this->getComputedList($apartment, 'multiple_values_field');
+
     $data = [
       '_language' => $apartment->language()->getId(),
       'apartment_address' => $this->getComputedMarkup($apartment, 'field_apartment_address'),
@@ -59,8 +68,8 @@ final class SearchMapper {
       'title' => $apartment->label(),
       'url' => $this->nodeUrl($apartment),
       'uuid' => $apartment->uuid(),
-      'image_urls' => $this->getComputedList($apartment, 'asu_computed_apartment_images'),
-      'services' => $this->getComputedList($apartment, 'multiple_values_field'),
+      'image_urls' => $imageUrls,
+      'services' => $services,
     ];
 
     if ($project) {
@@ -170,6 +179,25 @@ final class SearchMapper {
         if (isset($apartmentIdSet[$targetId])) {
           $this->apartmentProjectMap[$targetId] = $project;
         }
+      }
+    }
+  }
+
+  /**
+   * Prime project lookup when the project is already known.
+   *
+   * Use this for project-scoped endpoints where all apartments belong to the
+   * same project. Avoids the reverse lookup query used by primeProjectLookup.
+   *
+   * @param \Drupal\node\Entity\Node[] $apartments
+   *   Apartments on the current page.
+   * @param \Drupal\node\Entity\Node $project
+   *   The project all apartments belong to.
+   */
+  public function primeProjectLookupWithKnownProject(array $apartments, Node $project): void {
+    foreach ($apartments as $apartment) {
+      if ($apartment instanceof Node) {
+        $this->apartmentProjectMap[(int) $apartment->id()] = $project;
       }
     }
   }
@@ -487,24 +515,89 @@ final class SearchMapper {
 
   /**
    * Build URL for a file.
+   *
+   * @param int $fileId
+   *   File entity ID.
+   * @param string $imageStyle
+   *   Image style name for image files, or empty to skip style.
    */
-  private function buildFileUrl(int $fileId): ?string {
+  private function buildFileUrl(int $fileId, string $imageStyle = 'original_m'): ?string {
     $file = File::load($fileId);
     if (!$file) {
       return NULL;
     }
 
     // The 'extensions' property must be a string, not an array.
-    // Validates file extension as a string of extensions separated by spaces.
     $fileValidator = \Drupal::service('file.validator');
     $extensions = 'png jpg jpeg';
     $validationResult = $fileValidator->validate($file, ['FileExtension' => ['extensions' => $extensions]]);
 
-    if (empty($validationResult)) {
-      $style = ImageStyle::load('original_m');
+    if (empty($validationResult) && $imageStyle !== '') {
+      $style = ImageStyle::load($imageStyle);
       return $style ? $style->buildUrl($file->getFileUri()) : $file->createFileUrl(FALSE);
     }
     return $file->createFileUrl(FALSE);
+  }
+
+  /**
+   * Build apartment image URLs from raw fields using known project.
+   *
+   * Bypasses asu_computed_apartment_images to avoid getReverseReferences.
+   * Matches ApartmentImages logic: floorplan first, then shared, then apartment.
+   */
+  private function getApartmentImageUrlsFromProject(Node $apartment, Node $project): array {
+    $urls = [];
+    $style = '3_2_m';
+
+    $shared = $project->hasField('field_shared_apartment_images') && !$project->get('field_shared_apartment_images')->isEmpty()
+      ? $project->get('field_shared_apartment_images')->getValue()
+      : [];
+    $apartmentImages = $apartment->hasField('field_images') && !$apartment->get('field_images')->isEmpty()
+      ? $apartment->get('field_images')->getValue()
+      : [];
+    $floorplan = $apartment->hasField('field_floorplan') && !$apartment->get('field_floorplan')->isEmpty()
+      ? $apartment->get('field_floorplan')->getValue()
+      : [];
+
+    $items = array_merge($floorplan, $shared, $apartmentImages);
+    foreach ($items as $item) {
+      if (empty($item['target_id'])) {
+        continue;
+      }
+      if ($url = $this->buildFileUrl((int) $item['target_id'], $style)) {
+        $urls[] = $url;
+      }
+    }
+    return $urls;
+  }
+
+  /**
+   * Build services list from project field_services.
+   *
+   * Bypasses multiple_values_field to avoid getReverseReferences.
+   */
+  private function getServicesFromProject(Node $project): array {
+    if (!$project->hasField('field_services') || $project->get('field_services')->isEmpty()) {
+      return [];
+    }
+    $fieldServices = $project->get('field_services')->getValue();
+    $fieldServices = array_filter($fieldServices, static fn ($s) => !empty($s['term_id']) && $s['term_id'] !== '0');
+    $fieldServices = array_values($fieldServices);
+    if (empty($fieldServices)) {
+      return [];
+    }
+    $termIds = array_column($fieldServices, 'term_id');
+    $terms = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->loadMultiple($termIds);
+    $result = [];
+    foreach ($fieldServices as $delta => $svc) {
+      $termId = $svc['term_id'];
+      $term = $terms[$termId] ?? NULL;
+      $distance = $svc['distance'] ?? '';
+      if ($term) {
+        $result[] = trim($term->label() . ' ' . $distance . 'm');
+      }
+    }
+    return $result;
   }
 
   /**
