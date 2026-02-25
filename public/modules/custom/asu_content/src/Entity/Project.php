@@ -105,7 +105,7 @@ class Project extends Node {
    * @return string
    *   Application url.
    */
-  public function getApplicationUrl($apartmentId = NULL, $apartmentStateOfSale = NULL): string {
+  public function getApplicationUrl($apartmentNumber = NULL, $apartmentStateOfSale = NULL): string {
     $baseurl = \Drupal::request()->getSchemeAndHttpHost();
     $langcode = \Drupal::languageManager()->getDefaultLanguage()->getId();
     $baseurl = $baseurl . '/' . $langcode;
@@ -128,7 +128,7 @@ class Project extends Node {
     }
 
     if ($isFreeForReservations && $this->getCanApplyAfterwards() == FALSE) {
-      return $this->getContactUrl($apartmentId);
+      return $this->getContactUrl($apartmentNumber);
     }
 
     if ($this->isApplicationPeriod('after') && $this->getCanApplyAfterwards() == TRUE) {
@@ -136,7 +136,7 @@ class Project extends Node {
       if ($this->getOwnershipType() == 'haso') {
         return $addToApplicationUrl;
       }
-      return $this->getContactUrl($apartmentId);
+      return $this->getContactUrl($apartmentNumber);
     }
     return '';
   }
@@ -144,14 +144,17 @@ class Project extends Node {
   /**
    * Get the contact url for this project.
    *
+   * @param string|null $apartmentNumber
+   *   The apartment number (e.g. B12), not the Drupal node ID.
+   *
    * @return string
    *   Application url.
    */
-  public function getContactUrl($apartmentId): string {
+  public function getContactUrl($apartmentNumber): string {
     $baseurl = \Drupal::request()->getSchemeAndHttpHost();
     $langcode = \Drupal::languageManager()->getDefaultLanguage()->getId();
     $baseurl = $baseurl . '/' . $langcode;
-    $queryParameter = $apartmentId ? "?apartment=$apartmentId" . '&project=' . $this->id() : '?project=' . $this->id();
+    $queryParameter = $apartmentNumber ? "?apartment=$apartmentNumber" . '&project=' . $this->id() : '?project=' . $this->id();
     return sprintf('%s/contact/apply_for_free_apartment%s', $baseurl, $queryParameter);
   }
 
