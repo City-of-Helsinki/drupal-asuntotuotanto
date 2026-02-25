@@ -33,6 +33,7 @@
         "drupal/externalauth": "^2.0",
         "drupal/field_group": "^4.0",
         "drupal/flysystem": "^2.3",
+        "firebase/php-jwt": "^7.0",
         "drupal/gdpr_compliance": "^1.25",
         "drupal/gin": "^5.0",
         "drupal/gin_login": "^2.1",
