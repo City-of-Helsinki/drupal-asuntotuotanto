@@ -102,6 +102,9 @@
         "drupal/drupal": "*"
     },
     "config": {
+        "platform": {
+            "php": "8.3.15"
+        },
         "optimize-autoloader": true,
         "sort-packages": true,
         "allow-plugins": {
