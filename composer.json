@@ -168,7 +168,7 @@
         },
         "patches": {
             "drupal/simple_oauth": {
-                "Fix League v9 compatibility (Issue #3508777)": "https://git.drupalcode.org/project/simple_oauth/-/merge_requests/174.diff"
+                "Fix League 8.5.4 compatibility (finalizeScopes, getNewToken)": "patches/simple_oauth-league-8-compat.patch"
             },
             "drupal/helfi_platform_config": {
                 "Catch exception during hero paragraphs update": "patches/helfi_platform_config_hero_paragraph_fix.patch",

@@ -46,6 +46,7 @@ The project runs inside Docker containers.
   * Run `make lint-drupal` to verify code style.
   * If linting errors occur, fix them before finalizing the solution.
   * Run tests with `docker exec asuntotuotanto-app sh -c "composer test-php public/modules/custom"`
+  * run `docker exec asuntotuotanto-app sh -c "drush cr"` to verify nothing is broken
 
 ## Architecture Notes
 * **Django Microservice:** Be aware that complex business logic regarding application handling may reside in the connected Django microservice, not within Drupal.
