@@ -54,6 +54,10 @@ final class SearchMapper {
       'apartment_number' => $this->getScalar($apartment, 'field_apartment_number'),
       'apartment_state_of_sale' => $this->getEnumFromTermField($apartment, 'field_apartment_state_of_sale'),
       'apartment_structure' => $this->getScalar($apartment, 'field_apartment_structure'),
+      'has_balcony' => $this->getBoolean($apartment, 'field_has_balcony'),
+      'has_terrace' => $this->getBoolean($apartment, 'field_has_terrace'),
+      'has_yard' => $this->getBoolean($apartment, 'field_has_yard'),
+      'has_apartment_sauna' => $this->getBoolean($apartment, 'field_has_apartment_sauna'),
       'application_url' => $this->getComputedMarkup($apartment, 'asu_application_form_url'),
       'debt_free_sales_price' => $this->toCents($this->getScalar($apartment, 'field_debt_free_sales_price')),
       'floor' => $this->getScalar($apartment, 'field_floor'),
@@ -74,6 +78,7 @@ final class SearchMapper {
 
     if ($project) {
       $data += $this->mapProjectFields($project, $apartment);
+      $data['apartment_holding_type'] = $data['project_holding_type'] ?? '';
     }
 
     return $data;
@@ -261,6 +266,7 @@ final class SearchMapper {
       'project_coordinate_lon' => $this->getScalar($project, 'field_coordinate_lon'),
       'project_district' => $this->getTermLabel($project, 'field_district'),
       'project_estimated_completion' => $this->getScalar($project, 'field_estimated_completion'),
+      'project_holding_type' => $this->getEnumFromTermField($project, 'field_holding_type'),
       'project_housing_company' => $this->getScalar($project, 'field_housing_company'),
       'project_id' => $project->id(),
       'project_image_urls' => $this->getFileUrlsFromField($project, 'field_images'),
@@ -274,6 +280,16 @@ final class SearchMapper {
       'project_upcoming_description' => $this->getScalar($project, 'field_upcoming_description'),
       'project_url' => $this->nodeUrl($project),
       'project_uuid' => $project->uuid(),
+      'project_postal_code' => $this->getScalar($project, 'field_postal_code'),
+      'project_contract_business_id' => $this->getScalar($project, 'field_business_id'),
+      'project_realty_id' => $this->getScalar($project, 'field_realty_id'),
+      'project_new_housing' => $this->getBoolean($project, 'field_new_housing'),
+      'project_construction_year' => $this->getScalar($project, 'field_construction_year'),
+      'project_has_elevator' => $this->getBoolean($project, 'field_has_elevator'),
+      'project_has_sauna' => $this->getBoolean($project, 'field_has_sauna'),
+      'project_estate_agent' => $this->getReferencedUserField($project, 'field_salesperson', 'field_full_name'),
+      'project_estate_agent_email' => $this->getReferencedUserField($project, 'field_salesperson', 'mail'),
+      'project_estate_agent_phone' => $this->getReferencedUserField($project, 'field_salesperson', 'field_phone_number'),
     ];
 
     $data += [
@@ -382,11 +398,14 @@ final class SearchMapper {
     if ($term instanceof TranslatableInterface) {
       $term = $term->getUntranslated();
     }
-    $value = $term instanceof FieldableEntityInterface
+    if ($term instanceof FieldableEntityInterface
       && $term->hasField('field_machine_readable_name')
-      && !$term->get('field_machine_readable_name')->isEmpty()
-      ? $term->get('field_machine_readable_name')->value
-      : $term->id();
+      && !$term->get('field_machine_readable_name')->isEmpty()) {
+      $value = $term->get('field_machine_readable_name')->value;
+    }
+    else {
+      $value = trim($term->label() ?? '');
+    }
 
     return $this->normalizeEnum((string) $value);
   }
@@ -409,6 +428,26 @@ final class SearchMapper {
     }
     $value = $term->label();
     return strtolower((string) $value);
+  }
+
+  /**
+   * Get a field value from an entity-referenced user.
+   */
+  private function getReferencedUserField(Node $entity, string $refFieldName, string $userFieldName): string {
+    if (!$entity->hasField($refFieldName) || $entity->get($refFieldName)->isEmpty()) {
+      return '';
+    }
+    $field = $entity->get($refFieldName);
+    if (!$field instanceof EntityReferenceFieldItemListInterface) {
+      return '';
+    }
+    $users = $field->referencedEntities();
+    $user = reset($users);
+    if (!$user instanceof FieldableEntityInterface || !$user->hasField($userFieldName) || $user->get($userFieldName)->isEmpty()) {
+      return '';
+    }
+
+    return (string) $user->get($userFieldName)->value;
   }
 
   /**
