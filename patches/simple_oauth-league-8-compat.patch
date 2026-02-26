@@ -1,0 +1,39 @@
+diff --git a/src/OpenIdConnect/OpenIdConnectScopeRepository.php b/src/OpenIdConnect/OpenIdConnectScopeRepository.php
+index a688758..b1c2d3e 100644
+--- a/src/OpenIdConnect/OpenIdConnectScopeRepository.php
++++ b/src/OpenIdConnect/OpenIdConnectScopeRepository.php
+@@ -54,7 +54,7 @@ class OpenIdConnectScopeRepository implements ScopeRepositoryInterface {
+   /**
+    * {@inheritdoc}
+    */
+-  public function finalizeScopes(array $scopes, string $grantType, ClientEntityInterface $clientEntity, string|null $userIdentifier = NULL, ?string $authCodeId = NULL): array {
++  public function finalizeScopes(array $scopes, $grantType, ClientEntityInterface $clientEntity, $userIdentifier = null): array {
+     $finalized_scopes = $this->innerScopeRepository->finalizeScopes($scopes, $grantType, $clientEntity, $userIdentifier);
+ 
+     // Make sure that the openid scopes are in the user list.
+diff --git a/src/Repositories/AccessTokenRepository.php b/src/Repositories/AccessTokenRepository.php
+index 58263de..b2c3d4e 100644
+--- a/src/Repositories/AccessTokenRepository.php
++++ b/src/Repositories/AccessTokenRepository.php
+@@ -69,7 +69,7 @@ class AccessTokenRepository implements AccessTokenRepositoryInterface {
+   /**
+    * {@inheritdoc}
+    */
+-  public function getNewToken(ClientEntityInterface $clientEntity, array $scopes, string|null $userIdentifier = NULL): AccessTokenEntityInterface {
++  public function getNewToken(ClientEntityInterface $clientEntity, array $scopes, $userIdentifier = null): AccessTokenEntityInterface {
+     $access_token = $this->classResolver->getInstanceFromDefinition($this::$entityClass);
+     $access_token->setClient($clientEntity);
+     foreach ($scopes as $scope) {
+diff --git a/src/Repositories/ScopeRepository.php b/src/Repositories/ScopeRepository.php
+index 3824b63..c3d4e5f 100644
+--- a/src/Repositories/ScopeRepository.php
++++ b/src/Repositories/ScopeRepository.php
+@@ -59,7 +59,7 @@ class ScopeRepository implements ScopeRepositoryInterface {
+   /**
+    * {@inheritdoc}
+    */
+-  public function finalizeScopes(array $scopes, string $grantType, ClientEntityInterface $clientEntity, string|null $userIdentifier = NULL, ?string $authCodeId = NULL): array {
++  public function finalizeScopes(array $scopes, $grantType, ClientEntityInterface $clientEntity, $userIdentifier = null): array {
+     $default_user = NULL;
+     if (!$clientEntity->getDrupalEntity()->get('user_id')->isEmpty()) {
+       $default_user = $clientEntity->getDrupalEntity()->get('user_id')->entity;

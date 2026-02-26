@@ -1,12 +1,12 @@
 {
-    "_hash": "e8d4f3774e1343629f06f9cecffc4fca51077dc9327f11437bdb71f264e6986d",
+    "_hash": "c50bf6d52e2698981acf8789395adb9bc419f65a6e6a972a4a35ec975579e9da",
     "patches": {
         "drupal/simple_oauth": [
             {
                 "package": "drupal/simple_oauth",
-                "description": "Fix League v9 compatibility (Issue #3508777)",
-                "url": "https://git.drupalcode.org/project/simple_oauth/-/merge_requests/174.diff",
-                "sha256": "3cc2afa4b7a037b0e47037b4115919efbbaac5ad8dc5d3ee3db46b430ff55fa6",
+                "description": "Fix League 8.5.4 compatibility (finalizeScopes, getNewToken)",
+                "url": "patches/simple_oauth-league-8-compat.patch",
+                "sha256": "7a7923eaca6d3a72b1a02f3bc13fa91fb1032d67af54ea2033af2f6b06112605",
                 "depth": 1,
                 "extra": {
                     "provenance": "root"
