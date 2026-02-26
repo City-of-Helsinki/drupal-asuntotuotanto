@@ -126,7 +126,7 @@ class Project extends Node {
    *   Application url.
    */
   public function getApplicationUrl($apartmentId = NULL, $apartmentStateOfSale = NULL): string {
-    $baseurl = \Drupal::request()->getSchemeAndHttpHost();
+    $baseurl = $this->getBaseUrl();
     $langcode = \Drupal::languageManager()->getDefaultLanguage()->getId();
     $baseurl = $baseurl . '/' . $langcode;
     $apartmentType = '';
@@ -162,13 +162,32 @@ class Project extends Node {
   }
 
   /**
+   * Returns the base URL for building absolute links.
+   *
+   * Uses ASU_ASUNTOTUOTANTO_URL when set to avoid internal hostnames in URLs
+   * when requests arrive via proxy or internal routing.
+   *
+   * @return string
+   *   The base URL (scheme + host, no trailing slash).
+   */
+  private function getBaseUrl(): string {
+    $baseUrl = getenv('ASU_ASUNTOTUOTANTO_URL');
+    if ($baseUrl) {
+      return rtrim($baseUrl, '/');
+    }
+    $request = \Drupal::request();
+
+    return $request ? $request->getSchemeAndHttpHost() : '';
+  }
+
+  /**
    * Get the contact url for this project.
    *
    * @return string
    *   Application url.
    */
   public function getContactUrl($apartmentId): string {
-    $baseurl = \Drupal::request()->getSchemeAndHttpHost();
+    $baseurl = $this->getBaseUrl();
     $langcode = \Drupal::languageManager()->getDefaultLanguage()->getId();
     $baseurl = $baseurl . '/' . $langcode;
     $queryParameter = $apartmentId ? "?apartment=$apartmentId" . '&project=' . $this->id() : '?project=' . $this->id();

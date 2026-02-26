@@ -602,10 +602,18 @@ final class SearchMapper {
 
   /**
    * Build absolute URL for a node.
+   *
+   * Uses ASU_ASUNTOTUOTANTO_URL when set to avoid internal hostnames in URLs
+   * when requests arrive via proxy or internal routing.
    */
   private function nodeUrl(Node $node): string {
+    $baseUrl = getenv('ASU_ASUNTOTUOTANTO_URL');
+    if ($baseUrl) {
+      return rtrim($baseUrl, '/') . $node->toUrl()->toString();
+    }
     $request = $this->requestStack->getCurrentRequest();
     $host = $request ? $request->getSchemeAndHttpHost() : '';
+
     return $host . $node->toUrl()->toString();
   }
 
