@@ -346,12 +346,12 @@ class ElasticSearch extends ResourceBase {
             'project_state_of_sale' => $project_state_of_sale,
             'project_street_address' => $get_scalar($project_node, 'field_street_address'),
             'project_upcoming_description' => $get_scalar($project_node, 'field_upcoming_description'),
-            'project_url' => $project_node->toUrl('canonical', ['absolute' => TRUE])->toString(),
+            'project_url' => $this->buildAbsoluteUrl($project_node->toUrl()->toString()),
             'project_uuid' => $project_node->uuid(),
             'release_payment' => floatval($get_scalar($apartment_node, 'field_release_payment') ?: 0),
             'right_of_occupancy_payment' => floatval($get_scalar($apartment_node, 'field_right_of_occupancy_payment') ?: 0),
             'title' => $apartment_node->label(),
-            'url' => $get_scalar($apartment_node, 'field_apartment_url'),
+            'url' => $this->buildAbsoluteUrl($apartment_node->toUrl()->toString()),
             'uuid' => $apartment_node->uuid(),
             'sales_price' => floatval($get_scalar($apartment_node, 'field_sales_price') ?: 0),
             'room_count' => $room_count,
@@ -369,6 +369,23 @@ class ElasticSearch extends ResourceBase {
     }
 
     return new ResourceResponse($responseArray, 200, $headers);
+  }
+
+  /**
+   * Builds an absolute URL using configured base or current request host.
+   *
+   * Uses ASU_ASUNTOTUOTANTO_URL when set to avoid internal hostnames in URLs
+   * when requests arrive via proxy or internal routing.
+   */
+  private function buildAbsoluteUrl(string $path): string {
+    $baseUrl = getenv('ASU_ASUNTOTUOTANTO_URL');
+    if ($baseUrl) {
+      return rtrim($baseUrl, '/') . $path;
+    }
+    $request = \Drupal::request();
+    $host = $request ? $request->getSchemeAndHttpHost() : '';
+
+    return $host . $path;
   }
 
 }
