@@ -2,6 +2,7 @@
 
 namespace Drupal\asu_rest\Plugin\rest\resource;
 
+use Drupal\Core\StringTranslation\ByteSizeMarkup;
 use Drupal\file\Entity\File;
 use Drupal\node\Entity\Node;
 use Drupal\rest\ModifiedResourceResponse;
@@ -194,7 +195,7 @@ final class Content extends ResourceBase {
         if ($file) {
           $description = $attachment['description'];
           $file_name = $file->getFilename();
-          $file_size = format_size($file->getSize());
+          $file_size = ByteSizeMarkup::create($file->getSize())->__toString();
           $file_uri = \Drupal::service('file_url_generator')->generateAbsoluteString($file->getFileUri());
 
           array_push($attachments_stack, [
@@ -349,7 +350,7 @@ final class Content extends ResourceBase {
       $file = File::load($target_id);
       $description = $attachment['description'];
       $file_name = $file->getFilename();
-      $file_size = format_size($file->getSize());
+      $file_size = ByteSizeMarkup::create($file->getSize())->__toString();
       $file_uri = \Drupal::service('file_url_generator')->generateAbsoluteString($file->getFileUri());
 
       $attachments_stack[$key] = [
