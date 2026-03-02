@@ -9,9 +9,9 @@ use Drupal\Core\Url;
 use Drupal\Core\Site\Settings;
 use Drupal\file\Entity\File;
 use Drupal\paragraphs\Entity\Paragraph;
+use Drupal\Core\StringTranslation\ByteSizeMarkup;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\user\Entity\User;
-use Drupal\Core\StringTranslation\ByteSizeMarkup;
 
 /**
  * Helper function to get the icons path.
@@ -290,10 +290,7 @@ function asuntotuotanto_preprocess_views_view_table(&$variables) {
       $variables['rows'][$key]['is_application_period_active'] = $is_application_period_active;
       $variables['rows'][$key]['apartment_number'] = $apartment->field_apartment_number->value;
       $variables['rows'][$key]['reserved_or_sold'] = $reserved_or_sold;
-      $variables['rows'][$key]['application_url'] = $project->getApplicationUrl(
-        $apartment->id(),
-        $apartment->field_apartment_state_of_sale->target_id ?? NULL
-      );
+      $variables['rows'][$key]['application_url'] = $project->getApplicationUrl($apartment->id());
       $variables['rows'][$key]['application_url_title'] = $apartment->getApplicationUrlTitle();
       $variables['rows'][$key]['is_free'] = $apartment->isFree();
       $variables['rows'][$key]['can_apply_afterwards'] = $project->getCanApplyAfterwards();
@@ -761,7 +758,7 @@ function asuntotuotanto_preprocess_node(&$variables) {
             if ($file) {
               $description = $attachment['description'];
               $file_name = $file->getFilename();
-              $file_size = format_size($file->getSize());
+              $file_size = ByteSizeMarkup::create($file->getSize())->__toString();
               $file_uri = \Drupal::service('file_url_generator')->generateAbsoluteString($file->getFileUri());
 
               array_push($attachments_stack, [
@@ -782,7 +779,7 @@ function asuntotuotanto_preprocess_node(&$variables) {
             if ($file) {
               $description = $attachment['description'];
               $file_name = $file->getFilename();
-              $file_size = format_size($file->getSize());
+              $file_size = ByteSizeMarkup::create($file->getSize())->__toString();
               $file_uri = \Drupal::service('file_url_generator')->generateAbsoluteString($file->getFileUri());
 
               array_push($attachments_stack, [
