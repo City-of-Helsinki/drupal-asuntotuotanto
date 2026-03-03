@@ -7,12 +7,12 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "require": {
-        "asuntomyynti/react": "^1.5",
+        "asuntomyynti/react": "^1.5.2",
         "composer/installers": "^2.3",
         "cweagans/composer-patches": "^2.0",
         "dinbror/blazy": "^1.8",
         "druidfi/omen": "^0.9.0",
-        "drupal/api_tools": "^2.0",
+        "drupal/api_tools": "^1.0",
         "drupal/auto_entitylabel": "^3.4",
         "drupal/autologout": "^2.0",
         "drupal/better_exposed_filters": "^7.1",
@@ -23,9 +23,9 @@
         "drupal/config_filter": "^2.7",
         "drupal/config_terms": "^1.9",
         "drupal/context": "^5.0@RC",
-        "drupal/core": "^11.3",
-        "drupal/core-composer-scaffold": "^11.3",
-        "drupal/core-recommended": "^11.3",
+        "drupal/core": "~11.2.0",
+        "drupal/core-composer-scaffold": "~11.2.0",
+        "drupal/core-recommended": "~11.2.0",
         "drupal/ctools": "^4.1",
         "drupal/default_content": "^2.0@alpha",
         "drupal/email_registration": "^1.4",
@@ -38,11 +38,11 @@
         "drupal/gin_login": "^2.1",
         "drupal/gin_toolbar": "^3.0",
         "drupal/hal": "^2.0",
-        "drupal/hdbt": "*",
+        "drupal/hdbt": "^6.16",
         "drupal/hdbt_admin": "^3.4",
-        "drupal/helfi_api_base": "*",
+        "drupal/helfi_api_base": "^2.8",
         "drupal/helfi_azure_fs": "^2.2",
-        "drupal/helfi_platform_config": "^5.1",
+        "drupal/helfi_platform_config": "^5.0",
         "drupal/helfi_tunnistamo": "^3.1",
         "drupal/honeypot": "^2.2",
         "drupal/imagemagick": "^4.0",
@@ -65,11 +65,10 @@
         "drupal/rdf": "^3.0@beta",
         "drupal/rebuild_cache_access": "^1.12",
         "drupal/redis": "^1.11",
-        "drupal/registration_role": "^2.0.1",
+        "drupal/registration_role": "^2.0",
         "drupal/restui": "^1.22",
-        "drupal/route_condition": "^2.0.2",
+        "drupal/route_condition": "^2.0",
         "drupal/samlauth": "^3.13",
-        "drupal/simple_oauth": "6.1.0",
         "drupal/siteimprove": "^3.0",
         "drupal/slick": "^3.0",
         "drupal/symfony_mailer_lite": "^2.0",
@@ -83,12 +82,8 @@
         "drupal/yearonly": "^9.1",
         "drush/drush": "^13.7",
         "kenwheeler/slick": "^1.8",
-        "league/oauth2-server": "8.5.4 as 9.0.0",
-        "league/uri": "7.4.1 as 6.8.0",
         "mglaman/composer-drupal-lenient": "^1.0",
         "onelogin/php-saml": "^4.3",
-        "psr/http-message": "^1.1",
-        "steverhoades/oauth2-openid-connect-server": "^3.0",
         "zaporylie/composer-drupal-optimizations": "^1.2"
     },
     "require-dev": {
@@ -162,12 +157,10 @@
             ]
         },
         "patches": {
-            "drupal/simple_oauth": {
-                "Fix League 8.5.4 compatibility (finalizeScopes, getNewToken)": "patches/simple_oauth-league-8-compat.patch"
-            },
             "drupal/helfi_platform_config": {
                 "Catch exception during hero paragraphs update": "patches/helfi_platform_config_hero_paragraph_fix.patch",
-                "Skip update_9400 on Drupal 11 (HAL/RDF modules removed)": "patches/helfi_platform_config-d11-update-9400.patch"
+                "Skip update_9400 on Drupal 11 (HAL/RDF modules removed)": "patches/helfi_platform_config-d11-update-9400.patch",
+                "Make update_9328 idempotent when status field is already deleting/purging": "patches/helfi_platform_config-update-9328-idempotent.patch"
             },
             "drupal/config_terms": {
                 "Drupal 11 compatibility fixes": "https://www.drupal.org/files/issues/2024-06-02/config_terms.1.x-dev.rector.patch"
@@ -177,6 +170,7 @@
             },
             "drupal/core": {
                 "[#UHF-12709] Patch 'Deleted and replaced ...' error messages": "patches/uhf-12709-skip-deleted-log.patch",
+                "[#3452852] Add create() factory method with autowired parameters to PluginBase": "patches/3452852.patch",
                 "[D11] Skip delete when config entity missing": "patches/core-import-delete-null.patch",
                 "[D11] Skip delete in checkOp when entity missing": "patches/core-config-importer-null-entity.patch",
                 "[D11] Skip countFieldData when table missing": "patches/core-count-field-data-missing-table.patch",
@@ -275,9 +269,9 @@
             "type": "package",
             "package": {
                 "name": "asuntomyynti/react",
-                "version": "1.5.0",
+                "version": "1.5.2",
                 "dist": {
-                    "url": "https://github.com/City-of-Helsinki/asuntomyynti-react/releases/download/v1.5.0/asuntomyynti-react-1.5.0.zip",
+                    "url": "https://github.com/City-of-Helsinki/asuntomyynti-react/releases/download/v1.5.2/asuntomyynti-react-1.5.2.zip",
                     "type": "zip"
                 }
             }
