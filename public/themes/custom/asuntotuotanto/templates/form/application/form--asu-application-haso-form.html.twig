@@ -77,7 +77,7 @@
             </strong>
             {{ element.application_project_information['#teaser_values'].project_address }}
           </p>
-          <span class="application__project-ownership-type">
+          <span class="application__project-ownership-type application__project-ownership-type--{{ element.application_project_information['#teaser_values'].project_ownership_type|lower|default('haso') }}">
             <span class="visually-hidden">
               {% trans %}
                 Ownership type

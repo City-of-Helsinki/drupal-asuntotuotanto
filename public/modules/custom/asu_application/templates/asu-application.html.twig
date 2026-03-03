@@ -45,7 +45,7 @@
             </strong>
             {{ content['#teaser_values'].project_address }}
           </p>
-          <span class="application__project-ownership-type">
+          <span class="application__project-ownership-type application__project-ownership-type--{{ content['#teaser_values'].project_ownership_type|lower|default('hitas') }}">
             <span class="visually-hidden">
               {% trans %}
                 Ownership type
@@ -231,7 +231,7 @@
             </strong>
             {{ content['#teaser_values'].project_address }}
           </p>
-          <span class="application__project-ownership-type">
+          <span class="application__project-ownership-type application__project-ownership-type--{{ content['#teaser_values'].project_ownership_type|lower|default('hitas') }}">
             <span class="visually-hidden">
               {% trans %}
                 Ownership type
@@ -455,7 +455,7 @@
                 </strong>
                 {{ content['#teaser_values'].project_address }}
               </p>
-              <span class="application__project-ownership-type">
+              <span class="application__project-ownership-type application__project-ownership-type--{{ content['#teaser_values'].project_ownership_type|lower|default('hitas') }}">
                 <span class="visually-hidden">
                   {% trans %}
                     Ownership type
