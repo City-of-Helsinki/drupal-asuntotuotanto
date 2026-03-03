@@ -1,0 +1,13 @@
+oauth2_rest_flood:
+  ip_limit: 5
+  ip_window: 3600
+  resource_ids:
+    - asu_projects
+    - asu_project
+    - asu_apartments
+    - asu_apartment
+    - asu_project_apartments
+
+oauth2_token_flood:
+  ip_limit: 10
+  ip_window: 3600
