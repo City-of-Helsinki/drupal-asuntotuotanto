@@ -9,6 +9,9 @@ This is an **Open Source Drupal project**. It serves as the content management s
 * **External Integrations:** Connects to a Django microservice for specific logic.
 * agent skills are located in the `.agents/skills/` directory
 
+## General directives
+- **always write tests first** and then pause to give the human in the loop time to inspect them
+
 ## Security & Sensitive Data
 **STRICT RULE:** This is a public repository.
 * **NEVER** output or suggest code containing real secrets, passwords, API keys, or tokens.
