@@ -16,79 +16,86 @@
 %}
 {% set app_id = content['#teaser_values'].application_id %}
 
+{% macro project_header(teaser_values) %}
+  <h2 class="application__project-name">
+    <span class="visually-hidden">
+      {% trans %}
+        Project name
+      {% endtrans %}
+      {{ ': ' }}
+    </span>
+    {{ teaser_values.project_name }}
+  </h2>
+  <p class="application__project-address">
+    <span class="visually-hidden">
+      {% trans %}
+        Address
+      {% endtrans %}
+      {{ ': ' }}
+    </span>
+    <strong>
+      {{ teaser_values.project_district }}{{ ',' }}
+    </strong>
+    {{ teaser_values.project_address }}
+  </p>
+  <span class="application__project-ownership-type application__project-ownership-type--{{ teaser_values.project_ownership_type|lower|default('hitas') }}">
+    <span class="visually-hidden">
+      {% trans %}
+        Ownership type
+      {% endtrans %}
+      {{ ': ' }}
+    </span>
+    {{ teaser_values.project_ownership_type }}
+  </span>
+{% endmacro %}
+
+{% macro teaser_common(teaser_values, attributes, classes, app_id) %}
+  <article{{ attributes.addClass(classes) }} data-application="{{ app_id }}">
+    <figure class="application__image">
+      <img src="{{ teaser_values.project_main_image_url }}" alt="{{ 'Image of the project'|t }}">
+    </figure>
+    <div class="application__wrapper">
+      <div class="application__content">
+        {{ _self.project_header(teaser_values) }}
+        <ul class="application__date-information">
+          <li>
+            {% include "@hdbt/misc/icon.twig" with {icon: 'cogwheel', label: ''} %}
+            <span class="visually-hidden">
+              {% trans %}
+                Estimated completion
+              {% endtrans %}
+              {{ ': ' }}
+            </span>
+            {{ teaser_values.project_estimated_completion }}
+          </li>
+          <li>
+            {% include "@hdbt/misc/icon.twig" with {icon: 'clock', label: ''} %}
+
+            {% if teaser_values.is_application_period_over %}
+              {% trans %}
+                The application has ended {{ teaser_values.application_end_time }}
+              {% endtrans %}
+            {% else %}
+              {% trans %}
+                The application period is open until {{ teaser_values.application_end_time }}
+              {% endtrans %}
+            {% endif %}
+          </li>
+        </ul>
+        <ul class="application__misc-information">
+          <li>
+            {% if teaser_values.error %}
+              {% include "@hdbt/misc/icon.twig" with {icon: 'info-circle-fill', label: '', class: 'warning'} %}
+              {{ teaser_values.error }}
+            {% endif %}
+          </li>
+        </ul>
+      </div>
+{% endmacro %}
+
 {% if content['#teaser_values'].application_url %}
   {% if view_mode == 'submitted_teaser' %}
-    <article{{ attributes.addClass(classes) }} data-application="{{ app_id }}">
-      <figure class="application__image">
-        <img src="{{ content['#teaser_values'].project_main_image_url }}" alt="{{ 'Image of the project'|t }}">
-      </figure>
-      <div class="application__wrapper">
-        <div class="application__content">
-          <h2 class="application__project-name">
-            <span class="visually-hidden">
-              {% trans %}
-                Project name
-              {% endtrans %}
-              {{ ': ' }}
-            </span>
-            {{ content['#teaser_values'].project_name }}
-          </h2>
-          <p class="application__project-address">
-            <span class="visually-hidden">
-              {% trans %}
-                Address
-              {% endtrans %}
-              {{ ': ' }}
-            </span>
-            <strong>
-              {{ content['#teaser_values'].project_district }}{{ ',' }}
-            </strong>
-            {{ content['#teaser_values'].project_address }}
-          </p>
-          <span class="application__project-ownership-type application__project-ownership-type--{{ content['#teaser_values'].project_ownership_type|lower|default('hitas') }}">
-            <span class="visually-hidden">
-              {% trans %}
-                Ownership type
-              {% endtrans %}
-              {{ ': ' }}
-            </span>
-            {{ content['#teaser_values'].project_ownership_type }}
-          </span>
-          <ul class="application__date-information">
-            <li>
-              {% include "@hdbt/misc/icon.twig" with {icon: 'cogwheel', label: ''} %}
-              <span class="visually-hidden">
-                {% trans %}
-                  Estimated completion
-                {% endtrans %}
-                {{ ': ' }}
-              </span>
-              {{ content['#teaser_values'].project_estimated_completion }}
-            </li>
-            <li>
-              {% include "@hdbt/misc/icon.twig" with {icon: 'clock', label: ''} %}
-
-              {% if content['#teaser_values'].is_application_period_over %}
-                {% trans %}
-                  The application has ended {{ content['#teaser_values'].application_end_time }}
-                {% endtrans %}
-              {% else %}
-                {% trans %}
-                  The application period is open until {{ content['#teaser_values'].application_end_time }}
-                {% endtrans %}
-              {% endif %}
-            </li>
-          </ul>
-          <ul class="application__misc-information">
-            <li>
-              {% if content['#teaser_values'].error %}
-                {% include "@hdbt/misc/icon.twig" with {icon: 'info-circle-fill', label: '', class: 'warning'} %}
-                {{ content['#teaser_values'].error }}
-              {% endif %}
-            </li>
-          </ul>
-
-        </div>
+    {{ _self.teaser_common(content['#teaser_values'], attributes, classes, app_id) }}
         <div class="application__actions">
           <div>
           {% include "@asuntotuotanto/button/button.html.twig" with {
@@ -204,76 +211,7 @@
   {% endif %}
 
   {% if view_mode == 'draft_teaser' %}
-    <article{{ attributes.addClass(classes) }} data-application="{{ app_id }}">
-      <figure class="application__image">
-        <img src="{{ content['#teaser_values'].project_main_image_url }}" alt="{{ 'Image of the project'|t }}">
-      </figure>
-      <div class="application__wrapper">
-        <div class="application__content">
-          <h2 class="application__project-name">
-            <span class="visually-hidden">
-              {% trans %}
-                Project name
-              {% endtrans %}
-              {{ ': ' }}
-            </span>
-            {{ content['#teaser_values'].project_name }}
-          </h2>
-          <p class="application__project-address">
-            <span class="visually-hidden">
-              {% trans %}
-                Address
-              {% endtrans %}
-              {{ ': ' }}
-            </span>
-            <strong>
-              {{ content['#teaser_values'].project_district }}{{ ',' }}
-            </strong>
-            {{ content['#teaser_values'].project_address }}
-          </p>
-          <span class="application__project-ownership-type application__project-ownership-type--{{ content['#teaser_values'].project_ownership_type|lower|default('hitas') }}">
-            <span class="visually-hidden">
-              {% trans %}
-                Ownership type
-              {% endtrans %}
-              {{ ': ' }}
-            </span>
-            {{ content['#teaser_values'].project_ownership_type }}
-          </span>
-          <ul class="application__date-information">
-            <li>
-              {% include "@hdbt/misc/icon.twig" with {icon: 'cogwheel', label: ''} %}
-              <span class="visually-hidden">
-                {% trans %}
-                  Estimated completion
-                {% endtrans %}
-                {{ ': ' }}
-              </span>
-              {{ content['#teaser_values'].project_estimated_completion }}
-            </li>
-            <li>
-
-              {% include "@hdbt/misc/icon.twig" with {icon: 'clock', label: ''} %}
-              {% if content['#teaser_values'].is_application_period_over %}
-                {% trans %}
-                  The application has ended {{ content['#teaser_values'].application_end_time }}
-                {% endtrans %}
-              {% else %}
-                {% trans %}
-                  The application period is open until {{ content['#teaser_values'].application_end_time }}
-                {% endtrans %}
-              {% endif %}
-            </li>
-          </ul>
-          <ul class="application__misc-information">
-            <li>
-              {% if content['#teaser_values'].error %}
-                {% include "@hdbt/misc/icon.twig" with {icon: 'info-circle-fill', label: '', class: 'warning'} %}
-                {{ content['#teaser_values'].error }}
-              {% endif %}
-            </li>
-          </ul>
-        </div>
+    {{ _self.teaser_common(content['#teaser_values'], attributes, classes, app_id) }}
         {% if content['#teaser_values'].is_application_period %}
           {% set app_link_text = 'Edit application' %}
         <div class="application__actions">
@@ -434,36 +372,7 @@
               <img src="{{ content['#teaser_values'].project_main_image_url }}" alt="{{ 'Image of the project'|t }}">
             </figure>
             <div class="application__content">
-              <h2 class="application__project-name">
-                <span class="visually-hidden">
-                  {% trans %}
-                    Project name
-                  {% endtrans %}
-                  {{ ': ' }}
-                </span>
-                {{ content['#teaser_values'].project_name }}
-              </h2>
-              <p class="application__project-address">
-                <span class="visually-hidden">
-                  {% trans %}
-                    Address
-                  {% endtrans %}
-                  {{ ': ' }}
-                </span>
-                <strong>
-                  {{ content['#teaser_values'].project_district }}{{ ',' }}
-                </strong>
-                {{ content['#teaser_values'].project_address }}
-              </p>
-              <span class="application__project-ownership-type application__project-ownership-type--{{ content['#teaser_values'].project_ownership_type|lower|default('hitas') }}">
-                <span class="visually-hidden">
-                  {% trans %}
-                    Ownership type
-                  {% endtrans %}
-                  {{ ': ' }}
-                </span>
-                {{ content['#teaser_values'].project_ownership_type }}
-              </span>
+              {{ _self.project_header(content['#teaser_values']) }}
               {# <ul class="application__date-information">
                 <li>
                   {% include "@hdbt/misc/icon.twig" with {icon: 'cogwheel', label: ''} %}
