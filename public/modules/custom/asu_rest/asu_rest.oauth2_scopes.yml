@@ -1,0 +1,10 @@
+"rest_client":
+  description: "Scope for REST API client access."
+  umbrella: false
+  grant_types:
+    client_credentials:
+      status: true
+      description: "Client credentials for REST API access."
+  granularity_id: "role"
+  granularity_configuration:
+    role: "rest_client"
