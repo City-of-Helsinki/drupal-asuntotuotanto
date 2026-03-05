@@ -35,6 +35,7 @@ dependencies:
     - taxonomy.vocabulary.tasks
   module:
     - asu_application
+    - asu_project_subscription
     - content_translation
     - editoria11y
     - file
@@ -303,6 +304,7 @@ permissions:
   - 'update paragraph content text_block_with_link'
   - 'use text format full_html'
   - 'view all revisions'
+  - 'view application sync summary'
   - 'view any unpublished apartment content'
   - 'view any unpublished article content'
   - 'view any unpublished content'
@@ -344,5 +346,6 @@ permissions:
   - 'view paragraph content steps_list'
   - 'view paragraph content text'
   - 'view paragraph content text_block_with_link'
+  - 'view project subscriptions'
   - 'view the administration theme'
   - 'view unpublished paragraphs'
