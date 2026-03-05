@@ -250,7 +250,7 @@
     <div class="project__content">
       <div class="project__type-and-address">
         {% if ownership_type|render %}
-          <p class="project__ownership-type">
+          <p class="project__ownership-type project__ownership-type--{{ project_type|lower|default('hitas') }}">
             <span class="visually-hidden">({{ 'Ownership type'|t }})</span>
             {{ ownership_type }}
           </p>

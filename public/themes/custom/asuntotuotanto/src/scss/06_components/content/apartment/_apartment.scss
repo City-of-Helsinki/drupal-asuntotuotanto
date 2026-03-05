@@ -152,12 +152,27 @@ line-height: $lineheight-l; // Was 26px.
 
 .apartment__ownership-type {
   font-size: $fontsize-body-s;
-line-height: $lineheight-l; // Was 26px.
+  line-height: $lineheight-l; // Was 26px.
   background-color: var(--color-engel);
   color: var(--color-black-90);
   flex-shrink: 0;
   margin: 0;
   padding: $spacing-quarter $spacing-half-and-half;
+
+  // Hitas: yellow (matches asuntomyynti-react)
+  &--hitas {
+    background-color: var(--color-engel);
+  }
+
+  // Puolihitas: light yellow (matches asuntomyynti-react)
+  &--puolihitas {
+    background-color: var(--color-engel-light);
+  }
+
+  // HASO: blue (matches asuntomyynti-react)
+  &--haso {
+    background-color: var(--color-copper-medium-light);
+  }
 }
 
 .apartment__address {
