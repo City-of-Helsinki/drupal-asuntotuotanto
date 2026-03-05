@@ -346,3 +346,4 @@ permissions:
   - 'view paragraph content text_block_with_link'
   - 'view the administration theme'
   - 'view unpublished paragraphs'
+  - 'view integration summary'

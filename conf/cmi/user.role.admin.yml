@@ -320,3 +320,4 @@ permissions:
   - 'view sp metadata'
   - 'view the administration theme'
   - 'view unpublished paragraphs'
+  - 'view integration summary'
