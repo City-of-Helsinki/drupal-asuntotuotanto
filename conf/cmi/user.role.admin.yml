@@ -39,6 +39,7 @@ dependencies:
     - taxonomy.vocabulary.tasks
   module:
     - asu_application
+    - asu_project_subscription
     - block
     - block_content
     - config_translation
@@ -299,6 +300,7 @@ permissions:
   - 'use views bulk edit'
   - 'view all media revisions'
   - 'view all revisions'
+  - 'view application sync summary'
   - 'view announcement revisions'
   - 'view any unpublished apartment content'
   - 'view any unpublished article content'
@@ -318,6 +320,7 @@ permissions:
   - 'view remote entities'
   - 'view scheduled content'
   - 'view sp metadata'
+  - 'view project subscriptions'
   - 'view the administration theme'
   - 'view unpublished paragraphs'
   - 'view integration summary'
