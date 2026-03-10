@@ -1,6 +1,6 @@
 ---
 name: update-asuntomyynti-react-local-dev
-description: Updates and verifies asuntomyynti-react in local development and aligns Drupal asu_apartment_search module behavior. Use when updating the React widget, rebuilding local assets, or adjusting search filters.
+description: Updates asuntomyynti-react in local development and aligns Drupal asu_apartment_search module behavior. Use when updating the React widget, rebuilding local assets, or adjusting search filters.
 ---
 
 # Update Asuntomyynti React (Local Dev)
@@ -11,16 +11,15 @@ description: Updates and verifies asuntomyynti-react in local development and al
 - React dev server uses `yarn start` (Node 16 recommended if export errors occur).
 - Drupal module updates are Composer-driven (root `composer.json` + `composer.lock`, then `composer install`).
 
-## Local dev workflow (React)
+## Update workflow (React)
 1. Ensure Node 16 if you hit: `Package subpath './lib/tokenize' is not defined by "exports" ...`
    - `nvm install 16.0`
 2. Install dependencies:
    - `yarn`
-3. Run dev server:
-   - `yarn start`
-4. Update dist build when needed:
+3. Update dist build:
    - `nvm use 16; yarn dist;`
-   - Ensure `compose-dev.yaml` mounts `asuntomyynti-react/dist` as `/asuntomyynti-react`.
+   - If you run into errors, fix them and tell the human what you did
+   - Ensure `drupal-asuntomyynti/compose-dev.yaml` mounts `asuntomyynti-react/dist` as `/asuntomyynti-react`.
 
 ## Drupal module update workflow (Composer)
 1. Update `asuntomyynti-react/package.json` version number.
@@ -67,6 +66,17 @@ Use the local dist zip path in both files.
 - Widget renders and filters apply correctly.
 - Local `/elasticsearch` queries return expected results.
 - Drupal module assets are refreshed after `composer install`.
+
+## If updates are not visible
+1. Check the served module asset (note the path):
+   - `/modules/custom/asu_apartment_search/assets/react/hitas/asu_react_main.js`
+2. If the module asset is stale, ensure the dist mount is visible in the container:
+   - `/asuntomyynti-react` should contain the zip from `dist/`.
+   - If empty, restart the stack: `docker compose -f compose-dev.yaml down && docker compose -f compose-dev.yaml up -d`
+3. Force reinstall in container:
+   - `docker exec asuntotuotanto-app sh -c "rm -rf /app/vendor/asuntomyynti/react && composer install"`
+4. Clear caches:
+   - `docker exec asuntotuotanto-app sh -c "drush cr"`
 
 ## Example triggers
 - “Update asuntomyynti-react to the latest release locally.”
