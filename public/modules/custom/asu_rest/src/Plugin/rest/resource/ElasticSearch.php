@@ -201,6 +201,8 @@ class ElasticSearch extends ResourceBase {
     }
 
     $simpleConditions = [
+      'project_uuid',
+      'project_id',
       'project_ownership_type',
       'project_district',
       'project_building_type',
@@ -217,6 +219,17 @@ class ElasticSearch extends ResourceBase {
     foreach ($simpleConditions as $field) {
       $value = NULL;
       if ($parameters->get($field)) {
+        if ($field === 'project_uuid' && is_string($parameters->get($field))) {
+          $uuid = strtolower($parameters->get($field));
+          $parts = array_filter(explode('-', $uuid));
+          if (count($parts) > 1) {
+            // Match UUID parts since the index tokenizes on "-".
+            foreach ($parts as $part) {
+              $baseConditionGroup->addCondition($field, [$part], 'IN');
+            }
+            continue;
+          }
+        }
         $isBool = filter_var($parameters->get($field), FILTER_VALIDATE_BOOL);
 
         if (is_string($parameters->get($field)) && !$isBool) {
@@ -240,6 +253,9 @@ class ElasticSearch extends ResourceBase {
         elseif ($isBool) {
           $baseConditionGroup->addCondition($field, $parameters->get($field), '=');
         }
+        elseif (is_numeric($parameters->get($field))) {
+          $baseConditionGroup->addCondition($field, $parameters->get($field), '=');
+        }
         if (isset($value)) {
           $baseConditionGroup->addCondition($field, $value, 'IN');
         }
@@ -253,20 +269,20 @@ class ElasticSearch extends ResourceBase {
 
     // If no project state of sale is set, return all except upcoming and sold.
     if (empty($parameters->get('project_state_of_sale'))) {
-      $baseConditionGroup->addCondition('project_state_of_sale', ['upcoming'], 'NOT IN');
+      $baseConditionGroup->addCondition('project_state_of_sale', ['UPCOMING'], 'NOT IN');
     }
     else {
-      $states = array_map('strtolower', $parameters->get('project_state_of_sale'));
-      $upcoming = array_search('upcoming', $states, 'IN');
+      $states = array_map([$this, 'normalizeEnumValue'], $parameters->get('project_state_of_sale'));
+      $upcoming = in_array('UPCOMING', $states, TRUE);
       // Exclude upcoming apartments unless requested.
       if ($upcoming === FALSE) {
         $group = $query->createConditionGroup('OR');
         $group->addCondition('project_state_of_sale', $states, 'IN');
-        $group->addCondition('project_state_of_sale', ['upcoming'], 'NOT IN');
+        $group->addCondition('project_state_of_sale', ['UPCOMING'], 'NOT IN');
         $baseConditionGroup->addConditionGroup($group);
       }
       else {
-        $baseConditionGroup->addCondition('project_state_of_sale', ['upcoming'], 'IN');
+        $baseConditionGroup->addCondition('project_state_of_sale', ['UPCOMING'], 'IN');
       }
     }
 
@@ -326,6 +342,21 @@ class ElasticSearch extends ResourceBase {
         'debt_free_sales_price' : 'right_of_occupancy_payment';
       $baseConditionGroup->addCondition($field, $value, '<');
     }
+  }
+
+  /**
+   * Normalize enum values to match asu_enum indexing.
+   *
+   * @param string $value
+   *   Raw enum value.
+   *
+   * @return string
+   *   Normalized enum value.
+   */
+  private function normalizeEnumValue(string $value) : string {
+    $value = str_replace(' ', '_', $value);
+    $value = str_replace('-', '_', $value);
+    return strtoupper($value);
   }
 
 }
