@@ -219,17 +219,6 @@ class ElasticSearch extends ResourceBase {
     foreach ($simpleConditions as $field) {
       $value = NULL;
       if ($parameters->get($field)) {
-        if ($field === 'project_uuid' && is_string($parameters->get($field))) {
-          $uuid = strtolower($parameters->get($field));
-          $parts = array_filter(explode('-', $uuid));
-          if (count($parts) > 1) {
-            // Match UUID parts since the index tokenizes on "-".
-            foreach ($parts as $part) {
-              $baseConditionGroup->addCondition($field, [$part], 'IN');
-            }
-            continue;
-          }
-        }
         $isBool = filter_var($parameters->get($field), FILTER_VALIDATE_BOOL);
 
         if (is_string($parameters->get($field)) && !$isBool) {

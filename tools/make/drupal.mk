@@ -212,3 +212,13 @@ define drush
 	@drush $(1)
 endef
 endif
+
+dev-reset-elastic-index:
+ifneq ($(ENV),production)
+	$(call step,Reset Elasticsearch index...\n)
+	$(call drush,sapi-c)
+	$(call drush,sapi-i -y)
+	$(call drush,cr)
+else
+	$(call warn,This target can only be run in development mode (ENV != production).)
+endif
