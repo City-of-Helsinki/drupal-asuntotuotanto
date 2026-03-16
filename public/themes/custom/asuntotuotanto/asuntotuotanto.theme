@@ -458,6 +458,19 @@ function asuntotuotanto_preprocess_node(&$variables) {
       $project = $node;
       $project_type = $project->field_ownership_type->entity->name->value;
 
+      if ($variables['view_mode'] === 'full') {
+        $ownership_type = strtolower($project_type);
+        $library = $ownership_type === 'haso'
+          ? 'asu_apartment_search/haso-apartment-search'
+          : 'asu_apartment_search/hitas-apartment-search';
+        $variables['#attached']['library'][] = $library;
+        $variables['#attached']['drupalSettings']['asu_apartment_search']['project_apartment_widget'] = [
+          'project_uuid' => $project->uuid(),
+          'project_ownership_type' => $ownership_type,
+          'project_state_of_sale' => $project->field_state_of_sale->target_id ?? '',
+        ];
+      }
+
       if (
         $project->hasField('field_salesperson') &&
         !$project->get('field_salesperson')?->isEmpty()
