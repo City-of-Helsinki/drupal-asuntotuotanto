@@ -48,7 +48,8 @@ class ElasticSearch extends ResourceBase {
   public function post(array $data) : ModifiedResourceResponse | ResourceResponse {
     $parameters = new ParameterBag($data);
 
-    $headers = getenv('APP_ENV') == 'testing' ? [
+    $app_env = getenv('APP_ENV');
+    $headers = in_array($app_env, ['testing', 'dev'], TRUE) ? [
       'Access-Control-Allow-Origin' => '*',
       'Access-Control-Allow-Methods' => '*',
       'Access-Control-Allow-Headers' => '*',
