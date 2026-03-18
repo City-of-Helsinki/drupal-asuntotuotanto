@@ -43,54 +43,104 @@ class ResultController extends ControllerBase {
   public function getResults(): AjaxResponse {
     $user = $this->entityTypeManager()->getStorage('user')->load($this->currentUser()->id());
     $applicationId = $this->requestStack->getCurrentRequest()->get('application_id');
-    if ($user && $applicationId) {
-      $application = Application::load($applicationId);
-
-      $project = $this->entityTypeManager()->getStorage('node')->load($application->getProjectId());
-      if ($application->getOwnerId() != $user->id()) {
-        return new AjaxResponse([], 401);
-      }
-
-      $cid = 'asu_application_result_' . $user->id() . '_' . $applicationId;
-      if ($cached = $this->cache()->get($cid)) {
-        return new AjaxResponse(json_decode($cached->data, TRUE, 200));
-      }
-
-      try {
-        $request = new ApplicationLotteryResult($project->uuid());
-        $request->setSender($user);
-        /** @var \Drupal\asu_api\Api\BackendApi\Request\ApplicationLotteryResultResponse $responseContent */
-        $responseContent = $this->backendApi
-          ->send($request)
-          ->getContent();
-      }
-      catch (\Exception $e) {
-        $this->getLogger('asu_api')->critical('Exception when customer tried to access his application results: ' . $e->getMessage());
-        return new AjaxResponse([], 400);
-      }
-
-      if (empty($responseContent)) {
-        return new AjaxResponse([], 400);
-      }
-
-      $results = [];
-      foreach ($responseContent as $result) {
-        $apartment = $this->entity_repository->loadEntityByUuid('node', $result['apartment_uuid']);
-        $results[] = [
-          'apartment_id' => $apartment->id(),
-          'apartment_uuid' => $result['apartment_uuid'],
-          'apartment' => $apartment->field_apartment_number->value,
-          'position' => $result['lottery_position'],
-          'current_position' => $result['queue_position'],
-          // phpcs:ignore
-          'status' => t($result['state']),
-        ];
-      }
-
-      $this->cache()->set($cid, json_encode($results), (time() + 60 * 60));
-      return new AjaxResponse($results);
+    if (!$user || !$applicationId) {
+      return new AjaxResponse([]);
     }
-    return new AjaxResponse([], 400);
+
+    $application = Application::load($applicationId);
+    if (!$application) {
+      return new AjaxResponse([]);
+    }
+
+    $project = $this->entityTypeManager()->getStorage('node')->load($application->getProjectId());
+    if (!$project) {
+      return new AjaxResponse([]);
+    }
+
+    if ($application->getOwnerId() != $user->id()) {
+      return new AjaxResponse([], 401);
+    }
+
+    $cid = 'asu_application_result_' . $user->id() . '_' . $applicationId;
+    if ($cached = $this->cache()->get($cid)) {
+      return new AjaxResponse(json_decode($cached->data, TRUE, 200));
+    }
+
+    try {
+      $request = new ApplicationLotteryResult($project->uuid());
+      $request->setSender($user);
+      /** @var \Drupal\asu_api\Api\BackendApi\Request\ApplicationLotteryResultResponse $responseContent */
+      $responseContent = $this->backendApi
+        ->send($request)
+        ->getContent();
+    }
+    catch (\Exception $e) {
+      $this->getLogger('asu_api')->critical('Exception when customer tried to access his application results: ' . $e->getMessage());
+      return new AjaxResponse([]);
+    }
+
+    if (empty($responseContent)) {
+      $this->getLogger('asu_api')->warning(
+        'Empty reservations response for application @application_id (backend @backend_id), user @user_id, project @project_uuid.',
+        [
+          '@application_id' => $application->id(),
+          '@backend_id' => $application->get('field_backend_id')->value ?? 'N/A',
+          '@user_id' => $user->id(),
+          '@project_uuid' => $project->uuid(),
+        ]
+      );
+      return new AjaxResponse([]);
+    }
+
+    $results = [];
+    foreach ($responseContent as $result) {
+      $apartment = $this->entity_repository->loadEntityByUuid('node', $result['apartment_uuid']);
+
+        $state = $result['state'] ?? '';
+        $stateChangeEvents = $result['state_change_events'] ?? [];
+        if (is_string($stateChangeEvents)) {
+          $decodedEvents = json_decode($stateChangeEvents, TRUE);
+          $stateChangeEvents = is_array($decodedEvents) ? $decodedEvents : [];
+        }
+
+        $offer = NULL;
+        if (is_array($result['offer'] ?? NULL)) {
+          $offerState = $result['offer']['state'] ?? NULL;
+          $offer = [
+            'id' => $result['offer']['id'] ?? NULL,
+            'created_at' => $result['offer']['created_at'] ?? NULL,
+            'valid_until' => $result['offer']['valid_until'] ?? NULL,
+            'state' => $offerState,
+            'state_label' => $this->translateResultValue($offerState),
+            'concluded_at' => $result['offer']['concluded_at'] ?? NULL,
+            'comment' => $result['offer']['comment'] ?? NULL,
+            'is_expired' => $result['offer']['is_expired'] ?? NULL,
+          ];
+        }
+
+      $results[] = [
+        'apartment_id' => $apartment ? $apartment->id() : NULL,
+        'apartment_uuid' => $result['apartment_uuid'],
+        'apartment' => $apartment ? $apartment->field_apartment_number->value : NULL,
+        'position' => $result['lottery_position'],
+        'current_position' => $result['queue_position'],
+        'state' => $state,
+        'queue_position' => $result['queue_position'] ?? NULL,
+        'queue_position_before_cancelation' => $result['queue_position_before_cancelation'] ?? NULL,
+        'cancellation_reason' => $result['cancellation_reason'] ?? NULL,
+        'cancellation_reason_label' => $this->resolveCancellationReasonLabel($result['cancellation_reason'] ?? NULL),
+        'cancellation_actor' => $result['cancellation_actor'] ?? NULL,
+        'cancellation_actor_label' => $this->resolveCancellationActorLabel($result['cancellation_actor'] ?? NULL),
+        'cancellation_timestamp' => $result['cancellation_timestamp'] ?? NULL,
+        'state_change_events' => $stateChangeEvents,
+        'offer' => $offer,
+        // phpcs:ignore
+        'status' => $this->translateResultValue($state) ?? '-',
+      ];
+    }
+
+    $this->cache()->set($cid, json_encode($results), (time() + 60 * 60));
+    return new AjaxResponse($results);
   }
 
   /**
@@ -116,6 +166,69 @@ class ResultController extends ControllerBase {
       return new Response('problem with request.', 400);
     }
 
+  }
+
+  /**
+   * Translate backend state/reason values to localized labels.
+   */
+  private function translateResultValue(?string $value): ?string {
+    if (!$value) {
+      return NULL;
+    }
+
+    $map = [
+      'offered' => (string) $this->t('offered'),
+      'pending' => (string) $this->t('pending'),
+      'terminated' => (string) $this->t('terminated'),
+      'canceled' => (string) $this->t('canceled'),
+      'cancelled' => (string) $this->t('canceled'),
+      'submitted' => (string) $this->t('submitted'),
+      'reserved' => (string) $this->t('reserved'),
+      'accepted' => (string) $this->t('accepted'),
+      'rejected' => (string) $this->t('rejected'),
+    ];
+
+    return $map[$value] ?? (string) $this->t($value);
+  }
+
+  /**
+   * Resolve cancellation reason label from backend display/fallback mapping.
+   */
+  private function resolveCancellationReasonLabel(?string $reason): ?string {
+    if (!$reason) {
+      return NULL;
+    }
+
+    $map = [
+      'terminated' => 'Agreement terminated',
+      'canceled' => 'Reservation canceled',
+      'reservation_agreement_canceled' => 'Reservation agreement canceled',
+      'transferred' => 'Reservation transferred',
+      'lower_priority' => 'Higher priority apartment acquired',
+      'other_apartment_offered' => 'Another apartment offered in the same project',
+      'offer_rejected' => 'Offer rejected',
+    ];
+
+    $translationKey = $map[$reason] ?? $reason;
+    return (string) $this->t($translationKey);
+  }
+
+  /**
+   * Resolve cancellation actor label according to seller/system model.
+   */
+  private function resolveCancellationActorLabel(?string $actor): ?string {
+    if (!$actor) {
+      return NULL;
+    }
+
+    $map = [
+      'seller' => 'Cancelled by seller',
+      'system' => 'Cancelled by system',
+      'customer' => 'Cancelled by seller',
+    ];
+
+    $translationKey = $map[$actor] ?? $actor;
+    return (string) $this->t($translationKey);
   }
 
 }

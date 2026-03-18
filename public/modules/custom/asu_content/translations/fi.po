@@ -41415,7 +41415,7 @@ msgstr ""
 msgid "asu_user"
 msgstr ""
 msgid "system"
-msgstr ""
+msgstr "Järjestelmä peruuttanut"
 msgid "New sales user created: @email"
 msgstr ""
 msgid "New user: %email."
@@ -43485,3 +43485,105 @@ msgstr "Integraatioiden yhteenveto"
 
 msgid "View Etuovi and Oikotie integration summary."
 msgstr "Näytä Etuovi- ja Oikotie-integraatioiden yhteenveto."
+
+msgid "Current queue position"
+msgstr "Nykyinen jonosija"
+
+msgid "Offer status"
+msgstr "Tarjouksen tila"
+
+msgid "Offer valid until"
+msgstr "Tarjous voimassa asti"
+
+msgid "Cancellation"
+msgstr "Peruutus"
+
+msgid "Cancellation date"
+msgstr "Peruutuspäivä"
+
+msgid "Result"
+msgstr "Tulos"
+
+msgid "Queue"
+msgstr "Sija"
+
+msgid "Offer"
+msgstr "Tarjous"
+
+msgid "Valid until"
+msgstr "Voimassa"
+
+msgid "Date"
+msgstr "Pvm"
+
+msgid "offered"
+msgstr "tarjottu"
+
+msgid "pending"
+msgstr "odottaa"
+
+msgid "terminated"
+msgstr "päättynyt"
+
+msgid "canceled"
+msgstr "peruttu"
+
+msgid "submitted"
+msgstr "lähetetty"
+
+msgid "reserved"
+msgstr "varattu"
+
+msgid "accepted"
+msgstr "hyväksytty"
+
+msgid "rejected"
+msgstr "hylätty"
+
+msgid "seller"
+msgstr "Myyjä peruuttanut"
+
+msgid "system"
+msgstr "Järjestelmä peruuttanut"
+
+msgid "reservation_agreement_canceled"
+msgstr "Varaussopimus peruutettu"
+
+msgid "transferred"
+msgstr "Varaus siirretty"
+
+msgid "lower_priority"
+msgstr "Tarjottu korkeamman prioriteetin asunto"
+
+msgid "other_apartment_offered"
+msgstr "Muu asunto tarjottu samassa kohteessa"
+
+msgid "offer_rejected"
+msgstr "Tarjous hylätty"
+
+msgid "Cancelled by seller"
+msgstr "Myyjä peruuttanut"
+
+msgid "Cancelled by system"
+msgstr "Järjestelmä peruuttanut"
+
+msgid "Agreement terminated"
+msgstr "Sopimus irtisanottu"
+
+msgid "Reservation canceled"
+msgstr "Varaus peruutettu"
+
+msgid "Reservation agreement canceled"
+msgstr "Varaussopimus peruutettu"
+
+msgid "Reservation transferred"
+msgstr "Sopimus siirretty"
+
+msgid "Higher priority apartment acquired"
+msgstr "Hankittu korkeamman prioriteetin asunto"
+
+msgid "Another apartment offered in the same project"
+msgstr "Muu asunto tarjottu samassa kohteessa"
+
+msgid "Offer rejected"
+msgstr "Tarjous hylätty"
