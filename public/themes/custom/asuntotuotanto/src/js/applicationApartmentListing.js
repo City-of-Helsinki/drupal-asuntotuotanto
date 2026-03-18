@@ -125,13 +125,7 @@
           $(event.currentTarget).addClass('throbber');
 
           // Check if we have already loaded the data.
-          if ($(event.currentTarget).data('loaded') === 1) {
-            $(event.currentTarget).removeClass('throbber');
-            $(event.currentTarget).parent().addClass('is-hidden');
-            $(`.application__lottery-results-submitted[data-application="${id}"]`).removeClass('is-hidden');
-            $(`#application__lottery--hide--submitted[data-application="${id}"]`).removeClass('is-hidden');
-          }
-          else {
+          if ($(event.currentTarget).data('loaded') != 1) {
             getApartmentResults(event,
               () => {
                 const elements = document.querySelectorAll(`[data-application="${id}"]`);
@@ -140,6 +134,13 @@
                 $(event.currentTarget).parent().addClass('is-hidden');
                 $(`#application__lottery--hide--submitted[data-application="${id}"]`).removeClass('is-hidden');
               });
+
+          }
+          else {
+            $(event.currentTarget).removeClass('throbber');
+            $(event.currentTarget).parent().addClass('is-hidden');
+            $(`.application__lottery-results-submitted[data-application="${id}"]`).removeClass('is-hidden');
+            $(`#application__lottery--hide--submitted[data-application="${id}"]`).removeClass('is-hidden');
           }
         });
       })

@@ -193,19 +193,27 @@ class ResultController extends ControllerBase {
       return NULL;
     }
 
-    $map = [
-      'offered' => (string) $this->t('offered'),
-      'pending' => (string) $this->t('pending'),
-      'terminated' => (string) $this->t('terminated'),
-      'canceled' => (string) $this->t('canceled'),
-      'cancelled' => (string) $this->t('canceled'),
-      'submitted' => (string) $this->t('submitted'),
-      'reserved' => (string) $this->t('reserved'),
-      'accepted' => (string) $this->t('accepted'),
-      'rejected' => (string) $this->t('rejected'),
-    ];
-
-    return $map[$value] ?? (string) $this->t($value);
+    switch ($value) {
+      case 'offered':
+        return (string) $this->t('offered');
+      case 'pending':
+        return (string) $this->t('pending');
+      case 'terminated':
+        return (string) $this->t('terminated');
+      case 'canceled':
+      case 'cancelled':
+        return (string) $this->t('canceled');
+      case 'submitted':
+        return (string) $this->t('submitted');
+      case 'reserved':
+        return (string) $this->t('reserved');
+      case 'accepted':
+        return (string) $this->t('accepted');
+      case 'rejected':
+        return (string) $this->t('rejected');
+      default:
+        return NULL;
+    }
   }
 
   /**
@@ -216,18 +224,24 @@ class ResultController extends ControllerBase {
       return NULL;
     }
 
-    $map = [
-      'terminated' => 'Agreement terminated',
-      'canceled' => 'Reservation canceled',
-      'reservation_agreement_canceled' => 'Reservation agreement canceled',
-      'transferred' => 'Reservation transferred',
-      'lower_priority' => 'Higher priority apartment acquired',
-      'other_apartment_offered' => 'Another apartment offered in the same project',
-      'offer_rejected' => 'Offer rejected',
-    ];
-
-    $translationKey = $map[$reason] ?? $reason;
-    return (string) $this->t($translationKey);
+    switch ($reason) {
+      case 'terminated':
+        return (string) $this->t('Agreement terminated');
+      case 'canceled':
+        return (string) $this->t('Reservation canceled');
+      case 'reservation_agreement_canceled':
+        return (string) $this->t('Reservation agreement canceled');
+      case 'transferred':
+        return (string) $this->t('Reservation transferred');
+      case 'lower_priority':
+        return (string) $this->t('Higher priority apartment acquired');
+      case 'other_apartment_offered':
+        return (string) $this->t('Another apartment offered in the same project');
+      case 'offer_rejected':
+        return (string) $this->t('Offer rejected');
+      default:
+        return NULL;
+    }
   }
 
   /**
@@ -238,14 +252,16 @@ class ResultController extends ControllerBase {
       return NULL;
     }
 
-    $map = [
-      'seller' => 'Cancelled by seller',
-      'system' => 'Cancelled by system',
-      'customer' => 'Cancelled by seller',
-    ];
-
-    $translationKey = $map[$actor] ?? $actor;
-    return (string) $this->t($translationKey);
+    switch ($actor) {
+      case 'seller':
+        return (string) $this->t('Cancelled by seller');
+      case 'system':
+        return (string) $this->t('Cancelled by system');
+      case 'customer':
+        return (string) $this->t('Cancelled by seller');
+      default:
+        return NULL;
+    }
   }
 
 }
