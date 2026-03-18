@@ -94,49 +94,7 @@ class ResultController extends ControllerBase {
 
     $results = [];
     foreach ($responseContent as $result) {
-      $apartment = $this->entity_repository->loadEntityByUuid('node', $result['apartment_uuid']);
-
-        $state = $result['state'] ?? '';
-        $stateChangeEvents = $result['state_change_events'] ?? [];
-        if (is_string($stateChangeEvents)) {
-          $decodedEvents = json_decode($stateChangeEvents, TRUE);
-          $stateChangeEvents = is_array($decodedEvents) ? $decodedEvents : [];
-        }
-
-        $offer = NULL;
-        if (is_array($result['offer'] ?? NULL)) {
-          $offerState = $result['offer']['state'] ?? NULL;
-          $offer = [
-            'id' => $result['offer']['id'] ?? NULL,
-            'created_at' => $result['offer']['created_at'] ?? NULL,
-            'valid_until' => $result['offer']['valid_until'] ?? NULL,
-            'state' => $offerState,
-            'state_label' => $this->translateResultValue($offerState),
-            'concluded_at' => $result['offer']['concluded_at'] ?? NULL,
-            'comment' => $result['offer']['comment'] ?? NULL,
-            'is_expired' => $result['offer']['is_expired'] ?? NULL,
-          ];
-        }
-
-      $results[] = [
-        'apartment_id' => $apartment ? $apartment->id() : NULL,
-        'apartment_uuid' => $result['apartment_uuid'],
-        'apartment' => $apartment ? $apartment->field_apartment_number->value : NULL,
-        'position' => $result['lottery_position'],
-        'current_position' => $result['queue_position'],
-        'state' => $state,
-        'queue_position' => $result['queue_position'] ?? NULL,
-        'queue_position_before_cancelation' => $result['queue_position_before_cancelation'] ?? NULL,
-        'cancellation_reason' => $result['cancellation_reason'] ?? NULL,
-        'cancellation_reason_label' => $this->resolveCancellationReasonLabel($result['cancellation_reason'] ?? NULL),
-        'cancellation_actor' => $result['cancellation_actor'] ?? NULL,
-        'cancellation_actor_label' => $this->resolveCancellationActorLabel($result['cancellation_actor'] ?? NULL),
-        'cancellation_timestamp' => $result['cancellation_timestamp'] ?? NULL,
-        'state_change_events' => $stateChangeEvents,
-        'offer' => $offer,
-        // phpcs:ignore
-        'status' => $this->translateResultValue($state) ?? '-',
-      ];
+      $results[] = $this->buildResultItem($result);
     }
 
     $this->cache()->set($cid, json_encode($results), (time() + 60 * 60));
@@ -166,6 +124,65 @@ class ResultController extends ControllerBase {
       return new Response('problem with request.', 400);
     }
 
+  }
+
+  /**
+   * Build a single result item array from raw backend response data.
+   */
+  private function buildResultItem(array $result): array {
+    $apartment = $this->entity_repository->loadEntityByUuid('node', $result['apartment_uuid']);
+    $state = $result['state'] ?? '';
+
+    return [
+      'apartment_id' => $apartment ? $apartment->id() : NULL,
+      'apartment_uuid' => $result['apartment_uuid'],
+      'apartment' => $apartment ? $apartment->field_apartment_number->value : NULL,
+      'position' => $result['lottery_position'],
+      'current_position' => $result['queue_position'],
+      'state' => $state,
+      'queue_position' => $result['queue_position'] ?? NULL,
+      'queue_position_before_cancelation' => $result['queue_position_before_cancelation'] ?? NULL,
+      'cancellation_reason' => $result['cancellation_reason'] ?? NULL,
+      'cancellation_reason_label' => $this->resolveCancellationReasonLabel($result['cancellation_reason'] ?? NULL),
+      'cancellation_actor' => $result['cancellation_actor'] ?? NULL,
+      'cancellation_actor_label' => $this->resolveCancellationActorLabel($result['cancellation_actor'] ?? NULL),
+      'cancellation_timestamp' => $result['cancellation_timestamp'] ?? NULL,
+      'state_change_events' => $this->parseStateChangeEvents($result['state_change_events'] ?? []),
+      'offer' => $this->parseOffer($result['offer'] ?? NULL),
+      // phpcs:ignore
+      'status' => $this->translateResultValue($state) ?? '-',
+    ];
+  }
+
+  /**
+   * Parse state_change_events from either a JSON string or an array.
+   */
+  private function parseStateChangeEvents(mixed $raw): array {
+    if (is_string($raw)) {
+      $decoded = json_decode($raw, TRUE);
+      return is_array($decoded) ? $decoded : [];
+    }
+    return is_array($raw) ? $raw : [];
+  }
+
+  /**
+   * Parse offer data from raw backend value.
+   */
+  private function parseOffer(mixed $raw): ?array {
+    if (!is_array($raw)) {
+      return NULL;
+    }
+    $offerState = $raw['state'] ?? NULL;
+    return [
+      'id' => $raw['id'] ?? NULL,
+      'created_at' => $raw['created_at'] ?? NULL,
+      'valid_until' => $raw['valid_until'] ?? NULL,
+      'state' => $offerState,
+      'state_label' => $this->translateResultValue($offerState),
+      'concluded_at' => $raw['concluded_at'] ?? NULL,
+      'comment' => $raw['comment'] ?? NULL,
+      'is_expired' => $raw['is_expired'] ?? NULL,
+    ];
   }
 
   /**
