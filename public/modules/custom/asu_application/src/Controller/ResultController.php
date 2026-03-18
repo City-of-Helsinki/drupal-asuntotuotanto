@@ -196,21 +196,29 @@ class ResultController extends ControllerBase {
     switch ($value) {
       case 'offered':
         return (string) $this->t('offered');
+
       case 'pending':
         return (string) $this->t('pending');
+
       case 'terminated':
         return (string) $this->t('terminated');
+
       case 'canceled':
       case 'cancelled':
         return (string) $this->t('canceled');
+
       case 'submitted':
         return (string) $this->t('submitted');
+
       case 'reserved':
         return (string) $this->t('reserved');
+
       case 'accepted':
         return (string) $this->t('accepted');
+
       case 'rejected':
         return (string) $this->t('rejected');
+
       default:
         return NULL;
     }
@@ -227,18 +235,25 @@ class ResultController extends ControllerBase {
     switch ($reason) {
       case 'terminated':
         return (string) $this->t('Agreement terminated');
+
       case 'canceled':
         return (string) $this->t('Reservation canceled');
+
       case 'reservation_agreement_canceled':
         return (string) $this->t('Reservation agreement canceled');
+
       case 'transferred':
         return (string) $this->t('Reservation transferred');
+
       case 'lower_priority':
         return (string) $this->t('Higher priority apartment acquired');
+
       case 'other_apartment_offered':
         return (string) $this->t('Another apartment offered in the same project');
+
       case 'offer_rejected':
         return (string) $this->t('Offer rejected');
+
       default:
         return NULL;
     }
@@ -255,10 +270,13 @@ class ResultController extends ControllerBase {
     switch ($actor) {
       case 'seller':
         return (string) $this->t('Cancelled by seller');
+
       case 'system':
         return (string) $this->t('Cancelled by system');
+
       case 'customer':
         return (string) $this->t('Cancelled by seller');
+
       default:
         return NULL;
     }
