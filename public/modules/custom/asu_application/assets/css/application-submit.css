@@ -117,3 +117,149 @@
   background: #000;
   color: #fff;
 }
+
+.user-profile--applications .application__results-table,
+.application__results-table {
+  display: none !important;
+  background-color: var(--color-white, #fff);
+}
+
+.user-profile--applications .application__results-mobile-list,
+.application__results-mobile-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  background-color: var(--color-white, #fff);
+}
+
+.user-profile--applications .application__result-card,
+.application__result-card {
+  border-top: 1px solid var(--color-black-20, #d9d9d9);
+  padding: 16px;
+  background-color: var(--color-white, #fff);
+}
+
+.user-profile--applications .application__result-card:last-child,
+.application__result-card:last-child {
+  border-bottom: 1px solid var(--color-black-20, #d9d9d9);
+}
+
+.user-profile--applications .application__result-card-title,
+.application__result-card-title {
+  font-size: 1.125rem;
+  font-weight: 700;
+  margin: 0 0 4px;
+}
+
+.user-profile--applications .application__result-card-subtitle,
+.application__result-card-subtitle {
+  margin: 0 0 12px;
+}
+
+.user-profile--applications .application__result-attrs,
+.application__result-attrs {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.user-profile--applications .application__result-attr,
+.application__result-attr {
+  margin: 0;
+  padding: 6px 0;
+  line-height: 1.35;
+}
+
+.user-profile--applications .application__result-label,
+.application__result-label {
+  font-weight: 600;
+  margin-right: 6px;
+}
+
+.user-profile--applications .application__result-value,
+.application__result-value {
+  word-break: break-word;
+}
+
+@media screen and (max-width: 1279px) {
+  .user-profile--applications .application__results-table,
+  .application__results-table {
+    display: none !important;
+    visibility: hidden !important;
+  }
+
+  .user-profile--applications .application__results-mobile-list,
+  .application__results-mobile-list {
+    display: block !important;
+  }
+}
+
+@media screen and (min-width: 1280px) {
+  .user-profile--applications .application__results-mobile-list,
+  .application__results-mobile-list {
+    display: none !important;
+  }
+
+  .user-profile--applications .application__results-table,
+  .application__results-table {
+    display: table !important;
+    border-collapse: separate !important;
+    border-spacing: 0 !important;
+    table-layout: auto !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-top: 0 !important;
+    background-color: var(--color-white, #fff);
+  }
+
+  .user-profile--applications .application__results-table thead,
+  .application__results-table thead {
+    display: table-header-group !important;
+  }
+
+  .user-profile--applications .application__results-table tbody,
+  .application__results-table tbody {
+    display: table-row-group !important;
+  }
+
+  .user-profile--applications .application__results-table thead tr,
+  .user-profile--applications .application__results-table tbody tr,
+  .application__results-table thead tr,
+  .application__results-table tbody tr {
+    display: table-row !important;
+  }
+
+  .user-profile--applications .application__results-table th,
+  .user-profile--applications .application__results-table td,
+  .application__results-table th,
+  .application__results-table td {
+    display: table-cell !important;
+    box-sizing: border-box;
+    vertical-align: top;
+    white-space: normal;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+    text-align: left;
+    padding: 12px 10px !important;
+  }
+
+  .user-profile--applications .application__results-table tbody td,
+  .application__results-table tbody td {
+    border-top: 1px solid var(--color-black-20, #d9d9d9);
+  }
+
+  .user-profile--applications .application__results-table th:not(:last-child),
+  .user-profile--applications .application__results-table td:not(:last-child),
+  .application__results-table th:not(:last-child),
+  .application__results-table td:not(:last-child) {
+    padding-right: 12px !important;
+  }
+}
+
+.user-profile--applications .application__results-table.is-hidden,
+.application__results-table.is-hidden,
+.user-profile--applications .application__results-mobile-list.is-hidden,
+.application__results-mobile-list.is-hidden {
+  display: none !important;
+  visibility: hidden !important;
+}
