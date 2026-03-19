@@ -398,7 +398,7 @@
             <li class="apartment__details-item">
               <p>
                 <span>{% trans %}Share of housing company loan{% endtrans %}</span>
-                <span>{{ loan_share['#markup']|replace({'.': ','})|replace({'€': ''})|trim|number_format(2, ',', ' ') }}€</span>
+				<span>{{ loan_share['#markup']|replace({'€': ''})|replace({'/ kk': ''})|replace({' ': ''})|replace({',': '.'})|trim|number_format(2, ',', ' ') }}€</span>
               </p>
             </li>
           {% endif %}
@@ -456,7 +456,7 @@
 						<li class="apartment__details-item">
 							<p>
 								<span>{% trans %}Right of occupancy fee{% endtrans %}</span>
-								<span>{{ right_of_occupancy_fee['#markup']|replace({'.': ','})|replace({'€': ''})|trim|number_format(2, ',', ' ') }}€</span>
+								<span>{{ right_of_occupancy_fee['#markup']|replace({'€': ''})|replace({'/ kk': ''})|replace({' ': ''})|replace({',': '.'})|trim|number_format(2, ',', ' ') }}€</span>
 							</p>
 						</li>
 					{% endif %}
@@ -464,7 +464,7 @@
 						<li class="apartment__details-item">
 							<p>
 								<span>{% trans %}Maintenance fee{% endtrans %}</span>
-								<span>{{ maintenance_fee['#markup']|replace({'.': ','})|replace({'€': ''})|trim|number_format(2, ',', ' ') }}€</span>
+								<span>{{ maintenance_fee['#markup']|replace({'€': ''})|replace({'/ kk': ''})|replace({' ': ''})|replace({',': '.'})|trim|number_format(2, ',', ' ') }}€</span>
 							</p>
 						</li>
 					{% endif %}
@@ -472,7 +472,7 @@
 						<li class="apartment__details-item">
 							<p>
 								<span>{% trans %}Financing fee{% endtrans %}</span>
-								<span>{{ financing_fee['#markup']|replace({'.': ','})|replace({'€': ''})|trim|number_format(2, ',', ' ') }}€</span>
+								<span>{{ financing_fee['#markup']|replace({'€': ''})|replace({'/ kk': ''})|replace({' ': ''})|replace({',': '.'})|trim|number_format(2, ',', ' ') }}€</span>
 							</p>
 						</li>
 					{% endif %}
@@ -504,7 +504,7 @@
             <li class="apartment__details-item">
               <p>
                 <span>{% trans %}Alteration work{% endtrans %}</span>
-                <span>{{ field_alteration_work|replace({'.': ','})|replace({'€': ''})|trim|number_format(2, ',', ' ') }}€</span>
+				<span>{{ field_alteration_work|replace({'€': ''})|replace({'/ kk': ''})|replace({' ': ''})|replace({',': '.'})|trim|number_format(2, ',', ' ') }}€</span>
               </p>
             </li>
           {% endif %}
@@ -512,7 +512,7 @@
             <li class="apartment__details-item">
               <p>
                 <span>{% trans %}Water fee{% endtrans %}</span>
-                <span>{{ field_water_fee|replace({'.': ','})|replace({'€': ''})|trim|number_format(2, ',', ' ') }}{% trans %}€ / month{% endtrans %}</span>
+				<span>{{ field_water_fee|replace({'€': ''})|replace({'/ kk': ''})|replace({' ': ''})|replace({',': '.'})|trim|number_format(2, ',', ' ') }}{% trans %}€ / month{% endtrans %}</span>
               </p>
             </li>
           {% endif %}
@@ -528,7 +528,7 @@
             <li class="apartment__details-item">
               <p>
                 <span>{% trans %}Parking fee{% endtrans %}</span>
-                <span>{{ field_parking_fee|replace({'.': ','})|replace({'€': ''})|trim|number_format(2, ',', ' ') }}{% trans %}€ / month{% endtrans %}</span>
+				<span>{{ field_parking_fee|replace({'€': ''})|replace({'/ kk': ''})|replace({' ': ''})|replace({',': '.'})|trim|number_format(2, ',', ' ') }}{% trans %}€ / month{% endtrans %}</span>
               </p>
             </li>
           {% endif %}
