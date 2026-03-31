@@ -255,7 +255,7 @@ field_settings:
     label: 'Transfer of possession'
     datasource_id: 'entity:node'
     property_path: 'search_api_reverse_entity_references_node__field_apartments:field_possession_transfer_date'
-    type: object
+    type: asu_date_time
   project_published:
     label: 'Project status'
     datasource_id: 'entity:node'
