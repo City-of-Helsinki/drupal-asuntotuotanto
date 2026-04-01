@@ -8,9 +8,9 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Flood\FloodInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
-use Symfony\Component\HttpKernel\Exception\TooManyRequestsHttpException;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
@@ -19,6 +19,11 @@ use Symfony\Component\HttpKernel\KernelEvents;
  * Protects:
  * - OAuth2 Bearer REST endpoints (asu_projects, asu_apartments, etc.).
  * - oauth/token endpoint.
+ *
+ * Drupal 11 dispatches REST resource requests as sub-requests, so
+ * isMainRequest() is intentionally NOT checked here. The response is
+ * set via setResponse() rather than throwing an exception, because
+ * exceptions in sub-requests do not propagate to the outer response.
  */
 final class OAuth2BruteforceFloodSubscriber implements EventSubscriberInterface {
 
@@ -59,10 +64,6 @@ final class OAuth2BruteforceFloodSubscriber implements EventSubscriberInterface 
    *   The request event.
    */
   public function onRequest(RequestEvent $event): void {
-    if (!$event->isMainRequest()) {
-      return;
-    }
-
     $request = $event->getRequest();
     $route_name = $request->attributes->get('_route');
 
@@ -72,10 +73,10 @@ final class OAuth2BruteforceFloodSubscriber implements EventSubscriberInterface 
       $limit = (int) ($token_config['ip_limit'] ?? 10);
       $window = (int) ($token_config['ip_window'] ?? 3600);
       if (!$this->flood->isAllowed(self::TOKEN_FLOOD_EVENT, $limit, $window)) {
-        throw new TooManyRequestsHttpException(
-          NULL,
-          'Access is blocked because of IP based flood prevention.'
-        );
+        $event->setResponse(new Response(
+          'Access is blocked because of IP based flood prevention.',
+          Response::HTTP_TOO_MANY_REQUESTS,
+        ));
       }
       return;
     }
@@ -89,10 +90,10 @@ final class OAuth2BruteforceFloodSubscriber implements EventSubscriberInterface 
     $limit = (int) ($rest_config['ip_limit'] ?? 5);
     $window = (int) ($rest_config['ip_window'] ?? 3600);
     if (!$this->flood->isAllowed(self::REST_FLOOD_EVENT, $limit, $window)) {
-      throw new TooManyRequestsHttpException(
-        NULL,
-        'Access is blocked because of IP based flood prevention.'
-      );
+      $event->setResponse(new Response(
+        'Access is blocked because of IP based flood prevention.',
+        Response::HTTP_TOO_MANY_REQUESTS,
+      ));
     }
   }
 
@@ -103,10 +104,6 @@ final class OAuth2BruteforceFloodSubscriber implements EventSubscriberInterface 
    *   The response event.
    */
   public function onResponse(ResponseEvent $event): void {
-    if (!$event->isMainRequest()) {
-      return;
-    }
-
     $route_name = $event->getRequest()->attributes->get('_route');
     $status = $event->getResponse()->getStatusCode();
 
