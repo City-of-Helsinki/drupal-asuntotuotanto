@@ -41184,6 +41184,15 @@ msgstr ""
 msgid "Create an application for user"
 msgstr "Luo hakemus uudelle käyttäjälle"
 
+msgid "Application type"
+msgstr "Hakemuksen tyyppi"
+
+msgid "Regular application"
+msgstr "Tavallinen hakemus"
+
+msgid "Late application (jälkihakemus)"
+msgstr "Myöhäinen hakemus (jälkihakemus)"
+
 msgid "Autologout"
 msgstr ""
 msgid "Easy Breadcrumb"
