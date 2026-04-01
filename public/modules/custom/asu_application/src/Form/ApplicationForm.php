@@ -318,6 +318,22 @@ HTML;
       $form['actions']['submit']['#submit'] = ['::save'];
       $form['actions']['submit']['#weight'] = 1;
 
+      if ($currentUser->bundle() == 'sales' || $currentUser->hasPermission('administer applications')) {
+        $form['actions']['submitted_late'] = [
+          '#type' => 'radios',
+          '#title' => $this->t('Application type'),
+          '#options' => [
+            '0' => $this->t('Regular application'),
+            '1' => $this->t('Late application (jälkihakemus)'),
+          ],
+          '#default_value' => '0',
+          '#weight' => -10,
+          '#parents' => ['submitted_late'],
+          '#prefix' => '<div style="margin-top: 12px;">',
+          '#suffix' => '</div>',
+        ];
+      }
+
       // Show draft button only for customers.
       if ($currentUser->bundle() == 'customer') {
         $form['actions']['draft'] = [
@@ -591,13 +607,15 @@ HTML;
    */
   private function handleApplicationEvent(array $form, FormStateInterface $form_state) {
     $currentUser = $this->entityTypeManager->getStorage('user')->load($this->currentUser->id());
-    if ($currentUser->bundle() == 'sales' || $currentUser->hasPermission('administer')) {
+    if ($currentUser->bundle() == 'sales' || $currentUser->hasPermission('administer applications')) {
+      $submittedLate = (bool) $form_state->getValue('submitted_late', 0);
       $eventName = SalesApplicationEvent::EVENT_NAME;
       $event = new SalesApplicationEvent(
         $currentUser->id(),
         $this->entity->id(),
         $form['#project_name'],
         $form['#project_uuid'],
+        $submittedLate,
       );
     }
     else {
