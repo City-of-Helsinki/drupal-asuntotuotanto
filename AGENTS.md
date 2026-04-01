@@ -11,6 +11,7 @@ This is an **Open Source Drupal project**. It serves as the content management s
 
 ## General directives
 - **always write tests first** and then pause to give the human in the loop time to inspect them
+- dont say "Next I'll..." and wait for prompt, just keep going until the task is complete
 
 ## Security & Sensitive Data
 **STRICT RULE:** This is a public repository.

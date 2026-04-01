@@ -21,6 +21,3 @@ diff --git a/core/lib/Drupal/Core/Config/ConfigImporter.php b/core/lib/Drupal/Co
            else {
              $this->storageComparer->getTargetStorage($collection)->delete($name);
            }
-           return TRUE;
-         }
-         break;

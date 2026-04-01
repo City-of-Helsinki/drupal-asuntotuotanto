@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\asu_rest\Service;
 
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Entity\TranslatableInterface;
 use Drupal\Core\Field\EntityReferenceFieldItemListInterface;
@@ -380,34 +381,53 @@ final class SearchMapper {
    * Get enum value from term field.
    */
   private function getEnumFromTermField(Node $entity, string $fieldName): string {
-    $source = $entity instanceof TranslatableInterface
-      ? $entity->getUntranslated()
-      : $entity;
+    // Prefer the current translation's value (so we don't "lose" a value that was
+    // only set for a translated node). Fall back to the untranslated value.
+    $source = $entity;
     if (!$source->hasField($fieldName) || $source->get($fieldName)->isEmpty()) {
-      return '';
+      if ($entity instanceof TranslatableInterface) {
+        $untranslated = $entity->getUntranslated();
+        if ($untranslated->hasField($fieldName) && !$untranslated->get($fieldName)->isEmpty()) {
+          $source = $untranslated;
+        }
+        else {
+          return '';
+        }
+      }
+      else {
+        return '';
+      }
     }
     $field = $source->get($fieldName);
     if (!$field instanceof EntityReferenceFieldItemListInterface) {
       return '';
     }
     $referenced = $field->referencedEntities();
-    $term = reset($referenced);
-    if (!$term) {
+    $refEntity = reset($referenced);
+    if (!$refEntity) {
       return '';
     }
-    if ($term instanceof TranslatableInterface) {
-      $term = $term->getUntranslated();
-    }
-    if ($term instanceof FieldableEntityInterface
-      && $term->hasField('field_machine_readable_name')
-      && !$term->get('field_machine_readable_name')->isEmpty()) {
-      $value = $term->get('field_machine_readable_name')->value;
-    }
-    else {
-      $value = trim($term->label() ?? '');
+    if ($refEntity instanceof TranslatableInterface) {
+      $refEntity = $refEntity->getUntranslated();
     }
 
-    return $this->normalizeEnum((string) $value);
+    // Prefer machine IDs for config entity references (e.g. config_terms_term).
+    if ($refEntity instanceof ConfigEntityInterface) {
+      $value = (string) $refEntity->id();
+      return $this->normalizeEnum($value);
+    }
+
+    // Taxonomy term or other fieldable entity reference.
+    if ($refEntity instanceof FieldableEntityInterface
+      && $refEntity->hasField('field_machine_readable_name')
+      && !$refEntity->get('field_machine_readable_name')->isEmpty()) {
+      $value = (string) $refEntity->get('field_machine_readable_name')->value;
+      return $this->normalizeEnum($value);
+    }
+
+    // No safe machine value available.
+    return '';
+
   }
 
   /**
