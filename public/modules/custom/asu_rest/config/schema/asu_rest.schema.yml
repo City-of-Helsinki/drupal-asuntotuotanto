@@ -27,3 +27,16 @@ asu_rest.settings:
         ip_window:
           type: integer
           label: "IP window in seconds"
+    oauth_consumer:
+      type: mapping
+      label: "OAuth consumer provisioning (Simple OAuth)"
+      mapping:
+        auto_create:
+          type: boolean
+          label: "Create consumer automatically when environment secret is set"
+        client_id:
+          type: string
+          label: "OAuth client_id (overridable by ASU_REST_OAUTH_CLIENT_ID)"
+        label:
+          type: string
+          label: "Consumer label"

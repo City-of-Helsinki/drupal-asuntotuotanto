@@ -1,0 +1,108 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the asu_rest module.
+ */
+
+declare(strict_types=1);
+
+use Drupal\consumers\Entity\Consumer;
+
+/**
+ * Implements hook_install().
+ */
+function asu_rest_install(): void {
+  asu_rest_provision_oauth_consumer();
+}
+
+/**
+ * Creates the machine OAuth consumer for REST clients (one-time for existing sites).
+ */
+function asu_rest_update_10001(): void {
+  asu_rest_provision_oauth_consumer();
+}
+
+/**
+ * Ensures the configured OAuth consumer exists when secrets are available.
+ *
+ * Consumers are content entities and cannot be shipped as config YAML. This
+ * provisions the client expected by apartment-application-service when
+ * ASU_REST_OAUTH_CLIENT_SECRET is set in the environment (and optionally
+ * ASU_REST_OAUTH_CLIENT_ID). Client secret is never stored in config.
+ */
+function asu_rest_provision_oauth_consumer(): void {
+  if (!\Drupal::moduleHandler()->moduleExists('simple_oauth')) {
+    return;
+  }
+
+  $config = \Drupal::configFactory()->get('asu_rest.settings');
+  $oauth = $config->get('oauth_consumer') ?? [];
+  // Default TRUE so provisioning still runs if hook_install runs before CMI import.
+  $auto_create = $oauth['auto_create'] ?? TRUE;
+  if (!$auto_create) {
+    return;
+  }
+
+  $client_id = $oauth['client_id'] ?? 'apartment_application_service';
+  $client_id = is_string($client_id) ? trim($client_id) : '';
+  if ($client_id === '') {
+    \Drupal::logger('asu_rest')->warning('OAuth consumer auto-create is enabled but client_id is empty; skipping.');
+    return;
+  }
+
+  $secret = getenv('ASU_REST_OAUTH_CLIENT_SECRET');
+  if ($secret === FALSE || $secret === '') {
+    \Drupal::logger('asu_rest')->notice(
+      'ASU_REST_OAUTH_CLIENT_SECRET is not set; skipping automatic OAuth consumer creation for client ID @id.',
+      ['@id' => $client_id],
+    );
+    return;
+  }
+
+  $env_client_id = getenv('ASU_REST_OAUTH_CLIENT_ID');
+  if (is_string($env_client_id) && $env_client_id !== '') {
+    $client_id = trim($env_client_id);
+  }
+
+  $storage = \Drupal::entityTypeManager()->getStorage('consumer');
+  $existing = $storage->getQuery()
+    ->accessCheck(FALSE)
+    ->condition('client_id', $client_id)
+    ->range(0, 1)
+    ->execute();
+  if ($existing) {
+    return;
+  }
+
+  $scope_storage = \Drupal::entityTypeManager()->getStorage('oauth2_scope');
+  if (!$scope_storage->load('rest_client')) {
+    \Drupal::logger('asu_rest')->error(
+      'OAuth scope rest_client is missing; cannot create consumer @id.',
+      ['@id' => $client_id],
+    );
+    return;
+  }
+
+  $label = $oauth['label'] ?? 'Apartment application service';
+  $label = is_string($label) && $label !== '' ? $label : 'Apartment application service';
+
+  $consumer = Consumer::create([
+    'client_id' => $client_id,
+    'label' => $label,
+    'description' => 'Machine client for Elasticsearch-compatible REST endpoints (projects, apartments).',
+    'grant_types' => ['client_credentials'],
+    'scopes' => ['rest_client'],
+    'confidential' => TRUE,
+    'secret' => $secret,
+    'redirect' => ['https://127.0.0.1/oauth2-callback-not-used'],
+    'third_party' => FALSE,
+    'is_default' => FALSE,
+  ]);
+  $consumer->save();
+
+  \Drupal::logger('asu_rest')->notice(
+    'Created OAuth consumer @id for REST API client credentials.',
+    ['@id' => $client_id],
+  );
+}

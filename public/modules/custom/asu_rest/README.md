@@ -59,6 +59,28 @@ openssl rsa -in private.key -pubout -out public.key
 Create the `/app/keys` directory and place the keys there. In Docker, mount the
 keys directory or copy keys into the container. Keys are gitignored (`/keys`, `*.key`).
 
+#### OAuth consumer (machine client)
+
+Simple OAuth **consumers** are stored as entities, not config export, so they are
+not shipped as `*.yml` in `conf/cmi`. This module can **provision** the consumer
+for the apartment-application-service (or any caller using the same client ID)
+when:
+
+- `asu_rest.settings` → `oauth_consumer.auto_create` is `true` (default in CMI),
+- the `rest_client` OAuth2 scope config exists,
+- and the environment variable **`ASU_REST_OAUTH_CLIENT_SECRET`** is set at
+  install/update time (never commit this value).
+
+Optional: **`ASU_REST_OAUTH_CLIENT_ID`** overrides the configured `client_id`
+(default `apartment_application_service`).
+
+After deployment, run `drush updb` (or install the site) with the secret set; the
+consumer is created once. Match the same client ID and secret in Django
+`DRUPAL_SEARCH_API_CLIENT_ID` / `DRUPAL_SEARCH_API_CLIENT_SECRET`.
+
+To disable auto-provisioning, set `oauth_consumer.auto_create` to `false` in
+`asu_rest.settings` and manage the consumer in the UI instead.
+
 #### CORS and APP_ENV
 
 When `APP_ENV` is `testing` or `dev`, permissive CORS headers are added for local

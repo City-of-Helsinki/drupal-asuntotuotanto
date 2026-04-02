@@ -4,3 +4,7 @@ description: "ASU - REST provides rest apis for external systems to use"
 core: 8.x
 core_version_requirement: ^8 || ^9 || ^10  || ^11
 package: "ASU"
+dependencies:
+  - consumers:consumers
+  - drupal:rest
+  - simple_oauth:simple_oauth
