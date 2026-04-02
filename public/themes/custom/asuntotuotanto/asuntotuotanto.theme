@@ -8,6 +8,7 @@
 use Drupal\Core\Url;
 use Drupal\Core\Site\Settings;
 use Drupal\file\Entity\File;
+use Drupal\file\IconMimeTypes;
 use Drupal\paragraphs\Entity\Paragraph;
 use Drupal\Core\StringTranslation\ByteSizeMarkup;
 use Drupal\taxonomy\Entity\Term;
@@ -1112,7 +1113,7 @@ function asuntotuotanto_preprocess_file_link(&$variables) {
   // File type.
   $file = $variables['file'];
   $mime_type = $file->getMimeType();
-  $variables['mime_type'] = file_icon_class($mime_type);
+  $variables['mime_type'] = IconMimeTypes::getIconClass($mime_type);
   // File url.
   /** @var \Drupal\Core\File\FileUrlGeneratorInterface $file_url_generator */
   $file_url_generator = \Drupal::service('file_url_generator');
