@@ -148,7 +148,7 @@ class Project extends Node {
     }
 
     if ($isFreeForReservations && $this->getCanApplyAfterwards() == FALSE) {
-      return $this->getContactUrl($apartmentNumber);
+      return $this->getContactUrl($apartmentId);
     }
 
     if ($this->isApplicationPeriod('after') && $this->getCanApplyAfterwards() == TRUE) {
@@ -156,7 +156,7 @@ class Project extends Node {
       if ($this->getOwnershipType() == 'haso') {
         return $addToApplicationUrl;
       }
-      return $this->getContactUrl($apartmentNumber);
+      return $this->getContactUrl($apartmentId);
     }
     return '';
   }
@@ -189,11 +189,13 @@ class Project extends Node {
    * @return string
    *   Application url.
    */
-  public function getContactUrl($apartmentId): string {
+  public function getContactUrl(?string $apartmentNumber = NULL): string {
     $baseurl = $this->getBaseUrl();
     $langcode = \Drupal::languageManager()->getDefaultLanguage()->getId();
     $baseurl = $baseurl . '/' . $langcode;
-    $queryParameter = $apartmentNumber ? "?apartment=$apartmentNumber" . '&project=' . $this->id() : '?project=' . $this->id();
+    $queryParameter = $apartmentNumber
+      ? '?apartment=' . rawurlencode($apartmentNumber) . '&project=' . $this->id()
+      : '?project=' . $this->id();
     return sprintf('%s/contact/apply_for_free_apartment%s', $baseurl, $queryParameter);
   }
 
