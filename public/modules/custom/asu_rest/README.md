@@ -1,8 +1,12 @@
-#ASU - REST
+# ASU - REST
 
 Custom module which extends core REST module.
 
 ## Endpoints
+
+All endpoints are available under the site's current language prefix (e.g.
+`/fi/...`) via Drupal language negotiation. The canonical REST paths documented
+below omit the prefix.
 
 ### Initialize
 
@@ -10,13 +14,13 @@ Custom module which extends core REST module.
 
 returns current user data, search filters etc.
 
-### Elasticseach
+### Elasticsearch
 
-- Query the apartments indexed in elasticsrach
+- Query the apartments indexed in Elasticsearch
 
 ```
 Example:
-POST /{fi/en/sv}/elasticsearch
+POST /elasticsearch
 
 Parameters: (* = mandatory field)
 - project_ownership_type: * string - "hitas" or "haso" (mandatory for all requests)
@@ -89,31 +93,30 @@ requests from any origin.
 
 Endpoints:
 - `GET /projects`
-- `GET /projects/{project_id}`
-- `GET /projects/{project_id}/apartments`
+- `GET /projects/{uuid}`
+- `GET /projects/{uuid}/apartments`
 - `GET /apartments`
-- `GET /apartments/{apartment_id}`
+- `GET /apartments/{uuid}`
 
 Search params match the legacy `/elasticsearch` endpoint (e.g.
 `project_ownership_type`, `project_district`, `project_state_of_sale`,
 `room_count`, `living_area`, `price`, `properties`).
 
-### Mailing list
-- Not done in MVP
+#### Pagination
 
-- Adding users to mailinglist.
-- User can:
-  - Request a notification for certain project.
-  - Request to be added to a mailinglist.
+List endpoints support Elasticsearch-style pagination:
+- `size`: page size (default 100, max 250)
+- `from`: offset
+- `page`: page number (used when `from` is omitted)
+
+### Mailing list
 
 ```
 Example:
-POST /fi/en/sv/mailinglist
+POST /project/mailinglist
 
 Parameters: (* = mandatory field)
-- user_email            : * string   - "example@example.com"
 - project_id            : * int      - 32
-- subscribe_mailinglist : boolean    - 1/0, "true"/"false"
 
 Returns: Success/error message with appropriate status code.
 200 : OK
@@ -123,3 +126,14 @@ Returns: Success/error message with appropriate status code.
 Future:
 404 : Resource not found :: Either the project is not found or the premarketing start time has already gone.
 ```
+
+### Auth note (dev/prod)
+
+Current REST resource config (from `conf/cmi/rest.resource.*.yml`) is:
+- `/projects`, `/projects/{uuid}`, `/projects/{uuid}/apartments`, `/apartments`, `/apartments/{uuid}`: **OAuth2** (`simple_oauth`)
+- `/initialize`, `/elasticsearch`, `/project/mailinglist`: **cookie**
+
+### Other REST endpoints (outside this module)
+
+The following REST resource is also enabled in this project:
+- `GET /api/v1/package` (`rest.helfi_debug_package_version.GET`)
