@@ -11,6 +11,7 @@ services:
     class: Drupal\asu_rest\Service\SearchService
     arguments:
       - '@entity_type.manager'
+      - '@database'
 
   asu_rest.search_mapper:
     class: Drupal\asu_rest\Service\SearchMapper
@@ -18,3 +19,4 @@ services:
       - '@entity_type.manager'
       - '@file_url_generator'
       - '@request_stack'
+      - '@file.validator'

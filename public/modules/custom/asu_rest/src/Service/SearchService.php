@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\asu_rest\Service;
 
+use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\node\Entity\Node;
@@ -15,6 +16,7 @@ final class SearchService {
 
   public function __construct(
     private readonly EntityTypeManagerInterface $entityTypeManager,
+    private readonly Connection $database,
   ) {
   }
 
@@ -727,8 +729,7 @@ final class SearchService {
     if (!$projectIds) {
       return [];
     }
-    $connection = \Drupal::database();
-    $query = $connection->select('node__field_apartments', 'f')
+    $query = $this->database->select('node__field_apartments', 'f')
       ->fields('f', ['field_apartments_target_id'])
       ->condition('f.entity_id', $projectIds, 'IN');
     $result = $query->execute()->fetchCol();
@@ -795,58 +796,6 @@ final class SearchService {
       ? $term->get('field_machine_readable_name')->value
       : $term->label();
     return strtolower((string) $value);
-  }
-
-  /**
-   * Normalize a term label.
-   */
-  private function normalizeTermLabel(Node $entity, string $fieldName): string {
-    if (!$entity->hasField($fieldName) || $entity->get($fieldName)->isEmpty()) {
-      return '';
-    }
-    $targetId = $entity->get($fieldName)->target_id;
-    if (!$targetId) {
-      return '';
-    }
-    $term = $this->entityTypeManager->getStorage('taxonomy_term')->load($targetId);
-    return $term instanceof FieldableEntityInterface ? strtolower($term->label()) : '';
-  }
-
-  /**
-   * Normalize computed field markup value.
-   */
-  private function normalizeComputedValue(Node $entity, string $fieldName, bool $lowercase): string {
-    if (!$entity->hasField($fieldName) || $entity->get($fieldName)->isEmpty()) {
-      return '';
-    }
-    $value = $entity->get($fieldName)->value ?? $entity->get($fieldName)->getValue()[0]['#markup'] ?? '';
-    $value = (string) $value;
-    return $lowercase ? strtolower($value) : $value;
-  }
-
-  /**
-   * Match boolean property filters against project/apartment fields.
-   */
-  private function matchesProperty(string $property, Node $project, Node $apartment): bool {
-    $propertyMap = [
-      'project_has_elevator' => [$project, 'field_has_elevator'],
-      'project_has_sauna' => [$project, 'field_has_sauna'],
-      'has_apartment_sauna' => [$apartment, 'field_has_apartment_sauna'],
-      'has_terrace' => [$apartment, 'field_has_terrace'],
-      'has_balcony' => [$apartment, 'field_has_balcony'],
-      'has_yard' => [$apartment, 'field_has_yard'],
-    ];
-
-    if (!isset($propertyMap[$property])) {
-      return FALSE;
-    }
-
-    [$entity, $fieldName] = $propertyMap[$property];
-    if (!$entity->hasField($fieldName) || $entity->get($fieldName)->isEmpty()) {
-      return FALSE;
-    }
-
-    return (bool) $entity->get($fieldName)->value;
   }
 
 }

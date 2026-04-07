@@ -10,9 +10,8 @@ use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Entity\TranslatableInterface;
 use Drupal\Core\Field\EntityReferenceFieldItemListInterface;
 use Drupal\Core\File\FileUrlGeneratorInterface;
+use Drupal\file\Validation\FileValidatorInterface;
 use Drupal\node\Entity\Node;
-use Drupal\file\Entity\File;
-use Drupal\image\Entity\ImageStyle;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
@@ -31,6 +30,7 @@ final class SearchMapper {
     private readonly EntityTypeManagerInterface $entityTypeManager,
     private readonly FileUrlGeneratorInterface $fileUrlGenerator,
     private readonly RequestStack $requestStack,
+    private readonly FileValidatorInterface $fileValidator,
   ) {
   }
 
@@ -41,7 +41,8 @@ final class SearchMapper {
     $project = $this->getProjectForApartment($apartment);
 
     // When project is known, bypass expensive computed fields that use
-    // getReverseReferences (asu_computed_apartment_images, multiple_values_field).
+    // getReverseReferences (asu_computed_apartment_images,
+    // multiple_values_field).
     $imageUrls = $project
       ? $this->getApartmentImageUrlsFromProject($apartment, $project)
       : $this->getComputedList($apartment, 'asu_computed_apartment_images');
@@ -381,8 +382,8 @@ final class SearchMapper {
    * Get enum value from term field.
    */
   private function getEnumFromTermField(Node $entity, string $fieldName): string {
-    // Prefer the current translation's value (so we don't "lose" a value that was
-    // only set for a translated node). Fall back to the untranslated value.
+    // Prefer the current translation's value (so we don't "lose" a value that
+    // was only set for a translated node). Fall back to the untranslated value.
     $source = $entity;
     if (!$source->hasField($fieldName) || $source->get($fieldName)->isEmpty()) {
       if ($entity instanceof TranslatableInterface) {
@@ -581,18 +582,19 @@ final class SearchMapper {
    *   Image style name for image files, or empty to skip style.
    */
   private function buildFileUrl(int $fileId, string $imageStyle = 'original_m'): ?string {
-    $file = File::load($fileId);
+    $file = $this->entityTypeManager->getStorage('file')->load($fileId);
     if (!$file) {
       return NULL;
     }
 
     // The 'extensions' property must be a string, not an array.
-    $fileValidator = \Drupal::service('file.validator');
     $extensions = 'png jpg jpeg';
-    $validationResult = $fileValidator->validate($file, ['FileExtension' => ['extensions' => $extensions]]);
+    $violations = $this->fileValidator->validate($file, [
+      'FileExtension' => ['extensions' => $extensions],
+    ]);
 
-    if (empty($validationResult) && $imageStyle !== '') {
-      $style = ImageStyle::load($imageStyle);
+    if ($violations->count() === 0 && $imageStyle !== '') {
+      $style = $this->entityTypeManager->getStorage('image_style')->load($imageStyle);
       return $style ? $style->buildUrl($file->getFileUri()) : $file->createFileUrl(FALSE);
     }
     return $file->createFileUrl(FALSE);
@@ -602,19 +604,26 @@ final class SearchMapper {
    * Build apartment image URLs from raw fields using known project.
    *
    * Bypasses asu_computed_apartment_images to avoid getReverseReferences.
-   * Matches ApartmentImages logic: floorplan first, then shared, then apartment.
+   * Matches ApartmentImages logic: floorplan first, then shared, then
+   * apartment.
    */
   private function getApartmentImageUrlsFromProject(Node $apartment, Node $project): array {
     $urls = [];
     $style = '3_2_m';
 
-    $shared = $project->hasField('field_shared_apartment_images') && !$project->get('field_shared_apartment_images')->isEmpty()
+    $hasShared = $project->hasField('field_shared_apartment_images')
+      && !$project->get('field_shared_apartment_images')->isEmpty();
+    $shared = $hasShared
       ? $project->get('field_shared_apartment_images')->getValue()
       : [];
-    $apartmentImages = $apartment->hasField('field_images') && !$apartment->get('field_images')->isEmpty()
+    $hasAptImages = $apartment->hasField('field_images')
+      && !$apartment->get('field_images')->isEmpty();
+    $apartmentImages = $hasAptImages
       ? $apartment->get('field_images')->getValue()
       : [];
-    $floorplan = $apartment->hasField('field_floorplan') && !$apartment->get('field_floorplan')->isEmpty()
+    $hasFloorplan = $apartment->hasField('field_floorplan')
+      && !$apartment->get('field_floorplan')->isEmpty();
+    $floorplan = $hasFloorplan
       ? $apartment->get('field_floorplan')->getValue()
       : [];
 
@@ -646,9 +655,10 @@ final class SearchMapper {
       return [];
     }
     $termIds = array_column($fieldServices, 'term_id');
-    $terms = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->loadMultiple($termIds);
+    $terms = $this->entityTypeManager->getStorage('taxonomy_term')
+      ->loadMultiple($termIds);
     $result = [];
-    foreach ($fieldServices as $delta => $svc) {
+    foreach ($fieldServices as $svc) {
       $termId = $svc['term_id'];
       $term = $terms[$termId] ?? NULL;
       $distance = $svc['distance'] ?? '';

@@ -81,7 +81,8 @@ final class OAuth2BruteforceFloodSubscriber implements EventSubscriberInterface 
       return;
     }
 
-    // OAuth2 Bearer REST: only check if request has Bearer and route/path matches.
+    // OAuth2 Bearer REST: only check if request has Bearer and route/path
+    // matches.
     if (!$this->hasBearerHeader($request) || !$this->isOauth2RestRoute($route_name, $request)) {
       return;
     }

@@ -117,4 +117,3 @@ final class SearchMapperEnumTest extends KernelTestBase {
   }
 
 }
-

@@ -17,7 +17,9 @@ function asu_rest_install(): void {
 }
 
 /**
- * Creates the machine OAuth consumer for REST clients (one-time for existing sites).
+ * Creates the machine OAuth consumer for REST clients.
+ *
+ * One-time for existing sites.
  */
 function asu_rest_update_10001(): void {
   asu_rest_provision_oauth_consumer();
@@ -38,7 +40,8 @@ function asu_rest_provision_oauth_consumer(): void {
 
   $config = \Drupal::configFactory()->get('asu_rest.settings');
   $oauth = $config->get('oauth_consumer') ?? [];
-  // Default TRUE so provisioning still runs if hook_install runs before CMI import.
+  // Default TRUE so provisioning still runs if hook_install runs before CMI
+  // import.
   $auto_create = $oauth['auto_create'] ?? TRUE;
   if (!$auto_create) {
     return;

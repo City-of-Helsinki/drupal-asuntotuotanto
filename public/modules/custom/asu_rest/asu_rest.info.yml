@@ -6,5 +6,7 @@ core_version_requirement: ^8 || ^9 || ^10  || ^11
 package: "ASU"
 dependencies:
   - consumers:consumers
+  - drupal:file
+  - drupal:image
   - drupal:rest
   - simple_oauth:simple_oauth
