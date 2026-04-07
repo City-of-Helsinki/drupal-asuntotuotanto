@@ -1,5 +1,5 @@
 {
-    "_hash": "c50bf6d52e2698981acf8789395adb9bc419f65a6e6a972a4a35ec975579e9da",
+    "_hash": "30855e5839a6fe4606b01dfa42826a0230717831af8f991d4fcda0fea66e7f79",
     "patches": {
         "drupal/simple_oauth": [
             {
@@ -94,7 +94,7 @@
                 "package": "drupal/core",
                 "description": "[D11] Skip delete in checkOp when entity missing",
                 "url": "patches/core-config-importer-null-entity.patch",
-                "sha256": "499e950946e506ed897bccc764cae3e0d04518008551691ed7ab2d7d345491a7",
+                "sha256": "3a5900dd48cb37618a41d05aa12f26b6bc6a46a7ebe178cea2277c309c0ea2f7",
                 "depth": 2,
                 "extra": {
                     "provenance": "root"
