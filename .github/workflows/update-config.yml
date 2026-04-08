@@ -46,6 +46,10 @@ jobs:
         run: |
           composer install --no-interaction
           $(drush sql:connect) < latest.sql
+          # The DB dump can occasionally contain an invalid view config row with
+          # an empty ID (config name "views.view."). Remove it before running
+          # updates that iterate over all view entities.
+          drush sql:query "DELETE FROM config WHERE name = 'views.view.';"
           drush cim -y && drush updb -y && drush cr
           composer update drupal/helfi_* drupal/hdbt* -W --no-interaction
           drush cr
