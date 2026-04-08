@@ -1,5 +1,5 @@
 {
-    "_hash": "d1cb6a65fe6ca4cb58c47bc0d7be97ea745a006fd2b2f4ae5f78e940215fa047",
+    "_hash": "84034bb4ca5e196f14cc61ad04677e645d637fbec9310d60d1ef26e52f2413cc",
     "patches": {
         "drupal/helfi_platform_config": [
             {
@@ -39,6 +39,16 @@
                 "description": "[D11] Allow installing simple_oauth 5.x on Drupal 11",
                 "url": "patches/simple_oauth-drupal11-core-version.patch",
                 "sha256": "e7f221980e330f0bd72bfecb29e5d7eb223dde86057b8decae7c1acdb8173f47",
+                "depth": 1,
+                "extra": {
+                    "provenance": "root"
+                }
+            },
+            {
+                "package": "drupal/simple_oauth",
+                "description": "[D11] Fix normalizer signature for Symfony 7",
+                "url": "patches/simple_oauth-symfony7-normalizer-signature.patch",
+                "sha256": "923a0a10138f30ce8b8337bd6b31b42938f4987b34a041f6b5a827b2012433f8",
                 "depth": 1,
                 "extra": {
                     "provenance": "root"

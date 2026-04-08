@@ -1,0 +1,13 @@
+diff --git a/src/Normalizer/TokenEntityNormalizer.php b/src/Normalizer/TokenEntityNormalizer.php
+index 548eb58..5139d98 100644
+--- a/src/Normalizer/TokenEntityNormalizer.php
++++ b/src/Normalizer/TokenEntityNormalizer.php
+@@ -29,7 +29,7 @@ class TokenEntityNormalizer extends NormalizerBase implements TokenEntityNormali
+   /**
+    * {@inheritdoc}
+    */
+-  public function normalize($token_entity, $format = NULL, array $context = []) {
++  public function normalize(mixed $token_entity, ?string $format = NULL, array $context = []): array {
+     /** @var \League\OAuth2\Server\Entities\TokenInterface $token_entity */
+ 
+     $scopes = array_map(function ($scope_entity) {
