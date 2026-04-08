@@ -169,8 +169,7 @@
         "patches": {
             "drupal/helfi_platform_config": {
                 "Catch exception during hero paragraphs update": "patches/helfi_platform_config_hero_paragraph_fix.patch",
-                "Skip update_9400 on Drupal 11 (HAL/RDF modules removed)": "patches/helfi_platform_config-d11-update-9400.patch",
-                "Make update_9328 idempotent when status field is already deleting/purging": "patches/helfi_platform_config-update-9328-idempotent.patch"
+                "Skip update_9400 on Drupal 11 (HAL/RDF modules removed)": "patches/helfi_platform_config-d11-update-9400.patch"
             },
             "drupal/simple_oauth": {
                 "[D11] Allow installing simple_oauth 5.x on Drupal 11": "patches/simple_oauth-drupal11-core-version.patch"
@@ -182,12 +181,7 @@
                 "Drupal 11 compatibility fixes": "patches/computed_field_plugin-d11.patch"
             },
             "drupal/core": {
-                "[#UHF-12709] Patch 'Deleted and replaced ...' error messages": "patches/uhf-12709-skip-deleted-log.patch",
-                "[#3452852] Add create() factory method with autowired parameters to PluginBase": "patches/3452852.patch",
                 "[D11] Skip delete when config entity missing": "patches/core-import-delete-null.patch",
-                "[D11] Skip delete in checkOp when entity missing": "patches/core-config-importer-null-entity.patch",
-                "[D11] Skip countFieldData when table missing": "patches/core-count-field-data-missing-table.patch",
-                "[D11] Skip delete when field table missing": "patches/core-skip-delete-missing-field-table.patch",
                 "[CI] Unset foreach-by-ref in ViewsConfigUpdater (block_content post_update save)": "patches/core-views-foreach-reference-cleanup.patch"
             },
             "drupal/elasticsearch_connector": {

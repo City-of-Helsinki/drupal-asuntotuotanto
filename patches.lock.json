@@ -1,5 +1,5 @@
 {
-    "_hash": "cf405ed3b27fe6932a7dce63d3c6c4dfbdb1bba6ce7bb2a23cfc799d295d7601",
+    "_hash": "d1cb6a65fe6ca4cb58c47bc0d7be97ea745a006fd2b2f4ae5f78e940215fa047",
     "patches": {
         "drupal/helfi_platform_config": [
             {
@@ -70,26 +70,6 @@
             }
         ],
         "drupal/core": [
-            {
-                "package": "drupal/core",
-                "description": "[#UHF-12709] Patch 'Deleted and replaced ...' error messages",
-                "url": "patches/uhf-12709-skip-deleted-log.patch",
-                "sha256": "7c29a48f5b073d4e210db0b70041f19cafcf74bb2a841612c7f7c253adef8fda",
-                "depth": 2,
-                "extra": {
-                    "provenance": "root"
-                }
-            },
-            {
-                "package": "drupal/core",
-                "description": "[#3452852] Add create() factory method with autowired parameters to PluginBase",
-                "url": "patches/3452852.patch",
-                "sha256": "35e072a541b5617ac2b17fddc3dc95747dc9e641eefeb12db93ef9c0db7bb811",
-                "depth": 2,
-                "extra": {
-                    "provenance": "root"
-                }
-            },
             {
                 "package": "drupal/core",
                 "description": "[D11] Skip delete when config entity missing",

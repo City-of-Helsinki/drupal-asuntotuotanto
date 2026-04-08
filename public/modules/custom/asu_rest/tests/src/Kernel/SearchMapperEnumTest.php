@@ -28,6 +28,7 @@ final class SearchMapperEnumTest extends KernelTestBase {
     'field',
     'text',
     'filter',
+    'file',
     'config_terms',
     'asu_rest',
   ];

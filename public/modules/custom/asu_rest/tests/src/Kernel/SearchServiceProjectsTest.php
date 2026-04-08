@@ -5,9 +5,14 @@ declare(strict_types=1);
 namespace Drupal\Tests\asu_rest\Kernel;
 
 use Drupal\asu_rest\Service\SearchService;
+use Drupal\config_terms\Entity\Term;
+use Drupal\config_terms\Entity\Vocab;
+use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
+use Drupal\user\Entity\User;
 
 /**
  * Tests project search behavior in the search service.
@@ -26,6 +31,8 @@ final class SearchServiceProjectsTest extends KernelTestBase {
     'field',
     'text',
     'filter',
+    'file',
+    'config_terms',
     'asu_rest',
   ];
 
@@ -43,13 +50,66 @@ final class SearchServiceProjectsTest extends KernelTestBase {
     parent::setUp();
 
     $this->installEntitySchema('user');
-    $this->installEntitySchema('node');
-    $this->installConfig(['node']);
 
     NodeType::create([
       'type' => 'project',
       'name' => 'Project',
     ])->save();
+
+    FieldStorageConfig::create([
+      'field_name' => 'field_archived',
+      'entity_type' => 'node',
+      'type' => 'boolean',
+    ])->save();
+
+    FieldConfig::create([
+      'field_name' => 'field_archived',
+      'entity_type' => 'node',
+      'bundle' => 'project',
+      'label' => 'Archived',
+    ])->save();
+
+    FieldStorageConfig::create([
+      'field_name' => 'field_state_of_sale',
+      'entity_type' => 'node',
+      'type' => 'entity_reference',
+      'settings' => [
+        'target_type' => 'config_terms_term',
+      ],
+    ])->save();
+
+    FieldConfig::create([
+      'field_name' => 'field_state_of_sale',
+      'entity_type' => 'node',
+      'bundle' => 'project',
+      'label' => 'State of sale',
+      'settings' => [
+        'handler' => 'default:config_terms_term',
+      ],
+    ])->save();
+
+    $vocab = Vocab::create([
+      'id' => 'state_of_sale',
+      'label' => 'State of sale',
+    ]);
+    $vocab->save();
+
+    $term = Term::create([
+      'id' => 'sold',
+      'vid' => 'state_of_sale',
+      'label' => 'Sold',
+    ]);
+    $term->save();
+
+    $this->installEntitySchema('node');
+    $this->installConfig(['node']);
+
+    $user = User::create([
+      'name' => 'test-admin',
+      'status' => 1,
+    ]);
+    $user->save();
+    $this->container->get('current_user')->setAccount($user);
 
     $this->searchService = $this->container->get('asu_rest.search_service');
   }
@@ -125,6 +185,10 @@ final class SearchServiceProjectsTest extends KernelTestBase {
       'type' => 'project',
       'title' => $title,
       'status' => 1,
+      'field_archived' => 0,
+      'field_state_of_sale' => [
+        ['target_id' => 'sold'],
+      ],
     ]);
     $project->save();
     return $project;
