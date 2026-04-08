@@ -1,5 +1,5 @@
 {
-    "_hash": "385e6a6e639c4789f8eb3e0547fa17b7cf8c112a9dc24deb198957fb42b66c6c",
+    "_hash": "9fdaf966962c73b5a4992fe58a943bfde98e450623424ff56e239e862426a136",
     "patches": {
         "drupal/simple_oauth": [
             {
@@ -74,8 +74,8 @@
                 "package": "drupal/core",
                 "description": "[#UHF-12709] Patch 'Deleted and replaced ...' error messages",
                 "url": "patches/uhf-12709-skip-deleted-log.patch",
-                "sha256": "36995dc96842aa819510f6265b3c62af976c4e558f5a960b914cf8b2b3da9a84",
-                "depth": 2,
+                "sha256": "7c29a48f5b073d4e210db0b70041f19cafcf74bb2a841612c7f7c253adef8fda",
+                "depth": 1,
                 "extra": {
                     "provenance": "root"
                 }
