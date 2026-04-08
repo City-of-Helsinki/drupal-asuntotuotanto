@@ -50,7 +50,7 @@ jobs:
           # an empty ID (config name "views.view." or other malformed variants).
           # Remove it before running updates that iterate over all view entities.
           drush sql:query "DELETE FROM config WHERE name = 'views.view.';"
-          drush php:eval "\n\$storage = \\Drupal::service('config.storage');\nforeach (\$storage->listAll('views.view.') as \$name) {\n  \$suffix = trim(substr(\$name, strlen('views.view.')));\n  if (\$suffix === '') {\n    \$storage->delete(\$name);\n  }\n}\n"
+          drush php:eval '$storage = \Drupal::service("config.storage"); foreach ($storage->listAll("views.view.") as $name) { $suffix = trim(substr($name, strlen("views.view."))); if ($suffix === "") { $storage->delete($name); } }'
           drush cim -y && drush updb -y && drush cr
           composer update drupal/helfi_* drupal/hdbt* -W --no-interaction
           drush cr
