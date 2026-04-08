@@ -23,6 +23,7 @@
         "drupal/config_filter": "^2.7",
         "drupal/config_terms": "^1.9",
         "drupal/context": "^5.0@RC",
+        "drupal/consumers": "^1.24",
         "drupal/core": "~11.3.0",
         "drupal/core-composer-scaffold": "~11.3.0",
         "drupal/core-recommended": "~11.3.0",
@@ -70,6 +71,7 @@
         "drupal/route_condition": "^2.0",
         "drupal/samlauth": "^3.13",
         "drupal/siteimprove": "^3.0",
+        "drupal/simple_oauth": "5.2.5",
         "drupal/slick": "^3.0",
         "drupal/symfony_mailer_lite": "^2.0",
         "drupal/tfa": "^1.12",
@@ -87,7 +89,7 @@
         "onelogin/php-saml": "^4.3",
         "robrichards/xmlseclibs": "^3.1.5",
         "psr/http-message": "^1.1",
-        "steverhoades/oauth2-openid-connect-server": "^3.0",
+        "steverhoades/oauth2-openid-connect-server": "^2.6.1",
         "zaporylie/composer-drupal-optimizations": "^1.2"
     },
     "require-dev": {
@@ -200,6 +202,7 @@
                 "drupal/config_terms",
                 "drupal/computed_field_plugin",
                 "drupal/big_pipe_sessionless",
+                "drupal/simple_oauth",
                 "doctrine/annotations"
             ]
         }

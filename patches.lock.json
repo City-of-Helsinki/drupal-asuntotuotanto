@@ -1,18 +1,6 @@
 {
-    "_hash": "9fdaf966962c73b5a4992fe58a943bfde98e450623424ff56e239e862426a136",
+    "_hash": "925be5a0c72666da457dffa5bc9e136508d6ffad32eab43833854cd42a636e9a",
     "patches": {
-        "drupal/simple_oauth": [
-            {
-                "package": "drupal/simple_oauth",
-                "description": "Fix League 8.5.4 compatibility (finalizeScopes, getNewToken)",
-                "url": "patches/simple_oauth-league-8-compat.patch",
-                "sha256": "7a7923eaca6d3a72b1a02f3bc13fa91fb1032d67af54ea2033af2f6b06112605",
-                "depth": 1,
-                "extra": {
-                    "provenance": "root"
-                }
-            }
-        ],
         "drupal/helfi_platform_config": [
             {
                 "package": "drupal/helfi_platform_config",
