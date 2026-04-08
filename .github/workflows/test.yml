@@ -70,10 +70,12 @@ jobs:
         run: |
           mysql --user=drupal --password=drupal --database=drupal --host=db --port=3306 -A < latest.sql
           # The DB dump can occasionally contain an invalid view config row with
-          # an empty ID (config name "views.view."). That breaks Drupal core's
+          # an empty ID (config name "views.view." or other malformed variants).
+          # That breaks Drupal core's
           # block_content post-update which iterates all views and expects every
           # view entity to have a non-empty ID.
           mysql --user=drupal --password=drupal --database=drupal --host=db --port=3306 -A -e "DELETE FROM config WHERE name = 'views.view.';"
+          drush php:eval "\n\$storage = \\Drupal::service('config.storage');\nforeach (\$storage->listAll('views.view.') as \$name) {\n  // Any config name where the suffix is empty/whitespace is invalid.\n  \$suffix = trim(substr(\$name, strlen('views.view.')));\n  if (\$suffix === '') {\n    \$storage->delete(\$name);\n  }\n}\n"
           # deploy runs updatedb before cim; overlay sync first so DB matches
           # conf/cmi (e.g. views without deprecated plugins) before post-updates.
           drush cim -y --partial
