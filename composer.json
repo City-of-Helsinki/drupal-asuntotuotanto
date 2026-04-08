@@ -181,7 +181,8 @@
                 "[D11] Skip delete when config entity missing": "patches/core-import-delete-null.patch",
                 "[D11] Skip delete in checkOp when entity missing": "patches/core-config-importer-null-entity.patch",
                 "[D11] Skip countFieldData when table missing": "patches/core-count-field-data-missing-table.patch",
-                "[D11] Skip delete when field table missing": "patches/core-skip-delete-missing-field-table.patch"
+                "[D11] Skip delete when field table missing": "patches/core-skip-delete-missing-field-table.patch",
+                "[CI] Unset foreach-by-ref in ViewsConfigUpdater (block_content post_update save)": "patches/core-views-foreach-reference-cleanup.patch"
             },
             "drupal/elasticsearch_connector": {
                 "Use Search API field identifier in FilterBuilder": "patches/elasticsearch_connector-filterbuilder-use-field-identifier.patch"
