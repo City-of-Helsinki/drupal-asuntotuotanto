@@ -1,5 +1,5 @@
 {
-    "_hash": "925be5a0c72666da457dffa5bc9e136508d6ffad32eab43833854cd42a636e9a",
+    "_hash": "cf405ed3b27fe6932a7dce63d3c6c4dfbdb1bba6ce7bb2a23cfc799d295d7601",
     "patches": {
         "drupal/helfi_platform_config": [
             {
@@ -27,6 +27,18 @@
                 "description": "Make update_9328 idempotent when status field is already deleting/purging",
                 "url": "patches/helfi_platform_config-update-9328-idempotent.patch",
                 "sha256": "3549d8486542cb8aa0ee57c7ba497279c7508e4aba7483e397e3fbccf459f521",
+                "depth": 1,
+                "extra": {
+                    "provenance": "root"
+                }
+            }
+        ],
+        "drupal/simple_oauth": [
+            {
+                "package": "drupal/simple_oauth",
+                "description": "[D11] Allow installing simple_oauth 5.x on Drupal 11",
+                "url": "patches/simple_oauth-drupal11-core-version.patch",
+                "sha256": "e7f221980e330f0bd72bfecb29e5d7eb223dde86057b8decae7c1acdb8173f47",
                 "depth": 1,
                 "extra": {
                     "provenance": "root"
@@ -63,7 +75,17 @@
                 "description": "[#UHF-12709] Patch 'Deleted and replaced ...' error messages",
                 "url": "patches/uhf-12709-skip-deleted-log.patch",
                 "sha256": "7c29a48f5b073d4e210db0b70041f19cafcf74bb2a841612c7f7c253adef8fda",
-                "depth": 1,
+                "depth": 2,
+                "extra": {
+                    "provenance": "root"
+                }
+            },
+            {
+                "package": "drupal/core",
+                "description": "[#3452852] Add create() factory method with autowired parameters to PluginBase",
+                "url": "patches/3452852.patch",
+                "sha256": "35e072a541b5617ac2b17fddc3dc95747dc9e641eefeb12db93ef9c0db7bb811",
+                "depth": 2,
                 "extra": {
                     "provenance": "root"
                 }
@@ -83,7 +105,7 @@
                 "description": "[D11] Skip delete in checkOp when entity missing",
                 "url": "patches/core-config-importer-null-entity.patch",
                 "sha256": "d32bb5da431a8a67ba9755a82d9f75667de0955d88724df13e6ec6132f4e89ea",
-                "depth": 1,
+                "depth": 2,
                 "extra": {
                     "provenance": "root"
                 }
@@ -103,6 +125,16 @@
                 "description": "[D11] Skip delete when field table missing",
                 "url": "patches/core-skip-delete-missing-field-table.patch",
                 "sha256": "c63db5bfc018ae0eb34cfe708fcd95c0a6d855d58e9df2b80bc68b5b4c3b3416",
+                "depth": 2,
+                "extra": {
+                    "provenance": "root"
+                }
+            },
+            {
+                "package": "drupal/core",
+                "description": "[CI] Unset foreach-by-ref in ViewsConfigUpdater (block_content post_update save)",
+                "url": "patches/core-views-foreach-reference-cleanup.patch",
+                "sha256": "f25d3e12b8e180a36faa3e26c20748ef94b5e99567e4bcb34c9e3ee2fa5eb448",
                 "depth": 2,
                 "extra": {
                     "provenance": "root"
