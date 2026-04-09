@@ -93,7 +93,7 @@
                 "description": "[D11] Skip delete in checkOp when entity missing",
                 "url": "patches/core-config-importer-null-entity.patch",
                 "sha256": "b276daec9f375bba9f9f4a4c43539cfc2d0ae30e993f5db5a95c008961917336",
-                "depth": 2,
+                    "depth": 1,
                 "extra": {
                     "provenance": "root"
                 }
@@ -103,7 +103,7 @@
                 "description": "[D11] Skip countFieldData when table missing",
                 "url": "patches/core-count-field-data-missing-table.patch",
                 "sha256": "67294a7d6862b00ea3a0a004255fdaac182fc33b4f7ea9f0a33f461e7924d00a",
-                "depth": 2,
+                    "depth": 1,
                 "extra": {
                     "provenance": "root"
                 }
@@ -113,7 +113,7 @@
                 "description": "[D11] Skip delete when field table missing",
                 "url": "patches/core-skip-delete-missing-field-table.patch",
                 "sha256": "b275f0ac34052fdb644eacb08643a90c372773d60483b95164bdb97ece755059",
-                "depth": 2,
+                    "depth": 1,
                 "extra": {
                     "provenance": "root"
                 }
