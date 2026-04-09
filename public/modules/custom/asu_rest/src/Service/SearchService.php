@@ -238,6 +238,8 @@ final class SearchService {
     $storage = $this->entityTypeManager->getStorage('node');
     $restrictApartmentIds = NULL;
 
+    $apartmentUuids = $this->normalizeArrayParam($params['uuid'] ?? NULL, TRUE);
+
     $projectUuids = $this->normalizeArrayParam(
       $this->getParam($params, 'project_uuid'),
       TRUE
@@ -272,7 +274,7 @@ final class SearchService {
     }
 
     $hasExplicitProjectRestriction = $restrictApartmentIds !== NULL;
-    if (!$hasExplicitProjectRestriction) {
+    if (!$hasExplicitProjectRestriction && !$apartmentUuids) {
       $paramsForProjectFilter = $this->mergePropertiesIntoParams($params);
       $projectIdsFromFilter = $this->getProjectIdsMatchingApartmentFilters($paramsForProjectFilter);
       $restrictApartmentIds = $this->getApartmentIdsForProjectIds($projectIdsFromFilter);
@@ -284,7 +286,6 @@ final class SearchService {
     $query = $storage->getQuery()->accessCheck(TRUE);
     $query->condition('type', 'apartment');
 
-    $apartmentUuids = $this->normalizeArrayParam($params['uuid'] ?? NULL, TRUE);
     if ($apartmentUuids) {
       $query->condition('uuid', $apartmentUuids, 'IN');
     }
