@@ -1,5 +1,5 @@
 {
-    "_hash": "e6630a13826253b4fd18300540d06fb478a948a2b54ae5209421ef3e2e772499",
+    "_hash": "5fa7682911872f124b729ec6566e3d24c306009cccde0f3f3bec5a6706679f85",
     "patches": {
         "drupal/helfi_platform_config": [
             {
@@ -26,7 +26,7 @@
                 "package": "drupal/helfi_platform_config",
                 "description": "Make update_9328 idempotent when status field is already deleting/purging",
                 "url": "patches/helfi_platform_config-update-9328-idempotent.patch",
-                "sha256": "729f3ba7770850c73e130c75a7f1a1697bba79693abf6e948156eff207a5dff4",
+                "sha256": "3549d8486542cb8aa0ee57c7ba497279c7508e4aba7483e397e3fbccf459f521",
                 "depth": 1,
                 "extra": {
                     "provenance": "root"
@@ -92,8 +92,8 @@
                 "package": "drupal/core",
                 "description": "[D11] Skip delete in checkOp when entity missing",
                 "url": "patches/core-config-importer-null-entity.patch",
-                "sha256": "b276daec9f375bba9f9f4a4c43539cfc2d0ae30e993f5db5a95c008961917336",
-                    "depth": 1,
+                "sha256": "499e950946e506ed897bccc764cae3e0d04518008551691ed7ab2d7d345491a7",
+                "depth": 2,
                 "extra": {
                     "provenance": "root"
                 }
@@ -102,8 +102,8 @@
                 "package": "drupal/core",
                 "description": "[D11] Skip countFieldData when table missing",
                 "url": "patches/core-count-field-data-missing-table.patch",
-                "sha256": "67294a7d6862b00ea3a0a004255fdaac182fc33b4f7ea9f0a33f461e7924d00a",
-                    "depth": 1,
+                "sha256": "9fa81cf6e82b61fcd50f52e287db8ee7b5841e739bce964c5e8ac40445321689",
+                "depth": 2,
                 "extra": {
                     "provenance": "root"
                 }
@@ -112,8 +112,8 @@
                 "package": "drupal/core",
                 "description": "[D11] Skip delete when field table missing",
                 "url": "patches/core-skip-delete-missing-field-table.patch",
-                "sha256": "b275f0ac34052fdb644eacb08643a90c372773d60483b95164bdb97ece755059",
-                    "depth": 1,
+                "sha256": "c63db5bfc018ae0eb34cfe708fcd95c0a6d855d58e9df2b80bc68b5b4c3b3416",
+                "depth": 2,
                 "extra": {
                     "provenance": "root"
                 }
