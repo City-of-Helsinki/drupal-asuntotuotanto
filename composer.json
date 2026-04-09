@@ -173,7 +173,7 @@
             },
             "drupal/simple_oauth": {
                 "[D11] Allow installing simple_oauth 5.x on Drupal 11": "patches/simple_oauth-drupal11-core-version.patch",
-                "[D11] Fix normalizer signature for Symfony 7": "patches/simple_oauth-symfony7-normalizer-signature.patch"
+                "[D11] Fix simple_oauth normalizer signatures for Symfony 7": "patches/simple_oauth-symfony7-normalizer-signatures.patch"
             },
             "drupal/config_terms": {
                 "Drupal 11 compatibility fixes": "https://www.drupal.org/files/issues/2024-06-02/config_terms.1.x-dev.rector.patch"
