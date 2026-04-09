@@ -41,10 +41,11 @@ class DistrictFieldMappingSubscriber implements EventSubscriberInterface {
       return;
     }
 
-    // Force keyword mapping for URL-like fields to prevent dense_vector auto-mapping.
-    // In ES 8.11+, unmapped float arrays (typically 128-2048 length) are automatically
-    // inferred as dense_vector, which causes parse errors when actual values are strings.
-    // By explicitly setting keyword type here, we prevent ES from attempting auto-mapping.
+    // Force keyword mapping for URL-like fields.
+    // In ES 8.11+, unmapped float arrays (typically 128-2048 length)
+    // are auto-inferred as dense_vector, causing parse errors when
+    // actual values are strings.
+    // Explicit keyword mapping prevents this auto-mapping behavior.
     if (
       $fieldId === 'image_urls'
       || in_array($fieldType, ['asu_file_url', 'asu_url', 'computed_array_string'], TRUE)
