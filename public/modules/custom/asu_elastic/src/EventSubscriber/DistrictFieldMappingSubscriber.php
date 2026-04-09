@@ -25,7 +25,7 @@ class DistrictFieldMappingSubscriber implements EventSubscriberInterface {
   }
 
   /**
-   * Modifies field mapping for district fields.
+   * Modifies field mapping for district fields and URL-like fields.
    *
    * @param \Drupal\elasticsearch_connector\Event\FieldMappingEvent $event
    *   The field mapping event.
@@ -33,9 +33,22 @@ class DistrictFieldMappingSubscriber implements EventSubscriberInterface {
   public function onFieldMapping(FieldMappingEvent $event): void {
     $field = $event->getField();
     $fieldId = $field->getFieldIdentifier();
+    $fieldType = $field->getType();
 
     // Force keyword mapping for district field to prevent tokenization.
     if ($fieldId === 'project_district') {
+      $event->setParam(['type' => 'keyword']);
+      return;
+    }
+
+    // Force keyword mapping for URL-like fields to prevent dense_vector auto-mapping.
+    // In ES 8.11+, unmapped float arrays (typically 128-2048 length) are automatically
+    // inferred as dense_vector, which causes parse errors when actual values are strings.
+    // By explicitly setting keyword type here, we prevent ES from attempting auto-mapping.
+    if (
+      $fieldId === 'image_urls'
+      || in_array($fieldType, ['asu_file_url', 'asu_url', 'computed_array_string'], TRUE)
+    ) {
       $event->setParam(['type' => 'keyword']);
     }
   }
