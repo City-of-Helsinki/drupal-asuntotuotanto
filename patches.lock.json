@@ -94,8 +94,8 @@
                 "package": "drupal/core",
                 "description": "[D11] Skip delete in checkOp when entity missing",
                 "url": "patches/core-config-importer-null-entity.patch",
-                "sha256": "05e8e233ac3973a6d63b4f0abfc54465163c1b4e1a674615734057173b665a81",
-                "depth": 2,
+                "sha256": "7c0c01ea967faa2d3370701c6fcdd896fafd38661832b2926ce11050d91b4027",
+                "depth": 1,
                 "extra": {
                     "provenance": "root"
                 }
