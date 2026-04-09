@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Drush\Commands\helfi_drupal_tools;
 
@@ -232,7 +232,7 @@ final class SelfUpdateCommands extends DrushCommands {
    * @return $this
    *   The self.
    */
-  private function removeFiles(array $map) : self {
+  protected function removeFiles(array $map) : self {
     foreach ($map as $source) {
       if ($this->removeFile($source) !== DrushCommands::EXIT_SUCCESS) {
         throw new \InvalidArgumentException('Failed to remove file: ' . $source);
@@ -250,7 +250,7 @@ final class SelfUpdateCommands extends DrushCommands {
    * @return $this
    *   The self.
    */
-  private function addFiles(array $map) : self {
+  protected function addFiles(array $map) : self {
     foreach ($map as $source => $settings) {
       [
         'remote' => $isRemote,
@@ -295,9 +295,12 @@ final class SelfUpdateCommands extends DrushCommands {
    * @return int
    *   The exit code.
    */
-  public function updatePlatformFiles(array $files, array $options = [
-    'update-dist' => TRUE,
-  ]) : int {
+  public function updatePlatformFiles(
+    array $files,
+    array $options = [
+      'update-dist' => TRUE,
+    ],
+  ) : int {
     if (count($files) < 1) {
       throw new \InvalidArgumentException('You must provide at least one file.');
     }
