@@ -4,10 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\asu_rest\Kernel;
 
-use Drupal\field\Entity\FieldConfig;
-use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\node\Entity\Node;
-use Drupal\node\Entity\NodeType;
 
 /**
  * Tests apartment search behavior in the search service.
@@ -22,85 +19,7 @@ final class SearchServiceApartmentsTest extends SearchServiceKernelTestBase {
   protected function setUp(): void {
     parent::setUp();
 
-    NodeType::create([
-      'type' => 'apartment',
-      'name' => 'Apartment',
-    ])->save();
-
-    NodeType::create([
-      'type' => 'project',
-      'name' => 'Project',
-    ])->save();
-
-    FieldStorageConfig::create([
-      'field_name' => 'field_archived',
-      'entity_type' => 'node',
-      'type' => 'boolean',
-    ])->save();
-
-    FieldConfig::create([
-      'field_name' => 'field_archived',
-      'entity_type' => 'node',
-      'bundle' => 'apartment',
-      'label' => 'Archived',
-    ])->save();
-
-    FieldStorageConfig::create([
-      'field_name' => 'field_apartment_state_of_sale',
-      'entity_type' => 'node',
-      'type' => 'string',
-    ])->save();
-
-    FieldConfig::create([
-      'field_name' => 'field_apartment_state_of_sale',
-      'entity_type' => 'node',
-      'bundle' => 'apartment',
-      'label' => 'Apartment state of sale',
-    ])->save();
-
-    FieldStorageConfig::create([
-      'field_name' => 'field_apartments',
-      'entity_type' => 'node',
-      'type' => 'entity_reference',
-      'settings' => [
-        'target_type' => 'node',
-      ],
-    ])->save();
-
-    FieldConfig::create([
-      'field_name' => 'field_apartments',
-      'entity_type' => 'node',
-      'bundle' => 'project',
-      'label' => 'Apartments',
-      'settings' => [
-        'handler' => 'default:node',
-        'handler_settings' => [
-          'target_bundles' => [
-            'apartment' => 'apartment',
-          ],
-        ],
-      ],
-    ])->save();
-
-    FieldStorageConfig::create([
-      'field_name' => 'field_state_of_sale',
-      'entity_type' => 'node',
-      'type' => 'entity_reference',
-      'settings' => [
-        'target_type' => 'config_terms_term',
-      ],
-    ])->save();
-
-    FieldConfig::create([
-      'field_name' => 'field_state_of_sale',
-      'entity_type' => 'node',
-      'bundle' => 'project',
-      'label' => 'State of sale',
-      'settings' => [
-        'handler' => 'default:config_terms_term',
-      ],
-    ])->save();
-
+    $this->installSearchTestContentModel(TRUE);
     $this->createStateOfSaleVocabularyWithSoldTerm();
     $this->installNodeSchemaAndConfig();
     $this->createAndLoginUser();
