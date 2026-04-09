@@ -65,11 +65,53 @@ abstract class AsuSearchResourceBase extends ResourceBase {
   }
 
   /**
+   * Extract pagination parameters with page fallback and upper cap.
+   *
+   * Some internal clients use page-based polling. If "from" isn't provided but
+   * "page" is, derive offset from page and size to keep behavior stable.
+   *
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   Incoming request.
+   * @param int $defaultLimit
+   *   Default "size" when not provided or invalid.
+   * @param int $maxLimit
+   *   Maximum allowed "size" to keep response times stable.
+   *
+   * @return array{offset:int,limit:int}
+   *   Offset and limit.
+   */
+  protected function getPaginationWithPage(Request $request, int $defaultLimit = 100, int $maxLimit = 250): array {
+    $limit = (int) $request->query->get('size', $defaultLimit);
+    if ($limit <= 0) {
+      $limit = $defaultLimit;
+    }
+    $limit = min($limit, $maxLimit);
+
+    $offset = max(0, (int) $request->query->get('from', 0));
+    if (!$request->query->has('from') && $request->query->has('page')) {
+      $page = max(1, (int) $request->query->get('page', 1));
+      $offset = ($page - 1) * $limit;
+    }
+
+    return [
+      'offset' => $offset,
+      'limit' => $limit,
+    ];
+  }
+
+  /**
    * Build a resource response from mapped sources.
    */
   protected function buildResponse(array $sources, int $total, string $indexName): ResourceResponse {
     $payload = $this->searchMapper->buildSearchResponse($sources, $total, $indexName);
-    $response = new ResourceResponse($payload, 200, $this->getTestingHeaders());
+    return $this->buildCacheableResponse($payload);
+  }
+
+  /**
+   * Build a cacheable resource response from an already built payload.
+   */
+  protected function buildCacheableResponse(array $payload, int $status = 200): ResourceResponse {
+    $response = new ResourceResponse($payload, $status, $this->getTestingHeaders());
     $cache = (new CacheableMetadata())
       ->setCacheContexts(['url.query_args'])
       ->setCacheMaxAge((int) (getenv('ASU_REST_API_CACHE_MAX_AGE') ?: 0));
@@ -112,6 +154,22 @@ abstract class AsuSearchResourceBase extends ResourceBase {
   protected function getCachedPayload(string $cid): ?array {
     $cached = \Drupal::cache()->get($cid);
     return $cached ? $cached->data : NULL;
+  }
+
+  /**
+   * Return a cached response when cache is enabled and there's a hit.
+   */
+  protected function getCachedResponse(string $cid): ?ResourceResponse {
+    if ($this->isCacheBypass()) {
+      return NULL;
+    }
+
+    $cached = $this->getCachedPayload($cid);
+    if ($cached === NULL) {
+      return NULL;
+    }
+
+    return $this->buildCacheableResponse($cached);
   }
 
   /**

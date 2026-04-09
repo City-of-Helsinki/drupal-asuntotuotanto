@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\asu_rest\Plugin\rest\resource;
 
-use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\node\Entity\Node;
 use Drupal\rest\ResourceResponse;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -43,21 +42,14 @@ final class Projects extends AsuSearchResourceBase {
    */
   public function get(Request $request): ResourceResponse {
     $params = $request->query->all();
-    if ($error = $this->validatePriceParams($params)) {
+    $error = $this->validatePriceParams($params);
+    if ($error instanceof ResourceResponse) {
       return $error;
     }
 
     $cid = $this->buildCacheKey('projects', $params);
-    if (!$this->isCacheBypass()) {
-      $cached = $this->getCachedPayload($cid);
-      if ($cached !== NULL) {
-        $response = new ResourceResponse($cached, 200, $this->getTestingHeaders());
-        $response->addCacheableDependency(
-          (new CacheableMetadata())->setCacheContexts(['url.query_args'])
-            ->setCacheMaxAge((int) (getenv('ASU_REST_API_CACHE_MAX_AGE') ?: 0))
-        );
-        return $response;
-      }
+    if ($cachedResponse = $this->getCachedResponse($cid)) {
+      return $cachedResponse;
     }
 
     ['offset' => $offset, 'limit' => $limit] = $this->getPagination($request);

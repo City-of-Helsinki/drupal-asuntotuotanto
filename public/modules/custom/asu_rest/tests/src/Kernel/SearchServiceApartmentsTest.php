@@ -4,52 +4,23 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\asu_rest\Kernel;
 
-use Drupal\asu_rest\Service\SearchService;
-use Drupal\config_terms\Entity\Term;
-use Drupal\config_terms\Entity\Vocab;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
-use Drupal\KernelTests\KernelTestBase;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
-use Drupal\user\Entity\User;
 
 /**
  * Tests apartment search behavior in the search service.
  *
  * @group asu_rest
  */
-final class SearchServiceApartmentsTest extends KernelTestBase {
-
-  /**
-   * {@inheritdoc}
-   */
-  protected static $modules = [
-    'system',
-    'user',
-    'node',
-    'field',
-    'text',
-    'filter',
-    'file',
-    'config_terms',
-    'asu_rest',
-  ];
-
-  /**
-   * The search service under test.
-   *
-   * @var \Drupal\asu_rest\Service\SearchService
-   */
-  private SearchService $searchService;
+final class SearchServiceApartmentsTest extends SearchServiceKernelTestBase {
 
   /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
     parent::setUp();
-
-    $this->installEntitySchema('user');
 
     NodeType::create([
       'type' => 'apartment',
@@ -130,30 +101,10 @@ final class SearchServiceApartmentsTest extends KernelTestBase {
       ],
     ])->save();
 
-    $vocab = Vocab::create([
-      'id' => 'state_of_sale',
-      'label' => 'State of sale',
-    ]);
-    $vocab->save();
-
-    $term = Term::create([
-      'id' => 'sold',
-      'vid' => 'state_of_sale',
-      'label' => 'Sold',
-    ]);
-    $term->save();
-
-    $this->installEntitySchema('node');
-    $this->installConfig(['node']);
-
-    $user = User::create([
-      'name' => 'test-admin',
-      'status' => 1,
-    ]);
-    $user->save();
-    $this->container->get('current_user')->setAccount($user);
-
-    $this->searchService = $this->container->get('asu_rest.search_service');
+    $this->createStateOfSaleVocabularyWithSoldTerm();
+    $this->installNodeSchemaAndConfig();
+    $this->createAndLoginUser();
+    $this->initSearchService();
   }
 
   /**
