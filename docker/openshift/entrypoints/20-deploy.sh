@@ -32,11 +32,17 @@ if [ "$CURRENT_DEPLOY_ID" != "$OPENSHIFT_BUILD_NAME" ]; then
   if [ $? -ne 0 ]; then
     rollback_deployment "Failed to set deploy_id" $CURRENT_DEPLOY_ID
   fi
-  # Put site in maintenance mode
-  drush state:set system.maintenance_mode 1 --input-format=integer
 
-  if [ $? -ne 0 ]; then
-    rollback_deployment "Failed to enable maintenance_mode" $CURRENT_DEPLOY_ID
+  # Put site in maintenance mode only if Drupal is already installed.
+  # On fresh PR environments the database schema does not yet exist, causing
+  # drush state:set to fail when Drupal's string translation layer tries to
+  # query locales_source before drush deploy has initialised it.
+  if drush status --fields=bootstrap --format=string 2>/dev/null | grep -q "Successful"; then
+    drush state:set system.maintenance_mode 1 --input-format=integer
+
+    if [ $? -ne 0 ]; then
+      rollback_deployment "Failed to enable maintenance_mode" $CURRENT_DEPLOY_ID
+    fi
   fi
   # Run pre-deploy tasks.
   # @see https://github.com/City-of-Helsinki/drupal-module-helfi-api-base/blob/main/documentation/deploy-hooks.md
