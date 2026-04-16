@@ -24,9 +24,9 @@
         "drupal/config_terms": "^1.9",
         "drupal/context": "^5.0@RC",
         "drupal/consumers": "^1.24",
-        "drupal/core": "~11.3.0",
-        "drupal/core-composer-scaffold": "~11.3.0",
-        "drupal/core-recommended": "~11.3.0",
+        "drupal/core": "~11.3.7",
+        "drupal/core-composer-scaffold": "~11.3.7",
+        "drupal/core-recommended": "~11.3.7",
         "drupal/ctools": "^4.1",
         "drupal/default_content": "^2.0@alpha",
         "drupal/email_registration": "^1.4",
@@ -96,7 +96,7 @@
         "behat/mink": "^1.11",
         "dealerdirect/phpcodesniffer-composer-installer": "^1.0.0",
         "drupal/coder": "^8.3",
-        "drupal/core-dev": "~11.3.0",
+        "drupal/core-dev": "~11.3.7",
         "drupal/devel": "^5.0",
         "mikey179/vfsstream": "^1.6",
         "phpspec/prophecy-phpunit": "^2",
@@ -182,7 +182,6 @@
                 "Drupal 11 compatibility fixes": "patches/computed_field_plugin-d11.patch"
             },
             "drupal/core": {
-                "[D11] Skip delete when config entity missing": "patches/core-import-delete-null.patch",
                 "[CI] Unset foreach-by-ref in ViewsConfigUpdater (block_content post_update save)": "patches/core-views-foreach-reference-cleanup.patch"
             },
             "drupal/elasticsearch_connector": {

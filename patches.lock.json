@@ -82,16 +82,6 @@
         "drupal/core": [
             {
                 "package": "drupal/core",
-                "description": "[D11] Skip delete when config entity missing",
-                "url": "patches/core-import-delete-null.patch",
-                "sha256": "5bf0a22f458a0122448648f0847e51c9b585d7e442c2f4f8cd226e39267bf559",
-                "depth": 2,
-                "extra": {
-                    "provenance": "root"
-                }
-            },
-            {
-                "package": "drupal/core",
                 "description": "[D11] Skip delete in checkOp when entity missing",
                 "url": "patches/core-config-importer-null-entity.patch",
                 "sha256": "7c0c01ea967faa2d3370701c6fcdd896fafd38661832b2926ce11050d91b4027",
