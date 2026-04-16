@@ -1,0 +1,14 @@
+diff --git a/src/Server/ResourceServer.php b/src/Server/ResourceServer.php
+index c03985e..a4570b1 100644
+--- a/src/Server/ResourceServer.php
++++ b/src/Server/ResourceServer.php
+@@ -22,7 +22,7 @@ class ResourceServer implements ResourceServerInterface {
+    *
+    * @var \League\OAuth2\Server\ResourceServer|null
+    */
+-  protected ?LeagueResourceServer $subject;
++  protected ?LeagueResourceServer $subject = NULL;
+ 
+   /**
+    * The message factory.
+    *

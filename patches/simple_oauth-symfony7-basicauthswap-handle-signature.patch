@@ -1,0 +1,14 @@
+diff --git a/src/HttpMiddleware/BasicAuthSwap.php b/src/HttpMiddleware/BasicAuthSwap.php
+index e60d9c4..1bde4d0 100644
+--- a/src/HttpMiddleware/BasicAuthSwap.php
++++ b/src/HttpMiddleware/BasicAuthSwap.php
+@@ -50,7 +50,7 @@ class BasicAuthSwap implements HttpKernelInterface {
+    *
+    * @return \Symfony\Component\HttpFoundation\Response
+    *   A Response instance
+    */
+-  public function handle(Request $request, $type = self::MAIN_REQUEST, $catch = true): Response {
++  public function handle(Request $request, int $type = self::MAIN_REQUEST, bool $catch = TRUE): Response {
+     if (
+       strpos($request->getPathInfo(), '/oauth/token') !== FALSE &&
+       $request->headers->has('PHP_AUTH_USER') &&
