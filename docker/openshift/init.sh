@@ -3,16 +3,16 @@
 cd /var/www/html/public
 
 # Write Simple OAuth keys from env vars to /app/keys/ if provided.
-if [[ -n "${DRUPAL_SIMPLE_OAUTH_PRIVATE_KEY_PEM}" || -n "${DRUPAL_SIMPLE_OAUTH_PUBLIC_KEY_PEM}" ]]; then
-  if [[ ( -n "${DRUPAL_SIMPLE_OAUTH_PRIVATE_KEY_PEM}" && ! -f /app/keys/private.key ) || ( -n "${DRUPAL_SIMPLE_OAUTH_PUBLIC_KEY_PEM}" && ! -f /app/keys/public.key ) ]]; then
+if [ -n "${DRUPAL_SIMPLE_OAUTH_PRIVATE_KEY_PEM}" ] || [ -n "${DRUPAL_SIMPLE_OAUTH_PUBLIC_KEY_PEM}" ]; then
+  if { [ -n "${DRUPAL_SIMPLE_OAUTH_PRIVATE_KEY_PEM}" ] && [ ! -f /app/keys/private.key ]; } || { [ -n "${DRUPAL_SIMPLE_OAUTH_PUBLIC_KEY_PEM}" ] && [ ! -f /app/keys/public.key ]; }; then
     mkdir -p /app/keys && chmod 700 /app/keys
 
-    if [[ -n "${DRUPAL_SIMPLE_OAUTH_PRIVATE_KEY_PEM}" && ! -f /app/keys/private.key ]]; then
+    if [ -n "${DRUPAL_SIMPLE_OAUTH_PRIVATE_KEY_PEM}" ] && [ ! -f /app/keys/private.key ]; then
       printf '%s\n' "${DRUPAL_SIMPLE_OAUTH_PRIVATE_KEY_PEM}" > /app/keys/private.key
       chmod 600 /app/keys/private.key
     fi
 
-    if [[ -n "${DRUPAL_SIMPLE_OAUTH_PUBLIC_KEY_PEM}" && ! -f /app/keys/public.key ]]; then
+    if [ -n "${DRUPAL_SIMPLE_OAUTH_PUBLIC_KEY_PEM}" ] && [ ! -f /app/keys/public.key ]; then
       printf '%s\n' "${DRUPAL_SIMPLE_OAUTH_PUBLIC_KEY_PEM}" > /app/keys/public.key
       chmod 600 /app/keys/public.key
     fi
