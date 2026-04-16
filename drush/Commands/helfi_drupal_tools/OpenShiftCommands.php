@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Drush\Commands\helfi_drupal_tools;
 
@@ -50,7 +50,7 @@ final class OpenShiftCommands extends DrushCommands {
   /**
    * Ensure that we're logged in.
    */
-  private function ensureLoginDetails(string $token = NULL) : self {
+  private function ensureLoginDetails(?string $token = NULL) : self {
     static $attemptedLogin;
 
     if ($attemptedLogin) {
@@ -82,7 +82,7 @@ final class OpenShiftCommands extends DrushCommands {
    * @return $this
    *   The self.
    */
-  private function ensureProject() : self {
+  protected function ensureProject() : self {
     static $projectChanged;
 
     if (!$project = getenv('OC_PROJECT_NAME')) {
@@ -105,6 +105,8 @@ final class OpenShiftCommands extends DrushCommands {
    *   The commands to run.
    * @param callable|null $callback
    *   The callback.
+   * @param bool $showOutput
+   *   Whether to stream command output to the terminal.
    *
    * @return int
    *   The exit code.
@@ -112,7 +114,7 @@ final class OpenShiftCommands extends DrushCommands {
   private function invokeOc(
     array $command,
     ?callable $callback = NULL,
-    bool $showOutput = TRUE
+    bool $showOutput = TRUE,
   ) : int {
     $this
       ->ensureEnvVariables()

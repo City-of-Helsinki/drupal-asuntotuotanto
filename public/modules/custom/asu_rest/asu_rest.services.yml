@@ -1,0 +1,22 @@
+services:
+  asu_rest.oauth2_bruteforce_flood_subscriber:
+    class: Drupal\asu_rest\EventSubscriber\OAuth2BruteforceFloodSubscriber
+    arguments:
+      - '@flood'
+      - '@config.factory'
+    tags:
+      - { name: event_subscriber }
+
+  asu_rest.search_service:
+    class: Drupal\asu_rest\Service\SearchService
+    arguments:
+      - '@entity_type.manager'
+      - '@database'
+
+  asu_rest.search_mapper:
+    class: Drupal\asu_rest\Service\SearchMapper
+    arguments:
+      - '@entity_type.manager'
+      - '@file_url_generator'
+      - '@request_stack'
+      - '@file.validator'

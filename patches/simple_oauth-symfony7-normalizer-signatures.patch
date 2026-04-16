@@ -1,0 +1,45 @@
+diff --git a/src/Normalizer/RefreshTokenEntityNormalizer.php b/src/Normalizer/RefreshTokenEntityNormalizer.php
+index 830e4a0..644cf6c 100644
+--- a/src/Normalizer/RefreshTokenEntityNormalizer.php
++++ b/src/Normalizer/RefreshTokenEntityNormalizer.php
+@@ -16,12 +16,12 @@ class RefreshTokenEntityNormalizer extends NormalizerBase implements TokenEntity
+   /**
+    * {@inheritdoc}
+    */
+-  public function normalize($token_entity, $format = NULL, array $context = []) {
++  public function normalize(mixed $token_entity, ?string $format = NULL, array $context = []): array {
+     /** @var \League\OAuth2\Server\Entities\TokenInterface $token_entity */
+     return [
+       'value' => $token_entity->getIdentifier(),
+       'expire' => $token_entity->getExpiryDateTime()->format('U'),
+     ];
+   }
+ 
+ }
+diff --git a/src/Normalizer/UserClaimsNormalizer.php b/src/Normalizer/UserClaimsNormalizer.php
+index 4089a4a..cf3b128 100644
+--- a/src/Normalizer/UserClaimsNormalizer.php
++++ b/src/Normalizer/UserClaimsNormalizer.php
+@@ -62,7 +62,7 @@ class UserClaimsNormalizer extends NormalizerBase implements NormalizerInterface
+   /**
+    * {@inheritdoc}
+    */
+-  public function normalize($user_entity, $format = NULL, array $context = []) {
++  public function normalize(mixed $user_entity, ?string $format = NULL, array $context = []): array {
+     assert($user_entity instanceof UserEntityWithClaims);
+     $identifier = $user_entity->getIdentifier();
+     // Check if the account is in $context. If not, load it from the database.
+diff --git a/src/Normalizer/TokenEntityNormalizer.php b/src/Normalizer/TokenEntityNormalizer.php
+index 2f0a7b6..c3f0df7 100644
+--- a/src/Normalizer/TokenEntityNormalizer.php
++++ b/src/Normalizer/TokenEntityNormalizer.php
+@@ -29,7 +29,7 @@ class TokenEntityNormalizer extends NormalizerBase implements TokenEntityNormal
+   /**
+    * {@inheritdoc}
+    */
+-  public function normalize($token_entity, $format = NULL, array $context = []) {
++  public function normalize(mixed $token_entity, ?string $format = NULL, array $context = []): array {
+     /** @var \League\OAuth2\Server\Entities\TokenInterface $token_entity */
+ 
+     $scopes = array_map(function ($scope_entity) {
+*** End Patch"}}Oops tool syntax must be freeform string not json. Let's redo.  છું. We'll call ApplyPatch correctly. 

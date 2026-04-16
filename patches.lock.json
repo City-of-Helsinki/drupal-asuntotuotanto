@@ -1,5 +1,5 @@
 {
-    "_hash": "5fa7682911872f124b729ec6566e3d24c306009cccde0f3f3bec5a6706679f85",
+    "_hash": "d9b02b91318144ba9eab77191098355b64162461b3989dac5c0be33c14abb824",
     "patches": {
         "drupal/helfi_platform_config": [
             {
@@ -33,6 +33,28 @@
                 }
             }
         ],
+        "drupal/simple_oauth": [
+            {
+                "package": "drupal/simple_oauth",
+                "description": "[D11] Allow installing simple_oauth 5.x on Drupal 11",
+                "url": "patches/simple_oauth-drupal11-core-version.patch",
+                "sha256": "e7f221980e330f0bd72bfecb29e5d7eb223dde86057b8decae7c1acdb8173f47",
+                "depth": 1,
+                "extra": {
+                    "provenance": "root"
+                }
+            },
+            {
+                "package": "drupal/simple_oauth",
+                "description": "[D11] Fix simple_oauth normalizer signatures for Symfony 7",
+                "url": "patches/simple_oauth-symfony7-normalizer-signatures.patch",
+                "sha256": "477285d2564e7f1367a71714de4374978e664f0f27a2215e70da62fc372ab47e",
+                "depth": 1,
+                "extra": {
+                    "provenance": "root"
+                }
+            }
+        ],
         "drupal/config_terms": [
             {
                 "package": "drupal/config_terms",
@@ -60,40 +82,10 @@
         "drupal/core": [
             {
                 "package": "drupal/core",
-                "description": "[#UHF-12709] Patch 'Deleted and replaced ...' error messages",
-                "url": "patches/uhf-12709-skip-deleted-log.patch",
-                "sha256": "36995dc96842aa819510f6265b3c62af976c4e558f5a960b914cf8b2b3da9a84",
-                "depth": 2,
-                "extra": {
-                    "provenance": "root"
-                }
-            },
-            {
-                "package": "drupal/core",
-                "description": "[#3452852] Add create() factory method with autowired parameters to PluginBase",
-                "url": "patches/3452852.patch",
-                "sha256": "35e072a541b5617ac2b17fddc3dc95747dc9e641eefeb12db93ef9c0db7bb811",
-                "depth": 2,
-                "extra": {
-                    "provenance": "root"
-                }
-            },
-            {
-                "package": "drupal/core",
-                "description": "[D11] Skip delete when config entity missing",
-                "url": "patches/core-import-delete-null.patch",
-                "sha256": "5bf0a22f458a0122448648f0847e51c9b585d7e442c2f4f8cd226e39267bf559",
-                "depth": 2,
-                "extra": {
-                    "provenance": "root"
-                }
-            },
-            {
-                "package": "drupal/core",
                 "description": "[D11] Skip delete in checkOp when entity missing",
                 "url": "patches/core-config-importer-null-entity.patch",
-                "sha256": "499e950946e506ed897bccc764cae3e0d04518008551691ed7ab2d7d345491a7",
-                "depth": 2,
+                "sha256": "7c0c01ea967faa2d3370701c6fcdd896fafd38661832b2926ce11050d91b4027",
+                "depth": 1,
                 "extra": {
                     "provenance": "root"
                 }
@@ -113,6 +105,16 @@
                 "description": "[D11] Skip delete when field table missing",
                 "url": "patches/core-skip-delete-missing-field-table.patch",
                 "sha256": "c63db5bfc018ae0eb34cfe708fcd95c0a6d855d58e9df2b80bc68b5b4c3b3416",
+                "depth": 2,
+                "extra": {
+                    "provenance": "root"
+                }
+            },
+            {
+                "package": "drupal/core",
+                "description": "[CI] Unset foreach-by-ref in ViewsConfigUpdater (block_content post_update save)",
+                "url": "patches/core-views-foreach-reference-cleanup.patch",
+                "sha256": "f25d3e12b8e180a36faa3e26c20748ef94b5e99567e4bcb34c9e3ee2fa5eb448",
                 "depth": 2,
                 "extra": {
                     "provenance": "root"

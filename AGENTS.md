@@ -9,6 +9,11 @@ This is an **Open Source Drupal project**. It serves as the content management s
 * **External Integrations:** Connects to a Django microservice for specific logic.
 * agent skills are located in the `.agents/skills/` directory
 
+## General directives
+- **always write tests first** and then pause to give the human in the loop time to inspect them
+- dont say "Next I'll..." and wait for prompt, just keep going until the task is complete
+- dont use git to make commits or push
+
 ## Security & Sensitive Data
 **STRICT RULE:** This is a public repository.
 * **NEVER** output or suggest code containing real secrets, passwords, API keys, or tokens.
@@ -46,6 +51,7 @@ The project runs inside Docker containers.
   * Run `make lint-drupal` to verify code style.
   * If linting errors occur, fix them before finalizing the solution.
   * Run tests with `docker exec asuntotuotanto-app sh -c "composer test-php public/modules/custom"`
+  * run `docker exec asuntotuotanto-app sh -c "drush cr"` to verify nothing is broken
 
 ## Architecture Notes
 * **Django Microservice:** Be aware that complex business logic regarding application handling may reside in the connected Django microservice, not within Drupal.
