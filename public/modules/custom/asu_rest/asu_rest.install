@@ -69,22 +69,111 @@ function asu_rest_provision_oauth_consumer(): void {
   }
 
   $storage = \Drupal::entityTypeManager()->getStorage('consumer');
-  $existing = $storage->getQuery()
+  $existing_ids = $storage->getQuery()
     ->accessCheck(FALSE)
     ->condition('client_id', $client_id)
     ->range(0, 1)
     ->execute();
-  if ($existing) {
+  if ($existing_ids) {
+    // Ensure default user exists and is assigned, even if consumer already
+    // exists (common when secrets are added after initial install).
+    $role_storage = \Drupal::entityTypeManager()->getStorage('user_role');
+    if (!$role_storage->load('rest_client')) {
+      \Drupal::logger('asu_rest')->error(
+        'User role rest_client is missing; cannot provision OAuth REST client user for consumer @id.',
+        ['@id' => $client_id],
+      );
+      return;
+    }
+    $username_env = getenv('ASU_REST_OAUTH_DEFAULT_USERNAME');
+    $username = is_string($username_env) && trim($username_env) !== '' ? trim($username_env) : 'rest_client';
+    $user_storage = \Drupal::entityTypeManager()->getStorage('user');
+    $users = $user_storage->loadByProperties(['name' => $username]);
+    /** @var \Drupal\user\Entity\User|null $user */
+    $user = $users ? reset($users) : NULL;
+    if (!$user) {
+      $password = bin2hex(random_bytes(16));
+      $user = $user_storage->create([
+        'name' => $username,
+        'status' => 1,
+        'roles' => ['rest_client'],
+        'pass' => $password,
+      ]);
+      $user->save();
+    }
+    else {
+      if (!$user->isActive()) {
+        $user->activate();
+      }
+      if (!in_array('rest_client', $user->getRoles(), TRUE)) {
+        $user->addRole('rest_client');
+      }
+      $user->save();
+    }
+
+    /** @var \Drupal\consumers\Entity\Consumer|null $existing_consumer */
+    $existing_consumer = $storage->load(reset($existing_ids));
+    if ($existing_consumer && $existing_consumer->get('user_id')->isEmpty()) {
+      $existing_consumer->set('user_id', (int) $user->id())->save();
+      \Drupal::logger('asu_rest')->notice(
+        'Updated OAuth consumer @id default user to uid @uid.',
+        ['@id' => $client_id, '@uid' => $user->id()],
+      );
+    }
     return;
   }
 
-  $scope_storage = \Drupal::entityTypeManager()->getStorage('oauth2_scope');
-  if (!$scope_storage->load('rest_client')) {
+  $entity_type_manager = \Drupal::entityTypeManager();
+  // Some environments provide scopes as config entities (oauth2_scope). If the
+  // entity type exists, ensure the expected scope is present.
+  if ($entity_type_manager->hasDefinition('oauth2_scope')) {
+    $scope_storage = $entity_type_manager->getStorage('oauth2_scope');
+    if (!$scope_storage->load('rest_client')) {
+      \Drupal::logger('asu_rest')->error(
+        'OAuth scope rest_client is missing; cannot create consumer @id.',
+        ['@id' => $client_id],
+      );
+      return;
+    }
+  }
+
+  $role_storage = \Drupal::entityTypeManager()->getStorage('user_role');
+  if (!$role_storage->load('rest_client')) {
     \Drupal::logger('asu_rest')->error(
-      'OAuth scope rest_client is missing; cannot create consumer @id.',
+      'User role rest_client is missing; cannot provision OAuth REST client user for consumer @id.',
       ['@id' => $client_id],
     );
     return;
+  }
+
+  $username_env = getenv('ASU_REST_OAUTH_DEFAULT_USERNAME');
+  $username = is_string($username_env) && trim($username_env) !== '' ? trim($username_env) : 'rest_client';
+  $user_storage = \Drupal::entityTypeManager()->getStorage('user');
+  $users = $user_storage->loadByProperties(['name' => $username]);
+  /** @var \Drupal\user\Entity\User|null $user */
+  $user = $users ? reset($users) : NULL;
+  if (!$user) {
+    $password = bin2hex(random_bytes(16));
+    $user = $user_storage->create([
+      'name' => $username,
+      'status' => 1,
+      'roles' => ['rest_client'],
+      'pass' => $password,
+    ]);
+    $user->save();
+    \Drupal::logger('asu_rest')->notice(
+      'Created OAuth REST client user @name (uid @uid) for consumer @id.',
+      ['@name' => $username, '@uid' => $user->id(), '@id' => $client_id],
+    );
+  }
+  else {
+    if (!$user->isActive()) {
+      $user->activate();
+    }
+    if (!in_array('rest_client', $user->getRoles(), TRUE)) {
+      $user->addRole('rest_client');
+    }
+    $user->save();
   }
 
   $label = $oauth['label'] ?? 'Apartment application service';
@@ -96,6 +185,7 @@ function asu_rest_provision_oauth_consumer(): void {
     'description' => 'Machine client for Elasticsearch-compatible REST endpoints (projects, apartments).',
     'grant_types' => ['client_credentials'],
     'scopes' => ['rest_client'],
+    'user_id' => (int) $user->id(),
     'confidential' => TRUE,
     'secret' => $secret,
     'redirect' => ['https://127.0.0.1/oauth2-callback-not-used'],
