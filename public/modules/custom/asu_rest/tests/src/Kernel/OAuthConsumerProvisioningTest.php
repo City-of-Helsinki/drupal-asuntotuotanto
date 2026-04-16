@@ -31,6 +31,9 @@ final class OAuthConsumerProvisioningTest extends KernelTestBase {
     'asu_rest',
   ];
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
@@ -47,6 +50,9 @@ final class OAuthConsumerProvisioningTest extends KernelTestBase {
     ])->save();
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function tearDown(): void {
     putenv('ASU_REST_OAUTH_CLIENT_SECRET');
     putenv('ASU_REST_OAUTH_CLIENT_ID');
@@ -91,4 +97,3 @@ final class OAuthConsumerProvisioningTest extends KernelTestBase {
   }
 
 }
-
