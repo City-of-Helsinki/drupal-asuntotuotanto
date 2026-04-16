@@ -22,8 +22,8 @@
         "drupal/computed_field_plugin": "^1.4",
         "drupal/config_filter": "^2.7",
         "drupal/config_terms": "^1.9",
-        "drupal/context": "^5.0@RC",
         "drupal/consumers": "^1.24",
+        "drupal/context": "^5.0@RC",
         "drupal/core": "~11.3.7",
         "drupal/core-composer-scaffold": "~11.3.7",
         "drupal/core-recommended": "~11.3.7",
@@ -70,8 +70,8 @@
         "drupal/restui": "^1.22",
         "drupal/route_condition": "^2.0",
         "drupal/samlauth": "^3.13",
-        "drupal/siteimprove": "^3.0",
         "drupal/simple_oauth": "5.2.5",
+        "drupal/siteimprove": "^3.0",
         "drupal/slick": "^3.0",
         "drupal/symfony_mailer_lite": "^2.0",
         "drupal/tfa": "^1.12",
@@ -87,8 +87,8 @@
         "kenwheeler/slick": "^1.8",
         "mglaman/composer-drupal-lenient": "^1.0",
         "onelogin/php-saml": "^4.3",
-        "robrichards/xmlseclibs": "^3.1.5",
         "psr/http-message": "^1.1",
+        "robrichards/xmlseclibs": "^3.1.5",
         "steverhoades/oauth2-openid-connect-server": "^2.6.1",
         "zaporylie/composer-drupal-optimizations": "^1.2"
     },
@@ -173,7 +173,11 @@
             },
             "drupal/simple_oauth": {
                 "[D11] Allow installing simple_oauth 5.x on Drupal 11": "patches/simple_oauth-drupal11-core-version.patch",
-                "[D11] Fix simple_oauth normalizer signatures for Symfony 7": "patches/simple_oauth-symfony7-normalizer-signatures.patch"
+                "[D11] Fix simple_oauth normalizer signatures for Symfony 7": "patches/simple_oauth-symfony7-normalizer-signatures.patch",
+                "[D11] Implement normalizer supported types": "patches/simple_oauth-drupal11-normalizer-supported-types.patch",
+                "[D11] Replace watchdog_exception() usage": "patches/simple_oauth-drupal11-watchdog-exception.patch",
+                "[Symfony 7] Fix BasicAuthSwap handle signature": "patches/simple_oauth-symfony7-basicauthswap-handle-signature.patch",
+                "[PHP 7.4+] Initialize ResourceServer subject property": "patches/simple_oauth-resource-server-subject-init.patch"
             },
             "drupal/config_terms": {
                 "Drupal 11 compatibility fixes": "https://www.drupal.org/files/issues/2024-06-02/config_terms.1.x-dev.rector.patch"
