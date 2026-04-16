@@ -174,7 +174,6 @@
             "drupal/simple_oauth": {
                 "[D11] Allow installing simple_oauth 5.x on Drupal 11": "patches/simple_oauth-drupal11-core-version.patch",
                 "[D11] Fix simple_oauth normalizer signatures for Symfony 7": "patches/simple_oauth-symfony7-normalizer-signatures.patch",
-                "[D11] Implement normalizer supported types": "patches/simple_oauth-drupal11-normalizer-supported-types.patch",
                 "[D11] Replace watchdog_exception() usage": "patches/simple_oauth-drupal11-watchdog-exception.patch",
                 "[Symfony 7] Fix BasicAuthSwap handle signature": "patches/simple_oauth-symfony7-basicauthswap-handle-signature.patch",
                 "[PHP 7.4+] Initialize ResourceServer subject property": "patches/simple_oauth-resource-server-subject-init.patch"

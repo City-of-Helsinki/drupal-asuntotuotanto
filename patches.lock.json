@@ -1,5 +1,5 @@
 {
-    "_hash": "11f5ff31bd3baecd113cea7d260f1d467607533a0bc1dc2f8357e14532cda996",
+    "_hash": "ccee31539065b31a7ffddc3061bfcc89bf35f33588afaee9162d7b5be83bc859",
     "patches": {
         "drupal/helfi_platform_config": [
             {
@@ -39,16 +39,6 @@
                 "description": "[D11] Fix simple_oauth normalizer signatures for Symfony 7",
                 "url": "patches/simple_oauth-symfony7-normalizer-signatures.patch",
                 "sha256": "477285d2564e7f1367a71714de4374978e664f0f27a2215e70da62fc372ab47e",
-                "depth": 1,
-                "extra": {
-                    "provenance": "root"
-                }
-            },
-            {
-                "package": "drupal/simple_oauth",
-                "description": "[D11] Implement normalizer supported types",
-                "url": "patches/simple_oauth-drupal11-normalizer-supported-types.patch",
-                "sha256": "b9518f83a954d222196acc8c127ca915a72e81ea4f40a3591266d95ed815da36",
                 "depth": 1,
                 "extra": {
                     "provenance": "root"
