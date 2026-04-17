@@ -171,11 +171,13 @@
     {{ _self.teaser_common(content['#teaser_values'], attributes, classes, app_id) }}
         <div class="application__actions">
           <div>
+          {% if content['#teaser_values'].is_owner %}
           {% include "@asuntotuotanto/button/button.html.twig" with {
             label: 'Open the application'|t,
             href: content['#teaser_values'].application_url,
             type: 'primary'
           } %}
+          {% endif %}
           </div>
           <div class="application--action">
             <a class="hds-button hds-button--secondary application__lottery-link--toggle" data-application="{{ app_id }}">
@@ -186,7 +188,7 @@
               </span>
             </a>
           </div>
-          {% if content['#teaser_values'].is_application_period and content['#teaser_values'].delete_url %}
+          {% if content['#teaser_values'].is_owner and content['#teaser_values'].is_application_period and content['#teaser_values'].delete_url %}
           <div class="application--action">
             <form method="post" action="{{ content['#teaser_values'].delete_url }}">
               <button type="submit" class="hds-button hds-button--secondary application-delete-link">
