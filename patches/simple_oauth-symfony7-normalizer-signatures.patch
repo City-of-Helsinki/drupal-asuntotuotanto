@@ -1,26 +1,48 @@
-diff --git a/src/Normalizer/RefreshTokenEntityNormalizer.php b/src/Normalizer/RefreshTokenEntityNormalizer.php
-index 830e4a0..644cf6c 100644
---- a/src/Normalizer/RefreshTokenEntityNormalizer.php
-+++ b/src/Normalizer/RefreshTokenEntityNormalizer.php
-@@ -16,12 +16,12 @@ class RefreshTokenEntityNormalizer extends NormalizerBase implements TokenEntity
+--- a/src/Normalizer/RefreshTokenEntityNormalizer.php	2026-04-17 14:55:28
++++ b/src/Normalizer/RefreshTokenEntityNormalizer.php	2026-04-17 14:55:39
+@@ -11,12 +11,21 @@
+    *
+    * @var string|array
+    */
+-  protected $supportedInterfaceOrClass = '\League\OAuth2\Server\Entities\RefreshTokenEntityInterface';
++  protected $supportedInterfaceOrClass = 'League\OAuth2\Server\Entities\RefreshTokenEntityInterface';
+ 
    /**
     * {@inheritdoc}
     */
 -  public function normalize($token_entity, $format = NULL, array $context = []) {
++  public function getSupportedTypes(?string $format): array {
++    return [
++      $this->supportedInterfaceOrClass => TRUE,
++    ];
++  }
++
++  /**
++   * {@inheritdoc}
++   */
 +  public function normalize(mixed $token_entity, ?string $format = NULL, array $context = []): array {
      /** @var \League\OAuth2\Server\Entities\TokenInterface $token_entity */
      return [
        'value' => $token_entity->getIdentifier(),
-       'expire' => $token_entity->getExpiryDateTime()->format('U'),
-     ];
-   }
+--- a/src/Normalizer/UserClaimsNormalizer.php	2026-04-17 14:55:28
++++ b/src/Normalizer/UserClaimsNormalizer.php	2026-04-17 14:55:43
+@@ -20,6 +20,15 @@
+   protected $format = 'json';
  
- }
-diff --git a/src/Normalizer/UserClaimsNormalizer.php b/src/Normalizer/UserClaimsNormalizer.php
-index 4089a4a..cf3b128 100644
---- a/src/Normalizer/UserClaimsNormalizer.php
-+++ b/src/Normalizer/UserClaimsNormalizer.php
-@@ -62,7 +62,7 @@ class UserClaimsNormalizer extends NormalizerBase implements NormalizerInterface
+   /**
++   * {@inheritdoc}
++   */
++  public function getSupportedTypes(?string $format): array {
++    return [
++      $this->supportedInterfaceOrClass => TRUE,
++    ];
++  }
++
++  /**
+    * The user storage.
+    *
+    * @var \Drupal\user\UserStorageInterface
+@@ -62,7 +71,7 @@
    /**
     * {@inheritdoc}
     */
@@ -29,11 +51,29 @@ index 4089a4a..cf3b128 100644
      assert($user_entity instanceof UserEntityWithClaims);
      $identifier = $user_entity->getIdentifier();
      // Check if the account is in $context. If not, load it from the database.
-diff --git a/src/Normalizer/TokenEntityNormalizer.php b/src/Normalizer/TokenEntityNormalizer.php
-index 2f0a7b6..c3f0df7 100644
---- a/src/Normalizer/TokenEntityNormalizer.php
-+++ b/src/Normalizer/TokenEntityNormalizer.php
-@@ -29,7 +29,7 @@ class TokenEntityNormalizer extends NormalizerBase implements TokenEntityNormal
+--- a/src/Normalizer/TokenEntityNormalizer.php	2026-04-17 14:55:28
++++ b/src/Normalizer/TokenEntityNormalizer.php	2026-04-17 14:55:37
+@@ -12,9 +12,18 @@
+    *
+    * @var string|array
+    */
+-  protected $supportedInterfaceOrClass = '\League\OAuth2\Server\Entities\TokenInterface';
++  protected $supportedInterfaceOrClass = 'League\OAuth2\Server\Entities\TokenInterface';
+ 
+   /**
++   * {@inheritdoc}
++   */
++  public function getSupportedTypes(?string $format): array {
++    return [
++      $this->supportedInterfaceOrClass => TRUE,
++    ];
++  }
++
++  /**
+    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+    */
+   protected $entityTypeManager;
+@@ -29,7 +38,7 @@
    /**
     * {@inheritdoc}
     */
@@ -42,4 +82,3 @@ index 2f0a7b6..c3f0df7 100644
      /** @var \League\OAuth2\Server\Entities\TokenInterface $token_entity */
  
      $scopes = array_map(function ($scope_entity) {
-*** End Patch"}}Oops tool syntax must be freeform string not json. Let's redo.  છું. We'll call ApplyPatch correctly. 
