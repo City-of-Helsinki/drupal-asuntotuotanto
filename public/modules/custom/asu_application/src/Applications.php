@@ -77,10 +77,12 @@ class Applications {
       return array_values(array_unique(array_map('intval', $ids)));
     }
 
-    $coApplicantIds = \Drupal::database()
-      ->select('asu_application_co_applicant_map', 'm')
-      ->fields('m', ['application_id'])
-      ->innerJoin('asu_application', 'a', 'a.id = m.application_id')
+    $coApplicantQuery = \Drupal::database()
+      ->select('asu_application_co_applicant_map', 'm');
+    $coApplicantQuery->fields('m', ['application_id']);
+    $coApplicantQuery->innerJoin('asu_application', 'a', 'a.id = m.application_id');
+
+    $coApplicantIds = $coApplicantQuery
       ->condition('a.status', 1)
       ->condition('m.co_applicant_saml_hash', $samlHash)
       ->execute()
