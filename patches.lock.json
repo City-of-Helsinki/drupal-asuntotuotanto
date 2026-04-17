@@ -1,5 +1,5 @@
 {
-    "_hash": "ccee31539065b31a7ffddc3061bfcc89bf35f33588afaee9162d7b5be83bc859",
+    "_hash": "bba7ab1d8144f65b9b08f67a72e2b8fa012c597b789a621626f10cd640000d41",
     "patches": {
         "drupal/helfi_platform_config": [
             {
@@ -48,7 +48,7 @@
                 "package": "drupal/simple_oauth",
                 "description": "[D11] Replace watchdog_exception() usage",
                 "url": "patches/simple_oauth-drupal11-watchdog-exception.patch",
-                "sha256": "5ff871af833d7d468b7542db43202b8a0530a84fa8e754e114253964f60c0aa3",
+                "sha256": "c7898af92e634b042d40c8b2005bfcccf7edfebdcffd4002a8a9c5783b7027b9",
                 "depth": 1,
                 "extra": {
                     "provenance": "root"
@@ -69,6 +69,16 @@
                 "description": "[PHP 7.4+] Initialize ResourceServer subject property",
                 "url": "patches/simple_oauth-resource-server-subject-init.patch",
                 "sha256": "0b83d07995161ebd9eab25e865aab11678f3b847bb1a4852393207c8e3d38a3f",
+                "depth": 1,
+                "extra": {
+                    "provenance": "root"
+                }
+            },
+            {
+                "package": "drupal/simple_oauth",
+                "description": "[D11.1] Implement EntityInterface::getBundleEntity/getOriginal/setOriginal on TokenAuthUser",
+                "url": "patches/simple_oauth-d11-entity-interface-methods.patch",
+                "sha256": "5044b209e54c399a35d447677f414baf0c896dfc2dab83f4d0ee8039dc89867c",
                 "depth": 1,
                 "extra": {
                     "provenance": "root"

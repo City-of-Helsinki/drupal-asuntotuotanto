@@ -176,7 +176,8 @@
                 "[D11] Fix simple_oauth normalizer signatures for Symfony 7": "patches/simple_oauth-symfony7-normalizer-signatures.patch",
                 "[D11] Replace watchdog_exception() usage": "patches/simple_oauth-drupal11-watchdog-exception.patch",
                 "[Symfony 7] Fix BasicAuthSwap handle signature": "patches/simple_oauth-symfony7-basicauthswap-handle-signature.patch",
-                "[PHP 7.4+] Initialize ResourceServer subject property": "patches/simple_oauth-resource-server-subject-init.patch"
+                "[PHP 7.4+] Initialize ResourceServer subject property": "patches/simple_oauth-resource-server-subject-init.patch",
+                "[D11.1] Implement EntityInterface::getBundleEntity/getOriginal/setOriginal on TokenAuthUser": "patches/simple_oauth-d11-entity-interface-methods.patch"
             },
             "drupal/config_terms": {
                 "Drupal 11 compatibility fixes": "https://www.drupal.org/files/issues/2024-06-02/config_terms.1.x-dev.rector.patch"
