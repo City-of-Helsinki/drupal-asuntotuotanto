@@ -23,13 +23,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Drupal\Core\Security\TrustedCallbackInterface;
 
 /**
- * Form for Application.
- */
-/**
  * Application form.
- *
- * // phpcs:ignore
- * NOSONAR: This form class intentionally aggregates multiple responsibilities for cohesive form handling.
  */
 class ApplicationForm extends ContentEntityForm implements TrustedCallbackInterface {
   use MessengerTrait;
