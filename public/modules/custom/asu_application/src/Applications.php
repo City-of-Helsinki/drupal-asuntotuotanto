@@ -2,6 +2,8 @@
 
 namespace Drupal\asu_application;
 
+use Drupal\user\Entity\User;
+
 /**
  * Handles applications.
  */
@@ -38,13 +40,54 @@ class Applications {
         $this->applications = $applicationStorage->loadMultiple();
       }
       else {
-        $this->applications = $applicationStorage
-          ->loadByProperties(['uid' => $userId, 'status' => 1]);
+        $applicationIds = $this->resolveApplicationIdsByUser($userId);
+        $this->applications = empty($applicationIds)
+          ? []
+          : $applicationStorage->loadMultiple($applicationIds);
       }
     }
     catch (\Exception $e) {
       $this->applications = [];
     }
+  }
+
+  /**
+   * Resolve application ids where user is owner or mapped co-applicant.
+   */
+  private function resolveApplicationIdsByUser(string $userId): array {
+    $ids = \Drupal::database()
+      ->select('asu_application', 'a')
+      ->fields('a', ['id'])
+      ->condition('a.uid', (int) $userId)
+      ->condition('a.status', 1)
+      ->execute()
+      ->fetchCol();
+
+    $schema = \Drupal::database()->schema();
+    if (!$schema->tableExists('asu_application_co_applicant_map')) {
+      return array_map('intval', $ids);
+    }
+
+    $user = User::load((int) $userId);
+    $samlHash = $user && $user->hasField('field_saml_hash')
+      ? $user->get('field_saml_hash')->value
+      : NULL;
+
+    if (empty($samlHash)) {
+      return array_values(array_unique(array_map('intval', $ids)));
+    }
+
+    $coApplicantIds = \Drupal::database()
+      ->select('asu_application_co_applicant_map', 'm')
+      ->fields('m', ['application_id'])
+      ->innerJoin('asu_application', 'a', 'a.id = m.application_id')
+      ->condition('a.status', 1)
+      ->condition('m.co_applicant_saml_hash', $samlHash)
+      ->execute()
+      ->fetchCol();
+
+    $allIds = array_merge($ids, $coApplicantIds);
+    return array_values(array_unique(array_map('intval', $allIds)));
   }
 
   /**

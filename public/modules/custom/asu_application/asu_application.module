@@ -6,9 +6,12 @@
  */
 
 use Drupal\Core\Datetime\DrupalDateTime;
+use Drupal\views\ViewExecutable;
+use Drupal\views\Plugin\views\query\QueryPluginBase;
 use Drupal\asu_application\Entity\Application;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 use Drupal\file\Entity\File;
+use Drupal\user\Entity\User;
 
 /**
  * Implements hook_theme().
@@ -139,6 +142,7 @@ function template_preprocess_asu_application(array &$variables) {
     $application_teaser_values = [
       '#teaser_values' => [
         'application_id' => $application->id->value,
+        'is_owner' => ((int) $application->getOwnerId() === (int) \Drupal::currentUser()->id()),
         'backend_application_id' => $application->get('field_backend_id')->value,
         'project_uuid' => $project->uuid(),
         'language' => \Drupal::languageManager()->getCurrentLanguage()->getId(),
@@ -341,5 +345,93 @@ function asu_application_preprocess_views_view(&$variables) {
   if ($variables['view']->id() == 'applications') {
     $variables['#attached']['library'][] = 'asu_application/application-submit';
     $variables['#attached']['drupalSettings']['asuApplication']['hasExistingApplication'] = TRUE;
+  }
+}
+
+/**
+ * Implements hook_views_query_alter().
+ *
+ * Replaces owner-only constraints from the applications View with one
+ * explicit access condition:
+ * - owner only, or
+ * - owner OR mapped co-applicant (when SAML hash exists).
+ */
+function asu_application_views_query_alter(ViewExecutable $view, QueryPluginBase $query) {
+  if ($view->id() !== 'applications') {
+    return;
+  }
+
+  $uid = \Drupal::currentUser()->id();
+  if (!$uid) {
+    return;
+  }
+
+  // Remove owner-only conditions produced by the View argument/filter.
+  foreach ($query->where as &$group) {
+    if (empty($group['conditions']) || !is_array($group['conditions'])) {
+      continue;
+    }
+
+    foreach ($group['conditions'] as $condKey => $condition) {
+      if (!is_array($condition) || !isset($condition['field'])) {
+        continue;
+      }
+
+      // Case 1: formula in group 0 for current user uid.
+      if (is_string($condition['field'])
+        && str_contains($condition['field'], 'users_field_data_asu_application.uid')) {
+        unset($group['conditions'][$condKey]);
+        continue;
+      }
+
+      // Case 2: nested condition object from uid_current filter.
+      if (
+        is_object($condition['field'])
+        && method_exists($condition['field'], 'conditions')
+      ) {
+        $subConditions = &$condition['field']->conditions();
+        foreach ($subConditions as $subKey => $subCondition) {
+          if (!is_array($subCondition) || !isset($subCondition['field'])) {
+            continue;
+          }
+          $subField = is_string($subCondition['field']) ? $subCondition['field'] : '';
+          if (str_contains($subField, 'users_field_data_asu_application__users.uid')) {
+            unset($subConditions[$subKey]);
+          }
+        }
+
+        // If nested condition object has no real field conditions, remove it.
+        $hasFieldConditions = FALSE;
+        foreach ($subConditions as $subCondition) {
+          if (is_array($subCondition) && isset($subCondition['field'])) {
+            $hasFieldConditions = TRUE;
+            break;
+          }
+        }
+        if (!$hasFieldConditions) {
+          unset($group['conditions'][$condKey]);
+        }
+      }
+    }
+  }
+  unset($group);
+
+  // Build final explicit access condition.
+  $account = User::load($uid);
+  $samlHash = $account && $account->hasField('field_saml_hash')
+    ? $account->get('field_saml_hash')->value
+    : NULL;
+
+  $hasMapping = !empty($samlHash)
+    && \Drupal::database()->schema()->tableExists('asu_application_co_applicant_map');
+
+  if ($hasMapping) {
+    $query->addWhereExpression(0, '(asu_application.uid = :co_uid OR asu_application.id IN (
+      SELECT application_id FROM {asu_application_co_applicant_map}
+      WHERE co_applicant_saml_hash = :co_hash
+    ))', [':co_uid' => $uid, ':co_hash' => $samlHash]);
+  }
+  else {
+    $query->addWhereExpression(0, 'asu_application.uid = :co_uid', [':co_uid' => $uid]);
   }
 }

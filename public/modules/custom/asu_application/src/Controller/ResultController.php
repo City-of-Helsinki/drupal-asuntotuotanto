@@ -4,6 +4,7 @@ namespace Drupal\asu_application\Controller;
 
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\asu_api\Api\BackendApi\BackendApi;
 use Drupal\asu_api\Api\BackendApi\Request\ApplicationLotteryResult;
@@ -22,6 +23,7 @@ class ResultController extends ControllerBase {
     private readonly BackendApi $backendApi,
     private readonly EntityRepositoryInterface $entity_repository,
     private readonly RequestStack $requestStack,
+    private readonly Connection $database,
   ) {
 
   }
@@ -34,6 +36,7 @@ class ResultController extends ControllerBase {
       $container->get('asu_api.backendapi'),
       $container->get('entity.repository'),
       $container->get('request_stack'),
+      $container->get('database'),
     );
   }
 
@@ -57,7 +60,7 @@ class ResultController extends ControllerBase {
       return new AjaxResponse([]);
     }
 
-    if ($application->getOwnerId() != $user->id()) {
+    if (!$this->isOwnerOrCoApplicant($application, $user->id())) {
       return new AjaxResponse([], 401);
     }
 
@@ -66,9 +69,19 @@ class ResultController extends ControllerBase {
       return new AjaxResponse(json_decode($cached->data, TRUE, 200));
     }
 
+    // Backend API authentication data may exist only on the owner account.
+    // For mapped co-applicants, fetch lottery results using owner as sender.
+    $sender = $user;
+    if ((int) $application->getOwnerId() !== (int) $user->id()) {
+      $owner = $this->entityTypeManager()->getStorage('user')->load($application->getOwnerId());
+      if ($owner) {
+        $sender = $owner;
+      }
+    }
+
     try {
       $request = new ApplicationLotteryResult($project->uuid());
-      $request->setSender($user);
+      $request->setSender($sender);
       /** @var \Drupal\asu_api\Api\BackendApi\Request\ApplicationLotteryResultResponse $responseContent */
       $responseContent = $this->backendApi
         ->send($request)
@@ -99,6 +112,41 @@ class ResultController extends ControllerBase {
 
     $this->cache()->set($cid, json_encode($results), (time() + 60 * 60));
     return new AjaxResponse($results);
+  }
+
+  /**
+   * Check whether user is owner or mapped co-applicant for application.
+   */
+  private function isOwnerOrCoApplicant(Application $application, int $userId): bool {
+    if ((int) $application->getOwnerId() === $userId) {
+      return TRUE;
+    }
+
+    $schema = $this->database->schema();
+    if (!$schema->tableExists('asu_application_co_applicant_map')) {
+      return FALSE;
+    }
+
+    $account = $this->entityTypeManager()->getStorage('user')->load($userId);
+    if (!$account || !$account->hasField('field_saml_hash')) {
+      return FALSE;
+    }
+
+    $samlHash = $account->get('field_saml_hash')->value;
+    if (empty($samlHash)) {
+      return FALSE;
+    }
+
+    $exists = $this->database
+      ->select('asu_application_co_applicant_map', 'm')
+      ->fields('m', ['application_id'])
+      ->condition('application_id', (int) $application->id())
+      ->condition('co_applicant_saml_hash', $samlHash)
+      ->range(0, 1)
+      ->execute()
+      ->fetchField();
+
+    return (bool) $exists;
   }
 
   /**

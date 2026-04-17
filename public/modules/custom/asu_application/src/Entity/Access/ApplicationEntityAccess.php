@@ -23,6 +23,7 @@ class ApplicationEntityAccess extends EntityAccessControlHandler {
         return $this->viewOperationHandling($entity, $account);
 
       case 'update':
+      case 'delete':
         return $this->updateOperationAccess($entity, $account);
     }
     return parent::checkAccess($entity, $operation, $account);
@@ -45,8 +46,12 @@ class ApplicationEntityAccess extends EntityAccessControlHandler {
   private function viewOperationHandling(EntityInterface $entity, AccountInterface $account): AccessResult {
     $createPermission = 'view application';
     $administratePermission = 'administer applications';
+
+    $isOwner = $account->id() === $entity->getOwnerId();
+    $isCoApplicant = $this->isUserCoApplicant($entity, $account);
+
     return AccessResult::allowedIf(
-      ($account->id() === $entity->getOwnerId() && $account->hasPermission($createPermission)) ||
+      (($isOwner || $isCoApplicant) && $account->hasPermission($createPermission)) ||
       $account->hasPermission($administratePermission)
     );
   }
@@ -61,6 +66,41 @@ class ApplicationEntityAccess extends EntityAccessControlHandler {
       ($account->id() === $entity->getOwnerId() && $account->hasPermission($createPermission)) ||
       $account->hasPermission($administratePermission)
     );
+  }
+
+  /**
+   * Check whether current account is mapped as co-applicant for the entity.
+   */
+  private function isUserCoApplicant(EntityInterface $entity, AccountInterface $account): bool {
+    if (!$account->isAuthenticated()) {
+      return FALSE;
+    }
+
+    $schema = \Drupal::database()->schema();
+    if (!$schema->tableExists('asu_application_co_applicant_map')) {
+      return FALSE;
+    }
+
+    $accountEntity = \Drupal::entityTypeManager()->getStorage('user')->load($account->id());
+    if (!$accountEntity || !$accountEntity->hasField('field_saml_hash')) {
+      return FALSE;
+    }
+
+    $samlHash = $accountEntity->get('field_saml_hash')->value;
+    if (empty($samlHash)) {
+      return FALSE;
+    }
+
+    $exists = \Drupal::database()
+      ->select('asu_application_co_applicant_map', 'm')
+      ->fields('m', ['application_id'])
+      ->condition('application_id', (int) $entity->id())
+      ->condition('co_applicant_saml_hash', $samlHash)
+      ->range(0, 1)
+      ->execute()
+      ->fetchField();
+
+    return (bool) $exists;
   }
 
 }
