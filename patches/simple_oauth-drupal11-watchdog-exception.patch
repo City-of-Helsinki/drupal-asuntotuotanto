@@ -1,5 +1,4 @@
 diff --git a/src/Controller/Oauth2Token.php b/src/Controller/Oauth2Token.php
-index a00f01b..9811498 100644
 --- a/src/Controller/Oauth2Token.php
 +++ b/src/Controller/Oauth2Token.php
 @@ -69,7 +69,7 @@ class Oauth2Token extends ControllerBase {
@@ -11,3 +10,40 @@ index a00f01b..9811498 100644
        $response = $exception->generateHttpResponse(new Response());
      }
      return $response;
+diff --git a/src/Authentication/Provider/SimpleOauthAuthenticationProvider.php b/src/Authentication/Provider/SimpleOauthAuthenticationProvider.php
+--- a/src/Authentication/Provider/SimpleOauthAuthenticationProvider.php
++++ b/src/Authentication/Provider/SimpleOauthAuthenticationProvider.php
+@@ -4,6 +4,7 @@ namespace Drupal\simple_oauth\Authentication\Provider;
+ 
+ use Drupal\Core\Authentication\AuthenticationProviderInterface;
+ use Drupal\Core\Entity\EntityTypeManagerInterface;
++use Drupal\Core\Logger\LoggerChannelTrait;
+ use Drupal\Core\StringTranslation\StringTranslationTrait;
+ use Drupal\simple_oauth\Authentication\TokenAuthUser;
+ use Drupal\simple_oauth\PageCache\SimpleOauthRequestPolicyInterface;
+@@ -18,6 +19,7 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
+ class SimpleOauthAuthenticationProvider implements AuthenticationProviderInterface {
+ 
+   use StringTranslationTrait;
++  use LoggerChannelTrait;
+ 
+   /**
+    * @var \Drupal\simple_oauth\Server\ResourceServerInterface
+@@ -79,7 +81,7 @@ class SimpleOauthAuthenticationProvider implements AuthenticationProviderInterfa
+     }
+     catch (OAuthServerException $exception) {
+       // Procedural code here is hard to avoid.
+-      watchdog_exception('simple_oauth', $exception);
++      $this->getLogger('simple_oauth')->error($exception->getMessage(), ['exception' => $exception]);
+ 
+       throw new HttpException(
+         $exception->getHttpStatusCode(),
+@@ -106,7 +108,7 @@ class SimpleOauthAuthenticationProvider implements AuthenticationProviderInterfa
+           ['%name' => $account->getAccountName()]
+         )
+       );
+-      watchdog_exception('simple_oauth', $exception);
++      $this->getLogger('simple_oauth')->error($exception->getMessage(), ['exception' => $exception]);
+       throw new HttpException(
+         $exception->getHttpStatusCode(),
+         $exception->getHint(),

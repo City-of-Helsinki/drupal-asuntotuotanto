@@ -1,0 +1,47 @@
+diff --git a/src/Authentication/TokenAuthUser.php b/src/Authentication/TokenAuthUser.php
+--- a/src/Authentication/TokenAuthUser.php
++++ b/src/Authentication/TokenAuthUser.php
+@@ -3,6 +3,7 @@
+ namespace Drupal\simple_oauth\Authentication;
+ 
+ use Drupal\consumers\Entity\ConsumerInterface;
++use Drupal\Core\Entity\EntityInterface;
+ use Drupal\Core\Entity\EntityStorageInterface;
+ use Drupal\Core\Entity\EntityTypeInterface;
+ use Drupal\Core\Session\AccountInterface;
+@@ -74,6 +75,35 @@ class TokenAuthUser implements TokenAuthUserInterface {
+    */
+   public function getConsumer(): ConsumerInterface {
+     return $this->consumer;
++  }
++
++  /**
++   * {@inheritdoc}
++   */
++  public function getBundleEntity(): ?EntityInterface {
++    // Only supported when the decorated subject is a content entity.
++    return method_exists($this->subject, 'getBundleEntity')
++      ? $this->subject->getBundleEntity()
++      : NULL;
++  }
++
++  /**
++   * {@inheritdoc}
++   */
++  public function getOriginal(): ?static {
++    return method_exists($this->subject, 'getOriginal')
++      ? $this->subject->getOriginal()
++      : NULL;
++  }
++
++  /**
++   * {@inheritdoc}
++   */
++  public function setOriginal(?EntityInterface $original): static {
++    if (method_exists($this->subject, 'setOriginal')) {
++      $this->subject->setOriginal($original);
++    }
++    return $this;
+   }
+ 
+   /**
