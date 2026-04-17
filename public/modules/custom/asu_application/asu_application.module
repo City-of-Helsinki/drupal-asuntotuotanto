@@ -377,7 +377,7 @@ function asu_application_views_query_alter(ViewExecutable $view, QueryPluginBase
         continue;
       }
 
-      // Case 1: formula in group 0 (users_field_data_asu_application.uid = :uid).
+      // Case 1: formula in group 0 for current user uid.
       if (is_string($condition['field'])
         && str_contains($condition['field'], 'users_field_data_asu_application.uid')) {
         unset($group['conditions'][$condKey]);
@@ -385,7 +385,10 @@ function asu_application_views_query_alter(ViewExecutable $view, QueryPluginBase
       }
 
       // Case 2: nested condition object from uid_current filter.
-      if (is_object($condition['field']) && method_exists($condition['field'], 'conditions')) {
+      if (
+        is_object($condition['field'])
+        && method_exists($condition['field'], 'conditions')
+      ) {
         $subConditions = &$condition['field']->conditions();
         foreach ($subConditions as $subKey => $subCondition) {
           if (!is_array($subCondition) || !isset($subCondition['field'])) {
