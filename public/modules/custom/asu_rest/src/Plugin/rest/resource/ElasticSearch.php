@@ -313,15 +313,24 @@ class ElasticSearch extends ResourceBase {
             $room_count = intval($get_scalar($apartment_node, 'field_room_count'));
           }
 
+          $apartment_number = $get_scalar($apartment_node, 'field_apartment_number');
+          $application_url = '';
+          if (method_exists($project_node, 'getApplicationUrl')) {
+            $computed_url = $project_node->getApplicationUrl($apartment_number, $apartment_state_of_sale);
+            if (is_string($computed_url) && $computed_url !== '') {
+              $application_url = $computed_url;
+            }
+          }
+
           $apartment = [
             '_language' => $apartment_node->language()->getId(),
             'apartment_published' => $apartment_node->isPublished(),
             'project_published' => $project_node->isPublished(),
             'apartment_address' => $get_scalar($apartment_node, 'field_apartment_address'),
-            'apartment_number' => $get_scalar($apartment_node, 'field_apartment_number'),
+            'apartment_number' => $apartment_number,
             'apartment_state_of_sale' => $apartment_state_of_sale,
             'apartment_structure' => $apartment_structure,
-            'application_url' => "/application/{$apartment_node->id()}",
+            'application_url' => $application_url,
             'debt_free_sales_price' => floatval($get_scalar($apartment_node, 'field_debt_free_sales_price') ?: 0),
             'floor' => $get_scalar($apartment_node, 'field_floor') !== '' ? intval($get_scalar($apartment_node, 'field_floor')) : NULL,
             'floor_max' => $get_scalar($apartment_node, 'field_floor_max') !== '' ? intval($get_scalar($apartment_node, 'field_floor_max')) : NULL,
