@@ -41,13 +41,32 @@ final class OAuthConsumerProvisioningTest extends KernelTestBase {
     $this->installEntitySchema('consumer');
 
     // Needed by consumers/simple_oauth entities.
-    $this->installConfig(['system', 'user']);
+    $this->installConfig([
+      'system',
+      'user',
+      'consumers',
+      'simple_oauth',
+    ]);
 
     // Role expected to exist via CMI in real environments.
     Role::create([
       'id' => 'rest_client',
       'label' => 'REST api client',
     ])->save();
+
+    // asu_rest provisioning requires the rest_client scope when the
+    // oauth2_scope entity type exists in the environment.
+    $entity_type_manager = $this->container->get('entity_type.manager');
+    if ($entity_type_manager->hasDefinition('oauth2_scope')) {
+      $scope_storage = $entity_type_manager->getStorage('oauth2_scope');
+      if (!$scope_storage->load('rest_client')) {
+        $scope_storage->create([
+          'id' => 'rest_client',
+          'label' => 'REST client',
+          'description' => 'REST client scope for automated consumers.',
+        ])->save();
+      }
+    }
   }
 
   /**
@@ -65,6 +84,8 @@ final class OAuthConsumerProvisioningTest extends KernelTestBase {
    */
   public function testProvisioningCreatesUserAndAssignsConsumer(): void {
     putenv('ASU_REST_OAUTH_CLIENT_SECRET=test-secret');
+    // Ensure container environment does not override configured client_id.
+    putenv('ASU_REST_OAUTH_CLIENT_ID=apartment_application_service');
     putenv('ASU_REST_OAUTH_DEFAULT_USERNAME=rest_client');
 
     $this->config('asu_rest.settings')
@@ -87,11 +108,17 @@ final class OAuthConsumerProvisioningTest extends KernelTestBase {
     $this->assertTrue($user->isActive());
     $this->assertTrue(in_array('rest_client', $user->getRoles(), TRUE));
 
-    $consumers = $this->container->get('entity_type.manager')
-      ->getStorage('consumer')
-      ->loadByProperties(['client_id' => 'apartment_application_service']);
+    $consumer_storage = $this->container->get('entity_type.manager')
+      ->getStorage('consumer');
+    $consumer_ids = $consumer_storage->getQuery()
+      ->accessCheck(FALSE)
+      ->condition('client_id', 'apartment_application_service')
+      ->range(0, 1)
+      ->execute();
+    $this->assertNotEmpty($consumer_ids);
+
     /** @var \Drupal\consumers\Entity\Consumer $consumer */
-    $consumer = reset($consumers);
+    $consumer = $consumer_storage->load(reset($consumer_ids));
     $this->assertInstanceOf(Consumer::class, $consumer);
     $this->assertSame((int) $user->id(), (int) $consumer->get('user_id')->target_id);
   }

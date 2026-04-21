@@ -27,6 +27,19 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 class ElasticSearch extends ResourceBase {
 
   /**
+   * Convert a decimal euro string to integer cents.
+   *
+   * Drupal stores monetary values in decimal fields (scale 2). Consumers of
+   * this endpoint expect values in cents to match the other services.
+   */
+  protected function toCents(?string $value): int {
+    if ($value === NULL || $value === '') {
+      return 0;
+    }
+    return (int) round(((float) $value) * 100);
+  }
+
+  /**
    * {@inheritDoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
@@ -331,10 +344,10 @@ class ElasticSearch extends ResourceBase {
             'apartment_state_of_sale' => $apartment_state_of_sale,
             'apartment_structure' => $apartment_structure,
             'application_url' => $application_url,
-            'debt_free_sales_price' => floatval($get_scalar($apartment_node, 'field_debt_free_sales_price') ?: 0),
+            'debt_free_sales_price' => $this->toCents($get_scalar($apartment_node, 'field_debt_free_sales_price')),
             'floor' => $get_scalar($apartment_node, 'field_floor') !== '' ? intval($get_scalar($apartment_node, 'field_floor')) : NULL,
             'floor_max' => $get_scalar($apartment_node, 'field_floor_max') !== '' ? intval($get_scalar($apartment_node, 'field_floor_max')) : NULL,
-            'housing_company_fee' => floatval($get_scalar($apartment_node, 'field_housing_company_fee') ?: 0),
+            'housing_company_fee' => $this->toCents($get_scalar($apartment_node, 'field_housing_company_fee')),
             'living_area' => floatval($get_scalar($apartment_node, 'field_living_area') ?: 0),
             'nid' => intval($apartment_node->id()),
             'project_application_end_time' => $project_application_end_time,
@@ -357,12 +370,12 @@ class ElasticSearch extends ResourceBase {
             'project_upcoming_description' => $get_scalar($project_node, 'field_upcoming_description'),
             'project_url' => $this->buildAbsoluteUrl($project_node->toUrl()->toString()),
             'project_uuid' => $project_node->uuid(),
-            'release_payment' => floatval($get_scalar($apartment_node, 'field_release_payment') ?: 0),
-            'right_of_occupancy_payment' => floatval($get_scalar($apartment_node, 'field_right_of_occupancy_payment') ?: 0),
+            'release_payment' => $this->toCents($get_scalar($apartment_node, 'field_release_payment')),
+            'right_of_occupancy_payment' => $this->toCents($get_scalar($apartment_node, 'field_right_of_occupancy_payment')),
             'title' => $apartment_node->label(),
             'url' => $this->buildAbsoluteUrl($apartment_node->toUrl()->toString()),
             'uuid' => $apartment_node->uuid(),
-            'sales_price' => floatval($get_scalar($apartment_node, 'field_sales_price') ?: 0),
+            'sales_price' => $this->toCents($get_scalar($apartment_node, 'field_sales_price')),
             'room_count' => $room_count,
             // For accurate FE structure, add more fields as needed.
           ];
