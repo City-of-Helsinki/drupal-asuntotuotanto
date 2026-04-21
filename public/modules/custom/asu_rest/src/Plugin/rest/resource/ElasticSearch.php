@@ -29,8 +29,8 @@ class ElasticSearch extends ResourceBase {
   /**
    * Convert a decimal euro string to integer cents.
    *
-   * Drupal stores monetary values in decimal fields (scale 2). Consumers of this
-   * endpoint expect values in cents to match the other services.
+   * Drupal stores monetary values in decimal fields (scale 2). Consumers of
+   * this endpoint expect values in cents to match the other services.
    */
   protected function toCents(?string $value): int {
     if ($value === NULL || $value === '') {

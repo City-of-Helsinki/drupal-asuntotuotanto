@@ -183,12 +183,13 @@ function asu_rest_provision_oauth_consumer(): void {
     'client_id' => $client_id,
     'label' => $label,
     'description' => 'Machine client for Elasticsearch-compatible REST endpoints (projects, apartments).',
-    'grant_types' => ['client_credentials'],
-    'scopes' => ['rest_client'],
+    // simple_oauth implements OAuth2 scopes as Drupal user roles on the
+    // consumer entity.
+    'roles' => ['rest_client'],
     'user_id' => (int) $user->id(),
     'confidential' => TRUE,
     'secret' => $secret,
-    'redirect' => ['https://127.0.0.1/oauth2-callback-not-used'],
+    'redirect' => 'https://127.0.0.1/oauth2-callback-not-used',
     'third_party' => FALSE,
     'is_default' => FALSE,
   ]);

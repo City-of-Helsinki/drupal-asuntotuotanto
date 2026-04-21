@@ -15,6 +15,8 @@ use Drupal\Tests\UnitTestCase;
 final class ElasticSearchToCentsTest extends UnitTestCase {
 
   /**
+   * Tests that euro decimals are converted to integer cents.
+   *
    * @dataProvider centsProvider
    */
   public function testToCents(?string $input, int $expected): void {
@@ -33,6 +35,7 @@ final class ElasticSearchToCentsTest extends UnitTestCase {
    * Data provider for cents conversion.
    *
    * @return array<string, array{0: ?string, 1: int}>
+   *   Test cases keyed by human-readable description.
    */
   public static function centsProvider(): array {
     return [
@@ -47,4 +50,3 @@ final class ElasticSearchToCentsTest extends UnitTestCase {
   }
 
 }
-
