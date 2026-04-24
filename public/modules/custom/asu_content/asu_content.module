@@ -142,7 +142,7 @@ function asu_content_check_apartment_integration_fields(&$form, EntityInterface 
       $entity->get($trigger_field)->value == 1
     ) {
 
-      $required_apartment_fields = IntegrationConstants::getRequiredApartmentFieldsForIntegration($trigger_field, asu_content_get_ownershiptype());
+      $required_apartment_fields = IntegrationConstants::getRequiredApartmentFieldsForIntegration($trigger_field, asu_content_get_ownershiptype($entity));
       $required_project_fields = IntegrationConstants::getRequiredProjectFieldsForIntegration($trigger_field);
 
       $project = $entity->getProject();
@@ -273,28 +273,52 @@ function asu_content_hide_field_in_apartment_edit(&$form, $form_state) {
 }
 
 /**
- * Get HASO / HITAS edit form ownership type from url.
+ * Get HASO / HITAS ownership type from entity with route fallback.
+ *
+ * @param \Drupal\Core\Entity\EntityInterface|null $entity
+ *   (optional) The current apartment or project entity.
+ *
+ * @return string
+ *   Ownership type in lowercase, or an empty string if not available.
  */
-function asu_content_get_ownershiptype() {
-  $ownership_type = NULL;
-  $node = \Drupal::routeMatch()->getParameter('node');
+function asu_content_get_ownershiptype(?EntityInterface $entity = NULL): string {
+  $project = NULL;
 
-  if ($node instanceof Apartment || $node instanceof Project) {
-    $project = $node instanceof Apartment ? $node->getProject() : $node;
+  // Prefer entity-derived context for cron/queue execution.
+  if ($entity instanceof Apartment) {
+    $project = $entity->getProject();
+  }
+  elseif ($entity instanceof Project) {
+    $project = $entity;
+  }
 
-    if ($project instanceof Project && $project->hasField('field_ownership_type')) {
-      $ownership_term = $project->get('field_ownership_type')->entity;
-      if (!$ownership_term) {
-        $references = $project->get('field_ownership_type')->referencedEntities();
-        $ownership_term = reset($references) ?: NULL;
-      }
-      if ($ownership_term && method_exists($ownership_term, 'getName')) {
-        $ownership_type = $ownership_term->getName();
-      }
+  // UI forms still rely on route context.
+  if (!$project) {
+    $node = \Drupal::routeMatch()->getParameter('node');
+    if ($node instanceof Apartment) {
+      $project = $node->getProject();
+    }
+    elseif ($node instanceof Project) {
+      $project = $node;
     }
   }
 
-  return $ownership_type;
+  if ($project instanceof Project) {
+    return $project->getOwnershipType();
+  }
+
+  if ($project instanceof EntityInterface && $project->hasField('field_ownership_type')) {
+    $ownership_term = $project->get('field_ownership_type')->entity;
+    if (!$ownership_term) {
+      $references = $project->get('field_ownership_type')->referencedEntities();
+      $ownership_term = reset($references) ?: NULL;
+    }
+    if ($ownership_term && method_exists($ownership_term, 'getName')) {
+      return strtolower((string) $ownership_term->getName());
+    }
+  }
+
+  return '';
 }
 
 /**
