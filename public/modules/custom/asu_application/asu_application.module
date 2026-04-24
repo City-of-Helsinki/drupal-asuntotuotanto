@@ -230,6 +230,10 @@ function template_preprocess_asu_application(array &$variables) {
     $application_teaser_values = [];
   }
 
+  $application_teaser_values['#cache'] = [
+    'contexts' => ['user'],
+  ];
+
   $variables['content'] = $application_teaser_values;
 }
 
