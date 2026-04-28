@@ -15,6 +15,7 @@ use Drupal\Core\StreamWrapper\StreamWrapperInterface;
 use Drupal\Core\StringTranslation\ByteSizeMarkup;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\TypedData\DataDefinition;
+use Drupal\file\Validation\FileValidatorSettingsTrait;
 
 /**
  * Plugin implementation for csv file upload field.
@@ -33,6 +34,7 @@ use Drupal\Core\TypedData\DataDefinition;
 class AsuCsvImport extends EntityReferenceItem {
 
   use StringTranslationTrait;
+  use FileValidatorSettingsTrait;
 
   /**
    * {@inheritdoc}
@@ -303,24 +305,7 @@ class AsuCsvImport extends EntityReferenceItem {
    *   element's '#upload_validators' property.
    */
   public function getUploadValidators() {
-    $validators = [];
-    $settings = $this->getSettings();
-
-    // Cap the upload size according to the PHP limit.
-    $max_filesize = Bytes::toNumber(Environment::getUploadMaxSize());
-    if (!empty($settings['max_filesize'])) {
-      $max_filesize = min($max_filesize, Bytes::toNumber($settings['max_filesize']));
-    }
-
-    // There is always a file size limit due to the PHP server limit.
-    $validators['file_validate_size'] = [$max_filesize];
-
-    // Add the extension check if necessary.
-    if (!empty($settings['file_extensions'])) {
-      $validators['file_validate_extensions'] = [$settings['file_extensions']];
-    }
-
-    return $validators;
+    return $this->getFileUploadValidators($this->getSettings());
   }
 
   /**
