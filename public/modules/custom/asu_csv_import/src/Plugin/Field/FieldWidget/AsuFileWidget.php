@@ -35,6 +35,13 @@ class AsuFileWidget extends WidgetBase implements ContainerFactoryPluginInterfac
   use StringTranslationTrait;
 
   /**
+   * The element info manager service.
+   *
+   * @var \Drupal\Core\Render\ElementInfoManagerInterface
+   */
+  protected $elementInfo;
+
+  /**
    * The renderer service.
    *
    * @var \Drupal\Core\Render\RendererInterface
