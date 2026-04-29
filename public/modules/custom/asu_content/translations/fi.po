@@ -43532,7 +43532,7 @@ msgid "offered"
 msgstr "tarjottu"
 
 msgid "pending"
-msgstr "odottaa"
+msgstr "voimassa"
 
 msgid "terminated"
 msgstr "päättynyt"
