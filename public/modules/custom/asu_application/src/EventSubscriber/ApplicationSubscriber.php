@@ -330,6 +330,7 @@ class ApplicationSubscriber implements EventSubscriberInterface {
         $sender,
         $application,
         $project->uuid(),
+        $applicationEvent->isSubmittedLate(),
       );
 
       $customer = $this->entityTypeManager->getStorage("user")->load($application->getOwnerId());
