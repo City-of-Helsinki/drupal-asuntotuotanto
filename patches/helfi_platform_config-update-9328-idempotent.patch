@@ -2,7 +2,7 @@ diff --git a/helfi_platform_config.install b/helfi_platform_config.install
 index 37e8a45d..b7aab1fe 100644
 --- a/helfi_platform_config.install
 +++ b/helfi_platform_config.install
-@@ -459,22 +459,38 @@ function helfi_platform_config_update_9328(): void {
+@@ -459,30 +459,46 @@ function helfi_platform_config_update_9328(): void {
    // Redirect implemented EntityPublishableInterface:
    // https://www.drupal.org/project/redirect/issues/3424962.
    // We implemented similar field in UHF-10539.

@@ -1,6 +1,6 @@
-diff --git a/lib/Drupal/Core/Entity/Sql/SqlContentEntityStorage.php b/lib/Drupal/Core/Entity/Sql/SqlContentEntityStorage.php
---- a/lib/Drupal/Core/Entity/Sql/SqlContentEntityStorage.php
-+++ b/lib/Drupal/Core/Entity/Sql/SqlContentEntityStorage.php
+diff --git a/core/lib/Drupal/Core/Entity/Sql/SqlContentEntityStorage.php b/core/lib/Drupal/Core/Entity/Sql/SqlContentEntityStorage.php
+--- a/core/lib/Drupal/Core/Entity/Sql/SqlContentEntityStorage.php
++++ b/core/lib/Drupal/Core/Entity/Sql/SqlContentEntityStorage.php
 @@ -1546,14 +1546,19 @@ public function onFieldStorageDefinitionDelete(FieldStorageDefinitionInterface $storage_definition) {
      $table_mapping = $this->getTableMapping();
      if ($table_mapping->requiresDedicatedTableStorage($storage_definition)) {

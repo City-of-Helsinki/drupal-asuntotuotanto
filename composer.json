@@ -7,7 +7,7 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "require": {
-        "asuntomyynti/react": "^1.5.4",
+        "asuntomyynti/react": "^1.6.1",
         "composer/installers": "^2.3",
         "cweagans/composer-patches": "^2.0",
         "dinbror/blazy": "^1.8",
@@ -182,7 +182,7 @@
                 "[D11] Skip delete when field table missing": "patches/core-skip-delete-missing-field-table.patch"
             },
             "drupal/elasticsearch_connector": {
-                "[Local] Disable reopen parameter for ES": "patches/elasticsearch-connector-disable-reopen.patch"
+                "Use Search API field identifier in FilterBuilder": "patches/elasticsearch_connector-filterbuilder-use-field-identifier.patch"
             }
         },
         "composer-patches": {
@@ -274,9 +274,9 @@
             "type": "package",
             "package": {
                 "name": "asuntomyynti/react",
-                "version": "1.5.4",
+                "version": "1.6.1",
                 "dist": {
-                    "url": "https://github.com/City-of-Helsinki/asuntomyynti-react/releases/download/v1.5.4/asuntomyynti-react-1.5.4.zip",
+                    "url": "https://github.com/City-of-Helsinki/asuntomyynti-react/releases/download/v1.6.1/asuntomyynti-react-1.6.1.zip",
                     "type": "zip"
                 }
             }
