@@ -7,6 +7,7 @@
 #}
 
 {{ attach_library('asuntotuotanto/application-apartment-listing') }}
+{{ attach_library('asu_application/application_results') }}
 
 {%
   set classes = [
@@ -47,6 +48,78 @@
     </span>
     {{ teaser_values.project_ownership_type }}
   </span>
+{% endmacro %}
+
+{% macro results_mobile_list(apartments, app_id, container_class, with_loaded) %}
+  <ul class="application__apartments application__apartments--mobile application__results-mobile-list is-hidden {{ container_class }}" data-application="{{ app_id }}" aria-hidden="true">
+    {% for key, apartment in apartments %}
+      <li {{ with_loaded ? 'loaded="0"' }} data-apartment-uuid="{{ apartment.uuid|lower }}" class="lottery-result lottery-result--mobile application-apartment-{{ key }} application__result-card">
+        <h3 class="application__result-card-title">{% trans %}Apartment{% endtrans %} {{ apartment.number }}</h3>
+        <p class="application__result-card-subtitle">{{ apartment.structure }}</p>
+        <ul class="application__result-attrs">
+          <li class="application__result-attr">
+            <span class="application__result-label">{% trans %}Result of draw{% endtrans %}:</span>
+            <span class="application__result-value result">-</span>
+          </li>
+          <li class="application__result-attr">
+            <span class="application__result-label">{% trans %}Booking status{% endtrans %}:</span>
+            <span class="application__result-value status">-</span>
+          </li>
+          <li class="application__result-attr">
+            <span class="application__result-label">{% trans %}Current queue position{% endtrans %}:</span>
+            <span class="application__result-value queue-position">-</span>
+          </li>
+          <li class="application__result-attr">
+            <span class="application__result-label">{% trans %}Offer status{% endtrans %}:</span>
+            <span class="application__result-value offer-status">-</span>
+          </li>
+          <li class="application__result-attr">
+            <span class="application__result-label">{% trans %}Offer valid until{% endtrans %}:</span>
+            <span class="application__result-value offer-valid-until">-</span>
+          </li>
+          <li class="application__result-attr">
+            <span class="application__result-label">{% trans %}Cancellation{% endtrans %}:</span>
+            <span class="application__result-value cancellation-info">-</span>
+          </li>
+          <li class="application__result-attr">
+            <span class="application__result-label">{% trans %}Cancellation date{% endtrans %}:</span>
+            <span class="application__result-value cancellation-time">-</span>
+          </li>
+        </ul>
+      </li>
+    {% endfor %}
+  </ul>
+{% endmacro %}
+
+{% macro results_table(apartments, app_id, container_class, with_loaded) %}
+  <table class="application__apartments application__results-table is-hidden {{ container_class }}" data-application="{{ app_id }}" aria-hidden="true">
+    <thead>
+      <tr>
+        <th>{% trans %}Apartment{% endtrans %}</th>
+        <th>{% trans %}Result{% endtrans %}</th>
+        <th>{% trans %}Status{% endtrans %}</th>
+        <th>{% trans %}Queue{% endtrans %}</th>
+        <th>{% trans %}Offer{% endtrans %}</th>
+        <th>{% trans %}Valid until{% endtrans %}</th>
+        <th>{% trans %}Cancellation{% endtrans %}</th>
+        <th>{% trans %}Date{% endtrans %}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for key, apartment in apartments %}
+        <tr {{ with_loaded ? 'loaded="0"' }} data-apartment-uuid="{{ apartment.uuid|lower }}" class="lottery-result lottery-result--desktop application-apartment-{{ key }}">
+          <td>{{ apartment.number }} <span>{{ apartment.structure }}</span></td>
+          <td class="result">-</td>
+          <td class="status">-</td>
+          <td class="queue-position">-</td>
+          <td class="offer-status">-</td>
+          <td class="offer-valid-until">-</td>
+          <td class="cancellation-info">-</td>
+          <td class="cancellation-time">-</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
 {% endmacro %}
 
 {% macro teaser_common(teaser_values, attributes, classes, app_id) %}
@@ -134,72 +207,9 @@
       </a>
     </div>
 
-    <ul class="application__apartments application__apartments--mobile project__apartments-list is-hidden application__lottery-results-submitted" data-application="{{ app_id }}" aria-hidden="true">
-      {# Single lottery result (mobile) #}
+    {{ _self.results_mobile_list(content['#teaser_values'].application_apartments, app_id, 'application__lottery-results-submitted', true) }}
 
-      {% for key, apartment in content['#teaser_values'].application_apartments %}
-        <li loaded="0" class="project__apartments-item lottery-result lottery-result--mobile application-apartment-{{ key }}">
-          <button
-            aria-expanded="false"
-            class="project__apartments-item-button"
-            aria-label="Open apartment {{ apartment.number }} information"
-          >
-            <span>{{ apartment.number }}</span>
-            {# <span aria-hidden="true" class="project__apartment-application-status"></span> #}
-            <span>{{ apartment.structure }}</span>
-            {% include "@hdbt/misc/icon.twig" with {icon: 'angle-down', label: ''} %}
-          </button>
-          <div aria-hidden="true" class="project__apartments-item-content is-hidden">
-            <ul class="project__apartments-item-details-list">
-              <li class="project__apartments-item-details-item">
-                <p>
-                <span>
-                  {% trans %}
-                    Result of draw
-                  {% endtrans %}
-                </span>
-                <span class="result">
-                  -
-                </span>
-                </p>
-              </li>
-              <li class="project__apartments-item-details-item">
-                <p>
-                <span>
-                  {% trans %}
-                    Booking status
-                  {% endtrans %}
-                </span>
-                <span class="status">
-                  -
-                </span>
-                </p>
-              </li>
-            </ul>
-          </div>
-        </li>
-      {% endfor %}
-    </ul>
-
-    <table class="application__apartments application__apartments--desktop is-hidden application__lottery-results-submitted" data-application="{{ app_id }}" aria-hidden="true">
-      <thead>
-        <tr>
-          <th>{% trans %}Applied for apartment{% endtrans %}</th>
-          <th>{% trans %}Result of draw{% endtrans %}</th>
-          <th>{% trans %}Booking status{% endtrans %}</th>
-        </tr>
-      </thead>
-      <tbody>
-        {# Single lottery result (desktop) #}
-        {% for key, apartment in content['#teaser_values'].application_apartments %}
-          <tr loaded="0" class="lottery-result lottery-result--desktop application-apartment-{{ key }}">
-            <td>{{ apartment.number }} <span>{{ apartment.structure }}</span></td>
-            <td class="result">-</td>
-            <td class="status">-</td>
-          </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+    {{ _self.results_table(content['#teaser_values'].application_apartments, app_id, 'application__lottery-results-submitted', true) }}
 
     <div class="application__lottery application__lottery--hide is-hidden" data-application="{{ app_id }}" id="application__lottery--hide--submitted">
       <a class="application__lottery-link application__lottery-link--hide" id="application__lottery-link--hide--submitted">
@@ -245,72 +255,9 @@
     </div>
     #}
 
-    <ul class="application__apartments application__apartments--mobile project__apartments-list is-hidden application__lottery-results" data-application="{{ app_id }}" aria-hidden="true">
-      {# Single lottery result (mobile) #}
+    {{ _self.results_mobile_list(content['#teaser_values'].application_apartments, app_id, 'application__lottery-results', false) }}
 
-      {% for key, apartment in content['#teaser_values'].application_apartments %}
-        <li class="project__apartments-item lottery-result lottery-result--mobile application-apartment-{{ key }}">
-          <button
-            aria-expanded="false"
-            class="project__apartments-item-button"
-            aria-label="Open apartment {{ apartment.number }} information"
-          >
-            <span>{{ apartment.number }}</span>
-            {# <span aria-hidden="true" class="project__apartment-application-status"></span> #}
-            <span>{{ apartment.structure }}</span>
-            {% include "@hdbt/misc/icon.twig" with {icon: 'angle-down', label: ''} %}
-          </button>
-          <div aria-hidden="true" class="project__apartments-item-content is-hidden">
-            <ul class="project__apartments-item-details-list">
-              <li class="project__apartments-item-details-item">
-                <p>
-                <span>
-                  {% trans %}
-                    Result of draw
-                  {% endtrans %}
-                </span>
-                <span class="result">
-                  -
-                </span>
-                </p>
-              </li>
-              <li class="project__apartments-item-details-item">
-                <p>
-                <span>
-                  {% trans %}
-                    Booking status
-                  {% endtrans %}
-                </span>
-                <span class="status">
-                  -
-                </span>
-                </p>
-              </li>
-            </ul>
-          </div>
-        </li>
-      {% endfor %}
-    </ul>
-
-    <table class="application__apartments application__apartments--desktop is-hidden application__lottery-results-draft" data-application="{{ app_id }}" aria-hidden="true">
-      <thead>
-        <tr>
-          <th>{% trans %}Applied for apartment{% endtrans %}</th>
-          <th>{% trans %}Result of draw{% endtrans %}</th>
-          <th>{% trans %}Booking status{% endtrans %}</th>
-        </tr>
-      </thead>
-      <tbody>
-        {# Single lottery result (desktop) #}
-        {% for key, apartment in content['#teaser_values'].application_apartments %}
-          <tr class="lottery-result lottery-result--desktop application-apartment-{{ key }}">
-            <td>{{ apartment.number }} <span>{{ apartment.structure }}</span></td>
-            <td class="result">-</td>
-            <td clas="status">-</td>
-          </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+    {{ _self.results_table(content['#teaser_values'].application_apartments, app_id, 'application__lottery-results-draft', false) }}
 
     <div class="application__lottery application__lottery--hide application__lottery--hide--draft is-hidden" data-application="{{ app_id }}">
       <a class="application__lottery-link application__lottery-link--hide--draft" id="application__lottery-link--hide--draft">

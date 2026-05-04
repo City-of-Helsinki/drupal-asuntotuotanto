@@ -43,54 +43,62 @@ class ResultController extends ControllerBase {
   public function getResults(): AjaxResponse {
     $user = $this->entityTypeManager()->getStorage('user')->load($this->currentUser()->id());
     $applicationId = $this->requestStack->getCurrentRequest()->get('application_id');
-    if ($user && $applicationId) {
-      $application = Application::load($applicationId);
-
-      $project = $this->entityTypeManager()->getStorage('node')->load($application->getProjectId());
-      if ($application->getOwnerId() != $user->id()) {
-        return new AjaxResponse([], 401);
-      }
-
-      $cid = 'asu_application_result_' . $user->id() . '_' . $applicationId;
-      if ($cached = $this->cache()->get($cid)) {
-        return new AjaxResponse(json_decode($cached->data, TRUE, 200));
-      }
-
-      try {
-        $request = new ApplicationLotteryResult($project->uuid());
-        $request->setSender($user);
-        /** @var \Drupal\asu_api\Api\BackendApi\Request\ApplicationLotteryResultResponse $responseContent */
-        $responseContent = $this->backendApi
-          ->send($request)
-          ->getContent();
-      }
-      catch (\Exception $e) {
-        $this->getLogger('asu_api')->critical('Exception when customer tried to access his application results: ' . $e->getMessage());
-        return new AjaxResponse([], 400);
-      }
-
-      if (empty($responseContent)) {
-        return new AjaxResponse([], 400);
-      }
-
-      $results = [];
-      foreach ($responseContent as $result) {
-        $apartment = $this->entity_repository->loadEntityByUuid('node', $result['apartment_uuid']);
-        $results[] = [
-          'apartment_id' => $apartment->id(),
-          'apartment_uuid' => $result['apartment_uuid'],
-          'apartment' => $apartment->field_apartment_number->value,
-          'position' => $result['lottery_position'],
-          'current_position' => $result['queue_position'],
-          // phpcs:ignore
-          'status' => t($result['state']),
-        ];
-      }
-
-      $this->cache()->set($cid, json_encode($results), (time() + 60 * 60));
-      return new AjaxResponse($results);
+    if (!$user || !$applicationId) {
+      return new AjaxResponse([]);
     }
-    return new AjaxResponse([], 400);
+
+    $application = Application::load($applicationId);
+    if (!$application) {
+      return new AjaxResponse([]);
+    }
+
+    $project = $this->entityTypeManager()->getStorage('node')->load($application->getProjectId());
+    if (!$project) {
+      return new AjaxResponse([]);
+    }
+
+    if ($application->getOwnerId() != $user->id()) {
+      return new AjaxResponse([], 401);
+    }
+
+    $cid = 'asu_application_result_' . $user->id() . '_' . $applicationId;
+    if ($cached = $this->cache()->get($cid)) {
+      return new AjaxResponse(json_decode($cached->data, TRUE, 200));
+    }
+
+    try {
+      $request = new ApplicationLotteryResult($project->uuid());
+      $request->setSender($user);
+      /** @var \Drupal\asu_api\Api\BackendApi\Request\ApplicationLotteryResultResponse $responseContent */
+      $responseContent = $this->backendApi
+        ->send($request)
+        ->getContent();
+    }
+    catch (\Exception $e) {
+      $this->getLogger('asu_api')->critical('Exception when customer tried to access his application results: ' . $e->getMessage());
+      return new AjaxResponse([]);
+    }
+
+    if (empty($responseContent)) {
+      $this->getLogger('asu_api')->warning(
+        'Empty reservations response for application @application_id (backend @backend_id), user @user_id, project @project_uuid.',
+        [
+          '@application_id' => $application->id(),
+          '@backend_id' => $application->get('field_backend_id')->value ?? 'N/A',
+          '@user_id' => $user->id(),
+          '@project_uuid' => $project->uuid(),
+        ]
+      );
+      return new AjaxResponse([]);
+    }
+
+    $results = [];
+    foreach ($responseContent as $result) {
+      $results[] = $this->buildResultItem($result);
+    }
+
+    $this->cache()->set($cid, json_encode($results), (time() + 60 * 60));
+    return new AjaxResponse($results);
   }
 
   /**
@@ -116,6 +124,162 @@ class ResultController extends ControllerBase {
       return new Response('problem with request.', 400);
     }
 
+  }
+
+  /**
+   * Build a single result item array from raw backend response data.
+   */
+  private function buildResultItem(array $result): array {
+    $apartment = $this->entity_repository->loadEntityByUuid('node', $result['apartment_uuid']);
+    $state = $result['state'] ?? '';
+
+    return [
+      'apartment_id' => $apartment ? $apartment->id() : NULL,
+      'apartment_uuid' => $result['apartment_uuid'],
+      'apartment' => $apartment ? $apartment->field_apartment_number->value : NULL,
+      'position' => $result['lottery_position'],
+      'current_position' => $result['queue_position'],
+      'state' => $state,
+      'queue_position' => $result['queue_position'] ?? NULL,
+      'queue_position_before_cancelation' => $result['queue_position_before_cancelation'] ?? NULL,
+      'cancellation_reason' => $result['cancellation_reason'] ?? NULL,
+      'cancellation_reason_label' => $this->resolveCancellationReasonLabel($result['cancellation_reason'] ?? NULL),
+      'cancellation_actor' => $result['cancellation_actor'] ?? NULL,
+      'cancellation_actor_label' => $this->resolveCancellationActorLabel($result['cancellation_actor'] ?? NULL),
+      'cancellation_timestamp' => $result['cancellation_timestamp'] ?? NULL,
+      'state_change_events' => $this->parseStateChangeEvents($result['state_change_events'] ?? []),
+      'offer' => $this->parseOffer($result['offer'] ?? NULL),
+      // phpcs:ignore
+      'status' => $this->translateResultValue($state) ?? '-',
+    ];
+  }
+
+  /**
+   * Parse state_change_events from either a JSON string or an array.
+   */
+  private function parseStateChangeEvents(mixed $raw): array {
+    if (is_string($raw)) {
+      $decoded = json_decode($raw, TRUE);
+      return is_array($decoded) ? $decoded : [];
+    }
+    return is_array($raw) ? $raw : [];
+  }
+
+  /**
+   * Parse offer data from raw backend value.
+   */
+  private function parseOffer(mixed $raw): ?array {
+    if (!is_array($raw)) {
+      return NULL;
+    }
+    $offerState = $raw['state'] ?? NULL;
+    return [
+      'id' => $raw['id'] ?? NULL,
+      'created_at' => $raw['created_at'] ?? NULL,
+      'valid_until' => $raw['valid_until'] ?? NULL,
+      'state' => $offerState,
+      'state_label' => $this->translateResultValue($offerState),
+      'concluded_at' => $raw['concluded_at'] ?? NULL,
+      'comment' => $raw['comment'] ?? NULL,
+      'is_expired' => $raw['is_expired'] ?? NULL,
+    ];
+  }
+
+  /**
+   * Translate backend state/reason values to localized labels.
+   */
+  private function translateResultValue(?string $value): ?string {
+    if (!$value) {
+      return NULL;
+    }
+
+    switch ($value) {
+      case 'offered':
+        return (string) $this->t('offered');
+
+      case 'pending':
+        return (string) $this->t('pending');
+
+      case 'terminated':
+        return (string) $this->t('terminated');
+
+      case 'canceled':
+      case 'cancelled':
+        return (string) $this->t('canceled');
+
+      case 'submitted':
+        return (string) $this->t('submitted');
+
+      case 'reserved':
+        return (string) $this->t('reserved');
+
+      case 'accepted':
+        return (string) $this->t('accepted');
+
+      case 'rejected':
+        return (string) $this->t('rejected');
+
+      default:
+        return NULL;
+    }
+  }
+
+  /**
+   * Resolve cancellation reason label from backend display/fallback mapping.
+   */
+  private function resolveCancellationReasonLabel(?string $reason): ?string {
+    if (!$reason) {
+      return NULL;
+    }
+
+    switch ($reason) {
+      case 'terminated':
+        return (string) $this->t('Agreement terminated');
+
+      case 'canceled':
+        return (string) $this->t('Reservation canceled');
+
+      case 'reservation_agreement_canceled':
+        return (string) $this->t('Reservation agreement canceled');
+
+      case 'transferred':
+        return (string) $this->t('Reservation transferred');
+
+      case 'lower_priority':
+        return (string) $this->t('Higher priority apartment acquired');
+
+      case 'other_apartment_offered':
+        return (string) $this->t('Another apartment offered in the same project');
+
+      case 'offer_rejected':
+        return (string) $this->t('Offer rejected');
+
+      default:
+        return NULL;
+    }
+  }
+
+  /**
+   * Resolve cancellation actor label according to seller/system model.
+   */
+  private function resolveCancellationActorLabel(?string $actor): ?string {
+    if (!$actor) {
+      return NULL;
+    }
+
+    switch ($actor) {
+      case 'seller':
+        return (string) $this->t('Cancelled by seller');
+
+      case 'system':
+        return (string) $this->t('Cancelled by system');
+
+      case 'customer':
+        return (string) $this->t('Cancelled by seller');
+
+      default:
+        return NULL;
+    }
   }
 
 }
