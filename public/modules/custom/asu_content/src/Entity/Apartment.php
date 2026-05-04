@@ -73,17 +73,21 @@ class Apartment extends Node {
   /**
    * Get application url.
    *
+   * @param string|null $apartmentNumber
+   *   The apartment number (e.g. B12), or NULL to use this apartment's number.
+   *
    * @return string
    *   Url to application form.
    *
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
-  public function getApplicationUrl($apartmentId = NULL): string {
+  public function getApplicationUrl($apartmentNumber = NULL): string {
     if (!$project = $this->getProject()) {
       return '';
     }
-    return $project->getApplicationUrl($apartmentId);
+    $number = $apartmentNumber ?? $this->get('field_apartment_number')->value ?? NULL;
+    return $project->getApplicationUrl($number);
   }
 
   /**
