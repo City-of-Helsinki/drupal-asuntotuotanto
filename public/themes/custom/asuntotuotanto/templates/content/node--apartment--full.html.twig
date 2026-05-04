@@ -293,7 +293,7 @@
 		<div class="apartment__content">
 			<div class="apartment__type-and-address">
 				{% if ownership_type|render %}
-					<p class="apartment__ownership-type">
+					<p class="apartment__ownership-type apartment__ownership-type--{{ ownership_type|lower|default('hitas') }}">
 						<span class="visually-hidden">({{ 'Ownership type'|t }})</span>
 						{{ ownership_type }}
 					</p>
