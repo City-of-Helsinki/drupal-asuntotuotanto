@@ -5,6 +5,7 @@ include $(DRUIDFI_TOOLS_MAKE_DIR)docker.mk
 endif
 
 include $(DRUIDFI_TOOLS_MAKE_DIR)qa.mk
+include $(DRUIDFI_TOOLS_MAKE_DIR)asuntomyynti-react.mk
 
 #
 # Apps

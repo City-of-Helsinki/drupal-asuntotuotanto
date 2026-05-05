@@ -7,6 +7,7 @@ This is an **Open Source Drupal project**. It serves as the content management s
 * **Database:** MariaDB
 * **Search Engine:** Elasticsearch
 * **External Integrations:** Connects to a Django microservice for specific logic.
+* agent skills are located in the `.agents/skills/` directory
 
 ## Security & Sensitive Data
 **STRICT RULE:** This is a public repository.

@@ -3,6 +3,7 @@
 // phpcs:disable DrupalPractice.Objects.GlobalDrupal.GlobalDrupal,Drupal.Semantics.FunctionT.Concat
 namespace Drupal\asu_application\Form;
 
+use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Ajax\UpdateBuildIdCommand;
@@ -22,13 +23,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Drupal\Core\Security\TrustedCallbackInterface;
 
 /**
- * Form for Application.
- */
-/**
  * Application form.
- *
- * // phpcs:ignore
- * NOSONAR: This form class intentionally aggregates multiple responsibilities for cohesive form handling.
  */
 class ApplicationForm extends ContentEntityForm implements TrustedCallbackInterface {
   use MessengerTrait;
@@ -318,6 +313,22 @@ HTML;
       $form['actions']['submit']['#submit'] = ['::save'];
       $form['actions']['submit']['#weight'] = 1;
 
+      if ($currentUser->bundle() == 'sales' || $currentUser->hasPermission('administer applications')) {
+        $form['actions']['submitted_late'] = [
+          '#type' => 'radios',
+          '#title' => $this->t('Application type'),
+          '#options' => [
+            '0' => $this->t('Regular application'),
+            '1' => $this->t('Late application (jälkihakemus)'),
+          ],
+          '#default_value' => '0',
+          '#weight' => -10,
+          '#parents' => ['submitted_late'],
+          '#prefix' => '<div style="margin-top: 12px;">',
+          '#suffix' => '</div>',
+        ];
+      }
+
       // Show draft button only for customers.
       if ($currentUser->bundle() == 'customer') {
         $form['actions']['draft'] = [
@@ -567,6 +578,7 @@ HTML;
     $this->updateEntityFieldsWithUserInput($form_state);
     $this->updateApartments($form, $this->entity, $values['apartment']);
     $this->entity->save();
+    $this->syncCoApplicantMapping($values);
 
     // Validate additional applicant.
     if ($values['applicant'][0]['has_additional_applicant'] === "1") {
@@ -582,6 +594,90 @@ HTML;
   }
 
   /**
+   * Sync co-applicant SAML hash mapping for access control.
+   */
+  private function syncCoApplicantMapping(array $values): void {
+    $database = \Drupal::database();
+    $schema = $database->schema();
+
+    if (!$schema->tableExists('asu_application_co_applicant_map')) {
+      return;
+    }
+
+    $hasAdditionalApplicant = ($values['applicant'][0]['has_additional_applicant'] ?? '0') === '1';
+    $applicationId = (int) $this->entity->id();
+
+    if (!$applicationId) {
+      return;
+    }
+
+    if (!$hasAdditionalApplicant) {
+      $database->delete('asu_application_co_applicant_map')
+        ->condition('application_id', $applicationId)
+        ->execute();
+      return;
+    }
+
+    $dateOfBirth = $values['applicant'][0]['date_of_birth'] ?? '';
+    $personalId = strtoupper(trim((string) ($values['applicant'][0]['personal_id'] ?? '')));
+    $hashKey = (string) getenv('ASU_HASH_KEY');
+
+    if ($dateOfBirth === '' || $personalId === '' || $hashKey === '') {
+      return;
+    }
+
+    $fullHetu = $this->constructFullHetu($dateOfBirth, $personalId);
+    if ($fullHetu === NULL) {
+      return;
+    }
+
+    $samlHash = Crypt::hmacBase64($fullHetu, $hashKey);
+    $timestamp = \Drupal::time()->getRequestTime();
+
+    $updatedRows = $database->update('asu_application_co_applicant_map')
+      ->fields([
+        'co_applicant_saml_hash' => $samlHash,
+        'changed' => $timestamp,
+      ])
+      ->condition('application_id', $applicationId)
+      ->execute();
+
+    if ($updatedRows === 0) {
+      $database->insert('asu_application_co_applicant_map')
+        ->fields([
+          'application_id',
+          'co_applicant_saml_hash',
+          'created',
+          'changed',
+        ])
+        ->values([
+          $applicationId,
+          $samlHash,
+          $timestamp,
+          $timestamp,
+        ])
+        ->execute();
+    }
+  }
+
+  /**
+   * Build a full HETU from date of birth and personal id tail.
+   */
+  private function constructFullHetu(string $dateOfBirth, string $personalId): ?string {
+    $divider = $this->getPersonalIdDivider($dateOfBirth);
+    if (!$divider) {
+      return NULL;
+    }
+
+    $date = new DrupalDateTime($dateOfBirth);
+    if (!$date->hasErrors()) {
+      return $date->format('dmy') . $divider . $personalId;
+    }
+
+    return NULL;
+  }
+
+  /**
    * Handle the application event.
    *
    * @param array $form
@@ -591,13 +687,15 @@ HTML;
    */
   private function handleApplicationEvent(array $form, FormStateInterface $form_state) {
     $currentUser = $this->entityTypeManager->getStorage('user')->load($this->currentUser->id());
-    if ($currentUser->bundle() == 'sales' || $currentUser->hasPermission('administer')) {
+    if ($currentUser->bundle() == 'sales' || $currentUser->hasPermission('administer applications')) {
+      $submittedLate = (bool) $form_state->getValue('submitted_late', 0);
       $eventName = SalesApplicationEvent::EVENT_NAME;
       $event = new SalesApplicationEvent(
         $currentUser->id(),
         $this->entity->id(),
         $form['#project_name'],
         $form['#project_uuid'],
+        $submittedLate,
       );
     }
     else {

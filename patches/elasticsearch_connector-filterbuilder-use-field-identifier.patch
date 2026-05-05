@@ -1,0 +1,21 @@
+--- a/src/SearchAPI/Query/FilterBuilder.php
++++ b/src/SearchAPI/Query/FilterBuilder.php
+@@ -89,14 +89,10 @@
+           if ($field->getType() === 'boolean') {
+             $condition->setValue((bool) $condition->getValue());
+           }
+-
+-          $index_field_name = $field->getPropertyPath();
+-          // Use the property path if available.
+-          if (!empty($index_field_name)) {
+-            // Converting colon notation to Elasticsearch's dot notation.
+-            $field_id = str_replace(':', '.', $index_field_name);
+-            $condition->setField($field_id);
+-          }
++
++          // Keep field identifiers as indexed field names. Replacing them with
++          // property paths can produce non-existent fields in Elasticsearch.
++          $field_id = $condition->getField();
+ 
+           // For text fields in facet filters, append .keyword to use the
+           // keyword subfield for exact matching. Text fields are analyzed

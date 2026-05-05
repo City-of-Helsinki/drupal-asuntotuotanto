@@ -132,12 +132,27 @@ line-height: $lineheight-l; // Was 24px.
   .application--draft-teaser &,
   .application--form-teaser & {
     font-size: $fontsize-body-s;
-line-height: $lineheight-l; // Was 26px.
+    line-height: $lineheight-l; // Was 26px.
     background-color: var(--color-engel);
     color: var(--color-black-90);
     margin: 0 0 $spacing-and-half;
     padding: $spacing-quarter $spacing-half-and-half;
     display: inline-block;
+
+    // Hitas: yellow (matches asuntomyynti-react)
+    &--hitas {
+      background-color: var(--color-engel);
+    }
+
+    // Puolihitas: light yellow (matches asuntomyynti-react)
+    &--puolihitas {
+      background-color: var(--color-engel-light);
+    }
+
+    // HASO: blue (matches asuntomyynti-react)
+    &--haso {
+      background-color: var(--color-copper-medium-light);
+    }
   }
 }
 

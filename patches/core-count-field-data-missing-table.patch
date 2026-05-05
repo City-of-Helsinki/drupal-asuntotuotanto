@@ -1,7 +1,7 @@
-diff --git a/lib/Drupal/Core/Entity/Sql/SqlContentEntityStorage.php b/lib/Drupal/Core/Entity/Sql/SqlContentEntityStorage.php
+diff --git a/core/lib/Drupal/Core/Entity/Sql/SqlContentEntityStorage.php b/core/lib/Drupal/Core/Entity/Sql/SqlContentEntityStorage.php
 index f7a3a7b4a1..2c4d1d4c7d 100644
---- a/lib/Drupal/Core/Entity/Sql/SqlContentEntityStorage.php
-+++ b/lib/Drupal/Core/Entity/Sql/SqlContentEntityStorage.php
+--- a/core/lib/Drupal/Core/Entity/Sql/SqlContentEntityStorage.php
++++ b/core/lib/Drupal/Core/Entity/Sql/SqlContentEntityStorage.php
 @@ -1716,6 +1716,10 @@ public function countFieldData($storage_definition, $as_bool = FALSE) {
        else {
          $table_name = $table_mapping->getDedicatedDataTableName($storage_definition, $is_deleted);

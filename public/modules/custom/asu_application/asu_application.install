@@ -8,7 +8,9 @@
 declare(strict_types=1);
 
 use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Component\Utility\Crypt;
 use Drupal\asu_application\Entity\Application;
 
 /**
@@ -207,4 +209,169 @@ function asu_application_update_9012() {
 
   $definition_update_manager = \Drupal::entityDefinitionUpdateManager();
   $definition_update_manager->installFieldStorageDefinition('field_backend_id', 'asu_application', 'asu_application', $field);
+}
+
+/**
+ * Create mapping table for co-applicant access by SAML hash.
+ */
+function asu_application_update_9013() : void {
+  $schema = \Drupal::database()->schema();
+
+  if ($schema->tableExists('asu_application_co_applicant_map')) {
+    return;
+  }
+
+  $schema->createTable('asu_application_co_applicant_map', [
+    'description' => 'Maps application id to co-applicant SAML hash for access checks.',
+    'fields' => [
+      'application_id' => [
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ],
+      'co_applicant_saml_hash' => [
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+      ],
+      'created' => [
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+      'changed' => [
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+    ],
+    'primary key' => ['application_id'],
+    'indexes' => [
+      'co_applicant_saml_hash' => ['co_applicant_saml_hash'],
+    ],
+  ]);
+}
+
+/**
+ * Placeholder for backfill of existing applications.
+ *
+ * Intentionally left empty for now so backfill can be run as a final phase.
+ */
+function asu_application_update_9014() : void {
+  $database = \Drupal::database();
+  $schema = $database->schema();
+
+  if (!$schema->tableExists('asu_application_co_applicant_map')) {
+    return;
+  }
+
+  $hashKey = (string) getenv('ASU_HASH_KEY');
+  if ($hashKey === '') {
+    \Drupal::logger('asu_application')->warning('Skipped co-applicant backfill because ASU_HASH_KEY is missing.');
+    return;
+  }
+
+  $rows = $database->select('asu_application', 'a')
+    ->fields('a', ['id', 'created', 'changed', 'applicant__date_of_birth', 'applicant__personal_id'])
+    ->condition('a.status', 1)
+    ->isNotNull('a.applicant__date_of_birth')
+    ->isNotNull('a.applicant__personal_id')
+    ->execute()
+    ->fetchAllAssoc('id');
+
+  $inserted = 0;
+  $skipped = 0;
+
+  foreach ($rows as $row) {
+    $personalId = strtoupper(trim((string) $row->applicant__personal_id));
+    $fullHetu = asu_application_build_full_hetu((string) $row->applicant__date_of_birth, $personalId);
+
+    if ($fullHetu === NULL) {
+      $skipped++;
+      continue;
+    }
+
+    $samlHash = Crypt::hmacBase64($fullHetu, $hashKey);
+    $created = (int) ($row->created ?? 0);
+    $changed = (int) ($row->changed ?? 0);
+
+    $applicationId = (int) $row->id;
+    $updatedRows = $database->update('asu_application_co_applicant_map')
+      ->fields([
+        'co_applicant_saml_hash' => $samlHash,
+        'changed' => $changed,
+      ])
+      ->condition('application_id', $applicationId)
+      ->execute();
+
+    if ($updatedRows === 0) {
+      $database->insert('asu_application_co_applicant_map')
+        ->fields([
+          'application_id',
+          'co_applicant_saml_hash',
+          'created',
+          'changed',
+        ])
+        ->values([
+          $applicationId,
+          $samlHash,
+          $created,
+          $changed,
+        ])
+        ->execute();
+    }
+
+    $inserted++;
+  }
+
+  \Drupal::logger('asu_application')->notice('Co-applicant backfill completed. Processed: @processed, skipped: @skipped.', [
+    '@processed' => $inserted,
+    '@skipped' => $skipped,
+  ]);
+}
+
+/**
+ * Build full HETU from stored date of birth and personal id tail.
+ */
+function asu_application_build_full_hetu(string $dateOfBirth, string $personalId): ?string {
+  if ($dateOfBirth === '' || $personalId === '') {
+    return NULL;
+  }
+
+  $divider = asu_application_get_personal_id_divider($dateOfBirth);
+  if ($divider === NULL) {
+    return NULL;
+  }
+
+  $date = new DrupalDateTime($dateOfBirth);
+  if ($date->hasErrors()) {
+    return NULL;
+  }
+
+  return $date->format('dmy') . $divider . $personalId;
+}
+
+/**
+ * Resolve HETU century divider based on date of birth.
+ */
+function asu_application_get_personal_id_divider(string $dateOfBirth): ?string {
+  $date = new DrupalDateTime($dateOfBirth);
+  if ($date->hasErrors()) {
+    return NULL;
+  }
+
+  $year = (int) $date->format('Y');
+  if ($year >= 1800 && $year <= 1899) {
+    return '+';
+  }
+  if ($year >= 1900 && $year <= 1999) {
+    return '-';
+  }
+  if ($year >= 2000 && $year <= 2099) {
+    return 'A';
+  }
+
+  return NULL;
 }

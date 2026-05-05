@@ -132,12 +132,16 @@
           {% endif %}
 
           <div class="hero__image-container">
-            {% include '@hdbt/misc/koro.twig' with {koro: koro, flip: true } %}
+            {% if design == "diagonal" or design == "with-search" %}
+              {% include '@hdbt/misc/koro.twig' with {koro: koro, flip: true, diagonal: true } %}
+            {% else %}
+              {% include '@hdbt/misc/koro.twig' with {koro: koro, flip: true } %}
+            {% endif %}
             {{ drupal_image(image_uri, image_style, responsive=true) }}
           </div>
         {% endif %}
       {% endif %}
-      {% include '@hdbt/misc/koro.twig' with {koro: koro, flip: false } %}
+      {% include '@hdbt/misc/koro.twig' with {koro: koro, flip: true } %}
     </div>
   {% endif %}
 

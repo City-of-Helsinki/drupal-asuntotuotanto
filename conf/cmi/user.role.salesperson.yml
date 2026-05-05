@@ -349,3 +349,4 @@ permissions:
   - 'view project subscriptions'
   - 'view the administration theme'
   - 'view unpublished paragraphs'
+  - 'view integration summary'

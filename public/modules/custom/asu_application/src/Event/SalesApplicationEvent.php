@@ -39,6 +39,13 @@ class SalesApplicationEvent extends Event {
   private string $projectUuid;
 
   /**
+   * Is application submitted as late application.
+   *
+   * @var bool
+   */
+  private bool $submittedLate;
+
+  /**
    * {@inheritdoc}
    */
   public function __construct(
@@ -46,11 +53,13 @@ class SalesApplicationEvent extends Event {
     string $applicationId,
     string $projectName,
     string $projectUuid,
+    bool $submittedLate,
   ) {
     $this->senderId = $senderId;
     $this->applicationId = $applicationId;
     $this->projectName = $projectName;
     $this->projectUuid = $projectUuid;
+    $this->submittedLate = $submittedLate;
   }
 
   /**
@@ -82,6 +91,13 @@ class SalesApplicationEvent extends Event {
    */
   public function getProjectUuid(): string {
     return $this->projectUuid;
+  }
+
+  /**
+   * Get submitted late selection.
+   */
+  public function isSubmittedLate(): bool {
+    return $this->submittedLate;
   }
 
 }

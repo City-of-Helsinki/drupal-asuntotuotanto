@@ -7,7 +7,7 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "require": {
-        "asuntomyynti/react": "^1.5.2",
+        "asuntomyynti/react": "^1.6.1",
         "composer/installers": "^2.3",
         "cweagans/composer-patches": "^2.0",
         "dinbror/blazy": "^1.8",
@@ -81,9 +81,11 @@
         "drupal/views_infinite_scroll": "^2.0",
         "drupal/yearonly": "^9.1",
         "drush/drush": "^13.7",
+        "firebase/php-jwt": "^7.0",
         "kenwheeler/slick": "^1.8",
         "mglaman/composer-drupal-lenient": "^1.0",
         "onelogin/php-saml": "^4.3",
+        "robrichards/xmlseclibs": "^3.1.5",
         "zaporylie/composer-drupal-optimizations": "^1.2"
     },
     "require-dev": {
@@ -101,6 +103,9 @@
         "drupal/drupal": "*"
     },
     "config": {
+        "platform": {
+            "php": "8.3.15"
+        },
         "optimize-autoloader": true,
         "sort-packages": true,
         "allow-plugins": {
@@ -177,7 +182,7 @@
                 "[D11] Skip delete when field table missing": "patches/core-skip-delete-missing-field-table.patch"
             },
             "drupal/elasticsearch_connector": {
-                "[Local] Disable reopen parameter for ES": "patches/elasticsearch-connector-disable-reopen.patch"
+                "Use Search API field identifier in FilterBuilder": "patches/elasticsearch_connector-filterbuilder-use-field-identifier.patch"
             }
         },
         "composer-patches": {
@@ -269,9 +274,9 @@
             "type": "package",
             "package": {
                 "name": "asuntomyynti/react",
-                "version": "1.5.2",
+                "version": "1.6.1",
                 "dist": {
-                    "url": "https://github.com/City-of-Helsinki/asuntomyynti-react/releases/download/v1.5.2/asuntomyynti-react-1.5.2.zip",
+                    "url": "https://github.com/City-of-Helsinki/asuntomyynti-react/releases/download/v1.6.1/asuntomyynti-react-1.6.1.zip",
                     "type": "zip"
                 }
             }

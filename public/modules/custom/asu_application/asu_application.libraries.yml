@@ -14,3 +14,9 @@ application_submit:
     - core/drupal.dialog
     - core/drupal
     - core/once
+
+application_results:
+  version: 1.x
+  css:
+    component:
+      assets/css/application-submit.css: {}

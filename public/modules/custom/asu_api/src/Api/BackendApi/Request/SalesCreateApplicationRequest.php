@@ -19,16 +19,25 @@ class SalesCreateApplicationRequest extends CreateApplicationRequest {
   private string $projectUuid;
 
   /**
+   * Is application submitted as late application.
+   *
+   * @var bool
+   */
+  private bool $submittedLate;
+
+  /**
    * Constructor.
    */
   public function __construct(
     UserInterface $sender,
     Application $application,
     string $projectUuid,
+    bool $submittedLate,
   ) {
     $this->sender = $sender;
     $this->application = $application;
     $this->projectUuid = $projectUuid;
+    $this->submittedLate = $submittedLate;
   }
 
   /**
@@ -56,6 +65,7 @@ class SalesCreateApplicationRequest extends CreateApplicationRequest {
       'is_right_of_occupancy_housing_changer' => FALSE,
       'has_hitas_ownership' => FALSE,
       'right_of_residence_is_old_batch' => $this->application->hasNewPermitNumber(),
+      'submitted_late' => $this->submittedLate,
     ];
 
     if ($this->application->hasField('field_right_of_residence_number')) {
