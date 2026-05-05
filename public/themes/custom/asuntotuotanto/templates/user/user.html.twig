@@ -79,17 +79,19 @@
       {% endtrans %}
     </h2>
     <div class="user-profile__user-information">
-      {% include "@asuntotuotanto/user/disabled-input.html.twig" with {
-        id: 'email',
-        label: 'Email'|t,
-        value: email,
-      } %}
-      {% include "@asuntotuotanto/user/disabled-input.html.twig" with {
-        id: 'password',
-        label: 'Password'|t,
-        type: 'password',
-        value: 'password',
-      } %}
+      {% if show_authentication_fields %}
+        {% include "@asuntotuotanto/user/disabled-input.html.twig" with {
+          id: 'email',
+          label: 'Email'|t,
+          value: email,
+        } %}
+        {% include "@asuntotuotanto/user/disabled-input.html.twig" with {
+          id: 'password',
+          label: 'Password'|t,
+          type: 'password',
+          value: 'password',
+        } %}
+      {% endif %}
     </div>
     {{ link(link_title, 'internal:' ~ path('entity.user.edit_form', {'user': user.id}), link_attributes) }}
   </section>
