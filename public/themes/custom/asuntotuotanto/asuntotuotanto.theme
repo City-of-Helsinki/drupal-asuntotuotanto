@@ -900,6 +900,9 @@ function asuntotuotanto_preprocess_pager(&$variables) {
  */
 function asuntotuotanto_preprocess_user(&$variables) {
   $account = User::load(\Drupal::currentUser()->id());
+  $current_user_roles = \Drupal::currentUser()->getRoles();
+  $variables['show_authentication_fields'] = in_array('admin', $current_user_roles, TRUE)
+    || in_array('salesperson', $current_user_roles, TRUE);
 
   if ($account->bundle() == 'customer') {
     $fields = \Drupal::config('asu_user.external_user_fields')
