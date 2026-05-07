@@ -49,3 +49,43 @@ function asu_apartment_search_entity_load(array &$entities, string $entity_type)
     }
   }
 }
+
+/**
+ * Implements hook_library_info_alter().
+ */
+function asu_apartment_search_library_info_alter(array &$libraries, string $extension) {
+  if ($extension !== 'asu_apartment_search') {
+    return;
+  }
+
+  $module_path = DRUPAL_ROOT . '/' . \Drupal::service('extension.list.module')->getPath('asu_apartment_search');
+
+  foreach ($libraries as &$library) {
+    $signature_parts = [];
+
+    if (!empty($library['js'])) {
+      foreach (array_keys($library['js']) as $asset_path) {
+        $file_path = $module_path . '/' . $asset_path;
+        if (is_file($file_path)) {
+          $signature_parts[] = $asset_path . ':' . (string) filemtime($file_path) . ':' . (string) filesize($file_path);
+        }
+      }
+    }
+
+    if (!empty($library['css'])) {
+      foreach ($library['css'] as $css_group) {
+        foreach (array_keys($css_group) as $asset_path) {
+          $file_path = $module_path . '/' . $asset_path;
+          if (is_file($file_path)) {
+            $signature_parts[] = $asset_path . ':' . (string) filemtime($file_path) . ':' . (string) filesize($file_path);
+          }
+        }
+      }
+    }
+
+    if (!empty($signature_parts)) {
+      sort($signature_parts);
+      $library['version'] = substr(hash('sha256', implode('|', $signature_parts)), 0, 12);
+    }
+  }
+}

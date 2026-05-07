@@ -1,7 +1,7 @@
 # Define asuntomyynti-react application library.
 haso-apartment-search:
   remote: https://github.com/City-of-Helsinki/asuntomyynti-react
-  version: 0.3.0
+  version: 0.3.1
   license:
     name: MIT
     url: https://github.com/City-of-Helsinki/asuntomyynti-react/blob/develop/README.md
@@ -16,7 +16,7 @@ haso-apartment-search:
 
 haso-apartment-upcoming:
   remote: https://github.com/City-of-Helsinki/asuntomyynti-react
-  version: 0.3.0
+  version: 0.3.1
   license:
     name: MIT
     url: https://github.com/City-of-Helsinki/asuntomyynti-react/blob/develop/README.md
@@ -31,7 +31,7 @@ haso-apartment-upcoming:
 
 hitas-apartment-search:
   remote: https://github.com/City-of-Helsinki/asuntomyynti-react
-  version: 0.3.0
+  version: 0.3.1
   license:
     name: MIT
     url: https://github.com/City-of-Helsinki/asuntomyynti-react/blob/develop/README.md
@@ -42,11 +42,11 @@ hitas-apartment-search:
   css:
     theme:
       assets/react/hitas/asu_react_main.css: { }
-      assets/react/haso/asu_react_vendors.css: { }
+      assets/react/hitas/asu_react_vendors.css: { }
 
 hitas-apartment-upcoming:
   remote: https://github.com/City-of-Helsinki/asuntomyynti-react
-  version: 0.3.0
+  version: 0.3.1
   license:
     name: MIT
     url: https://github.com/City-of-Helsinki/asuntomyynti-react/blob/develop/README.md
@@ -57,4 +57,4 @@ hitas-apartment-upcoming:
   css:
     theme:
       assets/react/hitas_upcoming/asu_react_main.css: { }
-      assets/react/haso/asu_react_vendors.css: { }
+      assets/react/hitas_upcoming/asu_react_vendors.css: { }
