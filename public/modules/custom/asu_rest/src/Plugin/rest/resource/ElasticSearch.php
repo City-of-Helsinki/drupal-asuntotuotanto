@@ -411,7 +411,7 @@ class ElasticSearch extends ResourceBase {
   }
 
   /**
-   * Normalize image URI/path to an absolute browser URL, applying an image style when possible.
+   * Normalize image URI/path to an absolute browser URL.
    *
    * @param string $value
    *   Raw file URI (public://...), absolute URL, or relative path.
