@@ -208,17 +208,17 @@ class ElasticSearch extends ResourceBase {
           if ($project_image_field instanceof EntityReferenceFieldItemListInterface) {
             foreach ($project_image_field as $item) {
               if ($item->entity) {
-                $project_image_urls[] = $item->entity->getFileUri();
+                $project_image_urls[] = $this->normalizeImageUrl((string) $item->entity->getFileUri());
               }
             }
           }
 
           $project_main_image_url = '';
           if ($project_node->hasField('field_main_image_url') && !$project_node->get('field_main_image_url')->isEmpty()) {
-            $project_main_image_url = (string) $project_node->get('field_main_image_url')->value;
+            $project_main_image_url = $this->normalizeImageUrl((string) $project_node->get('field_main_image_url')->value);
           }
           elseif ($project_node->hasField('field_main_image') && !$project_node->get('field_main_image')->isEmpty() && $project_node->get('field_main_image')->entity) {
-            $project_main_image_url = $project_node->get('field_main_image')->entity->getFileUri();
+            $project_main_image_url = $this->normalizeImageUrl((string) $project_node->get('field_main_image')->entity->getFileUri());
           }
 
           $project_application_end_time = '';
@@ -408,6 +408,49 @@ class ElasticSearch extends ResourceBase {
     $host = $request ? $request->getSchemeAndHttpHost() : '';
 
     return $host . $path;
+  }
+
+  /**
+   * Normalize image URI/path to an absolute browser URL, applying an image style when possible.
+   *
+   * @param string $value
+   *   Raw file URI (public://...), absolute URL, or relative path.
+   * @param string $imageStyle
+   *   Drupal image style machine name. Defaults to '3_2_m' for consistent
+   *   aspect ratio. Pass empty string to skip style (returns original).
+   */
+  private function normalizeImageUrl(string $value, string $imageStyle = '3_2_m'): string {
+    if ($value === '') {
+      return '';
+    }
+
+    $lower = strtolower($value);
+    if (str_starts_with($lower, 'http://') || str_starts_with($lower, 'https://')) {
+      return $value;
+    }
+
+    if (str_starts_with($value, 'public://') || str_starts_with($value, 'private://') || str_starts_with($value, 'temporary://')) {
+      try {
+        if ($imageStyle !== '') {
+          $style = \Drupal::service('entity_type.manager')
+            ->getStorage('image_style')
+            ->load($imageStyle);
+          if ($style) {
+            return (string) $style->buildUrl($value);
+          }
+        }
+        return (string) \Drupal::service('file_url_generator')->generateAbsoluteString($value);
+      }
+      catch (\Throwable) {
+        return $value;
+      }
+    }
+
+    if (str_starts_with($value, '/')) {
+      return $this->buildAbsoluteUrl($value);
+    }
+
+    return $this->buildAbsoluteUrl('/' . ltrim($value, '/'));
   }
 
 }
