@@ -67,7 +67,7 @@
             "version": "1.6.3",
             "dist": {
                 "type": "zip",
-                "url": "/asuntomyynti-react/asuntomyynti-react-1.6.3.zip"
+                "url": "https://github.com/City-of-Helsinki/asuntomyynti-react/releases/download/v1.6.3/asuntomyynti-react-1.6.3.zip"
             },
             "type": "library"
         },
