@@ -59,9 +59,10 @@ final class Initialize extends ResourceBase {
     /** @var \Drupal\user\Entity\User $user */
     if (\Drupal::currentUser()->isAuthenticated()) {
       $user = User::load(\Drupal::currentUser()->id());
+      $userApplications = Applications::applicationsByUser($user->id());
       $response['user'] = $this->getUser($user);
-      $response['user']['applications'] = $this->getUserApplications($user);
-      $response['user']['application_project_pairs'] = Applications::applicationsByUser($user->id())
+      $response['user']['applications'] = $this->getUserApplications($userApplications);
+      $response['user']['application_project_pairs'] = $userApplications
         ->getApplicationsProjectPairs();
       // @todo Followed projects.
       $response['user']['followed_projects'][] = 15;
@@ -94,15 +95,14 @@ final class Initialize extends ResourceBase {
   /**
    * Get application apartments sent by the user.
    *
-   * @param \Drupal\user\Entity\User $user
-   *   User object.
+   * @param \Drupal\asu_application\Applications $userApplications
+   *   Applications for the current user (reuse one instance per request).
    *
    * @return array
    *   Array of applications by user.
    */
-  private function getUserApplications(User $user) {
-    return Applications::applicationsByUser($user->id())
-      ->getApartmentApplicationsByProject();
+  private function getUserApplications(Applications $userApplications): array {
+    return $userApplications->getApartmentApplicationsByProject();
   }
 
   /**

@@ -1,3 +1,8 @@
+PHONY += asuntomyynti-react-rebuild-dist
+asuntomyynti-react-rebuild-dist: ## Build asuntomyynti-react dist (zip + react/*) for Drupal mount
+	$(call step,Building asuntomyynti-react dist...\n)
+	cd ../asuntomyynti-react && npm run dist
+
 PHONY += asuntomyynti-react-check-sync
 asuntomyynti-react-check-sync: ## Check React widget assets vs Drupal and version match
 	$(call step,Checking React widget assets vs Drupal...\n)
