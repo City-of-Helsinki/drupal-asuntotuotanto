@@ -70,16 +70,6 @@
             },
             {
                 "package": "drupal/core",
-                "description": "[#3452852] Add create() factory method with autowired parameters to PluginBase",
-                "url": "patches/3452852.patch",
-                "sha256": "35e072a541b5617ac2b17fddc3dc95747dc9e641eefeb12db93ef9c0db7bb811",
-                "depth": 2,
-                "extra": {
-                    "provenance": "root"
-                }
-            },
-            {
-                "package": "drupal/core",
                 "description": "[D11] Skip delete when config entity missing",
                 "url": "patches/core-import-delete-null.patch",
                 "sha256": "5bf0a22f458a0122448648f0847e51c9b585d7e442c2f4f8cd226e39267bf559",

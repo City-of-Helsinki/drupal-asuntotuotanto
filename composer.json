@@ -175,7 +175,6 @@
             },
             "drupal/core": {
                 "[#UHF-12709] Patch 'Deleted and replaced ...' error messages": "patches/uhf-12709-skip-deleted-log.patch",
-                "[#3452852] Add create() factory method with autowired parameters to PluginBase": "patches/3452852.patch",
                 "[D11] Skip delete when config entity missing": "patches/core-import-delete-null.patch",
                 "[D11] Skip delete in checkOp when entity missing": "patches/core-config-importer-null-entity.patch",
                 "[D11] Skip countFieldData when table missing": "patches/core-count-field-data-missing-table.patch",
