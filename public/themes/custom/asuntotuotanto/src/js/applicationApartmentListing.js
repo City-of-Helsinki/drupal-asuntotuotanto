@@ -58,6 +58,84 @@
         return formatDateValue(apartmentResult.offer.valid_until);
       };
 
+      const canRespondToOffer = (apartmentResult) => {
+        return apartmentResult.state === 'offered'
+          && apartmentResult.offer
+          && apartmentResult.offer.state === 'pending'
+          && apartmentResult.offer.is_expired !== true;
+      };
+
+      const submitOfferAction = (offerId, action, applicationId, apartmentResult) => {
+        const baseUrl = (Drupal.url && Drupal.url()) ? Drupal.url() : '/';
+        jQuery.ajax({
+          url: `${baseUrl}user/offer/${offerId}/${action}`,
+          method: 'POST',
+          dataType: 'json',
+          data: {
+            application_id: applicationId,
+          },
+          success: function(response) {
+            if (response && response.success) {
+              apartmentResult.state = action === 'accept' ? 'offer_accepted' : 'canceled';
+              if (apartmentResult.offer) {
+                apartmentResult.offer.state = action === 'accept' ? 'accepted' : 'rejected';
+                apartmentResult.offer.state_label = action === 'accept' ? 'accepted' : 'rejected';
+              }
+              getResultRows(apartmentResult).forEach(function(result_row) {
+                jQuery(result_row).find('.status').first().html(
+                  apartmentResult.status ? apartmentResult.status.replace(/_/g, ' ') : '-'
+                );
+                jQuery(result_row).find('.offer-status').first().html(resolveOfferStatus(apartmentResult));
+                const actions = result_row.querySelector('.offer-actions');
+                if (actions) {
+                  actions.innerHTML = '';
+                }
+              });
+              jQuery(`.application__lottery-link--show--submitted[data-application="${applicationId}"]`).data('loaded', 0);
+            }
+          },
+        });
+      };
+
+      const renderOfferActions = (apartmentResult, applicationId) => {
+        if (!canRespondToOffer(apartmentResult)) {
+          return;
+        }
+
+        getResultRows(apartmentResult).forEach(function(result_row) {
+          let actions = result_row.querySelector('.offer-actions');
+          if (!actions) {
+            actions = document.createElement('div');
+            actions.className = 'offer-actions';
+            result_row.appendChild(actions);
+          }
+          actions.innerHTML = '';
+
+          const acceptButton = document.createElement('button');
+          acceptButton.type = 'button';
+          acceptButton.className = 'button offer-action offer-action--accept';
+          acceptButton.textContent = Drupal.t('Accept offer');
+          acceptButton.addEventListener('click', () => {
+            if (window.confirm(Drupal.t('Are you sure you want to accept this offer?'))) {
+              submitOfferAction(apartmentResult.offer.id, 'accept', applicationId, apartmentResult);
+            }
+          });
+
+          const rejectButton = document.createElement('button');
+          rejectButton.type = 'button';
+          rejectButton.className = 'button offer-action offer-action--reject';
+          rejectButton.textContent = Drupal.t('Reject offer');
+          rejectButton.addEventListener('click', () => {
+            if (window.confirm(Drupal.t('Are you sure you want to reject this offer?'))) {
+              submitOfferAction(apartmentResult.offer.id, 'reject', applicationId, apartmentResult);
+            }
+          });
+
+          actions.appendChild(acceptButton);
+          actions.appendChild(rejectButton);
+        });
+      };
+
       const resolveCancellationInfo = (apartmentResult) => {
         const actorLabel = apartmentResult.cancellation_actor_label || '';
         const reason = apartmentResult.cancellation_reason_label || apartmentResult.cancellation_reason || '';
@@ -180,6 +258,7 @@
                   jQuery(result_row).find('.offer-valid-until').first().html(resolveOfferValidUntil(apartment_result));
                   jQuery(result_row).find('.cancellation-info').first().html(resolveCancellationInfo(apartment_result));
                   jQuery(result_row).find('.cancellation-time').first().html(resolveCancellationTime(apartment_result));
+                  renderOfferActions(apartment_result, id);
                 });
               });
             }

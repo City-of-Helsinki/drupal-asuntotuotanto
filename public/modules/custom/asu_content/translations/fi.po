@@ -43599,3 +43599,54 @@ msgstr "Muu asunto tarjottu samassa kohteessa"
 
 msgid "Offer rejected"
 msgstr "Tarjous hylätty"
+
+msgid "Accept offer"
+msgstr "Hyväksy tarjous"
+
+msgid "Reject offer"
+msgstr "Hylkää tarjous"
+
+msgid "Are you sure you want to accept this offer?"
+msgstr "Haluatko varmasti hyväksyä tämän tarjouksen?"
+
+msgid "Are you sure you want to reject this offer?"
+msgstr "Haluatko varmasti hylätä tämän tarjouksen?"
+
+msgid "Actions"
+msgstr "Toiminnot"
+
+msgid "Customer accepted apartment offer"
+msgstr "Asiakas hyväksyi asuntotarjouksen"
+
+msgid "Customer rejected apartment offer"
+msgstr "Asiakas hylkäsi asuntotarjouksen"
+
+msgid "Reminder: apartment offer awaiting customer response"
+msgstr "Muistutus: asiakas ei ole vielä vastannut asuntotarjoukseen"
+
+msgid "A customer has accepted an apartment offer."
+msgstr "Asiakas on hyväksynyt asuntotarjouksen."
+
+msgid "A customer has rejected an apartment offer."
+msgstr "Asiakas on hylännyt asuntotarjouksen."
+
+msgid "A customer has not yet responded to an apartment offer before the deadline."
+msgstr "Asiakas ei ole vielä vastannut asuntotarjoukseen ennen määräaikaa."
+
+msgid "Project"
+msgstr "Kohde"
+
+msgid "Apartment"
+msgstr "Asunto"
+
+msgid "Customer"
+msgstr "Asiakas"
+
+msgid "Offer valid until"
+msgstr "Tarjous voimassa asti"
+
+msgid "offer accepted"
+msgstr "Tarjous hyväksytty"
+
+msgid "offer accepted"
+msgstr "Tarjous hyväksytty"

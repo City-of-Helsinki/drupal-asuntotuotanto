@@ -245,6 +245,9 @@ class ResultController extends ControllerBase {
       case 'offered':
         return (string) $this->t('offered');
 
+      case 'offer_accepted':
+        return (string) $this->t('offer accepted');
+
       case 'pending':
         return (string) $this->t('pending');
 

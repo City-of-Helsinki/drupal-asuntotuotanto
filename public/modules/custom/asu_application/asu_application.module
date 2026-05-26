@@ -22,6 +22,17 @@ function asu_application_theme() {
       'render element' => 'elements',
       'template' => 'asu-application',
     ],
+    'asu_application_offer_notification_mail' => [
+      'variables' => [
+        'project_name' => '',
+        'apartment_number' => '',
+        'customer_name' => '',
+        'customer_email' => '',
+        'valid_until' => '',
+        'action' => '',
+      ],
+      'template' => 'mail/asu-application-offer-notification-mail',
+    ],
   ];
 }
 
@@ -283,6 +294,15 @@ function asu_application_cron() {
     \Drupal::logger('asu_application_cron')->critical('Unable to perform application cron operation: ' . $e->getMessage());
   }
 
+  try {
+    \Drupal::service('asu_application.offer_reminder')->processDueReminders();
+  }
+  catch (\Exception $e) {
+    \Drupal::logger('asu_application_cron')->critical(
+      'Unable to process offer reminders: ' . $e->getMessage()
+    );
+  }
+
 }
 
 /**
@@ -306,6 +326,22 @@ function asu_application_mail(string $key, array &$message, array $params) {
       elseif (!empty($params['message'])) {
         $message['body'][] = $params['message'];
       }
+      break;
+
+    case 'offer_accepted_notification':
+    case 'offer_rejected_notification':
+    case 'offer_reminder_notification':
+      $message['from'] = \Drupal::config('system.site')->get('mail');
+      $message['subject'] = $params['subject'] ?? '';
+      $message['body'][] = \Drupal::service('renderer')->renderPlain([
+        '#theme' => 'asu_application_offer_notification_mail',
+        '#project_name' => $params['project_name'] ?? '',
+        '#apartment_number' => $params['apartment_number'] ?? '',
+        '#customer_name' => $params['customer_name'] ?? '',
+        '#customer_email' => $params['customer_email'] ?? '',
+        '#valid_until' => $params['valid_until'] ?? '',
+        '#action' => $params['action'] ?? '',
+      ]);
       break;
   }
 }

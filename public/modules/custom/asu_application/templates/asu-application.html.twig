@@ -86,6 +86,7 @@
             <span class="application__result-value cancellation-time">-</span>
           </li>
         </ul>
+        <div class="offer-actions"></div>
       </li>
     {% endfor %}
   </ul>
@@ -103,6 +104,7 @@
         <th>{% trans %}Valid until{% endtrans %}</th>
         <th>{% trans %}Cancellation{% endtrans %}</th>
         <th>{% trans %}Date{% endtrans %}</th>
+        <th>{% trans %}Actions{% endtrans %}</th>
       </tr>
     </thead>
     <tbody>
@@ -116,6 +118,7 @@
           <td class="offer-valid-until">-</td>
           <td class="cancellation-info">-</td>
           <td class="cancellation-time">-</td>
+          <td class="offer-actions"></td>
         </tr>
       {% endfor %}
     </tbody>
