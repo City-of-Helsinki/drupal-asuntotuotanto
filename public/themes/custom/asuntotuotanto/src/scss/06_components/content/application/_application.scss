@@ -237,6 +237,23 @@ line-height: $lineheight-l; // Was 24px.
   }
 }
 
+.offer-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-half-and-half;
+  margin-top: $spacing;
+
+  .hds-button {
+    @media screen and (max-width: $breakpoint-l - 1px) {
+      width: 100%;
+    }
+  }
+}
+
+.application__result-card .offer-actions {
+  margin-top: $spacing-and-half;
+}
+
 .application__lottery {
   background-color: $color-white;
   border: 1px solid $color-black-10;

@@ -97,6 +97,18 @@
         });
       };
 
+      const createHdsButton = (label, type, onClick) => {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = `hds-button hds-button--${type}`;
+        const labelSpan = document.createElement('span');
+        labelSpan.className = 'hds-button__label';
+        labelSpan.textContent = label;
+        button.appendChild(labelSpan);
+        button.addEventListener('click', onClick);
+        return button;
+      };
+
       const renderOfferActions = (apartmentResult, applicationId) => {
         if (!canRespondToOffer(apartmentResult)) {
           return;
@@ -111,28 +123,25 @@
           }
           actions.innerHTML = '';
 
-          const acceptButton = document.createElement('button');
-          acceptButton.type = 'button';
-          acceptButton.className = 'button offer-action offer-action--accept';
-          acceptButton.textContent = Drupal.t('Accept offer');
-          acceptButton.addEventListener('click', () => {
-            if (window.confirm(Drupal.t('Are you sure you want to accept this offer?'))) {
-              submitOfferAction(apartmentResult.offer.id, 'accept', applicationId, apartmentResult);
+          actions.appendChild(createHdsButton(
+            Drupal.t('Accept offer'),
+            'primary',
+            () => {
+              if (window.confirm(Drupal.t('Are you sure you want to accept this offer?'))) {
+                submitOfferAction(apartmentResult.offer.id, 'accept', applicationId, apartmentResult);
+              }
             }
-          });
+          ));
 
-          const rejectButton = document.createElement('button');
-          rejectButton.type = 'button';
-          rejectButton.className = 'button offer-action offer-action--reject';
-          rejectButton.textContent = Drupal.t('Reject offer');
-          rejectButton.addEventListener('click', () => {
-            if (window.confirm(Drupal.t('Are you sure you want to reject this offer?'))) {
-              submitOfferAction(apartmentResult.offer.id, 'reject', applicationId, apartmentResult);
+          actions.appendChild(createHdsButton(
+            Drupal.t('Reject offer'),
+            'secondary',
+            () => {
+              if (window.confirm(Drupal.t('Are you sure you want to reject this offer?'))) {
+                submitOfferAction(apartmentResult.offer.id, 'reject', applicationId, apartmentResult);
+              }
             }
-          });
-
-          actions.appendChild(acceptButton);
-          actions.appendChild(rejectButton);
+          ));
         });
       };
 
