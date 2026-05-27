@@ -339,7 +339,9 @@ function asu_application_mail(string $key, array &$message, array $params) {
     case 'offer_rejected_notification':
     case 'offer_reminder_notification':
       $message['from'] = \Drupal::config('system.site')->get('mail');
-      $message['subject'] = $params['subject'] ?? '';
+      $message['subject'] = \Drupal\asu_application\Util\OfferMailTestLabel::prefixSubject(
+        $params['subject'] ?? ''
+      );
       $build = [
         '#theme' => 'asu_application_offer_notification_mail',
         '#project_name' => $params['project_name'] ?? '',
@@ -349,7 +351,8 @@ function asu_application_mail(string $key, array &$message, array $params) {
         '#valid_until' => $params['valid_until'] ?? '',
         '#action' => $params['action'] ?? '',
       ];
-      $message['body'][] = \Drupal::service('renderer')->renderPlain($build);
+      $body = (string) \Drupal::service('renderer')->renderPlain($build);
+      $message['body'][] = \Drupal\asu_application\Util\OfferMailTestLabel::prefixBody($body);
       break;
   }
 }
