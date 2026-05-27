@@ -242,7 +242,14 @@ function template_preprocess_asu_application(array &$variables) {
   }
 
   $application_teaser_values['#cache'] = [
-    'contexts' => ['user'],
+    'contexts' => ['user', 'languages:language_interface'],
+  ];
+
+  $variables['#attached']['drupalSettings']['asuApplicationOffer'] = [
+    'acceptOffer' => (string) t('Accept offer'),
+    'rejectOffer' => (string) t('Reject offer'),
+    'confirmAccept' => (string) t('Are you sure you want to accept this offer?'),
+    'confirmReject' => (string) t('Are you sure you want to reject this offer?'),
   ];
 
   $variables['content'] = $application_teaser_values;
@@ -333,7 +340,7 @@ function asu_application_mail(string $key, array &$message, array $params) {
     case 'offer_reminder_notification':
       $message['from'] = \Drupal::config('system.site')->get('mail');
       $message['subject'] = $params['subject'] ?? '';
-      $message['body'][] = \Drupal::service('renderer')->renderPlain([
+      $build = [
         '#theme' => 'asu_application_offer_notification_mail',
         '#project_name' => $params['project_name'] ?? '',
         '#apartment_number' => $params['apartment_number'] ?? '',
@@ -341,7 +348,8 @@ function asu_application_mail(string $key, array &$message, array $params) {
         '#customer_email' => $params['customer_email'] ?? '',
         '#valid_until' => $params['valid_until'] ?? '',
         '#action' => $params['action'] ?? '',
-      ]);
+      ];
+      $message['body'][] = \Drupal::service('renderer')->renderPlain($build);
       break;
   }
 }

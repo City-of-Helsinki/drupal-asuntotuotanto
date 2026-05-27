@@ -1,6 +1,8 @@
 (($, Drupal) => {
   Drupal.behaviors.applicationApartmentListing = {
     attach: function attach() {
+      const offerStrings = drupalSettings.asuApplicationOffer || {};
+
       const getApplicationIdFromElement = (element) => {
         return $(element).closest('[data-application]').data('application');
       };
@@ -66,7 +68,7 @@
       };
 
       const submitOfferAction = (offerId, action, applicationId, apartmentResult) => {
-        const baseUrl = (Drupal.url && Drupal.url()) ? Drupal.url() : '/';
+        const baseUrl = (window.drupalSettings && drupalSettings.path && drupalSettings.path.baseUrl) ? drupalSettings.path.baseUrl : '/';
         jQuery.ajax({
           url: `${baseUrl}user/offer/${offerId}/${action}`,
           method: 'POST',
@@ -91,7 +93,7 @@
                   actions.innerHTML = '';
                 }
               });
-              jQuery(`.application__lottery-link--show--submitted[data-application="${applicationId}"]`).data('loaded', 0);
+              jQuery(`.application__lottery-link--toggle[data-application="${applicationId}"]`).data('loaded', 0);
             }
           },
         });
@@ -124,20 +126,20 @@
           actions.innerHTML = '';
 
           actions.appendChild(createHdsButton(
-            Drupal.t('Accept offer'),
+            offerStrings.acceptOffer || 'Accept offer',
             'primary',
             () => {
-              if (window.confirm(Drupal.t('Are you sure you want to accept this offer?'))) {
+              if (window.confirm(offerStrings.confirmAccept || 'Are you sure you want to accept this offer?')) {
                 submitOfferAction(apartmentResult.offer.id, 'accept', applicationId, apartmentResult);
               }
             }
           ));
 
           actions.appendChild(createHdsButton(
-            Drupal.t('Reject offer'),
+            offerStrings.rejectOffer || 'Reject offer',
             'secondary',
             () => {
-              if (window.confirm(Drupal.t('Are you sure you want to reject this offer?'))) {
+              if (window.confirm(offerStrings.confirmReject || 'Are you sure you want to reject this offer?')) {
                 submitOfferAction(apartmentResult.offer.id, 'reject', applicationId, apartmentResult);
               }
             }
@@ -204,33 +206,32 @@
         $(`.application__lottery--show--draft[data-application="${id}"]`).removeClass('is-hidden');
       }));
 
-      // For submitted applications.
-      let openResultsLinks = document.querySelectorAll('.application__lottery-link--show--submitted');
-      openResultsLinks.forEach(element=>{
-        element.addEventListener("click", (event) => {
-          let id = getApplicationIdFromElement(event.currentTarget);
+      const showSubmittedLotteryResults = (id) => {
+        document.querySelectorAll(`[data-application="${id}"]`).forEach((el) => {
+          $(el).removeClass('is-hidden');
+        });
+        $(`.application__lottery-results-submitted[data-application="${id}"]`).removeClass('is-hidden');
+        $(`.application__lottery-link--toggle[data-application="${id}"]`).closest('.application--action').addClass('is-hidden');
+        $(`#application__lottery--hide--submitted[data-application="${id}"]`).removeClass('is-hidden');
+      };
+
+      // For submitted applications: use the HDS "Show lottery results" button only.
+      document.querySelectorAll('.application__lottery-link--toggle').forEach((element) => {
+        element.addEventListener('click', (event) => {
+          const id = getApplicationIdFromElement(event.currentTarget);
           $(event.currentTarget).addClass('throbber');
 
-          // Check if we have already loaded the data.
           if ($(event.currentTarget).data('loaded') != 1) {
-            getApartmentResults(event,
-              () => {
-                const elements = document.querySelectorAll(`[data-application="${id}"]`);
-                elements.forEach(el=>$(el).removeClass('is-hidden'))
-                $(event.currentTarget).removeClass('throbber');
-                $(event.currentTarget).parent().addClass('is-hidden');
-                $(`#application__lottery--hide--submitted[data-application="${id}"]`).removeClass('is-hidden');
-              });
-
+            getApartmentResults(event, () => {
+              showSubmittedLotteryResults(id);
+            });
           }
           else {
             $(event.currentTarget).removeClass('throbber');
-            $(event.currentTarget).parent().addClass('is-hidden');
-            $(`.application__lottery-results-submitted[data-application="${id}"]`).removeClass('is-hidden');
-            $(`#application__lottery--hide--submitted[data-application="${id}"]`).removeClass('is-hidden');
+            showSubmittedLotteryResults(id);
           }
         });
-      })
+      });
 
       let hideButtonLinks = document.querySelectorAll('.application__lottery-link--hide');
       hideButtonLinks.forEach(element=>{
@@ -238,27 +239,26 @@
         element.addEventListener("click", (event) => {
           let id = getApplicationIdFromElement(event.currentTarget);
           $(`.application__lottery-results-submitted[data-application="${id}"]`).addClass('is-hidden');
-          $(`.application__lottery--show[data-application="${id}"]`).removeClass('is-hidden');
+          $(`.application__lottery-link--toggle[data-application="${id}"]`).closest('.application--action').removeClass('is-hidden');
           $(event.currentTarget).parent().addClass('is-hidden');
         });
       })
 
       const getApartmentResults = (event, callback) => {
-        const element = jQuery(event.currentTarget)
-
-        element.data('loaded', 1);
+        const trigger = jQuery(event.currentTarget);
         const id = getApplicationIdFromElement(event.currentTarget);
+
         jQuery.ajax({
-          url: "application/results",
-          method : 'POST',
+          url: 'application/results',
+          method: 'POST',
           dataType: 'json',
           data: {
-            'application_id': id
+            application_id: id,
           },
-          success: function(results) {
-            // Update elements
+        })
+          .done(function(results) {
             if (results && results.length) {
-              Array.from(results).forEach(function(apartment_result, index, array) {
+              Array.from(results).forEach(function(apartment_result) {
                 getResultRows(apartment_result).forEach(function(result_row) {
                   jQuery(result_row).find('.result').first().html(apartment_result.position);
                   jQuery(result_row).find('.status').first().html(apartment_result.status);
@@ -271,26 +271,18 @@
                 });
               });
             }
-            callback();
-          },
-          failed: function(results){
-            callback();
-          },
-          complete: function() {
-            callback();
-          }
-        });
-      };
-
-      let toggle = document.querySelectorAll('.application__lottery-link--toggle');
-      toggle.forEach(element => {
-        element.addEventListener('click', event => {
-          let id = $(event.currentTarget).data('application');
-          $('#result-'+id).each(function(element){
-            this.click();
+            trigger.data('loaded', 1);
+          })
+          .fail(function() {
+            trigger.data('loaded', 0);
+          })
+          .always(function() {
+            trigger.removeClass('throbber');
+            if (typeof callback === 'function') {
+              callback();
+            }
           });
-        })
-      });
+      };
 
     },
   };

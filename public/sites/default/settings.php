@@ -417,6 +417,13 @@ if ($env = getenv('APP_ENV')) {
     $orbstack = str_contains(php_uname('r'), 'orbstack');
     $config['search_api.server.asuntotuotanto']['backend_config']['connector_config']['url'] = $orbstack ? 'http://elastic.asuntotuotanto.orb.local' : 'http://elastic:9200';
 
+    // In local development, do not send outbound emails. Collect them to state
+    // so they can be inspected from the console (e.g. via drush).
+    $config['mailsystem.settings']['defaults']['sender'] = 'test_mail_collector';
+    $config['mailsystem.settings']['defaults']['formatter'] = 'test_mail_collector';
+    $config['mailsystem.settings']['modules']['symfony_mailer_lite']['none']['formatter'] = 'test_mail_collector';
+    $config['mailsystem.settings']['modules']['symfony_mailer_lite']['none']['sender'] = 'test_mail_collector';
+
     if ($orbstack) {
       // Mailer settings.
       $config['symfony_mailer_lite.symfony_mailer_lite_transport.smtp']['configuration']['host'] = 'host.docker.internal';

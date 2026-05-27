@@ -43647,6 +43647,3 @@ msgstr "Tarjous voimassa asti"
 
 msgid "offer accepted"
 msgstr "Tarjous hyväksytty"
-
-msgid "offer accepted"
-msgstr "Tarjous hyväksytty"
