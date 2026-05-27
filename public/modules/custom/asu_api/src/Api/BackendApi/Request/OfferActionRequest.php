@@ -24,7 +24,7 @@ class OfferActionRequest extends Request {
    * @param int $offerId
    *   Offer identifier.
    * @param string $state
-   *   accepted or rejected.
+   *   Accepted or rejected.
    */
   public function __construct(
     UserInterface $sender,
