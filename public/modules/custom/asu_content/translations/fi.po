@@ -43507,6 +43507,15 @@ msgstr "Tarjouksen tila"
 msgid "Offer valid until"
 msgstr "Tarjous voimassa asti"
 
+msgid "Offers"
+msgstr "Tarjoukset"
+
+msgid "No offers"
+msgstr "Ei tarjouksia"
+
+msgid "You will see your offers here"
+msgstr "Näet tarjouksesi täällä"
+
 msgid "Cancellation"
 msgstr "Peruutus"
 

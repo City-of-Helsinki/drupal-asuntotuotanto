@@ -104,7 +104,6 @@
         <th>{% trans %}Valid until{% endtrans %}</th>
         <th>{% trans %}Cancellation{% endtrans %}</th>
         <th>{% trans %}Date{% endtrans %}</th>
-        <th>{% trans %}Actions{% endtrans %}</th>
       </tr>
     </thead>
     <tbody>
@@ -118,7 +117,6 @@
           <td class="offer-valid-until">-</td>
           <td class="cancellation-info">-</td>
           <td class="cancellation-time">-</td>
-          <td class="offer-actions"></td>
         </tr>
       {% endfor %}
     </tbody>
@@ -126,7 +124,7 @@
 {% endmacro %}
 
 {% macro teaser_common(teaser_values, attributes, classes, app_id) %}
-  <article{{ attributes.addClass(classes) }} data-application="{{ app_id }}">
+  <article{{ attributes.addClass(classes) }} data-application="{{ app_id }}" data-project-name="{{ teaser_values.project_name }}">
     <figure class="application__image">
       <img src="{{ teaser_values.project_main_image_url }}" alt="{{ 'Image of the project'|t }}">
     </figure>

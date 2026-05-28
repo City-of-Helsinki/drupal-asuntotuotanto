@@ -64,8 +64,11 @@ class ResultController extends ControllerBase {
       return new AjaxResponse([], 401);
     }
 
+    $request = $this->requestStack->getCurrentRequest();
+    $noCache = (string) $request?->get('no_cache') === '1';
+
     $cid = 'asu_application_result_' . $user->id() . '_' . $applicationId;
-    if ($cached = $this->cache()->get($cid)) {
+    if (!$noCache && ($cached = $this->cache()->get($cid))) {
       $cachedResults = json_decode($cached->data, TRUE, 512);
       if (is_array($cachedResults) && !$this->shouldRefreshCachedResults($cachedResults)) {
         return new AjaxResponse($cachedResults);
@@ -114,7 +117,9 @@ class ResultController extends ControllerBase {
       $results[] = $this->buildResultItem($result);
     }
 
-    $this->cache()->set($cid, json_encode($results), (time() + 60 * 60));
+    if (!$noCache) {
+      $this->cache()->set($cid, json_encode($results), (time() + 60 * 60));
+    }
     return new AjaxResponse($results);
   }
 

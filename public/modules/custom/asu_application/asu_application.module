@@ -251,6 +251,8 @@ function template_preprocess_asu_application(array &$variables) {
     'rejectOffer' => (string) t('Reject offer'),
     'confirmAccept' => (string) t('Are you sure you want to accept this offer?'),
     'confirmReject' => (string) t('Are you sure you want to reject this offer?'),
+    'offerStatusLabel' => (string) t('Offer status'),
+    'offerValidUntilLabel' => (string) t('Offer valid until'),
   ];
 
   $variables['content'] = $application_teaser_values;
