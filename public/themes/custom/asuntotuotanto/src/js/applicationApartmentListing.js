@@ -196,14 +196,19 @@
       };
 
       const parseApartmentNumberForSort = (value) => {
-        const raw = String(value || '').trim();
-        const match = /^([^\d\s-]+)?\s*0*(\d+)?(.*)?$/.exec(raw);
-        return {
-          prefix: match && match[1] ? match[1].toUpperCase() : '',
-          number: match && match[2] ? parseInt(match[2], 10) : Number.MAX_SAFE_INTEGER,
-          suffix: match && match[3] ? match[3].toUpperCase() : '',
-          raw: raw.toUpperCase(),
-        };
+        const raw = String(value || '').trim().toUpperCase();
+        if (!raw) {
+          return { prefix: '', number: Number.MAX_SAFE_INTEGER, suffix: '', raw: '' };
+        }
+        const prefixMatch = /^[^\d\s-]+/.exec(raw);
+        const prefix = prefixMatch ? prefixMatch[0] : '';
+        const rest = raw.slice(prefix.length).trimStart();
+        const numberMatch = /^0*(\d+)/.exec(rest);
+        const number = numberMatch
+          ? Number.parseInt(numberMatch[1], 10)
+          : Number.MAX_SAFE_INTEGER;
+        const suffix = rest.slice(numberMatch ? numberMatch[0].length : 0);
+        return { prefix, number, suffix, raw };
       };
 
       const compareApartmentNumbers = (a, b) => {
