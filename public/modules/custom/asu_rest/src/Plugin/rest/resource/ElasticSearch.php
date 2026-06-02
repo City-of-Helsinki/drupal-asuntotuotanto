@@ -3,8 +3,10 @@
 namespace Drupal\asu_rest\Plugin\rest\resource;
 
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Field\EntityReferenceFieldItemListInterface;
 use Drupal\node\Entity\Node;
+use Drupal\taxonomy\TermInterface;
 use Drupal\rest\ModifiedResourceResponse;
 use Drupal\rest\Plugin\ResourceBase;
 use Drupal\rest\ResourceResponse;
@@ -270,7 +272,8 @@ class ElasticSearch extends ResourceBase {
             $value = str_replace('apartment_for_sale', 'for_sale', $value);
             return strtoupper(str_replace([' ', '-'], '_', $value));
           };
-          $get_term_enum = static function (Node $node, string $field) use ($normalize_enum): string {
+          $entity_repository = \Drupal::service('entity.repository');
+          $get_term_enum = static function (Node $node, string $field) use ($normalize_enum, $entity_repository): string {
             if (!$node->hasField($field) || $node->get($field)->isEmpty()) {
               return '';
             }
@@ -285,11 +288,18 @@ class ElasticSearch extends ResourceBase {
             if (method_exists($entity, 'getUntranslated')) {
               $entity = $entity->getUntranslated();
             }
+            if ($entity instanceof ConfigEntityInterface) {
+              return $normalize_enum((string) $entity->id());
+            }
             $value = '';
             if (method_exists($entity, 'hasField')
               && $entity->hasField('field_machine_readable_name')
               && !$entity->get('field_machine_readable_name')->isEmpty()) {
               $value = (string) $entity->get('field_machine_readable_name')->value;
+            }
+            if ($value === '' && $entity instanceof TermInterface) {
+              $term = $entity_repository->getTranslationFromContext($entity, 'en');
+              $value = trim($term->getName());
             }
             if ($value === '' && isset($item->target_id)) {
               $value = (string) $item->target_id;

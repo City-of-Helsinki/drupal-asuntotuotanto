@@ -20,3 +20,4 @@ services:
       - '@file_url_generator'
       - '@request_stack'
       - '@file.validator'
+      - '@entity.repository'
