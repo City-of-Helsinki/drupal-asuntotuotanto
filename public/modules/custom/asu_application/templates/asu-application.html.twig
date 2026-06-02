@@ -86,6 +86,7 @@
             <span class="application__result-value cancellation-time">-</span>
           </li>
         </ul>
+        <div class="offer-actions"></div>
       </li>
     {% endfor %}
   </ul>
@@ -123,7 +124,7 @@
 {% endmacro %}
 
 {% macro teaser_common(teaser_values, attributes, classes, app_id) %}
-  <article{{ attributes.addClass(classes) }} data-application="{{ app_id }}">
+  <article{{ attributes.addClass(classes) }} data-application="{{ app_id }}" data-project-name="{{ teaser_values.project_name }}">
     <figure class="application__image">
       <img src="{{ teaser_values.project_main_image_url }}" alt="{{ 'Image of the project'|t }}">
     </figure>
@@ -180,7 +181,7 @@
           {% endif %}
           </div>
           <div class="application--action">
-            <a class="hds-button hds-button--secondary application__lottery-link--toggle" data-application="{{ app_id }}">
+            <a class="hds-button hds-button--secondary asu-results application__lottery-link--toggle" data-application="{{ app_id }}" data-loaded="0">
               <span class="hds-button__label" data-application="{{ app_id }}">
                 {% trans %}
                   Show lottery results
@@ -200,14 +201,6 @@
         </div>
       </div>
     </article>
-
-    <div class="ajax-progress-throbber application__lottery application__lottery--show" data-application="{{ app_id }}">
-      <a data-loaded="0" class="asu-results application__lottery-link application__lottery-link--show application__lottery-link--show--submitted" id="result-{{ app_id }}">
-        {% trans %}
-          Show lottery results
-        {% endtrans %}
-      </a>
-    </div>
 
     {{ _self.results_mobile_list(content['#teaser_values'].application_apartments, app_id, 'application__lottery-results-submitted', true) }}
 

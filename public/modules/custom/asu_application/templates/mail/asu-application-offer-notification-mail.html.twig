@@ -1,0 +1,15 @@
+<p>
+  {% if action == 'accepted' %}
+    {% trans %}A customer has accepted an apartment offer.{% endtrans %}
+  {% elseif action == 'rejected' %}
+    {% trans %}A customer has rejected an apartment offer.{% endtrans %}
+  {% else %}
+    {% trans %}A customer has not yet responded to an apartment offer before the deadline.{% endtrans %}
+  {% endif %}
+</p>
+<ul>
+  <li>{% trans %}Project{% endtrans %}: {{ project_name }}</li>
+  <li>{% trans %}Apartment{% endtrans %}: {{ apartment_number }}</li>
+  <li>{% trans %}Customer{% endtrans %}: {{ customer_name }} ({{ customer_email }})</li>
+  <li>{% trans %}Offer valid until{% endtrans %}: {{ valid_until }}</li>
+</ul>

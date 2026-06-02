@@ -9,6 +9,7 @@ use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\query\QueryPluginBase;
 use Drupal\asu_application\Entity\Application;
+use Drupal\asu_application\Util\OfferMailTestLabel;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 use Drupal\file\Entity\File;
 use Drupal\user\Entity\User;
@@ -21,6 +22,17 @@ function asu_application_theme() {
     'asu_application' => [
       'render element' => 'elements',
       'template' => 'asu-application',
+    ],
+    'asu_application_offer_notification_mail' => [
+      'variables' => [
+        'project_name' => '',
+        'apartment_number' => '',
+        'customer_name' => '',
+        'customer_email' => '',
+        'valid_until' => '',
+        'action' => '',
+      ],
+      'template' => 'mail/asu-application-offer-notification-mail',
     ],
   ];
 }
@@ -231,7 +243,16 @@ function template_preprocess_asu_application(array &$variables) {
   }
 
   $application_teaser_values['#cache'] = [
-    'contexts' => ['user'],
+    'contexts' => ['user', 'languages:language_interface'],
+  ];
+
+  $variables['#attached']['drupalSettings']['asuApplicationOffer'] = [
+    'acceptOffer' => (string) t('Accept offer'),
+    'rejectOffer' => (string) t('Reject offer'),
+    'confirmAccept' => (string) t('Are you sure you want to accept this offer?'),
+    'confirmReject' => (string) t('Are you sure you want to reject this offer?'),
+    'offerStatusLabel' => (string) t('Offer status'),
+    'offerValidUntilLabel' => (string) t('Offer valid until'),
   ];
 
   $variables['content'] = $application_teaser_values;
@@ -283,6 +304,15 @@ function asu_application_cron() {
     \Drupal::logger('asu_application_cron')->critical('Unable to perform application cron operation: ' . $e->getMessage());
   }
 
+  try {
+    \Drupal::service('asu_application.offer_reminder')->processDueReminders();
+  }
+  catch (\Exception $e) {
+    \Drupal::logger('asu_application_cron')->critical(
+      'Unable to process offer reminders: ' . $e->getMessage()
+    );
+  }
+
 }
 
 /**
@@ -306,6 +336,26 @@ function asu_application_mail(string $key, array &$message, array $params) {
       elseif (!empty($params['message'])) {
         $message['body'][] = $params['message'];
       }
+      break;
+
+    case 'offer_accepted_notification':
+    case 'offer_rejected_notification':
+    case 'offer_reminder_notification':
+      $message['from'] = \Drupal::config('system.site')->get('mail');
+      $message['subject'] = OfferMailTestLabel::prefixSubject(
+        $params['subject'] ?? ''
+      );
+      $build = [
+        '#theme' => 'asu_application_offer_notification_mail',
+        '#project_name' => $params['project_name'] ?? '',
+        '#apartment_number' => $params['apartment_number'] ?? '',
+        '#customer_name' => $params['customer_name'] ?? '',
+        '#customer_email' => $params['customer_email'] ?? '',
+        '#valid_until' => $params['valid_until'] ?? '',
+        '#action' => $params['action'] ?? '',
+      ];
+      $body = (string) \Drupal::service('renderer')->renderPlain($build);
+      $message['body'][] = OfferMailTestLabel::prefixBody($body);
       break;
   }
 }

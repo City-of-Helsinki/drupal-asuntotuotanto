@@ -15,3 +15,21 @@ services:
       - '@datetime.time'
     tags:
       - { name: event_subscriber }
+
+  asu_application.offer_notification:
+    class: Drupal\asu_application\Service\OfferNotificationService
+    arguments:
+      - '@plugin.manager.mail'
+      - '@language_manager'
+      - '@entity_type.manager'
+      - '@entity.repository'
+      - '@logger.channel.asu_application'
+
+  asu_application.offer_reminder:
+    class: Drupal\asu_application\Service\OfferReminderService
+    arguments:
+      - '@asu_api.backendapi'
+      - '@asu_application.offer_notification'
+      - '@entity.repository'
+      - '@state'
+      - '@logger.channel.asu_application'
