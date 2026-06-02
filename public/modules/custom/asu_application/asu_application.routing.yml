@@ -24,6 +24,24 @@ asu_application.offer_action:
     offer_id: '\d+'
     action: 'accept|reject'
 
+asu_application.offer_message:
+  path: "/user/offer/{offer_id}/message"
+  defaults:
+    _controller: '\Drupal\asu_application\Controller\OfferMessageController::message'
+  methods: [GET]
+  requirements:
+    _user_is_logged_in: "TRUE"
+    offer_id: '\d+'
+
+asu_application.offer_details:
+  path: "/user/offer/{offer_id}/details"
+  defaults:
+    _controller: '\Drupal\asu_application\Controller\OfferDetailsController::details'
+  methods: [GET]
+  requirements:
+    _user_is_logged_in: "TRUE"
+    offer_id: '\d+'
+
 asu_application.lottery_start:
   path: "/lottery/start/{project_uuid}"
   defaults:
