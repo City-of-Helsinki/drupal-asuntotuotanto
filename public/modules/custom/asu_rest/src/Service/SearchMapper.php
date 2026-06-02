@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace Drupal\asu_rest\Service;
 
+use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Entity\TranslatableInterface;
+use Drupal\taxonomy\TermInterface;
 use Drupal\Core\Field\EntityReferenceFieldItemListInterface;
 use Drupal\Core\File\FileUrlGeneratorInterface;
 use Drupal\file\Validation\FileValidatorInterface;
@@ -31,6 +33,7 @@ final class SearchMapper {
     private readonly FileUrlGeneratorInterface $fileUrlGenerator,
     private readonly RequestStack $requestStack,
     private readonly FileValidatorInterface $fileValidator,
+    private readonly EntityRepositoryInterface $entityRepository,
   ) {
   }
 
@@ -426,7 +429,16 @@ final class SearchMapper {
       return $this->normalizeEnum($value);
     }
 
-    // No safe machine value available.
+    // holding_type and similar vocabs lack field_machine_readable_name; match
+    // asu_project_holding_type computed field (English label -> enum).
+    if ($refEntity instanceof TermInterface) {
+      $term = $this->entityRepository->getTranslationFromContext($refEntity, 'en');
+      $name = trim($term->getName());
+      if ($name !== '') {
+        return $this->normalizeEnum($name);
+      }
+    }
+
     return '';
 
   }

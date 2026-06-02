@@ -10,6 +10,8 @@ use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
+use Drupal\taxonomy\Entity\Term;
+use Drupal\taxonomy\Entity\Vocabulary;
 
 /**
  * Tests enum serialization in SearchMapper.
@@ -30,6 +32,7 @@ final class SearchMapperEnumTest extends KernelTestBase {
     'filter',
     'file',
     'config_terms',
+    'taxonomy',
     'asu_rest',
   ];
 
@@ -48,7 +51,8 @@ final class SearchMapperEnumTest extends KernelTestBase {
 
     $this->installEntitySchema('user');
     $this->installEntitySchema('node');
-    $this->installConfig(['node']);
+    $this->installEntitySchema('taxonomy_term');
+    $this->installConfig(['node', 'taxonomy']);
 
     NodeType::create([
       'type' => 'project',
@@ -115,6 +119,62 @@ final class SearchMapperEnumTest extends KernelTestBase {
 
     $mapped = $this->mapper->mapProject($project);
     $this->assertSame('SOLD', $mapped['project_state_of_sale']);
+  }
+
+  /**
+   * Holding type terms use label fallback when machine-readable name is absent.
+   */
+  public function testProjectHoldingTypeUsesTaxonomyLabelFallback(): void {
+    Vocabulary::create([
+      'vid' => 'holding_type',
+      'name' => 'Holding type',
+    ])->save();
+
+    FieldStorageConfig::create([
+      'field_name' => 'field_holding_type',
+      'entity_type' => 'node',
+      'type' => 'entity_reference',
+      'settings' => [
+        'target_type' => 'taxonomy_term',
+      ],
+    ])->save();
+
+    FieldConfig::create([
+      'field_name' => 'field_holding_type',
+      'entity_type' => 'node',
+      'bundle' => 'project',
+      'label' => 'Holding type',
+      'settings' => [
+        'handler' => 'default:taxonomy_term',
+        'handler_settings' => [
+          'target_bundles' => [
+            'holding_type' => 'holding_type',
+          ],
+        ],
+      ],
+    ])->save();
+
+    $term = Term::create([
+      'vid' => 'holding_type',
+      'name' => 'Right of residence apartment',
+    ]);
+    $term->save();
+
+    $project = Node::create([
+      'type' => 'project',
+      'title' => 'Project Two',
+      'status' => 1,
+      'field_holding_type' => [
+        ['target_id' => $term->id()],
+      ],
+    ]);
+    $project->save();
+
+    $mapped = $this->mapper->mapProject($project);
+    $this->assertSame(
+      'RIGHT_OF_RESIDENCE_APARTMENT',
+      $mapped['project_holding_type'],
+    );
   }
 
 }
