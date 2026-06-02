@@ -411,26 +411,37 @@ final class SearchMapper {
     if (!$refEntity) {
       return '';
     }
+
+    return $this->enumFromReferencedEntity($refEntity);
+
+  }
+
+  /**
+   * Resolve a referenced term/config entity to a normalized enum string.
+   *
+   * Used for apartment_state_of_sale, project_holding_type, project_building_type,
+   * project_new_development_status, and project_state_of_sale. Matches computed
+   * field plugins: prefer field_machine_readable_name, else English term label.
+   */
+  private function enumFromReferencedEntity(object $refEntity): string {
     if ($refEntity instanceof TranslatableInterface) {
       $refEntity = $refEntity->getUntranslated();
     }
 
     // Prefer machine IDs for config entity references (e.g. config_terms_term).
     if ($refEntity instanceof ConfigEntityInterface) {
-      $value = (string) $refEntity->id();
-      return $this->normalizeEnum($value);
+      return $this->normalizeEnum((string) $refEntity->id());
     }
 
     // Taxonomy term or other fieldable entity reference.
     if ($refEntity instanceof FieldableEntityInterface
       && $refEntity->hasField('field_machine_readable_name')
       && !$refEntity->get('field_machine_readable_name')->isEmpty()) {
-      $value = (string) $refEntity->get('field_machine_readable_name')->value;
-      return $this->normalizeEnum($value);
+      return $this->normalizeEnum(
+        (string) $refEntity->get('field_machine_readable_name')->value,
+      );
     }
 
-    // holding_type and similar vocabs lack field_machine_readable_name; match
-    // asu_project_holding_type computed field (English label -> enum).
     if ($refEntity instanceof TermInterface) {
       $term = $this->entityRepository->getTranslationFromContext($refEntity, 'en');
       $name = trim($term->getName());
@@ -440,7 +451,6 @@ final class SearchMapper {
     }
 
     return '';
-
   }
 
   /**

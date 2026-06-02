@@ -122,59 +122,148 @@ final class SearchMapperEnumTest extends KernelTestBase {
   }
 
   /**
-   * Holding type terms use label fallback when machine-readable name is absent.
+   * Provides taxonomy enum fields that lack term-level machine-readable names.
+   *
+   * @return array<string, array{string, string, string, string}>
    */
-  public function testProjectHoldingTypeUsesTaxonomyLabelFallback(): void {
-    Vocabulary::create([
-      'vid' => 'holding_type',
-      'name' => 'Holding type',
-    ])->save();
-
-    FieldStorageConfig::create([
-      'field_name' => 'field_holding_type',
-      'entity_type' => 'node',
-      'type' => 'entity_reference',
-      'settings' => [
-        'target_type' => 'taxonomy_term',
+  public static function taxonomyEnumFieldsWithoutMachineNameProvider(): array {
+    return [
+      'holding_type' => [
+        'holding_type',
+        'field_holding_type',
+        'Right of residence apartment',
+        'RIGHT_OF_RESIDENCE_APARTMENT',
       ],
-    ])->save();
-
-    FieldConfig::create([
-      'field_name' => 'field_holding_type',
-      'entity_type' => 'node',
-      'bundle' => 'project',
-      'label' => 'Holding type',
-      'settings' => [
-        'handler' => 'default:taxonomy_term',
-        'handler_settings' => [
-          'target_bundles' => [
-            'holding_type' => 'holding_type',
-          ],
-        ],
+      'building_type' => [
+        'building_types',
+        'field_building_type',
+        'Block of flats',
+        'BLOCK_OF_FLATS',
       ],
-    ])->save();
+      'new_development_status' => [
+        'new_development_status',
+        'field_new_development_status',
+        'Under construction',
+        'UNDER_CONSTRUCTION',
+      ],
+    ];
+  }
+
+  /**
+   * Taxonomy enum fields use English label fallback when machine name is absent.
+   *
+   * @dataProvider taxonomyEnumFieldsWithoutMachineNameProvider
+   */
+  public function testProjectTaxonomyEnumUsesLabelFallback(
+    string $vocabularyId,
+    string $fieldName,
+    string $termLabel,
+    string $expectedEnum,
+  ): void {
+    $this->createProjectTaxonomyEnumField($vocabularyId, $fieldName);
 
     $term = Term::create([
-      'vid' => 'holding_type',
-      'name' => 'Right of residence apartment',
+      'vid' => $vocabularyId,
+      'name' => $termLabel,
     ]);
     $term->save();
 
     $project = Node::create([
       'type' => 'project',
-      'title' => 'Project Two',
+      'title' => 'Project enum test',
       'status' => 1,
-      'field_holding_type' => [
+      $fieldName => [
         ['target_id' => $term->id()],
       ],
     ]);
     $project->save();
 
     $mapped = $this->mapper->mapProject($project);
-    $this->assertSame(
-      'RIGHT_OF_RESIDENCE_APARTMENT',
-      $mapped['project_holding_type'],
-    );
+    $mappedKey = str_replace('field_', 'project_', $fieldName);
+    $this->assertSame($expectedEnum, $mapped[$mappedKey]);
+  }
+
+  /**
+   * Prefers field_machine_readable_name over the term label when set.
+   */
+  public function testProjectBuildingTypePrefersMachineReadableName(): void {
+    $this->createProjectTaxonomyEnumField('building_types', 'field_building_type');
+
+    FieldStorageConfig::create([
+      'field_name' => 'field_machine_readable_name',
+      'entity_type' => 'taxonomy_term',
+      'type' => 'string',
+    ])->save();
+
+    FieldConfig::create([
+      'field_name' => 'field_machine_readable_name',
+      'entity_type' => 'taxonomy_term',
+      'bundle' => 'building_types',
+      'label' => 'Machine readable name',
+    ])->save();
+
+    $term = Term::create([
+      'vid' => 'building_types',
+      'name' => 'Block of flats',
+      'field_machine_readable_name' => 'detached_house',
+    ]);
+    $term->save();
+
+    $project = Node::create([
+      'type' => 'project',
+      'title' => 'Project machine name test',
+      'status' => 1,
+      'field_building_type' => [
+        ['target_id' => $term->id()],
+      ],
+    ]);
+    $project->save();
+
+    $mapped = $this->mapper->mapProject($project);
+    $this->assertSame('DETACHED_HOUSE', $mapped['project_building_type']);
+  }
+
+  /**
+   * Creates a project taxonomy enum reference field.
+   */
+  private function createProjectTaxonomyEnumField(
+    string $vocabularyId,
+    string $fieldName,
+  ): void {
+    if (!Vocabulary::load($vocabularyId)) {
+      Vocabulary::create([
+        'vid' => $vocabularyId,
+        'name' => $vocabularyId,
+      ])->save();
+    }
+
+    if (!FieldStorageConfig::loadByName('node', $fieldName)) {
+      FieldStorageConfig::create([
+        'field_name' => $fieldName,
+        'entity_type' => 'node',
+        'type' => 'entity_reference',
+        'settings' => [
+          'target_type' => 'taxonomy_term',
+        ],
+      ])->save();
+    }
+
+    if (!FieldConfig::loadByName('node', 'project', $fieldName)) {
+      FieldConfig::create([
+        'field_name' => $fieldName,
+        'entity_type' => 'node',
+        'bundle' => 'project',
+        'label' => $fieldName,
+        'settings' => [
+          'handler' => 'default:taxonomy_term',
+          'handler_settings' => [
+            'target_bundles' => [
+              $vocabularyId => $vocabularyId,
+            ],
+          ],
+        ],
+      ])->save();
+    }
   }
 
 }
