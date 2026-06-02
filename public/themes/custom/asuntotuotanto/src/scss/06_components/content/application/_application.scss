@@ -237,6 +237,89 @@ line-height: $lineheight-l; // Was 24px.
   }
 }
 
+.offer-row__actions-cell {
+  min-width: 12rem;
+}
+
+.offer-details-toggle {
+  margin-bottom: $spacing-half-and-half;
+}
+
+.offer-details-row {
+  &.is-hidden {
+    display: none;
+  }
+
+  td {
+    background-color: $color-black-5;
+    border-top: none;
+    padding-top: 0;
+  }
+}
+
+.offer-details {
+  margin: $spacing-half-and-half 0 $spacing;
+
+  &__message {
+    margin-bottom: $spacing-and-half;
+  }
+
+  &__table {
+    width: 100%;
+    border-collapse: collapse;
+
+    th,
+    td {
+      padding: $spacing-quarter 0;
+      vertical-align: top;
+    }
+
+    th {
+      font-weight: $font-weight-medium;
+      padding-right: $spacing;
+      width: 45%;
+    }
+
+    td {
+      width: 55%;
+    }
+  }
+
+  &__subject {
+    font-size: $fontsize-body-m;
+    font-weight: $font-weight-medium;
+    margin: 0 0 $spacing-half-and-half;
+  }
+
+  &__body {
+    font-size: $fontsize-body-m;
+    line-height: $lineheight-l;
+    white-space: pre-wrap;
+  }
+
+  &__loading,
+  &__error {
+    font-size: $fontsize-body-m;
+    margin: 0;
+  }
+
+  &__error {
+    color: $color-error;
+  }
+}
+
+.application__project-name--offers {
+  font-size: $fontsize-heading-m;
+  line-height: $lineheight-m;
+  font-weight: $font-weight-bold;
+  margin: 0;
+  display: inline-block;
+}
+
+.application__result-card .offer-details-toggle {
+  margin-top: $spacing-and-half;
+}
+
 .offer-actions {
   display: flex;
   flex-wrap: wrap;

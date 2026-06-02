@@ -253,6 +253,27 @@ function template_preprocess_asu_application(array &$variables) {
     'confirmReject' => (string) t('Are you sure you want to reject this offer?'),
     'offerStatusLabel' => (string) t('Offer status'),
     'offerValidUntilLabel' => (string) t('Offer valid until'),
+    'showOfferDetails' => (string) t('Show offer details'),
+    'hideOfferDetails' => (string) t('Hide offer details'),
+    'loadingOfferDetails' => (string) t('Loading offer details…'),
+    'offerDetailsError' => (string) t('Could not load offer details.'),
+    'offerDetailLabels' => [
+      'apartment_number' => (string) t('Apartment'),
+      'apartment_structure' => (string) t('Apartment type'),
+      'living_area' => (string) t('Living area'),
+      'floor' => (string) t('Floor'),
+      'sales_price' => (string) t('Sales price'),
+      'debt_free_sales_price' => (string) t('Debt-free price'),
+      'maintenance_fee' => (string) t('Estimated maintenance fee'),
+      'has_children' => (string) t('Family with children'),
+      'current_right_of_occupancy_payment' => (string) t('Estimated right of occupancy payment'),
+      'right_of_occupancy_fee' => (string) t('Estimated right of occupancy fee'),
+      'right_of_occupancy_deposit' => (string) t('Deposit'),
+      'right_of_residence' => (string) t('Right of residence number'),
+      'is_age_over_55' => (string) t('Over 55'),
+      'is_right_of_occupancy_housing_changer' => (string) t('Switching right of occupancy home'),
+      'valid_until' => (string) t('Offer valid until'),
+    ],
   ];
 
   $variables['content'] = $application_teaser_values;

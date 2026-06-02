@@ -43505,7 +43505,7 @@ msgid "Offer status"
 msgstr "Tarjouksen tila"
 
 msgid "Offer valid until"
-msgstr "Tarjous voimassa asti"
+msgstr "Viimeinen voimassaolopäivä"
 
 msgid "Offers"
 msgstr "Tarjoukset"
@@ -43515,6 +43515,60 @@ msgstr "Ei tarjouksia"
 
 msgid "You will see your offers here"
 msgstr "Näet tarjouksesi täällä"
+
+msgid "Show offer details"
+msgstr "Näytä tarjouksen tiedot"
+
+msgid "Hide offer details"
+msgstr "Piilota tarjouksen tiedot"
+
+msgid "Loading offer details…"
+msgstr "Ladataan tarjouksen tietoja…"
+
+msgid "Could not load offer details."
+msgstr "Tarjouksen tietoja ei voitu ladata."
+
+msgid "Actions"
+msgstr "Toiminnot"
+
+msgid "Apartment type"
+msgstr "Huoneistotyyppi"
+
+msgid "Living area"
+msgstr "Pinta-ala"
+
+msgid "Floor"
+msgstr "Kerros"
+
+msgid "Sales price"
+msgstr "Myyntihinta"
+
+msgid "Debt-free price"
+msgstr "Velaton hinta"
+
+msgid "Estimated maintenance fee"
+msgstr "Alustava vastike"
+
+msgid "Family with children"
+msgstr "Lapsiperhe"
+
+msgid "Estimated right of occupancy payment"
+msgstr "Alustava asumisoikeusmaksu"
+
+msgid "Estimated right of occupancy fee"
+msgstr "Alustava käyttövastike"
+
+msgid "Deposit"
+msgstr "Käyttövakuus"
+
+msgid "Right of residence number"
+msgstr "Asumisoikeusnumero"
+
+msgid "Over 55"
+msgstr "Yli 55v"
+
+msgid "Switching right of occupancy home"
+msgstr "Asumisoikeusasunnon vaihtaja"
 
 msgid "Cancellation"
 msgstr "Peruutus"
@@ -43650,9 +43704,6 @@ msgstr "Asunto"
 
 msgid "Customer"
 msgstr "Asiakas"
-
-msgid "Offer valid until"
-msgstr "Tarjous voimassa asti"
 
 msgid "offer accepted"
 msgstr "Tarjous hyväksytty"

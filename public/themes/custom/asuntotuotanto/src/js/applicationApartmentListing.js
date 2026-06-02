@@ -67,9 +67,8 @@
       };
 
       const submitOfferAction = (offerId, action, applicationId, apartmentResult) => {
-        const baseUrl = (window.drupalSettings && drupalSettings.path && drupalSettings.path.baseUrl) ? drupalSettings.path.baseUrl : '/';
         jQuery.ajax({
-          url: `${baseUrl}user/offer/${offerId}/${action}`,
+          url: `${getBaseUrl()}user/offer/${offerId}/${action}`,
           method: 'POST',
           dataType: 'json',
           data: {
@@ -98,6 +97,38 @@
         });
       };
 
+      const getBaseUrl = () => {
+        return (window.drupalSettings && drupalSettings.path && drupalSettings.path.baseUrl)
+          ? drupalSettings.path.baseUrl
+          : '/';
+      };
+
+      const offerDetailsCache = new Map();
+
+      const fetchOfferDetails = (offerId) => {
+        const cacheKey = String(offerId);
+        if (offerDetailsCache.has(cacheKey)) {
+          return Promise.resolve(offerDetailsCache.get(cacheKey));
+        }
+
+        return new Promise((resolve, reject) => {
+          jQuery.ajax({
+            url: `${getBaseUrl()}user/offer/${offerId}/details`,
+            method: 'GET',
+            dataType: 'json',
+          })
+            .done((response) => {
+              if (response && Array.isArray(response.items)) {
+                offerDetailsCache.set(cacheKey, response);
+                resolve(response);
+                return;
+              }
+              reject(new Error('empty'));
+            })
+            .fail(() => reject(new Error('fetch failed')));
+        });
+      };
+
       const createHdsButton = (label, type, onClick) => {
         const button = document.createElement('button');
         button.type = 'button';
@@ -106,7 +137,139 @@
         labelSpan.className = 'hds-button__label';
         labelSpan.textContent = label;
         button.appendChild(labelSpan);
-        button.addEventListener('click', onClick);
+        if (typeof onClick === 'function') {
+          button.addEventListener('click', onClick);
+        }
+        return button;
+      };
+
+      const createOfferDetailsPanel = () => {
+        const panel = document.createElement('div');
+        panel.className = 'offer-details';
+        panel.hidden = true;
+        const message = document.createElement('div');
+        message.className = 'offer-details__message';
+        const actions = document.createElement('div');
+        actions.className = 'offer-details__actions offer-actions';
+        panel.appendChild(message);
+        panel.appendChild(actions);
+        return panel;
+      };
+
+      const getOfferDetailsMessageContainer = (panel) => panel.querySelector('.offer-details__message');
+      const getOfferDetailsActionsContainer = (panel) => panel.querySelector('.offer-details__actions');
+
+      const setOfferDetailsLoading = (panel) => {
+        panel.hidden = false;
+        const message = getOfferDetailsMessageContainer(panel);
+        if (!message) {
+          return;
+        }
+        message.innerHTML = '';
+        const loading = document.createElement('p');
+        loading.className = 'offer-details__loading';
+        loading.textContent = offerStrings.loadingOfferDetails || 'Loading offer details…';
+        message.appendChild(loading);
+      };
+
+      const setOfferDetailsError = (panel) => {
+        panel.hidden = false;
+        const message = getOfferDetailsMessageContainer(panel);
+        if (!message) {
+          return;
+        }
+        message.innerHTML = '';
+        const error = document.createElement('p');
+        error.className = 'offer-details__error';
+        error.textContent = offerStrings.offerDetailsError || 'Could not load offer details.';
+        message.appendChild(error);
+      };
+
+      const renderOfferDetailsContent = (panel, message) => {
+        panel.hidden = false;
+        const messageContainer = getOfferDetailsMessageContainer(panel);
+        if (!messageContainer) {
+          return;
+        }
+        messageContainer.innerHTML = '';
+
+        const table = document.createElement('table');
+        table.className = 'offer-details__table';
+
+        const tbody = document.createElement('tbody');
+        const labels = (offerStrings && offerStrings.offerDetailLabels) ? offerStrings.offerDetailLabels : {};
+        (message.items || []).forEach((item) => {
+          if (!item || !item.key) {
+            return;
+          }
+          const tr = document.createElement('tr');
+          const th = document.createElement('th');
+          th.scope = 'row';
+          th.textContent = labels[item.key] || item.key;
+          const td = document.createElement('td');
+          td.textContent = item.value || '-';
+          tr.appendChild(th);
+          tr.appendChild(td);
+          tbody.appendChild(tr);
+        });
+
+        table.appendChild(tbody);
+        messageContainer.appendChild(table);
+      };
+
+      const bindOfferDetailsToggle = (button, detailsPanel, offerId, detailsRow) => {
+        const detailsId = `offer-details-${offerId}`;
+        detailsPanel.id = detailsId;
+        button.setAttribute('aria-controls', detailsId);
+        button.setAttribute('aria-expanded', 'false');
+        button.classList.add('offer-details-toggle');
+
+        const showLabel = offerStrings.showOfferDetails || 'Show offer details';
+        const hideLabel = offerStrings.hideOfferDetails || 'Hide offer details';
+
+        const setExpanded = (expanded) => {
+          button.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+          button.querySelector('.hds-button__label').textContent = expanded ? hideLabel : showLabel;
+          detailsPanel.hidden = !expanded;
+          if (detailsRow) {
+            detailsRow.classList.toggle('is-hidden', !expanded);
+          }
+
+          if (!expanded) {
+            return;
+          }
+
+          const cacheKey = String(offerId);
+          if (offerDetailsCache.has(cacheKey)) {
+            renderOfferDetailsContent(detailsPanel, offerDetailsCache.get(cacheKey));
+            return;
+          }
+
+          setOfferDetailsLoading(detailsPanel);
+          fetchOfferDetails(offerId)
+            .then((details) => {
+              if (button.getAttribute('aria-expanded') === 'true') {
+                renderOfferDetailsContent(detailsPanel, details);
+              }
+            })
+            .catch(() => {
+              if (button.getAttribute('aria-expanded') === 'true') {
+                setOfferDetailsError(detailsPanel);
+              }
+            });
+        };
+
+        button.addEventListener('click', () => {
+          setExpanded(button.getAttribute('aria-expanded') !== 'true');
+        });
+      };
+
+      const createOfferDetailsToggleButton = (detailsPanel, offerId, detailsRow) => {
+        const button = createHdsButton(
+          offerStrings.showOfferDetails || 'Show offer details',
+          'secondary'
+        );
+        bindOfferDetailsToggle(button, detailsPanel, offerId, detailsRow);
         return button;
       };
 
@@ -325,13 +488,21 @@
 
           tbody.innerHTML = '';
           list.innerHTML = '';
+          const offerColumnCount = 5;
           offers.forEach((offer) => {
+            const offerId = offer.apartmentResult.offer.id;
+            const detailsPanel = createOfferDetailsPanel();
+
             const tr = document.createElement('tr');
-            tr.className = 'lottery-result lottery-result--desktop';
+            tr.className = 'offer-row lottery-result lottery-result--desktop';
             tr.setAttribute('data-apartment-uuid', offer.apartmentUuid);
+            tr.setAttribute('data-offer-id', String(offerId));
 
             const tdProject = document.createElement('td');
-            tdProject.textContent = offer.projectName || '';
+            const project = document.createElement('span');
+            project.className = 'application__project-name application__project-name--offers';
+            project.textContent = offer.projectName || '';
+            tdProject.appendChild(project);
 
             const tdApartment = document.createElement('td');
             tdApartment.innerHTML = offer.apartmentCellHtml || offer.apartmentNumber || '';
@@ -345,9 +516,12 @@
             tdValidUntil.textContent = resolveOfferValidUntil(offer.apartmentResult);
 
             const tdActions = document.createElement('td');
-            const actionsContainer = document.createElement('div');
-            actionsContainer.className = 'offer-actions';
-            tdActions.appendChild(actionsContainer);
+            tdActions.className = 'offer-row__actions-cell';
+            const trDetails = document.createElement('tr');
+            trDetails.className = 'offer-details-row is-hidden';
+            trDetails.setAttribute('data-offer-id', String(offerId));
+
+            tdActions.appendChild(createOfferDetailsToggleButton(detailsPanel, offerId, trDetails));
 
             tr.appendChild(tdProject);
             tr.appendChild(tdApartment);
@@ -355,16 +529,26 @@
             tr.appendChild(tdValidUntil);
             tr.appendChild(tdActions);
             tbody.appendChild(tr);
+            const tdDetails = document.createElement('td');
+            tdDetails.colSpan = offerColumnCount;
+            tdDetails.appendChild(detailsPanel);
+            trDetails.appendChild(tdDetails);
+            tbody.appendChild(trDetails);
 
-            renderOfferActionsInto(actionsContainer, offer.apartmentResult, offer.applicationId);
+            renderOfferActionsInto(
+              getOfferDetailsActionsContainer(detailsPanel),
+              offer.apartmentResult,
+              offer.applicationId
+            );
 
             // Mobile card variant.
             const li = document.createElement('li');
-            li.className = 'lottery-result lottery-result--mobile application__result-card';
+            li.className = 'offer-row lottery-result lottery-result--mobile application__result-card';
             li.setAttribute('data-apartment-uuid', offer.apartmentUuid);
+            li.setAttribute('data-offer-id', String(offerId));
 
             const h3 = document.createElement('h3');
-            h3.className = 'application__result-card-title';
+            h3.className = 'application__project-name application__project-name--offers';
             h3.textContent = offer.projectName || '';
 
             const p = document.createElement('p');
@@ -402,14 +586,20 @@
               'offer-valid-until'
             ));
 
-            const mobileActions = document.createElement('div');
-            mobileActions.className = 'offer-actions';
-            renderOfferActionsInto(mobileActions, offer.apartmentResult, offer.applicationId);
+            const mobileDetailsPanel = createOfferDetailsPanel();
+            const mobileToggle = createOfferDetailsToggleButton(mobileDetailsPanel, offerId);
+
+            renderOfferActionsInto(
+              getOfferDetailsActionsContainer(mobileDetailsPanel),
+              offer.apartmentResult,
+              offer.applicationId
+            );
 
             li.appendChild(h3);
             li.appendChild(p);
             li.appendChild(ul);
-            li.appendChild(mobileActions);
+            li.appendChild(mobileToggle);
+            li.appendChild(mobileDetailsPanel);
             list.appendChild(li);
           });
 
