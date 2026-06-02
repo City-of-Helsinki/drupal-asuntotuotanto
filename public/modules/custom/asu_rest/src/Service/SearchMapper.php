@@ -419,9 +419,10 @@ final class SearchMapper {
   /**
    * Resolve a referenced term/config entity to a normalized enum string.
    *
-   * Used for apartment_state_of_sale, project_holding_type, project_building_type,
-   * project_new_development_status, and project_state_of_sale. Matches computed
-   * field plugins: prefer field_machine_readable_name, else English term label.
+   * Used for apartment_state_of_sale, project_holding_type,
+   * project_building_type, project_new_development_status, and
+   * project_state_of_sale. Matches computed field plugins: prefer
+   * field_machine_readable_name, else English term label.
    */
   private function enumFromReferencedEntity(object $refEntity): string {
     if ($refEntity instanceof TranslatableInterface) {

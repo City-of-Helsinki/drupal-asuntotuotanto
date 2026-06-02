@@ -125,6 +125,7 @@ final class SearchMapperEnumTest extends KernelTestBase {
    * Provides taxonomy enum fields that lack term-level machine-readable names.
    *
    * @return array<string, array{string, string, string, string}>
+   *   Vocabulary, field name, term label, and expected enum per case.
    */
   public static function taxonomyEnumFieldsWithoutMachineNameProvider(): array {
     return [
@@ -150,7 +151,7 @@ final class SearchMapperEnumTest extends KernelTestBase {
   }
 
   /**
-   * Taxonomy enum fields use English label fallback when machine name is absent.
+   * Taxonomy enum fields use English label fallback when name is absent.
    *
    * @dataProvider taxonomyEnumFieldsWithoutMachineNameProvider
    */
