@@ -2,19 +2,30 @@
 
 cd /var/www/html/public
 
-# Write Simple OAuth keys from env vars to /app/keys/ if provided.
+# Write Simple OAuth keys from env vars if provided.
+# In OpenShift the image filesystem is often read-only, so we write to Drupal's
+# private files directory by default (configurable via DRUPAL_FILES_PRIVATE).
 if [ -n "${DRUPAL_SIMPLE_OAUTH_PRIVATE_KEY_PEM}" ] || [ -n "${DRUPAL_SIMPLE_OAUTH_PUBLIC_KEY_PEM}" ]; then
-  if { [ -n "${DRUPAL_SIMPLE_OAUTH_PRIVATE_KEY_PEM}" ] && [ ! -f /app/keys/private.key ]; } || { [ -n "${DRUPAL_SIMPLE_OAUTH_PUBLIC_KEY_PEM}" ] && [ ! -f /app/keys/public.key ]; }; then
-    mkdir -p /app/keys && chmod 700 /app/keys
+  private_files_dir="${DRUPAL_FILES_PRIVATE:-sites/default/files/private}"
+  key_dir="${DRUPAL_SIMPLE_OAUTH_KEY_DIR:-${private_files_dir%/}/simple_oauth}"
+  private_key_path="${key_dir%/}/private.key"
+  public_key_path="${key_dir%/}/public.key"
 
-    if [ -n "${DRUPAL_SIMPLE_OAUTH_PRIVATE_KEY_PEM}" ] && [ ! -f /app/keys/private.key ]; then
-      printf '%s\n' "${DRUPAL_SIMPLE_OAUTH_PRIVATE_KEY_PEM}" > /app/keys/private.key
-      chmod 600 /app/keys/private.key
+  if { [ -n "${DRUPAL_SIMPLE_OAUTH_PRIVATE_KEY_PEM}" ] && [ ! -f "${private_key_path}" ]; } || { [ -n "${DRUPAL_SIMPLE_OAUTH_PUBLIC_KEY_PEM}" ] && [ ! -f "${public_key_path}" ]; }; then
+    if ! mkdir -p "${key_dir}"; then
+      echo "Container start error: Unable to create Simple OAuth key directory at '${key_dir}'."
+      exit 1
+    fi
+    chmod 700 "${key_dir}" || true
+
+    if [ -n "${DRUPAL_SIMPLE_OAUTH_PRIVATE_KEY_PEM}" ] && [ ! -f "${private_key_path}" ]; then
+      printf '%s\n' "${DRUPAL_SIMPLE_OAUTH_PRIVATE_KEY_PEM}" > "${private_key_path}"
+      chmod 600 "${private_key_path}" || true
     fi
 
-    if [ -n "${DRUPAL_SIMPLE_OAUTH_PUBLIC_KEY_PEM}" ] && [ ! -f /app/keys/public.key ]; then
-      printf '%s\n' "${DRUPAL_SIMPLE_OAUTH_PUBLIC_KEY_PEM}" > /app/keys/public.key
-      chmod 600 /app/keys/public.key
+    if [ -n "${DRUPAL_SIMPLE_OAUTH_PUBLIC_KEY_PEM}" ] && [ ! -f "${public_key_path}" ]; then
+      printf '%s\n' "${DRUPAL_SIMPLE_OAUTH_PUBLIC_KEY_PEM}" > "${public_key_path}"
+      chmod 600 "${public_key_path}" || true
     fi
   fi
 fi

@@ -2,8 +2,8 @@ _core:
   default_config_hash: KsPFWSp6mgXIQgjBJEShfKUGn6VLRlbpIJ2EysXvXWM
 scope_provider: dynamic
 token_cron_batch_size: 0
-public_key: /app/keys/public.key
-private_key: /app/keys/private.key
+public_key: sites/default/files/private/simple_oauth/public.key
+private_key: sites/default/files/private/simple_oauth/private.key
 disable_openid_connect: false
 access_token_expiration: 300
 authorization_code_expiration: 300

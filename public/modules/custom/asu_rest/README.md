@@ -51,8 +51,8 @@ an access token and send `Authorization: Bearer <token>` on requests.
 #### OAuth2 setup
 
 Simple OAuth expects RSA keys at the paths configured in `simple_oauth.settings.yml`:
-- `public_key`: `/app/keys/public.key`
-- `private_key`: `/app/keys/private.key`
+- `public_key`: `sites/default/files/private/simple_oauth/public.key`
+- `private_key`: `sites/default/files/private/simple_oauth/private.key`
 
 Generate keys (e.g. for local development):
 ```bash
@@ -60,8 +60,9 @@ openssl genrsa -out private.key 2048
 openssl rsa -in private.key -pubout -out public.key
 ```
 
-Create the `/app/keys` directory and place the keys there. In Docker, mount the
-keys directory or copy keys into the container. Keys are gitignored (`/keys`, `*.key`).
+Create the `sites/default/files/private/simple_oauth` directory and place the keys
+there (or set `DRUPAL_SIMPLE_OAUTH_PRIVATE_KEY_PEM` / `DRUPAL_SIMPLE_OAUTH_PUBLIC_KEY_PEM`
+to have them written on container start). Keys are gitignored (`/keys`, `*.key`).
 
 #### OAuth consumer (machine client)
 
