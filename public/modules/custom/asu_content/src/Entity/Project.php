@@ -13,6 +13,26 @@ use Drupal\asu_api\Api\BackendApi\Request\ApplicationLotteryResult;
 class Project extends Node {
 
   /**
+   * Load a project by its UUID.
+   *
+   * @param string $uuid
+   *   The project entity UUID.
+   *
+   * @return \Drupal\asu_content\Entity\Project|null
+   *   The project entity, or NULL if not found.
+   */
+  public static function loadByUuid(string $uuid): ?Project {
+    $nodes = \Drupal::entityTypeManager()
+      ->getStorage('node')
+      ->loadByProperties([
+        'type' => 'project',
+        'uuid' => $uuid,
+      ]);
+    $project = $nodes ? reset($nodes) : NULL;
+    return $project instanceof Project ? $project : NULL;
+  }
+
+  /**
    * Get apartment entities.
    *
    * @return mixed
@@ -105,8 +125,8 @@ class Project extends Node {
    * @return string
    *   Application url.
    */
-  public function getApplicationUrl($apartmentNumber = NULL, $apartmentStateOfSale = NULL): string {
-    $baseurl = \Drupal::request()->getSchemeAndHttpHost();
+  public function getApplicationUrl($apartmentId = NULL, $apartmentStateOfSale = NULL): string {
+    $baseurl = $this->getBaseUrl();
     $langcode = \Drupal::languageManager()->getDefaultLanguage()->getId();
     $baseurl = $baseurl . '/' . $langcode;
     $apartmentType = '';
@@ -128,7 +148,7 @@ class Project extends Node {
     }
 
     if ($isFreeForReservations && $this->getCanApplyAfterwards() == FALSE) {
-      return $this->getContactUrl($apartmentNumber);
+      return $this->getContactUrl($apartmentId);
     }
 
     if ($this->isApplicationPeriod('after') && $this->getCanApplyAfterwards() == TRUE) {
@@ -136,9 +156,28 @@ class Project extends Node {
       if ($this->getOwnershipType() == 'haso') {
         return $addToApplicationUrl;
       }
-      return $this->getContactUrl($apartmentNumber);
+      return $this->getContactUrl($apartmentId);
     }
     return '';
+  }
+
+  /**
+   * Returns the base URL for building absolute links.
+   *
+   * Uses ASU_ASUNTOTUOTANTO_URL when set to avoid internal hostnames in URLs
+   * when requests arrive via proxy or internal routing.
+   *
+   * @return string
+   *   The base URL (scheme + host, no trailing slash).
+   */
+  private function getBaseUrl(): string {
+    $baseUrl = getenv('ASU_ASUNTOTUOTANTO_URL');
+    if ($baseUrl) {
+      return rtrim($baseUrl, '/');
+    }
+    $request = \Drupal::request();
+
+    return $request ? $request->getSchemeAndHttpHost() : '';
   }
 
   /**
@@ -150,11 +189,13 @@ class Project extends Node {
    * @return string
    *   Application url.
    */
-  public function getContactUrl($apartmentNumber): string {
-    $baseurl = \Drupal::request()->getSchemeAndHttpHost();
+  public function getContactUrl(?string $apartmentNumber = NULL): string {
+    $baseurl = $this->getBaseUrl();
     $langcode = \Drupal::languageManager()->getDefaultLanguage()->getId();
     $baseurl = $baseurl . '/' . $langcode;
-    $queryParameter = $apartmentNumber ? "?apartment=$apartmentNumber" . '&project=' . $this->id() : '?project=' . $this->id();
+    $queryParameter = $apartmentNumber
+      ? '?apartment=' . rawurlencode($apartmentNumber) . '&project=' . $this->id()
+      : '?project=' . $this->id();
     return sprintf('%s/contact/apply_for_free_apartment%s', $baseurl, $queryParameter);
   }
 

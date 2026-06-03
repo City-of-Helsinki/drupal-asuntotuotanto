@@ -1,3 +1,8 @@
+# Ignore OAuth keys
+/keys
+*.key
+keys/*
+
 # Ignore project files that should not be in version control
 drush/sites/
 drush/Commands/*

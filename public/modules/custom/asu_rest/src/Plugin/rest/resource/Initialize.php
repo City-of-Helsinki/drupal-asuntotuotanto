@@ -9,7 +9,6 @@ use Drupal\asu_application\Applications;
 use Drupal\asu_rest\UserDto;
 use Drupal\rest\ModifiedResourceResponse;
 use Drupal\rest\Plugin\ResourceBase;
-use Drupal\search_api\Entity\Index;
 use Drupal\user\Entity\User;
 
 /**
@@ -38,8 +37,7 @@ final class Initialize extends ResourceBase {
     // Gets filters cached if possible.
     $response['filters'] = $this->getFilters();
 
-    if ($applicationCache = \Drupal::cache()
-      ->get('application_statuses')) {
+    if ($applicationCache = \Drupal::cache()->get('application_statuses')) {
       $response['apartment_application_status'] = $applicationCache->data;
     }
     else {
@@ -199,8 +197,7 @@ final class Initialize extends ResourceBase {
   protected function getFilters() {
     $cid = 'asu_initialize_filters';
 
-    if ($cache = \Drupal::cache()
-      ->get($cid)) {
+    if ($cache = \Drupal::cache()->get($cid)) {
       return $cache->data;
     }
 
@@ -273,64 +270,48 @@ final class Initialize extends ResourceBase {
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
   protected function getDistrictsByProjectOwnershipType() {
-    $index = Index::load('apartment_listing');
-    $query = $index->query();
-    $query->range(0, 10000);
-
-    $langCode = \Drupal::languageManager()->getCurrentLanguage()->getId();
-    $query->addCondition('_language', [$langCode], 'IN');
-    $query->addCondition('apartment_published', 'true');
-    $query->addCondition('project_published', 'true');
-
-    $query->addCondition(
-      'apartment_state_of_sale',
-      [
-        'open_for_applications',
-        'for_sale',
-        'free_for_reservations',
-        'reserved_haso',
-        'reserved',
-      ],
-      'IN'
-    );
-
-    $query->addCondition('project_state_of_sale', ['upcoming'], 'NOT IN');
-    $query->addCondition('project_ownership_type', ['hitas', 'haso'], 'IN');
-
-    $resultItems = $query->execute()
-      ->getResultItems();
-
-    $projects = [
+    // Query only published projects (status = 1)
+    $project_nodes = \Drupal::entityTypeManager()
+      ->getStorage('node')
+      ->loadByProperties([
+        'type' => 'project',
+        'status' => 1,
+      ]);
+    $districts_by_ownership = [
       'hitas' => [],
       'haso' => [],
     ];
 
-    foreach ($resultItems as $resultItem) {
-      if (isset($resultItem->getField('project_ownership_type')->getValues()[0])) {
-        $district = $resultItem->getField('project_district')->getValues()[0] ?? '';
-        if ($district) {
-          $address = $resultItem->getField('apartment_address')->getValues()[0];
-          if (!$address) {
-            continue;
-          }
-          $ownership = $resultItem->getField('project_ownership_type')->getValues()[0];
-          if (!in_array($district, $projects[strtolower($ownership)])) {
-            $projects[strtolower($ownership)][] = $district;
-          }
+    foreach ($project_nodes as $project) {
+      $ownership_type = '';
+      if ($project->hasField('field_ownership_type') && !$project->get('field_ownership_type')->isEmpty()) {
+        $ownership_term = $project->get('field_ownership_type')->entity;
+        if ($ownership_term) {
+          $ownership_type = strtolower((string) $ownership_term->label());
+        }
+      }
+
+      $district = '';
+      if ($project->hasField('field_district') && !$project->get('field_district')->isEmpty()) {
+        $district_term = $project->get('field_district')->entity;
+        if ($district_term) {
+          $district = (string) $district_term->label();
+        }
+      }
+
+      if (in_array($ownership_type, ['hitas', 'haso'], TRUE) && $district !== '') {
+        if (!in_array($district, $districts_by_ownership[$ownership_type], TRUE)) {
+          $districts_by_ownership[$ownership_type][] = $district;
         }
       }
     }
 
-    foreach ($projects as $key => $project) {
-      $filtered = array_unique($project);
-      asort($filtered);
-      $projects[$key] = $filtered;
+    // Optionally sort each district list alphabetically.
+    foreach ($districts_by_ownership as &$districts) {
+      sort($districts, SORT_LOCALE_STRING);
     }
 
-    return [
-      'hitas' => array_values($projects['hitas']),
-      'haso' => array_values($projects['haso']),
-    ];
+    return $districts_by_ownership;
   }
 
   /**

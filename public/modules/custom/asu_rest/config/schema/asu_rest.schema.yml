@@ -1,0 +1,42 @@
+asu_rest.settings:
+  type: config_object
+  label: "ASU REST settings"
+  mapping:
+    oauth2_rest_flood:
+      type: mapping
+      label: "OAuth2 REST bruteforce flood settings"
+      mapping:
+        ip_limit:
+          type: integer
+          label: "IP limit"
+        ip_window:
+          type: integer
+          label: "IP window in seconds"
+        resource_ids:
+          type: sequence
+          label: "REST resource IDs to protect"
+          sequence:
+            type: string
+    oauth2_token_flood:
+      type: mapping
+      label: "OAuth2 token endpoint flood settings"
+      mapping:
+        ip_limit:
+          type: integer
+          label: "IP limit"
+        ip_window:
+          type: integer
+          label: "IP window in seconds"
+    oauth_consumer:
+      type: mapping
+      label: "OAuth consumer provisioning (Simple OAuth)"
+      mapping:
+        auto_create:
+          type: boolean
+          label: "Create consumer automatically when environment secret is set"
+        client_id:
+          type: string
+          label: "OAuth client_id (overridable by ASU_REST_OAUTH_CLIENT_ID)"
+        label:
+          type: string
+          label: "Consumer label"

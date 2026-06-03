@@ -869,6 +869,9 @@ msgstr "Uusin kirjoitus"
 msgid "Access denied"
 msgstr "Pääsy kielletty"
 
+msgid "Access is blocked because of IP based flood prevention."
+msgstr "Pääsy estetty IP-pohjaisen tulvavalvonnan vuoksi."
+
 msgid "Year"
 msgstr "Vuosi"
 
