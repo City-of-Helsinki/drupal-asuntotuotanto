@@ -21,24 +21,19 @@ if [ -n "${DRUPAL_SIMPLE_OAUTH_PRIVATE_KEY_PEM}" ] || [ -n "${DRUPAL_SIMPLE_OAUT
   # Create files with correct permissions even when chmod is blocked.
   umask 077
 
+  # Always rewrite the key files when the env vars are set so that corrupt
+  # contents from previous deploys are replaced. rm+create ensures a fresh
+  # inode with the current umask.
   if [ -n "${DRUPAL_SIMPLE_OAUTH_PRIVATE_KEY_PEM}" ]; then
-    if [ -f "${private_key_path}" ] && ! chmod 600 "${private_key_path}" 2>/dev/null; then
-      rm -f "${private_key_path}" || true
-    fi
-    if [ ! -f "${private_key_path}" ]; then
-      printf '%b\n' "${DRUPAL_SIMPLE_OAUTH_PRIVATE_KEY_PEM}" > "${private_key_path}"
-      chmod 600 "${private_key_path}" || true
-    fi
+    rm -f "${private_key_path}" 2>/dev/null || true
+    printf '%b\n' "${DRUPAL_SIMPLE_OAUTH_PRIVATE_KEY_PEM}" > "${private_key_path}"
+    chmod 600 "${private_key_path}" 2>/dev/null || true
   fi
 
   if [ -n "${DRUPAL_SIMPLE_OAUTH_PUBLIC_KEY_PEM}" ]; then
-    if [ -f "${public_key_path}" ] && ! chmod 600 "${public_key_path}" 2>/dev/null; then
-      rm -f "${public_key_path}" || true
-    fi
-    if [ ! -f "${public_key_path}" ]; then
-      printf '%b\n' "${DRUPAL_SIMPLE_OAUTH_PUBLIC_KEY_PEM}" > "${public_key_path}"
-      chmod 600 "${public_key_path}" || true
-    fi
+    rm -f "${public_key_path}" 2>/dev/null || true
+    printf '%b\n' "${DRUPAL_SIMPLE_OAUTH_PUBLIC_KEY_PEM}" > "${public_key_path}"
+    chmod 644 "${public_key_path}" 2>/dev/null || true
   fi
 
   umask "${old_umask}" || true
