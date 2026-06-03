@@ -18,6 +18,7 @@ use Symfony\Component\HttpFoundation\Response;
 function asu_api_cron() {
   // Update apartments adjusted_right_of_occupancy_payment and
   // alteration_work_total values.
+  \Drupal::logger('asu_api')->info('Starting apartment revaluation cron');
   asu_api_get_apartment_revaluation_cron();
   asu_api_get_apartment_status_request_cron();
 }
@@ -75,6 +76,7 @@ function asu_api_get_apartment_revaluation_cron() {
  * Update apartments state of sale sold status.
  */
 function asu_api_get_apartment_status_request_cron() {
+  \Drupal::logger('asu_api')->notice('Starting apartment status request cron');
   try {
     /** @var \Drupal\asu_api\Api\BackendApi\BackendApi $api */
     $api = \Drupal::service('asu_api.backendapi');
@@ -82,8 +84,10 @@ function asu_api_get_apartment_status_request_cron() {
     /** @var \Drupal\asu_api\Api\BackendApi\Response\GetApartmentStatusResponse $response */
     $response = $api->send($request);
     $apartment_states = $response->getContent();
-
+    \Drupal::logger('asu_api')->notice('Apartment states: @states', ['@states' => json_encode($apartment_states)]);
     if (empty($apartment_states)) {
+
+      \Drupal::logger('asu_api')->info('No apartment states found');
       return;
     }
   }
@@ -113,6 +117,18 @@ function asu_api_get_apartment_status_request_cron() {
     if (!$node) {
       continue;
     }
+    // Log apartment address and state.
+    $address = $node->getTitle();
+    $uuid = $node->uuid();
+    $current_state = $node->get('field_apartment_state_of_sale')->target_id ?? NULL;
+    \Drupal::logger('asu_api')->info(
+      'Apartment address: @address, UUID: @uuid, Current state_of_sale: @state',
+      [
+        '@address' => $address,
+        '@uuid' => $uuid,
+        '@state' => $current_state,
+      ]
+    );
 
     $uuid = $node->uuid();
     if (!isset($apartment_states[$uuid])) {
@@ -131,18 +147,18 @@ function asu_api_get_apartment_status_request_cron() {
     if ($current !== $new) {
       $node->set('field_apartment_state_of_sale', ['target_id' => $new]);
       $dirty = TRUE;
-    }
 
-    if ($new === 'sold') {
-      if ($node->isPublished()) {
-        $node->setPublished(FALSE);
-        $dirty = TRUE;
+      if ($new === 'sold') {
+        if ($node->isPublished()) {
+          $node->setPublished(FALSE);
+          $dirty = TRUE;
+        }
       }
-    }
-    elseif (in_array($new, $free_states, TRUE)) {
-      if (!$node->isPublished()) {
-        $node->setPublished(TRUE);
-        $dirty = TRUE;
+      elseif (in_array($new, $free_states, TRUE)) {
+        if (!$node->isPublished()) {
+          $node->setPublished(TRUE);
+          $dirty = TRUE;
+        }
       }
     }
 
