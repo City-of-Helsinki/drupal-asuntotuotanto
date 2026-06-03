@@ -10,24 +10,38 @@ if [ -n "${DRUPAL_SIMPLE_OAUTH_PRIVATE_KEY_PEM}" ] || [ -n "${DRUPAL_SIMPLE_OAUT
   key_dir="${DRUPAL_SIMPLE_OAUTH_KEY_DIR:-${private_files_dir%/}/simple_oauth}"
   private_key_path="${key_dir%/}/private.key"
   public_key_path="${key_dir%/}/public.key"
+  old_umask="$(umask)"
 
-  if { [ -n "${DRUPAL_SIMPLE_OAUTH_PRIVATE_KEY_PEM}" ] && [ ! -f "${private_key_path}" ]; } || { [ -n "${DRUPAL_SIMPLE_OAUTH_PUBLIC_KEY_PEM}" ] && [ ! -f "${public_key_path}" ]; }; then
-    if ! mkdir -p "${key_dir}"; then
-      echo "Container start error: Unable to create Simple OAuth key directory at '${key_dir}'."
-      exit 1
+  if ! mkdir -p "${key_dir}"; then
+    echo "Container start error: Unable to create Simple OAuth key directory at '${key_dir}'."
+    exit 1
+  fi
+  chmod 700 "${key_dir}" || true
+
+  # Create files with correct permissions even when chmod is blocked.
+  umask 077
+
+  if [ -n "${DRUPAL_SIMPLE_OAUTH_PRIVATE_KEY_PEM}" ]; then
+    if [ -f "${private_key_path}" ] && ! chmod 600 "${private_key_path}" 2>/dev/null; then
+      rm -f "${private_key_path}" || true
     fi
-    chmod 700 "${key_dir}" || true
-
-    if [ -n "${DRUPAL_SIMPLE_OAUTH_PRIVATE_KEY_PEM}" ] && [ ! -f "${private_key_path}" ]; then
-      printf '%s\n' "${DRUPAL_SIMPLE_OAUTH_PRIVATE_KEY_PEM}" > "${private_key_path}"
+    if [ ! -f "${private_key_path}" ]; then
+      printf '%b\n' "${DRUPAL_SIMPLE_OAUTH_PRIVATE_KEY_PEM}" > "${private_key_path}"
       chmod 600 "${private_key_path}" || true
     fi
+  fi
 
-    if [ -n "${DRUPAL_SIMPLE_OAUTH_PUBLIC_KEY_PEM}" ] && [ ! -f "${public_key_path}" ]; then
-      printf '%s\n' "${DRUPAL_SIMPLE_OAUTH_PUBLIC_KEY_PEM}" > "${public_key_path}"
+  if [ -n "${DRUPAL_SIMPLE_OAUTH_PUBLIC_KEY_PEM}" ]; then
+    if [ -f "${public_key_path}" ] && ! chmod 600 "${public_key_path}" 2>/dev/null; then
+      rm -f "${public_key_path}" || true
+    fi
+    if [ ! -f "${public_key_path}" ]; then
+      printf '%b\n' "${DRUPAL_SIMPLE_OAUTH_PUBLIC_KEY_PEM}" > "${public_key_path}"
       chmod 600 "${public_key_path}" || true
     fi
   fi
+
+  umask "${old_umask}" || true
 fi
 
 function get_deploy_id {
