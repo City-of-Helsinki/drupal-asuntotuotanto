@@ -38,7 +38,7 @@
                 "package": "drupal/simple_oauth",
                 "description": "[D11] Fix simple_oauth normalizer signatures for Symfony 7",
                 "url": "patches/simple_oauth-symfony7-normalizer-signatures.patch",
-                "sha256": "477285d2564e7f1367a71714de4374978e664f0f27a2215e70da62fc372ab47e",
+                "sha256": "ad39d0a2b503ee3aeacf12fc2c77a7ff545a8649aa05e9ea33c683e90eaed9a0",
                 "depth": 1,
                 "extra": {
                     "provenance": "root"
