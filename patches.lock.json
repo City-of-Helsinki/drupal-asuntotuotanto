@@ -1,5 +1,5 @@
 {
-    "_hash": "d9b02b91318144ba9eab77191098355b64162461b3989dac5c0be33c14abb824",
+    "_hash": "ccee31539065b31a7ffddc3061bfcc89bf35f33588afaee9162d7b5be83bc859",
     "patches": {
         "drupal/helfi_platform_config": [
             {
@@ -17,16 +17,6 @@
                 "description": "Skip update_9400 on Drupal 11 (HAL/RDF modules removed)",
                 "url": "patches/helfi_platform_config-d11-update-9400.patch",
                 "sha256": "e13a1ddf7d33fc5027e7be3e8726a4be9515a2106fa0c11dbb07abfbde8e6551",
-                "depth": 1,
-                "extra": {
-                    "provenance": "root"
-                }
-            },
-            {
-                "package": "drupal/helfi_platform_config",
-                "description": "Make update_9328 idempotent when status field is already deleting/purging",
-                "url": "patches/helfi_platform_config-update-9328-idempotent.patch",
-                "sha256": "3549d8486542cb8aa0ee57c7ba497279c7508e4aba7483e397e3fbccf459f521",
                 "depth": 1,
                 "extra": {
                     "provenance": "root"
@@ -49,6 +39,36 @@
                 "description": "[D11] Fix simple_oauth normalizer signatures for Symfony 7",
                 "url": "patches/simple_oauth-symfony7-normalizer-signatures.patch",
                 "sha256": "477285d2564e7f1367a71714de4374978e664f0f27a2215e70da62fc372ab47e",
+                "depth": 1,
+                "extra": {
+                    "provenance": "root"
+                }
+            },
+            {
+                "package": "drupal/simple_oauth",
+                "description": "[D11] Replace watchdog_exception() usage",
+                "url": "patches/simple_oauth-drupal11-watchdog-exception.patch",
+                "sha256": "5ff871af833d7d468b7542db43202b8a0530a84fa8e754e114253964f60c0aa3",
+                "depth": 1,
+                "extra": {
+                    "provenance": "root"
+                }
+            },
+            {
+                "package": "drupal/simple_oauth",
+                "description": "[Symfony 7] Fix BasicAuthSwap handle signature",
+                "url": "patches/simple_oauth-symfony7-basicauthswap-handle-signature.patch",
+                "sha256": "02ecd91139ed05d645daaafbd21565d558a7883ec25f6920132d39916d8b130a",
+                "depth": 1,
+                "extra": {
+                    "provenance": "root"
+                }
+            },
+            {
+                "package": "drupal/simple_oauth",
+                "description": "[PHP 7.4+] Initialize ResourceServer subject property",
+                "url": "patches/simple_oauth-resource-server-subject-init.patch",
+                "sha256": "0b83d07995161ebd9eab25e865aab11678f3b847bb1a4852393207c8e3d38a3f",
                 "depth": 1,
                 "extra": {
                     "provenance": "root"
@@ -80,36 +100,6 @@
             }
         ],
         "drupal/core": [
-            {
-                "package": "drupal/core",
-                "description": "[D11] Skip delete in checkOp when entity missing",
-                "url": "patches/core-config-importer-null-entity.patch",
-                "sha256": "7c0c01ea967faa2d3370701c6fcdd896fafd38661832b2926ce11050d91b4027",
-                "depth": 1,
-                "extra": {
-                    "provenance": "root"
-                }
-            },
-            {
-                "package": "drupal/core",
-                "description": "[D11] Skip countFieldData when table missing",
-                "url": "patches/core-count-field-data-missing-table.patch",
-                "sha256": "9fa81cf6e82b61fcd50f52e287db8ee7b5841e739bce964c5e8ac40445321689",
-                "depth": 2,
-                "extra": {
-                    "provenance": "root"
-                }
-            },
-            {
-                "package": "drupal/core",
-                "description": "[D11] Skip delete when field table missing",
-                "url": "patches/core-skip-delete-missing-field-table.patch",
-                "sha256": "c63db5bfc018ae0eb34cfe708fcd95c0a6d855d58e9df2b80bc68b5b4c3b3416",
-                "depth": 2,
-                "extra": {
-                    "provenance": "root"
-                }
-            },
             {
                 "package": "drupal/core",
                 "description": "[CI] Unset foreach-by-ref in ViewsConfigUpdater (block_content post_update save)",
