@@ -119,6 +119,7 @@ abstract class SearchServiceKernelTestBase extends KernelTestBase {
         'field_name' => 'field_apartments',
         'entity_type' => 'node',
         'type' => 'entity_reference',
+        'cardinality' => -1,
         'settings' => [
           'target_type' => 'node',
         ],

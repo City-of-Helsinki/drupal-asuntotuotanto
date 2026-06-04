@@ -313,6 +313,10 @@ class ElasticSearch extends ResourceBase {
             $apartment_state_of_sale = $get_term_enum($apartment_node, 'field_state_of_sale');
           }
 
+          if (!$this->isApartmentVisibleInPublicSearch($apartment_state_of_sale)) {
+            continue;
+          }
+
           $apartment_structure = $get_scalar($apartment_node, 'field_apartment_structure');
           if ($apartment_structure === '') {
             $apartment_structure = $get_scalar($apartment_node, 'field_structure');
@@ -401,6 +405,16 @@ class ElasticSearch extends ResourceBase {
     }
 
     return new ResourceResponse($responseArray, 200, $headers);
+  }
+
+  /**
+   * Whether an apartment should be included in public elasticsearch responses.
+   *
+   * Sold apartments remain in Drupal and internal search APIs but are hidden
+   * from the public apartment search widget.
+   */
+  protected function isApartmentVisibleInPublicSearch(string $apartmentStateOfSale): bool {
+    return strtoupper($apartmentStateOfSale) !== 'SOLD';
   }
 
   /**

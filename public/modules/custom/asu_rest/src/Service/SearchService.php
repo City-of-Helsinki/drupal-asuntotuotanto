@@ -294,9 +294,6 @@ final class SearchService {
       $query->condition('nid', $restrictApartmentIds, 'IN');
     }
 
-    $query->condition('field_apartment_state_of_sale', 'sold', '<>');
-    $query->exists('field_apartment_state_of_sale');
-
     $projectOwnershipTypes = $this->normalizeArrayParam($params['project_ownership_type'] ?? NULL, TRUE);
     $propertyOptions = $this->resolvePropertyOptions($params);
     $this->addApartmentPropertyConditions($query, $propertyOptions);
