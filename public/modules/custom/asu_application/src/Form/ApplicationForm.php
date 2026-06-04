@@ -16,6 +16,8 @@ use Drupal\Core\Url;
 use Drupal\asu_application\Entity\Application;
 use Drupal\asu_application\Event\ApplicationEvent;
 use Drupal\asu_application\Event\SalesApplicationEvent;
+use Drupal\asu_application\Service\SoldApartmentApplicationPolicy;
+use Drupal\asu_content\Entity\Apartment;
 use Drupal\asu_content\Entity\Project;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -78,6 +80,13 @@ class ApplicationForm extends ContentEntityForm implements TrustedCallbackInterf
   private ?EventDispatcherInterface $eventDispatcher = NULL;
 
   /**
+   * Sold-apartment application policy (dev/test bypass).
+   *
+   * @var \Drupal\asu_application\Service\SoldApartmentApplicationPolicy
+   */
+  protected SoldApartmentApplicationPolicy $soldApartmentApplicationPolicy;
+
+  /**
    * Summary of application.
    *
    * @var application
@@ -113,6 +122,9 @@ class ApplicationForm extends ContentEntityForm implements TrustedCallbackInterf
     $instance->currentPath = $container->get('path.current');
     $instance->routeMatch = $container->get('current_route_match');
     $instance->eventDispatcher = $container->get('event_dispatcher');
+    $instance->soldApartmentApplicationPolicy = $container->get(
+      'asu_application.sold_apartment_application_policy'
+    );
 
     return $instance;
   }
@@ -183,7 +195,10 @@ HTML;
       return (new RedirectResponse($redirect, 301));
     }
 
-    $limit = ['sold'];
+    $limit = [];
+    if (!$this->soldApartmentApplicationPolicy->allowsApplicationsToSoldApartments()) {
+      $limit = ['sold'];
+    }
     if ($project->can_apply_afterwards != TRUE) {
       array_push($limit, ['reserved', 'reserved_haso']);
     }
@@ -399,6 +414,25 @@ HTML;
     if (count($formValues['apartment']) <= 1 && isset($formValues['apartment'][0])) {
       if ($formValues['apartment'][0]['id'] == '0' || empty($formValues['apartment'][0]['id'])) {
         $form_state->setErrorByName('apartment', $this->t('Field @field cannot be empty', ['@field' => 'apartment']));
+      }
+    }
+
+    if (
+      $triggerName === 'submit-application'
+      && !$this->soldApartmentApplicationPolicy->allowsApplicationsToSoldApartments()
+      && !empty($formValues['apartment'])
+    ) {
+      foreach ($formValues['apartment'] as $delta => $apartment_value) {
+        if (empty($apartment_value['id']) || $apartment_value['id'] === '0') {
+          continue;
+        }
+        $apartment = $this->entityTypeManager->getStorage('node')->load($apartment_value['id']);
+        if ($apartment instanceof Apartment && $apartment->isSold()) {
+          $form_state->setErrorByName(
+            'apartment][' . $delta . '][id',
+            $this->t('You cannot apply for an apartment that has already been sold.')
+          );
+        }
       }
     }
 
@@ -753,9 +787,14 @@ HTML;
       $apartments = [];
       foreach ($project->field_apartments as $apartmentReference) {
         $apartment = $apartmentReference->entity;
-        // Skip unpublish apartments.
+        // Skip unpublished apartments (sold are unpublished unless dev bypass).
         if ($apartment->get('status')->value == 0) {
-          continue;
+          $allow_sold = $this->soldApartmentApplicationPolicy
+            ->allowsApplicationsToSoldApartments();
+          $is_sold_apartment = $apartment instanceof Apartment && $apartment->isSold();
+          if (!$allow_sold || !$is_sold_apartment) {
+            continue;
+          }
         }
 
         $number = $apartment->field_apartment_number->value;

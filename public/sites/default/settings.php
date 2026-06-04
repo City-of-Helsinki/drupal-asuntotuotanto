@@ -409,6 +409,20 @@ if ($env = getenv('APP_ENV')) {
 
   $settings['ASU_DJANGO_BACKEND_URL'] = getenv('ASU_DJANGO_BACKEND_URL');
 
+  // Mirror Django ALLOW_APPLICATIONS_TO_SOLD_APARTMENTS (default block; allow in dev/test).
+  $allow_applications_to_sold_apartments = FALSE;
+  if (($env_allow = getenv('ALLOW_APPLICATIONS_TO_SOLD_APARTMENTS')) !== FALSE) {
+    $allow_applications_to_sold_apartments = filter_var(
+      $env_allow,
+      FILTER_VALIDATE_BOOL,
+      FILTER_NULL_ON_FAILURE
+    ) ?? FALSE;
+  }
+  elseif (in_array($env, ['dev', 'local', 'development', 'testing', 'test', 'ci'], TRUE)) {
+    $allow_applications_to_sold_apartments = TRUE;
+  }
+  $settings['allow_applications_to_sold_apartments'] = $allow_applications_to_sold_apartments;
+
   // Supported values: https://github.com/Seldaek/monolog/blob/main/doc/01-usage.md#log-levels.
   $default_log_level = getenv('APP_ENV') === 'production' ? 'info' : 'debug';
   $settings['helfi_api_base.log_level'] = getenv('LOG_LEVEL') ?: $default_log_level;

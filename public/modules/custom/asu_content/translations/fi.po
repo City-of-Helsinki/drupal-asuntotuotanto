@@ -43432,6 +43432,9 @@ msgstr "Helsingin kaupungin logo"
 msgid "You already have an offer or have been sold an apartment in this project and cannot submit a new application."
 msgstr "Sinulla on jo myyty tai tarjottu asunto tässä kohteessa etkä siksi voi tehdä uutta hakemusta."
 
+msgid "You cannot apply for an apartment that has already been sold."
+msgstr "Et voi hakea asuntoa, joka on jo myyty."
+
 msgid "Status"
 msgstr "Tila"
 
