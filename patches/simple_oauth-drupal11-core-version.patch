@@ -1,0 +1,13 @@
+diff --git a/simple_oauth.info.yml b/simple_oauth.info.yml
+index 2e7b6a2..b4d8e6a 100644
+--- a/simple_oauth.info.yml
++++ b/simple_oauth.info.yml
+@@ -1,7 +1,7 @@
+ name: Simple OAuth & OpenID Connect
+ type: module
+ description: 'The OAuth 2.0 Authorization Framework'
+-core_version_requirement: '^9 || ^10'
++core_version_requirement: '^9 || ^10 || ^11'
+ package: Authentication
+ configure: oauth2_token.settings
+ dependencies:

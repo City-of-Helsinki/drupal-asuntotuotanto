@@ -1,0 +1,24 @@
+uuid: f3e7b4c3-358d-435e-b336-46a3cbe6252a
+langcode: fi
+status: true
+dependencies:
+  config:
+    - rest.resource.asu_apartment
+    - rest.resource.asu_apartments
+    - rest.resource.asu_project
+    - rest.resource.asu_project_apartments
+    - rest.resource.asu_projects
+  module:
+    - rest
+    - system
+id: rest_client
+label: 'REST api client'
+weight: 9
+is_admin: null
+permissions:
+  - 'access content'
+  - 'restful get asu_apartment'
+  - 'restful get asu_apartments'
+  - 'restful get asu_project'
+  - 'restful get asu_project_apartments'
+  - 'restful get asu_projects'

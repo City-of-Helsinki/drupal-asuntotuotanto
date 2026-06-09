@@ -1,0 +1,37 @@
+diff --git a/core/modules/views/src/ViewsConfigUpdater.php b/core/modules/views/src/ViewsConfigUpdater.php
+--- a/core/modules/views/src/ViewsConfigUpdater.php
++++ b/core/modules/views/src/ViewsConfigUpdater.php
+@@ -124,6 +124,7 @@
+             if ($handler_processor($display['display_options'][$handler_type_lookup], $handler_type, NULL, $display_id)) {
+               $changed = TRUE;
+               if ($return_on_changed) {
++                unset($display);
+                 return $changed;
+               }
+             }
+@@ -133,13 +134,17 @@
+             if (is_array($handler) && $handler_processor($handler, $handler_type, $key, $display_id)) {
+               $changed = TRUE;
+               if ($return_on_changed) {
++                unset($handler);
++                unset($display);
+                 return $changed;
+               }
+             }
+           }
++          unset($handler);
+         }
+       }
+     }
++    unset($display);
+ 
+     if ($changed) {
+       $view->set('display', $displays);
+@@ -381,6 +386,7 @@
+         }
+       }
+     }
++    unset($display);
+ 
+     if ($changed) {
+       $view->set('display', $displays);

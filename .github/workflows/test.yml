@@ -69,6 +69,16 @@ jobs:
       - name: Install Drupal
         run: |
           mysql --user=drupal --password=drupal --database=drupal --host=db --port=3306 -A < latest.sql
+          # The DB dump can occasionally contain an invalid view config row with
+          # an empty ID (config name "views.view." or other malformed variants).
+          # That breaks Drupal core's
+          # block_content post-update which iterates all views and expects every
+          # view entity to have a non-empty ID.
+          mysql --user=drupal --password=drupal --database=drupal --host=db --port=3306 -A -e "DELETE FROM config WHERE name = 'views.view.';"
+          drush php:eval '$storage = \Drupal::service("config.storage"); foreach ($storage->listAll("views.view.") as $name) { $data = $storage->read($name); if (empty($data["id"])) { $storage->delete($name); } }'
+          # deploy runs updatedb before cim; overlay sync first so DB matches
+          # conf/cmi (e.g. views without deprecated plugins) before post-updates.
+          drush cim -y --partial
           drush deploy
 
       - name: Start services

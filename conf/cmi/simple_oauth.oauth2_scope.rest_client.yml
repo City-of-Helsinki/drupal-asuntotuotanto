@@ -1,0 +1,16 @@
+uuid: 11111111-1111-1111-1111-111111111111
+langcode: en
+status: true
+dependencies: {  }
+id: rest_client
+name: rest_client
+description: 'Scope for REST API client access.'
+grant_types:
+  client_credentials:
+    status: true
+    description: 'Client credentials for REST API access.'
+umbrella: false
+parent: ''
+granularity_id: role
+granularity_configuration:
+  role: rest_client

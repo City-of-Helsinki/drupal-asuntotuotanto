@@ -1,0 +1,18 @@
+uuid: 128cbc5f-b34c-43c0-83d0-f6868b4e848d
+langcode: en
+status: true
+dependencies:
+  module:
+    - asu_rest
+    - serialization
+    - simple_oauth
+id: asu_project_apartments
+plugin_id: asu_project_apartments
+granularity: resource
+configuration:
+  methods:
+    - GET
+  formats:
+    - json
+  authentication:
+    - oauth2

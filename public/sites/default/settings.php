@@ -114,6 +114,15 @@ $settings['file_public_path'] = getenv('DRUPAL_FILES_PUBLIC') ?: 'sites/default/
 $settings['file_private_path'] = getenv('DRUPAL_FILES_PRIVATE') ?: 'sites/default/files/private';
 $settings['file_temp_path'] = getenv('DRUPAL_TMP_PATH') ?: '/tmp';
 
+// Skip automatic remote interface translation fetch when new modules are
+// enabled (e.g. during config import). Without a writable translations
+// directory and reliable access to ftp.drupal.org, the locale batch can fatally
+// error (PoStreamReader TypeError). GitHub Actions and similar set CI=true;
+// .github/workflows/test.yml sets APP_ENV=test.
+if (getenv('CI') || getenv('APP_ENV') === 'test') {
+  $config['locale.settings']['translation']['import_enabled'] = FALSE;
+}
+
 if ($reverse_proxy_address = getenv('DRUPAL_REVERSE_PROXY_ADDRESS')) {
   $reverse_proxy_address = explode(',', $reverse_proxy_address);
 
