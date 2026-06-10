@@ -27,6 +27,37 @@ final class SearchServiceApartmentsTest extends SearchServiceKernelTestBase {
   }
 
   /**
+   * Tests that project apartment search includes sold apartments.
+   */
+  public function testSearchApartmentsByProjectIncludesSoldApartments(): void {
+    $availableApartment = $this->createApartment('Available apartment', 'available');
+    $soldApartment = $this->createApartment('Sold apartment', 'sold');
+
+    $project = Node::create([
+      'type' => 'project',
+      'title' => 'Project One',
+      'status' => 1,
+      'field_archived' => 0,
+      'field_state_of_sale' => [
+        ['target_id' => 'sold'],
+      ],
+      'field_apartments' => [
+        ['target_id' => $availableApartment->id()],
+        ['target_id' => $soldApartment->id()],
+      ],
+    ]);
+    $project->save();
+    $project = Node::load($project->id());
+
+    $result = $this->searchService->searchApartments([], (int) $project->id(), 0, 1000);
+
+    $this->assertSame(2, $result['total']);
+    $uuids = array_map(static fn (Node $node): string => $node->uuid(), $result['items']);
+    $this->assertContains($availableApartment->uuid(), $uuids);
+    $this->assertContains($soldApartment->uuid(), $uuids);
+  }
+
+  /**
    * Tests that searchApartments filters results by UUID.
    */
   public function testSearchApartmentsFiltersByUuid(): void {
@@ -64,17 +95,19 @@ final class SearchServiceApartmentsTest extends SearchServiceKernelTestBase {
    *
    * @param string $title
    *   The apartment title.
+   * @param string $stateOfSale
+   *   The apartment state of sale field value.
    *
    * @return \Drupal\node\Entity\Node
    *   The created apartment node.
    */
-  private function createApartment(string $title): Node {
+  private function createApartment(string $title, string $stateOfSale = 'available'): Node {
     $apartment = Node::create([
       'type' => 'apartment',
       'title' => $title,
       'status' => 1,
       'field_archived' => 0,
-      'field_apartment_state_of_sale' => 'available',
+      'field_apartment_state_of_sale' => $stateOfSale,
     ]);
     $apartment->save();
     return $apartment;
