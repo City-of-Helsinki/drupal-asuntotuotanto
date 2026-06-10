@@ -41,6 +41,14 @@ asu_application.delete_secure:
     token: "[A-Za-z0-9-_]+"
   methods: ["POST", "DELETE"]
 
+asu_application.messages:
+  path: "/application/{asu_application}/messages"
+  defaults:
+    _form: '\Drupal\asu_application\Form\ApplicationMessageForm'
+    _title: "Contact sales agent"
+  requirements:
+    _entity_access: 'asu_application.view'
+
 asu_application.summary_project:
   path: "/admin/asu/project/{node}/applications/summary"
   defaults:
