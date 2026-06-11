@@ -170,15 +170,23 @@
   {% if view_mode == 'submitted_teaser' %}
     {{ _self.teaser_common(content['#teaser_values'], attributes, classes, app_id) }}
         <div class="application__actions">
-          <div>
           {% if content['#teaser_values'].is_owner %}
-          {% include "@asuntotuotanto/button/button.html.twig" with {
-            label: 'Open the application'|t,
-            href: content['#teaser_values'].application_url,
-            type: 'primary'
-          } %}
-          {% endif %}
+          <div class="application--action">
+            {% include "@asuntotuotanto/button/button.html.twig" with {
+              label: 'Open the application'|t,
+              href: content['#teaser_values'].application_url,
+              type: 'primary'
+            } %}
           </div>
+
+          <div class="application--action">
+            {% include "@asuntotuotanto/button/button.html.twig" with {
+              label: 'Message sales agent'|t,
+              href: content['#teaser_values'].messages_url,
+              type: 'secondary'
+            } %}
+          </div>
+          {% endif %}
           <div class="application--action">
             <a class="hds-button hds-button--secondary application__lottery-link--toggle" data-application="{{ app_id }}">
               <span class="hds-button__label" data-application="{{ app_id }}">

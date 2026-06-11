@@ -333,6 +333,17 @@ function asu_application_update_9014() : void {
 }
 
 /**
+ * Installs the application message entity schema.
+ */
+function asu_application_update_9015() : void {
+  $entity_type_manager = \Drupal::entityTypeManager();
+  $entity_type_manager->clearCachedDefinitions();
+
+  $entity_type = $entity_type_manager->getDefinition('asu_application_message');
+  \Drupal::entityDefinitionUpdateManager()->installEntityType($entity_type);
+}
+
+/**
  * Build full HETU from stored date of birth and personal id tail.
  */
 function asu_application_build_full_hetu(string $dateOfBirth, string $personalId): ?string {
