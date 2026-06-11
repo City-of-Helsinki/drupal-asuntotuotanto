@@ -52,7 +52,7 @@ final class ApplicationMessageManager {
   /**
    * Loads an application thread in chronological order.
    *
-    * @return \Drupal\asu_application\Entity\ApplicationMessage[]
+   * @return \Drupal\asu_application\Entity\ApplicationMessage[]
    *   Messages for the given application.
    */
   public function loadThread(int $applicationId): array {
