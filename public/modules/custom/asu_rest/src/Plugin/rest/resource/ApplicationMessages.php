@@ -12,6 +12,7 @@ use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\rest\ModifiedResourceResponse;
 use Drupal\rest\Plugin\ResourceBase;
 use Drupal\rest\ResourceResponse;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -37,7 +38,7 @@ final class ApplicationMessages extends ResourceBase {
     $plugin_id,
     $plugin_definition,
     array $serializer_formats,
-    \Psr\Log\LoggerInterface $logger,
+    LoggerInterface $logger,
     private readonly ApplicationMessageManager $messageManager,
     private readonly AccountProxyInterface $currentUser,
     private readonly RequestStack $requestStack,
