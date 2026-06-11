@@ -285,6 +285,7 @@ final class SearchMapper {
       'project_postal_code' => $this->getScalar($project, 'field_postal_code'),
       'project_contract_business_id' => $this->getScalar($project, 'field_business_id'),
       'project_realty_id' => $this->getScalar($project, 'field_realty_id'),
+      'project_property_number' => $this->getScalar($project, 'field_property_number'),
       'project_new_housing' => $this->getBoolean($project, 'field_new_housing'),
       'project_construction_year' => $this->getScalar($project, 'field_construction_year'),
       'project_has_elevator' => $this->getBoolean($project, 'field_has_elevator'),
