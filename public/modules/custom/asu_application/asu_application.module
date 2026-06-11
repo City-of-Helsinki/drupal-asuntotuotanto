@@ -230,6 +230,8 @@ function template_preprocess_asu_application(array &$variables) {
 
     $application_teaser_values['#teaser_values']['application_url'] =
       $application->isLocked() || !$project->isApplicationPeriod() ? "/application/$id" : "/application/$id/edit";
+
+    $application_teaser_values['#teaser_values']['messages_url'] = "/application/$id/messages";
   }
   catch (\Exception $e) {
     \Drupal::logger('asu_application')->critical(
@@ -322,6 +324,20 @@ function asu_application_mail(string $key, array &$message, array $params) {
   switch ($key) {
     case 'apply_for_free_apartment':
       asu_application_send_apply_for_free_apartment($message, $params);
+      break;
+
+    case 'application_message_notification':
+      $message['from'] = \Drupal::config('system.site')->get('mail');
+      $message['subject'] = $params['subject'] ?? t('New application message');
+
+      if (!empty($params['message_lines']) && is_array($params['message_lines'])) {
+        foreach ($params['message_lines'] as $line) {
+          $message['body'][] = $line;
+        }
+      }
+      elseif (!empty($params['message'])) {
+        $message['body'][] = $params['message'];
+      }
       break;
 
     case 'application_submission':

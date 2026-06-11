@@ -6,6 +6,11 @@ services:
     parent: logger.channel_base
     arguments: [ 'asu_application' ]
 
+  asu_application.message_manager:
+    class: Drupal\asu_application\ApplicationMessageManager
+    arguments:
+      - '@entity_type.manager'
+
   asu_application.application_subscriber:
     class: Drupal\asu_application\EventSubscriber\ApplicationSubscriber
     arguments:

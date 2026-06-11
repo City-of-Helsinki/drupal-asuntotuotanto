@@ -1,0 +1,19 @@
+uuid: d5e6e2f3-cf96-4605-9b2e-3ff94e01ce18
+langcode: en
+status: true
+dependencies:
+  module:
+    - asu_rest
+    - serialization
+    - simple_oauth
+id: asu_application_messages
+plugin_id: asu_application_messages
+granularity: resource
+configuration:
+  methods:
+    - GET
+    - POST
+  formats:
+    - json
+  authentication:
+    - oauth2

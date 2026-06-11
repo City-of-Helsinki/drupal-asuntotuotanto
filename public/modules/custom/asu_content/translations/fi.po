@@ -40645,6 +40645,63 @@ msgstr "Hakemuksesi on lähetetty. Et voi enää muokata hakemusta."
 msgid "Open application"
 msgstr "Avoin hakemus"
 
+msgid "Open the application"
+msgstr "Avaa hakemus"
+
+msgid "Message sales agent"
+msgstr "Lähetä viesti myyjälle"
+
+msgid "Contact sales agent"
+msgstr "Ota yhteyttä myyjään"
+
+msgid "Send a message about @project. Replies saved to this thread can be shown here later."
+msgstr "Lähetä viesti kohteesta @project. Vastaukset tallennetaan tähän viestiketjuun."
+
+msgid "Send a message to the sales agent assigned to this application."
+msgstr "Lähetä viesti tälle hakemukselle nimetylle myyjälle."
+
+msgid "Back to application"
+msgstr "Takaisin hakemukseen"
+
+msgid "Conversation"
+msgstr "Viestiketju"
+
+msgid "No messages yet."
+msgstr "Ei viestejä vielä."
+
+msgid "Sales agent"
+msgstr "Myyjä"
+
+msgid "You"
+msgstr "Sinä"
+
+msgid "Message cannot be empty."
+msgstr "Viesti ei voi olla tyhjä."
+
+msgid "New message about application @id"
+msgstr "Uusi viesti hakemuksesta @id"
+
+msgid "A customer sent a new message from the application service."
+msgstr "Asiakas lähetti uuden viestin hakemuspalvelusta."
+
+msgid "Project: @project"
+msgstr "Kohde: @project"
+
+msgid "Application ID: @id"
+msgstr "Hakemuksen tunnus: @id"
+
+msgid "Message:"
+msgstr "Viesti:"
+
+msgid "The message was saved, but no salesperson email address was found."
+msgstr "Viesti tallennettiin, mutta myyjän sähköpostiosoitetta ei löytynyt."
+
+msgid "Your message has been sent."
+msgstr "Viestisi on lähetetty."
+
+msgid "New application message"
+msgstr "Uusi hakemusviesti"
+
 msgid "Show message"
 msgstr "Näytä viesti"
 

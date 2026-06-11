@@ -181,6 +181,10 @@
   word-break: break-word;
 }
 
+.application-message-form__title {
+  margin: 24px 0 12px;
+}
+
 @media screen and (max-width: 1279px) {
   .user-profile--applications .application__results-table,
   .application__results-table {
