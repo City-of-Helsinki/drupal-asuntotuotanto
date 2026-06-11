@@ -185,6 +185,17 @@
         message.appendChild(error);
       };
 
+      const appendOfferMessageText = (container, text, className) => {
+        const normalized = String(text || '').trim();
+        if (!normalized) {
+          return;
+        }
+        const paragraph = document.createElement('p');
+        paragraph.className = className;
+        paragraph.textContent = normalized;
+        container.appendChild(paragraph);
+      };
+
       const renderOfferDetailsContent = (panel, message) => {
         panel.hidden = false;
         const messageContainer = getOfferDetailsMessageContainer(panel);
@@ -192,6 +203,12 @@
           return;
         }
         messageContainer.innerHTML = '';
+
+        appendOfferMessageText(
+          messageContainer,
+          message.intro,
+          'offer-details__body offer-details__intro'
+        );
 
         const table = document.createElement('table');
         table.className = 'offer-details__table';
@@ -215,6 +232,12 @@
 
         table.appendChild(tbody);
         messageContainer.appendChild(table);
+
+        appendOfferMessageText(
+          messageContainer,
+          message.content,
+          'offer-details__body offer-details__content'
+        );
       };
 
       const bindOfferDetailsToggle = (button, detailsPanel, offerId, detailsRow) => {

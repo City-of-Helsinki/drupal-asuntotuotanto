@@ -57,6 +57,8 @@ class OfferDetailsController extends ControllerBase {
 
     return new JsonResponse([
       'subject' => $content['subject'] ?? '',
+      'intro' => $content['intro'] ?? '',
+      'content' => $content['content'] ?? '',
       'items' => $content['items'] ?? [],
     ]);
   }

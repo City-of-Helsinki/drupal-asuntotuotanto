@@ -13,7 +13,7 @@ use Psr\Http\Message\ResponseInterface;
 class CustomerOfferDetailsRequest extends Request {
 
   protected const METHOD = 'GET';
-  protected const PATH = '/v1/profiles/me/offers/{offer_id}/offer_details/';
+  protected const PATH = '/v1/profiles/me/offers/{offer_id}/details/';
   protected const AUTHENTICATED = TRUE;
 
   /**

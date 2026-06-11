@@ -297,6 +297,14 @@ line-height: $lineheight-l; // Was 24px.
     white-space: pre-wrap;
   }
 
+  &__intro {
+    margin: 0 0 $spacing-and-half;
+  }
+
+  &__content {
+    margin: $spacing-and-half 0 0;
+  }
+
   &__loading,
   &__error {
     font-size: $fontsize-body-m;
