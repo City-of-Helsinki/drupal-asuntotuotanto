@@ -55,6 +55,7 @@ final class SearchMapper {
 
     $data = [
       '_language' => $apartment->language()->getId(),
+      'apartment_published' => $apartment->isPublished(),
       'apartment_address' => $this->getComputedMarkup($apartment, 'field_apartment_address'),
       'apartment_number' => $this->getScalar($apartment, 'field_apartment_number'),
       'apartment_state_of_sale' => $this->getEnumFromTermField($apartment, 'field_apartment_state_of_sale'),
@@ -84,6 +85,7 @@ final class SearchMapper {
     if ($project) {
       $data += $this->mapProjectFields($project, $apartment);
       $data['apartment_holding_type'] = $data['project_holding_type'] ?? '';
+      $data['site_owner'] = $this->getTermLabel($project, 'field_site_owner');
     }
 
     return $data;
@@ -290,6 +292,7 @@ final class SearchMapper {
       'project_realty_id' => $this->getScalar($project, 'field_realty_id'),
       'project_property_number' => $this->getScalar($project, 'field_property_number'),
       'project_new_housing' => $this->getBoolean($project, 'field_new_housing'),
+      'project_use_complete_contract' => $this->getBoolean($project, 'field_use_complete_contract'),
       'project_construction_year' => $this->getScalar($project, 'field_construction_year'),
       'project_has_elevator' => $this->getBoolean($project, 'field_has_elevator'),
       'project_has_sauna' => $this->getBoolean($project, 'field_has_sauna'),
@@ -308,6 +311,56 @@ final class SearchMapper {
       'project_premarketing_start_time' => $this->formatDateTime($this->getScalar($project, 'field_premarketing_start_time')),
       'project_premarketing_end_time' => $this->formatDateTime($this->getScalar($project, 'field_premarketing_end_time')),
       'project_published' => $project->isPublished(),
+      'project_acc_financeofficer' => $this->getScalar($project, 'field_acc_financeofficer'),
+      'project_attachment_urls' => $this->getLinkUrlsFromField($project, 'field_attachments_url'),
+      'project_barred_bank_account' => $this->getScalar($project, 'field_barred_bank_account'),
+      'project_completion_date' => $this->formatDateTime($this->getScalar($project, 'field_completion_date')),
+      'project_constructor' => $this->getScalar($project, 'field_constructor'),
+      'project_control_transferred_when' => $this->getScalar($project, 'field_control_transferred_when'),
+      'project_documents_delivered' => $this->getScalar($project, 'field_documents_delivered'),
+      'project_energy_class' => $this->getTermLabel($project, 'field_energy_class'),
+      'project_estimated_completion_date' => $this->formatDateTime($this->getScalar($project, 'field_estimated_completion_date')),
+      'project_housing_manager' => $this->getScalar($project, 'field_housing_manager'),
+      'project_payment_recipient' => $this->getScalar($project, 'field_payment_recipient'),
+      'project_payment_recipient_final' => $this->getScalar($project, 'field_payment_recipient_final'),
+      'project_project_manager' => $this->getScalar($project, 'field_project_manager'),
+      'project_publication_end_time' => $this->formatDateTime($this->getScalar($project, 'field_publication_end_time')),
+      'project_publication_start_time' => $this->formatDateTime($this->getScalar($project, 'field_publication_start_time')),
+      'project_regular_bank_account' => $this->getScalar($project, 'field_regular_bank_account'),
+      'project_roof_material' => $this->getScalar($project, 'field_roof_material'),
+      'project_sanitation' => $this->getScalar($project, 'field_sanitation'),
+      'project_shareholder_meeting_date' => $this->formatDateTime($this->getScalar($project, 'field_shareholder_meeting_date')),
+      'project_shares_transferred_when' => $this->getScalar($project, 'field_shares_transferred_when'),
+      'project_site_area' => $this->getScalar($project, 'field_site_area'),
+      'project_site_renter' => $this->getScalar($project, 'field_site_renter'),
+      'project_virtual_presentation_url' => $this->getScalar($project, 'field_virtual_presentation_url'),
+      'project_zoning_info' => $this->getScalar($project, 'field_zoning_info'),
+      'project_zoning_status' => $this->getScalar($project, 'field_zoning_status'),
+      'project_contract_apartment_completion_selection_1' => $this->getBoolean($project, 'field_completion_selection_1'),
+      'project_contract_apartment_completion_selection_1_date' => $this->formatDateTime($this->getScalar($project, 'field_completion_1_start')),
+      'project_contract_apartment_completion_selection_2' => $this->getBoolean($project, 'field_completion_selection_2'),
+      'project_contract_apartment_completion_selection_2_start' => $this->formatDateTime($this->getScalar($project, 'field_completion_2_start')),
+      'project_contract_apartment_completion_selection_2_end' => $this->formatDateTime($this->getScalar($project, 'field_completion_2_end')),
+      'project_contract_apartment_completion_selection_3' => $this->getBoolean($project, 'field_completion_selection_3'),
+      'project_contract_apartment_completion_selection_3_date' => $this->formatDateTime($this->getScalar($project, 'field_completion_3_start')),
+      'project_contract_article_of_association' => $this->getScalar($project, 'field_article_of_association'),
+      'project_contract_bill_of_sale_terms' => $this->getScalar($project, 'field_contract_other_terms'),
+      'project_contract_collateral_type' => $this->getScalar($project, 'field_collateral_type'),
+      'project_contract_construction_permit_requested' => $this->formatDateTime($this->getScalar($project, 'field_construction_permit_claim')),
+      'project_contract_customer_document_handover' => $this->getScalar($project, 'field_customer_document_handover'),
+      'project_contract_default_collateral' => $this->getScalar($project, 'field_default_collateral'),
+      'project_contract_depositary' => $this->getScalar($project, 'field_depositary'),
+      'project_contract_estimated_handover_date_end' => $this->formatDateTime($this->getScalar($project, 'field_estimated_handover_end')),
+      'project_contract_estimated_handover_date_start' => $this->formatDateTime($this->getScalar($project, 'field_estimated_handover_start')),
+      'project_contract_material_selection_date' => $this->formatDateTime($this->getScalar($project, 'field_material_selection_date')),
+      'project_contract_material_selection_description' => $this->getScalar($project, 'field_material_selection_desc'),
+      'project_contract_material_selection_later' => $this->getBoolean($project, 'field_material_selection_later'),
+      'project_contract_other_terms' => $this->getScalar($project, 'field_other_terms'),
+      'project_contract_repository' => $this->getScalar($project, 'field_repository'),
+      'project_contract_right_of_occupancy_payment_verification' => $this->getScalar($project, 'field_payment_verification'),
+      'project_contract_rs_bank' => $this->getScalar($project, 'field_recommended_bank'),
+      'project_contract_transfer_restriction' => $this->getBoolean($project, 'field_transfer_restriction'),
+      'project_contract_usage_fees' => $this->getScalar($project, 'field_usage_fees'),
     ];
 
     if ($apartment) {
@@ -565,6 +618,22 @@ final class SearchMapper {
     $value = str_replace('apartment_for_sale', 'for_sale', $value);
     $value = strtoupper(str_replace([' ', '-'], '_', $value));
     return $value;
+  }
+
+  /**
+   * Get URIs from a multi-value link field.
+   */
+  private function getLinkUrlsFromField(Node $entity, string $fieldName): array {
+    if (!$entity->hasField($fieldName) || $entity->get($fieldName)->isEmpty()) {
+      return [];
+    }
+    $urls = [];
+    foreach ($entity->get($fieldName)->getValue() as $item) {
+      if (!empty($item['uri'])) {
+        $urls[] = (string) $item['uri'];
+      }
+    }
+    return $urls;
   }
 
   /**
