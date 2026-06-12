@@ -154,6 +154,23 @@ final class SearchMapperElasticsearchParityTest extends KernelTestBase {
   }
 
   /**
+   * project_use_complete_contract defaults to FALSE when unset on the project.
+   */
+  public function testProjectUseCompleteContractDefaultsToFalse(): void {
+    $project = Node::create([
+      'type' => 'project',
+      'title' => 'Standard contract project',
+      'status' => 1,
+    ]);
+    $project->save();
+
+    $mapped = $this->mapper->mapProject($project);
+
+    $this->assertArrayHasKey('project_use_complete_contract', $mapped);
+    $this->assertFalse($mapped['project_use_complete_contract']);
+  }
+
+  /**
    * Apartment listing map exposes apartment_published from node status.
    */
   public function testApartmentListingIncludesApartmentPublished(): void {
