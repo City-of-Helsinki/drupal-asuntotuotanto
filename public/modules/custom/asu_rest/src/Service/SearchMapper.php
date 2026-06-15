@@ -52,6 +52,7 @@ final class SearchMapper {
 
     $data = [
       '_language' => $apartment->language()->getId(),
+      'apartment_published' => $apartment->isPublished(),
       'apartment_address' => $this->getComputedMarkup($apartment, 'field_apartment_address'),
       'apartment_number' => $this->getScalar($apartment, 'field_apartment_number'),
       'apartment_state_of_sale' => $this->getEnumFromTermField($apartment, 'field_apartment_state_of_sale'),
@@ -81,6 +82,7 @@ final class SearchMapper {
     if ($project) {
       $data += $this->mapProjectFields($project, $apartment);
       $data['apartment_holding_type'] = $data['project_holding_type'] ?? '';
+      $data['site_owner'] = $this->getTermLabel($project, 'field_site_owner');
     }
 
     return $data;
@@ -263,7 +265,7 @@ final class SearchMapper {
       'project_application_end_time' => $this->formatDateTime($this->getScalar($project, 'field_application_end_time')),
       'project_application_start_time' => $this->formatDateTime($this->getScalar($project, 'field_application_start_time')),
       'project_can_apply_afterwards' => $this->getBoolean($project, 'field_can_apply_afterwards'),
-      'project_building_type' => $apartment ? $this->getComputedMarkup($apartment, 'asu_project_building_type') : $this->getEnumFromTermField($project, 'field_building_type'),
+      'project_building_type' => $this->projectBuildingType($project, $apartment),
       'project_coordinate_lat' => $this->getScalar($project, 'field_coordinate_lat'),
       'project_coordinate_lon' => $this->getScalar($project, 'field_coordinate_lon'),
       'project_district' => $this->getTermLabel($project, 'field_district'),
@@ -274,7 +276,7 @@ final class SearchMapper {
       'project_image_urls' => $this->getFileUrlsFromField($project, 'field_images'),
       'project_main_image_url' => $this->getFileUrlFromField($project, 'field_main_image'),
       'project_construction_materials' => $this->getTermLabels($project, 'field_construction_materials'),
-      'project_new_development_status' => $apartment ? $this->getComputedMarkup($apartment, 'asu_new_development_status') : $this->getEnumFromTermField($project, 'field_new_development_status'),
+      'project_new_development_status' => $this->projectNewDevelopmentStatus($project, $apartment),
       'project_ownership_type' => $this->getLowercaseTermName($project, 'field_ownership_type'),
       'project_possession_transfer_date' => $this->formatDateTime($this->getScalar($project, 'field_possession_transfer_date')),
       'project_state_of_sale' => $this->getEnumFromTermField($project, 'field_state_of_sale'),
@@ -287,6 +289,7 @@ final class SearchMapper {
       'project_realty_id' => $this->getScalar($project, 'field_realty_id'),
       'project_property_number' => $this->getScalar($project, 'field_property_number'),
       'project_new_housing' => $this->getBoolean($project, 'field_new_housing'),
+      'project_use_complete_contract' => $this->getBoolean($project, 'field_use_complete_contract'),
       'project_construction_year' => $this->getScalar($project, 'field_construction_year'),
       'project_has_elevator' => $this->getBoolean($project, 'field_has_elevator'),
       'project_has_sauna' => $this->getBoolean($project, 'field_has_sauna'),
@@ -295,23 +298,223 @@ final class SearchMapper {
       'project_estate_agent_phone' => $this->getReferencedUserField($project, 'field_salesperson', 'field_phone_number'),
     ];
 
-    $data += [
-      'project_city' => $this->getScalar($project, 'field_city'),
-      'project_description' => $this->getScalar($project, 'field_project_description'),
-      'project_archived' => $this->getBoolean($project, 'field_archived'),
-      'project_apartment_count' => $this->getScalar($project, 'field_apartment_count'),
-      'project_heating_options' => $this->getTermLabels($project, 'field_heating_options'),
-      'project_material_choice_dl' => $this->getScalar($project, 'field_material_choice_dl'),
-      'project_premarketing_start_time' => $this->formatDateTime($this->getScalar($project, 'field_premarketing_start_time')),
-      'project_premarketing_end_time' => $this->formatDateTime($this->getScalar($project, 'field_premarketing_end_time')),
-      'project_published' => $project->isPublished(),
-    ];
+    $data += $this->mapProjectExtendedFields($project);
+    $data += $this->mapProjectContractFields($project);
 
     if ($apartment) {
       $data['project_construction_materials'] = $this->getTermLabels($project, 'field_construction_materials');
     }
 
     return $data;
+  }
+
+  /**
+   * Map additional project metadata fields for internal consumers.
+   */
+  private function mapProjectExtendedFields(Node $project): array {
+    return [
+      'project_city' => $this->projectFieldScalar($project, 'field_city'),
+      'project_description' => $this->projectFieldScalar($project, 'field_project_description'),
+      'project_archived' => $this->projectFieldBoolean($project, 'field_archived'),
+      'project_apartment_count' => $this->projectFieldScalar($project, 'field_apartment_count'),
+      'project_heating_options' => $this->getTermLabels($project, 'field_heating_options'),
+      'project_material_choice_dl' => $this->projectFieldScalar($project, 'field_material_choice_dl'),
+      'project_premarketing_start_time' => $this->projectFieldDate(
+        $project,
+        'field_premarketing_start_time',
+      ),
+      'project_premarketing_end_time' => $this->projectFieldDate(
+        $project,
+        'field_premarketing_end_time',
+      ),
+      'project_published' => $project->isPublished(),
+      'project_acc_financeofficer' => $this->projectFieldScalar($project, 'field_acc_financeofficer'),
+      'project_attachment_urls' => $this->getLinkUrlsFromField($project, 'field_attachments_url'),
+      'project_barred_bank_account' => $this->projectFieldScalar($project, 'field_barred_bank_account'),
+      'project_completion_date' => $this->projectFieldDate($project, 'field_completion_date'),
+      'project_constructor' => $this->projectFieldScalar($project, 'field_constructor'),
+      'project_control_transferred_when' => $this->projectFieldScalar(
+        $project,
+        'field_control_transferred_when',
+      ),
+      'project_documents_delivered' => $this->projectFieldScalar($project, 'field_documents_delivered'),
+      'project_energy_class' => $this->getTermLabel($project, 'field_energy_class'),
+      'project_estimated_completion_date' => $this->projectFieldDate(
+        $project,
+        'field_estimated_completion_date',
+      ),
+      'project_housing_manager' => $this->projectFieldScalar($project, 'field_housing_manager'),
+      'project_payment_recipient' => $this->projectFieldScalar($project, 'field_payment_recipient'),
+      'project_payment_recipient_final' => $this->projectFieldScalar(
+        $project,
+        'field_payment_recipient_final',
+      ),
+      'project_project_manager' => $this->projectFieldScalar($project, 'field_project_manager'),
+      'project_publication_end_time' => $this->projectFieldDate(
+        $project,
+        'field_publication_end_time',
+      ),
+      'project_publication_start_time' => $this->projectFieldDate(
+        $project,
+        'field_publication_start_time',
+      ),
+      'project_regular_bank_account' => $this->projectFieldScalar(
+        $project,
+        'field_regular_bank_account',
+      ),
+      'project_roof_material' => $this->projectFieldScalar($project, 'field_roof_material'),
+      'project_sanitation' => $this->projectFieldScalar($project, 'field_sanitation'),
+      'project_shareholder_meeting_date' => $this->projectFieldDate(
+        $project,
+        'field_shareholder_meeting_date',
+      ),
+      'project_shares_transferred_when' => $this->projectFieldScalar(
+        $project,
+        'field_shares_transferred_when',
+      ),
+      'project_site_area' => $this->projectFieldScalar($project, 'field_site_area'),
+      'project_site_renter' => $this->projectFieldScalar($project, 'field_site_renter'),
+      'project_virtual_presentation_url' => $this->projectFieldScalar(
+        $project,
+        'field_virtual_presentation_url',
+      ),
+      'project_zoning_info' => $this->projectFieldScalar($project, 'field_zoning_info'),
+      'project_zoning_status' => $this->projectFieldScalar($project, 'field_zoning_status'),
+    ];
+  }
+
+  /**
+   * Map HITAS/HASO contract fields stored on the project node.
+   */
+  private function mapProjectContractFields(Node $project): array {
+    return [
+      'project_contract_apartment_completion_selection_1' => $this->projectFieldBoolean(
+        $project,
+        'field_completion_selection_1',
+      ),
+      'project_contract_apartment_completion_selection_1_date' => $this->projectFieldDate(
+        $project,
+        'field_completion_1_start',
+      ),
+      'project_contract_apartment_completion_selection_2' => $this->projectFieldBoolean(
+        $project,
+        'field_completion_selection_2',
+      ),
+      'project_contract_apartment_completion_selection_2_start' => $this->projectFieldDate(
+        $project,
+        'field_completion_2_start',
+      ),
+      'project_contract_apartment_completion_selection_2_end' => $this->projectFieldDate(
+        $project,
+        'field_completion_2_end',
+      ),
+      'project_contract_apartment_completion_selection_3' => $this->projectFieldBoolean(
+        $project,
+        'field_completion_selection_3',
+      ),
+      'project_contract_apartment_completion_selection_3_date' => $this->projectFieldDate(
+        $project,
+        'field_completion_3_start',
+      ),
+      'project_contract_article_of_association' => $this->projectFieldScalar(
+        $project,
+        'field_article_of_association',
+      ),
+      'project_contract_bill_of_sale_terms' => $this->projectFieldScalar(
+        $project,
+        'field_contract_other_terms',
+      ),
+      'project_contract_collateral_type' => $this->projectFieldScalar(
+        $project,
+        'field_collateral_type',
+      ),
+      'project_contract_construction_permit_requested' => $this->projectFieldDate(
+        $project,
+        'field_construction_permit_claim',
+      ),
+      'project_contract_customer_document_handover' => $this->projectFieldScalar(
+        $project,
+        'field_customer_document_handover',
+      ),
+      'project_contract_default_collateral' => $this->projectFieldScalar(
+        $project,
+        'field_default_collateral',
+      ),
+      'project_contract_depositary' => $this->projectFieldScalar($project, 'field_depositary'),
+      'project_contract_estimated_handover_date_end' => $this->projectFieldDate(
+        $project,
+        'field_estimated_handover_end',
+      ),
+      'project_contract_estimated_handover_date_start' => $this->projectFieldDate(
+        $project,
+        'field_estimated_handover_start',
+      ),
+      'project_contract_material_selection_date' => $this->projectFieldDate(
+        $project,
+        'field_material_selection_date',
+      ),
+      'project_contract_material_selection_description' => $this->projectFieldScalar(
+        $project,
+        'field_material_selection_desc',
+      ),
+      'project_contract_material_selection_later' => $this->projectFieldBoolean(
+        $project,
+        'field_material_selection_later',
+      ),
+      'project_contract_other_terms' => $this->projectFieldScalar($project, 'field_other_terms'),
+      'project_contract_repository' => $this->projectFieldScalar($project, 'field_repository'),
+      'project_contract_right_of_occupancy_payment_verification' => $this->projectFieldScalar(
+        $project,
+        'field_payment_verification',
+      ),
+      'project_contract_rs_bank' => $this->projectFieldScalar($project, 'field_recommended_bank'),
+      'project_contract_transfer_restriction' => $this->projectFieldBoolean(
+        $project,
+        'field_transfer_restriction',
+      ),
+      'project_contract_usage_fees' => $this->projectFieldScalar($project, 'field_usage_fees'),
+    ];
+  }
+
+  /**
+   * Resolve project building type from apartment computed field or project term.
+   */
+  private function projectBuildingType(Node $project, ?Node $apartment): string {
+    if ($apartment) {
+      return $this->getComputedMarkup($apartment, 'asu_project_building_type');
+    }
+    return $this->getEnumFromTermField($project, 'field_building_type');
+  }
+
+  /**
+   * Resolve new development status from apartment computed field or project term.
+   */
+  private function projectNewDevelopmentStatus(Node $project, ?Node $apartment): string {
+    if ($apartment) {
+      return $this->getComputedMarkup($apartment, 'asu_new_development_status');
+    }
+    return $this->getEnumFromTermField($project, 'field_new_development_status');
+  }
+
+  /**
+   * Read a scalar project field value.
+   */
+  private function projectFieldScalar(Node $project, string $fieldName): string {
+    return $this->getScalar($project, $fieldName);
+  }
+
+  /**
+   * Read a boolean project field value.
+   */
+  private function projectFieldBoolean(Node $project, string $fieldName): bool {
+    return $this->getBoolean($project, $fieldName);
+  }
+
+  /**
+   * Read a datetime project field value.
+   */
+  private function projectFieldDate(Node $project, string $fieldName): string {
+    return $this->formatDateTime($this->getScalar($project, $fieldName));
   }
 
   /**
@@ -542,6 +745,22 @@ final class SearchMapper {
     $value = str_replace('apartment_for_sale', 'for_sale', $value);
     $value = strtoupper(str_replace([' ', '-'], '_', $value));
     return $value;
+  }
+
+  /**
+   * Get URIs from a multi-value link field.
+   */
+  private function getLinkUrlsFromField(Node $entity, string $fieldName): array {
+    if (!$entity->hasField($fieldName) || $entity->get($fieldName)->isEmpty()) {
+      return [];
+    }
+    $urls = [];
+    foreach ($entity->get($fieldName)->getValue() as $item) {
+      if (!empty($item['uri'])) {
+        $urls[] = (string) $item['uri'];
+      }
+    }
+    return $urls;
   }
 
   /**
