@@ -477,7 +477,7 @@ final class SearchMapper {
   }
 
   /**
-   * Resolve project building type from apartment computed field or project term.
+   * Resolve building type from apartment computed field or project term.
    */
   private function projectBuildingType(Node $project, ?Node $apartment): string {
     if ($apartment) {
@@ -487,7 +487,7 @@ final class SearchMapper {
   }
 
   /**
-   * Resolve new development status from apartment computed field or project term.
+   * Resolve new development status from computed field or project term.
    */
   private function projectNewDevelopmentStatus(Node $project, ?Node $apartment): string {
     if ($apartment) {
