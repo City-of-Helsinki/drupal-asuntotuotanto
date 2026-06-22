@@ -112,6 +112,13 @@
         "platform": {
             "php": "8.3.15"
         },
+        "audit": {
+            "ignore": {
+                "CVE-2026-55767": "Temporary: drupal/core-recommended 11.3.12 pins guzzle below fixed version; remove after upstream Drupal release updates constraints.",
+                "CVE-2026-55568": "Temporary: drupal/core-recommended 11.3.12 pins guzzle below fixed version; remove after upstream Drupal release updates constraints.",
+                "CVE-2026-55766": "Temporary: drupal/core-recommended 11.3.12 pins guzzlehttp/psr7 below fixed version; remove after upstream Drupal release updates constraints."
+            }
+        },
         "optimize-autoloader": true,
         "sort-packages": true,
         "allow-plugins": {
