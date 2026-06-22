@@ -22,7 +22,7 @@ use Drupal\node\Entity\NodeType;
 final class SearchMapperElasticsearchParityTest extends KernelTestBase {
 
   /**
-   * Project fields indexed in search_api.index.apartment and on ApartmentDocument.
+   * Project fields indexed in search_api.index.apartment and ApartmentDocument.
    */
   private const PROJECT_PARITY_KEYS = [
     'project_acc_financeofficer',
