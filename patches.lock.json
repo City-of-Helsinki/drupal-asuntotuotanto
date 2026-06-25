@@ -126,7 +126,7 @@
                 "package": "drupal/elasticsearch_connector",
                 "description": "Use Search API field identifier in FilterBuilder",
                 "url": "patches/elasticsearch_connector-filterbuilder-use-field-identifier.patch",
-                "sha256": "a12ef7e63b8b5c44e50f8c93ab36258dd6a8a32d4f796ba91ff9b9a33f81b905",
+                "sha256": "301eeed88e8c950ccf5136925d3eea7cc2a0e400d1281ddcd7bc094ff33406cc",
                 "depth": 1,
                 "extra": {
                     "provenance": "root"
