@@ -89,8 +89,8 @@ class ElasticSearch extends ResourceBase {
       }
     }
     $url_params = ($url_params) ? implode('_', $url_params) : '';
-    // Bump cache namespace when response enum serialization changes.
-    $cid = 'asu_rest:apartment_list:v3:' . $ownership_type . $url_params;
+    // Bump cache namespace when response serialization changes.
+    $cid = 'asu_rest:apartment_list:v4:' . $ownership_type . $url_params;
 
     $account = User::load(\Drupal::currentUser()->id());
     $debug = $account && $account->id() == 1;
@@ -354,10 +354,10 @@ class ElasticSearch extends ResourceBase {
             'apartment_state_of_sale' => $apartment_state_of_sale,
             'apartment_structure' => $apartment_structure,
             'application_url' => $application_url,
-            'debt_free_sales_price' => $this->toCents($get_scalar($apartment_node, 'field_debt_free_sales_price')),
+            'debt_free_sales_price' => floatval($get_scalar($apartment_node, 'field_debt_free_sales_price') ?: 0),
             'floor' => $get_scalar($apartment_node, 'field_floor') !== '' ? intval($get_scalar($apartment_node, 'field_floor')) : NULL,
             'floor_max' => $get_scalar($apartment_node, 'field_floor_max') !== '' ? intval($get_scalar($apartment_node, 'field_floor_max')) : NULL,
-            'housing_company_fee' => $this->toCents($get_scalar($apartment_node, 'field_housing_company_fee')),
+            'housing_company_fee' => floatval($get_scalar($apartment_node, 'field_housing_company_fee') ?: 0),
             'living_area' => floatval($get_scalar($apartment_node, 'field_living_area') ?: 0),
             'nid' => intval($apartment_node->id()),
             'project_application_end_time' => $project_application_end_time,
@@ -380,12 +380,12 @@ class ElasticSearch extends ResourceBase {
             'project_upcoming_description' => $get_scalar($project_node, 'field_upcoming_description'),
             'project_url' => $this->buildAbsoluteUrl($project_node->toUrl()->toString()),
             'project_uuid' => $project_node->uuid(),
-            'release_payment' => $this->toCents($get_scalar($apartment_node, 'field_release_payment')),
-            'right_of_occupancy_payment' => $this->toCents($get_scalar($apartment_node, 'field_right_of_occupancy_payment')),
+            'release_payment' => floatval($get_scalar($apartment_node, 'field_release_payment') ?: 0),
+            'right_of_occupancy_payment' => floatval($get_scalar($apartment_node, 'field_right_of_occupancy_payment') ?: 0),
             'title' => $apartment_node->label(),
             'url' => $this->buildAbsoluteUrl($apartment_node->toUrl()->toString()),
             'uuid' => $apartment_node->uuid(),
-            'sales_price' => $this->toCents($get_scalar($apartment_node, 'field_sales_price')),
+            'sales_price' => floatval($get_scalar($apartment_node, 'field_sales_price') ?: 0),
             'room_count' => $room_count,
             // For accurate FE structure, add more fields as needed.
           ];
