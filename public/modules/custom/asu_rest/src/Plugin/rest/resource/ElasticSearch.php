@@ -158,28 +158,29 @@ class ElasticSearch extends ResourceBase {
         $nodes = [];
       }
       else {
+        $room_count_filter = $this->normalizeRoomCountFilter($parameters->get('room_count'));
+
+        [$price_min, $price_max] = $this->normalizePriceBoundsForFilter($request_data);
+        if ($price_min !== NULL && $price_max !== NULL && $price_min > $price_max) {
+          [$price_min, $price_max] = [$price_max, $price_min];
+        }
+
+        if ($ownership_type === 'haso') {
+          // Legacy FE sends HASO max as 5500 -> 550000000. Convert to
+          // comparable payload scale (5 500 000) for HASO cards.
+          if ($price_min !== NULL && $price_min >= 100000000) {
+            $price_min /= 100;
+          }
+          if ($price_max !== NULL && $price_max >= 100000000) {
+            $price_max /= 100;
+          }
+        }
+
         // Query apartments in our projects that pass apartment filters.
         $entity_query = \Drupal::entityQuery('node')
           ->condition('type', 'apartment')
           ->condition('status', 1)
           ->condition('nid', array_values($apartment_ids), 'IN');
-
-        if ($parameters->has('room_count')) {
-          $room_count_val = $parameters->get('room_count');
-          if (is_array($room_count_val)) {
-            $entity_query->condition('field_room_count.value', $room_count_val, 'IN');
-          }
-          else {
-            $entity_query->condition('field_room_count.value', $room_count_val);
-          }
-        }
-
-        if ($parameters->has('price_min')) {
-          $entity_query->condition('field_sales_price.value', $parameters->get('price_min'), '>=');
-        }
-        if ($parameters->has('price_max')) {
-          $entity_query->condition('field_sales_price.value', $parameters->get('price_max'), '<=');
-        }
 
         try {
           $entity_query->accessCheck(TRUE);
@@ -199,6 +200,14 @@ class ElasticSearch extends ResourceBase {
           $apartment_id = (int) $apartment_node->id();
           $project_node = $apartment_project_map[$apartment_id] ?? NULL;
           if (!$project_node || !$project_node->isPublished()) {
+            continue;
+          }
+
+          if (!$this->matchesRoomCountFilter($this->resolveApartmentRoomCount($apartment_node), $room_count_filter)) {
+            continue;
+          }
+
+          if (!$this->matchesPriceFilter($apartment_node, $price_min, $price_max, $ownership_type)) {
             continue;
           }
 
@@ -335,10 +344,7 @@ class ElasticSearch extends ResourceBase {
           $project_ownership_type = strtolower($get_term_label($project_node, 'field_ownership_type'));
           $project_state_of_sale = $get_term_enum($project_node, 'field_state_of_sale');
 
-          $room_count = NULL;
-          if ($get_scalar($apartment_node, 'field_room_count') !== '') {
-            $room_count = intval($get_scalar($apartment_node, 'field_room_count'));
-          }
+          $room_count = $this->resolveApartmentRoomCount($apartment_node);
 
           $apartment_number = $get_scalar($apartment_node, 'field_apartment_number');
           $application_url = '';
@@ -415,6 +421,189 @@ class ElasticSearch extends ResourceBase {
    */
   protected function isApartmentVisibleInPublicSearch(string $apartmentStateOfSale): bool {
     return strtoupper($apartmentStateOfSale) !== 'SOLD';
+  }
+
+  /**
+   * Normalize room count filter values from request payload.
+   */
+  private function normalizeRoomCountFilter(mixed $raw): array {
+    if ($raw === NULL || $raw === '') {
+      return [];
+    }
+
+    $values = is_array($raw) ? $raw : [$raw];
+    $normalized = [];
+
+    foreach ($values as $value) {
+      if (is_numeric($value)) {
+        $normalized[] = (int) $value;
+      }
+    }
+
+    return array_values(array_unique(array_filter($normalized, static fn (int $v): bool => $v > 0)));
+  }
+
+  /**
+   * Resolve apartment room count with fallback to structure field parsing.
+   */
+  private function resolveApartmentRoomCount(Node $apartment): ?int {
+    if ($apartment->hasField('field_room_count') && !$apartment->get('field_room_count')->isEmpty()) {
+      $raw = (string) $apartment->get('field_room_count')->value;
+      if ($raw !== '' && is_numeric($raw)) {
+        $resolved = (int) $raw;
+        if ($resolved > 0) {
+          return $resolved;
+        }
+      }
+    }
+
+    $structure = '';
+    if ($apartment->hasField('field_apartment_structure') && !$apartment->get('field_apartment_structure')->isEmpty()) {
+      $structure = (string) $apartment->get('field_apartment_structure')->value;
+    }
+    elseif ($apartment->hasField('field_structure') && !$apartment->get('field_structure')->isEmpty()) {
+      $structure = (string) $apartment->get('field_structure')->value;
+    }
+
+    if ($structure !== '' && preg_match('/\d+/', $structure, $matches) === 1) {
+      return (int) $matches[0];
+    }
+
+    return NULL;
+  }
+
+  /**
+   * Check if apartment matches room count filter values.
+   */
+  private function matchesRoomCountFilter(?int $roomCount, array $filter): bool {
+    if (!$filter) {
+      return TRUE;
+    }
+    if ($roomCount === NULL) {
+      return FALSE;
+    }
+    if (in_array($roomCount, $filter, TRUE)) {
+      return TRUE;
+    }
+
+    return in_array(5, $filter, TRUE) && $roomCount >= 5;
+  }
+
+  /**
+   * Normalize request price bounds to comparable numeric values.
+   *
+   * Legacy FE sends max price in `price` and may send arrays/csv in some
+   * environments.
+   *
+   * @return array{0:?float,1:?float}
+   *   [min, max] in comparable numeric scale.
+   */
+  private function normalizePriceBoundsForFilter(array $requestData): array {
+    $priceParam = $requestData['price'] ?? NULL;
+    $minRaw = $requestData['price_min'] ?? NULL;
+    $maxRaw = $requestData['price_max'] ?? NULL;
+
+    if (is_array($priceParam)) {
+      $values = array_values(array_filter($priceParam, static fn ($v) => $v !== '' && $v !== NULL));
+      if ($minRaw === NULL && isset($values[0]) && is_numeric($values[0])) {
+        $minRaw = $values[0];
+      }
+      if ($maxRaw === NULL && $values) {
+        $last = end($values);
+        if ($last !== FALSE && is_numeric($last)) {
+          $maxRaw = $last;
+        }
+      }
+    }
+    elseif (is_string($priceParam) && str_contains($priceParam, ',')) {
+      $values = array_values(array_filter(array_map('trim', explode(',', $priceParam)), static fn ($v): bool => $v !== ''));
+      if ($minRaw === NULL && isset($values[0]) && is_numeric($values[0])) {
+        $minRaw = $values[0];
+      }
+      if ($maxRaw === NULL && $values) {
+        $last = end($values);
+        if ($last !== FALSE && is_numeric($last)) {
+          $maxRaw = $last;
+        }
+      }
+    }
+    elseif ($maxRaw === NULL && is_numeric($priceParam)) {
+      $maxRaw = $priceParam;
+    }
+
+    $min = is_numeric($minRaw) ? (float) $minRaw : NULL;
+    $max = is_numeric($maxRaw) ? (float) $maxRaw : NULL;
+
+    if ($min !== NULL && $min <= 0) {
+      $min = NULL;
+    }
+    if ($max !== NULL && $max <= 0) {
+      $max = NULL;
+    }
+
+    return [$min, $max];
+  }
+
+  /**
+   * Check if apartment comparable price is inside optional min/max bounds.
+   */
+  private function matchesPriceFilter(Node $apartment, ?float $priceMin, ?float $priceMax, string $ownershipType): bool {
+    if ($priceMin === NULL && $priceMax === NULL) {
+      return TRUE;
+    }
+
+    $value = $this->resolveComparablePrice($apartment, $ownershipType);
+    if ($value === NULL) {
+      return FALSE;
+    }
+
+    if ($priceMin !== NULL && $value < $priceMin) {
+      return FALSE;
+    }
+    if ($priceMax !== NULL && $value > $priceMax) {
+      return FALSE;
+    }
+
+    return TRUE;
+  }
+
+  /**
+   * Resolve comparable apartment price used by listing UI.
+   */
+  private function resolveComparablePrice(Node $apartment, string $ownershipType): ?float {
+    if ($ownershipType === 'haso') {
+      // HASO cards display release_payment first, then right_of_occupancy.
+      if ($apartment->hasField('field_release_payment') && !$apartment->get('field_release_payment')->isEmpty()) {
+        $releaseRaw = (string) $apartment->get('field_release_payment')->value;
+        if (is_numeric($releaseRaw) && (float) $releaseRaw > 0) {
+          return (float) $this->toCents($releaseRaw);
+        }
+      }
+
+      if ($apartment->hasField('field_right_of_occupancy_payment') && !$apartment->get('field_right_of_occupancy_payment')->isEmpty()) {
+        $rightRaw = (string) $apartment->get('field_right_of_occupancy_payment')->value;
+        if (is_numeric($rightRaw)) {
+          return (float) $this->toCents($rightRaw);
+        }
+      }
+
+      return NULL;
+    }
+
+    $fieldName = $ownershipType === 'hitas'
+      ? 'field_debt_free_sales_price'
+      : 'field_sales_price';
+
+    if (!$apartment->hasField($fieldName) || $apartment->get($fieldName)->isEmpty()) {
+      return NULL;
+    }
+
+    $raw = (string) $apartment->get($fieldName)->value;
+    if (!is_numeric($raw)) {
+      return NULL;
+    }
+
+    return (float) $this->toCents($raw);
   }
 
   /**
