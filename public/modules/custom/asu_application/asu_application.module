@@ -257,6 +257,8 @@ function template_preprocess_asu_application(array &$variables) {
     'hideOfferDetails' => (string) t('Hide offer details'),
     'loadingOfferDetails' => (string) t('Loading offer details…'),
     'offerDetailsError' => (string) t('Could not load offer details.'),
+    'projectMaterialbankLink' => (string) t('Project material bank'),
+    'apartmentPageLink' => (string) t('Apartment page'),
     'offerDetailLabels' => [
       'apartment_number' => (string) t('Apartment'),
       'apartment_structure' => (string) t('Apartment type'),

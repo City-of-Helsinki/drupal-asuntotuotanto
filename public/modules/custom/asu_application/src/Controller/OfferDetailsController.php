@@ -60,6 +60,8 @@ class OfferDetailsController extends ControllerBase {
       'intro' => $content['intro'] ?? '',
       'content' => $content['content'] ?? '',
       'items' => $content['items'] ?? [],
+      'project_materialbank_url' => $content['project_materialbank_url'] ?? '',
+      'apartment_url' => $content['apartment_url'] ?? '',
     ]);
   }
 

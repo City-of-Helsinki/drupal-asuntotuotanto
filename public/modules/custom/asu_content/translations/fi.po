@@ -43531,6 +43531,12 @@ msgstr "Ladataan tarjouksen tietoja…"
 msgid "Could not load offer details."
 msgstr "Tarjouksen tietoja ei voitu ladata."
 
+msgid "Project material bank"
+msgstr "Kohteen aineistopankki"
+
+msgid "Apartment page"
+msgstr "Asunnon sivu"
+
 msgid "Actions"
 msgstr "Toiminnot"
 

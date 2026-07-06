@@ -305,6 +305,19 @@ line-height: $lineheight-l; // Was 24px.
     margin: $spacing-and-half 0 0;
   }
 
+  &__links {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: $spacing-half-and-half;
+    margin: $spacing-and-half 0 0;
+  }
+
+  &__link {
+    font-size: $fontsize-body-m;
+    font-weight: $font-weight-medium;
+  }
+
   &__loading,
   &__error {
     font-size: $fontsize-body-m;

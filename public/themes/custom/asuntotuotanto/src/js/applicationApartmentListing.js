@@ -196,6 +196,40 @@
         container.appendChild(paragraph);
       };
 
+      const createOfferDetailsLink = (label, href) => {
+        const link = document.createElement('a');
+        link.className = 'offer-details__link';
+        link.href = href;
+        link.textContent = label;
+        link.target = '_blank';
+        link.rel = 'noreferrer';
+        return link;
+      };
+
+      const appendOfferMaterialbankLinks = (container, message) => {
+        const links = [
+          {
+            href: message.project_materialbank_url,
+            label: offerStrings.projectMaterialbankLink || 'Project material bank',
+          },
+          {
+            href: message.apartment_url,
+            label: offerStrings.apartmentPageLink || 'Apartment page',
+          },
+        ].filter((entry) => String(entry.href || '').trim());
+
+        if (!links.length) {
+          return;
+        }
+
+        const linksContainer = document.createElement('div');
+        linksContainer.className = 'offer-details__links';
+        links.forEach((entry) => {
+          linksContainer.appendChild(createOfferDetailsLink(entry.label, entry.href));
+        });
+        container.appendChild(linksContainer);
+      };
+
       const renderOfferDetailsContent = (panel, message) => {
         panel.hidden = false;
         const messageContainer = getOfferDetailsMessageContainer(panel);
@@ -203,6 +237,13 @@
           return;
         }
         messageContainer.innerHTML = '';
+
+        if (message.subject) {
+          const subject = document.createElement('p');
+          subject.className = 'offer-details__subject';
+          subject.textContent = message.subject;
+          messageContainer.appendChild(subject);
+        }
 
         appendOfferMessageText(
           messageContainer,
@@ -238,6 +279,8 @@
           message.content,
           'offer-details__body offer-details__content'
         );
+
+        appendOfferMaterialbankLinks(messageContainer, message);
       };
 
       const bindOfferDetailsToggle = (button, detailsPanel, offerId, detailsRow) => {
