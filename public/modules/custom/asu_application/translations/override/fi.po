@@ -40,6 +40,33 @@ msgstr "Hakemuksen tunnus: @id"
 msgid "Message:"
 msgstr "Viesti:"
 
+msgid "Customer message thread: @url"
+msgstr "Asiakkaan viestiketju: @url"
+
+msgid "Salesperson message thread: @url"
+msgstr "Myyjän viestiketju: @url"
+
+msgid "Open your message thread: @url"
+msgstr "Avaa viestiketjusi: @url"
+
+msgid "You have received a new message in the application service."
+msgstr "Sinulle on saapunut uusi viesti hakemuspalvelussa."
+
+msgid "Sender: @name"
+msgstr "Lähettäjä: @name"
+
+msgid "Message content:"
+msgstr "Viestin sisältö:"
+
+msgid "Message content: @url"
+msgstr "Viestin sisältö: @url"
+
+msgid "Open chat: @url"
+msgstr "Avaa chat: @url"
+
+msgid "This is an automated message. Please do not reply to this email."
+msgstr "Tämä on automaattinen viesti. Älä vastaa tähän sähköpostiin."
+
 msgid "New reply about your application @id"
 msgstr "Uusi vastaus hakemukseesi @id"
 
