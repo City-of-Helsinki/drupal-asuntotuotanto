@@ -268,6 +268,7 @@ function _asu_application_get_offer_drupal_settings(): array {
     'offerDetailsError' => (string) t('Could not load offer details.'),
     'projectMaterialbankLink' => (string) t('Project material bank'),
     'apartmentPageLink' => (string) t('Apartment page'),
+    'offerExpiredLabel' => (string) t('Offer expired'),
     'offerDetailLabels' => [
       'apartment_number' => (string) t('Apartment'),
       'apartment_structure' => (string) t('Apartment type'),

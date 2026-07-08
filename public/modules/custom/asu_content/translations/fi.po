@@ -43537,6 +43537,9 @@ msgstr "Kohteen aineistopankki"
 msgid "Apartment page"
 msgstr "Asunnon sivu"
 
+msgid "Offer expired"
+msgstr "Tarjous vanhentunut"
+
 msgid "Actions"
 msgstr "Toiminnot"
 

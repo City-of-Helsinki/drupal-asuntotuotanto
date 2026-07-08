@@ -37,6 +37,9 @@ msgstr "Kohteen aineistopankki"
 msgid "Apartment page"
 msgstr "Asunnon sivu"
 
+msgid "Offer expired"
+msgstr "Tarjous vanhentunut"
+
 msgid "Apartment"
 msgstr "Asunto"
 

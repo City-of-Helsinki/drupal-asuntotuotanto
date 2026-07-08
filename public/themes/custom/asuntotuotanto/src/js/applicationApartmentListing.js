@@ -50,6 +50,9 @@
         if (!apartmentResult.offer) {
           return '-';
         }
+        if (isOfferExpired(apartmentResult)) {
+          return offerStrings.offerExpiredLabel || 'Offer expired';
+        }
         return valueOrDash(apartmentResult.offer.state_label || apartmentResult.offer.state);
       };
 
@@ -60,10 +63,41 @@
         return formatDateValue(apartmentResult.offer.valid_until);
       };
 
+      const isOfferExpired = (apartmentResult) => {
+        if (!apartmentResult.offer) {
+          return false;
+        }
+        if (apartmentResult.offer.is_expired === true) {
+          return true;
+        }
+        if (apartmentResult.offer.state !== 'pending') {
+          return false;
+        }
+
+        const validUntil = apartmentResult.offer.valid_until;
+        if (!validUntil) {
+          return false;
+        }
+
+        const dateMatch = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(validUntil));
+        if (!dateMatch) {
+          return false;
+        }
+
+        const validUntilDate = new Date(
+          Number(dateMatch[1]),
+          Number(dateMatch[2]) - 1,
+          Number(dateMatch[3])
+        );
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        return validUntilDate < today;
+      };
+
       const canRespondToOffer = (apartmentResult) => {
         return apartmentResult.offer
           && apartmentResult.offer.state === 'pending'
-          && apartmentResult.offer.is_expired !== true;
+          && !isOfferExpired(apartmentResult);
       };
 
       const submitOfferAction = (offerId, action, applicationId, apartmentResult) => {
