@@ -4,9 +4,12 @@ declare(strict_types=1);
 
 namespace Drupal\asu_rest\Plugin\rest\resource;
 
+use Drupal\asu_api\Api\BackendApi\BackendApi;
 use Drupal\asu_application\ApplicationMessageManager;
 use Drupal\asu_application\Entity\Application;
+use Drupal\asu_application\Notification\SenderNameResolverTrait;
 use Drupal\Core\Cache\CacheableMetadata;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Mail\MailManagerInterface;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\rest\ModifiedResourceResponse;
@@ -29,6 +32,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
  * )
  */
 final class ApplicationMessages extends ResourceBase {
+  use SenderNameResolverTrait;
 
   /**
    * Constructs the resource.
@@ -43,6 +47,8 @@ final class ApplicationMessages extends ResourceBase {
     private readonly AccountProxyInterface $currentUser,
     private readonly RequestStack $requestStack,
     private readonly MailManagerInterface $mailManager,
+    private readonly BackendApi $backendApi,
+    private readonly EntityTypeManagerInterface $entityTypeManager,
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $serializer_formats, $logger);
   }
@@ -61,6 +67,8 @@ final class ApplicationMessages extends ResourceBase {
       $container->get('current_user'),
       $container->get('request_stack'),
       $container->get('plugin.manager.mail'),
+      $container->get('asu_api.backendapi'),
+      $container->get('entity_type.manager'),
     );
   }
 
@@ -151,18 +159,32 @@ final class ApplicationMessages extends ResourceBase {
       $buyerMail = $this->resolveBuyerMail($application);
       if ($buyerMail !== '') {
         $buyerLangcode = $this->resolveBuyerLangcode($application);
+        $customerThreadUrl = $this->getCustomerThreadUrl($application_id);
+        $projectLabel = $this->messageManager->getProjectLabel($application);
+        $senderName = $this->resolveSenderName();
         $subject = (string) $this->t(
           'New reply about your application @id',
           ['@id' => (string) $application_id],
           ['langcode' => $buyerLangcode],
         );
         $lines = [
-          (string) $this->t('Sales agent replied to your message in the application service.', [], ['langcode' => $buyerLangcode]),
+          (string) $this->t('You have received a new message in the application service.', [], ['langcode' => $buyerLangcode]),
           '',
+          (string) $this->t('Project: @project', ['@project' => $projectLabel !== '' ? $projectLabel : '-'], ['langcode' => $buyerLangcode]),
           (string) $this->t('Application ID: @id', ['@id' => (string) $application_id], ['langcode' => $buyerLangcode]),
-          (string) $this->t('Message:', [], ['langcode' => $buyerLangcode]),
+          (string) $this->t('Sender: @name', ['@name' => $senderName], ['langcode' => $buyerLangcode]),
+          '',
+          (string) $this->t('Message content:', [], ['langcode' => $buyerLangcode]),
+          '',
           $body,
+          '',
         ];
+
+        if ($customerThreadUrl !== '') {
+          $lines[] = (string) $this->t('Open chat: @url', ['@url' => $customerThreadUrl], ['langcode' => $buyerLangcode]);
+        }
+
+        $lines[] = (string) $this->t('This is an automated message. Please do not reply to this email.', [], ['langcode' => $buyerLangcode]);
 
         $this->mailManager->mail('asu_application', 'application_message_notification', $buyerMail, $buyerLangcode, [
           'subject' => $subject,
@@ -225,6 +247,40 @@ final class ApplicationMessages extends ResourceBase {
     }
 
     return $owner->getPreferredLangcode() ?: 'fi';
+  }
+
+  /**
+   * Resolves sender name for notification emails.
+   */
+  private function resolveSenderName(): string {
+    return $this->resolveNotificationSenderName(
+      $this->currentUser,
+      $this->backendApi,
+      $this->entityTypeManager,
+      (string) $this->t('Sales agent'),
+    );
+  }
+
+  /**
+   * Builds customer-facing message thread URL.
+   */
+  private function getCustomerThreadUrl(int $applicationId): string {
+    return $this->buildAbsoluteUrl('/application/' . $applicationId . '/messages');
+  }
+
+  /**
+   * Builds an absolute URL using configured public base URL when available.
+   */
+  private function buildAbsoluteUrl(string $path): string {
+    $baseUrl = getenv('ASU_ASUNTOTUOTANTO_URL');
+    if ($baseUrl) {
+      return rtrim($baseUrl, '/') . $path;
+    }
+
+    $request = $this->requestStack->getCurrentRequest();
+    $host = $request ? $request->getSchemeAndHttpHost() : '';
+
+    return $host . $path;
   }
 
   /**

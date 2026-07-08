@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Drupal\asu_application\Form;
 
+use Drupal\asu_api\Api\BackendApi\BackendApi;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -14,12 +16,15 @@ use Drupal\Core\Url;
 use Drupal\Component\Utility\Html;
 use Drupal\asu_application\ApplicationMessageManager;
 use Drupal\asu_application\Entity\Application;
+use Drupal\asu_application\Notification\SenderNameResolverTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Form for sending messages about an application to the salesperson.
  */
 final class ApplicationMessageForm extends FormBase {
+  use SenderNameResolverTrait;
 
   /**
    * The current application.
@@ -36,6 +41,9 @@ final class ApplicationMessageForm extends FormBase {
     private readonly MailManagerInterface $mailManager,
     private readonly DateFormatterInterface $dateFormatter,
     private readonly AccountProxyInterface $currentUser,
+    private readonly BackendApi $backendApi,
+    private readonly EntityTypeManagerInterface $entityTypeManager,
+    private readonly RequestStack $httpRequestStack,
   ) {
   }
 
@@ -48,6 +56,9 @@ final class ApplicationMessageForm extends FormBase {
       $container->get('plugin.manager.mail'),
       $container->get('date.formatter'),
       $container->get('current_user'),
+      $container->get('asu_api.backendapi'),
+      $container->get('entity_type.manager'),
+      $container->get('request_stack'),
     );
   }
 
@@ -198,14 +209,30 @@ final class ApplicationMessageForm extends FormBase {
         ['@id' => (string) $this->application->id()],
         ['langcode' => $recipientLangcode],
       );
+      $salesThreadUrl = $this->getSalesThreadUrl();
+      $senderName = $this->resolveSenderName();
       $lines = [
-        (string) $this->t('A customer sent a new message from the application service.', [], ['langcode' => $recipientLangcode]),
+        (string) $this->t('You have received a new message in the application service.', [], ['langcode' => $recipientLangcode]),
         '',
         (string) $this->t('Project: @project', ['@project' => $projectLabel !== '' ? $projectLabel : '-'], ['langcode' => $recipientLangcode]),
         (string) $this->t('Application ID: @id', ['@id' => (string) $this->application->id()], ['langcode' => $recipientLangcode]),
-        (string) $this->t('Message:', [], ['langcode' => $recipientLangcode]),
-        $body,
+        (string) $this->t('Sender: @name', ['@name' => $senderName], ['langcode' => $recipientLangcode]),
       ];
+      $lines = array_merge($lines, [
+        '',
+        (string) $this->t('Message content:', [], ['langcode' => $recipientLangcode]),
+        '',
+        $body,
+        '',
+      ]);
+
+      if ($salesThreadUrl !== '') {
+        $lines[] = (string) $this->t('Open chat: @url', ['@url' => $salesThreadUrl], ['langcode' => $recipientLangcode]);
+      }
+
+      $lines = array_merge($lines, [
+        (string) $this->t('This is an automated message. Please do not reply to this email.', [], ['langcode' => $recipientLangcode]),
+      ]);
 
       $this->mailManager->mail('asu_application', 'application_message_notification', $recipientMail, $recipientLangcode, [
         'subject' => $subject,
@@ -218,6 +245,44 @@ final class ApplicationMessageForm extends FormBase {
 
     $this->messenger()->addStatus($this->t('Your message has been sent.'));
     $form_state->setRedirect('asu_application.messages', ['asu_application' => $this->application->id()]);
+  }
+
+  /**
+   * Resolves sender name for email notifications.
+   */
+  private function resolveSenderName(): string {
+    return $this->resolveNotificationSenderName(
+      $this->currentUser,
+      $this->backendApi,
+      $this->entityTypeManager,
+      (string) $this->t('Customer'),
+    );
+  }
+
+  /**
+   * Builds absolute URL using configured public base URL when available.
+   */
+  private function buildAbsoluteUrl(string $path): string {
+    $baseUrl = getenv('ASU_ASUNTOTUOTANTO_URL');
+    if ($baseUrl) {
+      return rtrim($baseUrl, '/') . $path;
+    }
+
+    $request = $this->httpRequestStack->getCurrentRequest();
+    $host = $request ? $request->getSchemeAndHttpHost() : '';
+
+    return $host . $path;
+  }
+
+  /**
+   * Returns salesperson-facing message thread URL in Drupal.
+   */
+  private function getSalesThreadUrl(): string {
+    if (!$this->application) {
+      return '';
+    }
+
+    return $this->buildAbsoluteUrl('/application/' . $this->application->id() . '/messages');
   }
 
 }
