@@ -246,7 +246,16 @@ function template_preprocess_asu_application(array &$variables) {
     'contexts' => ['user', 'languages:language_interface'],
   ];
 
-  $variables['#attached']['drupalSettings']['asuApplicationOffer'] = [
+  $variables['#attached']['drupalSettings']['asuApplicationOffer'] = _asu_application_get_offer_drupal_settings();
+
+  $variables['content'] = $application_teaser_values;
+}
+
+/**
+ * Return translated offer UI strings for JavaScript.
+ */
+function _asu_application_get_offer_drupal_settings(): array {
+  return [
     'acceptOffer' => (string) t('Accept offer'),
     'rejectOffer' => (string) t('Reject offer'),
     'confirmAccept' => (string) t('Are you sure you want to accept this offer?'),
@@ -277,8 +286,6 @@ function template_preprocess_asu_application(array &$variables) {
       'valid_until' => (string) t('Offer valid until'),
     ],
   ];
-
-  $variables['content'] = $application_teaser_values;
 }
 
 /**
@@ -421,7 +428,10 @@ function asu_application_preprocess_asu_application(array &$variables) {
 function asu_application_preprocess_views_view(&$variables) {
   if ($variables['view']->id() == 'applications') {
     $variables['#attached']['library'][] = 'asu_application/application-submit';
+    $variables['#attached']['library'][] = 'asuntotuotanto/application-apartment-listing';
     $variables['#attached']['drupalSettings']['asuApplication']['hasExistingApplication'] = TRUE;
+    $variables['#attached']['drupalSettings']['asuApplicationOffer'] = _asu_application_get_offer_drupal_settings();
+    $variables['#cache']['contexts'][] = 'languages:language_interface';
   }
 }
 

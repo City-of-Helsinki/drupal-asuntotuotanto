@@ -1,2 +1,134 @@
 msgid "Thank you, Your application has been successfully sent."
 msgstr "Kiitos, Hakemuksesi on onnistuneesti lähetetty."
+
+msgid "Accept offer"
+msgstr "Hyväksy tarjous"
+
+msgid "Reject offer"
+msgstr "Hylkää tarjous"
+
+msgid "Are you sure you want to accept this offer?"
+msgstr "Haluatko varmasti hyväksyä tämän tarjouksen?"
+
+msgid "Are you sure you want to reject this offer?"
+msgstr "Haluatko varmasti hylätä tämän tarjouksen?"
+
+msgid "Offer status"
+msgstr "Tarjouksen tila"
+
+msgid "Offer valid until"
+msgstr "Viimeinen voimassaolopäivä"
+
+msgid "Show offer details"
+msgstr "Näytä tarjouksen tiedot"
+
+msgid "Hide offer details"
+msgstr "Piilota tarjouksen tiedot"
+
+msgid "Loading offer details…"
+msgstr "Ladataan tarjouksen tietoja…"
+
+msgid "Could not load offer details."
+msgstr "Tarjouksen tietoja ei voitu ladata."
+
+msgid "Project material bank"
+msgstr "Kohteen aineistopankki"
+
+msgid "Apartment page"
+msgstr "Asunnon sivu"
+
+msgid "Apartment"
+msgstr "Asunto"
+
+msgid "Apartment type"
+msgstr "Huoneistotyyppi"
+
+msgid "Living area"
+msgstr "Pinta-ala"
+
+msgid "Floor"
+msgstr "Kerros"
+
+msgid "Sales price"
+msgstr "Myyntihinta"
+
+msgid "Debt-free price"
+msgstr "Velaton hinta"
+
+msgid "Estimated maintenance fee"
+msgstr "Alustava vastike"
+
+msgid "Family with children"
+msgstr "Lapsiperhe"
+
+msgid "Estimated right of occupancy payment"
+msgstr "Alustava asumisoikeusmaksu"
+
+msgid "Estimated right of occupancy fee"
+msgstr "Alustava käyttövastike"
+
+msgid "Deposit"
+msgstr "Käyttövakuus"
+
+msgid "Right of residence number"
+msgstr "Asumisoikeusnumero"
+
+msgid "Over 55"
+msgstr "Yli 55v"
+
+msgid "Switching right of occupancy home"
+msgstr "Asumisoikeusasunnon vaihtaja"
+
+msgid "offered"
+msgstr "tarjottu"
+
+msgid "offer accepted"
+msgstr "Tarjous hyväksytty"
+
+msgid "pending"
+msgstr "voimassa"
+
+msgid "terminated"
+msgstr "päättynyt"
+
+msgid "canceled"
+msgstr "peruttu"
+
+msgid "submitted"
+msgstr "lähetetty"
+
+msgid "reserved"
+msgstr "varattu"
+
+msgid "accepted"
+msgstr "hyväksytty"
+
+msgid "rejected"
+msgstr "hylätty"
+
+msgid "Agreement terminated"
+msgstr "Sopimus purettu"
+
+msgid "Reservation canceled"
+msgstr "Varaus peruttu"
+
+msgid "Reservation agreement canceled"
+msgstr "Varaus peruttu"
+
+msgid "Reservation transferred"
+msgstr "Varaus siirretty"
+
+msgid "Higher priority apartment acquired"
+msgstr "Korkeamman prioriteetin asunto hankittu"
+
+msgid "Another apartment offered in the same project"
+msgstr "Muu asunto tarjottu samassa kohteessa"
+
+msgid "Offer rejected"
+msgstr "Tarjous hylätty"
+
+msgid "Cancelled by seller"
+msgstr "Myyjän peruuttama"
+
+msgid "Cancelled by system"
+msgstr "Järjestelmän peruuttama"
