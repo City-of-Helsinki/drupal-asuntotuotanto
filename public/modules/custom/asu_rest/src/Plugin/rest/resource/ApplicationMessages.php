@@ -145,13 +145,16 @@ final class ApplicationMessages extends ResourceBase {
       return new ModifiedResourceResponse(['message' => 'Invalid sender_role. Allowed values: sales, customer.'], 400, $this->getTestingHeaders());
     }
 
+    $salesperson = $senderRole === 'sales' ? $this->messageManager->resolveSalesperson($application) : NULL;
+    $salespersonUid = $salesperson ? (int) $salesperson->id() : NULL;
+
     $message = $this->messageManager->createMessage(
       $application_id,
       $this->messageManager->getProjectId($application),
       $body,
       $senderRole,
       $this->currentUser->isAuthenticated() ? (int) $this->currentUser->id() : NULL,
-      NULL,
+      $salespersonUid,
       (string) ($data['recipient_mail'] ?? ''),
     );
 
