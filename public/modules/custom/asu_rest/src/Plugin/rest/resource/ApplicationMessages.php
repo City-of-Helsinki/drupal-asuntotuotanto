@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Drupal\asu_rest\Plugin\rest\resource;
 
+use Drupal\asu_api\Api\BackendApi\BackendApi;
+use Drupal\asu_api\Api\BackendApi\Request\UserRequest;
 use Drupal\asu_application\ApplicationMessageManager;
 use Drupal\asu_application\Entity\Application;
 use Drupal\Core\Cache\CacheableMetadata;
@@ -12,6 +14,7 @@ use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\rest\ModifiedResourceResponse;
 use Drupal\rest\Plugin\ResourceBase;
 use Drupal\rest\ResourceResponse;
+use Drupal\user\Entity\User;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -43,6 +46,7 @@ final class ApplicationMessages extends ResourceBase {
     private readonly AccountProxyInterface $currentUser,
     private readonly RequestStack $requestStack,
     private readonly MailManagerInterface $mailManager,
+    private readonly BackendApi $backendApi,
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $serializer_formats, $logger);
   }
@@ -61,6 +65,7 @@ final class ApplicationMessages extends ResourceBase {
       $container->get('current_user'),
       $container->get('request_stack'),
       $container->get('plugin.manager.mail'),
+      $container->get('asu_api.backendapi'),
     );
   }
 
@@ -151,18 +156,32 @@ final class ApplicationMessages extends ResourceBase {
       $buyerMail = $this->resolveBuyerMail($application);
       if ($buyerMail !== '') {
         $buyerLangcode = $this->resolveBuyerLangcode($application);
+        $customerThreadUrl = $this->getCustomerThreadUrl($application_id);
+        $projectLabel = $this->messageManager->getProjectLabel($application);
+        $senderName = $this->resolveSenderName();
         $subject = (string) $this->t(
           'New reply about your application @id',
           ['@id' => (string) $application_id],
           ['langcode' => $buyerLangcode],
         );
         $lines = [
-          (string) $this->t('Sales agent replied to your message in the application service.', [], ['langcode' => $buyerLangcode]),
+          (string) $this->t('You have received a new message in the application service.', [], ['langcode' => $buyerLangcode]),
           '',
+          (string) $this->t('Project: @project', ['@project' => $projectLabel !== '' ? $projectLabel : '-'], ['langcode' => $buyerLangcode]),
           (string) $this->t('Application ID: @id', ['@id' => (string) $application_id], ['langcode' => $buyerLangcode]),
-          (string) $this->t('Message:', [], ['langcode' => $buyerLangcode]),
+          (string) $this->t('Sender: @name', ['@name' => $senderName], ['langcode' => $buyerLangcode]),
+          '',
+          (string) $this->t('Message content:', [], ['langcode' => $buyerLangcode]),
+          '',
           $body,
+          '',
         ];
+
+        if ($customerThreadUrl !== '') {
+          $lines[] = (string) $this->t('Open chat: @url', ['@url' => $customerThreadUrl], ['langcode' => $buyerLangcode]);
+        }
+
+        $lines[] = (string) $this->t('This is an automated message. Please do not reply to this email.', [], ['langcode' => $buyerLangcode]);
 
         $this->mailManager->mail('asu_application', 'application_message_notification', $buyerMail, $buyerLangcode, [
           'subject' => $subject,
@@ -225,6 +244,87 @@ final class ApplicationMessages extends ResourceBase {
     }
 
     return $owner->getPreferredLangcode() ?: 'fi';
+  }
+
+  /**
+   * Resolves sender name for notification emails.
+   */
+  private function resolveSenderName(): string {
+    if ($this->currentUser->isAuthenticated()) {
+      $user = User::load((int) $this->currentUser->id());
+      if ($user) {
+        $fullName = $this->buildFullName(
+          $user->hasField('first_name') && !$user->get('first_name')->isEmpty() ? (string) $user->get('first_name')->value : '',
+          $user->hasField('last_name') && !$user->get('last_name')->isEmpty() ? (string) $user->get('last_name')->value : '',
+        );
+
+        if ($fullName !== '') {
+          return $fullName;
+        }
+
+        try {
+          if ($user->hasField('field_backend_profile') && !$user->get('field_backend_profile')->isEmpty()) {
+            $request = new UserRequest($user);
+            $request->setSender($user);
+            $response = $this->backendApi->send($request);
+            $userInformation = $response->getUserInformation();
+
+            $backendFullName = $this->buildFullName(
+              (string) ($userInformation['first_name'] ?? ''),
+              (string) ($userInformation['last_name'] ?? ''),
+            );
+            if ($backendFullName !== '') {
+              return $backendFullName;
+            }
+          }
+        }
+        catch (\Exception $e) {
+          // Fallback continues below.
+        }
+
+        if ($user->hasField('field_full_name') && !$user->get('field_full_name')->isEmpty()) {
+          $storedFullName = trim((string) $user->get('field_full_name')->value);
+          if ($storedFullName !== '') {
+            return $storedFullName;
+          }
+        }
+
+        if ($user->getDisplayName() !== '') {
+          return $user->getDisplayName();
+        }
+      }
+    }
+
+    return $this->currentUser->getDisplayName() ?: (string) $this->t('Sales agent');
+  }
+
+  /**
+   * Builds a normalized full name from first and last name parts.
+   */
+  private function buildFullName(string $firstName, string $lastName): string {
+    return trim(trim($firstName) . ' ' . trim($lastName));
+  }
+
+  /**
+   * Builds customer-facing message thread URL.
+   */
+  private function getCustomerThreadUrl(int $applicationId): string {
+    return $this->buildAbsoluteUrl('/application/' . $applicationId . '/messages');
+  }
+
+  /**
+   * Builds an absolute URL using configured public base URL when available.
+   */
+  private function buildAbsoluteUrl(string $path): string {
+    $baseUrl = getenv('ASU_ASUNTOTUOTANTO_URL');
+    if ($baseUrl) {
+      return rtrim($baseUrl, '/') . $path;
+    }
+
+    $request = $this->requestStack->getCurrentRequest();
+    $host = $request ? $request->getSchemeAndHttpHost() : '';
+
+    return $host . $path;
   }
 
   /**
