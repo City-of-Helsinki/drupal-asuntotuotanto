@@ -43532,7 +43532,7 @@ msgid "Could not load offer details."
 msgstr "Tarjouksen tietoja ei voitu ladata."
 
 msgid "Project material bank"
-msgstr "Kohteen aineistopankki"
+msgstr "Kohteen materiaalipankki"
 
 msgid "Apartment page"
 msgstr "Asunnon sivu"
