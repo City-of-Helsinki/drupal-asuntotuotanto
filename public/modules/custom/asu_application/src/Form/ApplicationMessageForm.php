@@ -119,11 +119,9 @@ final class ApplicationMessageForm extends FormBase {
     }
     else {
       $items = [];
+      $senderNamesByUid = [];
       foreach ($thread as $message) {
-        $senderRole = (string) $message->get('sender_role')->value;
-        $senderLabel = $senderRole === 'sales'
-          ? (string) $this->t('Sales agent')
-          : (string) $this->t('You');
+        $senderLabel = $this->resolveMessageSenderName($message, $senderNamesByUid);
         $created = (int) ($message->get('created')->value ?? 0);
         $body = nl2br(Html::escape((string) $message->get('body')->value));
         $timestamp = $created > 0 ? $this->dateFormatter->format($created, 'custom', 'd.m.Y H:i') : '';
@@ -283,6 +281,42 @@ final class ApplicationMessageForm extends FormBase {
     }
 
     return $this->buildAbsoluteUrl('/application/' . $this->application->id() . '/messages');
+  }
+
+  /**
+   * Resolves display label for a thread message sender.
+   */
+  private function resolveMessageSenderName($message, array &$senderNamesByUid): string {
+    $senderRole = (string) $message->get('sender_role')->value;
+    $senderUid = $message->get('sender_uid')->isEmpty() ? 0 : (int) $message->get('sender_uid')->target_id;
+    $salespersonUid = $message->get('salesperson_uid')->isEmpty() ? 0 : (int) $message->get('salesperson_uid')->target_id;
+
+    if ($senderRole === 'sales' && $salespersonUid > 0) {
+      $senderUid = $salespersonUid;
+    }
+
+    if ($senderUid > 0) {
+      if (!array_key_exists($senderUid, $senderNamesByUid)) {
+        $sender = $this->entityTypeManager->getStorage('user')->load($senderUid);
+        $senderNamesByUid[$senderUid] = $sender && $sender->getDisplayName() !== ''
+          ? $sender->getDisplayName()
+          : '';
+      }
+
+      if ($senderNamesByUid[$senderUid] !== '') {
+        if ($senderRole === 'sales' && $senderNamesByUid[$senderUid] === 'rest_client' && $this->application) {
+          $salesperson = $this->messageManager->resolveSalesperson($this->application);
+          if ($salesperson && $salesperson->getDisplayName() !== '') {
+            return $salesperson->getDisplayName();
+          }
+        }
+        return $senderNamesByUid[$senderUid];
+      }
+    }
+
+    return $senderRole === 'sales'
+      ? (string) $this->t('Sales agent')
+      : (string) $this->t('Customer');
   }
 
 }
