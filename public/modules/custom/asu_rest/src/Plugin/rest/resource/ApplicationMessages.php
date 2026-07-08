@@ -5,16 +5,16 @@ declare(strict_types=1);
 namespace Drupal\asu_rest\Plugin\rest\resource;
 
 use Drupal\asu_api\Api\BackendApi\BackendApi;
-use Drupal\asu_api\Api\BackendApi\Request\UserRequest;
 use Drupal\asu_application\ApplicationMessageManager;
 use Drupal\asu_application\Entity\Application;
+use Drupal\asu_application\Notification\SenderNameResolverTrait;
 use Drupal\Core\Cache\CacheableMetadata;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Mail\MailManagerInterface;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\rest\ModifiedResourceResponse;
 use Drupal\rest\Plugin\ResourceBase;
 use Drupal\rest\ResourceResponse;
-use Drupal\user\Entity\User;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -32,6 +32,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
  * )
  */
 final class ApplicationMessages extends ResourceBase {
+  use SenderNameResolverTrait;
 
   /**
    * Constructs the resource.
@@ -47,6 +48,7 @@ final class ApplicationMessages extends ResourceBase {
     private readonly RequestStack $requestStack,
     private readonly MailManagerInterface $mailManager,
     private readonly BackendApi $backendApi,
+    private readonly EntityTypeManagerInterface $entityTypeManager,
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $serializer_formats, $logger);
   }
@@ -66,6 +68,7 @@ final class ApplicationMessages extends ResourceBase {
       $container->get('request_stack'),
       $container->get('plugin.manager.mail'),
       $container->get('asu_api.backendapi'),
+      $container->get('entity_type.manager'),
     );
   }
 
@@ -250,59 +253,12 @@ final class ApplicationMessages extends ResourceBase {
    * Resolves sender name for notification emails.
    */
   private function resolveSenderName(): string {
-    if ($this->currentUser->isAuthenticated()) {
-      $user = User::load((int) $this->currentUser->id());
-      if ($user) {
-        $fullName = $this->buildFullName(
-          $user->hasField('first_name') && !$user->get('first_name')->isEmpty() ? (string) $user->get('first_name')->value : '',
-          $user->hasField('last_name') && !$user->get('last_name')->isEmpty() ? (string) $user->get('last_name')->value : '',
-        );
-
-        if ($fullName !== '') {
-          return $fullName;
-        }
-
-        try {
-          if ($user->hasField('field_backend_profile') && !$user->get('field_backend_profile')->isEmpty()) {
-            $request = new UserRequest($user);
-            $request->setSender($user);
-            $response = $this->backendApi->send($request);
-            $userInformation = $response->getUserInformation();
-
-            $backendFullName = $this->buildFullName(
-              (string) ($userInformation['first_name'] ?? ''),
-              (string) ($userInformation['last_name'] ?? ''),
-            );
-            if ($backendFullName !== '') {
-              return $backendFullName;
-            }
-          }
-        }
-        catch (\Exception $e) {
-          // Fallback continues below.
-        }
-
-        if ($user->hasField('field_full_name') && !$user->get('field_full_name')->isEmpty()) {
-          $storedFullName = trim((string) $user->get('field_full_name')->value);
-          if ($storedFullName !== '') {
-            return $storedFullName;
-          }
-        }
-
-        if ($user->getDisplayName() !== '') {
-          return $user->getDisplayName();
-        }
-      }
-    }
-
-    return $this->currentUser->getDisplayName() ?: (string) $this->t('Sales agent');
-  }
-
-  /**
-   * Builds a normalized full name from first and last name parts.
-   */
-  private function buildFullName(string $firstName, string $lastName): string {
-    return trim(trim($firstName) . ' ' . trim($lastName));
+    return $this->resolveNotificationSenderName(
+      $this->currentUser,
+      $this->backendApi,
+      $this->entityTypeManager,
+      (string) $this->t('Sales agent'),
+    );
   }
 
   /**
