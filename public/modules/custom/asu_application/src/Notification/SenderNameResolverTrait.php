@@ -76,7 +76,18 @@ trait SenderNameResolverTrait {
    * Builds a normalized full name from first and last name parts.
    */
   private function buildFullName(string $firstName, string $lastName): string {
-    return trim(trim($firstName) . ' ' . trim($lastName));
+    $firstName = $this->normalizeNamePart($firstName);
+    $lastName = $this->normalizeNamePart($lastName);
+
+    return trim($firstName . ' ' . $lastName);
+  }
+
+  /**
+   * Normalizes a single name part and removes placeholder values.
+   */
+  private function normalizeNamePart(string $value): string {
+    $value = trim($value);
+    return $value === '-' ? '' : $value;
   }
 
 }
