@@ -773,22 +773,6 @@ final class SearchMapper {
   }
 
   /**
-   * Get URIs from a multi-value link field.
-   */
-  private function getLinkUrlsFromField(Node $entity, string $fieldName): array {
-    if (!$entity->hasField($fieldName) || $entity->get($fieldName)->isEmpty()) {
-      return [];
-    }
-    $urls = [];
-    foreach ($entity->get($fieldName)->getValue() as $item) {
-      if (!empty($item['uri'])) {
-        $urls[] = (string) $item['uri'];
-      }
-    }
-    return $urls;
-  }
-
-  /**
    * Get file URLs from a multi-value image field.
    */
   private function getFileUrlsFromField(Node $entity, string $fieldName): array {
