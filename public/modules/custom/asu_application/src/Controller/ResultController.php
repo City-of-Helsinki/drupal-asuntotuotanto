@@ -245,16 +245,52 @@ class ResultController extends ControllerBase {
       return NULL;
     }
     $offerState = $raw['state'] ?? NULL;
+    $validUntil = $raw['valid_until'] ?? NULL;
+    $isExpired = $this->resolveOfferIsExpired(
+      $raw['is_expired'] ?? NULL,
+      $offerState,
+      $validUntil,
+    );
+    $stateLabel = ($isExpired && $offerState === 'pending')
+      ? (string) $this->t('Offer expired')
+      : $this->translateResultValue($offerState);
+
     return [
       'id' => $raw['id'] ?? NULL,
       'created_at' => $raw['created_at'] ?? NULL,
-      'valid_until' => $raw['valid_until'] ?? NULL,
+      'valid_until' => $validUntil,
       'state' => $offerState,
-      'state_label' => $this->translateResultValue($offerState),
+      'state_label' => $stateLabel,
       'concluded_at' => $raw['concluded_at'] ?? NULL,
       'comment' => $raw['comment'] ?? NULL,
-      'is_expired' => $raw['is_expired'] ?? NULL,
+      'is_expired' => $isExpired,
     ];
+  }
+
+  /**
+   * Resolve whether a pending offer has passed its valid until date.
+   */
+  private function resolveOfferIsExpired(
+    mixed $isExpired,
+    ?string $offerState,
+    mixed $validUntil,
+  ): bool {
+    if ($isExpired === TRUE || $isExpired === 1 || $isExpired === '1') {
+      return TRUE;
+    }
+    if ($offerState !== 'pending' || empty($validUntil)) {
+      return FALSE;
+    }
+
+    try {
+      $validUntilDate = new \DateTimeImmutable((string) $validUntil);
+      $today = new \DateTimeImmutable('today');
+    }
+    catch (\Exception) {
+      return FALSE;
+    }
+
+    return $validUntilDate < $today;
   }
 
   /**

@@ -9,6 +9,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Entity\TranslatableInterface;
+use Drupal\Core\Url;
 use Drupal\taxonomy\TermInterface;
 use Drupal\Core\Field\EntityReferenceFieldItemListInterface;
 use Drupal\Core\File\FileUrlGeneratorInterface;
@@ -285,6 +286,7 @@ final class SearchMapper {
       'project_state_of_sale' => $this->getEnumFromTermField($project, 'field_state_of_sale'),
       'project_street_address' => $this->getScalar($project, 'field_street_address'),
       'project_upcoming_description' => $this->getScalar($project, 'field_upcoming_description'),
+      'project_attachment_urls' => $this->getLinkUrlsFromField($project, 'field_attachments_url'),
       'project_url' => $this->nodeUrl($project),
       'project_uuid' => $project->uuid(),
       'project_postal_code' => $this->getScalar($project, 'field_postal_code'),
@@ -919,14 +921,52 @@ final class SearchMapper {
    * when requests arrive via proxy or internal routing.
    */
   private function nodeUrl(Node $node): string {
+    return $this->absolutePathUrl($node->toUrl()->toString());
+  }
+
+  /**
+   * Get absolute URLs from a multi-value link field.
+   */
+  private function getLinkUrlsFromField(Node $entity, string $fieldName): array {
+    if (!$entity->hasField($fieldName) || $entity->get($fieldName)->isEmpty()) {
+      return [];
+    }
+
+    $urls = [];
+    foreach ($entity->get($fieldName)->getValue() as $item) {
+      $uri = (string) ($item['uri'] ?? '');
+      if ($uri === '') {
+        continue;
+      }
+
+      try {
+        $urls[] = $this->absolutePathUrl(Url::fromUri($uri)->toString());
+      }
+      catch (\Exception) {
+        continue;
+      }
+    }
+
+    return $urls;
+  }
+
+  /**
+   * Build an absolute URL from a path or already-absolute URL.
+   */
+  private function absolutePathUrl(string $path): string {
+    if (preg_match('#^https?://#', $path)) {
+      return $path;
+    }
+
     $baseUrl = getenv('ASU_ASUNTOTUOTANTO_URL');
     if ($baseUrl) {
-      return rtrim($baseUrl, '/') . $node->toUrl()->toString();
+      return rtrim($baseUrl, '/') . $path;
     }
+
     $request = $this->requestStack->getCurrentRequest();
     $host = $request ? $request->getSchemeAndHttpHost() : '';
 
-    return $host . $node->toUrl()->toString();
+    return $host . $path;
   }
 
 }
