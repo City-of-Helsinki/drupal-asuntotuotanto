@@ -110,6 +110,40 @@ function asuntotuotanto_preprocess_page(array &$variables) : void {
 function asuntotuotanto_preprocess_menu(&$variables) {
   $menu_name = $variables['menu_name'];
 
+  if ($menu_name === 'footer-secondary') {
+    $default_privacy_url = 'https://www.hel.fi/fi/paatoksenteko-ja-hallinto/tietoa-helsingista/tietosuoja-ja-tiedonhallinta/tietosuoja';
+    $hitas_privacy_url = 'https://www.hel.fi/static/liitteet-2019/Kaupunginkanslia/Rekisteriselosteet/Kymp/Helsingin%20kaupungin%20Asuntotuotannon%20Hitas-asuntojen%20hakemisen%20tietosuojaseloste.pdf';
+    $haso_privacy_url = 'https://www.hel.fi/static/liitteet-2019/Kaupunginkanslia/Rekisteriselosteet/Kymp/Helsingin%20kaupungin%20Asuntotuotannon%20asumisoikeusasuntojen%20hakemisen%20tietosuojaseloste.pdf';
+
+    $current_path = strtolower(
+      \Drupal::service('path.current')->getPath()
+    );
+
+    $target_privacy_url = $default_privacy_url;
+    if (str_contains($current_path, '/hitas')) {
+      $target_privacy_url = $hitas_privacy_url;
+    }
+    elseif (str_contains($current_path, '/haso')) {
+      $target_privacy_url = $haso_privacy_url;
+    }
+
+    foreach ($variables['items'] as $key => $item) {
+      if (empty($item['url']) || !$item['url'] instanceof Url || !$item['url']->isExternal()) {
+        continue;
+      }
+
+      $item_url = rtrim($item['url']->toString(), '/');
+      $normalized_default_url = rtrim($default_privacy_url, '/');
+
+      if ($item_url === $normalized_default_url) {
+        $variables['items'][$key]['url'] = Url::fromUri($target_privacy_url);
+      }
+    }
+
+    // Ensure different sections (hitas/haso/other) get their own cached menu.
+    $variables['#cache']['contexts'][] = 'url.path';
+  }
+
   switch ($menu_name) {
     case 'main':
       $menu_block_configuration_suggestion = $variables['menu_block_configuration']['suggestion'];
