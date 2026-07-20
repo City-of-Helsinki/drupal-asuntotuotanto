@@ -124,7 +124,22 @@ class OfferNotificationService {
       TRUE,
     );
 
-    return !empty($result['result']);
+    return $this->wasMailSentSuccessfully($result);
+  }
+
+  /**
+   * Determine whether mail delivery should be treated as successful.
+   *
+   * In local dev, asu_content_mail_alter logs outgoing mail and blocks send,
+   * which makes the mail plugin report failure even though the message was
+   * generated correctly.
+   */
+  private function wasMailSentSuccessfully(array $result): bool {
+    if (!empty($result['result'])) {
+      return TRUE;
+    }
+
+    return getenv('APP_ENV') === 'dev';
   }
 
   /**
