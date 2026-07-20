@@ -18,9 +18,9 @@ use Drupal\Tests\UnitTestCase;
 final class OfferMessageServiceTest extends UnitTestCase {
 
   /**
-   * Processes messages and marks them sent only after successful mail.
+   * Sends claimed pending messages without calling mark again.
    */
-  public function testProcessesMessagesAndMarksSent(): void {
+  public function testProcessesClaimedMessagesWithoutRemaking(): void {
     $notification = $this->createMock(OfferNotificationService::class);
     $notification->expects($this->exactly(2))
       ->method('sendOfferCreatedNotification')
@@ -41,31 +41,27 @@ final class OfferMessageServiceTest extends UnitTestCase {
       });
 
     $backend = $this->createMock(BackendApi::class);
-    $backend->expects($this->exactly(3))
+    $backend->expects($this->once())
       ->method('send')
-      ->willReturnOnConsecutiveCalls(
-        new PendingOfferMessagesResponse([
-          [
-            'id' => 1,
-            'subject' => 'Tarjous As Oy 1',
-            'body' => 'Offer body one',
-            'recipients' => [
-              ['name' => 'A', 'email' => 'a@example.com'],
-            ],
+      ->willReturn(new PendingOfferMessagesResponse([
+        [
+          'id' => 1,
+          'subject' => 'Tarjous As Oy 1',
+          'body' => 'Offer body one',
+          'recipients' => [
+            ['name' => 'A', 'email' => 'a@example.com'],
           ],
-          [
-            'id' => 2,
-            'subject' => 'Tarjous As Oy 2',
-            'body' => 'Offer body two',
-            'recipients' => [
-              ['name' => 'B', 'email' => 'b@example.com'],
-              ['name' => 'C', 'email' => 'c@example.com'],
-            ],
+        ],
+        [
+          'id' => 2,
+          'subject' => 'Tarjous As Oy 2',
+          'body' => 'Offer body two',
+          'recipients' => [
+            ['name' => 'B', 'email' => 'b@example.com'],
+            ['name' => 'C', 'email' => 'c@example.com'],
           ],
-        ]),
-        new MarkOfferMessageSentResponse(['id' => 1]),
-        new MarkOfferMessageSentResponse(['id' => 2]),
-      );
+        ],
+      ]));
 
     $service = new OfferMessageService(
       $backend,
@@ -77,9 +73,9 @@ final class OfferMessageServiceTest extends UnitTestCase {
   }
 
   /**
-   * Does not mark sent when mail delivery fails.
+   * Logs mail failure after Django has already claimed the offer.
    */
-  public function testDoesNotMarkSentWhenMailFails(): void {
+  public function testLogsErrorWhenMailFailsAfterClaim(): void {
     $notification = $this->createMock(OfferNotificationService::class);
     $notification->expects($this->once())
       ->method('sendOfferCreatedNotification')
@@ -101,6 +97,41 @@ final class OfferMessageServiceTest extends UnitTestCase {
 
     $logger = $this->createMock(LoggerChannelInterface::class);
     $logger->expects($this->once())->method('error');
+
+    $service = new OfferMessageService(
+      $backend,
+      $notification,
+      $logger,
+    );
+
+    $service->processDueMessages();
+  }
+
+  /**
+   * Marks incomplete payloads as sent so cron does not retry forever.
+   */
+  public function testMarksSentWhenSkippingIncompleteMessage(): void {
+    $notification = $this->createMock(OfferNotificationService::class);
+    $notification->expects($this->never())
+      ->method('sendOfferCreatedNotification');
+
+    $backend = $this->createMock(BackendApi::class);
+    $backend->expects($this->exactly(2))
+      ->method('send')
+      ->willReturnOnConsecutiveCalls(
+        new PendingOfferMessagesResponse([
+          [
+            'id' => 1,
+            'subject' => 'Tarjous As Oy 1',
+            'body' => 'Offer body one',
+            'recipients' => [],
+          ],
+        ]),
+        new MarkOfferMessageSentResponse(['id' => 1]),
+      );
+
+    $logger = $this->createMock(LoggerChannelInterface::class);
+    $logger->expects($this->once())->method('warning');
 
     $service = new OfferMessageService(
       $backend,

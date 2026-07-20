@@ -9,6 +9,10 @@ use Drupal\Core\Logger\LoggerChannelInterface;
 
 /**
  * Polls Django for pending offer emails and sends them to customers.
+ *
+ * Django claims offers when listing pending messages, so this service only
+ * delivers mail for returned items. Incomplete payloads are marked sent so
+ * cron does not retry them forever.
  */
 class OfferMessageService {
 
@@ -55,6 +59,9 @@ class OfferMessageService {
         'Skipping offer message @id: missing subject, body, or recipients.',
         ['@id' => $offerId]
       );
+      if ($offerId > 0) {
+        $this->markMessageSent($offerId);
+      }
       return;
     }
 
@@ -66,16 +73,29 @@ class OfferMessageService {
       );
       if (!$sent) {
         $this->logger->error(
-          'Offer message mail failed for offer @id; will retry on next cron.',
+          'Offer message mail failed for offer @id after claim; will not retry automatically.',
           ['@id' => $offerId]
         );
-        return;
       }
-      $this->backendApi->send(new MarkOfferMessageSentRequest($offerId));
     }
     catch (\Exception $exception) {
       $this->logger->error(
         'Failed offer message for offer @id: @message',
+        ['@id' => $offerId, '@message' => $exception->getMessage()]
+      );
+    }
+  }
+
+  /**
+   * Mark an incomplete offer message as sent in Django.
+   */
+  private function markMessageSent(int $offerId): void {
+    try {
+      $this->backendApi->send(new MarkOfferMessageSentRequest($offerId));
+    }
+    catch (\Exception $exception) {
+      $this->logger->error(
+        'Failed to mark incomplete offer message @id as sent: @message',
         ['@id' => $offerId, '@message' => $exception->getMessage()]
       );
     }
