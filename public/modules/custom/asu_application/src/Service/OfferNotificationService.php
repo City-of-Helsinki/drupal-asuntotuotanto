@@ -93,6 +93,36 @@ class OfferNotificationService {
   }
 
   /**
+   * Send the initial offer email to customer recipients.
+   */
+  public function sendOfferCreatedNotification(
+    string $recipients,
+    string $subject,
+    string $body,
+  ): void {
+    if ($recipients === '') {
+      $this->logger->warning(
+        'Skipped offer_created_notification: no recipient emails.'
+      );
+      return;
+    }
+
+    $langcode = $this->languageManager->getDefaultLanguage()->getId();
+    $this->mailManager->mail(
+      'asu_application',
+      'offer_created_notification',
+      $recipients,
+      $langcode,
+      [
+        'subject' => $subject,
+        'body' => $body,
+      ],
+      NULL,
+      TRUE,
+    );
+  }
+
+  /**
    * Send a salesperson notification email.
    */
   private function sendNotification(

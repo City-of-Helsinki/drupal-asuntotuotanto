@@ -359,6 +359,15 @@ function asu_application_cron() {
     );
   }
 
+  try {
+    \Drupal::service('asu_application.offer_message')->processDueMessages();
+  }
+  catch (\Exception $e) {
+    \Drupal::logger('asu_application_cron')->critical(
+      'Unable to process offer messages: ' . $e->getMessage()
+    );
+  }
+
 }
 
 /**
@@ -416,6 +425,16 @@ function asu_application_mail(string $key, array &$message, array $params) {
       ];
       $body = (string) \Drupal::service('renderer')->renderPlain($build);
       $message['body'][] = OfferMailTestLabel::prefixBody($body);
+      break;
+
+    case 'offer_created_notification':
+      $message['from'] = \Drupal::config('system.site')->get('mail');
+      $message['subject'] = OfferMailTestLabel::prefixSubject(
+        $params['subject'] ?? ''
+      );
+      $message['body'][] = OfferMailTestLabel::prefixBody(
+        (string) ($params['body'] ?? '')
+      );
       break;
   }
 }
