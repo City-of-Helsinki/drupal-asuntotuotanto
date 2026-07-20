@@ -6,14 +6,11 @@ use Drupal\asu_api\Api\BackendApi\BackendApi;
 use Drupal\asu_api\Api\BackendApi\Request\MarkOfferMessageSentRequest;
 use Drupal\asu_api\Api\BackendApi\Request\PendingOfferMessagesRequest;
 use Drupal\Core\Logger\LoggerChannelInterface;
-use Drupal\Core\State\StateInterface;
 
 /**
  * Polls Django for pending offer emails and sends them to customers.
  */
 class OfferMessageService {
-
-  public const STATE_KEY_LAST_RUN = 'asu_application.offer_messages.last_run_date';
 
   /**
    * Constructor.
@@ -21,19 +18,13 @@ class OfferMessageService {
   public function __construct(
     private readonly BackendApi $backendApi,
     private readonly OfferNotificationService $offerNotification,
-    private readonly StateInterface $state,
     private readonly LoggerChannelInterface $logger,
   ) {}
 
   /**
-   * Process pending offer messages if not already run today.
+   * Process pending offer messages on every cron run.
    */
   public function processDueMessages(): void {
-    $today = date('Y-m-d');
-    if ($this->state->get(self::STATE_KEY_LAST_RUN) === $today) {
-      return;
-    }
-
     try {
       $response = $this->backendApi->send(new PendingOfferMessagesRequest());
       $messages = $response?->getContent() ?? [];
@@ -49,8 +40,6 @@ class OfferMessageService {
     foreach ($messages as $message) {
       $this->processSingleMessage($message);
     }
-
-    $this->state->set(self::STATE_KEY_LAST_RUN, $today);
   }
 
   /**
@@ -70,11 +59,18 @@ class OfferMessageService {
     }
 
     try {
-      $this->offerNotification->sendOfferCreatedNotification(
+      $sent = $this->offerNotification->sendOfferCreatedNotification(
         $recipients,
         $subject,
         $body,
       );
+      if (!$sent) {
+        $this->logger->error(
+          'Offer message mail failed for offer @id; will retry on next cron.',
+          ['@id' => $offerId]
+        );
+        return;
+      }
       $this->backendApi->send(new MarkOfferMessageSentRequest($offerId));
     }
     catch (\Exception $exception) {

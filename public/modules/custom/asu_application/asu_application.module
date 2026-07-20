@@ -429,6 +429,7 @@ function asu_application_mail(string $key, array &$message, array $params) {
 
     case 'offer_created_notification':
       $message['from'] = \Drupal::config('system.site')->get('mail');
+      $message['headers']['Content-Type'] = 'text/plain; charset=UTF-8';
       $message['subject'] = OfferMailTestLabel::prefixSubject(
         $params['subject'] ?? ''
       );

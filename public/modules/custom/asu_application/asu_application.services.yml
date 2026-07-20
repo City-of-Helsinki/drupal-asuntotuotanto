@@ -47,5 +47,4 @@ services:
     arguments:
       - '@asu_api.backendapi'
       - '@asu_application.offer_notification'
-      - '@state'
       - '@logger.channel.asu_application'

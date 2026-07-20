@@ -8,7 +8,6 @@ use Drupal\asu_api\Api\BackendApi\Response\PendingOfferMessagesResponse;
 use Drupal\asu_application\Service\OfferMessageService;
 use Drupal\asu_application\Service\OfferNotificationService;
 use Drupal\Core\Logger\LoggerChannelInterface;
-use Drupal\Core\State\StateInterface;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -19,47 +18,27 @@ use Drupal\Tests\UnitTestCase;
 final class OfferMessageServiceTest extends UnitTestCase {
 
   /**
-   * Daily throttle prevents a second run on the same day.
-   */
-  public function testDailyThrottleSkipsSecondRun(): void {
-    $state = $this->createMock(StateInterface::class);
-    $state->expects($this->once())
-      ->method('get')
-      ->with(OfferMessageService::STATE_KEY_LAST_RUN)
-      ->willReturn(date('Y-m-d'));
-
-    $backend = $this->createMock(BackendApi::class);
-    $backend->expects($this->never())->method('send');
-
-    $service = new OfferMessageService(
-      $backend,
-      $this->createMock(OfferNotificationService::class),
-      $state,
-      $this->createMock(LoggerChannelInterface::class),
-    );
-
-    $service->processDueMessages();
-  }
-
-  /**
-   * Processes messages and marks them sent in Django.
+   * Processes messages and marks them sent only after successful mail.
    */
   public function testProcessesMessagesAndMarksSent(): void {
-    $state = $this->createMock(StateInterface::class);
-    $state->expects($this->once())->method('get')->willReturn('2000-01-01');
-    $state->expects($this->once())->method('set')->with(
-      OfferMessageService::STATE_KEY_LAST_RUN,
-      date('Y-m-d')
-    );
-
     $notification = $this->createMock(OfferNotificationService::class);
     $notification->expects($this->exactly(2))
       ->method('sendOfferCreatedNotification')
-      ->with(
-        $this->logicalOr('a@example.com', 'b@example.com,c@example.com'),
-        $this->isType('string'),
-        $this->isType('string'),
-      );
+      ->willReturnCallback(function (string $recipients, string $subject, string $body): bool {
+        static $call = 0;
+        $call++;
+        if ($call === 1) {
+          $this->assertSame('a@example.com', $recipients);
+          $this->assertSame('Tarjous As Oy 1', $subject);
+          $this->assertSame('Offer body one', $body);
+        }
+        else {
+          $this->assertSame('b@example.com,c@example.com', $recipients);
+          $this->assertSame('Tarjous As Oy 2', $subject);
+          $this->assertSame('Offer body two', $body);
+        }
+        return TRUE;
+      });
 
     $backend = $this->createMock(BackendApi::class);
     $backend->expects($this->exactly(3))
@@ -91,8 +70,42 @@ final class OfferMessageServiceTest extends UnitTestCase {
     $service = new OfferMessageService(
       $backend,
       $notification,
-      $state,
       $this->createMock(LoggerChannelInterface::class),
+    );
+
+    $service->processDueMessages();
+  }
+
+  /**
+   * Does not mark sent when mail delivery fails.
+   */
+  public function testDoesNotMarkSentWhenMailFails(): void {
+    $notification = $this->createMock(OfferNotificationService::class);
+    $notification->expects($this->once())
+      ->method('sendOfferCreatedNotification')
+      ->willReturn(FALSE);
+
+    $backend = $this->createMock(BackendApi::class);
+    $backend->expects($this->once())
+      ->method('send')
+      ->willReturn(new PendingOfferMessagesResponse([
+        [
+          'id' => 1,
+          'subject' => 'Tarjous As Oy 1',
+          'body' => 'Offer body one',
+          'recipients' => [
+            ['name' => 'A', 'email' => 'a@example.com'],
+          ],
+        ],
+      ]));
+
+    $logger = $this->createMock(LoggerChannelInterface::class);
+    $logger->expects($this->once())->method('error');
+
+    $service = new OfferMessageService(
+      $backend,
+      $notification,
+      $logger,
     );
 
     $service->processDueMessages();

@@ -94,21 +94,24 @@ class OfferNotificationService {
 
   /**
    * Send the initial offer email to customer recipients.
+   *
+   * @return bool
+   *   TRUE when the mail plugin reported a successful send.
    */
   public function sendOfferCreatedNotification(
     string $recipients,
     string $subject,
     string $body,
-  ): void {
+  ): bool {
     if ($recipients === '') {
       $this->logger->warning(
         'Skipped offer_created_notification: no recipient emails.'
       );
-      return;
+      return FALSE;
     }
 
     $langcode = $this->languageManager->getDefaultLanguage()->getId();
-    $this->mailManager->mail(
+    $result = $this->mailManager->mail(
       'asu_application',
       'offer_created_notification',
       $recipients,
@@ -120,6 +123,8 @@ class OfferNotificationService {
       NULL,
       TRUE,
     );
+
+    return !empty($result['result']);
   }
 
   /**
