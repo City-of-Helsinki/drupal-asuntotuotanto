@@ -41,3 +41,10 @@ services:
       - '@entity.repository'
       - '@state'
       - '@logger.channel.asu_application'
+
+  asu_application.offer_message:
+    class: Drupal\asu_application\Service\OfferMessageService
+    arguments:
+      - '@asu_api.backendapi'
+      - '@asu_application.offer_notification'
+      - '@logger.channel.asu_application'
