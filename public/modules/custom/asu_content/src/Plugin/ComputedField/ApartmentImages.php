@@ -49,57 +49,85 @@ class ApartmentImages extends FieldItemList {
   }
 
   /**
-   * Combine Project shared apartment images and images.
+   * Combine project shared images, apartment images and floorplan once.
    *
-   * @return mixed
-   *   Returns the computed value.
-   *
-   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
-   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
-   */
-
-  /**
-   * Protected function singleComputeValue().
+   * Order matches SearchMapper: floorplan, shared project images, apartment
+   * images. Images are deduplicated by file target_id so repeated reverse
+   * project references cannot multiply URLs in Search API / export feeds.
    */
   protected function computeValue() {
     $current_entity = $this->getEntity();
     $reverse_references = $this->reverseEntities->getReverseReferences($current_entity);
 
-    $images = [];
-
+    $shared = [];
+    $seen_projects = [];
     foreach ($reverse_references as $reference) {
       if (
-        !empty($reference) &&
-        $reference['referring_entity'] instanceof Node
+        empty($reference) ||
+        !($reference['referring_entity'] instanceof Node)
       ) {
-        $referencing_node = $reference['referring_entity'];
-        // Add shared images from project.
-        if (!$referencing_node->field_shared_apartment_images->isEmpty()) {
-          $images = array_merge($images, $referencing_node->field_shared_apartment_images->getValue());
-        }
-      }
-      // Add images from apartment.
-      if (!$current_entity->field_images->isEmpty()) {
-        $images = array_merge($images, $current_entity->field_images->getValue());
-      }
-      // Floorplan should be the first item in images array.
-      if (!$current_entity->field_floorplan->isEmpty()) {
-        $images = array_merge($current_entity->field_floorplan->getValue(), $images);
+        continue;
       }
 
-      foreach ($images as $delta => $image) {
-        if (!isset($image['target_id'])) {
-          continue;
-        }
+      $referencing_node = $reference['referring_entity'];
+      $project_id = $referencing_node->id();
+      if (isset($seen_projects[$project_id])) {
+        continue;
+      }
+      $seen_projects[$project_id] = TRUE;
 
-        if ($file = File::load($image['target_id'])) {
-          $style = ImageStyle::load('3_2_m');
-          $image_url = $style->buildUrl($file->getFileUri());
-          $this->list[$delta] = $this->createItem($delta, $image_url);
-        }
+      if (
+        $referencing_node->hasField('field_shared_apartment_images') &&
+        !$referencing_node->get('field_shared_apartment_images')->isEmpty()
+      ) {
+        $shared = array_merge(
+          $shared,
+          $referencing_node->get('field_shared_apartment_images')->getValue()
+        );
       }
     }
 
+    $apartment_images = [];
+    if (
+      $current_entity->hasField('field_images') &&
+      !$current_entity->get('field_images')->isEmpty()
+    ) {
+      $apartment_images = $current_entity->get('field_images')->getValue();
+    }
+
+    $floorplan = [];
+    if (
+      $current_entity->hasField('field_floorplan') &&
+      !$current_entity->get('field_floorplan')->isEmpty()
+    ) {
+      $floorplan = $current_entity->get('field_floorplan')->getValue();
+    }
+
+    $images = array_merge($floorplan, $shared, $apartment_images);
+    $style = ImageStyle::load('3_2_m');
+    if (!$style) {
+      return;
+    }
+
+    $seen_target_ids = [];
+    $delta = 0;
+    foreach ($images as $image) {
+      if (!isset($image['target_id'])) {
+        continue;
+      }
+
+      $target_id = (int) $image['target_id'];
+      if (isset($seen_target_ids[$target_id])) {
+        continue;
+      }
+      $seen_target_ids[$target_id] = TRUE;
+
+      if ($file = File::load($target_id)) {
+        $image_url = $style->buildUrl($file->getFileUri());
+        $this->list[$delta] = $this->createItem($delta, $image_url);
+        $delta++;
+      }
+    }
   }
 
 }
