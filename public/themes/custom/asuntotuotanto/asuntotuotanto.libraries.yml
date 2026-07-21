@@ -3,7 +3,7 @@ application-form-actions:
     dist/js/applicationFormActions.min.js: {}
 
 application-apartment-listing:
-  version: 1.3.0
+  version: 1.3.2
   js:
     dist/js/applicationApartmentListing.min.js: {}
   dependencies:
@@ -49,7 +49,7 @@ faq:
     dist/js/faq.min.js: {}
 
 global-styling:
-  version: 1.x
+  version: 1.0.1
   css:
     theme:
       dist/css/asuntotuotanto-icons.css: {}

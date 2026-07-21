@@ -100,7 +100,67 @@
           && !isOfferExpired(apartmentResult);
       };
 
+      const getOffersSectionElements = () => {
+        return {
+          section: document.querySelector('#application-offers-section'),
+          loading: document.querySelector('#application-offers-loading'),
+          confirmation: document.querySelector('#application-offers-confirmation'),
+          table: document.querySelector('#application-offers-table'),
+          list: document.querySelector('#application-offers-list'),
+          empty: document.querySelector('#application-offers-empty'),
+        };
+      };
+
+      const setElementVisible = (element, visible) => {
+        if (!element) {
+          return;
+        }
+        element.classList.toggle('is-hidden', !visible);
+        element.setAttribute('aria-hidden', visible ? 'false' : 'true');
+      };
+
+      const showOffersLoading = () => {
+        const { section, loading, table, list, empty } = getOffersSectionElements();
+        setElementVisible(loading, true);
+        setElementVisible(empty, false);
+        setElementVisible(table, false);
+        setElementVisible(list, false);
+        if (section) {
+          section.setAttribute('aria-busy', 'true');
+        }
+      };
+
+      const hideOffersLoading = () => {
+        const { section, loading } = getOffersSectionElements();
+        setElementVisible(loading, false);
+        if (section) {
+          section.removeAttribute('aria-busy');
+        }
+      };
+
+      const showOfferConfirmation = (message, isError = false) => {
+        const { confirmation } = getOffersSectionElements();
+        if (!confirmation) {
+          return;
+        }
+        const textEl = confirmation.querySelector('.application-offers__confirmation-text');
+        if (textEl) {
+          textEl.textContent = message;
+        }
+        confirmation.classList.toggle('application-offers__confirmation--error', isError);
+        confirmation.classList.toggle('application-offers__confirmation--success', !isError);
+        setElementVisible(confirmation, true);
+        confirmation.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      };
+
+      const setOfferActionButtonsDisabled = (offerId, disabled) => {
+        document.querySelectorAll(`[data-offer-id="${offerId}"] .offer-actions .hds-button`).forEach((button) => {
+          button.disabled = disabled;
+        });
+      };
+
       const submitOfferAction = (offerId, action, applicationId, apartmentResult) => {
+        setOfferActionButtonsDisabled(offerId, true);
         jQuery.ajax({
           url: `${getBaseUrl()}user/offer/${offerId}/${action}`,
           method: 'POST',
@@ -108,27 +168,46 @@
           data: {
             application_id: applicationId,
           },
-          success: function(response) {
+        })
+          .done(function(response) {
             if (response && response.success) {
+              const reservationStatusLabel = action === 'accept'
+                ? (offerStrings.offerAcceptedStatus || 'offer accepted')
+                : (offerStrings.offerRejectedStatus || 'Offer rejected');
               apartmentResult.state = action === 'accept' ? 'offer_accepted' : 'canceled';
+              apartmentResult.status = reservationStatusLabel;
               if (apartmentResult.offer) {
                 apartmentResult.offer.state = action === 'accept' ? 'accepted' : 'rejected';
-                apartmentResult.offer.state_label = action === 'accept' ? 'accepted' : 'rejected';
+                apartmentResult.offer.state_label = action === 'accept'
+                  ? (offerStrings.acceptedLabel || 'accepted')
+                  : (offerStrings.rejectedLabel || 'rejected');
               }
               getResultRows(apartmentResult).forEach(function(result_row) {
-                jQuery(result_row).find('.status').first().html(
-                  apartmentResult.status ? apartmentResult.status.replace(/_/g, ' ') : '-'
-                );
+                jQuery(result_row).find('.status').first().html(reservationStatusLabel);
                 jQuery(result_row).find('.offer-status').first().html(resolveOfferStatus(apartmentResult));
-                const actions = result_row.querySelector('.offer-actions');
-                if (actions) {
-                  actions.innerHTML = '';
-                }
               });
+              offersState.render();
+              showOfferConfirmation(
+                action === 'accept'
+                  ? (offerStrings.offerAcceptedConfirmation || 'You have accepted this offer.')
+                  : (offerStrings.offerRejectedConfirmation || 'You have rejected this offer.')
+              );
               jQuery(`.application__lottery-link--toggle[data-application="${applicationId}"]`).data('loaded', 0);
+              return;
             }
-          },
-        });
+            setOfferActionButtonsDisabled(offerId, false);
+            showOfferConfirmation(
+              offerStrings.offerActionError || 'Could not update the offer. Please try again.',
+              true
+            );
+          })
+          .fail(function() {
+            setOfferActionButtonsDisabled(offerId, false);
+            showOfferConfirmation(
+              offerStrings.offerActionError || 'Could not update the offer. Please try again.',
+              true
+            );
+          });
       };
 
       const getBaseUrl = () => {
@@ -572,11 +651,9 @@
 
           const offers = Array.from(offersByApartmentUuid.values());
           if (!offers.length) {
-            table.classList.add('is-hidden');
-            table.setAttribute('aria-hidden', 'true');
-            list.classList.add('is-hidden');
-            list.setAttribute('aria-hidden', 'true');
-            empty.classList.remove('is-hidden');
+            setElementVisible(table, false);
+            setElementVisible(list, false);
+            setElementVisible(empty, true);
             return;
           }
 
@@ -703,11 +780,9 @@
             list.appendChild(li);
           });
 
-          empty.classList.add('is-hidden');
-          table.classList.remove('is-hidden');
-          table.setAttribute('aria-hidden', 'false');
-          list.classList.remove('is-hidden');
-          list.setAttribute('aria-hidden', 'false');
+          setElementVisible(empty, false);
+          setElementVisible(table, true);
+          setElementVisible(list, true);
         };
 
         return { updateFromResults, render };
@@ -720,9 +795,12 @@
 
         const applicationArticles = Array.from(document.querySelectorAll('article[data-application]'));
         if (!applicationArticles.length) {
+          hideOffersLoading();
           offersState.render();
           return;
         }
+
+        showOffersLoading();
 
         let pending = applicationArticles.length;
         applicationArticles.forEach((article) => {
@@ -730,6 +808,7 @@
           if (!id) {
             pending -= 1;
             if (pending === 0) {
+              hideOffersLoading();
               offersState.render();
             }
             return;
@@ -750,6 +829,7 @@
             .always(function() {
               pending -= 1;
               if (pending === 0) {
+                hideOffersLoading();
                 offersState.render();
               }
             });

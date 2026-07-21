@@ -28,8 +28,20 @@ msgstr "Piilota tarjouksen tiedot"
 msgid "Loading offer details…"
 msgstr "Ladataan tarjouksen tietoja…"
 
+msgid "Loading offers…"
+msgstr "Ladataan tarjouksia…"
+
 msgid "Could not load offer details."
 msgstr "Tarjouksen tietoja ei voitu ladata."
+
+msgid "You have accepted this offer."
+msgstr "Olet hyväksynyt tämän tarjouksen."
+
+msgid "You have rejected this offer."
+msgstr "Olet hylännyt tämän tarjouksen."
+
+msgid "Could not update the offer. Please try again."
+msgstr "Tarjouksen päivitys epäonnistui. Yritä uudelleen."
 
 msgid "Project material bank"
 msgstr "Kohteen materiaalipankki"
