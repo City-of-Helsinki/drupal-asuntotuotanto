@@ -30,12 +30,23 @@
  * @see template_preprocess_views_view()
  */
 #}
-<section class="user-profile__section">
+<section class="user-profile__section application-offers" id="application-offers-section" aria-live="polite">
   <h2>
     {{ 'Offers'|t }}
   </h2>
 
-  <div class="application-status-message application-status-message--offers" id="application-offers-empty">
+  <div class="application-offers__loading is-hidden" id="application-offers-loading" aria-hidden="true">
+    <span class="application-offers__spinner" aria-hidden="true"></span>
+    <p>
+      {{ 'Loading offers…'|t }}
+    </p>
+  </div>
+
+  <div class="application-status-message application-status-message--offers application-offers__confirmation is-hidden" id="application-offers-confirmation" aria-hidden="true" role="status">
+    <p class="application-offers__confirmation-text"></p>
+  </div>
+
+  <div class="application-status-message application-status-message--offers is-hidden" id="application-offers-empty" aria-hidden="true">
     <h2>
       {{ 'No offers'|t }}
     </h2>
