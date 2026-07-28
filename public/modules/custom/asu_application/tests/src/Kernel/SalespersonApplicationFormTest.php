@@ -93,6 +93,8 @@ final class SalespersonApplicationFormTest extends KernelTestBase {
     $application_markup = (string) $form['user_applications_' . $application->id()]['#markup'];
     $this->assertStringContainsString('Upcoming Co, Upcoming St 2', $application_markup);
     $this->assertStringNotContainsString('Unknown project', $application_markup);
+    $this->assertStringContainsString('/application/' . $application->id() . '/edit', $application_markup);
+    $this->assertStringContainsString('>Edit<', $application_markup);
   }
 
   /**
@@ -126,6 +128,34 @@ final class SalespersonApplicationFormTest extends KernelTestBase {
 
     $application_markup = (string) $form['user_applications_' . $application->id()]['#markup'];
     $this->assertStringContainsString('(after-application)', $application_markup);
+    $this->assertStringContainsString('/application/' . $application->id() . '/edit', $application_markup);
+  }
+
+  /**
+   * Tests that sent applications also link to the edit page.
+   */
+  public function testApplicationListLinksLockedApplicationsToEdit(): void {
+    $project = $this->createTestProject('Ready Co', 'Ready St 1', 'ready');
+    $user = $this->createCustomerUser();
+    $this->container->get('current_user')->setAccount($user);
+
+    $application = Application::create([
+      'bundle' => 'hitas',
+      'uid' => $user->id(),
+      'project_id' => (int) $project->id(),
+      'status' => 1,
+    ]);
+    $application->set('field_locked', 1);
+    $application->save();
+
+    $form = $this->container->get('form_builder')->getForm(
+      SalespersonApplicationForm::class,
+      (string) $user->id(),
+    );
+
+    $application_markup = (string) $form['user_applications_' . $application->id()]['#markup'];
+    $this->assertStringContainsString('/application/' . $application->id() . '/edit', $application_markup);
+    $this->assertStringContainsString('>Edit<', $application_markup);
   }
 
 }

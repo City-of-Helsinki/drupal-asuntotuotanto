@@ -8,6 +8,7 @@ use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Link;
 use Drupal\Core\Messenger\MessengerTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -119,8 +120,13 @@ class SalespersonApplicationForm extends FormBase {
           if ($this->lateApplicationChecker->isLateSubmission($application)) {
             $project_label .= ' — ' . $this->t('(after-application)');
           }
+          $application_link = Link::fromTextAndUrl(
+            $this->t('Edit'),
+            $application->toUrl('edit-form'),
+          );
           $form['user_applications_' . $key] = [
-            '#markup' => $project_label . ' — ' . $status . ' (' . $latest_change . ')<br>',
+            '#markup' => $project_label . ' — ' . $status . ' (' . $latest_change . ') — '
+            . $application_link->toString() . '<br>',
           ];
         }
       }
