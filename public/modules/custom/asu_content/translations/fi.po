@@ -43776,3 +43776,24 @@ msgstr "Asiakas"
 
 msgid "offer accepted"
 msgstr "Tarjous hyväksytty"
+
+msgid "Unknown project"
+msgstr "Tuntematon kohde"
+
+msgid "Already sent"
+msgstr "Jo lähetetty"
+
+msgid "User applications for active projects"
+msgstr "Käyttäjän hakemukset aktiivisiin kohteisiin"
+
+msgid "User has no applications for active projects."
+msgstr "Käyttäjällä ei ole hakemuksia aktiivisiin kohteisiin."
+
+msgid "Failed to fetch projects"
+msgstr "Kohteiden hakeminen epäonnistui"
+
+msgid "Select project"
+msgstr "Valitse kohde"
+
+msgid "(after-application)"
+msgstr "(jälkihakemus)"

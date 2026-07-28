@@ -2,13 +2,13 @@
 
 namespace Drupal\asu_application\Form;
 
+use Drupal\asu_application\Service\LateApplicationChecker;
+use Drupal\asu_application\Service\SalespersonApplicationProjectProvider;
 use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Messenger\MessengerTrait;
-use Drupal\search_api\Entity\Index;
-use Drupal\search_api\ParseMode\ParseModePluginManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -18,19 +18,22 @@ class SalespersonApplicationForm extends FormBase {
   use MessengerTrait;
 
   /**
-   * Constructs a FieldMapperBase object.
+   * Constructs a SalespersonApplicationForm object.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager service.
-   * @param \Drupal\search_api\ParseMode\ParseModePluginManager $parseModeManager
-   *   The parse mode manager.
    * @param \Drupal\Core\Datetime\DateFormatterInterface $date
    *   The date service.
+   * @param \Drupal\asu_application\Service\SalespersonApplicationProjectProvider $projectProvider
+   *   Project label provider for the form.
+   * @param \Drupal\asu_application\Service\LateApplicationChecker $lateApplicationChecker
+   *   Late application detector.
    */
   public function __construct(
     protected EntityTypeManagerInterface $entityTypeManager,
-    protected ParseModePluginManager $parseModeManager,
     protected DateFormatterInterface $date,
+    protected SalespersonApplicationProjectProvider $projectProvider,
+    protected LateApplicationChecker $lateApplicationChecker,
   ) {
   }
 
@@ -40,8 +43,9 @@ class SalespersonApplicationForm extends FormBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('entity_type.manager'),
-      $container->get('plugin.manager.search_api.parse_mode'),
       $container->get('date.formatter'),
+      $container->get('asu_application.salesperson_project_provider'),
+      $container->get('asu_application.late_application_checker'),
     );
   }
 
@@ -60,7 +64,7 @@ class SalespersonApplicationForm extends FormBase {
       $projects = [];
       $user = $this->entityTypeManager->getStorage('user')->load($user_id);
       try {
-        $projects = $this->getProjects();
+        $projects = $this->projectProvider->getSelectableProjects();
       }
       catch (\Exception $e) {
         $this->messenger()->addError($this->t('Failed to fetch projects'));
@@ -74,7 +78,11 @@ class SalespersonApplicationForm extends FormBase {
       $ownership = [];
       $key = NULL;
       foreach ($projects as $key => $project) {
-        $options[$key] = $project['title'];
+        $label = $project['title'];
+        if (!empty($project['address'])) {
+          $label .= ', ' . $project['address'];
+        }
+        $options[$key] = $label;
         $ownership[$key] = (isset($project['ownership_type'])) ? strtolower($project['ownership_type']) : NULL;
       }
 
@@ -87,12 +95,32 @@ class SalespersonApplicationForm extends FormBase {
       ];
 
       if (!empty($userApplications)) {
+        $missing_project_ids = [];
+        foreach ($userApplications as $application) {
+          /** @var \Drupal\asu_application\Entity\Application $application */
+          $application_project_id = (int) $application->getProjectId();
+          if ($application_project_id && !isset($projects[$application_project_id])) {
+            $missing_project_ids[$application_project_id] = $application_project_id;
+          }
+        }
+        if ($missing_project_ids) {
+          $projects += $this->projectProvider->loadProjectLabels($missing_project_ids);
+        }
+
         foreach ($userApplications as $key => $application) {
-          /** @var \Drupal\asu_application\Entity\Application $application  */
+          /** @var \Drupal\asu_application\Entity\Application $application */
           $status = $application->isLocked() ? $this->t('Already sent') : $this->t('Draft');
           $latest_change = $this->date->format($application->getLatestTimestamp(), 'long');
+          $project = $projects[(int) $application->getProjectId()] ?? NULL;
+          $project_label = $project['title'] ?? $this->t('Unknown project');
+          if (!empty($project['address'])) {
+            $project_label .= ', ' . $project['address'];
+          }
+          if ($this->lateApplicationChecker->isLateSubmission($application)) {
+            $project_label .= ' — ' . $this->t('(after-application)');
+          }
           $form['user_applications_' . $key] = [
-            '#markup' => $status . ' ( ' . $latest_change . ' ): ' . $projects[$application->getProjectId()]['title'] . '<br>',
+            '#markup' => $project_label . ' — ' . $status . ' (' . $latest_change . ')<br>',
           ];
         }
       }
@@ -111,7 +139,7 @@ class SalespersonApplicationForm extends FormBase {
         '#type' => 'select',
         '#title' => $this->t('Project'),
         '#options' => $options,
-        '#empty_option' => 'Select project',
+        '#empty_option' => $this->t('Select project'),
         '#empty_value' => 0,
         '#required' => TRUE,
       ];
@@ -156,44 +184,6 @@ class SalespersonApplicationForm extends FormBase {
       ],
       ['query' => ['user_id' => $userId]],
     );
-  }
-
-  /**
-   * Get applicable projects.
-   *
-   * @return array
-   *   Array of projects.
-   *
-   * @throws \Drupal\search_api\SearchApiException
-   */
-  private function getProjects() {
-    $indexes = Index::loadMultiple();
-    $index = $indexes['apartment'] ?? reset($indexes);
-    $query = $index->query();
-
-    $parse_mode = $this->parseModeManager->createInstance('direct');
-    $parse_mode->setConjunction('AND');
-    $query->setParseMode($parse_mode);
-
-    $query->range(0, 10000);
-
-    $query->addCondition('project_state_of_sale', ['upcoming', 'ready'], 'NOT IN');
-
-    $projectData = $query->execute()->getResultItems();
-
-    $projects = [];
-    foreach ($projectData as $apartment) {
-      if (!empty($apartment->getField('project_id')->getValues()[0]) && !empty($apartment->getField('project_housing_company')->getValues()[0])) {
-        if (!isset($projects[$apartment->getField('project_id')->getValues()[0]])) {
-          $projects[$apartment->getField('project_id')->getValues()[0]] = [
-            'title' => $apartment->getField('project_housing_company')->getValues()[0] ?? NULL,
-            'ownership_type' => $apartment->getField('project_ownership_type')->getValues()[0] ?? NULL,
-          ];
-        }
-      }
-    }
-
-    return $projects;
   }
 
 }
