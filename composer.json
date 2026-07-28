@@ -187,6 +187,8 @@
                 "Drupal 11 compatibility fixes": "patches/computed_field_plugin-d11.patch"
             },
             "drupal/core": {
+                "[D11] Skip countFieldData when table missing": "patches/core-count-field-data-missing-table.patch",
+                "[D11] Skip delete when field table missing": "patches/core-skip-delete-missing-field-table.patch",
                 "[CI] Unset foreach-by-ref in ViewsConfigUpdater (block_content post_update save)": "patches/core-views-foreach-reference-cleanup.patch"
             },
             "drupal/elasticsearch_connector": {
