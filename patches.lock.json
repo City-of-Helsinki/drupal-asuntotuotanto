@@ -1,5 +1,5 @@
 {
-    "_hash": "bba7ab1d8144f65b9b08f67a72e2b8fa012c597b789a621626f10cd640000d41",
+    "_hash": "f2a9137640923c101cccb3b487af34d3dbe18a3667f7b6c6b6efe6029144580a",
     "patches": {
         "drupal/helfi_platform_config": [
             {
@@ -119,6 +119,16 @@
                 "extra": {
                     "provenance": "root"
                 }
+            },
+            {
+                "package": "drupal/core",
+                "description": "[#3014514] Make igbinary the default serializer, if available",
+                "url": "./public/modules/contrib/helfi_api_base/patches/3014514.patch",
+                "sha256": "d4a3acf6e031ba83272817d8c884f9c1bdca19df857793ce52a670e759521014",
+                "depth": 2,
+                "extra": {
+                    "provenance": "dependency:drupal/core"
+                }
             }
         ],
         "drupal/elasticsearch_connector": [
@@ -133,15 +143,15 @@
                 }
             }
         ],
-        "drupal/big_pipe_sessionless": [
+        "drupal/user_bundle": [
             {
-                "package": "drupal/big_pipe_sessionless",
-                "description": "Drupal 11 support (https://drupal.org/i/3428235)",
-                "url": "https://www.drupal.org/files/issues/2025-05-07/3428235.d11.patch",
-                "sha256": "5b59bfe5c291076f251b87baa736e17789a553c7c7bfbc67b596b6e694fc1ee2",
+                "package": "drupal/user_bundle",
+                "description": "Skip people view updates when views.view.user_admin_people is missing",
+                "url": "patches/user_bundle-skip-missing-people-view.patch",
+                "sha256": "3d7690da88a9c139f2e64acc8afcf24c9696d1e2eff419eadb54b510223a0f30",
                 "depth": 1,
                 "extra": {
-                    "provenance": "dependency:drupal/big_pipe_sessionless"
+                    "provenance": "root"
                 }
             }
         ],

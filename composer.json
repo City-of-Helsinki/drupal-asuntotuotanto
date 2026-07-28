@@ -191,6 +191,9 @@
             },
             "drupal/elasticsearch_connector": {
                 "Use Search API field identifier in FilterBuilder": "patches/elasticsearch_connector-filterbuilder-use-field-identifier.patch"
+            },
+            "drupal/user_bundle": {
+                "Skip people view updates when views.view.user_admin_people is missing": "patches/user_bundle-skip-missing-people-view.patch"
             }
         },
         "composer-patches": {
