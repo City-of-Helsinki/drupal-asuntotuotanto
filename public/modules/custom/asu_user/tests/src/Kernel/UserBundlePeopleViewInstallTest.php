@@ -16,14 +16,6 @@ final class UserBundlePeopleViewInstallTest extends KernelTestBase {
 
   /**
    * {@inheritdoc}
-   *
-   * Production/CI installs do not enforce config schema on save. Disable it
-   * here so the missing-view case matches site-install behavior.
-   */
-  protected $strictConfigSchema = FALSE;
-
-  /**
-   * {@inheritdoc}
    */
   protected static $modules = [
     'system',

@@ -62,7 +62,7 @@ final class CountFieldDataMissingTableTest extends KernelTestBase {
   }
 
   /**
-   * countFieldData returns empty when the revision field table is absent.
+   * Returns empty when the revision field table is absent.
    *
    * - Mirrors existing-config site install where field config is imported
    *   before dedicated tables exist (or after tables were dropped).
