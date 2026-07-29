@@ -117,6 +117,8 @@ class Project extends Node {
    * apartment_state_of_sale is `'OPEN_FOR_APPLICATIONS'`
    * or if application period has passed if its a HASO project
    * and after-applications are enabled.
+   * Also returns the application URL for HITAS projects with
+   * `FREE_FOR_RESERVATIONS` apartments when `field_can_apply_afterwards` is on.
    *
    * Return `contact/apply_for_free_apartment...`-url if
    * apartment_state_of_sale is `'FREE_FOR_RESERVATIONS'`
@@ -152,8 +154,11 @@ class Project extends Node {
     }
 
     if ($this->isApplicationPeriod('after') && $this->getCanApplyAfterwards() == TRUE) {
-
-      if ($this->getOwnershipType() == 'haso') {
+      $ownershipType = $this->getOwnershipType();
+      if ($ownershipType == 'haso') {
+        return $addToApplicationUrl;
+      }
+      if ($ownershipType == 'hitas' && $isFreeForReservations) {
         return $addToApplicationUrl;
       }
       return $this->getContactUrl($apartmentId);

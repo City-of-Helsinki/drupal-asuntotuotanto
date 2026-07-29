@@ -147,3 +147,25 @@ msgstr "Myyjän peruuttama"
 
 msgid "Cancelled by system"
 msgstr "Järjestelmän peruuttama"
+
+msgid "You already have a reservation on this project."
+msgstr "Sinulla on jo varaus tähän kohteeseen."
+
+msgid "Make a reservation for"
+msgstr "Tee varaus kohteeseen"
+
+msgid "Make a reservation"
+msgstr "Tee varaus"
+
+msgid "Apartment to reserve"
+msgstr "Varattava huoneisto"
+
+msgid "You can reserve one apartment. Remove the selected apartment to choose another one."
+msgstr "Voit varata yhden huoneiston. Poista valittu huoneisto valitaksesi toisen."
+
+msgid "Selected apartment"
+msgstr "Valittu huoneisto"
+
+msgid "Only one apartment can be selected when making a reservation."
+msgstr "Varausta tehdessä voi valita vain yhden huoneiston."
+

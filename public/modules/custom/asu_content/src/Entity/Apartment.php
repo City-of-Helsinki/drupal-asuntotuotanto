@@ -107,7 +107,10 @@ class Apartment extends Node {
       return '';
     }
     $number = $apartmentNumber ?? $this->get('field_apartment_number')->value ?? NULL;
-    return $project->getApplicationUrl($number);
+    $stateOfSale = strtoupper(
+      str_replace(' ', '_', (string) ($this->field_apartment_state_of_sale->target_id ?? ''))
+    );
+    return $project->getApplicationUrl($number, $stateOfSale, (int) $this->id());
   }
 
   /**

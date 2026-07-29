@@ -243,6 +243,28 @@ line-height: $lineheight-l; // Was 24px.
     }
   }
 
+  &--single li {
+    &:first-child {
+      min-width: 170px;
+    }
+
+    &:nth-child(2) {
+      min-width: 90px;
+    }
+
+    &:nth-child(3) {
+      min-width: 124px;
+    }
+
+    &:nth-child(4) {
+      min-width: 142px;
+    }
+
+    &:nth-child(5) {
+      min-width: auto;
+    }
+  }
+
   p {
    font-size: $fontsize-body-m;
 line-height: $lineheight-l; // Was 24px.
@@ -273,6 +295,14 @@ line-height: $lineheight-l;
         }
       }
     }
+  }
+}
+
+.application-form__apartments--single {
+  .application-form-apartment__list-position,
+  .application-form-apartment__list-position-actions {
+    display: none;
+    visibility: hidden;
   }
 }
 
