@@ -9,8 +9,8 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\asu_api\Api\BackendApi\BackendApi;
 use Drupal\asu_api\Api\BackendApi\Request\UserRequest;
+use Drupal\user\UserInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Plugin implementation of the main applicant field widget.
@@ -25,6 +25,8 @@ use Symfony\Component\HttpFoundation\Response;
  * )
  */
 class MainApplicantWidget extends WidgetBase {
+  use ApplicantFormElementsTrait;
+
   /**
    * The entity type manager service.
    *
@@ -42,7 +44,7 @@ class MainApplicantWidget extends WidgetBase {
   /**
    * Backend api.
    *
-   * @var Drupal\asu_api\Api\BackendApi\BackendApi
+   * @var \Drupal\asu_api\Api\BackendApi\BackendApi
    */
   private BackendApi $backendApi;
 
@@ -62,119 +64,64 @@ class MainApplicantWidget extends WidgetBase {
    * {@inheritdoc}
    */
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
-    $account = $this->entityTypeManager->getStorage('user')->load($this->currentUser->id());
+    $account = $this->resolveMainApplicantAccount($items);
+    $userInformation = $this->emptyUserInformation();
 
-    if ($account->hasRole('customer')) {
+    if ($account && $account->hasRole('customer')) {
       $request = new UserRequest($account);
-      $request->setSender($account);
+      // Authenticate as the current user so salespersons/admins can fetch the
+      // owner's profile; customers opening their own form still use themselves.
+      $sender = $this->entityTypeManager->getStorage('user')->load($this->currentUser->id());
+      $request->setSender($sender instanceof UserInterface ? $sender : $account);
 
       try {
         $userResponse = $this->backendApi->send($request);
+        /** @var \Drupal\asu_api\Api\BackendApi\Response\UserResponse $userResponse */
+        $userInformation = $userResponse->getUserInformation();
       }
       catch (\Exception $e) {
-        return new Response('Failed to fetch user data to applicant form.', 400);
+        // Leave empty defaults so the form still renders when Backend is down
+        // or the profile cannot be loaded.
       }
-
-      /** @var \Drupal\asu_api\Api\BackendApi\Response\UserResponse $userResponse */
-      $userInformation = $userResponse->getUserInformation();
-    }
-    else {
-      $userInformation = [
-        'first_name' => NULL,
-        'last_name' => NULL,
-        'date_of_birth' => NULL,
-        'street_address' => NULL,
-        'postal_code' => NULL,
-        'city' => NULL,
-        'phone_number' => NULL,
-        'email' => NULL,
-      ];
     }
 
-    $element['first_name'] = [
-      '#type' => 'textfield',
-      '#title' => $this->t('First name'),
-      '#maxlength' => 50,
-      '#size' => 100,
-      '#default_value' => $items->getValue()[$delta]['first_name'] ?? $userInformation['first_name'],
-      '#required' => TRUE,
-    ];
+    $storedValues = $items->getValue()[$delta] ?? [];
 
-    $element['last_name'] = [
-      '#type' => 'textfield',
-      '#title' => $this->t('Last name'),
-      '#maxlength' => 50,
-      '#size' => 100,
-      '#default_value' => $items->getValue()[$delta]['last_name'] ?? $userInformation['last_name'],
-      '#required' => TRUE,
-    ];
+    return $this->appendApplicantContactFields(
+      $element,
+      $storedValues,
+      $userInformation,
+      [
+        'required' => TRUE,
+        'personal_id_length' => 5,
+        'empty_default' => NULL,
+      ]
+    );
+  }
 
-    $element['date_of_birth'] = [
-      '#type' => 'date',
-      '#title' => $this->t('Date of birth'),
-      '#size' => 30,
-      '#default_value' => $items->getValue()[$delta]['date_of_birth'] ?? $userInformation['date_of_birth'],
-      '#required' => TRUE,
-    ];
+  /**
+   * Resolve the customer whose profile should prefill the form.
+   *
+   * Prefers the application owner so salespersons/admins editing another
+   * user's application get that customer's data, not an empty form.
+   *
+   * @param \Drupal\Core\Field\FieldItemListInterface $items
+   *   The main applicant field items.
+   *
+   * @return \Drupal\user\UserInterface|null
+   *   Applicant user account, or NULL if unavailable.
+   */
+  protected function resolveMainApplicantAccount(FieldItemListInterface $items): ?UserInterface {
+    $entity = $items->getEntity();
+    if ($entity && method_exists($entity, 'getOwner')) {
+      $owner = $entity->getOwner();
+      if ($owner instanceof UserInterface && $owner->hasRole('customer')) {
+        return $owner;
+      }
+    }
 
-    $personal_id_default = (!empty($items->getValue()[$delta]['personal_id'])) ? substr($items->getValue()[$delta]['personal_id'], -4) : NULL;
-
-    $element['personal_id'] = [
-      '#type' => 'textfield',
-      '#title' => $this->t('Personal id'),
-      '#description' => $this->t('last 4 characters'),
-      '#minlength' => 5,
-      '#maxlength' => 5,
-      '#default_value' => $personal_id_default ?? '',
-      '#required' => TRUE,
-    ];
-
-    $element['address'] = [
-      '#type' => 'textfield',
-      '#title' => $this->t('Street address'),
-      '#maxlength' => 99,
-      '#default_value' => $items->getValue()[$delta]['address'] ?? $userInformation['street_address'],
-      '#required' => TRUE,
-    ];
-
-    $element['postal_code'] = [
-      '#type' => 'textfield',
-      '#title' => $this->t('Postal code'),
-      '#minlength' => 5,
-      '#maxlength' => 5,
-      '#size' => 50,
-      '#default_value' => $items->getValue()[$delta]['postal_code'] ?? $userInformation['postal_code'],
-      '#required' => TRUE,
-    ];
-
-    $element['city'] = [
-      '#type' => 'textfield',
-      '#title' => $this->t('City'),
-      '#maxlength' => 50,
-      '#size' => 50,
-      '#default_value' => $items->getValue()[$delta]['city'] ?? $userInformation['city'],
-      '#required' => TRUE,
-    ];
-
-    $element['phone'] = [
-      '#type' => 'textfield',
-      '#title' => $this->t('Phone number'),
-      '#maxlength' => 20,
-      '#size' => 20,
-      '#default_value' => $items->getValue()[$delta]['phone'] ?? $userInformation['phone_number'],
-      '#required' => TRUE,
-    ];
-
-    $element['email'] = [
-      '#type' => 'email',
-      '#title' => $this->t('Email'),
-      '#maxlength' => 99,
-      '#size' => 50,
-      '#default_value' => $items->getValue()[$delta]['email'] ?? $userInformation['email'],
-      '#required' => TRUE,
-    ];
-
-    return $element;
+    $account = $this->entityTypeManager->getStorage('user')->load($this->currentUser->id());
+    return $account instanceof UserInterface ? $account : NULL;
   }
 
 }
