@@ -56,103 +56,123 @@ trait ApplicantFormElementsTrait {
       ? $options['empty_default']
       : '';
 
-    $default = function (string $storedKey, string $profileKey) use ($storedValues, $userInformation, $emptyDefault) {
-      return $this->coalesceApplicantDefault(
-        $storedValues[$storedKey] ?? NULL,
-        $userInformation[$profileKey] ?? NULL,
-        $emptyDefault
-      );
-    };
-
-    $element['first_name'] = [
-      '#type' => 'textfield',
-      '#title' => $this->t('First name'),
-      '#maxlength' => 50,
-      '#size' => 100,
-      '#default_value' => $default('first_name', 'first_name'),
-      '#required' => $required,
+    $fields = [
+      'first_name' => [
+        'type' => 'textfield',
+        'title' => $this->t('First name'),
+        'stored' => 'first_name',
+        'profile' => 'first_name',
+        'maxlength' => 50,
+        'size' => 100,
+      ],
+      'last_name' => [
+        'type' => 'textfield',
+        'title' => $this->t('Last name'),
+        'stored' => 'last_name',
+        'profile' => 'last_name',
+        'maxlength' => 50,
+        'size' => 100,
+      ],
+      'date_of_birth' => [
+        'type' => 'date',
+        'title' => $this->t('Date of birth'),
+        'stored' => 'date_of_birth',
+        'profile' => 'date_of_birth',
+        'size' => 30,
+      ],
+      'personal_id' => [
+        'type' => 'textfield',
+        'title' => $this->t('Personal id'),
+        'description' => $this->t('last 4 characters'),
+        'minlength' => $personalIdLength,
+        'maxlength' => $personalIdLength,
+        'default' => $this->personalIdDefault($storedValues, $emptyDefault),
+      ],
+      'address' => [
+        'type' => 'textfield',
+        'title' => $this->t('Street address'),
+        'stored' => 'address',
+        'profile' => 'street_address',
+        'maxlength' => 99,
+      ],
+      'postal_code' => [
+        'type' => 'textfield',
+        'title' => $this->t('Postal code'),
+        'stored' => 'postal_code',
+        'profile' => 'postal_code',
+        'maxlength' => 5,
+        'size' => 50,
+        'minlength' => $required ? 5 : NULL,
+      ],
+      'city' => [
+        'type' => 'textfield',
+        'title' => $this->t('City'),
+        'stored' => 'city',
+        'profile' => 'city',
+        'maxlength' => 50,
+        'size' => 50,
+      ],
+      'phone' => [
+        'type' => 'textfield',
+        'title' => $this->t('Phone number'),
+        'stored' => 'phone',
+        'profile' => 'phone_number',
+        'maxlength' => 20,
+        'size' => 20,
+      ],
+      'email' => [
+        'type' => 'email',
+        'title' => $this->t('Email'),
+        'stored' => 'email',
+        'profile' => 'email',
+        'maxlength' => 99,
+        'size' => 50,
+      ],
     ];
 
-    $element['last_name'] = [
-      '#type' => 'textfield',
-      '#title' => $this->t('Last name'),
-      '#maxlength' => 50,
-      '#size' => 100,
-      '#default_value' => $default('last_name', 'last_name'),
-      '#required' => $required,
-    ];
-
-    $element['date_of_birth'] = [
-      '#type' => 'date',
-      '#title' => $this->t('Date of birth'),
-      '#size' => 30,
-      '#default_value' => $default('date_of_birth', 'date_of_birth'),
-      '#required' => $required,
-    ];
-
-    $personalIdDefault = !empty($storedValues['personal_id'])
-      ? substr($storedValues['personal_id'], -4)
-      : ($emptyDefault === NULL ? NULL : '');
-
-    $element['personal_id'] = [
-      '#type' => 'textfield',
-      '#title' => $this->t('Personal id'),
-      '#description' => $this->t('last 4 characters'),
-      '#minlength' => $personalIdLength,
-      '#maxlength' => $personalIdLength,
-      '#default_value' => $personalIdDefault ?? '',
-      '#required' => $required,
-    ];
-
-    $element['address'] = [
-      '#type' => 'textfield',
-      '#title' => $this->t('Street address'),
-      '#maxlength' => 99,
-      '#default_value' => $default('address', 'street_address'),
-      '#required' => $required,
-    ];
-
-    $postalCode = [
-      '#type' => 'textfield',
-      '#title' => $this->t('Postal code'),
-      '#maxlength' => 5,
-      '#size' => 50,
-      '#default_value' => $default('postal_code', 'postal_code'),
-      '#required' => $required,
-    ];
-    if ($required) {
-      $postalCode['#minlength'] = 5;
+    foreach ($fields as $name => $definition) {
+      $field = [
+        '#type' => $definition['type'],
+        '#title' => $definition['title'],
+        '#required' => $required,
+      ];
+      if (array_key_exists('default', $definition)) {
+        $field['#default_value'] = $definition['default'];
+      }
+      else {
+        $field['#default_value'] = $this->coalesceApplicantDefault(
+          $storedValues[$definition['stored']] ?? NULL,
+          $userInformation[$definition['profile']] ?? NULL,
+          $emptyDefault
+        );
+      }
+      foreach (['description', 'maxlength', 'minlength', 'size'] as $property) {
+        if (isset($definition[$property]) && $definition[$property] !== NULL) {
+          $field['#' . $property] = $definition[$property];
+        }
+      }
+      $element[$name] = $field;
     }
-    $element['postal_code'] = $postalCode;
-
-    $element['city'] = [
-      '#type' => 'textfield',
-      '#title' => $this->t('City'),
-      '#maxlength' => 50,
-      '#size' => 50,
-      '#default_value' => $default('city', 'city'),
-      '#required' => $required,
-    ];
-
-    $element['phone'] = [
-      '#type' => 'textfield',
-      '#title' => $this->t('Phone number'),
-      '#maxlength' => 20,
-      '#size' => 20,
-      '#default_value' => $default('phone', 'phone_number'),
-      '#required' => $required,
-    ];
-
-    $element['email'] = [
-      '#type' => 'email',
-      '#title' => $this->t('Email'),
-      '#maxlength' => 99,
-      '#size' => 50,
-      '#default_value' => $default('email', 'email'),
-      '#required' => $required,
-    ];
 
     return $element;
+  }
+
+  /**
+   * Default value for the personal id (last 4 characters) field.
+   *
+   * @param array $storedValues
+   *   Values already stored on the field item.
+   * @param mixed $emptyDefault
+   *   Fallback when personal id is not stored.
+   *
+   * @return mixed
+   *   Personal id default for the form element.
+   */
+  protected function personalIdDefault(array $storedValues, $emptyDefault) {
+    if (!empty($storedValues['personal_id'])) {
+      return substr($storedValues['personal_id'], -4);
+    }
+    return $emptyDefault ?? '';
   }
 
   /**
