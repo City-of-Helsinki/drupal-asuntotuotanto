@@ -25,6 +25,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * )
  */
 class MainApplicantWidget extends WidgetBase {
+  use ApplicantFormElementsTrait;
+
   /**
    * The entity type manager service.
    *
@@ -42,7 +44,7 @@ class MainApplicantWidget extends WidgetBase {
   /**
    * Backend api.
    *
-   * @var Drupal\asu_api\Api\BackendApi\BackendApi
+   * @var \Drupal\asu_api\Api\BackendApi\BackendApi
    */
   private BackendApi $backendApi;
 
@@ -63,16 +65,7 @@ class MainApplicantWidget extends WidgetBase {
    */
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
     $account = $this->resolveMainApplicantAccount($items);
-    $userInformation = [
-      'first_name' => NULL,
-      'last_name' => NULL,
-      'date_of_birth' => NULL,
-      'street_address' => NULL,
-      'postal_code' => NULL,
-      'city' => NULL,
-      'phone_number' => NULL,
-      'email' => NULL,
-    ];
+    $userInformation = $this->emptyUserInformation();
 
     if ($account && $account->hasRole('customer')) {
       $request = new UserRequest($account);
@@ -92,90 +85,18 @@ class MainApplicantWidget extends WidgetBase {
       }
     }
 
-    $element['first_name'] = [
-      '#type' => 'textfield',
-      '#title' => $this->t('First name'),
-      '#maxlength' => 50,
-      '#size' => 100,
-      '#default_value' => $items->getValue()[$delta]['first_name'] ?? $userInformation['first_name'],
-      '#required' => TRUE,
-    ];
+    $storedValues = $items->getValue()[$delta] ?? [];
 
-    $element['last_name'] = [
-      '#type' => 'textfield',
-      '#title' => $this->t('Last name'),
-      '#maxlength' => 50,
-      '#size' => 100,
-      '#default_value' => $items->getValue()[$delta]['last_name'] ?? $userInformation['last_name'],
-      '#required' => TRUE,
-    ];
-
-    $element['date_of_birth'] = [
-      '#type' => 'date',
-      '#title' => $this->t('Date of birth'),
-      '#size' => 30,
-      '#default_value' => $items->getValue()[$delta]['date_of_birth'] ?? $userInformation['date_of_birth'],
-      '#required' => TRUE,
-    ];
-
-    $personal_id_default = (!empty($items->getValue()[$delta]['personal_id'])) ? substr($items->getValue()[$delta]['personal_id'], -4) : NULL;
-
-    $element['personal_id'] = [
-      '#type' => 'textfield',
-      '#title' => $this->t('Personal id'),
-      '#description' => $this->t('last 4 characters'),
-      '#minlength' => 5,
-      '#maxlength' => 5,
-      '#default_value' => $personal_id_default ?? '',
-      '#required' => TRUE,
-    ];
-
-    $element['address'] = [
-      '#type' => 'textfield',
-      '#title' => $this->t('Street address'),
-      '#maxlength' => 99,
-      '#default_value' => $items->getValue()[$delta]['address'] ?? $userInformation['street_address'],
-      '#required' => TRUE,
-    ];
-
-    $element['postal_code'] = [
-      '#type' => 'textfield',
-      '#title' => $this->t('Postal code'),
-      '#minlength' => 5,
-      '#maxlength' => 5,
-      '#size' => 50,
-      '#default_value' => $items->getValue()[$delta]['postal_code'] ?? $userInformation['postal_code'],
-      '#required' => TRUE,
-    ];
-
-    $element['city'] = [
-      '#type' => 'textfield',
-      '#title' => $this->t('City'),
-      '#maxlength' => 50,
-      '#size' => 50,
-      '#default_value' => $items->getValue()[$delta]['city'] ?? $userInformation['city'],
-      '#required' => TRUE,
-    ];
-
-    $element['phone'] = [
-      '#type' => 'textfield',
-      '#title' => $this->t('Phone number'),
-      '#maxlength' => 20,
-      '#size' => 20,
-      '#default_value' => $items->getValue()[$delta]['phone'] ?? $userInformation['phone_number'],
-      '#required' => TRUE,
-    ];
-
-    $element['email'] = [
-      '#type' => 'email',
-      '#title' => $this->t('Email'),
-      '#maxlength' => 99,
-      '#size' => 50,
-      '#default_value' => $items->getValue()[$delta]['email'] ?? $userInformation['email'],
-      '#required' => TRUE,
-    ];
-
-    return $element;
+    return $this->appendApplicantContactFields(
+      $element,
+      $storedValues,
+      $userInformation,
+      [
+        'required' => TRUE,
+        'personal_id_length' => 5,
+        'empty_default' => NULL,
+      ]
+    );
   }
 
   /**

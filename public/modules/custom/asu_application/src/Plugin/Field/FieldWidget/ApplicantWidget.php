@@ -26,6 +26,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * )
  */
 class ApplicantWidget extends WidgetBase implements ContainerFactoryPluginInterface {
+  use ApplicantFormElementsTrait;
 
   /**
    * The entity type manager service.
@@ -70,20 +71,9 @@ class ApplicantWidget extends WidgetBase implements ContainerFactoryPluginInterf
    * {@inheritdoc}
    */
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
-
     $form['#attached']['library'][] = 'asu_application/additional-applicant';
 
-    $userInformation = [
-      'first_name' => NULL,
-      'last_name' => NULL,
-      'date_of_birth' => NULL,
-      'street_address' => NULL,
-      'postal_code' => NULL,
-      'city' => NULL,
-      'phone_number' => NULL,
-      'email' => NULL,
-    ];
-
+    $userInformation = $this->emptyUserInformation();
     $storedValues = $items->getValue()[$delta] ?? [];
     $hasStoredApplicant = !$items->isEmpty();
 
@@ -137,80 +127,16 @@ class ApplicantWidget extends WidgetBase implements ContainerFactoryPluginInterf
       '#markup' => '</div>',
     ];
 
-    $element['first_name'] = [
-      '#type' => 'textfield',
-      '#title' => $this->t('First name'),
-      '#maxlength' => 50,
-      '#size' => 100,
-      '#default_value' => $storedValues['first_name'] ?? $userInformation['first_name'] ?? '',
-    ];
-
-    $element['last_name'] = [
-      '#type' => 'textfield',
-      '#title' => $this->t('Last name'),
-      '#maxlength' => 50,
-      '#size' => 100,
-      '#default_value' => $storedValues['last_name'] ?? $userInformation['last_name'] ?? '',
-    ];
-
-    $element['date_of_birth'] = [
-      '#type' => 'date',
-      '#title' => $this->t('Date of birth'),
-      '#size' => 30,
-      '#default_value' => $storedValues['date_of_birth'] ?? $userInformation['date_of_birth'] ?? '',
-    ];
-
-    $personal_id_default = !empty($storedValues['personal_id'])
-      ? substr($storedValues['personal_id'], -4)
-      : '';
-
-    $element['personal_id'] = [
-      '#type' => 'textfield',
-      '#title' => $this->t('Personal id'),
-      '#description' => $this->t('last 4 characters'),
-      '#minlength' => 4,
-      '#maxlength' => 4,
-      '#default_value' => $personal_id_default,
-    ];
-
-    $element['address'] = [
-      '#type' => 'textfield',
-      '#title' => $this->t('Street address'),
-      '#maxlength' => 99,
-      '#default_value' => $storedValues['address'] ?? $userInformation['street_address'] ?? '',
-    ];
-
-    $element['postal_code'] = [
-      '#type' => 'textfield',
-      '#title' => $this->t('Postal code'),
-      '#maxlength' => 5,
-      '#size' => 50,
-      '#default_value' => $storedValues['postal_code'] ?? $userInformation['postal_code'] ?? '',
-    ];
-
-    $element['city'] = [
-      '#type' => 'textfield',
-      '#title' => $this->t('City'),
-      '#maxlength' => 50,
-      '#size' => 50,
-      '#default_value' => $storedValues['city'] ?? $userInformation['city'] ?? '',
-    ];
-
-    $element['phone'] = [
-      '#type' => 'textfield',
-      '#title' => $this->t('Phone number'),
-      '#maxlength' => 20,
-      '#size' => 20,
-      '#default_value' => $storedValues['phone'] ?? $userInformation['phone_number'] ?? '',
-    ];
-
-    $element['email'] = [
-      '#type' => 'email',
-      '#title' => $this->t('Email'),
-      '#maxlength' => 99,
-      '#size' => 50,
-      '#default_value' => $storedValues['email'] ?? $userInformation['email'] ?? '',
-    ];
+    $element = $this->appendApplicantContactFields(
+      $element,
+      $storedValues,
+      $userInformation,
+      [
+        'required' => FALSE,
+        'personal_id_length' => 4,
+        'empty_default' => '',
+      ]
+    );
 
     $element['applicant_suffix'] = [
       '#type' => 'markup',
