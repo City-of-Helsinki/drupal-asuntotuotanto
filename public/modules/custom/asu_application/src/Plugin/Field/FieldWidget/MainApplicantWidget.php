@@ -9,8 +9,8 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\asu_api\Api\BackendApi\BackendApi;
 use Drupal\asu_api\Api\BackendApi\Request\UserRequest;
+use Drupal\user\UserInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Plugin implementation of the main applicant field widget.
@@ -62,33 +62,34 @@ class MainApplicantWidget extends WidgetBase {
    * {@inheritdoc}
    */
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
-    $account = $this->entityTypeManager->getStorage('user')->load($this->currentUser->id());
+    $account = $this->resolveMainApplicantAccount($items);
+    $userInformation = [
+      'first_name' => NULL,
+      'last_name' => NULL,
+      'date_of_birth' => NULL,
+      'street_address' => NULL,
+      'postal_code' => NULL,
+      'city' => NULL,
+      'phone_number' => NULL,
+      'email' => NULL,
+    ];
 
-    if ($account->hasRole('customer')) {
+    if ($account && $account->hasRole('customer')) {
       $request = new UserRequest($account);
-      $request->setSender($account);
+      // Authenticate as the current user so salespersons/admins can fetch the
+      // owner's profile; customers opening their own form still use themselves.
+      $sender = $this->entityTypeManager->getStorage('user')->load($this->currentUser->id());
+      $request->setSender($sender instanceof UserInterface ? $sender : $account);
 
       try {
         $userResponse = $this->backendApi->send($request);
+        /** @var \Drupal\asu_api\Api\BackendApi\Response\UserResponse $userResponse */
+        $userInformation = $userResponse->getUserInformation();
       }
       catch (\Exception $e) {
-        return new Response('Failed to fetch user data to applicant form.', 400);
+        // Leave empty defaults so the form still renders when Backend is down
+        // or the profile cannot be loaded.
       }
-
-      /** @var \Drupal\asu_api\Api\BackendApi\Response\UserResponse $userResponse */
-      $userInformation = $userResponse->getUserInformation();
-    }
-    else {
-      $userInformation = [
-        'first_name' => NULL,
-        'last_name' => NULL,
-        'date_of_birth' => NULL,
-        'street_address' => NULL,
-        'postal_code' => NULL,
-        'city' => NULL,
-        'phone_number' => NULL,
-        'email' => NULL,
-      ];
     }
 
     $element['first_name'] = [
@@ -175,6 +176,31 @@ class MainApplicantWidget extends WidgetBase {
     ];
 
     return $element;
+  }
+
+  /**
+   * Resolve the customer whose profile should prefill the form.
+   *
+   * Prefers the application owner so salespersons/admins editing another
+   * user's application get that customer's data, not an empty form.
+   *
+   * @param \Drupal\Core\Field\FieldItemListInterface $items
+   *   The main applicant field items.
+   *
+   * @return \Drupal\user\UserInterface|null
+   *   Applicant user account, or NULL if unavailable.
+   */
+  protected function resolveMainApplicantAccount(FieldItemListInterface $items): ?UserInterface {
+    $entity = $items->getEntity();
+    if ($entity && method_exists($entity, 'getOwner')) {
+      $owner = $entity->getOwner();
+      if ($owner instanceof UserInterface && $owner->hasRole('customer')) {
+        return $owner;
+      }
+    }
+
+    $account = $this->entityTypeManager->getStorage('user')->load($this->currentUser->id());
+    return $account instanceof UserInterface ? $account : NULL;
   }
 
 }
