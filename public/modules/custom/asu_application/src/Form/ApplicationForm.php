@@ -524,8 +524,10 @@ HTML;
     }
 
     if (!empty($form['#is_hitas_post_period_reservation']) && !empty($formValues['apartment'])) {
-      $selected_apartments = array_filter($formValues['apartment'], static function (array $apartment): bool {
-        return !empty($apartment['id']) && $apartment['id'] !== '0';
+      $selected_apartments = array_filter($formValues['apartment'], static function ($apartment): bool {
+        return is_array($apartment)
+          && !empty($apartment['id'])
+          && $apartment['id'] !== '0';
       });
       if (count($selected_apartments) > 1) {
         $form_state->setErrorByName(
