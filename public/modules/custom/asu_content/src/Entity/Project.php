@@ -150,10 +150,7 @@ class Project extends Node {
 
     $addToApplicationUrl = sprintf('%s/application/add/%s/%s', $baseurl, $apartmentType, $this->id());
     if ($this->isApplicationPeriod() || $this->isApplicationPeriod('before')) {
-      if ($apartmentType == '') {
-        return '';
-      }
-      return $addToApplicationUrl;
+      return $apartmentType === '' ? '' : $addToApplicationUrl;
     }
 
     if ($isFreeForReservations && $this->getCanApplyAfterwards() == FALSE) {
@@ -161,19 +158,48 @@ class Project extends Node {
     }
 
     if ($this->isApplicationPeriod('after') && $this->getCanApplyAfterwards() == TRUE) {
-      $ownershipType = $this->getOwnershipType();
-      if ($ownershipType == 'haso') {
-        return $addToApplicationUrl;
-      }
-      if ($ownershipType == 'hitas' && $isFreeForReservations) {
-        if ($apartmentNodeId !== NULL) {
-          return $addToApplicationUrl . '?apartment=' . (int) $apartmentNodeId;
-        }
-        return $addToApplicationUrl;
-      }
-      return $this->getContactUrl($apartmentId);
+      return $this->getPostPeriodApplicationUrl(
+        $addToApplicationUrl,
+        $apartmentId,
+        $isFreeForReservations,
+        $apartmentNodeId
+      );
     }
     return '';
+  }
+
+  /**
+   * Build application URL after the application period has ended.
+   *
+   * @param string $addToApplicationUrl
+   *   Base /application/add/{type}/{id} URL.
+   * @param string|null $apartmentId
+   *   Apartment number for contact-form links.
+   * @param bool $isFreeForReservations
+   *   Whether apartment state is FREE_FOR_RESERVATIONS.
+   * @param int|null $apartmentNodeId
+   *   Apartment node id for reservation preselection.
+   *
+   * @return string
+   *   Application or contact URL.
+   */
+  private function getPostPeriodApplicationUrl(
+    string $addToApplicationUrl,
+    $apartmentId,
+    bool $isFreeForReservations,
+    $apartmentNodeId,
+  ): string {
+    $ownershipType = $this->getOwnershipType();
+    if ($ownershipType == 'haso') {
+      return $addToApplicationUrl;
+    }
+    if ($ownershipType == 'hitas' && $isFreeForReservations) {
+      if ($apartmentNodeId !== NULL) {
+        return $addToApplicationUrl . '?apartment=' . (int) $apartmentNodeId;
+      }
+      return $addToApplicationUrl;
+    }
+    return $this->getContactUrl($apartmentId);
   }
 
   /**

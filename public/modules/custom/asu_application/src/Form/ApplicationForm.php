@@ -876,7 +876,7 @@ HTML;
   private function getApartments(Project $project, array $limit = []): ?array {
     $sortedLimit = $limit;
     sort($sortedLimit);
-    $cid = 'application_project_apartments_' . $project->id() . '_' . md5(serialize($sortedLimit));
+    $cid = 'application_project_apartments_' . $project->id() . '_' . Crypt::hashBase64(serialize($sortedLimit));
     $values = [];
     $type = $project->get('field_ownership_type')
       ?->first()

@@ -573,7 +573,7 @@
         applicationFormApartmentListElement.innerHTML = "";
         appendListItemToApartmentList();
         const listItem = applicationFormApartmentListElement.lastElementChild;
-        listItem.setAttribute("data-id", "0");
+        listItem.dataset.id = "0";
         listItem.addEventListener("click", handleListItemInnerClicks);
         openApartmentSelectOnListItem(listItem);
       };
@@ -639,7 +639,7 @@
 
       const handleListItemInnerClicks = ({ target }) => {
         if (
-          target.getAttribute("data-list-position-action-button") === "raise" ||
+          target.dataset.listPositionActionButton === "raise" ||
           target.closest('[data-list-position-action-button="raise"]')
         ) {
           const raiseButton = target.closest('[data-list-position-action-button="raise"]') || target;
@@ -648,7 +648,7 @@
         }
 
         if (
-          target.getAttribute("data-list-position-action-button") === "lower" ||
+          target.dataset.listPositionActionButton === "lower" ||
           target.closest('[data-list-position-action-button="lower"]')
         ) {
           const lowerButton = target.closest('[data-list-position-action-button="lower"]') || target;
@@ -692,6 +692,35 @@
           // eslint-disable-next-line no-use-before-define
           appendListItemToApartmentList();
         }
+      };
+
+      const appendListPositionActions = (
+        listPositionActions,
+        apartmentNumberValue,
+        withSelectElement
+      ) => {
+        if (isSingleApartmentMode) {
+          return;
+        }
+
+        const listPositionActionsRaiseButton = createButtonElement(
+          "",
+          `Raise on the list, apartment ${apartmentNumberValue}`,
+          withSelectElement && true
+        );
+        listPositionActionsRaiseButton.dataset.listPositionActionButton = "raise";
+
+        const listPositionActionsLowerButton = createButtonElement(
+          "",
+          `Lower on the list, apartment ${apartmentNumberValue}`,
+          withSelectElement && true
+        );
+        listPositionActionsLowerButton.dataset.listPositionActionButton = "lower";
+
+        listPositionActions.append(
+          listPositionActionsRaiseButton,
+          listPositionActionsLowerButton
+        );
       };
 
       const createApartmentListItem = (
@@ -780,34 +809,11 @@
           "application-form-apartment__list-position-actions"
         );
 
-        if (!isSingleApartmentMode) {
-          const listPositionActionsRaiseButton = createButtonElement(
-            "",
-            `Raise on the list, apartment ${apartmentNumberValue}`,
-            withSelectElement && true
-          );
-
-          listPositionActionsRaiseButton.setAttribute(
-            "data-list-position-action-button",
-            "raise"
-          );
-
-          const listPositionActionsLowerButton = createButtonElement(
-            "",
-            `Lower on the list, apartment ${apartmentNumberValue}`,
-            withSelectElement && true
-          );
-
-          listPositionActionsLowerButton.setAttribute(
-            "data-list-position-action-button",
-            "lower"
-          );
-
-          listPositionActions.append(
-            listPositionActionsRaiseButton,
-            listPositionActionsLowerButton
-          );
-        }
+        appendListPositionActions(
+          listPositionActions,
+          apartmentNumberValue,
+          withSelectElement
+        );
 
         const formApartmentInformation = createElementWithClasses("ul", [
           "application-form-apartment__information",
