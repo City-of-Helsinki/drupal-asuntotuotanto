@@ -15,6 +15,30 @@
       });
 
       const lang = drupalSettings.path.currentLanguage;
+      const maxApartments = drupalSettings.asuApplication?.maxApartments ?? 5;
+      const isSingleApartmentMode = maxApartments === 1;
+      const canAddMoreApartments = () =>
+        getApplicationFormApartmentListElementCount() < maxApartments;
+
+      /**
+       * Keep the reservation apartment query parameter in sync with the UI.
+       *
+       * @param {string|null} apartmentId
+       *   Selected apartment node id, or null when cleared.
+       */
+      const updateApartmentQueryParam = (apartmentId) => {
+        if (!isSingleApartmentMode) {
+          return;
+        }
+
+        const url = new URL(window.location.href);
+        if (apartmentId && apartmentId !== "0") {
+          url.searchParams.set("apartment", String(apartmentId));
+        } else {
+          url.searchParams.delete("apartment");
+        }
+        window.history.replaceState({}, "", url.toString());
+      };
       const translation = {
         "Delete": {
           "fi": "Poista",
@@ -208,7 +232,18 @@
 
         const lastCustomSelect = allCustomSelectElements[customSelectCount - 1];
 
-        lastCustomSelect.focus();
+        if (lastCustomSelect) {
+          lastCustomSelect.focus();
+        }
+      };
+
+      const getSourceApartmentSelectElement = () => {
+        if (isSingleApartmentMode) {
+          return document.querySelector(
+            '[data-drupal-selector="edit-apartment-0-id"]'
+          );
+        }
+        return getLastOriginalApartmentSelectElement();
       };
 
       const createCustomSelectElement = () => {
@@ -217,7 +252,9 @@
           "application-form-apartment__apartment-add-actions-wrapper"
         );
 
-        const selectCount = getApplicationFormApartmentListElementCount() - 1;
+        const selectCount = isSingleApartmentMode
+          ? 0
+          : getApplicationFormApartmentListElementCount() - 1;
         const selectElementId = `apartment_list_select_${selectCount}`;
 
         const apartmentListElement = document.createElement("div");
@@ -238,17 +275,23 @@
           "hds-select-element__select-wrapper"
         );
 
-        const selectedApartments = getOriginalSelectElementValues();
+        const sourceSelect = getSourceApartmentSelectElement();
+        if (!sourceSelect) {
+          return apartmentListElementWrapper;
+        }
 
-        const apartmentSelectElement = getLastOriginalApartmentSelectElement().cloneNode(
-          true
-        );
+        const selectedApartments = isSingleApartmentMode
+          ? []
+          : getOriginalSelectElementValues();
+
+        const apartmentSelectElement = sourceSelect.cloneNode(true);
+        apartmentSelectElement.value = "0";
 
         // eslint-disable-next-line array-callback-return
         [...apartmentSelectElement.options].map((option, index) => {
           if (index > 0) {
-            const originalTextSplitted = option.innerHTML.split(" | ");
-            option.innerHTML = `${originalTextSplitted[0]} | ${originalTextSplitted[1]} | ${originalTextSplitted[3]}`;
+            const originalTextSplitted = option.textContent.split(" | ");
+            option.textContent = `${originalTextSplitted[0]} | ${originalTextSplitted[1]} | ${originalTextSplitted[3]}`;
           }
         });
 
@@ -291,6 +334,7 @@
 
           originalSelectElementTarget.value = target.value;
           originalSelectElementTarget.dispatchEvent(new Event("change"));
+          updateApartmentQueryParam(target.value);
 
           targetParent.classList.remove(
             "application-form__apartments-item--with-select"
@@ -322,43 +366,45 @@
           );
           screenReaderInformationBoxElement.append(information);
 
-          const index = [...targetParent.parentElement.children].indexOf(
-            targetParent
-          );
+          if (!isSingleApartmentMode) {
+            const index = [...targetParent.parentElement.children].indexOf(
+              targetParent
+            );
 
-          if (index === 0) {
-            targetParent.querySelector("button").disabled = true;
-          }
-
-          if (index === getApplicationFormApartmentListElementCount() - 1) {
-            targetParent.querySelector(
-              'button[data-list-position-action-button="lower"]'
-            ).disabled = true;
-          }
-
-          if (index > 0) {
-            targetParent.previousElementSibling.querySelector(
-              'button[data-list-position-action-button="lower"]'
-            ).disabled = false;
-          }
-
-          if (
-            targetParent.nextElementSibling &&
-            targetParent.nextElementSibling.classList &&
-            targetParent.nextElementSibling.classList.contains(
-              "application-form__apartments-item--with-select"
-            )
-          ) {
-            targetParent.querySelector(
-              'button[data-list-position-action-button="lower"]'
-            ).disabled = true;
-          }
-
-          if (apartmentAddButton) {
-            if ($.active == 0) {
-              apartmentAddButton.removeAttribute("disabled");
+            if (index === 0) {
+              targetParent.querySelector("button").disabled = true;
             }
-            apartmentAddButton.focus();
+
+            if (index === getApplicationFormApartmentListElementCount() - 1) {
+              targetParent.querySelector(
+                'button[data-list-position-action-button="lower"]'
+              ).disabled = true;
+            }
+
+            if (index > 0) {
+              targetParent.previousElementSibling.querySelector(
+                'button[data-list-position-action-button="lower"]'
+              ).disabled = false;
+            }
+
+            if (
+              targetParent.nextElementSibling &&
+              targetParent.nextElementSibling.classList &&
+              targetParent.nextElementSibling.classList.contains(
+                "application-form__apartments-item--with-select"
+              )
+            ) {
+              targetParent.querySelector(
+                'button[data-list-position-action-button="lower"]'
+              ).disabled = true;
+            }
+
+            if (apartmentAddButton) {
+              if ($.active == 0) {
+                apartmentAddButton.removeAttribute("disabled");
+              }
+              apartmentAddButton.focus();
+            }
           }
         });
 
@@ -505,17 +551,38 @@
         }
       };
 
-      const handleApartmentDeleteButtonClick = (target) => {
-        jQuery('.application-form-apartment__apartment-delete-button').each((index, element) => {
-          jQuery(element).prop("disabled", true );
-        })
+      const openApartmentSelectOnListItem = (listItem) => {
+        const formHeader = listItem.querySelector(
+          ".application-form-apartment__header"
+        );
+        const addButton = listItem.querySelector(
+          ".application-form-apartment__apartment-add-button"
+        );
+        if (!formHeader) {
+          return;
+        }
 
+        formHeader.appendChild(createCustomSelectElement());
+        if (addButton) {
+          addButton.remove();
+        }
+        setFocusToLastSelectElement();
+      };
+
+      const resetSingleApartmentSelection = () => {
+        applicationFormApartmentListElement.innerHTML = "";
+        appendListItemToApartmentList();
+        const listItem = applicationFormApartmentListElement.lastElementChild;
+        listItem.dataset.id = "0";
+        listItem.addEventListener("click", handleListItemInnerClicks);
+        openApartmentSelectOnListItem(listItem);
+      };
+
+      const handleApartmentDeleteButtonClick = (target) => {
         const parentLiElement =
+          target.closest(".application-form__apartments-item") ||
           target.parentElement.parentElement.parentElement;
-        const apartment = findMatchingApartmentName(target)
-        if (!apartment) return;
-        const originalDropdown = findMatchingOriginalSelectElementByName(apartment)
-        const removeButton = originalDropdown.closest('tr').find(':submit')[0];
+
         const information = document.createElement("p");
         information.appendChild(
           document.createTextNode(
@@ -524,8 +591,37 @@
         );
         screenReaderInformationBoxElement.append(information);
 
+        // Reservation mode: always clear the only Drupal select and reopen the
+        // dropdown. Do not depend on apartment-name matching, and do not trigger
+        // Drupal's remove AJAX (that deletes the only widget row).
+        if (isSingleApartmentMode) {
+          const originalSelect = document.querySelector(
+            '[data-drupal-selector="edit-apartment-0-id"]'
+          );
+          if (originalSelect) {
+            originalSelect.value = "0";
+            originalSelect.dispatchEvent(new Event("change"));
+          }
+          updateApartmentQueryParam(null);
+          resetSingleApartmentSelection();
+          return;
+        }
+
+        const apartment = findMatchingApartmentName(target);
+        if (!apartment) return;
+        const originalDropdown = findMatchingOriginalSelectElementByName(apartment);
+        if (!originalDropdown || originalDropdown.length === 0) {
+          return;
+        }
+
         originalDropdown.val(0);
-        originalDropdown.change()
+        originalDropdown.change();
+
+        jQuery('.application-form-apartment__apartment-delete-button').each((index, element) => {
+          jQuery(element).prop("disabled", true );
+        });
+
+        const removeButton = originalDropdown.closest('tr').find(':submit')[0];
 
         parentLiElement.innerHTML =
            "<div class='application-form-apartment-loader-wrapper'><div class='application-form-apartment-loader'></div></div>";
@@ -543,22 +639,28 @@
 
       const handleListItemInnerClicks = ({ target }) => {
         if (
-          target.getAttribute("data-list-position-action-button") === "raise"
+          target.dataset.listPositionActionButton === "raise" ||
+          target.closest('[data-list-position-action-button="raise"]')
         ) {
-          handleListPositionRaiseClick(target);
+          const raiseButton = target.closest('[data-list-position-action-button="raise"]') || target;
+          handleListPositionRaiseClick(raiseButton);
+          return;
         }
 
         if (
-          target.getAttribute("data-list-position-action-button") === "lower"
+          target.dataset.listPositionActionButton === "lower" ||
+          target.closest('[data-list-position-action-button="lower"]')
         ) {
-          handleListPositionLowerClick(target);
+          const lowerButton = target.closest('[data-list-position-action-button="lower"]') || target;
+          handleListPositionLowerClick(lowerButton);
+          return;
         }
 
-        if (
-          target.getAttribute("class") ===
-          "application-form-apartment__apartment-delete-button"
-        ) {
-          handleApartmentDeleteButtonClick(target);
+        const deleteButton = target.closest(
+          ".application-form-apartment__apartment-delete-button"
+        );
+        if (deleteButton) {
+          handleApartmentDeleteButtonClick(deleteButton);
         }
       };
 
@@ -568,7 +670,7 @@
         );
 
         if (
-          getApplicationFormApartmentListElementCount() <= 5 &&
+          getApplicationFormApartmentListElementCount() <= maxApartments &&
           getApplicationFormApartmentListElementCount() > 1 &&
           getLastOriginalApartmentSelectElement().value !== "0"
         ) {
@@ -586,10 +688,39 @@
         target.remove();
         setFocusToLastSelectElement();
 
-        if (getApplicationFormApartmentListElementCount() < 5) {
+        if (canAddMoreApartments()) {
           // eslint-disable-next-line no-use-before-define
           appendListItemToApartmentList();
         }
+      };
+
+      const appendListPositionActions = (
+        listPositionActions,
+        apartmentNumberValue,
+        withSelectElement
+      ) => {
+        if (isSingleApartmentMode) {
+          return;
+        }
+
+        const listPositionActionsRaiseButton = createButtonElement(
+          "",
+          `Raise on the list, apartment ${apartmentNumberValue}`,
+          withSelectElement && true
+        );
+        listPositionActionsRaiseButton.dataset.listPositionActionButton = "raise";
+
+        const listPositionActionsLowerButton = createButtonElement(
+          "",
+          `Lower on the list, apartment ${apartmentNumberValue}`,
+          withSelectElement && true
+        );
+        listPositionActionsLowerButton.dataset.listPositionActionButton = "lower";
+
+        listPositionActions.append(
+          listPositionActionsRaiseButton,
+          listPositionActionsLowerButton
+        );
       };
 
       const createApartmentListItem = (
@@ -678,31 +809,10 @@
           "application-form-apartment__list-position-actions"
         );
 
-        const listPositionActionsRaiseButton = createButtonElement(
-          "",
-          `Raise on the list, apartment ${apartmentNumberValue}`,
-          withSelectElement && true
-        );
-
-        listPositionActionsRaiseButton.setAttribute(
-          "data-list-position-action-button",
-          "raise"
-        );
-
-        const listPositionActionsLowerButton = createButtonElement(
-          "",
-          `Lower on the list, apartment ${apartmentNumberValue}`,
-          withSelectElement && true
-        );
-
-        listPositionActionsLowerButton.setAttribute(
-          "data-list-position-action-button",
-          "lower"
-        );
-
-        listPositionActions.append(
-          listPositionActionsRaiseButton,
-          listPositionActionsLowerButton
+        appendListPositionActions(
+          listPositionActions,
+          apartmentNumberValue,
+          withSelectElement
         );
 
         const formApartmentInformation = createElementWithClasses("ul", [
@@ -777,15 +887,16 @@
         formActions.append(formActionsDeleteButton, formActionsLink);
 
         if (withSelectElement) {
-          article.append(listPositionDesktop, formHeader, listPositionActions);
+          article.append(listPositionDesktop, formHeader);
+          if (!isSingleApartmentMode) {
+            article.append(listPositionActions);
+          }
         } else {
-          article.append(
-            listPositionDesktop,
-            formHeader,
-            listPositionActions,
-            formApartmentInformation,
-            formActions
-          );
+          article.append(listPositionDesktop, formHeader);
+          if (!isSingleApartmentMode) {
+            article.append(listPositionActions);
+          }
+          article.append(formApartmentInformation, formActions);
         }
 
         li.appendChild(article);
@@ -872,7 +983,7 @@
             });
           }
 
-          if (getApplicationFormApartmentListElementCount() < 5) {
+          if (canAddMoreApartments()) {
             appendListItemToApartmentList();
 
             const apartmentAddButton = document.getElementsByClassName(
@@ -898,6 +1009,25 @@
             item.setAttribute("data-id", index);
             item.addEventListener("click", handleListItemInnerClicks);
           });
+        }
+
+        // Reservation mode: open the apartment selector immediately so the
+        // customer does not have to click "Add an apartment" first.
+        if (
+          isSingleApartmentMode &&
+          getOriginalSelectElementValues().length === 0
+        ) {
+          const selectRow = applicationFormApartmentListElement.querySelector(
+            ".application-form__apartments-item--with-select"
+          );
+          if (
+            selectRow &&
+            !selectRow.querySelector(
+              '[data-drupal-selector="custom_apartment_select"]'
+            )
+          ) {
+            openApartmentSelectOnListItem(selectRow);
+          }
         }
       };
 

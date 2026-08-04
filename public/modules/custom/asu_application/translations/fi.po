@@ -1,3 +1,13 @@
+# Finnish translation of ASU Applications
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: asu_application\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
 msgid "Thank you, Your application has been successfully sent."
 msgstr "Kiitos, Hakemuksesi on onnistuneesti lähetetty."
 
@@ -147,3 +157,16 @@ msgstr "Myyjän peruuttama"
 
 msgid "Cancelled by system"
 msgstr "Järjestelmän peruuttama"
+
+msgid "Make a reservation for @project"
+msgstr "Tee varaus kohteeseen @project"
+
+msgid "Application for @project"
+msgstr "Hakemus kohteeseen @project"
+
+msgid "Make a reservation"
+msgstr "Tee varaus"
+
+msgid "Only one apartment can be selected when making a reservation."
+msgstr "Varausta tehdessä voi valita vain yhden huoneiston."
+

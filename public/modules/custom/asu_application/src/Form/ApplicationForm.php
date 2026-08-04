@@ -16,6 +16,7 @@ use Drupal\Core\Url;
 use Drupal\asu_application\Entity\Application;
 use Drupal\asu_application\Event\ApplicationEvent;
 use Drupal\asu_application\Event\SalesApplicationEvent;
+use Drupal\asu_application\Service\ReservationApartmentPreselector;
 use Drupal\asu_application\Service\SoldApartmentApplicationPolicy;
 use Drupal\asu_content\Entity\Apartment;
 use Drupal\asu_content\Entity\Project;
@@ -87,6 +88,13 @@ class ApplicationForm extends ContentEntityForm implements TrustedCallbackInterf
   protected SoldApartmentApplicationPolicy $soldApartmentApplicationPolicy;
 
   /**
+   * Resolves the apartment preselected for a reservation.
+   *
+   * @var \Drupal\asu_application\Service\ReservationApartmentPreselector
+   */
+  protected ReservationApartmentPreselector $reservationApartmentPreselector;
+
+  /**
    * Summary of application.
    *
    * @var application
@@ -124,6 +132,9 @@ class ApplicationForm extends ContentEntityForm implements TrustedCallbackInterf
     $instance->eventDispatcher = $container->get('event_dispatcher');
     $instance->soldApartmentApplicationPolicy = $container->get(
       'asu_application.sold_apartment_application_policy'
+    );
+    $instance->reservationApartmentPreselector = $container->get(
+      'asu_application.reservation_apartment_preselector'
     );
 
     return $instance;
@@ -195,12 +206,19 @@ HTML;
       return (new RedirectResponse($redirect, 301));
     }
 
+    // HITAS post-period reservation: period ended + can_apply_afterwards.
+    $isHitasPostPeriodReservation = (
+      $project->getOwnershipType() == 'hitas' &&
+      $project->isApplicationPeriod('after') &&
+      $project->getCanApplyAfterwards()
+    );
+
     $limit = [];
     if (!$this->soldApartmentApplicationPolicy->allowsApplicationsToSoldApartments()) {
       $limit = ['sold'];
     }
-    if ($project->can_apply_afterwards != TRUE) {
-      array_push($limit, ['reserved', 'reserved_haso']);
+    if (!$project->getCanApplyAfterwards()) {
+      array_push($limit, 'reserved', 'reserved_haso');
     }
 
     // Dont allow users who have a reservation with the state
@@ -216,6 +234,32 @@ HTML;
       $this->logger('asu_application')->critical('User tried to access nonexistent project of id ' . $project_id);
       $this->messenger()->addMessage($this->t('Unfortunately the project you are trying to apply for is unavailable.'));
       return new RedirectResponse($applicationsUrl);
+    }
+
+    // Reservation mode: only apartments free for reservations (allowlist).
+    if ($isHitasPostPeriodReservation) {
+      $project_data['apartments'] = $this->filterApartmentsByStateOfSale(
+        $project,
+        $project_data['apartments'],
+        'free_for_reservations'
+      );
+      if (empty($project_data['apartments'])) {
+        $this->messenger()->addMessage($this->t('Unfortunately the project you are trying to apply for is unavailable.'));
+        return new RedirectResponse($applicationsUrl);
+      }
+    }
+
+    // A reservation targets a single apartment, which the customer already
+    // picked in the search UI. Preselect it so it is visible on the form.
+    if ($isHitasPostPeriodReservation && $this->entity->get('apartment')->isEmpty()) {
+      $requestedApartmentId = $this->requestStack->getCurrentRequest()->query->get('apartment');
+      $preselectedApartment = $this->reservationApartmentPreselector->resolve(
+        $requestedApartmentId === NULL ? NULL : (string) $requestedApartmentId,
+        $project_data['apartments']
+      );
+      if ($preselectedApartment !== NULL) {
+        $this->entity->set('apartment', [$preselectedApartment]);
+      }
     }
 
     // Form is filled by customer or salesperson on behalf of the customer.
@@ -254,9 +298,13 @@ HTML;
           ]);
 
         if (!empty($applications)) {
-          $url = reset($applications)->toUrl()->toString();
-          (new RedirectResponse($url . '/edit'))->send();
-          return $form;
+          $url = reset($applications)->toUrl()->toString() . '/edit';
+          $requestedApartmentId = $this->requestStack->getCurrentRequest()->query->get('apartment');
+          $url = $this->reservationApartmentPreselector->appendApartmentQuery(
+            $url,
+            $requestedApartmentId === NULL ? NULL : (string) $requestedApartmentId
+          );
+          return new RedirectResponse($url);
         }
       }
 
@@ -287,8 +335,11 @@ HTML;
         return new RedirectResponse($applicationsUrl);
       }
 
+      $ownershipType = strtolower($project_data['ownership_type']);
+
       if (
-        strtolower($project_data['ownership_type']) != 'haso' &&
+        $ownershipType != 'haso' &&
+        !$isHitasPostPeriodReservation &&
         $this->isApplicationPeriod('after', $startDate, $endDate)
       ) {
         $freeApplicationUrl = $this->requestStack->getCurrentRequest()->getSchemeAndHttpHost() .
@@ -302,9 +353,13 @@ HTML;
 
       $this->entity->save();
 
-      $url = $this->entity->toUrl()->toString();
-      (new RedirectResponse($url . '/edit'))->send();
-      return $form;
+      $url = $this->entity->toUrl()->toString() . '/edit';
+      $requestedApartmentId = $this->requestStack->getCurrentRequest()->query->get('apartment');
+      $url = $this->reservationApartmentPreselector->appendApartmentQuery(
+        $url,
+        $requestedApartmentId === NULL ? NULL : (string) $requestedApartmentId
+      );
+      return new RedirectResponse($url);
 
     }
     else {
@@ -316,14 +371,43 @@ HTML;
       // Set the apartments as a value to the form array.
       $form['#apartment_values'] = $apartments;
       $form['#project_name'] = $projectName;
-
       $form['#project_uuid'] = $project_data['project_uuid'];
+      $form['#is_hitas_post_period_reservation'] = $isHitasPostPeriodReservation;
 
       $form = parent::buildForm($form, $form_state);
 
-      $form['#title'] = sprintf('%s %s', $this->t('Application for'), $projectName);
+      if ($isHitasPostPeriodReservation) {
+        // The apartment list UI is built client side; tell it that a
+        // reservation targets exactly one apartment.
+        $form['#attached']['drupalSettings']['asuApplication']['maxApartments'] = 1;
+      }
 
-      $form['actions']['submit']['#value'] = $this->t('Send application');
+      if ($isHitasPostPeriodReservation && isset($form['apartment']['widget'])) {
+        foreach ($form['apartment']['widget'] as $delta => &$widget) {
+          if (!is_numeric($delta)) {
+            continue;
+          }
+          if ((int) $delta > 0) {
+            $widget['#access'] = FALSE;
+          }
+        }
+        unset($widget);
+
+        if (isset($form['apartment']['widget']['add_more'])) {
+          $form['apartment']['widget']['add_more']['#access'] = FALSE;
+        }
+      }
+
+      if ($isHitasPostPeriodReservation) {
+        $form['#title'] = $this->t('Make a reservation for @project', ['@project' => $projectName]);
+      }
+      else {
+        $form['#title'] = $this->t('Application for @project', ['@project' => $projectName]);
+      }
+
+      $form['actions']['submit']['#value'] = $isHitasPostPeriodReservation
+        ? $this->t('Make a reservation')
+        : $this->t('Send application');
       $form['actions']['submit']['#name'] = 'submit-application';
       $form['actions']['submit']['#submit'] = ['::save'];
       $form['actions']['submit']['#weight'] = 1;
@@ -414,6 +498,20 @@ HTML;
     if (count($formValues['apartment']) <= 1 && isset($formValues['apartment'][0])) {
       if ($formValues['apartment'][0]['id'] == '0' || empty($formValues['apartment'][0]['id'])) {
         $form_state->setErrorByName('apartment', $this->t('Field @field cannot be empty', ['@field' => 'apartment']));
+      }
+    }
+
+    if (!empty($form['#is_hitas_post_period_reservation']) && !empty($formValues['apartment'])) {
+      $selected_apartments = array_filter($formValues['apartment'], static function ($apartment): bool {
+        return is_array($apartment)
+          && !empty($apartment['id'])
+          && $apartment['id'] !== '0';
+      });
+      if (count($selected_apartments) > 1) {
+        $form_state->setErrorByName(
+          'apartment',
+          $this->t('Only one apartment can be selected when making a reservation.')
+        );
       }
     }
 
@@ -767,11 +865,23 @@ HTML;
   /**
    * Get project apartments.
    *
+   * @param \Drupal\asu_content\Entity\Project $project
+   *   Project entity.
+   * @param array $limit
+   *   Apartment state_of_sale term ids to exclude.
+   *
    * @return array
    *   Array of project information & apartments.
    */
   private function getApartments(Project $project, array $limit = []): ?array {
-    $cid = 'application_project_apartments_' . $project->id();
+    $sortedLimit = $limit;
+    sort($sortedLimit);
+    // Cache suffix from excluded state ids (no hash required).
+    $limitKey = $sortedLimit === [] ? 'all' : implode('-', $sortedLimit);
+    $cid = 'application_project_apartments_'
+      . $project->id()
+      . '_'
+      . $limitKey;
     $values = [];
     $type = $project->get('field_ownership_type')
       ?->first()
@@ -843,6 +953,42 @@ HTML;
   }
 
   /**
+   * Keep only apartments whose state_of_sale matches the allowlisted state.
+   *
+   * @param \Drupal\asu_content\Entity\Project $project
+   *   Project entity.
+   * @param array $apartments
+   *   Apartment options keyed by node id.
+   * @param string $allowedState
+   *   Allowed field_apartment_state_of_sale target id.
+   *
+   * @return array
+   *   Filtered apartment options.
+   */
+  private function filterApartmentsByStateOfSale(
+    Project $project,
+    array $apartments,
+    string $allowedState,
+  ): array {
+    $allowedIds = [];
+    foreach ($project->field_apartments as $apartmentReference) {
+      $apartment = $apartmentReference->entity;
+      if (!$apartment) {
+        continue;
+      }
+      if (($apartment->field_apartment_state_of_sale->target_id ?? '') === $allowedState) {
+        $allowedIds[(int) $apartment->id()] = TRUE;
+      }
+    }
+
+    return array_filter(
+      $apartments,
+      static fn ($label, $id) => isset($allowedIds[(int) $id]),
+      ARRAY_FILTER_USE_BOTH
+    );
+  }
+
+  /**
    * Ajax callback function to presave when triggered by apartment selection.
    *
    * @param array $form
@@ -880,7 +1026,7 @@ HTML;
         ),
         new ReplaceCommand(
           '#edit-apartment-wrapper',
-          $form['apartments'],
+          $form['apartment'],
         ),
       );
 
@@ -926,6 +1072,9 @@ HTML;
     ksort($sorted);
     foreach ($sorted as $value) {
       if ($value['id'] == 0 || !$value['id']) {
+        continue;
+      }
+      if (!isset($form['#apartment_values'][$value['id']])) {
         continue;
       }
       $apartments[] = [

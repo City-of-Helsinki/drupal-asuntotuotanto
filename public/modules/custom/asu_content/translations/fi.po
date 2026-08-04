@@ -40591,7 +40591,11 @@ msgid "I have underage children who are moving in with me"
 msgstr "Yksi tai useampi alaikäinen lapsi muuttaa kanssani."
 
 msgid "Application for"
-msgstr ""
+msgstr "Hakemus kohteeseen"
+
+msgid "Application for @project"
+msgstr "Hakemus kohteeseen @project"
+
 msgid "Select apartment"
 msgstr "Valitse huoneisto"
 
@@ -43800,3 +43804,15 @@ msgstr "(jälkihakemus)"
 
 msgid "User or project was not selected"
 msgstr "Käyttäjää tai kohdetta ei valittu"
+
+msgid "Apartment to reserve"
+msgstr "Varattava huoneisto"
+
+msgid "You can reserve one apartment. Remove the selected apartment to choose another one."
+msgstr "Voit varata yhden huoneiston. Poista valittu huoneisto valitaksesi toisen."
+
+msgid "Selected apartment"
+msgstr "Valittu huoneisto"
+
+msgid "Make a reservation for @project"
+msgstr "Tee varaus kohteeseen @project"

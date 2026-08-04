@@ -12,6 +12,9 @@ services:
   asu_application.sold_apartment_application_policy:
     class: Drupal\asu_application\Service\SoldApartmentApplicationPolicy
 
+  asu_application.reservation_apartment_preselector:
+    class: Drupal\asu_application\Service\ReservationApartmentPreselector
+
   logger.channel.asu_application:
     parent: logger.channel_base
     arguments: [ 'asu_application' ]

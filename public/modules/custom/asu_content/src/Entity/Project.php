@@ -117,15 +117,24 @@ class Project extends Node {
    * apartment_state_of_sale is `'OPEN_FOR_APPLICATIONS'`
    * or if application period has passed if its a HASO project
    * and after-applications are enabled.
+   * Also returns the application URL for HITAS projects with
+   * `FREE_FOR_RESERVATIONS` apartments when `field_can_apply_afterwards` is on.
    *
    * Return `contact/apply_for_free_apartment...`-url if
    * apartment_state_of_sale is `'FREE_FOR_RESERVATIONS'`
    * and after-apply isnt enabled
    *
+   * @param string|null $apartmentId
+   *   The apartment number (e.g. B12) for contact-form links, or NULL.
+   * @param string|null $apartmentStateOfSale
+   *   Apartment state of sale machine name (any case), or NULL.
+   * @param int|null $apartmentNodeId
+   *   Apartment node id appended as ?apartment= for reservation form links.
+   *
    * @return string
    *   Application url.
    */
-  public function getApplicationUrl($apartmentId = NULL, $apartmentStateOfSale = NULL): string {
+  public function getApplicationUrl($apartmentId = NULL, $apartmentStateOfSale = NULL, $apartmentNodeId = NULL): string {
     $baseurl = $this->getBaseUrl();
     $langcode = \Drupal::languageManager()->getDefaultLanguage()->getId();
     $baseurl = $baseurl . '/' . $langcode;
@@ -141,10 +150,7 @@ class Project extends Node {
 
     $addToApplicationUrl = sprintf('%s/application/add/%s/%s', $baseurl, $apartmentType, $this->id());
     if ($this->isApplicationPeriod() || $this->isApplicationPeriod('before')) {
-      if ($apartmentType == '') {
-        return '';
-      }
-      return $addToApplicationUrl;
+      return $apartmentType === '' ? '' : $addToApplicationUrl;
     }
 
     if ($isFreeForReservations && $this->getCanApplyAfterwards() == FALSE) {
@@ -152,13 +158,48 @@ class Project extends Node {
     }
 
     if ($this->isApplicationPeriod('after') && $this->getCanApplyAfterwards() == TRUE) {
-
-      if ($this->getOwnershipType() == 'haso') {
-        return $addToApplicationUrl;
-      }
-      return $this->getContactUrl($apartmentId);
+      return $this->getPostPeriodApplicationUrl(
+        $addToApplicationUrl,
+        $apartmentId,
+        $isFreeForReservations,
+        $apartmentNodeId
+      );
     }
     return '';
+  }
+
+  /**
+   * Build application URL after the application period has ended.
+   *
+   * @param string $addToApplicationUrl
+   *   Base /application/add/{type}/{id} URL.
+   * @param string|null $apartmentId
+   *   Apartment number for contact-form links.
+   * @param bool $isFreeForReservations
+   *   Whether apartment state is FREE_FOR_RESERVATIONS.
+   * @param int|null $apartmentNodeId
+   *   Apartment node id for reservation preselection.
+   *
+   * @return string
+   *   Application or contact URL.
+   */
+  private function getPostPeriodApplicationUrl(
+    string $addToApplicationUrl,
+    $apartmentId,
+    bool $isFreeForReservations,
+    $apartmentNodeId,
+  ): string {
+    $ownershipType = $this->getOwnershipType();
+    if ($ownershipType == 'haso') {
+      return $addToApplicationUrl;
+    }
+    if ($ownershipType == 'hitas' && $isFreeForReservations) {
+      if ($apartmentNodeId !== NULL) {
+        return $addToApplicationUrl . '?apartment=' . (int) $apartmentNodeId;
+      }
+      return $addToApplicationUrl;
+    }
+    return $this->getContactUrl($apartmentId);
   }
 
   /**

@@ -1,6 +1,11 @@
 application-form-actions:
+  version: 1.1.0
   js:
     dist/js/applicationFormActions.min.js: {}
+  dependencies:
+    - core/drupalSettings
+    - core/jquery
+    - core/drupal
 
 application-apartment-listing:
   version: 1.3.2
