@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\asu_content\Kernel;
 
+use Drupal\asu_content\Entity\Project;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\KernelTests\KernelTestBase;
@@ -211,7 +212,7 @@ final class ProjectGetApplicationUrlTest extends KernelTestBase {
     string $startTime,
     string $endTime,
     bool $canApplyAfterwards,
-  ): object {
+  ): Project {
     $project = Node::create([
       'type' => 'project',
       'title' => 'Test Project',
@@ -225,6 +226,7 @@ final class ProjectGetApplicationUrlTest extends KernelTestBase {
       'field_can_apply_afterwards' => [['value' => (int) $canApplyAfterwards]],
     ]);
     $project->save();
+    $this->assertInstanceOf(Project::class, $project);
     return $project;
   }
 
@@ -310,6 +312,78 @@ final class ProjectGetApplicationUrlTest extends KernelTestBase {
 
     $this->assertStringContainsString('/application/add/hitas/', $url);
     $this->assertStringNotContainsString('/contact/', $url);
+  }
+
+  /**
+   * After-period HITAS apartments that are for sale go to the contact form.
+   */
+  public function testHitasAfterPeriodApartmentForSaleReturnsContactUrl(): void {
+    $term = $this->createOwnershipTerm('Hitas');
+    $project = $this->createProject(
+      $term,
+      '2020-01-01T00:00:00',
+      '2020-06-01T00:00:00',
+      canApplyAfterwards: TRUE,
+    );
+
+    $url = $project->getApplicationUrl(NULL, 'APARTMENT_FOR_SALE');
+
+    $this->assertStringContainsString('/contact/', $url);
+    $this->assertStringNotContainsString('/application/add/', $url);
+  }
+
+  /**
+   * After-period HITAS reserved apartments go to the contact form.
+   */
+  public function testHitasAfterPeriodReservedReturnsContactUrl(): void {
+    $term = $this->createOwnershipTerm('Hitas');
+    $project = $this->createProject(
+      $term,
+      '2020-01-01T00:00:00',
+      '2020-06-01T00:00:00',
+      canApplyAfterwards: TRUE,
+    );
+
+    $url = $project->getApplicationUrl(NULL, 'RESERVED');
+
+    $this->assertStringContainsString('/contact/', $url);
+    $this->assertStringNotContainsString('/application/add/', $url);
+  }
+
+  /**
+   * After-period HITAS open-for-applications apartments go to contact form.
+   */
+  public function testHitasAfterPeriodOpenForApplicationsReturnsContactUrl(): void {
+    $term = $this->createOwnershipTerm('Hitas');
+    $project = $this->createProject(
+      $term,
+      '2020-01-01T00:00:00',
+      '2020-06-01T00:00:00',
+      canApplyAfterwards: TRUE,
+    );
+
+    $url = $project->getApplicationUrl(NULL, 'OPEN_FOR_APPLICATIONS');
+
+    $this->assertStringContainsString('/contact/', $url);
+    $this->assertStringNotContainsString('/application/add/', $url);
+  }
+
+  /**
+   * Apartment node id is appended for HITAS reservation application URLs.
+   */
+  public function testHitasReservationUrlAppendsApartmentNodeId(): void {
+    $term = $this->createOwnershipTerm('Hitas');
+    $project = $this->createProject(
+      $term,
+      '2020-01-01T00:00:00',
+      '2020-06-01T00:00:00',
+      canApplyAfterwards: TRUE,
+    );
+
+    $url = $project->getApplicationUrl(NULL, 'FREE_FOR_RESERVATIONS', 84);
+
+    $this->assertStringContainsString('/application/add/hitas/', $url);
+    $this->assertStringContainsString('apartment=84', $url);
   }
 
 }

@@ -349,7 +349,11 @@ class ElasticSearch extends ResourceBase {
           $apartment_number = $get_scalar($apartment_node, 'field_apartment_number');
           $application_url = '';
           if (method_exists($project_node, 'getApplicationUrl')) {
-            $computed_url = $project_node->getApplicationUrl($apartment_number, $apartment_state_of_sale);
+            $computed_url = $project_node->getApplicationUrl(
+              $apartment_number,
+              $apartment_state_of_sale,
+              (int) $apartment_node->id()
+            );
             if (is_string($computed_url) && $computed_url !== '') {
               $application_url = $computed_url;
             }

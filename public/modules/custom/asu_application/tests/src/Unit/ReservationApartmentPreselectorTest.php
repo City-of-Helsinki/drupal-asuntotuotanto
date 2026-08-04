@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\asu_application\Unit;
 
 use Drupal\asu_application\Service\ReservationApartmentPreselector;
@@ -115,6 +117,36 @@ final class ReservationApartmentPreselectorTest extends UnitTestCase {
     $this->assertSame(
       '/application/12/edit?foo=bar&apartment=84',
       $preselector->appendApartmentQuery('/application/12/edit?foo=bar', '84')
+    );
+  }
+
+  /**
+   * Absolute URLs keep scheme, host and path when apartment is appended.
+   */
+  public function testAppendsApartmentQueryToAbsoluteUrl(): void {
+    $preselector = new ReservationApartmentPreselector();
+
+    $this->assertSame(
+      'https://example.com/fi/application/12/edit?apartment=84',
+      $preselector->appendApartmentQuery(
+        'https://example.com/fi/application/12/edit',
+        '84'
+      )
+    );
+  }
+
+  /**
+   * Fragment identifiers survive when apartment query is appended.
+   */
+  public function testPreservesFragmentWhenAppendingApartment(): void {
+    $preselector = new ReservationApartmentPreselector();
+
+    $this->assertSame(
+      '/application/12/edit?apartment=84#section',
+      $preselector->appendApartmentQuery(
+        '/application/12/edit#section',
+        '84'
+      )
     );
   }
 

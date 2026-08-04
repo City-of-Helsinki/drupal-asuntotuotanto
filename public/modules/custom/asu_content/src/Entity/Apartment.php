@@ -91,7 +91,10 @@ class Apartment extends Node {
   }
 
   /**
-   * Get application url.
+   * Get application url for this apartment via its parent project.
+   *
+   * Passes this apartment's node id so HITAS post-period reservation links
+   * include `?apartment={nid}` for Drupal-rendered CTAs.
    *
    * @param string|null $apartmentNumber
    *   The apartment number (e.g. B12), or NULL to use this apartment's number.

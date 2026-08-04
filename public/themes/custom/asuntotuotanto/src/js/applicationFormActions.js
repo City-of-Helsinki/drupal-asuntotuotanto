@@ -232,7 +232,9 @@
 
         const lastCustomSelect = allCustomSelectElements[customSelectCount - 1];
 
-        lastCustomSelect.focus();
+        if (lastCustomSelect) {
+          lastCustomSelect.focus();
+        }
       };
 
       const getSourceApartmentSelectElement = () => {
@@ -278,12 +280,6 @@
           return apartmentListElementWrapper;
         }
 
-        // Ensure the clone starts from an empty selection so every free
-        // apartment remains available in the custom dropdown.
-        if (isSingleApartmentMode) {
-          sourceSelect.value = "0";
-        }
-
         const selectedApartments = isSingleApartmentMode
           ? []
           : getOriginalSelectElementValues();
@@ -294,8 +290,8 @@
         // eslint-disable-next-line array-callback-return
         [...apartmentSelectElement.options].map((option, index) => {
           if (index > 0) {
-            const originalTextSplitted = option.innerHTML.split(" | ");
-            option.innerHTML = `${originalTextSplitted[0]} | ${originalTextSplitted[1]} | ${originalTextSplitted[3]}`;
+            const originalTextSplitted = option.textContent.split(" | ");
+            option.textContent = `${originalTextSplitted[0]} | ${originalTextSplitted[1]} | ${originalTextSplitted[3]}`;
           }
         });
 

@@ -124,10 +124,17 @@ class Project extends Node {
    * apartment_state_of_sale is `'FREE_FOR_RESERVATIONS'`
    * and after-apply isnt enabled
    *
+   * @param string|null $apartmentId
+   *   The apartment number (e.g. B12) for contact-form links, or NULL.
+   * @param string|null $apartmentStateOfSale
+   *   Apartment state of sale machine name (any case), or NULL.
+   * @param int|null $apartmentNodeId
+   *   Apartment node id appended as ?apartment= for reservation form links.
+   *
    * @return string
    *   Application url.
    */
-  public function getApplicationUrl($apartmentId = NULL, $apartmentStateOfSale = NULL): string {
+  public function getApplicationUrl($apartmentId = NULL, $apartmentStateOfSale = NULL, $apartmentNodeId = NULL): string {
     $baseurl = $this->getBaseUrl();
     $langcode = \Drupal::languageManager()->getDefaultLanguage()->getId();
     $baseurl = $baseurl . '/' . $langcode;
@@ -159,6 +166,9 @@ class Project extends Node {
         return $addToApplicationUrl;
       }
       if ($ownershipType == 'hitas' && $isFreeForReservations) {
+        if ($apartmentNodeId !== NULL) {
+          return $addToApplicationUrl . '?apartment=' . (int) $apartmentNodeId;
+        }
         return $addToApplicationUrl;
       }
       return $this->getContactUrl($apartmentId);

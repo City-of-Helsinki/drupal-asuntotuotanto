@@ -2,6 +2,8 @@
 
 namespace Drupal\asu_application\Service;
 
+use Drupal\Component\Utility\UrlHelper;
+
 /**
  * Resolves the apartment preselected for a HITAS post-period reservation.
  *
@@ -59,20 +61,19 @@ final class ReservationApartmentPreselector {
       return $url;
     }
 
-    $parts = parse_url($url);
-    $query = [];
-    if (!empty($parts['query'])) {
-      parse_str($parts['query'], $query);
-    }
+    $parts = UrlHelper::parse($url);
+    $query = $parts['query'] ?? [];
     $query['apartment'] = $apartmentId;
 
-    $base = ($parts['path'] ?? $url);
-    if (!empty($parts['scheme']) && !empty($parts['host'])) {
-      $port = isset($parts['port']) ? ':' . $parts['port'] : '';
-      $base = $parts['scheme'] . '://' . $parts['host'] . $port . ($parts['path'] ?? '');
+    $result = $parts['path'] ?? $url;
+    if ($query) {
+      $result .= '?' . UrlHelper::buildQuery($query);
+    }
+    if (!empty($parts['fragment'])) {
+      $result .= '#' . $parts['fragment'];
     }
 
-    return $base . '?' . http_build_query($query);
+    return $result;
   }
 
 }
