@@ -331,27 +331,23 @@ function asu_application_cron() {
       ->condition('field_application_end_time', [$after, $before], 'BETWEEN')
       ->execute();
 
-    if (!$projects) {
-      return;
-    }
+    if ($projects) {
+      $applicationIds = \Drupal::entityTypeManager()
+        ->getStorage('asu_application')
+        ->getQuery()
+        ->accessCheck(TRUE)
+        ->condition('project_id', $projects, 'IN')
+        ->condition('field_locked', 0, '=')
+        ->execute();
 
-    $applicationIds = \Drupal::entityTypeManager()
-      ->getStorage('asu_application')
-      ->getQuery()
-      ->accessCheck(TRUE)
-      ->condition('project_id', $projects, 'IN')
-      ->condition('field_locked', 0, '=')
-      ->execute();
-
-    if (!$applicationIds) {
-      return;
-    }
-
-    $applications = Application::loadMultiple($applicationIds);
-    /** @var \Drupal\asu_application\Entity\Application $application */
-    foreach ($applications as $application) {
-      \Drupal::logger('asu_application')->info('Deleted draft application for project of id: ' . $application->getProjectId());
-      $application->delete();
+      if ($applicationIds) {
+        $applications = Application::loadMultiple($applicationIds);
+        /** @var \Drupal\asu_application\Entity\Application $application */
+        foreach ($applications as $application) {
+          \Drupal::logger('asu_application')->info('Deleted draft application for project of id: ' . $application->getProjectId());
+          $application->delete();
+        }
+      }
     }
   }
   catch (\Exception $e) {
