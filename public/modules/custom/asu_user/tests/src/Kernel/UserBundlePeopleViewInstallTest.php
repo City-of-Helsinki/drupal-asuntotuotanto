@@ -36,15 +36,14 @@ final class UserBundlePeopleViewInstallTest extends KernelTestBase {
   /**
    * Installing user_bundle without the people view must not create a stub.
    *
-   * - During existing-config site install the optional people view may be
-   *   absent when user_bundle installs.
+   * - During existing-config site install the people view may be absent when
+   *   user_bundle installs (e.g. before config import).
    * - getEditable() always returns a config object, so user_bundle must not
    *   save display fragments onto a non-existent view.
    * - A stub without id breaks ViewsBlock discovery / theme install later.
    */
   public function testInstallWithoutPeopleViewDoesNotCreateMalformedConfig(): void {
-    // Simulate existing-config install where the optional people view is not
-    // present yet (it is not exported to conf/cmi in this project).
+    // Simulate install where the people view is not present yet.
     $this->container->get('config.storage')->delete('views.view.user_admin_people');
     $this->container->get('config.factory')->reset('views.view.user_admin_people');
     $this->assertFalse(
