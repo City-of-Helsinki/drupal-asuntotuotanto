@@ -10,6 +10,8 @@ display:
           label: Massuppdatera
         name:
           label: Användarnamn
+        type:
+          label: Kontotyp
         status:
           label: Tila
           settings:
@@ -50,6 +52,9 @@ display:
         combine:
           expose:
             label: 'Namn eller e-post innehåller'
+        type:
+          expose:
+            label: Kontotyp
         status:
           group_info:
             label: Tila
@@ -61,9 +66,6 @@ display:
         roles_target_id:
           expose:
             label: Roll
-        permission:
-          expose:
-            label: Behörighet
       use_more_text: mer
   page_1:
     display_title: Sida
