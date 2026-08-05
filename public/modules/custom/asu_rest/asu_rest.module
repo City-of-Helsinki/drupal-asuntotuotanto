@@ -4,3 +4,48 @@
  * @file
  * Contains asu_rest.module.
  */
+
+use Drupal\Core\Cache\Cache;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\node\NodeInterface;
+
+/**
+ * Cache tag used by asu_rest search payload caches.
+ */
+const ASU_REST_SEARCH_CACHE_TAG = 'apartment_entity_list';
+
+/**
+ * Implements hook_entity_insert().
+ */
+function asu_rest_entity_insert(EntityInterface $entity): void {
+	asu_rest_invalidate_search_cache_if_needed($entity);
+}
+
+/**
+ * Implements hook_entity_update().
+ */
+function asu_rest_entity_update(EntityInterface $entity): void {
+	asu_rest_invalidate_search_cache_if_needed($entity);
+}
+
+/**
+ * Implements hook_entity_delete().
+ */
+function asu_rest_entity_delete(EntityInterface $entity): void {
+	asu_rest_invalidate_search_cache_if_needed($entity);
+}
+
+/**
+ * Invalidate cached search payloads when relevant content changes.
+ */
+function asu_rest_invalidate_search_cache_if_needed(EntityInterface $entity): void {
+	if (!$entity instanceof NodeInterface) {
+		return;
+	}
+
+	if (!in_array($entity->bundle(), ['project', 'apartment'], TRUE)) {
+		return;
+	}
+
+	Cache::invalidateTags([ASU_REST_SEARCH_CACHE_TAG]);
+}
