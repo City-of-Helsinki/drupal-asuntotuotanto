@@ -13,7 +13,7 @@ use Drupal\node\NodeInterface;
  * Cache tag used by asu_rest search payload caches.
  */
 function asu_rest_search_cache_tag(): string {
-	return 'apartment_entity_list';
+  return 'apartment_entity_list';
 }
 
 /**
