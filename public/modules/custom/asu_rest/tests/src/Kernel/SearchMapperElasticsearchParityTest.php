@@ -197,6 +197,59 @@ final class SearchMapperElasticsearchParityTest extends KernelTestBase {
   }
 
   /**
+   * Apartment listing includes publish_on_etuovi and publish_on_oikotie.
+   *
+   * List endpoints (/apartments, /projects/{uuid}/apartments) must expose these
+   * flags so Django get_apartments() does not default them to None.
+   *
+   * - Asserts both keys are present on mapApartmentListing.
+   * - Asserts TRUE when fields are set and FALSE when unset.
+   */
+  public function testApartmentListingIncludesPublishOnFlags(): void {
+    $project = Node::create([
+      'type' => 'project',
+      'title' => 'Parent project',
+      'status' => 1,
+    ]);
+    $project->save();
+
+    $published = Node::create([
+      'type' => 'apartment',
+      'title' => 'Published on portals',
+      'status' => 1,
+      'field_publish_on_etuovi' => 1,
+      'field_publish_on_oikotie' => 1,
+    ]);
+    $published->save();
+
+    $unpublished = Node::create([
+      'type' => 'apartment',
+      'title' => 'Not published on portals',
+      'status' => 1,
+      'field_publish_on_etuovi' => 0,
+      'field_publish_on_oikotie' => 0,
+    ]);
+    $unpublished->save();
+
+    $this->mapper->primeProjectLookupWithKnownProject(
+      [$published, $unpublished],
+      $project
+    );
+
+    $mappedPublished = $this->mapper->mapApartmentListing($published);
+    $this->assertArrayHasKey('publish_on_etuovi', $mappedPublished);
+    $this->assertArrayHasKey('publish_on_oikotie', $mappedPublished);
+    $this->assertTrue($mappedPublished['publish_on_etuovi']);
+    $this->assertTrue($mappedPublished['publish_on_oikotie']);
+
+    $mappedUnpublished = $this->mapper->mapApartmentListing($unpublished);
+    $this->assertArrayHasKey('publish_on_etuovi', $mappedUnpublished);
+    $this->assertArrayHasKey('publish_on_oikotie', $mappedUnpublished);
+    $this->assertFalse($mappedUnpublished['publish_on_etuovi']);
+    $this->assertFalse($mappedUnpublished['publish_on_oikotie']);
+  }
+
+  /**
    * Install string/boolean fields required for parity key presence checks.
    */
   private function installMinimalProjectFields(): void {
@@ -249,6 +302,23 @@ final class SearchMapperElasticsearchParityTest extends KernelTestBase {
         'field_name' => $fieldName,
         'entity_type' => 'node',
         'type' => 'string',
+      ])->save();
+      FieldConfig::create([
+        'field_name' => $fieldName,
+        'entity_type' => 'node',
+        'bundle' => 'apartment',
+        'label' => $fieldName,
+      ])->save();
+    }
+
+    foreach ([
+      'field_publish_on_etuovi',
+      'field_publish_on_oikotie',
+    ] as $fieldName) {
+      FieldStorageConfig::create([
+        'field_name' => $fieldName,
+        'entity_type' => 'node',
+        'type' => 'boolean',
       ])->save();
       FieldConfig::create([
         'field_name' => $fieldName,
