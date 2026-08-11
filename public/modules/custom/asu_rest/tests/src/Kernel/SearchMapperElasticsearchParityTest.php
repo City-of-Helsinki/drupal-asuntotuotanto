@@ -181,7 +181,8 @@ final class SearchMapperElasticsearchParityTest extends KernelTestBase {
   /**
    * Apartment listing exposes project_site_owner alongside site_owner.
    *
-   * ApartmentDocument declares both keys; Oikotie/Etuovi read project_site_owner.
+   * ApartmentDocument declares both keys; Oikotie/Etuovi read
+   * project_site_owner.
    *
    * - Asserts project_site_owner is present on mapApartmentListing.
    * - Asserts it matches site_owner (same field_site_owner source).

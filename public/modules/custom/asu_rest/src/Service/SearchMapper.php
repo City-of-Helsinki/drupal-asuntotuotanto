@@ -61,7 +61,8 @@ final class SearchMapper {
     $stockEnd = $this->getScalar($apartment, 'field_stock_end_number');
 
     // Full ApartmentDocument key set on list and detail endpoints so consumers
-    // (Django portals, PDF, serializers) do not depend on GET /apartments/{uuid}.
+    // (Django portals, PDF, serializers) do not depend on
+    // GET /apartments/{uuid}.
     $data = [
       '_language' => $apartment->language()->getId(),
       'additional_information' => $this->getScalar($apartment, 'field_additional_information'),
@@ -458,7 +459,8 @@ final class SearchMapper {
         $project,
         'field_customer_document_handover',
       ),
-      // Legacy ApartmentDocument alias of project_contract_customer_document_handover.
+      // Legacy ApartmentDocument alias of
+      // project_contract_customer_document_handover.
       'project_customer_document_handover' => $this->projectFieldScalar(
         $project,
         'field_customer_document_handover',
