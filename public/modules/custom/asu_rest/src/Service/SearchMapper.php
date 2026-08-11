@@ -54,17 +54,35 @@ final class SearchMapper {
       ? $this->getServicesFromProject($project)
       : $this->getComputedList($apartment, 'multiple_values_field');
 
+    $livingArea = $this->getScalar($apartment, 'field_living_area');
+    $financingFee = $this->getScalar($apartment, 'field_financing_fee');
+    $maintenanceFee = $this->getScalar($apartment, 'field_maintenance_fee');
+    $stockStart = $this->getScalar($apartment, 'field_stock_start_number');
+    $stockEnd = $this->getScalar($apartment, 'field_stock_end_number');
+
+    // Full ApartmentDocument key set on list and detail endpoints so consumers
+    // (Django portals, PDF, serializers) do not depend on GET /apartments/{uuid}.
     $data = [
       '_language' => $apartment->language()->getId(),
+      'additional_information' => $this->getScalar($apartment, 'field_additional_information'),
       'apartment_published' => $apartment->isPublished(),
       'apartment_address' => $this->getComputedMarkup($apartment, 'field_apartment_address'),
       'apartment_number' => $this->getScalar($apartment, 'field_apartment_number'),
       'apartment_state_of_sale' => $this->getEnumFromTermField($apartment, 'field_apartment_state_of_sale'),
       'apartment_structure' => $this->getScalar($apartment, 'field_apartment_structure'),
+      'balcony_description' => $this->getScalar($apartment, 'field_balcony_description'),
+      'bathroom_appliances' => $this->getScalar($apartment, 'field_bathroom_appliances'),
+      'condition' => $this->getTermLabel($apartment, 'field_condition'),
+      'field_alteration_work' => $this->toCents($this->getScalar($apartment, 'field_alteration_work')),
+      'field_index_adjusted_right_of_oc' => $this->toCents($this->getScalar($apartment, 'field_index_adjusted_right_of_oc')),
+      'financing_fee' => $this->toCents($financingFee),
+      'financing_fee_m2' => $this->feePerSquareMeterCents($financingFee, $livingArea),
+      'floor_plan_image' => $this->getFileUrlFromField($apartment, 'field_floorplan'),
       'has_balcony' => $this->getBoolean($apartment, 'field_has_balcony'),
       'has_terrace' => $this->getBoolean($apartment, 'field_has_terrace'),
       'has_yard' => $this->getBoolean($apartment, 'field_has_yard'),
       'has_apartment_sauna' => $this->getBoolean($apartment, 'field_has_apartment_sauna'),
+      'housing_shares' => $this->formatHousingShares($stockStart, $stockEnd),
       'publish_on_etuovi' => $this->getBoolean($apartment, 'field_publish_on_etuovi'),
       'publish_on_oikotie' => $this->getBoolean($apartment, 'field_publish_on_oikotie'),
       'application_url' => $this->getComputedMarkup($apartment, 'asu_application_form_url'),
@@ -72,15 +90,33 @@ final class SearchMapper {
       'floor' => $this->getScalar($apartment, 'field_floor'),
       'floor_max' => $this->getScalar($apartment, 'field_floor_max'),
       'housing_company_fee' => $this->toCents($this->getComputedMarkup($apartment, 'field_housing_company_fee')),
-      'living_area' => $this->getScalar($apartment, 'field_living_area'),
+      'kitchen_appliances' => $this->getScalar($apartment, 'field_kitchen_appliances'),
+      'living_area' => $livingArea,
+      'loan_share' => $this->toCents($this->getScalar($apartment, 'field_loan_share')),
+      'maintenance_fee' => $this->toCents($maintenanceFee),
+      'maintenance_fee_m2' => $this->feePerSquareMeterCents($maintenanceFee, $livingArea),
       'nid' => $apartment->id(),
+      'other_fees' => $this->getScalar($apartment, 'field_other_fees'),
+      'parking_fee' => $this->toCents($this->getScalar($apartment, 'field_parking_fee')),
+      'parking_fee_explanation' => $this->getScalar($apartment, 'field_parking_fee_explanation'),
+      'price_m2' => $this->toCents($this->getScalar($apartment, 'field_price_m2')),
       'release_payment' => $this->toCents($this->getScalar($apartment, 'field_release_payment')),
+      'right_of_occupancy_deposit' => $this->toCents($this->getScalar($apartment, 'field_right_of_occupancy_deposit')),
+      'right_of_occupancy_fee' => $this->toCents($this->getScalar($apartment, 'field_right_of_occupancy_fee')),
       'right_of_occupancy_payment' => $this->toCents($this->getScalar($apartment, 'field_right_of_occupancy_payment')),
       'room_count' => $this->toNumber($this->getScalar($apartment, 'field_apartment_structure')),
       'sales_price' => $this->toCents($this->getScalar($apartment, 'field_sales_price')),
+      'services_description' => $this->getScalar($apartment, 'field_services_description'),
+      'showing_times' => $this->formatDateTime($this->getScalar($apartment, 'field_showing_time')),
+      'stock_end_number' => $stockEnd,
+      'stock_start_number' => $stockStart,
+      'storage_description' => $this->getScalar($apartment, 'field_storage_description'),
       'title' => $apartment->label(),
       'url' => $this->nodeUrl($apartment),
       'uuid' => $apartment->uuid(),
+      'view_description' => $this->getScalar($apartment, 'field_view_description'),
+      'water_fee' => $this->toCents($this->getScalar($apartment, 'field_water_fee')),
+      'water_fee_explanation' => $this->getScalar($apartment, 'field_water_fee_explanation'),
       'image_urls' => $imageUrls,
       'services' => $services,
     ];
@@ -88,7 +124,9 @@ final class SearchMapper {
     if ($project) {
       $data += $this->mapProjectFields($project, $apartment);
       $data['apartment_holding_type'] = $data['project_holding_type'] ?? '';
-      $data['site_owner'] = $this->getTermLabel($project, 'field_site_owner');
+      $siteOwner = $this->getTermLabel($project, 'field_site_owner');
+      $data['site_owner'] = $siteOwner;
+      $data['project_site_owner'] = $siteOwner;
     }
 
     return $data;
@@ -96,40 +134,11 @@ final class SearchMapper {
 
   /**
    * Map an apartment for detail responses.
+   *
+   * Detail and listing share the full ApartmentDocument key set.
    */
   public function mapApartmentDetail(Node $apartment): array {
-    $data = $this->mapApartmentListing($apartment);
-
-    $data += [
-      'additional_information' => $this->getScalar($apartment, 'field_additional_information'),
-      'balcony_description' => $this->getScalar($apartment, 'field_balcony_description'),
-      'bathroom_appliances' => $this->getScalar($apartment, 'field_bathroom_appliances'),
-      'condition' => $this->getTermLabel($apartment, 'field_condition'),
-      'field_alteration_work' => $this->toCents($this->getScalar($apartment, 'field_alteration_work')),
-      'field_index_adjusted_right_of_oc' => $this->toCents($this->getScalar($apartment, 'field_index_adjusted_right_of_oc')),
-      'financing_fee' => $this->toCents($this->getScalar($apartment, 'field_financing_fee')),
-      'floor_plan_image' => $this->getFileUrlFromField($apartment, 'field_floorplan'),
-      'kitchen_appliances' => $this->getScalar($apartment, 'field_kitchen_appliances'),
-      'loan_share' => $this->toCents($this->getScalar($apartment, 'field_loan_share')),
-      'maintenance_fee' => $this->toCents($this->getScalar($apartment, 'field_maintenance_fee')),
-      'other_fees' => $this->getScalar($apartment, 'field_other_fees'),
-      'parking_fee' => $this->toCents($this->getScalar($apartment, 'field_parking_fee')),
-      'parking_fee_explanation' => $this->getScalar($apartment, 'field_parking_fee_explanation'),
-      'price_m2' => $this->toCents($this->getScalar($apartment, 'field_price_m2')),
-      'right_of_occupancy_deposit' => $this->toCents($this->getScalar($apartment, 'field_right_of_occupancy_deposit')),
-      'right_of_occupancy_fee' => $this->toCents($this->getScalar($apartment, 'field_right_of_occupancy_fee')),
-      'services' => $this->getComputedList($apartment, 'multiple_values_field'),
-      'services_description' => $this->getScalar($apartment, 'field_services_description'),
-      'showing_times' => $this->formatDateTime($this->getScalar($apartment, 'field_showing_time')),
-      'stock_end_number' => $this->getScalar($apartment, 'field_stock_end_number'),
-      'stock_start_number' => $this->getScalar($apartment, 'field_stock_start_number'),
-      'storage_description' => $this->getScalar($apartment, 'field_storage_description'),
-      'view_description' => $this->getScalar($apartment, 'field_view_description'),
-      'water_fee' => $this->toCents($this->getScalar($apartment, 'field_water_fee')),
-      'water_fee_explanation' => $this->getScalar($apartment, 'field_water_fee_explanation'),
-    ];
-
-    return $data;
+    return $this->mapApartmentListing($apartment);
   }
 
   /**
@@ -301,6 +310,8 @@ final class SearchMapper {
       'project_estate_agent' => $this->getReferencedUserField($project, 'field_salesperson', 'field_full_name'),
       'project_estate_agent_email' => $this->getReferencedUserField($project, 'field_salesperson', 'mail'),
       'project_estate_agent_phone' => $this->getReferencedUserField($project, 'field_salesperson', 'field_phone_number'),
+      'project_acc_salesperson' => $this->getScalar($project, 'field_acc_salesperson'),
+      'project_accessibility' => $this->getScalar($project, 'field_project_accessibility'),
     ];
 
     $data += $this->mapProjectExtendedFields($project);
@@ -377,8 +388,14 @@ final class SearchMapper {
         $project,
         'field_shares_transferred_when',
       ),
+      'project_parkingplace_count' => $this->projectFieldScalar(
+        $project,
+        'field_parkingplace_count',
+      ),
       'project_site_area' => $this->projectFieldScalar($project, 'field_site_area'),
+      'project_site_owner' => $this->getTermLabel($project, 'field_site_owner'),
       'project_site_renter' => $this->projectFieldScalar($project, 'field_site_renter'),
+      'project_smoke_free' => $this->projectFieldScalar($project, 'field_smoke_free'),
       'project_virtual_presentation_url' => $this->projectFieldScalar(
         $project,
         'field_virtual_presentation_url',
@@ -438,6 +455,11 @@ final class SearchMapper {
         'field_construction_permit_claim',
       ),
       'project_contract_customer_document_handover' => $this->projectFieldScalar(
+        $project,
+        'field_customer_document_handover',
+      ),
+      // Legacy ApartmentDocument alias of project_contract_customer_document_handover.
+      'project_customer_document_handover' => $this->projectFieldScalar(
         $project,
         'field_customer_document_handover',
       ),
@@ -738,6 +760,27 @@ final class SearchMapper {
       return 0;
     }
     return (int) ((float) $value * 100);
+  }
+
+  /**
+   * Format housing share range for ApartmentDocument.housing_shares.
+   */
+  private function formatHousingShares(string $stockStart, string $stockEnd): string {
+    if ($stockStart === '' && $stockEnd === '') {
+      return '';
+    }
+    return trim($stockStart . ' - ' . $stockEnd);
+  }
+
+  /**
+   * Fee per m2 in cents, matching field_price_m2 computation style.
+   */
+  private function feePerSquareMeterCents(string $feeEuros, string $livingArea): int {
+    if ($feeEuros === '' || $livingArea === '' || (float) $livingArea === 0.0) {
+      return 0;
+    }
+    $perM2 = (float) $feeEuros / (float) $livingArea;
+    return $this->toCents(number_format($perM2, 2, '.', ''));
   }
 
   /**

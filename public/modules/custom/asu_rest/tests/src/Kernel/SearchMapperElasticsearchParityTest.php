@@ -26,6 +26,8 @@ final class SearchMapperElasticsearchParityTest extends KernelTestBase {
    */
   private const PROJECT_PARITY_KEYS = [
     'project_acc_financeofficer',
+    'project_acc_salesperson',
+    'project_accessibility',
     'project_attachment_urls',
     'project_barred_bank_account',
     'project_completion_date',
@@ -56,10 +58,12 @@ final class SearchMapperElasticsearchParityTest extends KernelTestBase {
     'project_contract_transfer_restriction',
     'project_contract_usage_fees',
     'project_control_transferred_when',
+    'project_customer_document_handover',
     'project_documents_delivered',
     'project_energy_class',
     'project_estimated_completion_date',
     'project_housing_manager',
+    'project_parkingplace_count',
     'project_payment_recipient',
     'project_payment_recipient_final',
     'project_project_manager',
@@ -71,11 +75,22 @@ final class SearchMapperElasticsearchParityTest extends KernelTestBase {
     'project_shareholder_meeting_date',
     'project_shares_transferred_when',
     'project_site_area',
+    'project_site_owner',
     'project_site_renter',
+    'project_smoke_free',
     'project_virtual_presentation_url',
     'project_zoning_info',
     'project_zoning_status',
     'project_use_complete_contract',
+  ];
+
+  /**
+   * Apartment keys required by ApartmentDocument that belong on detail maps.
+   */
+  private const APARTMENT_DETAIL_PARITY_KEYS = [
+    'financing_fee_m2',
+    'housing_shares',
+    'maintenance_fee_m2',
   ];
 
   /**
@@ -140,6 +155,9 @@ final class SearchMapperElasticsearchParityTest extends KernelTestBase {
       'field_depositary' => 'Example Bank',
       'field_use_complete_contract' => 1,
       'field_roof_material' => 'Tile',
+      'field_acc_salesperson' => 'Maija Myyjä',
+      'field_project_accessibility' => 'Elevator and ramp',
+      'field_customer_document_handover' => 'Documents at bank',
     ]);
     $project->save();
 
@@ -151,6 +169,89 @@ final class SearchMapperElasticsearchParityTest extends KernelTestBase {
     $this->assertSame('Example Bank', $mapped['project_contract_depositary']);
     $this->assertTrue($mapped['project_use_complete_contract']);
     $this->assertSame('Tile', $mapped['project_roof_material']);
+    $this->assertSame('Maija Myyjä', $mapped['project_acc_salesperson']);
+    $this->assertSame('Elevator and ramp', $mapped['project_accessibility']);
+    $this->assertSame('Documents at bank', $mapped['project_customer_document_handover']);
+    $this->assertSame(
+      $mapped['project_contract_customer_document_handover'],
+      $mapped['project_customer_document_handover'],
+    );
+  }
+
+  /**
+   * Apartment listing exposes project_site_owner alongside site_owner.
+   *
+   * ApartmentDocument declares both keys; Oikotie/Etuovi read project_site_owner.
+   *
+   * - Asserts project_site_owner is present on mapApartmentListing.
+   * - Asserts it matches site_owner (same field_site_owner source).
+   */
+  public function testApartmentListingIncludesProjectSiteOwner(): void {
+    $project = Node::create([
+      'type' => 'project',
+      'title' => 'Site owner project',
+      'status' => 1,
+    ]);
+    $project->save();
+
+    $apartment = Node::create([
+      'type' => 'apartment',
+      'title' => 'A 1',
+      'status' => 1,
+    ]);
+    $apartment->save();
+
+    $this->mapper->primeProjectLookupWithKnownProject([$apartment], $project);
+    $mapped = $this->mapper->mapApartmentListing($apartment);
+
+    $this->assertArrayHasKey('project_site_owner', $mapped);
+    $this->assertArrayHasKey('site_owner', $mapped);
+    $this->assertSame($mapped['site_owner'], $mapped['project_site_owner']);
+  }
+
+  /**
+   * Apartment listing/detail expose ApartmentDocument fee/share parity keys.
+   *
+   * List endpoints feed Etuovi/Oikotie, so these keys must not be detail-only.
+   *
+   * - Asserts housing_shares, financing_fee_m2, maintenance_fee_m2 on listing.
+   * - Asserts detail matches listing for the same apartment.
+   * - Asserts housing_shares is derived from stock start/end numbers.
+   * - Asserts fee_m2 values are cents-per-m2 from fee / living_area.
+   */
+  public function testApartmentDetailIncludesFeeAndShareParityKeys(): void {
+    $project = Node::create([
+      'type' => 'project',
+      'title' => 'Fee parity project',
+      'status' => 1,
+    ]);
+    $project->save();
+
+    $apartment = Node::create([
+      'type' => 'apartment',
+      'title' => 'A 2',
+      'status' => 1,
+      'field_stock_start_number' => '10',
+      'field_stock_end_number' => '20',
+      'field_living_area' => '50',
+      'field_financing_fee' => '100',
+      'field_maintenance_fee' => '200',
+    ]);
+    $apartment->save();
+
+    $this->mapper->primeProjectLookupWithKnownProject([$apartment], $project);
+    $listed = $this->mapper->mapApartmentListing($apartment);
+    $detailed = $this->mapper->mapApartmentDetail($apartment);
+
+    foreach (self::APARTMENT_DETAIL_PARITY_KEYS as $key) {
+      $this->assertArrayHasKey($key, $listed, "Missing parity key on listing: {$key}");
+      $this->assertArrayHasKey($key, $detailed, "Missing parity key on detail: {$key}");
+    }
+    $this->assertSame('10 - 20', $listed['housing_shares']);
+    // 100 EUR / 50 m2 = 2.00 EUR/m2 => 200 cents; 200 / 50 = 4.00 => 400 cents.
+    $this->assertSame(200, $listed['financing_fee_m2']);
+    $this->assertSame(400, $listed['maintenance_fee_m2']);
+    $this->assertSame($listed, $detailed);
   }
 
   /**
@@ -256,6 +357,9 @@ final class SearchMapperElasticsearchParityTest extends KernelTestBase {
     foreach ([
       'field_depositary',
       'field_roof_material',
+      'field_acc_salesperson',
+      'field_project_accessibility',
+      'field_customer_document_handover',
     ] as $fieldName) {
       FieldStorageConfig::create([
         'field_name' => $fieldName,
@@ -297,6 +401,10 @@ final class SearchMapperElasticsearchParityTest extends KernelTestBase {
       'field_debt_free_sales_price',
       'field_release_payment',
       'field_right_of_occupancy_payment',
+      'field_stock_start_number',
+      'field_stock_end_number',
+      'field_financing_fee',
+      'field_maintenance_fee',
     ] as $fieldName) {
       FieldStorageConfig::create([
         'field_name' => $fieldName,
