@@ -158,6 +158,9 @@ msgstr "Myyjän peruuttama"
 msgid "Cancelled by system"
 msgstr "Järjestelmän peruuttama"
 
+msgid "I have read the city's <a target=\"_blank\" href=\"@privacy\">Privacy Statement</a>"
+msgstr "Olen lukenut kaupungin <a target=\"_blank\" href=\"@privacy\">tietosuojaselosteen</a>"
+
 msgid "Make a reservation for @project"
 msgstr "Tee varaus kohteeseen @project"
 
