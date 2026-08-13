@@ -366,7 +366,7 @@ class Application extends EditorialContentEntityBase implements ContentEntityInt
   }
 
   /**
-   * If sales creates application for customer, use user_id query parameter.
+   * If sales/admin creates application for customer, use user_id query param.
    *
    * @param Drupal\Core\Entity\EntityStorageInterface $storage
    *   Entity storage interface.
@@ -383,27 +383,27 @@ class Application extends EditorialContentEntityBase implements ContentEntityInt
     $project_id = $parameters->get('project_id');
 
     $user = User::load(\Drupal::currentUser()->id());
-    if ($user->bundle() == 'sales') {
-      $created_admin = TRUE;
-
-      if (\Drupal::request()->get('user_id')) {
-        $user_id = \Drupal::request()->get('user_id');
-      }
-      else {
-        throw new \Exception('Tried to create new application without user.');
-      }
-    }
-    else {
+    // Customers always own their own applications. Salespersons and admins
+    // (any non-customer account) must pass user_id for the customer owner.
+    // Limiting this to bundle === 'sales' left default-bundle admins owning
+    // applications meant for customers, so edit forms could not prefill.
+    if ($user->hasRole('customer')) {
       $user_id = $user->id();
       $created_admin = FALSE;
     }
+    else {
+      $created_admin = TRUE;
+      if (!$user_id = \Drupal::request()->get('user_id')) {
+        throw new \Exception('Tried to create new application without user.');
+      }
+    }
 
+    $values['uid'] = $user_id;
+    $values['created_admin'] = $created_admin;
+    $values['created_by'] = $user->id();
     $values += [
-      'uid' => $user_id,
       'project_id' => $project_id,
       'project' => $project_id,
-      'created_admin' => $created_admin,
-      'created_by' => $user->id(),
       'create_to_django' => NULL,
     ];
 

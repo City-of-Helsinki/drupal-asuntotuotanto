@@ -10,6 +10,7 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
+use Drupal\user\Entity\Role;
 use Drupal\user\Entity\User;
 
 /**
@@ -143,15 +144,26 @@ trait SalespersonApplicationFormTestTrait {
   /**
    * Create a customer user for application ownership tests.
    *
+   * The customer role is required so Application::preCreate treats the
+   * account as a self-serve customer instead of a salesperson/admin.
+   *
    * @return \Drupal\user\Entity\User
    *   The created user.
    */
   protected function createCustomerUser(): User {
+    if (!Role::load('customer')) {
+      Role::create([
+        'id' => 'customer',
+        'label' => 'Customer',
+      ])->save();
+    }
+
     $user = User::create([
       'name' => 'customer-test',
       'mail' => 'customer@example.com',
       'status' => 1,
     ]);
+    $user->addRole('customer');
     $user->save();
 
     return $user;
