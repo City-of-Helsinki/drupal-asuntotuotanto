@@ -10,6 +10,7 @@ use Drupal\asu_content\Entity\Project;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\node\Entity\Node;
 use Drupal\Tests\asu_content\Kernel\ProjectApartmentContentModelTrait;
+use Drupal\user\Entity\Role;
 use Drupal\user\Entity\User;
 
 /**
@@ -78,6 +79,13 @@ final class ApplicationFormReservationGatingTest extends KernelTestBase {
     ])->save();
     $this->container->get('entity_type.bundle.info')->clearCachedBundles();
     $this->installEntitySchema('asu_application');
+
+    if (!Role::load('customer')) {
+      Role::create([
+        'id' => 'customer',
+        'label' => 'Customer',
+      ])->save();
+    }
   }
 
   /**
@@ -128,6 +136,7 @@ final class ApplicationFormReservationGatingTest extends KernelTestBase {
       'mail' => $this->randomMachineName() . '@example.com',
       'status' => 1,
     ]);
+    $user->addRole('customer');
     $user->save();
     $this->container->get('current_user')->setAccount($user);
 
