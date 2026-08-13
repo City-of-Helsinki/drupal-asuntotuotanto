@@ -10,6 +10,8 @@ display:
           label: Massapäivitys
         name:
           label: Käyttäjätunnus
+        type:
+          label: Tilin tyyppi
         status:
           label: Tila
           settings:
@@ -52,6 +54,9 @@ display:
         combine:
           expose:
             label: 'Nimi tai sähköposti sisältää'
+        type:
+          expose:
+            label: Tilin tyyppi
         status:
           group_info:
             label: Tila
@@ -63,9 +68,6 @@ display:
         roles_target_id:
           expose:
             label: Rooli
-        permission:
-          expose:
-            label: Käyttöoikeus
       use_more_text: lisää
   page_1:
     display_title: Sivu
