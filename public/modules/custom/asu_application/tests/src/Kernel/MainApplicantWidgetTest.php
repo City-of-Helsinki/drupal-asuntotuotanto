@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\asu_application\Kernel;
 
+use Drupal\asu_api\Api\BackendApi\Request\UserRequest;
+use Drupal\asu_api\Api\BackendApi\Response\UserResponse;
 use Drupal\asu_application\Plugin\Field\FieldWidget\MainApplicantWidget;
 use Drupal\KernelTests\KernelTestBase;
 
@@ -46,7 +48,8 @@ final class MainApplicantWidgetTest extends KernelTestBase {
    *
    * - Application owner is a customer with empty main_applicant values.
    * - Current user is a salesperson (no customer role).
-   * - Backend profile for the owner is returned by the API.
+   * - Backend UserRequest targets the owner and authenticates as the owner
+   *   (Django ProfileViewSet only allows reading one's own profile).
    * - Widget default values come from the owner profile.
    */
   public function testPrefillsOwnerDataWhenSalespersonOpensApplication(): void {
@@ -59,7 +62,7 @@ final class MainApplicantWidgetTest extends KernelTestBase {
     $this->container->get('current_user')->setAccount($salesperson);
 
     $ownerProfile = $this->sampleUserInformation('Maija', 'Meikalainen');
-    $this->expectBackendUserInformation($ownerProfile);
+    $this->expectBackendUserInformationForAccount($owner, $ownerProfile);
 
     $element = $this->buildWidgetElement($application);
 
@@ -71,6 +74,33 @@ final class MainApplicantWidgetTest extends KernelTestBase {
     $this->assertSame('Helsinki', $element['city']['#default_value']);
     $this->assertSame('0401234567', $element['phone']['#default_value']);
     $this->assertSame('maija@example.com', $element['email']['#default_value']);
+  }
+
+  /**
+   * Prefills from application owner when an admin opens the edit form.
+   *
+   * - Application owner is a customer with empty main_applicant values.
+   * - Current user is an administrator without customer role.
+   * - Backend request authenticates as the owner, not the admin.
+   * - Widget default values come from the owner profile.
+   */
+  public function testPrefillsOwnerDataWhenAdminOpensApplication(): void {
+    $owner = $this->createUserWithRoles(['customer'], 'owner-for-admin');
+    $admin = $this->createUserWithRoles([], 'admin-editor');
+    $this->container->get('current_user')->setAccount($owner);
+
+    $application = $this->createHitasApplication($owner);
+
+    $this->container->get('current_user')->setAccount($admin);
+
+    $ownerProfile = $this->sampleUserInformation('Aino', 'Asukas');
+    $this->expectBackendUserInformationForAccount($owner, $ownerProfile);
+
+    $element = $this->buildWidgetElement($application);
+
+    $this->assertSame('Aino', $element['first_name']['#default_value']);
+    $this->assertSame('Asukas', $element['last_name']['#default_value']);
+    $this->assertSame('aino@example.com', $element['email']['#default_value']);
   }
 
   /**
@@ -181,6 +211,34 @@ final class MainApplicantWidgetTest extends KernelTestBase {
       'asu_main_applicant_widget',
       'asu_main_applicant',
     );
+  }
+
+  /**
+   * Expect BackendApi::send for a UserRequest of/as the given account.
+   *
+   * @param \Drupal\user\Entity\User $account
+   *   Profile owner that must be both request target and sender.
+   * @param array $userInformation
+   *   Profile data returned by UserResponse.
+   */
+  private function expectBackendUserInformationForAccount($account, array $userInformation): void {
+    $response = $this->createMock(UserResponse::class);
+    $response->method('getUserInformation')->willReturn($userInformation);
+    $accountId = (int) $account->id();
+
+    $this->backendApi->expects($this->once())
+      ->method('send')
+      ->with($this->callback(static function ($request) use ($accountId): bool {
+        if (!$request instanceof UserRequest) {
+          return FALSE;
+        }
+        $user = $request->getUser();
+        $sender = $request->getSender();
+        return $user && $sender
+          && (int) $user->id() === $accountId
+          && (int) $sender->id() === $accountId;
+      }))
+      ->willReturn($response);
   }
 
 }
