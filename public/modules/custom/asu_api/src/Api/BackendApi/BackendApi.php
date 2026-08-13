@@ -151,7 +151,8 @@ class BackendApi {
    */
   private function handleAuthentication(?UserInterface $account = NULL): ?string {
     if ($account) {
-      $token = $this->store->get('asu_api_token');
+      $tokenKey = AuthenticationHelper::getTokenStoreKey($account);
+      $token = $this->store->get($tokenKey);
     }
     else {
       $token = getenv('DRUPAL_SERVER_AUTH_TOKEN');
@@ -160,7 +161,7 @@ class BackendApi {
     if ($account && (!$token || !AuthenticationHelper::isTokenAlive($token))) {
       try {
         $authenticationResponse = $this->authenticate($account);
-        $this->store->set('asu_api_token', $authenticationResponse->getToken());
+        $this->store->set($tokenKey, $authenticationResponse->getToken());
         return $authenticationResponse->getToken();
       }
       catch (\Exception $e) {

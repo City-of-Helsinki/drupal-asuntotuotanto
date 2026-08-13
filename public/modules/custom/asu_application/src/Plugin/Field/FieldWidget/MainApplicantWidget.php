@@ -69,10 +69,10 @@ class MainApplicantWidget extends WidgetBase {
 
     if ($account && $account->hasRole('customer')) {
       $request = new UserRequest($account);
-      // Authenticate as the current user so salespersons/admins can fetch the
-      // owner's profile; customers opening their own form still use themselves.
-      $sender = $this->entityTypeManager->getStorage('user')->load($this->currentUser->id());
-      $request->setSender($sender instanceof UserInterface ? $sender : $account);
+      // Authenticate as the profile owner. Django ProfileViewSet only allows
+      // reading one's own profile, so salesperson/admin tokens cannot fetch a
+      // customer's data. Owner credentials live on the Drupal user entity.
+      $request->setSender($account);
 
       try {
         $userResponse = $this->backendApi->send($request);
