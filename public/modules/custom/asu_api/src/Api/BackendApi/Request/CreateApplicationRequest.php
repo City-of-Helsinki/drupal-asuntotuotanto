@@ -49,6 +49,7 @@ class CreateApplicationRequest extends Request {
    */
   public function toArray(): array {
     $values = [
+      'drupal_application_id' => (int) $this->application->id(),
       'application_uuid' => $this->application->uuid(),
       'application_type' => $this->application->bundle(),
       'applicant' => $this->getMainApplicant(),
