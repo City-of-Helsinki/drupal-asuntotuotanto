@@ -40637,6 +40637,9 @@ msgstr ""
 msgid "Edit application"
 msgstr "Muokkaa hakemusta"
 
+msgid "View the application"
+msgstr "Näytä hakemus"
+
 msgid "The application has been submitted successfully."
 msgstr "Hakemuksesi on lähetetty onnistuneesti."
 
