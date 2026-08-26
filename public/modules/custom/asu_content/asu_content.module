@@ -20,6 +20,7 @@ use Drupal\asu_content\Entity\Apartment;
 use Drupal\asu_content\Entity\Project;
 use Drupal\asu_content\ProjectUpdater;
 use Drupal\helfi_platform_config\DTO\ParagraphTypeCollection;
+use Drupal\media\Entity\Media;
 use Drupal\node\Entity\Node;
 use Drupal\node\NodeForm;
 use Drupal\asu_content\IntegrationConstants;
@@ -522,8 +523,166 @@ function asu_content_entity_presave(EntityInterface $entity) {
 
       $apartment_count = count($entity->getApartmentEntities());
       $entity->set('field_apartment_count', $apartment_count);
+
+      // Keep mixed gallery backwards-compatible: when editors add only a
+      // remote video to the new media field, append legacy project images.
+      asu_content_backfill_project_gallery_media_images($entity);
     }
   }
+}
+
+/**
+ * Keep project mixed gallery ordered as images first and video last.
+ *
+ * If gallery has remote video but no image media, this backfills image media
+ * from legacy project image file fields. After that, all image media are kept
+ * first and non-image media (including remote video) are kept at the end.
+ */
+function asu_content_backfill_project_gallery_media_images(EntityInterface $entity): void {
+  if (
+    !$entity->hasField('field_project_gallery_media') ||
+    !$entity->hasField('field_main_image') ||
+    !$entity->hasField('field_images')
+  ) {
+    return;
+  }
+
+  if ($entity->get('field_project_gallery_media')->isEmpty()) {
+    return;
+  }
+
+  $referenced_media = $entity->get('field_project_gallery_media')->referencedEntities();
+  $existing_media_ids = [];
+  $existing_image_media_ids = [];
+  $existing_non_image_media_ids = [];
+  $has_remote_video = FALSE;
+
+  foreach ($referenced_media as $media) {
+    $media_id = (int) $media->id();
+    if ($media_id <= 0) {
+      continue;
+    }
+
+    $existing_media_ids[] = $media_id;
+
+    if ($media->bundle() === 'remote_video') {
+      $has_remote_video = TRUE;
+    }
+
+    if ($media->bundle() === 'image') {
+      $existing_image_media_ids[] = $media_id;
+    }
+    else {
+      $existing_non_image_media_ids[] = $media_id;
+    }
+  }
+
+  // Nothing to do unless there is at least one remote video.
+  if (!$has_remote_video) {
+    return;
+  }
+
+  $image_media_ids = $existing_image_media_ids;
+
+  // If only video was added to the new field, source images from legacy fields.
+  if (empty($existing_image_media_ids)) {
+    $file_ids = asu_content_collect_project_gallery_file_ids($entity);
+    if (!empty($file_ids)) {
+      $project_title = method_exists($entity, 'label') ? (string) $entity->label() : 'Project image';
+      foreach ($file_ids as $file_id) {
+        $image_media = asu_content_load_or_create_image_media((int) $file_id, $project_title);
+        if ($image_media) {
+          $image_media_ids[] = (int) $image_media->id();
+        }
+      }
+    }
+  }
+
+  if (empty($image_media_ids) || empty($existing_non_image_media_ids)) {
+    return;
+  }
+
+  $ordered_media_ids = array_values(array_unique(array_merge(
+    $image_media_ids,
+    $existing_non_image_media_ids
+  )));
+
+  if ($ordered_media_ids === $existing_media_ids) {
+    return;
+  }
+
+  $new_values = [];
+  foreach ($ordered_media_ids as $media_id) {
+    $new_values[] = ['target_id' => $media_id];
+  }
+
+  $entity->set('field_project_gallery_media', $new_values);
+}
+
+/**
+ * Collect unique image file IDs from legacy project image fields.
+ */
+function asu_content_collect_project_gallery_file_ids(EntityInterface $entity): array {
+  $file_ids = [];
+
+  if (!$entity->get('field_main_image')->isEmpty()) {
+    $main_image_id = (int) $entity->get('field_main_image')->target_id;
+    if ($main_image_id > 0) {
+      $file_ids[] = $main_image_id;
+    }
+  }
+
+  foreach ($entity->get('field_images') as $item) {
+    $file_id = (int) $item->target_id;
+    if ($file_id > 0) {
+      $file_ids[] = $file_id;
+    }
+  }
+
+  return array_values(array_unique($file_ids));
+}
+
+/**
+ * Load or create media:image entity for a file ID.
+ */
+function asu_content_load_or_create_image_media(int $file_id, string $project_title): ?Media {
+  if ($file_id <= 0) {
+    return NULL;
+  }
+
+  $media_storage = \Drupal::entityTypeManager()->getStorage('media');
+  $existing_ids = $media_storage->getQuery()
+    ->accessCheck(FALSE)
+    ->condition('bundle', 'image')
+    ->condition('field_media_image.target_id', $file_id)
+    ->range(0, 1)
+    ->execute();
+
+  if (!empty($existing_ids)) {
+    $existing_id = (int) reset($existing_ids);
+    $existing_media = $media_storage->load($existing_id);
+    if ($existing_media instanceof Media) {
+      return $existing_media;
+    }
+  }
+
+  $file = File::load($file_id);
+  if (!$file instanceof FileInterface) {
+    return NULL;
+  }
+
+  $media = Media::create([
+    'bundle' => 'image',
+    'name' => $file->getFilename() ?: $project_title,
+    'field_media_image' => [
+      'target_id' => $file_id,
+      'alt' => $project_title,
+    ],
+    'status' => 1,
+  ]);
+  $media->save();
+
+  return $media;
 }
 
 /**

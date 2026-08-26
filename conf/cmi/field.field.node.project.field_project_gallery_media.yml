@@ -1,0 +1,31 @@
+uuid: eecaa6b4-9101-4af2-924b-0ac267ea7707
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_project_gallery_media
+    - media.type.image
+    - media.type.remote_video
+    - node.type.project
+id: node.project.field_project_gallery_media
+field_name: field_project_gallery_media
+entity_type: node
+bundle: project
+label: 'Gallery media'
+description: 'Images and YouTube videos shown in the project gallery.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:media'
+  handler_settings:
+    target_bundles:
+      image: image
+      remote_video: remote_video
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference
