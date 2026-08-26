@@ -217,8 +217,6 @@ class ApplicationSubscriber implements EventSubscriberInterface {
             $this->t('This is an automated message – please do not reply to this email.'),
           ];
 
-          $mailManager->mail('asu_application', 'application_submission', $to, $langcode, $params, NULL, TRUE);
-
           $result = $mailManager->mail('asu_application', 'application_submission', $to, $langcode, $params, NULL, TRUE);
 
           if (!empty($result['result'])) {
