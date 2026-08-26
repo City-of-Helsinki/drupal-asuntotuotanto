@@ -1128,9 +1128,70 @@ function get_project_apartment_teaser_values($project_id) {
  * Add fullscreen functionality to slick.
  */
 function asuntotuotanto_preprocess_blazy(&$variables) {
-  // dd($variables);
-  $variables['image']['#attributes']['data-image'] = \Drupal::service('file_url_generator')->generateAbsoluteString($variables['image']['#uri']);
-  $variables['#attached']['library'][] = 'asuntotuotanto/intense-images';
+  // Match the effective project showcase image ratio to prevent the default
+  // browser iframe strip height when Blazy sets width: 100%.
+  $showcase_ratio_style = 'display:block;width:100%;height:auto;min-height:330px;aspect-ratio:1024/445;';
+  $oembed_width = 1024;
+  $oembed_height = 445;
+  $uri = $variables['image']['#uri'] ?? NULL;
+
+  // Remote videos do not provide image URI here.
+  if (is_string($uri) && $uri !== '') {
+    $variables['image']['#attributes']['data-image'] = \Drupal::service('file_url_generator')->generateAbsoluteString($uri);
+    $variables['#attached']['library'][] = 'asuntotuotanto/intense-images';
+    return;
+  }
+
+  // Keep Blazy video iframe dimensions stable in Slick slides.
+  if (!isset($variables['iframe'])) {
+    return;
+  }
+
+  if (is_array($variables['iframe']) && isset($variables['iframe']['#attributes'])) {
+    $attributes = &$variables['iframe']['#attributes'];
+
+    if (is_array($attributes)) {
+      $attributes['width'] = (string) $oembed_width;
+      $attributes['height'] = (string) $oembed_height;
+
+      $existing_style = is_string($attributes['style'] ?? NULL) ? trim($attributes['style']) : '';
+      $attributes['style'] = $existing_style === ''
+        ? $showcase_ratio_style
+        : rtrim($existing_style, ';') . ';' . $showcase_ratio_style;
+    }
+    return;
+  }
+
+  if (is_string($variables['iframe']) && $variables['iframe'] !== '') {
+    $iframe = $variables['iframe'];
+
+    if (!str_contains($iframe, ' width=')) {
+      $iframe = preg_replace('/<iframe\\b/', '<iframe width="' . $oembed_width . '"', $iframe, 1) ?: $iframe;
+    }
+
+    if (!str_contains($iframe, ' height=')) {
+      $iframe = preg_replace('/<iframe\\b/', '<iframe height="' . $oembed_height . '"', $iframe, 1) ?: $iframe;
+    }
+
+    if (!str_contains($iframe, ' style=')) {
+      $iframe = preg_replace('/<iframe\\b/', '<iframe style="' . $showcase_ratio_style . '"', $iframe, 1) ?: $iframe;
+    }
+    else {
+      $iframe = preg_replace_callback('/<iframe\\b([^>]*)>/', static function (array $matches) use ($showcase_ratio_style): string {
+        $attributes = $matches[1];
+        if (!preg_match('/style="([^"]*)"/', $attributes, $style_match)) {
+          return '<iframe' . $attributes . '>';
+        }
+
+        $merged_style = rtrim($style_match[1], ';') . ';' . $showcase_ratio_style;
+        $attributes = str_replace($style_match[0], 'style="' . $merged_style . '"', $attributes);
+
+        return '<iframe' . $attributes . '>';
+      }, $iframe, 1) ?: $iframe;
+    }
+
+    $variables['iframe'] = $iframe;
+  }
 }
 
 /**
