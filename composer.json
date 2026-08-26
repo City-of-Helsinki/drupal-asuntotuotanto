@@ -171,7 +171,8 @@
         "patches": {
             "drupal/helfi_platform_config": {
                 "Catch exception during hero paragraphs update": "patches/helfi_platform_config_hero_paragraph_fix.patch",
-                "Skip update_9400 on Drupal 11 (HAL/RDF modules removed)": "patches/helfi_platform_config-d11-update-9400.patch"
+                "Skip update_9400 on Drupal 11 (HAL/RDF modules removed)": "patches/helfi_platform_config-d11-update-9400.patch",
+                "Fix preprocess_media_oembed_iframe string handling (D11/PHP8)": "patches/helfi_platform_config-remote-video-string-cast.patch"
             },
             "drupal/simple_oauth": {
                 "[D11] Allow installing simple_oauth 5.x on Drupal 11": "patches/simple_oauth-drupal11-core-version.patch",
