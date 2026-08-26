@@ -79,6 +79,7 @@ dependencies:
     - field.field.node.project.field_postal_code
     - field.field.node.project.field_pre_marketing_end_time
     - field.field.node.project.field_premarketing_start_time
+    - field.field.node.project.field_project_gallery_media
     - field.field.node.project.field_project_accessibility
     - field.field.node.project.field_project_area_description
     - field.field.node.project.field_project_attachments
@@ -124,6 +125,7 @@ dependencies:
     - file
     - link
     - options
+    - slick
     - text
     - user
 id: node.project.default
@@ -607,6 +609,56 @@ content:
       preload: false
     third_party_settings: {  }
     weight: 41
+    region: content
+  field_project_gallery_media:
+    type: slick_media
+    label: hidden
+    settings:
+      caption: {  }
+      optionset: default
+      layout: ''
+      view_mode: default
+      cache: 0
+      skin: ''
+      style: ''
+      background: false
+      box_caption: ''
+      box_caption_custom: ''
+      box_media_style: ''
+      responsive_image_style: showcase_gallery
+      box_style: ''
+      image_style: 3_2_m
+      media_switch: ''
+      ratio: ''
+      thumbnail_style: ''
+      grid: null
+      grid_medium: null
+      grid_small: null
+      overridables:
+        arrows: '0'
+        autoplay: '0'
+        dots: '0'
+        draggable: '0'
+        infinite: '0'
+        mouseWheel: '0'
+        randomize: '0'
+        variableWidth: '0'
+      optionset_thumbnail: ''
+      skin_thumbnail: ''
+      thumbnail_caption: ''
+      thumbnail_effect: ''
+      thumbnail_position: ''
+      override: false
+      skin_arrows: ''
+      skin_dots: ''
+      use_theme_field: false
+      preserve_keys: false
+      visible_items: null
+      lazy: ''
+      loading: lazy
+      preload: false
+    third_party_settings: {  }
+    weight: 40
     region: content
   field_location_block:
     type: string

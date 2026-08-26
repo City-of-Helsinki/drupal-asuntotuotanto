@@ -79,6 +79,7 @@ dependencies:
     - field.field.node.project.field_postal_code
     - field.field.node.project.field_pre_marketing_end_time
     - field.field.node.project.field_premarketing_start_time
+    - field.field.node.project.field_project_gallery_media
     - field.field.node.project.field_project_accessibility
     - field.field.node.project.field_project_area_description
     - field.field.node.project.field_project_attachments
@@ -127,6 +128,7 @@ dependencies:
     - image
     - inline_entity_form
     - link
+    - media_library
     - path
     - publication_date
     - scheduler
@@ -269,6 +271,7 @@ third_party_settings:
         - field_attachments_url
         - field_main_image
         - field_images
+        - field_project_gallery_media
         - field_shared_apartment_images
         - field_virtual_presentation_url
         - field_project_attachments
@@ -987,6 +990,13 @@ content:
     region: content
     settings:
       progress_indicator: throbber
+    third_party_settings: {  }
+  field_project_gallery_media:
+    type: media_library_widget
+    weight: 27
+    region: content
+    settings:
+      media_types: {  }
     third_party_settings: {  }
   field_project_description:
     type: text_textarea
