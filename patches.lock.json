@@ -1,5 +1,5 @@
 {
-    "_hash": "42f5a3191015a7bd16be4a5422fc81ee35bd984579c12b5960daf6965a5530c6",
+    "_hash": "e75f269e3e7ba688c2746ce74f60ec757993f21f9e3b3dd4a2e751ccde9c0241",
     "patches": {
         "drupal/helfi_platform_config": [
             {
@@ -17,6 +17,16 @@
                 "description": "Skip update_9400 on Drupal 11 (HAL/RDF modules removed)",
                 "url": "patches/helfi_platform_config-d11-update-9400.patch",
                 "sha256": "e13a1ddf7d33fc5027e7be3e8726a4be9515a2106fa0c11dbb07abfbde8e6551",
+                "depth": 1,
+                "extra": {
+                    "provenance": "root"
+                }
+            },
+            {
+                "package": "drupal/helfi_platform_config",
+                "description": "Fix preprocess_media_oembed_iframe string handling (D11/PHP8)",
+                "url": "patches/helfi_platform_config-remote-video-string-cast.patch",
+                "sha256": "a93224d545ed4e2050afd83c8feaa254111622810342740c5548268e19274fda",
                 "depth": 1,
                 "extra": {
                     "provenance": "root"
