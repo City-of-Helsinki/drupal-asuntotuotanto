@@ -6,8 +6,7 @@
 {% trans %}A customer has not yet responded to an apartment offer before the deadline.{% endtrans %}
 {% endif %}
 
-{% trans %}Project{% endtrans %}: {{ project_name }}
-{% trans %}Apartment{% endtrans %}: {{ apartment_number }}
-{% trans %}Customer{% endtrans %}: {{ customer_name }} ({{ customer_email }})
-{% trans %}Offer valid until{% endtrans %}: {{ valid_until }}
-{% endautoescape %}
+{% trans %}Project{% endtrans %}: {{ project_name|raw }}
+{% trans %}Apartment{% endtrans %}: {{ apartment_number|raw }}
+{% trans %}Customer{% endtrans %}: {{ customer_name|raw }} ({{ customer_email|raw }})
+{% trans %}Offer valid until{% endtrans %}: {{ valid_until|raw }}
