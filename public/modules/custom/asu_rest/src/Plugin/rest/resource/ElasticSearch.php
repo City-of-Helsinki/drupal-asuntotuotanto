@@ -158,6 +158,11 @@ class ElasticSearch extends ResourceBase {
       else {
         $room_count_filter = $this->normalizeRoomCountFilter($parameters->get('room_count'));
 
+        [$living_area_min, $living_area_max] = $this->normalizeLivingAreaBoundsForFilter($request_data);
+        if ($living_area_min !== NULL && $living_area_max !== NULL && $living_area_min > $living_area_max) {
+          [$living_area_min, $living_area_max] = [$living_area_max, $living_area_min];
+        }
+
         [$price_min, $price_max] = $this->normalizePriceBoundsForFilter($request_data);
         if ($price_min !== NULL && $price_max !== NULL && $price_min > $price_max) {
           [$price_min, $price_max] = [$price_max, $price_min];
@@ -202,6 +207,10 @@ class ElasticSearch extends ResourceBase {
           }
 
           if (!$this->matchesRoomCountFilter($this->resolveApartmentRoomCount($apartment_node), $room_count_filter)) {
+            continue;
+          }
+
+          if (!$this->matchesLivingAreaFilter($this->resolveApartmentLivingArea($apartment_node), $living_area_min, $living_area_max)) {
             continue;
           }
 
@@ -477,6 +486,112 @@ class ElasticSearch extends ResourceBase {
     }
 
     return in_array(5, $filter, TRUE) && $roomCount >= 5;
+  }
+
+  /**
+   * Resolve apartment living area in square meters.
+   */
+  private function resolveApartmentLivingArea(Node $apartment): ?float {
+    if (!$apartment->hasField('field_living_area') || $apartment->get('field_living_area')->isEmpty()) {
+      return NULL;
+    }
+
+    $raw = (string) $apartment->get('field_living_area')->value;
+    if (!is_numeric($raw)) {
+      return NULL;
+    }
+
+    return (float) $raw;
+  }
+
+  /**
+   * Normalize request living area bounds to comparable numeric values.
+   *
+   * Supports legacy forms:
+   * - living_area as "min,max" (including ",max" and "min,")
+   * - living_area as array [min, max]
+   * - explicit living_area_min/living_area_max
+   * - aliases area/area_min/area_max.
+   *
+   * @return array{0:?float,1:?float}
+   *   [min, max] in square meters.
+   */
+  private function normalizeLivingAreaBoundsForFilter(array $requestData): array {
+    $rangeParam = $requestData['living_area'] ?? $requestData['area'] ?? NULL;
+    $minRaw = $requestData['living_area_min'] ?? $requestData['area_min'] ?? NULL;
+    $maxRaw = $requestData['living_area_max'] ?? $requestData['area_max'] ?? NULL;
+
+    if (is_array($rangeParam)) {
+      if ($minRaw === NULL && array_key_exists(0, $rangeParam)) {
+        $candidate = $rangeParam[0];
+        if ($candidate !== '' && $candidate !== NULL && is_numeric($candidate)) {
+          $minRaw = $candidate;
+        }
+      }
+      if ($maxRaw === NULL && array_key_exists(1, $rangeParam)) {
+        $candidate = $rangeParam[1];
+        if ($candidate !== '' && $candidate !== NULL && is_numeric($candidate)) {
+          $maxRaw = $candidate;
+        }
+      }
+      // Fallback for single-item arrays.
+      if ($maxRaw === NULL && $minRaw === NULL && array_key_exists(0, $rangeParam)) {
+        $candidate = $rangeParam[0];
+        if ($candidate !== '' && $candidate !== NULL && is_numeric($candidate)) {
+          $maxRaw = $candidate;
+        }
+      }
+    }
+    elseif (is_string($rangeParam) && str_contains($rangeParam, ',')) {
+      [$left, $right] = array_pad(explode(',', $rangeParam, 2), 2, '');
+      $left = trim($left);
+      $right = trim($right);
+
+      if ($minRaw === NULL && $left !== '' && is_numeric($left)) {
+        $minRaw = $left;
+      }
+      if ($maxRaw === NULL && $right !== '' && is_numeric($right)) {
+        $maxRaw = $right;
+      }
+    }
+    elseif ($maxRaw === NULL && is_numeric($rangeParam)) {
+      // Backward-compatible shorthand: living_area=70 means upper bound.
+      $maxRaw = $rangeParam;
+    }
+
+    $min = is_numeric($minRaw) ? (float) $minRaw : NULL;
+    $max = is_numeric($maxRaw) ? (float) $maxRaw : NULL;
+
+    if ($min !== NULL && $min <= 0) {
+      $min = NULL;
+    }
+    if ($max !== NULL && $max <= 0) {
+      $max = NULL;
+    }
+
+    return [$min, $max];
+  }
+
+  /**
+   * Check if apartment living area is inside optional min/max bounds.
+   */
+  private function matchesLivingAreaFilter(?float $livingArea, ?float $min, ?float $max): bool {
+    if ($min === NULL && $max === NULL) {
+      return TRUE;
+    }
+
+    if ($livingArea === NULL) {
+      return FALSE;
+    }
+
+    if ($min !== NULL && $livingArea < $min) {
+      return FALSE;
+    }
+    if ($max !== NULL && $livingArea > $max) {
+      return FALSE;
+    }
+
+    return TRUE;
   }
 
   /**
