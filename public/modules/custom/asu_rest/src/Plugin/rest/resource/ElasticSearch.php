@@ -525,7 +525,7 @@ class ElasticSearch extends ResourceBase {
    * - living_area as "min,max" (including ",max" and "min,")
    * - living_area as array [min, max]
    * - explicit living_area_min/living_area_max
-   * - aliases area/area_min/area_max
+   * - aliases area/area_min/area_max.
    *
    * @return array{0:?float,1:?float}
    *   [min, max] in square meters.

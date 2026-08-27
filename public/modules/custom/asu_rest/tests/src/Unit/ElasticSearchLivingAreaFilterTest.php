@@ -15,6 +15,8 @@ use Drupal\Tests\UnitTestCase;
 final class ElasticSearchLivingAreaFilterTest extends UnitTestCase {
 
   /**
+   * Tests living area bounds normalization.
+   *
    * @dataProvider normalizeBoundsProvider
    */
   public function testNormalizeLivingAreaBoundsForFilter(array $request, ?float $expectedMin, ?float $expectedMax): void {
@@ -29,7 +31,10 @@ final class ElasticSearchLivingAreaFilterTest extends UnitTestCase {
   }
 
   /**
+   * Provides normalization test cases for living area bounds.
+   *
    * @return array<string, array{0: array<string, mixed>, 1: ?float, 2: ?float}>
+   *   Request payload and expected min/max bounds.
    */
   public static function normalizeBoundsProvider(): array {
     return [
@@ -38,7 +43,15 @@ final class ElasticSearchLivingAreaFilterTest extends UnitTestCase {
       'csv lower bound only' => [['living_area' => '50,'], 50.0, NULL],
       'csv lower and upper bound' => [['living_area' => '50,80'], 50.0, 80.0],
       'array lower and upper bound' => [['living_area' => ['45', '90']], 45.0, 90.0],
-      'explicit bounds override range' => [['living_area' => '10,20', 'living_area_min' => '40', 'living_area_max' => '60'], 40.0, 60.0],
+      'explicit bounds override range' => [
+        [
+          'living_area' => '10,20',
+          'living_area_min' => '40',
+          'living_area_max' => '60',
+        ],
+        40.0,
+        60.0,
+      ],
       'single numeric shorthand means upper bound' => [['living_area' => '70'], NULL, 70.0],
       'zero and negative values are ignored' => [['living_area' => '-10,0'], NULL, NULL],
       'legacy aliases are supported' => [['area_min' => '35', 'area_max' => '95'], 35.0, 95.0],
@@ -46,6 +59,8 @@ final class ElasticSearchLivingAreaFilterTest extends UnitTestCase {
   }
 
   /**
+   * Tests living area range matching.
+   *
    * @dataProvider matchesProvider
    */
   public function testMatchesLivingAreaFilter(?float $value, ?float $min, ?float $max, bool $expected): void {
@@ -59,7 +74,10 @@ final class ElasticSearchLivingAreaFilterTest extends UnitTestCase {
   }
 
   /**
+   * Provides matching test cases for living area filter checks.
+   *
    * @return array<string, array{0: ?float, 1: ?float, 2: ?float, 3: bool}>
+   *   Living area value, min, max, and expected match result.
    */
   public static function matchesProvider(): array {
     return [
@@ -72,6 +90,9 @@ final class ElasticSearchLivingAreaFilterTest extends UnitTestCase {
     ];
   }
 
+  /**
+   * Creates an ElasticSearch resource instance without container wiring.
+   */
   private function createResource(): ElasticSearch {
     $ref = new \ReflectionClass(ElasticSearch::class);
     /** @var \Drupal\asu_rest\Plugin\rest\resource\ElasticSearch $resource */
