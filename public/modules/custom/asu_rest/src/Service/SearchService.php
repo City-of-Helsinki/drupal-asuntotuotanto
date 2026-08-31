@@ -367,7 +367,7 @@ final class SearchService {
   /**
    * Get project IDs matching all project-level filters for apartment search.
    *
-  * Applies state-of-sale filtering (exclude upcoming by default).
+   * Applies state-of-sale filtering (exclude upcoming by default).
    * Returns IDs to restrict apartments to matching projects.
    *
    * @return int[]

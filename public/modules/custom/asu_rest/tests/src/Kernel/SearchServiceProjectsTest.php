@@ -110,6 +110,8 @@ final class SearchServiceProjectsTest extends SearchServiceKernelTestBase {
    *
    * @param string $title
    *   The project title.
+   * @param bool $archived
+   *   Whether the project should be archived.
    *
    * @return \Drupal\node\Entity\Node
    *   The created project node.
