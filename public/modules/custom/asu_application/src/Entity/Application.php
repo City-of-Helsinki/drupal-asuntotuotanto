@@ -7,9 +7,12 @@ use Drupal\Core\Entity\EditorialContentEntityBase;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\Form\EnforcedResponseException;
+use Drupal\Core\Url;
 use Drupal\user\Entity\User;
 use Drupal\user\EntityOwnerInterface;
 use Drupal\user\EntityOwnerTrait;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Defines the Application entity.
@@ -373,7 +376,10 @@ class Application extends EditorialContentEntityBase implements ContentEntityInt
    * @param array $values
    *   Entity values.
    *
+   * @throws \Drupal\Core\Form\EnforcedResponseException
+   *   When the current user is anonymous and must log in first.
    * @throws \Exception
+   *   When a non-customer creates an application without user_id.
    */
   public static function preCreate(EntityStorageInterface $storage, array &$values) {
     // @todo muista jotain. ei saa ajaa jos asko.
@@ -382,12 +388,17 @@ class Application extends EditorialContentEntityBase implements ContentEntityInt
     $parameters = \Drupal::routeMatch()->getParameters();
     $project_id = $parameters->get('project_id');
 
-    $user = User::load(\Drupal::currentUser()->id());
+    $account = \Drupal::currentUser();
+    if ($account->isAnonymous()) {
+      throw new EnforcedResponseException(self::loginRedirectResponse());
+    }
+
+    $user = User::load($account->id());
     // Customers always own their own applications. Salespersons and admins
     // (any non-customer account) must pass user_id for the customer owner.
     // Limiting this to bundle === 'sales' left default-bundle admins owning
     // applications meant for customers, so edit forms could not prefill.
-    if ($user->hasRole('customer')) {
+    if ($user && $user->hasRole('customer')) {
       $user_id = $user->id();
       $created_admin = FALSE;
     }
@@ -400,13 +411,26 @@ class Application extends EditorialContentEntityBase implements ContentEntityInt
 
     $values['uid'] = $user_id;
     $values['created_admin'] = $created_admin;
-    $values['created_by'] = $user->id();
+    $values['created_by'] = $account->id();
     $values += [
       'project_id' => $project_id,
       'project' => $project_id,
       'create_to_django' => NULL,
     ];
 
+  }
+
+  /**
+   * Redirect to login, then back to the current application URL.
+   *
+   * @return \Symfony\Component\HttpFoundation\RedirectResponse
+   *   Redirect to user.login with a destination query.
+   */
+  public static function loginRedirectResponse(): RedirectResponse {
+    $url = Url::fromRoute('user.login', [], [
+      'query' => ['destination' => \Drupal::request()->getRequestUri()],
+    ])->toString();
+    return new RedirectResponse($url);
   }
 
   /**

@@ -7,11 +7,13 @@ namespace Drupal\Tests\asu_application\Kernel;
 use Drupal\asu_application\Entity\Application;
 use Drupal\asu_application\Entity\ApplicationType;
 use Drupal\asu_content\Entity\Project;
+use Drupal\Core\Form\EnforcedResponseException;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\node\Entity\Node;
 use Drupal\Tests\asu_content\Kernel\ProjectApartmentContentModelTrait;
 use Drupal\user\Entity\Role;
 use Drupal\user\Entity\User;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Tests ApplicationForm HITAS post-period reservation gating.
@@ -19,7 +21,8 @@ use Drupal\user\Entity\User;
  * Verifies that:
  * - After period + can_apply_afterwards enables reservation mode on the form
  * - In-period or can_apply_afterwards=false does not enable reservation mode
- * - Reservation mode limits selection to one apartment.
+ * - Reservation mode limits selection to one apartment
+ * - Already reserved apartments cannot be selected.
  *
  * @group asu_application
  *
@@ -89,18 +92,14 @@ final class ApplicationFormReservationGatingTest extends KernelTestBase {
   }
 
   /**
-   * Creates a HITAS project with one free apartment.
+   * Creates an apartment node with the given state of sale.
    */
-  private function createHitasProject(
-    string $startTime,
-    string $endTime,
-    bool $canApplyAfterwards,
-  ): Project {
+  private function createApartment(string $number, string $stateOfSale): Node {
     $apartment = Node::create([
       'type' => 'apartment',
-      'title' => 'A1',
+      'title' => $number,
       'status' => 1,
-      'field_apartment_number' => 'A1',
+      'field_apartment_number' => $number,
       'field_apartment_structure' => '1h+k',
       'field_living_area' => 30,
       'field_floor' => 2,
@@ -108,10 +107,35 @@ final class ApplicationFormReservationGatingTest extends KernelTestBase {
       'field_sales_price' => 200000,
       'field_debt_free_sales_price' => 250000,
       'field_apartment_state_of_sale' => [
-        ['target_id' => 'free_for_reservations'],
+        ['target_id' => $stateOfSale],
       ],
     ]);
     $apartment->save();
+    return $apartment;
+  }
+
+  /**
+   * Creates a HITAS project with the given apartments.
+   *
+   * @param array $apartments
+   *   Apartment nodes to attach.
+   * @param string $startTime
+   *   Application start datetime.
+   * @param string $endTime
+   *   Application end datetime.
+   * @param bool $canApplyAfterwards
+   *   Whether post-period reservations are allowed.
+   */
+  private function createHitasProjectWithApartments(
+    array $apartments,
+    string $startTime,
+    string $endTime,
+    bool $canApplyAfterwards,
+  ): Project {
+    $references = [];
+    foreach ($apartments as $apartment) {
+      $references[] = ['target_id' => $apartment->id()];
+    }
 
     return $this->createProject(
       $this->createOwnershipTerm('Hitas'),
@@ -122,8 +146,24 @@ final class ApplicationFormReservationGatingTest extends KernelTestBase {
         'title' => 'Reservation Project',
         'field_housing_company' => 'Reservation Co',
         'field_street_address' => 'Reserve St 1',
-        'field_apartments' => [['target_id' => $apartment->id()]],
+        'field_apartments' => $references,
       ],
+    );
+  }
+
+  /**
+   * Creates a HITAS project with one free apartment.
+   */
+  private function createHitasProject(
+    string $startTime,
+    string $endTime,
+    bool $canApplyAfterwards,
+  ): Project {
+    return $this->createHitasProjectWithApartments(
+      [$this->createApartment('A1', 'free_for_reservations')],
+      $startTime,
+      $endTime,
+      $canApplyAfterwards,
     );
   }
 
@@ -208,6 +248,52 @@ final class ApplicationFormReservationGatingTest extends KernelTestBase {
     $form = $this->buildApplicationForm($project);
 
     $this->assertFalse(!empty($form['#is_hitas_post_period_reservation']));
+  }
+
+  /**
+   * Reservation mode lists only free apartments, not reserved ones.
+   *
+   * - Free apartment remains selectable.
+   * - Reserved apartment is omitted from #apartment_values.
+   */
+  public function testReservationModeExcludesReservedApartments(): void {
+    $free = $this->createApartment('A1', 'free_for_reservations');
+    $reserved = $this->createApartment('A2', 'reserved');
+    $project = $this->createHitasProjectWithApartments(
+      [$free, $reserved],
+      '2020-01-01T00:00:00',
+      '2020-06-01T00:00:00',
+      canApplyAfterwards: TRUE,
+    );
+
+    $form = $this->buildApplicationForm($project);
+
+    $this->assertIsArray($form);
+    $this->assertArrayHasKey((string) $free->id(), $form['#apartment_values']);
+    $this->assertArrayNotHasKey((string) $reserved->id(), $form['#apartment_values']);
+  }
+
+  /**
+   * Reservation mode is unavailable when every apartment is already reserved.
+   *
+   * - Form build returns a redirect instead of the reservation form.
+   */
+  public function testReservationModeUnavailableWhenAllApartmentsReserved(): void {
+    $reserved = $this->createApartment('A1', 'reserved');
+    $project = $this->createHitasProjectWithApartments(
+      [$reserved],
+      '2020-01-01T00:00:00',
+      '2020-06-01T00:00:00',
+      canApplyAfterwards: TRUE,
+    );
+
+    try {
+      $this->buildApplicationForm($project);
+      $this->fail('Expected a redirect when no free apartments remain.');
+    }
+    catch (EnforcedResponseException $e) {
+      $this->assertInstanceOf(RedirectResponse::class, $e->getResponse());
+    }
   }
 
 }

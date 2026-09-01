@@ -193,18 +193,16 @@ HTML;
     $project_id = $project->id();
     $application_type_id = $this->entity->bundle();
 
+    if ($this->currentUser->isAnonymous()) {
+      return Application::loginRedirectResponse();
+    }
+
     /** @var \Drupal\user\Entity\User $currentUser */
     $currentUser = $this->entityTypeManager->getStorage('user')->load($this->currentUser->id());
     $applicationsUrl = $this->getUserApplicationsUrl();
 
     $form['#project_id'] = $project_id;
     $form['#project_url'] = Url::fromUri('internal:/node/' . $project_id);
-
-    // Redirect cases.
-    if ($currentUser->isAnonymous()) {
-      $redirect = '/user/register';
-      return (new RedirectResponse($redirect, 301));
-    }
 
     // HITAS post-period reservation: period ended + can_apply_afterwards.
     $isHitasPostPeriodReservation = (
