@@ -22,11 +22,15 @@
   <div class="user-form__section">
     <h2 class="user-form__identiyfy">{{ 'Basic user identify yourself and login'|t }}</h2>
 
+    {% set suomi_href = login_destination
+      ? path('user.register', {}, { query: { destination: login_destination } })
+      : path('user.register')
+    %}
     {% include '@asuntotuotanto/button/button.html.twig' with {
       type: 'primary',
       disabled: false,
       label: 'Suomi.fi authentication'|t,
-      href: path('user.register')
+      href: suomi_href
     }
     %}
 

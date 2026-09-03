@@ -44,6 +44,19 @@ function asuntotuotanto_preprocess(&$variables) {
 }
 
 /**
+ * Implements hook_preprocess_HOOK().
+ */
+function asuntotuotanto_preprocess_form(array &$variables): void {
+  if (($variables['element']['#form_id'] ?? '') !== 'user_login_form') {
+    return;
+  }
+  $destination = \Drupal::request()->query->get('destination');
+  $variables['login_destination'] = is_string($destination) && $destination !== ''
+    ? $destination
+    : NULL;
+}
+
+/**
  * Implements hook_theme_suggestions_alter().
  *
  * {@inheritdoc}

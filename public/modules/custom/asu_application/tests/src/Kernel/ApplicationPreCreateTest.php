@@ -6,9 +6,12 @@ namespace Drupal\Tests\asu_application\Kernel;
 
 use Drupal\asu_application\Entity\Application;
 use Drupal\asu_application\Entity\ApplicationType;
+use Drupal\Core\Form\EnforcedResponseException;
+use Drupal\Core\Session\AnonymousUserSession;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\user\Entity\Role;
 use Drupal\user\Entity\User;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -131,6 +134,43 @@ final class ApplicationPreCreateTest extends KernelTestBase {
       'bundle' => 'hitas',
       'project_id' => 42,
     ]);
+  }
+
+  /**
+   * Anonymous create redirects to login and preserves the application URL.
+   *
+   * - Current user is anonymous.
+   * - Request is the add-form URL with an apartment query.
+   * - preCreate throws EnforcedResponseException wrapping a login redirect.
+   * - Redirect target includes destination back to the original URL.
+   */
+  public function testAnonymousCreateRedirectsToLoginWithDestination(): void {
+    $this->container->get('router.builder')->rebuild();
+    $this->container->get('current_user')->setAccount(new AnonymousUserSession());
+    $request = Request::create(
+      '/application/add/hitas/42',
+      'GET',
+      ['apartment' => '99']
+    );
+    $request->setSession($this->container->get('request_stack')->getCurrentRequest()->getSession());
+    $this->container->get('request_stack')->push($request);
+
+    try {
+      Application::create([
+        'bundle' => 'hitas',
+        'project_id' => 42,
+      ]);
+      $this->fail('Expected a login redirect for anonymous users.');
+    }
+    catch (EnforcedResponseException $e) {
+      $response = $e->getResponse();
+      $this->assertInstanceOf(RedirectResponse::class, $response);
+      $location = urldecode($response->getTargetUrl());
+      $this->assertStringContainsString('user/login', $location);
+      $this->assertStringContainsString('destination=', $location);
+      $this->assertStringContainsString('application/add/hitas/42', $location);
+      $this->assertStringContainsString('apartment=99', $location);
+    }
   }
 
   /**
