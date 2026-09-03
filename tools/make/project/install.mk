@@ -27,6 +27,13 @@ helfi-drush-enable-modules: ## Enable modules and base configurations.
 	$(call drush,cr)
 	$(call drush,en -y helfi_platform_config helfi_base_config)
 
+SANITIZED_DUMP_DIR ?= .
+
+PHONY += create-sanitized-dump
+create-sanitized-dump: ## Create anonymized SQL dump (does not modify live DB).
+	$(call step,Create sanitized dump in $(SANITIZED_DUMP_DIR)...)
+	$(call drush,asu:sql:sanitized-dump --directory=${DOCKER_PROJECT_ROOT}/$(SANITIZED_DUMP_DIR))
+
 PHONY += drush-locale-update
 drush-locale-update: ## Update translations.
 	$(call step,Update translations...)

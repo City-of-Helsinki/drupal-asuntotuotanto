@@ -1,0 +1,7 @@
+name: 'ASU Sanitized Dump'
+type: module
+description: 'Anonymized MariaDB dumps that leave production data unchanged.'
+core_version_requirement: ^10 || ^11
+package: ASU
+dependencies:
+  - gdpr_dumper:gdpr_dumper

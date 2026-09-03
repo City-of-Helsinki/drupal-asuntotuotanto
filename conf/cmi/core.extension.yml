@@ -19,6 +19,7 @@ module:
   asu_noindex: 0
   asu_project_subscription: 0
   asu_rest: 0
+  asu_sanitized_dump: 0
   asu_tasklist: 0
   asu_translation: 0
   asu_user: 0
@@ -72,6 +73,7 @@ module:
   flysystem: 0
   focal_point: 0
   gdpr_compliance: 0
+  gdpr_dumper: 0
   gin_toolbar: 0
   hal: 0
   hdbt_admin_tools: 0
