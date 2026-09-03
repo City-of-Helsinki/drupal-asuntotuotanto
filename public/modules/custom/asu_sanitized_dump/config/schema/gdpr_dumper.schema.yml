@@ -1,0 +1,13 @@
+gdpr_dumper.settings:
+  type: config_object
+  label: 'GDPR dumper settings'
+  mapping:
+    gdpr_expressions:
+      type: ignore
+      label: 'SQL expressions for dump anonymization'
+    gdpr_replacements:
+      type: ignore
+      label: 'Faker replacements for dump anonymization'
+    drivers:
+      type: ignore
+      label: 'Database driver dump command overrides'
