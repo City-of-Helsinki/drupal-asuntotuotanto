@@ -1,4 +1,14 @@
 services:
+  asu_application.salesperson_project_provider:
+    class: Drupal\asu_application\Service\SalespersonApplicationProjectProvider
+    arguments:
+      - '@entity_type.manager'
+
+  asu_application.late_application_checker:
+    class: Drupal\asu_application\Service\LateApplicationChecker
+    arguments:
+      - '@entity_type.manager'
+
   asu_application.sold_apartment_application_policy:
     class: Drupal\asu_application\Service\SoldApartmentApplicationPolicy
 

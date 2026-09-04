@@ -1,5 +1,5 @@
 {
-    "_hash": "bba7ab1d8144f65b9b08f67a72e2b8fa012c597b789a621626f10cd640000d41",
+    "_hash": "e75f269e3e7ba688c2746ce74f60ec757993f21f9e3b3dd4a2e751ccde9c0241",
     "patches": {
         "drupal/helfi_platform_config": [
             {
@@ -17,6 +17,16 @@
                 "description": "Skip update_9400 on Drupal 11 (HAL/RDF modules removed)",
                 "url": "patches/helfi_platform_config-d11-update-9400.patch",
                 "sha256": "e13a1ddf7d33fc5027e7be3e8726a4be9515a2106fa0c11dbb07abfbde8e6551",
+                "depth": 1,
+                "extra": {
+                    "provenance": "root"
+                }
+            },
+            {
+                "package": "drupal/helfi_platform_config",
+                "description": "Fix preprocess_media_oembed_iframe string handling (D11/PHP8)",
+                "url": "patches/helfi_platform_config-remote-video-string-cast.patch",
+                "sha256": "a93224d545ed4e2050afd83c8feaa254111622810342740c5548268e19274fda",
                 "depth": 1,
                 "extra": {
                     "provenance": "root"
@@ -112,12 +122,42 @@
         "drupal/core": [
             {
                 "package": "drupal/core",
+                "description": "[D11] Skip countFieldData when table missing",
+                "url": "patches/core-count-field-data-missing-table.patch",
+                "sha256": "01b8df53f16b79803d523ae397fa78e9132d5193572234d0ad67fa34bda23b27",
+                "depth": 2,
+                "extra": {
+                    "provenance": "root"
+                }
+            },
+            {
+                "package": "drupal/core",
+                "description": "[D11] Skip delete when field table missing",
+                "url": "patches/core-skip-delete-missing-field-table.patch",
+                "sha256": "c63db5bfc018ae0eb34cfe708fcd95c0a6d855d58e9df2b80bc68b5b4c3b3416",
+                "depth": 2,
+                "extra": {
+                    "provenance": "root"
+                }
+            },
+            {
+                "package": "drupal/core",
                 "description": "[CI] Unset foreach-by-ref in ViewsConfigUpdater (block_content post_update save)",
                 "url": "patches/core-views-foreach-reference-cleanup.patch",
                 "sha256": "f25d3e12b8e180a36faa3e26c20748ef94b5e99567e4bcb34c9e3ee2fa5eb448",
                 "depth": 2,
                 "extra": {
                     "provenance": "root"
+                }
+            },
+            {
+                "package": "drupal/core",
+                "description": "[#3014514] Make igbinary the default serializer, if available",
+                "url": "./public/modules/contrib/helfi_api_base/patches/3014514.patch",
+                "sha256": "d4a3acf6e031ba83272817d8c884f9c1bdca19df857793ce52a670e759521014",
+                "depth": 2,
+                "extra": {
+                    "provenance": "dependency:drupal/core"
                 }
             }
         ],
@@ -133,15 +173,15 @@
                 }
             }
         ],
-        "drupal/big_pipe_sessionless": [
+        "drupal/user_bundle": [
             {
-                "package": "drupal/big_pipe_sessionless",
-                "description": "Drupal 11 support (https://drupal.org/i/3428235)",
-                "url": "https://www.drupal.org/files/issues/2025-05-07/3428235.d11.patch",
-                "sha256": "5b59bfe5c291076f251b87baa736e17789a553c7c7bfbc67b596b6e694fc1ee2",
+                "package": "drupal/user_bundle",
+                "description": "Skip people view updates when views.view.user_admin_people is missing",
+                "url": "patches/user_bundle-skip-missing-people-view.patch",
+                "sha256": "3d7690da88a9c139f2e64acc8afcf24c9696d1e2eff419eadb54b510223a0f30",
                 "depth": 1,
                 "extra": {
-                    "provenance": "dependency:drupal/big_pipe_sessionless"
+                    "provenance": "root"
                 }
             }
         ],
