@@ -176,8 +176,19 @@ function template_preprocess_asu_application(array &$variables) {
         'is_application_period_over' => $project->isApplicationPeriod('after'),
         'application_apartments' => $apartmentData,
         'error' => $application->hasError() ? $application->getError() : FALSE,
+        'show_application_payments' => (
+          \Drupal::currentUser()->hasPermission('view application payments') ||
+          \Drupal::currentUser()->hasPermission('administer applications')
+        ),
+        'application_payments' => [],
+        'application_payments_ui' => _asu_application_get_payments_ui_strings(),
       ],
     ];
+
+    if ($application_teaser_values['#teaser_values']['show_application_payments']) {
+      $application_teaser_values['#teaser_values']['application_payments'] = \Drupal::service('asu_application.payment_sync')
+        ->getPaymentsForApplication((int) $application->id());
+    }
 
     if ($variables['elements']['#view_mode'] == 'full') {
       $apartments = \Drupal::entityTypeManager()
@@ -258,6 +269,25 @@ function template_preprocess_asu_application(array &$variables) {
   $variables['#attached']['drupalSettings']['asuApplicationOffer'] = _asu_application_get_offer_drupal_settings();
 
   $variables['content'] = $application_teaser_values;
+}
+
+/**
+ * Return localized payments UI labels with English fallback.
+ */
+function _asu_application_get_payments_ui_strings(): array {
+  $language = \Drupal::languageManager()->getCurrentLanguage()->getId();
+  $isFinnish = $language === 'fi';
+
+  return [
+    'show' => $isFinnish ? 'Asunnon maksut' : 'Apartment payments',
+    'hide' => $isFinnish ? 'Piilota asunnon maksut' : 'Hide apartment payments',
+    'empty' => $isFinnish ? 'Ei maksuja' : 'No payments',
+    'installment_type' => $isFinnish ? 'Maksulaji' : 'Installment type',
+    'amount' => $isFinnish ? 'Summa' : 'Amount',
+    'due_date' => $isFinnish ? 'Eräpäivä' : 'Due date',
+    'account_number' => $isFinnish ? 'IBAN-tilinumero' : 'IBAN account number',
+    'reference_number' => $isFinnish ? 'Viitenumero' : 'Reference number',
+  ];
 }
 
 /**

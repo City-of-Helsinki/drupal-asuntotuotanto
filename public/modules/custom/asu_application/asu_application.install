@@ -114,6 +114,7 @@ function asu_application_grant_permissions() : void {
   $permissions = [
     'admin' => [
       'administer applications',
+      'view application payments',
     ],
     'anonymous' => [
       'create application',
@@ -121,6 +122,12 @@ function asu_application_grant_permissions() : void {
     'authenticated' => [
       'create application',
       'view application',
+    ],
+    'salesperson' => [
+      'view application payments',
+    ],
+    'rest_client' => [
+      'sync application payments',
     ],
   ];
 
@@ -385,4 +392,22 @@ function asu_application_get_personal_id_divider(string $dateOfBirth): ?string {
   }
 
   return NULL;
+}
+
+/**
+ * Install the application payment entity schema.
+ */
+function asu_application_update_9016(): void {
+  $entity_type_manager = \Drupal::entityTypeManager();
+  $entity_type_manager->clearCachedDefinitions();
+
+  $entity_type = $entity_type_manager->getDefinition('asu_application_payment');
+  \Drupal::entityDefinitionUpdateManager()->installEntityType($entity_type);
+}
+
+/**
+ * Grant permissions for viewing and syncing application payments.
+ */
+function asu_application_update_9017(): void {
+  asu_application_grant_permissions();
 }

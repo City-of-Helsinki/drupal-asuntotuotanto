@@ -95,3 +95,11 @@ asu_application.summary_project_csv:
     _permission: "view application sync summary"
     _custom_access: '\Drupal\asu_application\Controller\ApplicationSummaryController::projectAccess'
     node: '\d+'
+
+asu_application.payment_sync:
+  path: "/api/asu/application-payments/sync"
+  defaults:
+    _controller: '\Drupal\asu_application\Controller\ApplicationPaymentWebhookController::sync'
+  methods: [POST]
+  requirements:
+    _permission: "sync application payments"

@@ -13,3 +13,13 @@ view application:
 view application sync summary:
   title: "View application sync summary"
   description: "View summary of applications sync state per project"
+
+view application payments:
+  title: "View application payments"
+  description: "View SAP-sent apartment payments on application cards"
+  restrict access: true
+
+sync application payments:
+  title: "Sync application payments"
+  description: "Push application payment data from external systems"
+  restrict access: true
