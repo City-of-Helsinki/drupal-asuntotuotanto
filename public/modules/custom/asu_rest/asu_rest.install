@@ -26,6 +26,60 @@ function asu_rest_update_10001(): void {
 }
 
 /**
+ * Removes stale ASU-1881 messaging REST config left in active storage.
+ *
+ * Some environments contain rest.resource.asu_application_messages in active
+ * config even when this release branch does not ship the related class. That
+ * causes plugin discovery failures during config import. Clean up the stale
+ * config and related rest_client role references before import.
+ */
+function asu_rest_update_10002(): void {
+  $config_factory = \Drupal::configFactory();
+
+  if ($config_factory->getEditable('rest.resource.asu_application_messages')->delete()) {
+    \Drupal::logger('asu_rest')->notice('Removed stale active config rest.resource.asu_application_messages.');
+  }
+
+  $role_config = $config_factory->getEditable('user.role.rest_client');
+  $dependencies = $role_config->get('dependencies') ?? [];
+  $changed = FALSE;
+
+  if (!empty($dependencies['config']) && is_array($dependencies['config'])) {
+    $filtered_dependencies = array_values(array_filter(
+      $dependencies['config'],
+      static fn (string $item): bool => $item !== 'rest.resource.asu_application_messages'
+    ));
+
+    if ($filtered_dependencies !== $dependencies['config']) {
+      $dependencies['config'] = $filtered_dependencies;
+      $role_config->set('dependencies', $dependencies);
+      $changed = TRUE;
+    }
+  }
+
+  $permissions = $role_config->get('permissions') ?? [];
+  if (is_array($permissions) && $permissions !== []) {
+    $filtered_permissions = array_values(array_filter(
+      $permissions,
+      static fn (string $item): bool => !in_array($item, [
+        'restful get asu_application_messages',
+        'restful post asu_application_messages',
+      ], TRUE)
+    ));
+
+    if ($filtered_permissions !== $permissions) {
+      $role_config->set('permissions', $filtered_permissions);
+      $changed = TRUE;
+    }
+  }
+
+  if ($changed) {
+    $role_config->save(TRUE);
+    \Drupal::logger('asu_rest')->notice('Removed stale asu_application_messages references from user.role.rest_client.');
+  }
+}
+
+/**
  * Ensures the configured OAuth consumer exists when secrets are available.
  *
  * Consumers are content entities and cannot be shipped as config YAML. This

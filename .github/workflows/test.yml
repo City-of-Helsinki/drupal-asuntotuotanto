@@ -76,6 +76,11 @@ jobs:
           # view entity to have a non-empty ID.
           mysql --user=drupal --password=drupal --database=drupal --host=db --port=3306 -A -e "DELETE FROM config WHERE name = 'views.view.';"
           drush php:eval '$storage = \Drupal::service("config.storage"); foreach ($storage->listAll("views.view.") as $name) { $data = $storage->read($name); if (empty($data["id"])) { $storage->delete($name); } }'
+          # Release branches may use DB artifacts produced from develop. Remove
+          # stale ASU-1881 resource config if code for that feature is not in
+          # the current branch to avoid plugin discovery failures during import.
+          drush config:delete -y rest.resource.asu_application_messages || true
+          drush php:eval '$config = \Drupal::service("config.factory")->getEditable("user.role.rest_client"); $permissions = $config->get("permissions") ?: []; $permissions = array_values(array_filter($permissions, static fn($p) => !in_array($p, ["restful get asu_application_messages", "restful post asu_application_messages"], true))); $dependencies = $config->get("dependencies") ?: []; if (!empty($dependencies["config"]) && is_array($dependencies["config"])) { $dependencies["config"] = array_values(array_filter($dependencies["config"], static fn($d) => $d !== "rest.resource.asu_application_messages")); } $config->set("permissions", $permissions)->set("dependencies", $dependencies)->save(true);'
           # deploy runs updatedb before cim; overlay sync first so DB matches
           # conf/cmi (e.g. views without deprecated plugins) before post-updates.
           drush cim -y --partial
