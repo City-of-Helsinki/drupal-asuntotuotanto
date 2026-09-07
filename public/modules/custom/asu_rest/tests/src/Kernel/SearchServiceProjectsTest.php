@@ -48,13 +48,28 @@ final class SearchServiceProjectsTest extends SearchServiceKernelTestBase {
   }
 
   /**
-   * Tests that archived projects are included when no filters are applied.
+   * Tests that archived projects are excluded when no filters are applied.
    */
-  public function testSearchProjectsIncludesArchivedProjectsWhenNoFilters(): void {
+  public function testSearchProjectsExcludesArchivedProjectsByDefault(): void {
+    $activeProject = $this->createProject('Active Project', FALSE);
+    $this->createProject('Archived Project', TRUE);
+
+    $result = $this->searchService->searchProjects([], 0, 1000);
+
+    $this->assertSame(1, $result['total']);
+    $this->assertCount(1, $result['items']);
+
+    $this->assertSame($activeProject->uuid(), $result['items'][0]->uuid());
+  }
+
+  /**
+   * Tests that include_archived=true includes archived projects.
+   */
+  public function testSearchProjectsIncludesArchivedProjectsWhenRequested(): void {
     $activeProject = $this->createProject('Active Project', FALSE);
     $archivedProject = $this->createProject('Archived Project', TRUE);
 
-    $result = $this->searchService->searchProjects([], 0, 1000);
+    $result = $this->searchService->searchProjects(['include_archived' => 'true'], 0, 1000);
 
     $this->assertSame(2, $result['total']);
     $this->assertCount(2, $result['items']);
