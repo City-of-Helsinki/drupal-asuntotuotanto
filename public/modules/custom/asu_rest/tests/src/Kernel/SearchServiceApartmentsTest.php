@@ -91,6 +91,48 @@ final class SearchServiceApartmentsTest extends SearchServiceKernelTestBase {
   }
 
   /**
+   * Tests that apartments from archived projects are excluded by default.
+   */
+  public function testSearchApartmentsExcludesArchivedProjectsByDefault(): void {
+    $activeApartment = $this->createApartment('Active project apartment');
+    $archivedApartment = $this->createApartment('Archived project apartment');
+
+    $this->createProjectWithApartment('Active Project', $activeApartment, FALSE);
+    $this->createProjectWithApartment('Archived Project', $archivedApartment, TRUE);
+
+    $result = $this->searchService->searchApartments([], NULL, 0, 1000);
+
+    $this->assertSame(1, $result['total']);
+    $this->assertCount(1, $result['items']);
+    $this->assertSame($activeApartment->uuid(), $result['items'][0]->uuid());
+  }
+
+  /**
+   * Tests include_archived=true for archived project apartments.
+   */
+  public function testSearchApartmentsIncludesArchivedProjectsWhenRequested(): void {
+    $activeApartment = $this->createApartment('Active project apartment');
+    $archivedApartment = $this->createApartment('Archived project apartment');
+
+    $this->createProjectWithApartment('Active Project', $activeApartment, FALSE);
+    $this->createProjectWithApartment('Archived Project', $archivedApartment, TRUE);
+
+    $result = $this->searchService->searchApartments(
+      ['include_archived' => 'true'],
+      NULL,
+      0,
+      1000
+    );
+
+    $this->assertSame(2, $result['total']);
+    $this->assertCount(2, $result['items']);
+
+    $uuids = array_map(static fn (Node $node): string => $node->uuid(), $result['items']);
+    $this->assertContains($activeApartment->uuid(), $uuids);
+    $this->assertContains($archivedApartment->uuid(), $uuids);
+  }
+
+  /**
    * Creates an apartment node for testing.
    *
    * @param string $title
@@ -111,6 +153,32 @@ final class SearchServiceApartmentsTest extends SearchServiceKernelTestBase {
     ]);
     $apartment->save();
     return $apartment;
+  }
+
+  /**
+   * Creates a project node and links a single apartment node to it.
+   *
+   * @param string $title
+   *   Project title.
+   * @param \Drupal\node\Entity\Node $apartment
+   *   The apartment node to attach.
+   * @param bool $archived
+   *   Whether the project is archived.
+   */
+  private function createProjectWithApartment(string $title, Node $apartment, bool $archived): void {
+    $project = Node::create([
+      'type' => 'project',
+      'title' => $title,
+      'status' => 1,
+      'field_archived' => $archived ? 1 : 0,
+      'field_state_of_sale' => [
+        ['target_id' => 'sold'],
+      ],
+      'field_apartments' => [
+        ['target_id' => $apartment->id()],
+      ],
+    ]);
+    $project->save();
   }
 
 }

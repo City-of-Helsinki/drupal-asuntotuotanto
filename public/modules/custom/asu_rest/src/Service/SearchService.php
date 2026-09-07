@@ -377,6 +377,9 @@ final class SearchService {
     $storage = $this->entityTypeManager->getStorage('node');
     $query = $storage->getQuery()->accessCheck(TRUE);
     $query->condition('type', 'project');
+    if (!$this->shouldIncludeArchived($params)) {
+      $query->condition('field_archived', 0);
+    }
     $query->exists('field_apartments');
 
     $projectStatesOfSale = $this->normalizeArrayParam($params['project_state_of_sale'] ?? NULL, TRUE);
@@ -517,6 +520,10 @@ final class SearchService {
     $query = $storage->getQuery()
       ->accessCheck(TRUE)
       ->condition('type', 'project');
+
+    if (!$this->shouldIncludeArchived($params)) {
+      $query->condition('field_archived', 0);
+    }
 
     $projectUuids = $this->normalizeArrayParam(
       $this->getParam($params, 'project_uuid'),
@@ -770,6 +777,13 @@ final class SearchService {
       return NULL;
     }
     return filter_var($value, FILTER_VALIDATE_BOOL, FILTER_NULL_ON_FAILURE);
+  }
+
+  /**
+   * Whether archived projects should be included in API results.
+   */
+  private function shouldIncludeArchived(array $params): bool {
+    return $this->normalizeBooleanParam($this->getParam($params, 'include_archived')) === TRUE;
   }
 
   /**
