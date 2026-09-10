@@ -131,7 +131,12 @@ final class ApplicationMessages extends ResourceBase {
       return new ModifiedResourceResponse(['message' => 'Application not found.'], 404, $this->getTestingHeaders());
     }
 
-    if (!$this->canWriteThread($application)) {
+    $senderRole = (string) ($data['sender_role'] ?? 'sales');
+    if (!in_array($senderRole, ['sales', 'customer'], TRUE)) {
+      return new ModifiedResourceResponse(['message' => 'Invalid sender_role. Allowed values: sales, customer.'], 400, $this->getTestingHeaders());
+    }
+
+    if (!$this->canWriteThread($application, $senderRole)) {
       return new ModifiedResourceResponse(['message' => 'Access denied.'], 403, $this->getTestingHeaders());
     }
 
@@ -140,10 +145,7 @@ final class ApplicationMessages extends ResourceBase {
       return new ModifiedResourceResponse(['message' => 'Missing required field: body.'], 400, $this->getTestingHeaders());
     }
 
-    $senderRole = (string) ($data['sender_role'] ?? 'sales');
-    if (!in_array($senderRole, ['sales', 'customer'], TRUE)) {
-      return new ModifiedResourceResponse(['message' => 'Invalid sender_role. Allowed values: sales, customer.'], 400, $this->getTestingHeaders());
-    }
+    $coApplicantEmail = trim((string) ($data['co_applicant_email'] ?? ''));
 
     $salesperson = $senderRole === 'sales' ? $this->messageManager->resolveSalesperson($application) : NULL;
     $salespersonUid = $salesperson ? (int) $salesperson->id() : NULL;
@@ -159,9 +161,14 @@ final class ApplicationMessages extends ResourceBase {
     );
 
     if ($senderRole === 'sales') {
-      $buyerMail = $this->resolveBuyerMail($application);
-      if ($buyerMail !== '') {
-        $buyerLangcode = $this->resolveBuyerLangcode($application);
+      $customerRecipients = $this->messageManager->resolveCustomerRecipients($application, $coApplicantEmail);
+      foreach ($customerRecipients as $recipient) {
+        $buyerMail = (string) ($recipient['mail'] ?? '');
+        if ($buyerMail === '') {
+          continue;
+        }
+
+        $buyerLangcode = (string) ($recipient['langcode'] ?? 'fi');
         $customerThreadUrl = $this->getCustomerThreadUrl($application_id);
         $projectLabel = $this->messageManager->getProjectLabel($application);
         $senderName = $this->resolveSenderName();
@@ -223,33 +230,16 @@ final class ApplicationMessages extends ResourceBase {
   /**
    * Checks write access to message thread.
    */
-  private function canWriteThread(Application $application): bool {
+  private function canWriteThread(Application $application, string $senderRole): bool {
+    if ($senderRole === 'customer') {
+      // Customer messages must be tied to a real authenticated account with
+      // application visibility (owner or mapped co-applicant).
+      return $this->currentUser->isAuthenticated()
+        && $application->access('view', $this->currentUser, TRUE)->isAllowed();
+    }
+
     return $application->access('update', $this->currentUser, TRUE)->isAllowed()
       || $this->currentUser->hasPermission('restful post asu_application_messages');
-  }
-
-  /**
-   * Resolves buyer email address from application owner.
-   */
-  private function resolveBuyerMail(Application $application): string {
-    $owner = $application->getOwner();
-    if (!$owner) {
-      return '';
-    }
-
-    return (string) ($owner->getEmail() ?? '');
-  }
-
-  /**
-   * Resolves buyer preferred language code.
-   */
-  private function resolveBuyerLangcode(Application $application): string {
-    $owner = $application->getOwner();
-    if (!$owner || !method_exists($owner, 'getPreferredLangcode')) {
-      return 'fi';
-    }
-
-    return $owner->getPreferredLangcode() ?: 'fi';
   }
 
   /**
