@@ -344,6 +344,50 @@ function asu_application_update_9015() : void {
 }
 
 /**
+ * Add explicit co-applicant email storage for message notifications.
+ */
+function asu_application_update_9016() : void {
+  $database = \Drupal::database();
+  $schema = $database->schema();
+
+  if (!$schema->tableExists('asu_application_co_applicant_map')) {
+    return;
+  }
+
+  if (!$schema->fieldExists('asu_application_co_applicant_map', 'co_applicant_email')) {
+    $schema->addField('asu_application_co_applicant_map', 'co_applicant_email', [
+      'description' => 'Co-applicant email captured from application form at submit time.',
+      'type' => 'varchar',
+      'length' => 255,
+      'not null' => FALSE,
+      'default' => '',
+    ]);
+  }
+
+  // Best-effort backfill for unlocked applications where applicant email still
+  // exists in asu_application table.
+  $rows = $database->select('asu_application', 'a')
+    ->fields('a', ['id', 'field_locked', 'applicant__email'])
+    ->condition('a.status', 1)
+    ->isNotNull('a.applicant__email')
+    ->execute()
+    ->fetchAllAssoc('id');
+
+  foreach ($rows as $row) {
+    $applicationId = (int) $row->id;
+    $email = trim((string) ($row->applicant__email ?? ''));
+    if ($applicationId <= 0 || $email === '') {
+      continue;
+    }
+
+    $database->update('asu_application_co_applicant_map')
+      ->fields(['co_applicant_email' => $email])
+      ->condition('application_id', $applicationId)
+      ->execute();
+  }
+}
+
+/**
  * Build full HETU from stored date of birth and personal id tail.
  */
 function asu_application_build_full_hetu(string $dateOfBirth, string $personalId): ?string {

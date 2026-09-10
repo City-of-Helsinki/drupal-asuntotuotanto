@@ -632,30 +632,41 @@ HTML;
     }
 
     $samlHash = Crypt::hmacBase64($fullHetu, $hashKey);
+    $coApplicantEmail = trim((string) ($values['applicant'][0]['email'] ?? ''));
+    if ($coApplicantEmail === '' && $this->entity->hasField('applicant') && !$this->entity->get('applicant')->isEmpty()) {
+      $existingApplicant = (array) ($this->entity->get('applicant')->first()?->getValue() ?? []);
+      $coApplicantEmail = trim((string) ($existingApplicant['email'] ?? ''));
+    }
+    $hasCoApplicantEmailColumn = $schema->fieldExists('asu_application_co_applicant_map', 'co_applicant_email');
     $timestamp = \Drupal::time()->getRequestTime();
 
+    $updateFields = [
+      'co_applicant_saml_hash' => $samlHash,
+      'changed' => $timestamp,
+    ];
+    if ($hasCoApplicantEmailColumn && $coApplicantEmail !== '') {
+      $updateFields['co_applicant_email'] = $coApplicantEmail;
+    }
+
     $updatedRows = $database->update('asu_application_co_applicant_map')
-      ->fields([
-        'co_applicant_saml_hash' => $samlHash,
-        'changed' => $timestamp,
-      ])
+      ->fields($updateFields)
       ->condition('application_id', $applicationId)
       ->execute();
 
     if ($updatedRows === 0) {
+      $insertFields = [
+        'application_id' => $applicationId,
+        'co_applicant_saml_hash' => $samlHash,
+        'created' => $timestamp,
+        'changed' => $timestamp,
+      ];
+      if ($hasCoApplicantEmailColumn && $coApplicantEmail !== '') {
+        $insertFields['co_applicant_email'] = $coApplicantEmail;
+      }
+
       $database->insert('asu_application_co_applicant_map')
-        ->fields([
-          'application_id',
-          'co_applicant_saml_hash',
-          'created',
-          'changed',
-        ])
-        ->values([
-          $applicationId,
-          $samlHash,
-          $timestamp,
-          $timestamp,
-        ])
+        ->fields(array_keys($insertFields))
+        ->values(array_values($insertFields))
         ->execute();
     }
   }

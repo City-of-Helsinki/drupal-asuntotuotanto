@@ -112,6 +112,125 @@ final class ApplicationMessageManager {
   }
 
   /**
+   * Resolves customer recipients for salesperson notifications.
+   *
+   * Includes application owner and mapped co-applicant accounts.
+   *
+   * @return array<int, array{uid:int, mail:string, langcode:string}>
+   *   Unique recipients by email.
+   */
+  public function resolveCustomerRecipients(Application $application, ?string $fallbackCoApplicantEmail = NULL): array {
+    $recipients = [];
+
+    $owner = $application->getOwner();
+    if ($owner && $owner->getEmail()) {
+      $recipients[] = [
+        'uid' => (int) $owner->id(),
+        'mail' => (string) $owner->getEmail(),
+        'langcode' => method_exists($owner, 'getPreferredLangcode')
+          ? ($owner->getPreferredLangcode() ?: 'fi')
+          : 'fi',
+      ];
+    }
+
+    $schema = \Drupal::database()->schema();
+    if (!$schema->tableExists('asu_application_co_applicant_map')) {
+      return $this->uniqueRecipientsByEmail($recipients);
+    }
+
+    $applicationId = (int) $application->id();
+    if ($applicationId <= 0) {
+      return $this->uniqueRecipientsByEmail($recipients);
+    }
+
+    $fallbackCoApplicantEmail = trim((string) ($fallbackCoApplicantEmail ?? ''));
+
+    $hasCoApplicantEmailColumn = $schema->fieldExists('asu_application_co_applicant_map', 'co_applicant_email');
+    $mapQuery = \Drupal::database()
+      ->select('asu_application_co_applicant_map', 'm')
+      ->fields('m', ['co_applicant_saml_hash']);
+
+    if ($hasCoApplicantEmailColumn) {
+      $mapQuery->fields('m', ['co_applicant_email']);
+    }
+
+    $mappingRow = $mapQuery
+      ->condition('application_id', $applicationId)
+      ->range(0, 1)
+      ->execute()
+      ->fetchAssoc();
+
+    if (!is_array($mappingRow) || $mappingRow === []) {
+      if (filter_var($fallbackCoApplicantEmail, FILTER_VALIDATE_EMAIL)) {
+        $recipients[] = [
+          'uid' => 0,
+          'mail' => $fallbackCoApplicantEmail,
+          'langcode' => 'fi',
+        ];
+      }
+      return $this->uniqueRecipientsByEmail($recipients);
+    }
+
+    $coApplicantEmail = trim((string) ($mappingRow['co_applicant_email'] ?? ''));
+    if ($hasCoApplicantEmailColumn) {
+      if (filter_var($coApplicantEmail, FILTER_VALIDATE_EMAIL)) {
+        $recipients[] = [
+          'uid' => 0,
+          'mail' => $coApplicantEmail,
+          'langcode' => 'fi',
+        ];
+      }
+      elseif (filter_var($fallbackCoApplicantEmail, FILTER_VALIDATE_EMAIL)) {
+        $recipients[] = [
+          'uid' => 0,
+          'mail' => $fallbackCoApplicantEmail,
+          'langcode' => 'fi',
+        ];
+        $this->persistCoApplicantEmail($applicationId, $fallbackCoApplicantEmail);
+      }
+
+      // When explicit co-applicant email storage is available, avoid
+      // hash-based lookup that may match an unrelated local test account.
+      return $this->uniqueRecipientsByEmail($recipients);
+    }
+
+    if (filter_var($fallbackCoApplicantEmail, FILTER_VALIDATE_EMAIL)) {
+      $recipients[] = [
+        'uid' => 0,
+        'mail' => $fallbackCoApplicantEmail,
+        'langcode' => 'fi',
+      ];
+      return $this->uniqueRecipientsByEmail($recipients);
+    }
+
+    $samlHash = $mappingRow['co_applicant_saml_hash'] ?? '';
+
+    if (!is_string($samlHash) || $samlHash === '') {
+      return $this->uniqueRecipientsByEmail($recipients);
+    }
+
+    $users = $this->entityTypeManager
+      ->getStorage('user')
+      ->loadByProperties(['field_saml_hash' => $samlHash]);
+
+    foreach ($users as $user) {
+      if (!$user instanceof UserInterface || !$user->getEmail()) {
+        continue;
+      }
+
+      $recipients[] = [
+        'uid' => (int) $user->id(),
+        'mail' => (string) $user->getEmail(),
+        'langcode' => method_exists($user, 'getPreferredLangcode')
+          ? ($user->getPreferredLangcode() ?: 'fi')
+          : 'fi',
+      ];
+    }
+
+    return $this->uniqueRecipientsByEmail($recipients);
+  }
+
+  /**
    * Returns the project id for the application.
    */
   public function getProjectId(Application $application): int {
@@ -144,6 +263,52 @@ final class ApplicationMessageManager {
     }
 
     return $this->entityTypeManager->getStorage('node')->load($projectId);
+  }
+
+  /**
+   * Removes duplicate recipients by normalized email.
+   *
+   * @param array<int, array{uid:int, mail:string, langcode:string}> $recipients
+   *   Raw recipients.
+   *
+   * @return array<int, array{uid:int, mail:string, langcode:string}>
+   *   Deduplicated recipients.
+   */
+  private function uniqueRecipientsByEmail(array $recipients): array {
+    $unique = [];
+    $seen = [];
+
+    foreach ($recipients as $recipient) {
+      $mail = mb_strtolower(trim($recipient['mail']));
+      if ($mail === '' || isset($seen[$mail])) {
+        continue;
+      }
+
+      $seen[$mail] = TRUE;
+      $recipient['mail'] = $mail;
+      $unique[] = $recipient;
+    }
+
+    return $unique;
+  }
+
+  /**
+   * Persist co-applicant email for existing map row when missing.
+   */
+  private function persistCoApplicantEmail(int $applicationId, string $email): void {
+    if ($applicationId <= 0 || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+      return;
+    }
+
+    $database = \Drupal::database();
+    $database->update('asu_application_co_applicant_map')
+      ->fields([
+        'co_applicant_email' => $email,
+        'changed' => \Drupal::time()->getRequestTime(),
+      ])
+      ->condition('application_id', $applicationId)
+      ->condition('co_applicant_email', '', '=')
+      ->execute();
   }
 
 }
