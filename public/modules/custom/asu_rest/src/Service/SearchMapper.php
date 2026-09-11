@@ -397,7 +397,7 @@ final class SearchMapper {
       'project_site_owner' => $this->getTermLabel($project, 'field_site_owner'),
       'project_site_renter' => $this->projectFieldScalar($project, 'field_site_renter'),
       'project_smoke_free' => $this->projectFieldScalar($project, 'field_smoke_free'),
-      'project_virtual_presentation_url' => $this->projectFieldScalar(
+      'project_virtual_presentation_url' => $this->getLinkUrlFromField(
         $project,
         'field_virtual_presentation_url',
       ),
@@ -951,6 +951,14 @@ final class SearchMapper {
    */
   private function nodeUrl(Node $node): string {
     return $this->absolutePathUrl($node->toUrl()->toString());
+  }
+
+  /**
+   * Get the first absolute URL from a link field, or an empty string.
+   */
+  private function getLinkUrlFromField(Node $entity, string $fieldName): string {
+    $urls = $this->getLinkUrlsFromField($entity, $fieldName);
+    return $urls[0] ?? '';
   }
 
   /**
