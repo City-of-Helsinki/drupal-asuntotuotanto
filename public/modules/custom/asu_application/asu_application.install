@@ -456,16 +456,6 @@ function asu_application_get_personal_id_divider(string $dateOfBirth): ?string {
   return NULL;
 }
 
-/**
- * Install the application payment entity schema.
- */
-function asu_application_update_9016(): void {
-  $entity_type_manager = \Drupal::entityTypeManager();
-  $entity_type_manager->clearCachedDefinitions();
-
-  $entity_type = $entity_type_manager->getDefinition('asu_application_payment');
-  \Drupal::entityDefinitionUpdateManager()->installEntityType($entity_type);
-}
 
 /**
  * Grant permissions for viewing and syncing application payments.
