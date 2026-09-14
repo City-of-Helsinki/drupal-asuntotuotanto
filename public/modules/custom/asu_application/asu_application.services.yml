@@ -61,3 +61,9 @@ services:
       - '@asu_api.backendapi'
       - '@asu_application.offer_notification'
       - '@logger.channel.asu_application'
+
+  asu_application.payment_sync:
+    class: Drupal\asu_application\Service\ApplicationPaymentSyncService
+    arguments:
+      - '@entity_type.manager'
+      - '@logger.channel.asu_application'

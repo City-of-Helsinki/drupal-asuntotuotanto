@@ -14,6 +14,15 @@ asu_application.application_results:
   requirements:
     _permission: "create application"
 
+asu_application.application_payments:
+  path: "/user/application/payments"
+  defaults:
+    _controller: '\Drupal\asu_application\Controller\ApplicationPaymentController::getPayments'
+  methods: [POST]
+  requirements:
+    _permission: "create application"
+
+
 asu_application.offer_action:
   path: "/user/offer/{offer_id}/{action}"
   defaults:
@@ -95,3 +104,11 @@ asu_application.summary_project_csv:
     _permission: "view application sync summary"
     _custom_access: '\Drupal\asu_application\Controller\ApplicationSummaryController::projectAccess'
     node: '\d+'
+
+asu_application.payment_sync:
+  path: "/api/asu/application-payments/sync"
+  defaults:
+    _controller: '\Drupal\asu_application\Controller\ApplicationPaymentWebhookController::sync'
+  methods: [POST]
+  requirements:
+    _permission: "sync application payments"
