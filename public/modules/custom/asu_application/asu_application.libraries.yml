@@ -20,3 +20,14 @@ application_results:
   css:
     component:
       assets/css/application-submit.css: {}
+
+application_payments:
+  version: 1.x
+  js:
+    assets/js/application-payments.js: {}
+  css:
+    component:
+      assets/css/application-submit.css: {}
+  dependencies:
+    - core/jquery
+    - core/drupal

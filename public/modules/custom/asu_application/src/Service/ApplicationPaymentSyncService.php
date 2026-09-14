@@ -1,0 +1,250 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Drupal\asu_application\Service;
+
+use Drupal\Core\Cache\Cache;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Psr\Log\LoggerInterface;
+
+/**
+ * Persists application payments from external systems.
+ */
+final class ApplicationPaymentSyncService {
+
+  public function __construct(
+    private readonly EntityTypeManagerInterface $entityTypeManager,
+    private readonly LoggerInterface $logger,
+  ) {
+  }
+
+  /**
+   * Upsert incoming payment records.
+   *
+   * @param array $records
+   *   Incoming payload records.
+   * @param string $correlationId
+   *   Correlation id for logging.
+   *
+   * @return array
+   *   Summary counters.
+   */
+  public function upsertPayments(array $records, string $correlationId = ''): array {
+    $summary = [
+      'received' => count($records),
+      'created' => 0,
+      'updated' => 0,
+      'skipped' => 0,
+    ];
+
+    $cacheTagsToInvalidate = [];
+
+    try {
+      $storage = $this->entityTypeManager->getStorage('asu_application_payment');
+    }
+    catch (\Throwable $exception) {
+      $this->logger->error('Payment sync storage is unavailable. Correlation id: @correlation_id. Error: @error', [
+        '@correlation_id' => $correlationId !== '' ? $correlationId : 'n/a',
+        '@error' => $exception->getMessage(),
+      ]);
+      $summary['skipped'] = $summary['received'];
+      return $summary;
+    }
+
+    foreach ($records as $index => $record) {
+      if (!is_array($record)) {
+        $summary['skipped']++;
+        $this->logger->warning('Skipping payment row @row: payload is not an object. Correlation id: @correlation_id', [
+          '@row' => (string) $index,
+          '@correlation_id' => $correlationId !== '' ? $correlationId : 'n/a',
+        ]);
+        continue;
+      }
+
+      if (!$this->isSentToSap($record)) {
+        $summary['skipped']++;
+        continue;
+      }
+
+      $applicationId = (int) ($record['application_id'] ?? 0);
+      $reservationId = trim((string) ($record['reservation_id'] ?? ''));
+      $installmentType = trim((string) ($record['installment_type'] ?? ''));
+      $dueDate = $this->normalizeDate((string) ($record['due_date'] ?? ''));
+      $amount = $this->normalizeAmount($record['amount'] ?? NULL);
+
+      if (
+        $applicationId <= 0 ||
+        $reservationId === '' ||
+        $installmentType === '' ||
+        $dueDate === NULL ||
+        $amount === NULL
+      ) {
+        $summary['skipped']++;
+        $this->logger->warning('Skipping invalid payment row @row for application @application_id. Correlation id: @correlation_id', [
+          '@row' => (string) $index,
+          '@application_id' => (string) $applicationId,
+          '@correlation_id' => $correlationId !== '' ? $correlationId : 'n/a',
+        ]);
+        continue;
+      }
+
+      $ids = $storage->getQuery()
+        ->accessCheck(FALSE)
+        ->condition('application_id', $applicationId)
+        ->condition('reservation_id', $reservationId)
+        ->condition('installment_type', $installmentType)
+        ->range(0, 1)
+        ->execute();
+
+      $entity = $ids
+        ? $storage->load((int) reset($ids))
+        : $storage->create([
+          'application_id' => $applicationId,
+          'reservation_id' => $reservationId,
+          'installment_type' => $installmentType,
+        ]);
+
+      $entity->set('amount', $amount);
+      $entity->set('due_date', $dueDate);
+      $entity->set('account_number', trim((string) ($record['account_number'] ?? '')));
+      $entity->set('reference_number', trim((string) ($record['reference_number'] ?? '')));
+      $entity->set('sap_sent', TRUE);
+      if ($correlationId !== '') {
+        $entity->set('source_correlation_id', $correlationId);
+      }
+      $entity->save();
+
+      if ($ids) {
+        $summary['updated']++;
+      }
+      else {
+        $summary['created']++;
+      }
+
+      $cacheTagsToInvalidate[] = "asu_application_payment_list:{$applicationId}";
+    }
+
+    if ($cacheTagsToInvalidate !== []) {
+      Cache::invalidateTags(array_values(array_unique($cacheTagsToInvalidate)));
+    }
+
+    return $summary;
+  }
+
+  /**
+   * List payments for one application sorted by due date ASC.
+   */
+  public function getPaymentsForApplication(int $applicationId): array {
+    if ($applicationId <= 0) {
+      return [];
+    }
+
+    try {
+      $storage = $this->entityTypeManager->getStorage('asu_application_payment');
+      $ids = $storage->getQuery()
+        ->accessCheck(FALSE)
+        ->condition('application_id', $applicationId)
+        ->condition('sap_sent', 1)
+        ->sort('due_date', 'ASC')
+        ->sort('installment_type', 'ASC')
+        ->execute();
+    }
+    catch (\Throwable) {
+      return [];
+    }
+
+    if (!$ids) {
+      return [];
+    }
+
+    $payments = [];
+    foreach ($storage->loadMultiple($ids) as $payment) {
+      $rawDueDate = (string) $payment->get('due_date')->value;
+      $payments[] = [
+        'installment_type' => (string) $payment->get('installment_type')->value,
+        'amount' => number_format((float) $payment->get('amount')->value, 2, ',', ' '),
+        'due_date' => $this->formatDateForDisplay($rawDueDate),
+        'account_number' => (string) $payment->get('account_number')->value,
+        'reference_number' => (string) $payment->get('reference_number')->value,
+      ];
+    }
+
+    return $payments;
+  }
+
+  /**
+   * Recognize records that were actually sent to SAP.
+   */
+  private function isSentToSap(array $record): bool {
+    $sentFlag = $record['sent_to_sap'] ?? $record['sap_sent'] ?? $record['is_sent_to_sap'] ?? NULL;
+
+    if ($sentFlag === NULL) {
+      // Accept by default for backward-compatible payloads where this endpoint
+      // is called only after "Lähetä SAP".
+      return TRUE;
+    }
+
+    return in_array($sentFlag, [TRUE, 1, '1', 'true', 'yes'], TRUE);
+  }
+
+  /**
+   * Normalize due date to Drupal storage date format (Y-m-d).
+   */
+  private function normalizeDate(string $raw): ?string {
+    $raw = trim($raw);
+    if ($raw === '') {
+      return NULL;
+    }
+
+    $date = \DateTimeImmutable::createFromFormat('Y-m-d', $raw);
+    if ($date instanceof \DateTimeImmutable) {
+      return $date->format('Y-m-d');
+    }
+
+    try {
+      $parsed = new \DateTimeImmutable($raw);
+      return $parsed->format('Y-m-d');
+    }
+    catch (\Exception) {
+      return NULL;
+    }
+  }
+
+  /**
+   * Normalize amount to decimal string with 2 digits.
+   */
+  private function normalizeAmount(mixed $amount): ?string {
+    if ($amount === NULL || $amount === '') {
+      return NULL;
+    }
+
+    if (is_string($amount)) {
+      $amount = str_replace(' ', '', $amount);
+      $amount = str_replace(',', '.', $amount);
+    }
+
+    if (!is_numeric($amount)) {
+      return NULL;
+    }
+
+    return number_format((float) $amount, 2, '.', '');
+  }
+
+  /**
+   * Convert storage date to dd.mm.YYYY for the UI table.
+   */
+  private function formatDateForDisplay(string $raw): string {
+    if ($raw === '') {
+      return '-';
+    }
+
+    $date = \DateTimeImmutable::createFromFormat('Y-m-d', $raw);
+    if (!$date instanceof \DateTimeImmutable) {
+      return $raw;
+    }
+
+    return $date->format('d.m.Y');
+  }
+
+}
