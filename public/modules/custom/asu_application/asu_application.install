@@ -131,7 +131,25 @@ function asu_application_grant_permissions() : void {
     ],
   ];
 
-  helfi_platform_config_grant_permissions($permissions);
+  if (function_exists("helfi_platform_config_grant_permissions")) {
+    helfi_platform_config_grant_permissions($permissions);
+    return;
+  }
+
+  // Fallback for local/dev contexts where helper module is not available.
+  $roleStorage = \Drupal::entityTypeManager()->getStorage("user_role");
+  foreach ($permissions as $roleId => $rolePermissions) {
+    $role = $roleStorage->load($roleId);
+    if (!$role) {
+      continue;
+    }
+    foreach ($rolePermissions as $permission) {
+      if (!$role->hasPermission($permission)) {
+        $role->grantPermission($permission);
+      }
+    }
+    $role->save();
+  }
 }
 
 /**
@@ -410,4 +428,20 @@ function asu_application_update_9016(): void {
  */
 function asu_application_update_9017(): void {
   asu_application_grant_permissions();
+}
+
+/**
+ * Ensure application payment schema exists in drifted environments.
+ */
+function asu_application_update_9018(): void {
+  $schema = \Drupal::database()->schema();
+  if ($schema->tableExists("asu_application_payment")) {
+    return;
+  }
+
+  $entity_type_manager = \Drupal::entityTypeManager();
+  $entity_type_manager->clearCachedDefinitions();
+
+  $entity_type = $entity_type_manager->getDefinition("asu_application_payment");
+  \Drupal::entityDefinitionUpdateManager()->installEntityType($entity_type);
 }

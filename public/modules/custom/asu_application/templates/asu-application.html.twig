@@ -180,7 +180,9 @@
               type: 'primary'
             } %}
           </div>
+          {% endif %}
 
+          {% if content['#teaser_values'].can_message %}
           <div class="application--action">
             {% include "@asuntotuotanto/button/button.html.twig" with {
               label: 'Message sales agent'|t,
@@ -233,7 +235,7 @@
     </div>
 
     {% if content['#teaser_values'].show_application_payments %}
-    <table class="application__apartments application__results-table application__payments-table is-hidden" data-application="{{ app_id }}" aria-hidden="true">
+    <table class="application__apartments application__results-table application__payments-table is-hidden" data-application="{{ app_id }}" data-empty-label="{{ content['#teaser_values'].application_payments_ui.empty|e('html_attr') }}" aria-hidden="true">
       <thead>
       <tr>
         <th>{{ content['#teaser_values'].application_payments_ui.installment_type }}</th>

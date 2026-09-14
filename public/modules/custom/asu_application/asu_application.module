@@ -162,6 +162,7 @@ function template_preprocess_asu_application(array &$variables) {
       '#teaser_values' => [
         'application_id' => $application->id->value,
         'is_owner' => ((int) $application->getOwnerId() === (int) \Drupal::currentUser()->id()),
+        'can_message' => $application->access('view', \Drupal::currentUser(), TRUE)->isAllowed(),
         'backend_application_id' => $application->get('field_backend_id')->value,
         'project_uuid' => $project->uuid(),
         'language' => \Drupal::languageManager()->getCurrentLanguage()->getId(),
@@ -264,6 +265,7 @@ function template_preprocess_asu_application(array &$variables) {
 
   $application_teaser_values['#cache'] = [
     'contexts' => ['user', 'languages:language_interface'],
+    'tags' => ["asu_application_payment_list:{$id}"],
   ];
 
   $variables['#attached']['drupalSettings']['asuApplicationOffer'] = _asu_application_get_offer_drupal_settings();

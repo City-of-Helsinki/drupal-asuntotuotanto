@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\asu_application\Service;
 
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Psr\Log\LoggerInterface;
 
@@ -36,6 +37,8 @@ final class ApplicationPaymentSyncService {
       'updated' => 0,
       'skipped' => 0,
     ];
+
+    $cacheTagsToInvalidate = [];
 
     try {
       $storage = $this->entityTypeManager->getStorage('asu_application_payment');
@@ -118,6 +121,12 @@ final class ApplicationPaymentSyncService {
       else {
         $summary['created']++;
       }
+
+      $cacheTagsToInvalidate[] = "asu_application_payment_list:{$applicationId}";
+    }
+
+    if ($cacheTagsToInvalidate !== []) {
+      Cache::invalidateTags(array_values(array_unique($cacheTagsToInvalidate)));
     }
 
     return $summary;
