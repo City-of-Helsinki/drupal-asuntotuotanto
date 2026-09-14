@@ -150,6 +150,7 @@ function template_preprocess_asu_application(array &$variables) {
       '#teaser_values' => [
         'application_id' => $application->id->value,
         'is_owner' => ((int) $application->getOwnerId() === (int) \Drupal::currentUser()->id()),
+        'can_message' => $application->access('view', \Drupal::currentUser(), TRUE)->isAllowed(),
         'backend_application_id' => $application->get('field_backend_id')->value,
         'project_uuid' => $project->uuid(),
         'language' => \Drupal::languageManager()->getCurrentLanguage()->getId(),
@@ -164,8 +165,19 @@ function template_preprocess_asu_application(array &$variables) {
         'is_application_period_over' => $project->isApplicationPeriod('after'),
         'application_apartments' => $apartmentData,
         'error' => $application->hasError() ? $application->getError() : FALSE,
+        'show_application_payments' => (
+          \Drupal::currentUser()->hasPermission('view application payments') ||
+          \Drupal::currentUser()->hasPermission('administer applications')
+        ),
+        'application_payments' => [],
+        'application_payments_ui' => _asu_application_get_payments_ui_strings(),
       ],
     ];
+
+    if ($application_teaser_values['#teaser_values']['show_application_payments']) {
+      $application_teaser_values['#teaser_values']['application_payments'] = \Drupal::service('asu_application.payment_sync')
+        ->getPaymentsForApplication((int) $application->id());
+    }
 
     if ($variables['elements']['#view_mode'] == 'full') {
       $apartments = \Drupal::entityTypeManager()
@@ -240,10 +252,76 @@ function template_preprocess_asu_application(array &$variables) {
   }
 
   $application_teaser_values['#cache'] = [
-    'contexts' => ['user'],
+    'contexts' => ['user', 'languages:language_interface'],
+    'tags' => ["asu_application_payment_list:{$id}"],
   ];
 
   $variables['content'] = $application_teaser_values;
+}
+
+/**
+ * Return localized payments UI labels with English fallback.
+ */
+function _asu_application_get_payments_ui_strings(): array {
+  $language = \Drupal::languageManager()->getCurrentLanguage()->getId();
+  $isFinnish = $language === 'fi';
+
+  return [
+    'show' => $isFinnish ? 'Asunnon maksut' : 'Apartment payments',
+    'hide' => $isFinnish ? 'Piilota asunnon maksut' : 'Hide apartment payments',
+    'empty' => $isFinnish ? 'Ei maksuja' : 'No payments',
+    'installment_type' => $isFinnish ? 'Maksulaji' : 'Installment type',
+    'amount' => $isFinnish ? 'Summa' : 'Amount',
+    'due_date' => $isFinnish ? 'Eräpäivä' : 'Due date',
+    'account_number' => $isFinnish ? 'IBAN-tilinumero' : 'IBAN account number',
+    'reference_number' => $isFinnish ? 'Viitenumero' : 'Reference number',
+  ];
+}
+
+/**
+ * Return translated offer UI strings for JavaScript.
+ */
+function _asu_application_get_offer_drupal_settings(): array {
+  return [
+    'acceptOffer' => (string) t('Accept offer'),
+    'rejectOffer' => (string) t('Reject offer'),
+    'confirmAccept' => (string) t('Are you sure you want to accept this offer?'),
+    'confirmReject' => (string) t('Are you sure you want to reject this offer?'),
+    'offerStatusLabel' => (string) t('Offer status'),
+    'offerValidUntilLabel' => (string) t('Offer valid until'),
+    'showOfferDetails' => (string) t('Show offer details'),
+    'hideOfferDetails' => (string) t('Hide offer details'),
+    'loadingOfferDetails' => (string) t('Loading offer details…'),
+    'loadingOffers' => (string) t('Loading offers…'),
+    'offerDetailsError' => (string) t('Could not load offer details.'),
+    'offerAcceptedConfirmation' => (string) t('You have accepted this offer.'),
+    'offerRejectedConfirmation' => (string) t('You have rejected this offer.'),
+    'offerActionError' => (string) t('Could not update the offer. Please try again.'),
+    'acceptedLabel' => (string) t('accepted'),
+    'rejectedLabel' => (string) t('rejected'),
+    'offerAcceptedStatus' => (string) t('offer accepted'),
+    'offerRejectedStatus' => (string) t('Offer rejected'),
+    'projectMaterialbankLink' => (string) t('Project material bank'),
+    'apartmentPageLink' => (string) t('Apartment page'),
+    'offerExpiredLabel' => (string) t('Offer expired'),
+    'offerDetailLabels' => [
+      'apartment_number' => (string) t('Apartment'),
+      'apartment_structure' => (string) t('Apartment type'),
+      'living_area' => (string) t('Living area'),
+      'floor' => (string) t('Floor'),
+      'sales_price' => (string) t('Sales price'),
+      'debt_free_sales_price' => (string) t('Debt-free price'),
+      'maintenance_fee' => (string) t('Estimated maintenance fee'),
+      'has_children' => (string) t('Family with children'),
+      'current_right_of_occupancy_payment' => (string) t('Estimated right of occupancy payment'),
+      'right_of_occupancy_fee' => (string) t('Estimated right of occupancy fee'),
+      'right_of_occupancy_deposit' => (string) t('Deposit'),
+      'right_of_residence' => (string) t('Right of residence number'),
+      'is_age_over_55' => (string) t('Over 55'),
+      'is_right_of_occupancy_housing_changer' => (string) t('Switching right of occupancy home'),
+      'valid_until' => (string) t('Offer valid until'),
+    ],
+  ];
 }
 
 /**
