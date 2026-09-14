@@ -476,6 +476,15 @@ function asu_application_update_9018(): void {
   $entity_type_manager = \Drupal::entityTypeManager();
   $entity_type_manager->clearCachedDefinitions();
 
-  $entity_type = $entity_type_manager->getDefinition("asu_application_payment");
+  try {
+    $entity_type = $entity_type_manager->getDefinition("asu_application_payment");
+  }
+  catch (\Throwable $exception) {
+    \Drupal::logger("asu_application")->warning("Skipped update 9018 because entity type asu_application_payment is not available yet: @error", [
+      "@error" => $exception->getMessage(),
+    ]);
+    return;
+  }
+
   \Drupal::entityDefinitionUpdateManager()->installEntityType($entity_type);
 }

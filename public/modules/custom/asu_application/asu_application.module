@@ -178,6 +178,7 @@ function template_preprocess_asu_application(array &$variables) {
         'application_apartments' => $apartmentData,
         'error' => $application->hasError() ? $application->getError() : FALSE,
         'show_application_payments' => (
+          (int) $application->getOwnerId() === (int) \Drupal::currentUser()->id() ||
           \Drupal::currentUser()->hasPermission('view application payments') ||
           \Drupal::currentUser()->hasPermission('administer applications')
         ),
