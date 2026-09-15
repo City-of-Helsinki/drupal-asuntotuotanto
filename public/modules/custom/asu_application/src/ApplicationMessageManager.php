@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Drupal\asu_application;
 
+use Drupal\Component\Datetime\TimeInterface;
+use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\asu_application\Entity\Application;
 use Drupal\asu_application\Entity\ApplicationMessage;
@@ -19,6 +21,8 @@ final class ApplicationMessageManager {
    */
   public function __construct(
     private readonly EntityTypeManagerInterface $entityTypeManager,
+    private readonly Connection $database,
+    private readonly TimeInterface $time,
   ) {
   }
 
@@ -133,7 +137,7 @@ final class ApplicationMessageManager {
       ];
     }
 
-    $schema = \Drupal::database()->schema();
+    $schema = $this->database->schema();
     if (!$schema->tableExists('asu_application_co_applicant_map')) {
       return $this->uniqueRecipientsByEmail($recipients);
     }
@@ -146,7 +150,7 @@ final class ApplicationMessageManager {
     $fallbackCoApplicantEmail = trim((string) ($fallbackCoApplicantEmail ?? ''));
 
     $hasCoApplicantEmailColumn = $schema->fieldExists('asu_application_co_applicant_map', 'co_applicant_email');
-    $mapQuery = \Drupal::database()
+    $mapQuery = $this->database
       ->select('asu_application_co_applicant_map', 'm')
       ->fields('m', ['co_applicant_saml_hash']);
 
@@ -300,11 +304,10 @@ final class ApplicationMessageManager {
       return;
     }
 
-    $database = \Drupal::database();
-    $database->update('asu_application_co_applicant_map')
+    $this->database->update('asu_application_co_applicant_map')
       ->fields([
         'co_applicant_email' => $email,
-        'changed' => \Drupal::time()->getRequestTime(),
+        'changed' => $this->time->getRequestTime(),
       ])
       ->condition('application_id', $applicationId)
       ->condition('co_applicant_email', '', '=')

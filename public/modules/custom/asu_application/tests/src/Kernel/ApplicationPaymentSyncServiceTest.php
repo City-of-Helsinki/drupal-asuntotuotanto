@@ -21,6 +21,7 @@ final class ApplicationPaymentSyncServiceTest extends KernelTestBase {
     'user',
     'field',
     'datetime',
+    'asu_api',
     'asu_application',
   ];
 
