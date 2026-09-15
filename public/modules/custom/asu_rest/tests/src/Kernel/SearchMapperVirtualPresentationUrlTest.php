@@ -4,13 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\asu_rest\Kernel;
 
-use Drupal\asu_rest\Service\SearchMapper;
-use Drupal\field\Entity\FieldConfig;
-use Drupal\field\Entity\FieldStorageConfig;
-use Drupal\KernelTests\KernelTestBase;
-use Drupal\node\Entity\Node;
-use Drupal\node\Entity\NodeType;
-
 /**
  * Tests that project virtual presentation URLs are exposed in the REST mapping.
  *
@@ -19,66 +12,17 @@ use Drupal\node\Entity\NodeType;
  *
  * @group asu_rest
  */
-final class SearchMapperVirtualPresentationUrlTest extends KernelTestBase {
-
-  /**
-   * {@inheritdoc}
-   */
-  protected static $modules = [
-    'system',
-    'user',
-    'node',
-    'field',
-    'link',
-    'text',
-    'filter',
-    'file',
-    'config_terms',
-    'asu_rest',
-  ];
-
-  /**
-   * The mapper under test.
-   *
-   * @var \Drupal\asu_rest\Service\SearchMapper
-   */
-  private SearchMapper $mapper;
+final class SearchMapperVirtualPresentationUrlTest extends SearchMapperKernelTestBase {
 
   /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
     parent::setUp();
-
-    $this->installEntitySchema('user');
-    $this->installEntitySchema('node');
-    $this->installConfig(['node']);
-
-    NodeType::create([
-      'type' => 'project',
-      'name' => 'Project',
-    ])->save();
-
-    FieldStorageConfig::create([
-      'field_name' => 'field_virtual_presentation_url',
-      'entity_type' => 'node',
-      'type' => 'link',
-      'cardinality' => 1,
-      'settings' => [],
-    ])->save();
-
-    FieldConfig::create([
-      'field_name' => 'field_virtual_presentation_url',
-      'entity_type' => 'node',
-      'bundle' => 'project',
-      'label' => 'Virtual presentation URL',
-      'settings' => [
-        'link_type' => 17,
-        'title' => 0,
-      ],
-    ])->save();
-
-    $this->mapper = $this->container->get('asu_rest.search_mapper');
+    $this->createProjectLinkField(
+      'field_virtual_presentation_url',
+      'Virtual presentation URL',
+    );
   }
 
   /**
@@ -88,17 +32,11 @@ final class SearchMapperVirtualPresentationUrlTest extends KernelTestBase {
    * - Asserts an external URI is returned as an absolute string.
    */
   public function testProjectVirtualPresentationUrlIsMapped(): void {
-    $project = Node::create([
-      'type' => 'project',
-      'title' => 'Project With Tour',
-      'status' => 1,
+    $mapped = $this->mapProject('Project With Tour', [
       'field_virtual_presentation_url' => [
         ['uri' => 'https://example.com/virtual-tour'],
       ],
     ]);
-    $project->save();
-
-    $mapped = $this->mapper->mapProject($project);
 
     $this->assertArrayHasKey('project_virtual_presentation_url', $mapped);
     $this->assertSame(
@@ -113,14 +51,7 @@ final class SearchMapperVirtualPresentationUrlTest extends KernelTestBase {
    * - Asserts the key is always present so the consumer schema is stable.
    */
   public function testProjectVirtualPresentationUrlDefaultsToEmptyString(): void {
-    $project = Node::create([
-      'type' => 'project',
-      'title' => 'Project Without Tour',
-      'status' => 1,
-    ]);
-    $project->save();
-
-    $mapped = $this->mapper->mapProject($project);
+    $mapped = $this->mapProject('Project Without Tour');
 
     $this->assertArrayHasKey('project_virtual_presentation_url', $mapped);
     $this->assertSame('', $mapped['project_virtual_presentation_url']);

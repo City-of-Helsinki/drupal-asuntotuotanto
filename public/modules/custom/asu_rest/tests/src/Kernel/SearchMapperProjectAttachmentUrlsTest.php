@@ -4,13 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\asu_rest\Kernel;
 
-use Drupal\asu_rest\Service\SearchMapper;
-use Drupal\field\Entity\FieldConfig;
-use Drupal\field\Entity\FieldStorageConfig;
-use Drupal\KernelTests\KernelTestBase;
-use Drupal\node\Entity\Node;
-use Drupal\node\Entity\NodeType;
-
 /**
  * Tests that project attachment URLs are exposed in the REST mapping.
  *
@@ -20,66 +13,18 @@ use Drupal\node\Entity\NodeType;
  *
  * @group asu_rest
  */
-final class SearchMapperProjectAttachmentUrlsTest extends KernelTestBase {
-
-  /**
-   * {@inheritdoc}
-   */
-  protected static $modules = [
-    'system',
-    'user',
-    'node',
-    'field',
-    'link',
-    'text',
-    'filter',
-    'file',
-    'config_terms',
-    'asu_rest',
-  ];
-
-  /**
-   * The mapper under test.
-   *
-   * @var \Drupal\asu_rest\Service\SearchMapper
-   */
-  private SearchMapper $mapper;
+final class SearchMapperProjectAttachmentUrlsTest extends SearchMapperKernelTestBase {
 
   /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
     parent::setUp();
-
-    $this->installEntitySchema('user');
-    $this->installEntitySchema('node');
-    $this->installConfig(['node']);
-
-    NodeType::create([
-      'type' => 'project',
-      'name' => 'Project',
-    ])->save();
-
-    FieldStorageConfig::create([
-      'field_name' => 'field_attachments_url',
-      'entity_type' => 'node',
-      'type' => 'link',
-      'cardinality' => -1,
-      'settings' => [],
-    ])->save();
-
-    FieldConfig::create([
-      'field_name' => 'field_attachments_url',
-      'entity_type' => 'node',
-      'bundle' => 'project',
-      'label' => 'Attachments / URL',
-      'settings' => [
-        'link_type' => 17,
-        'title' => 0,
-      ],
-    ])->save();
-
-    $this->mapper = $this->container->get('asu_rest.search_mapper');
+    $this->createProjectLinkField(
+      'field_attachments_url',
+      'Attachments / URL',
+      -1,
+    );
   }
 
   /**
@@ -89,18 +34,12 @@ final class SearchMapperProjectAttachmentUrlsTest extends KernelTestBase {
    * - Asserts external URLs are returned as absolute strings.
    */
   public function testProjectAttachmentUrlsAreMapped(): void {
-    $project = Node::create([
-      'type' => 'project',
-      'title' => 'Project One',
-      'status' => 1,
+    $mapped = $this->mapProject('Project One', [
       'field_attachments_url' => [
         ['uri' => 'https://example.com/mediabank/project'],
         ['uri' => 'https://example.com/mediabank/project-2'],
       ],
     ]);
-    $project->save();
-
-    $mapped = $this->mapper->mapProject($project);
 
     $this->assertArrayHasKey('project_attachment_urls', $mapped);
     $this->assertSame(
@@ -118,14 +57,7 @@ final class SearchMapperProjectAttachmentUrlsTest extends KernelTestBase {
    * - Asserts the key is always present so the consumer schema is stable.
    */
   public function testProjectAttachmentUrlsDefaultToEmptyList(): void {
-    $project = Node::create([
-      'type' => 'project',
-      'title' => 'Project Without Attachments',
-      'status' => 1,
-    ]);
-    $project->save();
-
-    $mapped = $this->mapper->mapProject($project);
+    $mapped = $this->mapProject('Project Without Attachments');
 
     $this->assertArrayHasKey('project_attachment_urls', $mapped);
     $this->assertSame([], $mapped['project_attachment_urls']);

@@ -4,13 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\asu_rest\Kernel;
 
-use Drupal\asu_rest\Service\SearchMapper;
-use Drupal\field\Entity\FieldConfig;
-use Drupal\field\Entity\FieldStorageConfig;
-use Drupal\KernelTests\KernelTestBase;
-use Drupal\node\Entity\Node;
-use Drupal\node\Entity\NodeType;
-
 /**
  * Ensures SearchMapper exposes Elasticsearch index fields consumed by Django.
  *
@@ -19,7 +12,7 @@ use Drupal\node\Entity\NodeType;
  *
  * @group asu_rest
  */
-final class SearchMapperElasticsearchParityTest extends KernelTestBase {
+final class SearchMapperElasticsearchParityTest extends SearchMapperKernelTestBase {
 
   /**
    * Project fields indexed in search_api.index.apartment and ApartmentDocument.
@@ -96,49 +89,12 @@ final class SearchMapperElasticsearchParityTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = [
-    'system',
-    'user',
-    'node',
-    'field',
-    'text',
-    'filter',
-    'file',
-    'link',
-    'config_terms',
-    'asu_rest',
-  ];
-
-  /**
-   * The mapper under test.
-   *
-   * @var \Drupal\asu_rest\Service\SearchMapper
-   */
-  private SearchMapper $mapper;
-
-  /**
-   * {@inheritdoc}
-   */
   protected function setUp(): void {
     parent::setUp();
 
-    $this->installEntitySchema('user');
-    $this->installEntitySchema('node');
-    $this->installConfig(['node']);
-
-    NodeType::create([
-      'type' => 'project',
-      'name' => 'Project',
-    ])->save();
-    NodeType::create([
-      'type' => 'apartment',
-      'name' => 'Apartment',
-    ])->save();
-
+    $this->ensureNodeType('apartment', 'Apartment');
     $this->installMinimalProjectFields();
     $this->installMinimalApartmentFields();
-
-    $this->mapper = $this->container->get('asu_rest.search_mapper');
   }
 
   /**
@@ -148,10 +104,7 @@ final class SearchMapperElasticsearchParityTest extends KernelTestBase {
    * - Asserts values are returned when set on the project node.
    */
   public function testProjectMapIncludesElasticsearchParityKeys(): void {
-    $project = Node::create([
-      'type' => 'project',
-      'title' => 'Parity project',
-      'status' => 1,
+    $mapped = $this->mapProject('Parity project', [
       'field_depositary' => 'Example Bank',
       'field_use_complete_contract' => 1,
       'field_roof_material' => 'Tile',
@@ -159,9 +112,6 @@ final class SearchMapperElasticsearchParityTest extends KernelTestBase {
       'field_project_accessibility' => 'Elevator and ramp',
       'field_customer_document_handover' => 'Documents at bank',
     ]);
-    $project->save();
-
-    $mapped = $this->mapper->mapProject($project);
 
     foreach (self::PROJECT_PARITY_KEYS as $key) {
       $this->assertArrayHasKey($key, $mapped, "Missing parity key: {$key}");
@@ -188,22 +138,7 @@ final class SearchMapperElasticsearchParityTest extends KernelTestBase {
    * - Asserts it matches site_owner (same field_site_owner source).
    */
   public function testApartmentListingIncludesProjectSiteOwner(): void {
-    $project = Node::create([
-      'type' => 'project',
-      'title' => 'Site owner project',
-      'status' => 1,
-    ]);
-    $project->save();
-
-    $apartment = Node::create([
-      'type' => 'apartment',
-      'title' => 'A 1',
-      'status' => 1,
-    ]);
-    $apartment->save();
-
-    $this->mapper->primeProjectLookupWithKnownProject([$apartment], $project);
-    $mapped = $this->mapper->mapApartmentListing($apartment);
+    $mapped = $this->mapApartmentListing('Site owner project', 'A 1');
 
     $this->assertArrayHasKey('project_site_owner', $mapped);
     $this->assertArrayHasKey('site_owner', $mapped);
@@ -221,24 +156,14 @@ final class SearchMapperElasticsearchParityTest extends KernelTestBase {
    * - Asserts fee_m2 values are cents-per-m2 from fee / living_area.
    */
   public function testApartmentDetailIncludesFeeAndShareParityKeys(): void {
-    $project = Node::create([
-      'type' => 'project',
-      'title' => 'Fee parity project',
-      'status' => 1,
-    ]);
-    $project->save();
-
-    $apartment = Node::create([
-      'type' => 'apartment',
-      'title' => 'A 2',
-      'status' => 1,
+    $project = $this->createProjectNode('Fee parity project');
+    $apartment = $this->createApartmentNode('A 2', [
       'field_stock_start_number' => '10',
       'field_stock_end_number' => '20',
       'field_living_area' => '50',
       'field_financing_fee' => '100',
       'field_maintenance_fee' => '200',
     ]);
-    $apartment->save();
 
     $this->mapper->primeProjectLookupWithKnownProject([$apartment], $project);
     $listed = $this->mapper->mapApartmentListing($apartment);
@@ -259,14 +184,7 @@ final class SearchMapperElasticsearchParityTest extends KernelTestBase {
    * Project_use_complete_contract defaults to FALSE when unset on the project.
    */
   public function testProjectUseCompleteContractDefaultsToFalse(): void {
-    $project = Node::create([
-      'type' => 'project',
-      'title' => 'Standard contract project',
-      'status' => 1,
-    ]);
-    $project->save();
-
-    $mapped = $this->mapper->mapProject($project);
+    $mapped = $this->mapProject('Standard contract project');
 
     $this->assertArrayHasKey('project_use_complete_contract', $mapped);
     $this->assertFalse($mapped['project_use_complete_contract']);
@@ -276,22 +194,7 @@ final class SearchMapperElasticsearchParityTest extends KernelTestBase {
    * Apartment listing map exposes apartment_published from node status.
    */
   public function testApartmentListingIncludesApartmentPublished(): void {
-    $project = Node::create([
-      'type' => 'project',
-      'title' => 'Parent project',
-      'status' => 1,
-    ]);
-    $project->save();
-
-    $apartment = Node::create([
-      'type' => 'apartment',
-      'title' => 'A 1',
-      'status' => 1,
-    ]);
-    $apartment->save();
-
-    $this->mapper->primeProjectLookupWithKnownProject([$apartment], $project);
-    $mapped = $this->mapper->mapApartmentListing($apartment);
+    $mapped = $this->mapApartmentListing('Parent project', 'A 1');
 
     $this->assertArrayHasKey('apartment_published', $mapped);
     $this->assertTrue($mapped['apartment_published']);
@@ -308,30 +211,15 @@ final class SearchMapperElasticsearchParityTest extends KernelTestBase {
    * - Asserts TRUE when fields are set and FALSE when unset.
    */
   public function testApartmentListingIncludesPublishOnFlags(): void {
-    $project = Node::create([
-      'type' => 'project',
-      'title' => 'Parent project',
-      'status' => 1,
-    ]);
-    $project->save();
-
-    $published = Node::create([
-      'type' => 'apartment',
-      'title' => 'Published on portals',
-      'status' => 1,
+    $project = $this->createProjectNode('Parent project');
+    $published = $this->createApartmentNode('Published on portals', [
       'field_publish_on_etuovi' => 1,
       'field_publish_on_oikotie' => 1,
     ]);
-    $published->save();
-
-    $unpublished = Node::create([
-      'type' => 'apartment',
-      'title' => 'Not published on portals',
-      'status' => 1,
+    $unpublished = $this->createApartmentNode('Not published on portals', [
       'field_publish_on_etuovi' => 0,
       'field_publish_on_oikotie' => 0,
     ]);
-    $unpublished->save();
 
     $this->mapper->primeProjectLookupWithKnownProject(
       [$published, $unpublished],
@@ -352,6 +240,30 @@ final class SearchMapperElasticsearchParityTest extends KernelTestBase {
   }
 
   /**
+   * Map a listing payload for a new apartment on a new project.
+   *
+   * @param string $projectTitle
+   *   The project title.
+   * @param string $apartmentTitle
+   *   The apartment title.
+   * @param array<string, mixed> $apartmentValues
+   *   Additional apartment field values.
+   *
+   * @return array<string, mixed>
+   *   Mapped apartment listing payload.
+   */
+  private function mapApartmentListing(
+    string $projectTitle,
+    string $apartmentTitle,
+    array $apartmentValues = [],
+  ): array {
+    $project = $this->createProjectNode($projectTitle);
+    $apartment = $this->createApartmentNode($apartmentTitle, $apartmentValues);
+    $this->mapper->primeProjectLookupWithKnownProject([$apartment], $project);
+    return $this->mapper->mapApartmentListing($apartment);
+  }
+
+  /**
    * Install string/boolean fields required for parity key presence checks.
    */
   private function installMinimalProjectFields(): void {
@@ -362,30 +274,15 @@ final class SearchMapperElasticsearchParityTest extends KernelTestBase {
       'field_project_accessibility',
       'field_customer_document_handover',
     ] as $fieldName) {
-      FieldStorageConfig::create([
-        'field_name' => $fieldName,
-        'entity_type' => 'node',
-        'type' => 'string',
-      ])->save();
-      FieldConfig::create([
-        'field_name' => $fieldName,
-        'entity_type' => 'node',
-        'bundle' => 'project',
-        'label' => $fieldName,
-      ])->save();
+      $this->createNodeField($fieldName, 'project', 'string', $fieldName);
     }
 
-    FieldStorageConfig::create([
-      'field_name' => 'field_use_complete_contract',
-      'entity_type' => 'node',
-      'type' => 'boolean',
-    ])->save();
-    FieldConfig::create([
-      'field_name' => 'field_use_complete_contract',
-      'entity_type' => 'node',
-      'bundle' => 'project',
-      'label' => 'Use complete apartment contract',
-    ])->save();
+    $this->createNodeField(
+      'field_use_complete_contract',
+      'project',
+      'boolean',
+      'Use complete apartment contract',
+    );
   }
 
   /**
@@ -407,34 +304,14 @@ final class SearchMapperElasticsearchParityTest extends KernelTestBase {
       'field_financing_fee',
       'field_maintenance_fee',
     ] as $fieldName) {
-      FieldStorageConfig::create([
-        'field_name' => $fieldName,
-        'entity_type' => 'node',
-        'type' => 'string',
-      ])->save();
-      FieldConfig::create([
-        'field_name' => $fieldName,
-        'entity_type' => 'node',
-        'bundle' => 'apartment',
-        'label' => $fieldName,
-      ])->save();
+      $this->createNodeField($fieldName, 'apartment', 'string', $fieldName);
     }
 
     foreach ([
       'field_publish_on_etuovi',
       'field_publish_on_oikotie',
     ] as $fieldName) {
-      FieldStorageConfig::create([
-        'field_name' => $fieldName,
-        'entity_type' => 'node',
-        'type' => 'boolean',
-      ])->save();
-      FieldConfig::create([
-        'field_name' => $fieldName,
-        'entity_type' => 'node',
-        'bundle' => 'apartment',
-        'label' => $fieldName,
-      ])->save();
+      $this->createNodeField($fieldName, 'apartment', 'boolean', $fieldName);
     }
   }
 
