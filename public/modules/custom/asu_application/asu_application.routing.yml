@@ -22,6 +22,14 @@ asu_application.application_payments:
   requirements:
     _permission: "create application"
 
+asu_application.application_payments_mark:
+  path: "/user/application/payments/mark"
+  defaults:
+    _controller: '\Drupal\asu_application\Controller\ApplicationPaymentController::markPayment'
+  methods: [POST]
+  requirements:
+    _permission: "create application"
+
 
 asu_application.offer_action:
   path: "/user/offer/{offer_id}/{action}"

@@ -50,7 +50,44 @@ final class ApplicationPaymentController extends ControllerBase {
       return $this->response([], 403);
     }
 
-    return $this->response($this->paymentSync->getPaymentsForApplication($applicationId));
+    return $this->response($this->paymentSync->getPaymentsForApplication($applicationId, (int) $this->currentUser()->id()));
+  }
+
+  /**
+   * Mark or unmark one payment row as paid for current user.
+   */
+  public function markPayment(): JsonResponse {
+    $request = $this->requestStack->getCurrentRequest();
+    $applicationId = (int) ($request->get('application_id') ?? 0);
+    $paymentId = (int) ($request->get('payment_id') ?? 0);
+    $markedRaw = $request->get('marked');
+    $marked = in_array($markedRaw, [TRUE, 1, '1', 'true', 'yes', 'on'], TRUE);
+
+    if ($applicationId <= 0 || $paymentId <= 0) {
+      return $this->response(['success' => FALSE], 400);
+    }
+
+    $application = Application::load($applicationId);
+    if (!$application) {
+      return $this->response(['success' => FALSE], 404);
+    }
+
+    if (!$application->access('view', $this->currentUser(), TRUE)->isAllowed()) {
+      return $this->response(['success' => FALSE], 403);
+    }
+
+    if (!$this->paymentSync->paymentBelongsToApplication($paymentId, $applicationId)) {
+      return $this->response(['success' => FALSE], 404);
+    }
+
+    $state = $this->paymentSync->setUserPaymentMarked($paymentId, (int) $this->currentUser()->id(), $marked);
+
+    return $this->response([
+      'success' => TRUE,
+      'payment_id' => $paymentId,
+      'is_marked_paid' => $state['is_marked_paid'],
+      'marked_paid_at' => $state['marked_paid_at'],
+    ]);
   }
 
   /**
