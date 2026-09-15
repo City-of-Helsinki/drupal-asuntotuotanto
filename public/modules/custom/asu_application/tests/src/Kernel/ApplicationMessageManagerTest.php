@@ -44,6 +44,13 @@ final class ApplicationMessageManagerTest extends KernelTestBase {
   }
 
   /**
+   * Tests that the container injects every constructor dependency.
+   */
+  public function testMessageManagerServiceIsInstantiable(): void {
+    $this->assertInstanceOf(ApplicationMessageManager::class, $this->manager);
+  }
+
+  /**
    * Tests that messages are scoped to the application and sorted by creation.
    */
   public function testLoadThreadReturnsChronologicalMessages(): void {
