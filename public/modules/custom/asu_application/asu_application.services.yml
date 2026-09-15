@@ -67,3 +67,4 @@ services:
     arguments:
       - '@entity_type.manager'
       - '@logger.channel.asu_application'
+      - '@user.data'

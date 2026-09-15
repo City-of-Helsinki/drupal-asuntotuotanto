@@ -234,35 +234,58 @@
       </a>
     </div>
 
-    {% if content['#teaser_values'].show_application_payments %}
-    <table class="application__apartments application__results-table application__payments-table is-hidden" data-application="{{ app_id }}" data-empty-label="{{ content['#teaser_values'].application_payments_ui.empty|e('html_attr') }}" aria-hidden="true">
-      <thead>
-      <tr>
-        <th>{{ content['#teaser_values'].application_payments_ui.installment_type }}</th>
-        <th>{{ content['#teaser_values'].application_payments_ui.amount }}</th>
-        <th>{{ content['#teaser_values'].application_payments_ui.due_date }}</th>
-        <th>{{ content['#teaser_values'].application_payments_ui.account_number }}</th>
-        <th>{{ content['#teaser_values'].application_payments_ui.reference_number }}</th>
-      </tr>
-      </thead>
-      <tbody>
-      {% if content['#teaser_values'].application_payments|length > 0 %}
-        {% for payment in content['#teaser_values'].application_payments %}
-          <tr>
-            <td>{{ payment.installment_type }}</td>
-            <td>{{ payment.amount }}</td>
-            <td>{{ payment.due_date }}</td>
-            <td>{{ payment.account_number ?: '-' }}</td>
-            <td>{{ payment.reference_number ?: '-' }}</td>
-          </tr>
-        {% endfor %}
-      {% else %}
+      {% if content['#teaser_values'].show_application_payments %}
+      <p class="application__payments-note is-hidden" data-application="{{ app_id }}">
+        {{ content['#teaser_values'].application_payments_ui.mark_notice }}
+      </p>
+      <table class="application__apartments application__results-table application__payments-table is-hidden" data-application="{{ app_id }}" data-empty-label="{{ content['#teaser_values'].application_payments_ui.empty|e('html_attr') }}" data-mark-paid-label="{{ content['#teaser_values'].application_payments_ui.mark_paid|e('html_attr') }}" data-marked-paid-label="{{ content['#teaser_values'].application_payments_ui.marked_paid|e('html_attr') }}" aria-hidden="true">
+        <thead>
         <tr>
-          <td colspan="5">{{ content['#teaser_values'].application_payments_ui.empty }}</td>
+          <th>{{ content['#teaser_values'].application_payments_ui.installment_type }}</th>
+          <th>{{ content['#teaser_values'].application_payments_ui.amount }}</th>
+          <th>{{ content['#teaser_values'].application_payments_ui.due_date }}</th>
+          <th>{{ content['#teaser_values'].application_payments_ui.account_number }}</th>
+          <th>{{ content['#teaser_values'].application_payments_ui.reference_number }}</th>
+          <th>{{ content['#teaser_values'].application_payments_ui.user_mark }}</th>
         </tr>
-      {% endif %}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+        {% if content['#teaser_values'].application_payments|length > 0 %}
+          {% for payment in content['#teaser_values'].application_payments %}
+            <tr>
+              <td>{{ payment.installment_type }}</td>
+              <td>{{ payment.amount }}</td>
+              <td>{{ payment.due_date }}</td>
+              <td>{{ payment.account_number ?: '-' }}</td>
+              <td>{{ payment.reference_number ?: '-' }}</td>
+              <td>
+                <label>
+                  <input
+                    type="checkbox"
+                    class="application__payment-mark-checkbox"
+                    data-payment-id="{{ payment.payment_id }}"
+                    {% if payment.is_marked_paid %}checked{% endif %}
+                  >
+                  {{ content['#teaser_values'].application_payments_ui.mark_paid }}
+                </label>
+                <div class="application__payment-mark-status">
+                  {% if payment.is_marked_paid %}
+                    {{ content['#teaser_values'].application_payments_ui.marked_paid }}
+                    {% if payment.marked_paid_at %}
+                      {{ payment.marked_paid_at }}
+                    {% endif %}
+                  {% endif %}
+                </div>
+              </td>
+            </tr>
+          {% endfor %}
+        {% else %}
+          <tr>
+            <td colspan="6">{{ content['#teaser_values'].application_payments_ui.empty }}</td>
+          </tr>
+        {% endif %}
+        </tbody>
+      </table>
 
     <div class="application__lottery application__lottery--hide is-hidden" data-application="{{ app_id }}" id="application__payments--hide--submitted">
       <a class="application__lottery-link application__payments-link--hide">

@@ -189,7 +189,7 @@ function template_preprocess_asu_application(array &$variables) {
 
     if ($application_teaser_values['#teaser_values']['show_application_payments']) {
       $application_teaser_values['#teaser_values']['application_payments'] = \Drupal::service('asu_application.payment_sync')
-        ->getPaymentsForApplication((int) $application->id());
+        ->getPaymentsForApplication((int) $application->id(), (int) \Drupal::currentUser()->id());
     }
 
     if ($variables['elements']['#view_mode'] == 'full') {
@@ -290,6 +290,12 @@ function _asu_application_get_payments_ui_strings(): array {
     'due_date' => $isFinnish ? 'Eräpäivä' : 'Due date',
     'account_number' => $isFinnish ? 'IBAN-tilinumero' : 'IBAN account number',
     'reference_number' => $isFinnish ? 'Viitenumero' : 'Reference number',
+    'user_mark' => $isFinnish ? 'Oma merkintä' : 'Personal note',
+    'mark_paid' => $isFinnish ? 'Merkitse maksetuksi' : 'Mark as paid',
+    'marked_paid' => $isFinnish ? 'Merkitty maksetuksi' : 'Marked as paid',
+    'mark_notice' => $isFinnish
+      ? 'Tämä on käyttäjän oma merkintä. Se ei vahvista maksun saapumista.'
+      : 'This is a personal note. It does not confirm that payment has arrived.',
   ];
 }
 
