@@ -7,9 +7,12 @@ use Drupal\Core\Entity\EditorialContentEntityBase;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\Form\EnforcedResponseException;
+use Drupal\Core\Url;
 use Drupal\user\Entity\User;
 use Drupal\user\EntityOwnerInterface;
 use Drupal\user\EntityOwnerTrait;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Defines the Application entity.
@@ -373,6 +376,8 @@ class Application extends EditorialContentEntityBase implements ContentEntityInt
    * @param array $values
    *   Entity values.
    *
+   * @throws \Drupal\Core\Form\EnforcedResponseException
+   *   When the current user is anonymous and must log in first.
    * @throws \Exception
    */
   public static function preCreate(EntityStorageInterface $storage, array &$values) {
@@ -381,6 +386,11 @@ class Application extends EditorialContentEntityBase implements ContentEntityInt
 
     $parameters = \Drupal::routeMatch()->getParameters();
     $project_id = $parameters->get('project_id');
+
+    $account = \Drupal::currentUser();
+    if ($account->isAnonymous()) {
+      throw new EnforcedResponseException(self::loginRedirectResponse());
+    }
 
     $user = User::load(\Drupal::currentUser()->id());
     // Customers always own their own applications. Salespersons and admins
@@ -407,6 +417,19 @@ class Application extends EditorialContentEntityBase implements ContentEntityInt
       'create_to_django' => NULL,
     ];
 
+  }
+
+  /**
+   * Redirect to login, then back to the current application URL.
+   *
+   * @return \Symfony\Component\HttpFoundation\RedirectResponse
+   *   Redirect to user.login with a destination query.
+   */
+  public static function loginRedirectResponse(): RedirectResponse {
+    $url = Url::fromRoute('user.login', [], [
+      'query' => ['destination' => \Drupal::request()->getRequestUri()],
+    ])->toString();
+    return new RedirectResponse($url);
   }
 
   /**
