@@ -18,15 +18,15 @@
 }
 
 .showcase-block__title {
- font-size: $fontsize-heading-m;
-line-height: $lineheight-m;
+  font-size: $fontsize-heading-m;
+  line-height: $lineheight-m;
   margin: 0 0 $spacing-triple;
   font-weight: $font-weight-bold;
   text-align: center;
 
   @media screen and (min-width: $breakpoint-l) {
-   font-size: $fontsize-heading-l;
-line-height: $lineheight-m;
+    font-size: $fontsize-heading-l;
+    line-height: $lineheight-m;
     margin: 0 0 $spacing-quadruple;
   }
 }
@@ -174,8 +174,8 @@ line-height: $lineheight-m;
   max-width: 334px; // According to design.
 
   p {
-   font-size: $fontsize-body-m;
-line-height: $lineheight-l; // Was 24px.
+    font-size: $fontsize-body-m;
+    line-height: $lineheight-l; // Was 24px.
     font-weight: $font-weight-regular;
 
     &:first-child {
@@ -196,12 +196,69 @@ line-height: $lineheight-l; // Was 24px.
   }
 
   a {
-   font-size: $fontsize-body-m;
-line-height: $lineheight-l; // Was 26px.
+    font-size: $fontsize-body-m;
+    line-height: $lineheight-l; // Was 26px.
     font-weight: $font-weight-bold;
 
     &:not(:first-child) {
       margin-top: $spacing-half-and-half;
+    }
+  }
+}
+
+.showcase-block--homepage-highlights {
+  .showcase-block__content {
+    background-color: transparent;
+    padding: 0;
+  }
+
+  .showcase-block__showcases.showcases-count--2 {
+    @media screen and (min-width: $breakpoint-m) {
+      display: grid;
+      gap: $spacing-double;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      justify-content: initial;
+    }
+
+    .showcase {
+      @media screen and (min-width: $breakpoint-m) {
+        margin-top: 0;
+        max-width: none;
+        width: 100%;
+      }
+    }
+  }
+
+  .liftup-with-image-and-links {
+    display: block;
+    position: relative;
+  }
+
+  .liftup-with-image-and-links__image {
+    height: 100%;
+    line-height: 0;
+    overflow: hidden;
+
+    @media screen and (min-width: $breakpoint-l) {
+      margin: 0;
+      max-width: none;
+      padding: 0;
+    }
+
+    picture,
+    img {
+      display: block;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      width: 100%;
+    }
+  }
+
+  .liftup-with-image-and-links--design-image-on-left {
+    .liftup-with-image-and-links__content {
+      left: auto;
+      right: 0;
     }
   }
 }

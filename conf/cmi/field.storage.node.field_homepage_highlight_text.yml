@@ -1,0 +1,19 @@
+uuid: 8dd85db6-f775-4c34-96c7-a2c7f83dd2ea
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: node.field_homepage_highlight_text
+field_name: field_homepage_highlight_text
+entity_type: node
+type: string_long
+settings:
+  case_sensitive: false
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false
