@@ -137,14 +137,13 @@ final class ApplicationPreCreateTest extends KernelTestBase {
   }
 
   /**
-   * Anonymous create redirects to login and preserves the application URL.
+   * Anonymous create redirects to /user/register.
    *
    * - Current user is anonymous.
-   * - Request is the add-form URL with an apartment query.
-   * - preCreate throws EnforcedResponseException wrapping a login redirect.
-   * - Redirect target includes destination back to the original URL.
+   * - Request is the add-form URL.
+   * - preCreate throws EnforcedResponseException wrapping a permanent redirect.
    */
-  public function testAnonymousCreateRedirectsToLoginWithDestination(): void {
+  public function testAnonymousCreateRedirectsToUserRegister(): void {
     $this->container->get('router.builder')->rebuild();
     $this->container->get('current_user')->setAccount(new AnonymousUserSession());
     $request = Request::create(
@@ -165,11 +164,10 @@ final class ApplicationPreCreateTest extends KernelTestBase {
     catch (EnforcedResponseException $e) {
       $response = $e->getResponse();
       $this->assertInstanceOf(RedirectResponse::class, $response);
+      $this->assertSame(301, $response->getStatusCode());
       $location = urldecode($response->getTargetUrl());
-      $this->assertStringContainsString('user/login', $location);
-      $this->assertStringContainsString('destination=', $location);
-      $this->assertStringContainsString('application/add/hitas/42', $location);
-      $this->assertStringContainsString('apartment=99', $location);
+      $this->assertStringContainsString('/user/register', $location);
+      $this->assertStringNotContainsString('destination=', $location);
     }
   }
 

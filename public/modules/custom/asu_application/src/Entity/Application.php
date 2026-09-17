@@ -8,7 +8,6 @@ use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Form\EnforcedResponseException;
-use Drupal\Core\Url;
 use Drupal\user\Entity\User;
 use Drupal\user\EntityOwnerInterface;
 use Drupal\user\EntityOwnerTrait;
@@ -421,16 +420,13 @@ class Application extends EditorialContentEntityBase implements ContentEntityInt
   }
 
   /**
-   * Redirect to login, then back to the current application URL.
+   * Redirect anonymous users to Suomi.fi entry route.
    *
    * @return \Symfony\Component\HttpFoundation\RedirectResponse
-   *   Redirect to user.login with a destination query.
+   *   Permanent redirect to /user/register.
    */
   public static function loginRedirectResponse(): RedirectResponse {
-    $url = Url::fromRoute('user.login', [], [
-      'query' => ['destination' => \Drupal::request()->getRequestUri()],
-    ])->toString();
-    return new RedirectResponse($url);
+    return new RedirectResponse('/user/register', 301);
   }
 
   /**
