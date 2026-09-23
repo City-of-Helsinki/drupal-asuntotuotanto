@@ -132,17 +132,12 @@ final class SearchServiceProjectsTest extends SearchServiceKernelTestBase {
    *   The created project node.
    */
   private function createProject(string $title, bool $archived = FALSE): Node {
-    $project = Node::create([
-      'type' => 'project',
-      'title' => $title,
-      'status' => 1,
+    return $this->createContentNode('project', $title, [
       'field_archived' => $archived ? 1 : 0,
       'field_state_of_sale' => [
         ['target_id' => 'sold'],
       ],
     ]);
-    $project->save();
-    return $project;
   }
 
 }
