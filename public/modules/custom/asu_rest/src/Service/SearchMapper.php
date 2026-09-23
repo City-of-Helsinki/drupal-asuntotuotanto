@@ -9,6 +9,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Entity\TranslatableInterface;
+use Drupal\Core\Url;
 use Drupal\taxonomy\TermInterface;
 use Drupal\Core\Field\EntityReferenceFieldItemListInterface;
 use Drupal\Core\File\FileUrlGeneratorInterface;
@@ -395,7 +396,7 @@ final class SearchMapper {
       'project_site_owner' => $this->getTermLabel($project, 'field_site_owner'),
       'project_site_renter' => $this->projectFieldScalar($project, 'field_site_renter'),
       'project_smoke_free' => $this->projectFieldScalar($project, 'field_smoke_free'),
-      'project_virtual_presentation_url' => $this->projectFieldScalar(
+      'project_virtual_presentation_url' => $this->getLinkUrlFromField(
         $project,
         'field_virtual_presentation_url',
       ),
@@ -816,7 +817,7 @@ final class SearchMapper {
   }
 
   /**
-   * Get URIs from a multi-value link field.
+   * Get absolute URLs from a multi-value link field.
    */
   private function getLinkUrlsFromField(Node $entity, string $fieldName): array {
     if (!$entity->hasField($fieldName) || $entity->get($fieldName)->isEmpty()) {
@@ -824,8 +825,16 @@ final class SearchMapper {
     }
     $urls = [];
     foreach ($entity->get($fieldName)->getValue() as $item) {
-      if (!empty($item['uri'])) {
-        $urls[] = (string) $item['uri'];
+      $uri = (string) ($item['uri'] ?? '');
+      if ($uri === '') {
+        continue;
+      }
+
+      try {
+        $urls[] = $this->absolutePathUrl(Url::fromUri($uri)->toString());
+      }
+      catch (\Exception) {
+        continue;
       }
     }
     return $urls;
@@ -964,14 +973,33 @@ final class SearchMapper {
    * when requests arrive via proxy or internal routing.
    */
   private function nodeUrl(Node $node): string {
+    return $this->absolutePathUrl($node->toUrl()->toString());
+  }
+
+  /**
+   * Get the first absolute URL from a link field, or an empty string.
+   */
+  private function getLinkUrlFromField(Node $entity, string $fieldName): string {
+    $urls = $this->getLinkUrlsFromField($entity, $fieldName);
+    return $urls[0] ?? '';
+  }
+
+  /**
+   * Build an absolute URL from a path or already-absolute URL.
+   */
+  private function absolutePathUrl(string $path): string {
+    if (preg_match('#^https?://#', $path)) {
+      return $path;
+    }
+
     $baseUrl = getenv('ASU_ASUNTOTUOTANTO_URL');
     if ($baseUrl) {
-      return rtrim($baseUrl, '/') . $node->toUrl()->toString();
+      return rtrim($baseUrl, '/') . $path;
     }
     $request = $this->requestStack->getCurrentRequest();
     $host = $request ? $request->getSchemeAndHttpHost() : '';
 
-    return $host . $node->toUrl()->toString();
+    return $host . $path;
   }
 
 }

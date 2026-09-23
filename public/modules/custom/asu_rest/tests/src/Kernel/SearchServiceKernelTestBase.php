@@ -10,6 +10,7 @@ use Drupal\config_terms\Entity\Vocab;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\KernelTests\KernelTestBase;
+use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use Drupal\user\Entity\User;
 
@@ -41,6 +42,113 @@ abstract class SearchServiceKernelTestBase extends KernelTestBase {
   protected SearchService $searchService;
 
   /**
+   * Create a node type if it does not already exist.
+   *
+   * @param string $type
+   *   Node type machine name.
+   * @param string $name
+   *   Human-readable type name.
+   */
+  protected function ensureNodeType(string $type, string $name): void {
+    if (!NodeType::load($type)) {
+      NodeType::create([
+        'type' => $type,
+        'name' => $name,
+      ])->save();
+    }
+  }
+
+  /**
+   * Create a field on an entity bundle.
+   *
+   * @param string $entityType
+   *   Entity type ID.
+   * @param string $fieldName
+   *   Field machine name.
+   * @param string $bundle
+   *   Entity bundle.
+   * @param string $type
+   *   Field type plugin ID.
+   * @param string $label
+   *   Field label.
+   * @param int $cardinality
+   *   Field cardinality.
+   * @param array<string, mixed> $storageSettings
+   *   Field storage settings.
+   * @param array<string, mixed> $instanceSettings
+   *   Field instance settings.
+   */
+  protected function createEntityField(
+    string $entityType,
+    string $fieldName,
+    string $bundle,
+    string $type,
+    string $label,
+    int $cardinality = 1,
+    array $storageSettings = [],
+    array $instanceSettings = [],
+  ): void {
+    if (!FieldStorageConfig::loadByName($entityType, $fieldName)) {
+      FieldStorageConfig::create([
+        'field_name' => $fieldName,
+        'entity_type' => $entityType,
+        'type' => $type,
+        'cardinality' => $cardinality,
+        'settings' => $storageSettings,
+      ])->save();
+    }
+
+    if (!FieldConfig::loadByName($entityType, $bundle, $fieldName)) {
+      FieldConfig::create([
+        'field_name' => $fieldName,
+        'entity_type' => $entityType,
+        'bundle' => $bundle,
+        'label' => $label,
+        'settings' => $instanceSettings,
+      ])->save();
+    }
+  }
+
+  /**
+   * Create a node field on a bundle.
+   *
+   * @param string $fieldName
+   *   Field machine name.
+   * @param string $bundle
+   *   Node bundle.
+   * @param string $type
+   *   Field type plugin ID.
+   * @param string $label
+   *   Field label.
+   * @param int $cardinality
+   *   Field cardinality.
+   * @param array<string, mixed> $storageSettings
+   *   Field storage settings.
+   * @param array<string, mixed> $instanceSettings
+   *   Field instance settings.
+   */
+  protected function createNodeField(
+    string $fieldName,
+    string $bundle,
+    string $type,
+    string $label,
+    int $cardinality = 1,
+    array $storageSettings = [],
+    array $instanceSettings = [],
+  ): void {
+    $this->createEntityField(
+      'node',
+      $fieldName,
+      $bundle,
+      $type,
+      $label,
+      $cardinality,
+      $storageSettings,
+      $instanceSettings,
+    );
+  }
+
+  /**
    * Create node types and fields commonly used by search service tests.
    *
    * @param bool $withApartments
@@ -48,89 +156,47 @@ abstract class SearchServiceKernelTestBase extends KernelTestBase {
    *   apartments reference field.
    */
   protected function installSearchTestContentModel(bool $withApartments = FALSE): void {
-    NodeType::create([
-      'type' => 'project',
-      'name' => 'Project',
-    ])->save();
-
+    $this->ensureNodeType('project', 'Project');
     if ($withApartments) {
-      NodeType::create([
-        'type' => 'apartment',
-        'name' => 'Apartment',
-      ])->save();
+      $this->ensureNodeType('apartment', 'Apartment');
     }
 
-    FieldStorageConfig::create([
-      'field_name' => 'field_archived',
-      'entity_type' => 'node',
-      'type' => 'boolean',
-    ])->save();
-
-    FieldConfig::create([
-      'field_name' => 'field_archived',
-      'entity_type' => 'node',
-      'bundle' => 'project',
-      'label' => 'Archived',
-    ])->save();
-
+    $this->createNodeField('field_archived', 'project', 'boolean', 'Archived');
     if ($withApartments) {
-      FieldConfig::create([
-        'field_name' => 'field_archived',
-        'entity_type' => 'node',
-        'bundle' => 'apartment',
-        'label' => 'Archived',
-      ])->save();
+      $this->createNodeField('field_archived', 'apartment', 'boolean', 'Archived');
     }
 
-    FieldStorageConfig::create([
-      'field_name' => 'field_state_of_sale',
-      'entity_type' => 'node',
-      'type' => 'entity_reference',
-      'settings' => [
+    $this->createNodeField(
+      'field_state_of_sale',
+      'project',
+      'entity_reference',
+      'State of sale',
+      1,
+      [
         'target_type' => 'config_terms_term',
       ],
-    ])->save();
-
-    FieldConfig::create([
-      'field_name' => 'field_state_of_sale',
-      'entity_type' => 'node',
-      'bundle' => 'project',
-      'label' => 'State of sale',
-      'settings' => [
+      [
         'handler' => 'default:config_terms_term',
       ],
-    ])->save();
+    );
 
     if ($withApartments) {
-      FieldStorageConfig::create([
-        'field_name' => 'field_apartment_state_of_sale',
-        'entity_type' => 'node',
-        'type' => 'string',
-      ])->save();
-
-      FieldConfig::create([
-        'field_name' => 'field_apartment_state_of_sale',
-        'entity_type' => 'node',
-        'bundle' => 'apartment',
-        'label' => 'Apartment state of sale',
-      ])->save();
-
-      FieldStorageConfig::create([
-        'field_name' => 'field_apartments',
-        'entity_type' => 'node',
-        'type' => 'entity_reference',
-        'cardinality' => -1,
-        'settings' => [
+      $this->createNodeField(
+        'field_apartment_state_of_sale',
+        'apartment',
+        'string',
+        'Apartment state of sale',
+      );
+      $this->createNodeField(
+        'field_apartments',
+        'project',
+        'entity_reference',
+        'Apartments',
+        -1,
+        [
           'target_type' => 'node',
         ],
-      ])->save();
-
-      FieldConfig::create([
-        'field_name' => 'field_apartments',
-        'entity_type' => 'node',
-        'bundle' => 'project',
-        'label' => 'Apartments',
-        'settings' => [
+        [
           'handler' => 'default:node',
           'handler_settings' => [
             'target_bundles' => [
@@ -138,7 +204,7 @@ abstract class SearchServiceKernelTestBase extends KernelTestBase {
             ],
           ],
         ],
-      ])->save();
+      );
     }
   }
 
@@ -158,6 +224,29 @@ abstract class SearchServiceKernelTestBase extends KernelTestBase {
       'label' => 'Sold',
     ]);
     $term->save();
+  }
+
+  /**
+   * Create and save a content node.
+   *
+   * @param string $type
+   *   Node type machine name.
+   * @param string $title
+   *   Node title.
+   * @param array<string, mixed> $values
+   *   Additional field values.
+   *
+   * @return \Drupal\node\Entity\Node
+   *   The saved node.
+   */
+  protected function createContentNode(string $type, string $title, array $values = []): Node {
+    $node = Node::create([
+      'type' => $type,
+      'title' => $title,
+      'status' => 1,
+    ] + $values);
+    $node->save();
+    return $node;
   }
 
   /**

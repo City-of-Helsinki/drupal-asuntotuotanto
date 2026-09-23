@@ -33,10 +33,7 @@ final class SearchServiceApartmentsTest extends SearchServiceKernelTestBase {
     $availableApartment = $this->createApartment('Available apartment', 'available');
     $soldApartment = $this->createApartment('Sold apartment', 'sold');
 
-    $project = Node::create([
-      'type' => 'project',
-      'title' => 'Project One',
-      'status' => 1,
+    $project = $this->createContentNode('project', 'Project One', [
       'field_archived' => 0,
       'field_state_of_sale' => [
         ['target_id' => 'sold'],
@@ -46,7 +43,6 @@ final class SearchServiceApartmentsTest extends SearchServiceKernelTestBase {
         ['target_id' => $soldApartment->id()],
       ],
     ]);
-    $project->save();
     $project = Node::load($project->id());
 
     $result = $this->searchService->searchApartments([], (int) $project->id(), 0, 1000);
@@ -64,10 +60,7 @@ final class SearchServiceApartmentsTest extends SearchServiceKernelTestBase {
     $apartmentOne = $this->createApartment('Apartment One');
     $this->createApartment('Apartment Two');
 
-    $project = Node::create([
-      'type' => 'project',
-      'title' => 'Project One',
-      'status' => 1,
+    $this->createContentNode('project', 'Project One', [
       'field_archived' => 0,
       'field_state_of_sale' => [
         ['target_id' => 'sold'],
@@ -76,7 +69,6 @@ final class SearchServiceApartmentsTest extends SearchServiceKernelTestBase {
         ['target_id' => $apartmentOne->id()],
       ],
     ]);
-    $project->save();
 
     $result = $this->searchService->searchApartments(
       ['uuid' => $apartmentOne->uuid()],
@@ -144,15 +136,10 @@ final class SearchServiceApartmentsTest extends SearchServiceKernelTestBase {
    *   The created apartment node.
    */
   private function createApartment(string $title, string $stateOfSale = 'available'): Node {
-    $apartment = Node::create([
-      'type' => 'apartment',
-      'title' => $title,
-      'status' => 1,
+    return $this->createContentNode('apartment', $title, [
       'field_archived' => 0,
       'field_apartment_state_of_sale' => $stateOfSale,
     ]);
-    $apartment->save();
-    return $apartment;
   }
 
   /**
@@ -166,10 +153,7 @@ final class SearchServiceApartmentsTest extends SearchServiceKernelTestBase {
    *   Whether the project is archived.
    */
   private function createProjectWithApartment(string $title, Node $apartment, bool $archived): void {
-    $project = Node::create([
-      'type' => 'project',
-      'title' => $title,
-      'status' => 1,
+    $this->createContentNode('project', $title, [
       'field_archived' => $archived ? 1 : 0,
       'field_state_of_sale' => [
         ['target_id' => 'sold'],
@@ -178,7 +162,6 @@ final class SearchServiceApartmentsTest extends SearchServiceKernelTestBase {
         ['target_id' => $apartment->id()],
       ],
     ]);
-    $project->save();
   }
 
 }

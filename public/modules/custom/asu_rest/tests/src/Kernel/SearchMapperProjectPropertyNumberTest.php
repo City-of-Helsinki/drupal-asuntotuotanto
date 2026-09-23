@@ -4,13 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\asu_rest\Kernel;
 
-use Drupal\asu_rest\Service\SearchMapper;
-use Drupal\field\Entity\FieldConfig;
-use Drupal\field\Entity\FieldStorageConfig;
-use Drupal\KernelTests\KernelTestBase;
-use Drupal\node\Entity\Node;
-use Drupal\node\Entity\NodeType;
-
 /**
  * Tests that the project property number is exposed in the REST mapping.
  *
@@ -20,59 +13,19 @@ use Drupal\node\Entity\NodeType;
  *
  * @group asu_rest
  */
-final class SearchMapperProjectPropertyNumberTest extends KernelTestBase {
-
-  /**
-   * {@inheritdoc}
-   */
-  protected static $modules = [
-    'system',
-    'user',
-    'node',
-    'field',
-    'text',
-    'filter',
-    'file',
-    'config_terms',
-    'asu_rest',
-  ];
-
-  /**
-   * The mapper under test.
-   *
-   * @var \Drupal\asu_rest\Service\SearchMapper
-   */
-  private SearchMapper $mapper;
+final class SearchMapperProjectPropertyNumberTest extends SearchMapperKernelTestBase {
 
   /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
     parent::setUp();
-
-    $this->installEntitySchema('user');
-    $this->installEntitySchema('node');
-    $this->installConfig(['node']);
-
-    NodeType::create([
-      'type' => 'project',
-      'name' => 'Project',
-    ])->save();
-
-    FieldStorageConfig::create([
-      'field_name' => 'field_property_number',
-      'entity_type' => 'node',
-      'type' => 'string',
-    ])->save();
-
-    FieldConfig::create([
-      'field_name' => 'field_property_number',
-      'entity_type' => 'node',
-      'bundle' => 'project',
-      'label' => 'Property number',
-    ])->save();
-
-    $this->mapper = $this->container->get('asu_rest.search_mapper');
+    $this->createNodeField(
+      'field_property_number',
+      'project',
+      'string',
+      'Property number',
+    );
   }
 
   /**
@@ -82,15 +35,9 @@ final class SearchMapperProjectPropertyNumberTest extends KernelTestBase {
    * - Asserts the value matches the field value on the node.
    */
   public function testProjectPropertyNumberIsMapped(): void {
-    $project = Node::create([
-      'type' => 'project',
-      'title' => 'Project One',
-      'status' => 1,
+    $mapped = $this->mapProject('Project One', [
       'field_property_number' => '053',
     ]);
-    $project->save();
-
-    $mapped = $this->mapper->mapProject($project);
 
     $this->assertArrayHasKey('project_property_number', $mapped);
     $this->assertSame('053', $mapped['project_property_number']);
@@ -103,14 +50,7 @@ final class SearchMapperProjectPropertyNumberTest extends KernelTestBase {
    * - Asserts the value is an empty string rather than missing/NULL.
    */
   public function testProjectPropertyNumberDefaultsToEmptyString(): void {
-    $project = Node::create([
-      'type' => 'project',
-      'title' => 'Project Without Number',
-      'status' => 1,
-    ]);
-    $project->save();
-
-    $mapped = $this->mapper->mapProject($project);
+    $mapped = $this->mapProject('Project Without Number');
 
     $this->assertArrayHasKey('project_property_number', $mapped);
     $this->assertSame('', $mapped['project_property_number']);
