@@ -136,13 +136,13 @@ final class ApplicationPreCreateTest extends KernelTestBase {
     ]);
   }
 
-    /**
-    * Anonymous create redirects to /user/register.
-    *
-    * - Current user is anonymous.
-    * - Request is the add-form URL.
-    * - preCreate throws EnforcedResponseException wrapping a permanent redirect.
-    */
+  /**
+   * Anonymous create redirects to /user/register.
+   *
+   * - Current user is anonymous.
+   * - Request is the add-form URL.
+   * - preCreate throws EnforcedResponseException wrapping a permanent redirect.
+   */
   public function testAnonymousCreateRedirectsToUserRegister(): void {
     $this->container->get('router.builder')->rebuild();
     $this->container->get('current_user')->setAccount(new AnonymousUserSession());
