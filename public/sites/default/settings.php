@@ -111,6 +111,9 @@ foreach ($routes as $route) {
 
 $settings['config_sync_directory'] = '../conf/cmi';
 $settings['file_public_path'] = getenv('DRUPAL_FILES_PUBLIC') ?: 'sites/default/files';
+if ($asuntotuotanto_url = getenv('ASU_ASUNTOTUOTANTO_URL')) {
+  $settings['file_public_base_url'] = rtrim($asuntotuotanto_url, '/') . '/' . trim($settings['file_public_path'], '/');
+}
 $settings['file_private_path'] = getenv('DRUPAL_FILES_PRIVATE') ?: 'sites/default/files/private';
 $settings['file_temp_path'] = getenv('DRUPAL_TMP_PATH') ?: '/tmp';
 
