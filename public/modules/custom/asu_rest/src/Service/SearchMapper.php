@@ -296,6 +296,7 @@ final class SearchMapper {
       'project_state_of_sale' => $this->getEnumFromTermField($project, 'field_state_of_sale'),
       'project_street_address' => $this->getScalar($project, 'field_street_address'),
       'project_upcoming_description' => $this->getScalar($project, 'field_upcoming_description'),
+      'project_attachment_urls' => $this->getLinkUrlsFromField($project, 'field_attachments_url'),
       'project_url' => $this->nodeUrl($project),
       'project_uuid' => $project->uuid(),
       'project_postal_code' => $this->getScalar($project, 'field_postal_code'),
@@ -985,6 +986,32 @@ final class SearchMapper {
   }
 
   /**
+   * Get absolute URLs from a multi-value link field.
+   */
+  private function getLinkUrlsFromField(Node $entity, string $fieldName): array {
+    if (!$entity->hasField($fieldName) || $entity->get($fieldName)->isEmpty()) {
+      return [];
+    }
+
+    $urls = [];
+    foreach ($entity->get($fieldName)->getValue() as $item) {
+      $uri = (string) ($item['uri'] ?? '');
+      if ($uri === '') {
+        continue;
+      }
+
+      try {
+        $urls[] = $this->absolutePathUrl(Url::fromUri($uri)->toString());
+      }
+      catch (\Exception) {
+        continue;
+      }
+    }
+
+    return $urls;
+  }
+
+  /**
    * Build an absolute URL from a path or already-absolute URL.
    */
   private function absolutePathUrl(string $path): string {
@@ -996,6 +1023,7 @@ final class SearchMapper {
     if ($baseUrl) {
       return rtrim($baseUrl, '/') . $path;
     }
+
     $request = $this->requestStack->getCurrentRequest();
     $host = $request ? $request->getSchemeAndHttpHost() : '';
 

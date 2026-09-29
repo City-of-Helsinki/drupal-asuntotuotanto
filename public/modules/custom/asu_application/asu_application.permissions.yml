@@ -23,3 +23,13 @@ sync application payments:
   title: "Sync application payments"
   description: "Push application payment data from external systems"
   restrict access: true
+
+view application payments:
+  title: "View application payments"
+  description: "View SAP-sent apartment payments on application cards"
+  restrict access: true
+
+sync application payments:
+  title: "Sync application payments"
+  description: "Push application payment data from external systems"
+  restrict access: true

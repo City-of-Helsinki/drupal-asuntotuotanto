@@ -456,7 +456,6 @@ function asu_application_get_personal_id_divider(string $dateOfBirth): ?string {
   return NULL;
 }
 
-
 /**
  * Grant permissions for viewing and syncing application payments.
  */

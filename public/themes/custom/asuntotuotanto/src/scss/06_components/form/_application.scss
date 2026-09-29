@@ -212,6 +212,7 @@ line-height: $lineheight-l; // Was 24px.
   margin: 0;
   padding: 0 0 $spacing;
   list-style: none;
+  border-bottom: 1px solid var(--color-black-20);
 
   @media screen and (max-width: $breakpoint-xl - 1px) {
     display: none;
@@ -240,6 +241,28 @@ line-height: $lineheight-l; // Was 24px.
 
     &:nth-child(5) {
       min-width: 142px;
+    }
+  }
+
+  &--single li {
+    &:first-child {
+      min-width: 170px;
+    }
+
+    &:nth-child(2) {
+      min-width: 90px;
+    }
+
+    &:nth-child(3) {
+      min-width: 124px;
+    }
+
+    &:nth-child(4) {
+      min-width: 142px;
+    }
+
+    &:nth-child(5) {
+      min-width: auto;
     }
   }
 
@@ -276,16 +299,20 @@ line-height: $lineheight-l;
   }
 }
 
+.application-form__apartments--single {
+  .application-form-apartment__list-position,
+  .application-form-apartment__list-position-actions {
+    display: none;
+    visibility: hidden;
+  }
+}
+
 .application-form-apartment__list-span {
   margin-left: $spacing-and-half;
 }
 
 .application-form-apartment {
   border-top: none;
-  border-bottom: 1px solid var(--color-black-20);
-}
-
-.application-form__apartments-list-header {
   border-bottom: 1px solid var(--color-black-20);
 }
 

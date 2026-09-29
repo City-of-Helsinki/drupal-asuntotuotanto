@@ -23,7 +23,11 @@ use Drupal\Core\Field\BaseFieldDefinition;
  *     "changed" = "changed"
  *   },
  *   unique_keys = {
- *     "payment_identity" = {"application_id", "reservation_id", "installment_type"}
+ *     "payment_identity" = {
+ *       "application_id",
+ *       "reservation_id",
+ *       "installment_type"
+ *     }
  *   },
  *   handlers = {
  *     "access" = "Drupal\\asu_application\\Entity\\Access\\ApplicationPaymentAccess"

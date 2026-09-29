@@ -378,6 +378,7 @@ class Application extends EditorialContentEntityBase implements ContentEntityInt
    * @throws \Drupal\Core\Form\EnforcedResponseException
    *   When the current user is anonymous and must log in first.
    * @throws \Exception
+   *   When a non-customer creates an application without user_id.
    */
   public static function preCreate(EntityStorageInterface $storage, array &$values) {
     // @todo muista jotain. ei saa ajaa jos asko.
@@ -391,12 +392,12 @@ class Application extends EditorialContentEntityBase implements ContentEntityInt
       throw new EnforcedResponseException(self::loginRedirectResponse());
     }
 
-    $user = User::load(\Drupal::currentUser()->id());
+    $user = User::load($account->id());
     // Customers always own their own applications. Salespersons and admins
     // (any non-customer account) must pass user_id for the customer owner.
     // Limiting this to bundle === 'sales' left default-bundle admins owning
     // applications meant for customers, so edit forms could not prefill.
-    if ($user->hasRole('customer')) {
+    if ($user && $user->hasRole('customer')) {
       $user_id = $user->id();
       $created_admin = FALSE;
     }
@@ -409,7 +410,7 @@ class Application extends EditorialContentEntityBase implements ContentEntityInt
 
     $values['uid'] = $user_id;
     $values['created_admin'] = $created_admin;
-    $values['created_by'] = $user->id();
+    $values['created_by'] = $account->id();
     $values += [
       'project_id' => $project_id,
       'project' => $project_id,

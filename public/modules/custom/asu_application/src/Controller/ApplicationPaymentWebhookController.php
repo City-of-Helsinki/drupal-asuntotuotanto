@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\asu_application\Controller;
 
 use Drupal\asu_application\Service\ApplicationPaymentSyncService;
+use Drupal\Component\Uuid\UuidInterface;
 use Drupal\Core\Controller\ControllerBase;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -19,6 +20,7 @@ final class ApplicationPaymentWebhookController extends ControllerBase {
   public function __construct(
     private readonly ApplicationPaymentSyncService $paymentSync,
     private readonly LoggerInterface $logger,
+    private readonly UuidInterface $uuid,
   ) {
   }
 
@@ -29,6 +31,7 @@ final class ApplicationPaymentWebhookController extends ControllerBase {
     return new self(
       $container->get('asu_application.payment_sync'),
       $container->get('logger.channel.asu_application'),
+      $container->get('uuid'),
     );
   }
 
@@ -108,7 +111,7 @@ final class ApplicationPaymentWebhookController extends ControllerBase {
       return $header;
     }
 
-    return (string) \Drupal::service('uuid')->generate();
+    return (string) $this->uuid->generate();
   }
 
 }

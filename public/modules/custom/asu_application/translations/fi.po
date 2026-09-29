@@ -173,3 +173,6 @@ msgstr "Tee varaus"
 msgid "Only one apartment can be selected when making a reservation."
 msgstr "Varausta tehdessä voi valita vain yhden huoneiston."
 
+msgid "View the application"
+msgstr "Näytä hakemus"
+

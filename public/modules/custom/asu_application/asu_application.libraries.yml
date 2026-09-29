@@ -27,6 +27,7 @@ application_payments:
     assets/js/application-payments.js: {}
   css:
     component:
+      assets/css/message-badges.css: {}
       assets/css/application-submit.css: {}
   dependencies:
     - core/jquery

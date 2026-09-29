@@ -47,6 +47,47 @@
 %}
 {% block paragraph %}
   {% set title = content.field_title.0 %}
+  {% set highlight_projects = homepage_highlight_projects ?? [] %}
+
+  {% block homepage_highlights %}
+    {% if highlight_projects is not empty %}
+      <section class="showcase-block showcase-block--homepage-highlights" aria-label="{{ 'Highlighted projects'|t }}">
+        <div class="showcase-block__content" style="background-color: transparent; padding: 0;">
+          <ul class="showcase-block__showcases showcases-count--{{ highlight_projects|length }}">
+            {% for project in highlight_projects %}
+              {% set panel_bg = 'var(--color-engel)' %}
+              {% if project.type_class == 'haso' %}
+                {% set panel_bg = 'var(--color-copper-medium-light)' %}
+              {% elseif project.type_class == 'puolihitas' %}
+                {% set panel_bg = 'var(--color-engel-light)' %}
+              {% endif %}
+              <li class="showcase" style="height: 600px; max-height: 600px; overflow: hidden;">
+                <a class="liftup-with-image-and-links liftup-with-image-and-links--design-image-on-left" href="{{ project.url }}" style="display: block; height: 100%; max-height: 100%; overflow: hidden; position: relative;">
+                  <div class="liftup-with-image-and-links__image" style="height: 100%;">
+                    <img src="{{ project.image_url }}" alt="{{ project.image_alt }}" loading="lazy" style="display: block; width: 100%; height: 100%; object-fit: cover; object-position: center;" />
+                  </div>
+                  <div class="liftup-with-image-and-links__container">
+                    <div class="liftup-with-image-and-links__content" style="background-color: {{ panel_bg }}; padding: 24px; min-height: 0; left: auto; right: 0; top: 10%; transform: none; width: 40%;">
+                      {% if project.type_label %}
+                        <p class="project__ownership-type project__ownership-type--{{ project.type_class|default('hitas') }}">
+                          <span class="visually-hidden">({{ 'Ownership type'|t }})</span>
+                          {{ project.type_label }}
+                        </p>
+                      {% endif %}
+                      <h3 class="liftup-with-image-and-links__title" style="font-size: 1.75rem; margin-bottom: 12px;">{{ project.text }}</h3>
+                      <div class="liftup-with-image-and-links__desc">
+                        <p class="project__address">{{ project.title }}</p>
+                      </div>
+                    </div>
+                  </div>
+                </a>
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </section>
+    {% endif %}
+  {% endblock %}
 
   <div{{ attributes.addClass(classes) }}>
     {% block container_content %}
