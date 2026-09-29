@@ -39,10 +39,7 @@
               link.url,
               {
                 'class': [link.is_link_active ? 'is-active', 'user-tools__link'],
-                'data-unread-count': link.unread_count|default(0),
-                'aria-label': link.unread_count|default(0) > 0
-                  ? '@title, @count unread messages'|t({'@title': link.title, '@count': link.unread_count})
-                  : link.title
+                'data-unread-count': link.unread_count|default(0)
               }
             ) }}
           </li>

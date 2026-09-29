@@ -1,6 +1,6 @@
 (function ($, Drupal, once) {
   function ensureNumber(value) {
-    const parsed = parseInt(String(value || ""), 10);
+    const parsed = Number.parseInt(String(value || ""), 10);
     return Number.isNaN(parsed) ? 0 : parsed;
   }
 
@@ -89,12 +89,13 @@
 
       const counts = payload.counts;
       buttons.forEach(function (button) {
-        const applicationId = String(button.getAttribute("data-application-id") || "").trim();
+        const applicationId = String(button.dataset.applicationId || "").trim();
         const count = ensureNumber(counts[applicationId]);
         setButtonBadge(button, count);
       });
     }
     catch (error) {
+      console.warn("Unable to sync unread message badges", error);
       syncApplicationMessageBadgesFallback();
     }
   }

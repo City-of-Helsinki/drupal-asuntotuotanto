@@ -6,7 +6,9 @@ namespace Drupal\asu_application;
 
 use Drupal\asu_application\Entity\Application;
 use Drupal\asu_application\Entity\ApplicationMessage;
+use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\State\StateInterface;
 use Drupal\user\UserDataInterface;
@@ -34,6 +36,8 @@ final class ApplicationMessageManager {
     private readonly EntityTypeManagerInterface $entityTypeManager,
     private readonly UserDataInterface $userData,
     private readonly StateInterface $state,
+    private readonly Connection $database,
+    private readonly TimeInterface $time,
   ) {
   }
 
@@ -60,7 +64,7 @@ final class ApplicationMessageManager {
       'recipient_mail' => $recipientMail,
     ]);
     $message->save();
-    $this->invalidateUnreadTagsForMessage($applicationId, $senderRole, $senderUid, $salespersonUid);
+    $this->invalidateUnreadTagsForMessage($applicationId, $senderRole, $salespersonUid);
 
     return $message;
   }
@@ -136,18 +140,7 @@ final class ApplicationMessageManager {
    *   Unique recipients by email.
    */
   public function resolveCustomerRecipients(Application $application): array {
-    $recipients = [];
-
-    $owner = $application->getOwner();
-    if ($owner && $owner->getEmail()) {
-      $recipients[] = [
-        'uid' => (int) $owner->id(),
-        'mail' => (string) $owner->getEmail(),
-        'langcode' => method_exists($owner, 'getPreferredLangcode')
-          ? ($owner->getPreferredLangcode() ?: 'fi')
-          : 'fi',
-      ];
-    }
+    $recipients = $this->getOwnerRecipients($application);
 
     $schema = $this->database->schema();
     if (!$schema->tableExists('asu_application_co_applicant_map')) {
@@ -180,13 +173,7 @@ final class ApplicationMessageManager {
 
     $coApplicantEmail = trim((string) ($mappingRow['co_applicant_email'] ?? ''));
     if ($hasCoApplicantEmailColumn) {
-      if (filter_var($coApplicantEmail, FILTER_VALIDATE_EMAIL)) {
-        $recipients[] = [
-          'uid' => 0,
-          'mail' => $coApplicantEmail,
-          'langcode' => 'fi',
-        ];
-      }
+      $this->appendEmailRecipient($recipients, $coApplicantEmail);
 
       // When explicit co-applicant email storage is available, avoid
       // hash-based lookup that may match an unrelated local test account.
@@ -199,6 +186,66 @@ final class ApplicationMessageManager {
       return $this->uniqueRecipientsByEmail($recipients);
     }
 
+    $this->appendMappedUserRecipients($recipients, $samlHash);
+
+    return $this->uniqueRecipientsByEmail($recipients);
+  }
+
+  /**
+   * Returns owner recipient list for notifications.
+   *
+   * @param \Drupal\asu_application\Entity\Application $application
+   *   Application entity.
+   *
+   * @return array<int, array{uid:int, mail:string, langcode:string}>
+   *   Owner recipient or empty list.
+   */
+  private function getOwnerRecipients(Application $application): array {
+    $owner = $application->getOwner();
+    if (!$owner || !$owner->getEmail()) {
+      return [];
+    }
+
+    return [
+      [
+        'uid' => (int) $owner->id(),
+        'mail' => (string) $owner->getEmail(),
+        'langcode' => method_exists($owner, 'getPreferredLangcode')
+          ? ($owner->getPreferredLangcode() ?: 'fi')
+          : 'fi',
+      ],
+    ];
+  }
+
+  /**
+   * Appends email recipient if valid.
+   *
+   * @param array<int, array{uid:int, mail:string, langcode:string}> $recipients
+   *   Recipient list passed by reference.
+   * @param string $email
+   *   Recipient email candidate.
+   */
+  private function appendEmailRecipient(array &$recipients, string $email): void {
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+      return;
+    }
+
+    $recipients[] = [
+      'uid' => 0,
+      'mail' => $email,
+      'langcode' => 'fi',
+    ];
+  }
+
+  /**
+   * Appends mapped co-applicant user recipients.
+   *
+   * @param array<int, array{uid:int, mail:string, langcode:string}> $recipients
+   *   Recipient list passed by reference.
+   * @param string $samlHash
+   *   SAML hash for mapped co-applicant.
+   */
+  private function appendMappedUserRecipients(array &$recipients, string $samlHash): void {
     $users = $this->entityTypeManager
       ->getStorage('user')
       ->loadByProperties(['field_saml_hash' => $samlHash]);
@@ -216,8 +263,6 @@ final class ApplicationMessageManager {
           : 'fi',
       ];
     }
-
-    return $this->uniqueRecipientsByEmail($recipients);
   }
 
   /**
@@ -265,7 +310,7 @@ final class ApplicationMessageManager {
       return;
     }
 
-    $timestamp ??= \Drupal::time()->getRequestTime();
+    $timestamp ??= $this->time->getRequestTime();
 
     if ($this->resolveViewerRole($uid) === 'sales') {
       $this->markThreadReadSalesShared($applicationId, $timestamp);
@@ -291,7 +336,7 @@ final class ApplicationMessageManager {
       return;
     }
 
-    $timestamp ??= \Drupal::time()->getRequestTime();
+    $timestamp ??= $this->time->getRequestTime();
 
     $map = $this->getSharedSalesLastReadMap();
     $current = (int) ($map[$applicationId] ?? 0);
@@ -352,7 +397,7 @@ final class ApplicationMessageManager {
       ? $this->getSharedSalesLastReadMap()
       : $this->getLastReadMap($uid);
 
-    $rows = \Drupal::database()
+    $rows = $this->database
       ->select('asu_application_message', 'm')
       ->fields('m', ['application_id', 'created'])
       ->condition('m.application_id', $applicationIds, 'IN')
@@ -386,7 +431,7 @@ final class ApplicationMessageManager {
   public function getSalesInboxSummary(array $applicationIds = []): array {
     $applicationIds = array_values(array_unique(array_filter(array_map('intval', $applicationIds), static fn(int $id): bool => $id > 0)));
 
-    $latestRows = \Drupal::database()
+    $latestRows = $this->database
       ->select('asu_application_message', 'm')
       ->fields('m', ['application_id', 'body', 'created', 'id'])
       ->condition('m.sender_role', 'customer')
@@ -557,42 +602,63 @@ final class ApplicationMessageManager {
   private function invalidateUnreadTagsForMessage(
     int $applicationId,
     string $senderRole,
-    ?int $senderUid,
     ?int $salespersonUid = NULL,
   ): void {
     if ($applicationId <= 0) {
       return;
     }
 
+    if ($senderRole === 'sales') {
+      $this->invalidateUnreadForCustomers($applicationId);
+      return;
+    }
+
+    $targetUids = [];
+    if ($salespersonUid && $salespersonUid > 0) {
+      $targetUids[] = (int) $salespersonUid;
+    }
+
+    Cache::invalidateTags([
+      $this->getSharedSalesUnreadCacheTag($applicationId),
+    ]);
+
+    $this->invalidateUserUnreadTags($applicationId, $targetUids);
+  }
+
+  /**
+   * Invalidates unread tags for customer recipients.
+   */
+  private function invalidateUnreadForCustomers(int $applicationId): void {
     $targetUids = [];
 
-    if ($senderRole === 'sales') {
-      try {
-        $application = $this->entityTypeManager->getStorage('asu_application')->load($applicationId);
-        if ($application instanceof Application) {
-          foreach ($this->resolveCustomerRecipients($application) as $recipient) {
-            $uid = (int) ($recipient['uid'] ?? 0);
-            if ($uid > 0) {
-              $targetUids[] = $uid;
-            }
+    try {
+      $application = $this->entityTypeManager->getStorage('asu_application')->load($applicationId);
+      if ($application instanceof Application) {
+        foreach ($this->resolveCustomerRecipients($application) as $recipient) {
+          $uid = (int) ($recipient['uid'] ?? 0);
+          if ($uid > 0) {
+            $targetUids[] = $uid;
           }
         }
       }
-      catch (\Throwable) {
-        // Skip recipient-based cache invalidation when related entity storages
-        // are unavailable in lightweight test environments.
-      }
     }
-    else {
-      if ($salespersonUid && $salespersonUid > 0) {
-        $targetUids[] = (int) $salespersonUid;
-      }
-
-      Cache::invalidateTags([
-        $this->getSharedSalesUnreadCacheTag($applicationId),
-      ]);
+    catch (\Throwable) {
+      // Skip recipient-based cache invalidation when related entity storages
+      // are unavailable in lightweight test environments.
     }
 
+    $this->invalidateUserUnreadTags($applicationId, $targetUids);
+  }
+
+  /**
+   * Invalidates user/application unread tags.
+   *
+   * @param int $applicationId
+   *   Application id.
+   * @param int[] $targetUids
+   *   Target users.
+   */
+  private function invalidateUserUnreadTags(int $applicationId, array $targetUids): void {
     if ($targetUids === []) {
       return;
     }

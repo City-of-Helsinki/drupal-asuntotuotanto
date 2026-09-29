@@ -6,7 +6,9 @@ namespace Drupal\asu_application\Controller;
 
 use Drupal\asu_application\ApplicationMessageManager;
 use Drupal\asu_application\Applications;
+use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\Database\Connection;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,6 +23,8 @@ final class ApplicationUnreadController extends ControllerBase {
    */
   public function __construct(
     private readonly ApplicationMessageManager $messageManager,
+    private readonly TimeInterface $time,
+    private readonly Connection $database,
   ) {
   }
 
@@ -30,6 +34,8 @@ final class ApplicationUnreadController extends ControllerBase {
   public static function create(ContainerInterface $container): self {
     return new self(
       $container->get('asu_application.message_manager'),
+      $container->get('datetime.time'),
+      $container->get('database'),
     );
   }
 
@@ -199,7 +205,7 @@ final class ApplicationUnreadController extends ControllerBase {
         ], 403);
       }
 
-      $timestamp = \Drupal::time()->getRequestTime();
+      $timestamp = $this->time->getRequestTime();
       foreach ($applicationIds as $applicationId) {
         $this->messageManager->markThreadReadSalesShared($applicationId, $timestamp);
       }
@@ -304,7 +310,7 @@ final class ApplicationUnreadController extends ControllerBase {
    *   Deduplicated positive ids.
    */
   private function getSalesSharedApplicationIds(): array {
-    $ids = \Drupal::database()
+    $ids = $this->database
       ->select('asu_application_message', 'm')
       ->fields('m', ['application_id'])
       ->condition('m.sender_role', 'customer')
