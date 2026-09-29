@@ -59,12 +59,8 @@
         { 'class':['is-active']} )
       }}
     </li>
-    <li class="user-profile__tab">
-      {{ link(
-        'Applications'|t,
-        "internal:/user/applications",
-        { 'class':['']} )
-      }}
+    <li class="user-profile__tab user-profile__tab--with-badge">
+      {% include "@asuntotuotanto/user/_applications-tab-link.html.twig" %}
     </li>
   </ul>
   <section class="user-profile__section">

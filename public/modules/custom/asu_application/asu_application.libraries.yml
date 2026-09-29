@@ -21,6 +21,12 @@ application_results:
     component:
       assets/css/application-submit.css: {}
 
+message_badges:
+  version: 1.x
+  css:
+    component:
+      assets/css/message-badges.css: {}
+
 application_payments:
   version: 1.x
   js:

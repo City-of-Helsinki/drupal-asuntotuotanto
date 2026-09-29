@@ -16,6 +16,7 @@ use Drupal\Core\Url;
 use Drupal\Component\Utility\Html;
 use Drupal\asu_application\ApplicationMessageManager;
 use Drupal\asu_application\Entity\Application;
+use Drupal\asu_application\Notification\ApplicationProjectResolverTrait;
 use Drupal\asu_application\Notification\SenderNameResolverTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -24,6 +25,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
  * Form for sending messages about an application to the salesperson.
  */
 final class ApplicationMessageForm extends FormBase {
+  use ApplicationProjectResolverTrait;
   use SenderNameResolverTrait;
 
   /**
@@ -78,8 +80,17 @@ final class ApplicationMessageForm extends FormBase {
     }
 
     $this->application = $asu_application;
-    $projectLabel = $this->messageManager->getProjectLabel($asu_application);
+    $projectLabel = $this->resolveApplicationProjectLabel($asu_application);
     $thread = $this->messageManager->loadThread((int) $asu_application->id());
+    $currentUid = (int) $this->currentUser->id();
+    $viewerRole = $this->messageManager->resolveViewerRole($currentUid);
+    $lastReadAt = $currentUid > 0
+      ? $this->messageManager->getThreadLastRead($currentUid, (int) $asu_application->id())
+      : 0;
+
+    if ($currentUid > 0) {
+      $this->messageManager->markThreadRead($currentUid, (int) $asu_application->id());
+    }
 
     $form['intro'] = [
       '#type' => 'container',
@@ -110,39 +121,7 @@ final class ApplicationMessageForm extends FormBase {
       ],
     ];
 
-    if ($thread === []) {
-      $form['thread_empty'] = [
-        '#type' => 'item',
-        '#title' => $this->t('Conversation'),
-        '#markup' => $this->t('No messages yet.'),
-      ];
-    }
-    else {
-      $items = [];
-      $senderNamesByUid = [];
-      foreach ($thread as $message) {
-        $senderLabel = $this->resolveMessageSenderName($message, $senderNamesByUid);
-        $created = (int) ($message->get('created')->value ?? 0);
-        $body = nl2br(Html::escape((string) $message->get('body')->value));
-        $timestamp = $created > 0 ? $this->dateFormatter->format($created, 'custom', 'd.m.Y H:i') : '';
-
-        $items[] = Markup::create(
-          '<div class="application-message-form__message">'
-          . '<p><strong>' . Html::escape($senderLabel) . '</strong>'
-          . ($timestamp !== '' ? ' <span>' . Html::escape($timestamp) . '</span>' : '')
-          . '</p><div>' . $body . '</div></div>'
-        );
-      }
-
-      $form['thread'] = [
-        '#theme' => 'item_list',
-        '#title' => $this->t('Conversation'),
-        '#items' => $items,
-        '#attributes' => [
-          'class' => ['application-message-form__thread'],
-        ],
-      ];
-    }
+    $this->buildThreadSection($form, $thread, $lastReadAt, $viewerRole);
 
     $form['message'] = [
       '#type' => 'textarea',
@@ -159,6 +138,7 @@ final class ApplicationMessageForm extends FormBase {
     ];
 
     $form['#attached']['library'][] = 'asu_application/application_results';
+    $form['#attached']['library'][] = 'asu_application/message_badges';
 
     $form['#cache'] = ['max-age' => 0];
 
@@ -184,16 +164,16 @@ final class ApplicationMessageForm extends FormBase {
     }
 
     $body = trim((string) $form_state->getValue('message'));
-    $salesperson = $this->messageManager->resolveSalesperson($this->application);
-    $recipientMail = $this->messageManager->resolveRecipientMail($this->application);
-    $projectLabel = $this->messageManager->getProjectLabel($this->application);
+    $salesperson = $this->resolveApplicationSalesperson($this->application);
+    $recipientMail = $this->resolveApplicationRecipientMail($this->application, $salesperson);
+    $projectLabel = $this->resolveApplicationProjectLabel($this->application);
     $recipientLangcode = ($salesperson && method_exists($salesperson, 'getPreferredLangcode') && $salesperson->getPreferredLangcode() !== '')
       ? $salesperson->getPreferredLangcode()
       : ($this->currentUser->getPreferredLangcode() ?: 'fi');
 
     $this->messageManager->createMessage(
       (int) $this->application->id(),
-      $this->messageManager->getProjectId($this->application),
+      (int) $this->application->getProjectId(),
       $body,
       'customer',
       (int) $this->currentUser->id(),
@@ -305,7 +285,7 @@ final class ApplicationMessageForm extends FormBase {
 
       if ($senderNamesByUid[$senderUid] !== '') {
         if ($senderRole === 'sales' && $senderNamesByUid[$senderUid] === 'rest_client' && $this->application) {
-          $salesperson = $this->messageManager->resolveSalesperson($this->application);
+          $salesperson = $this->resolveApplicationSalesperson($this->application);
           if ($salesperson && $salesperson->getDisplayName() !== '') {
             return $salesperson->getDisplayName();
           }
@@ -317,6 +297,87 @@ final class ApplicationMessageForm extends FormBase {
     return $senderRole === 'sales'
       ? (string) $this->t('Sales agent')
       : (string) $this->t('Customer');
+  }
+
+  /**
+   * Returns whether a sender role is incoming for the current viewer side.
+   */
+  private function isIncomingMessageForViewer(string $senderRole, string $viewerRole): bool {
+    if ($viewerRole === 'sales') {
+      return $senderRole === 'customer';
+    }
+
+    return $senderRole === 'sales';
+  }
+
+  /**
+   * Provides entity manager for project resolver trait.
+   */
+  protected function getEntityTypeManagerForProjectResolver(): EntityTypeManagerInterface {
+    return $this->entityTypeManager;
+  }
+
+  /**
+   * Adds conversation section to the form.
+   *
+   * @param array<string, mixed> $form
+   *   Form render array.
+   * @param array<int, mixed> $thread
+   *   Thread messages.
+   * @param int $lastReadAt
+   *   Viewer last-read timestamp.
+   * @param string $viewerRole
+   *   Viewer role side.
+   */
+  private function buildThreadSection(array &$form, array $thread, int $lastReadAt, string $viewerRole): void {
+    if ($thread === []) {
+      $form['thread_empty'] = [
+        '#type' => 'item',
+        '#title' => $this->t('Conversation'),
+        '#markup' => $this->t('No messages yet.'),
+      ];
+      return;
+    }
+
+    $items = [];
+    $senderNamesByUid = [];
+    foreach ($thread as $message) {
+      $items[] = $this->buildThreadItemMarkup($message, $senderNamesByUid, $lastReadAt, $viewerRole);
+    }
+
+    $form['thread'] = [
+      '#theme' => 'item_list',
+      '#title' => $this->t('Conversation'),
+      '#items' => $items,
+      '#attributes' => [
+        'class' => ['application-message-form__thread'],
+      ],
+    ];
+  }
+
+  /**
+   * Builds one message item HTML for the thread list.
+   */
+  private function buildThreadItemMarkup($message, array &$senderNamesByUid, int $lastReadAt, string $viewerRole): Markup {
+    $senderLabel = $this->resolveMessageSenderName($message, $senderNamesByUid);
+    $created = (int) ($message->get('created')->value ?? 0);
+    $senderRole = (string) ($message->get('sender_role')->value ?? 'customer');
+    $isUnread = $created > $lastReadAt
+      && $this->isIncomingMessageForViewer($senderRole, $viewerRole);
+    $body = nl2br(Html::escape((string) $message->get('body')->value));
+    $timestamp = $created > 0 ? $this->dateFormatter->format($created, 'custom', 'd.m.Y H:i') : '';
+    $messageClasses = 'application-message-form__message' . ($isUnread ? ' application-message-form__message--new' : '');
+    $newLabel = $isUnread
+      ? '<span class="application-message-form__new-label">' . Html::escape((string) $this->t('New')) . '</span>'
+      : '';
+
+    return Markup::create(
+      '<div class="' . $messageClasses . '">'
+      . '<p><strong>' . Html::escape($senderLabel) . '</strong>'
+      . ($timestamp !== '' ? ' <span>' . Html::escape($timestamp) . '</span>' : '')
+      . $newLabel
+      . '</p><div>' . $body . '</div></div>'
+    );
   }
 
 }

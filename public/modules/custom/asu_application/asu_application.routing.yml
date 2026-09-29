@@ -14,6 +14,30 @@ asu_application.application_results:
   requirements:
     _permission: "create application"
 
+asu_application.unread_counts:
+  path: "/user/application/unread-counts"
+  defaults:
+    _controller: '\Drupal\asu_application\Controller\ApplicationUnreadController::getUnreadCounts'
+  methods: [GET]
+  requirements:
+    _permission: "access content"
+
+asu_application.inbox_summary:
+  path: "/user/application/inbox-summary"
+  defaults:
+    _controller: '\Drupal\asu_application\Controller\ApplicationUnreadController::getInboxSummary'
+  methods: [GET]
+  requirements:
+    _permission: "access content"
+
+asu_application.mark_read:
+  path: "/user/application/mark-read"
+  defaults:
+    _controller: '\Drupal\asu_application\Controller\ApplicationUnreadController::markRead'
+  methods: [POST]
+  requirements:
+    _permission: "access content"
+
 asu_application.application_payments:
   path: "/user/application/payments"
   defaults:
