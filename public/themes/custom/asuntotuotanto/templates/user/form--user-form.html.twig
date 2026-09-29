@@ -37,12 +37,7 @@
       }}
     </li>
     <li class="user-profile__tab user-profile__tab--with-badge">
-      <a href="{{ path('view.applications.applications_page') }}">
-        {{ 'Applications'|t }}
-        {% if asu_unread_messages_total|default(0) > 0 %}
-          <span class="asu-unread-badge" aria-label="{{ '@count unread messages'|t({'@count': asu_unread_messages_total}) }}">{{ asu_unread_messages_total }}</span>
-        {% endif %}
-      </a>
+      {% include "@asuntotuotanto/user/_applications-tab-link.html.twig" %}
     </li>
   </ul>
   <section class="user-profile__section">

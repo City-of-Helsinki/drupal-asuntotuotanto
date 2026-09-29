@@ -12,6 +12,7 @@ use Drupal\Core\Database\Connection;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Drupal\Core\Session\AccountInterface;
 
 /**
  * Returns unread message counts for current user's applications.
@@ -57,17 +58,11 @@ final class ApplicationUnreadController extends ControllerBase {
       $viewerRole = NULL;
       $salesShared = $request->query->getBoolean('sales_shared');
       if ($salesShared) {
-        $isSales = $this->messageManager->resolveViewerRole((int) $account->id()) === 'sales';
-        $hasSharedPermission = $account->hasPermission('view shared sales unread counts')
-          || $account->hasPermission('administer applications');
-
-        if (!$isSales && !$hasSharedPermission) {
-          return $this->buildNoStoreResponse([
+        if (!$this->canUseSharedSales($account)) {
+          return $this->buildForbiddenResponse('Missing permission: view shared sales unread counts.', [
             'counts' => [],
             'total' => 0,
-            'error' => 'forbidden',
-            'message' => 'Missing permission: view shared sales unread counts.',
-          ], 403);
+          ]);
         }
 
         $viewerRole = 'sales';
@@ -96,16 +91,16 @@ final class ApplicationUnreadController extends ControllerBase {
       ]);
     }
     catch (\Throwable $throwable) {
-      $this->getLogger('asu_application')->warning('Unread count endpoint failed: @message', [
-        '@message' => $throwable->getMessage(),
-      ]);
-
-      return $this->buildNoStoreResponse([
-        'counts' => [],
-        'total' => 0,
-        'error' => 'internal_error',
-        'message' => 'Unread count endpoint failed.',
-      ], 500);
+      return $this->buildServerErrorResponse(
+        'Unread count endpoint failed',
+        $throwable,
+        [
+          'counts' => [],
+          'total' => 0,
+          'error' => 'internal_error',
+          'message' => 'Unread count endpoint failed.',
+        ]
+      );
     }
   }
 
@@ -113,31 +108,18 @@ final class ApplicationUnreadController extends ControllerBase {
    * Returns sales inbox summary grouped by application.
    */
   public function getInboxSummary(Request $request): JsonResponse {
-    $account = $this->currentUser();
-    if (!$account->isAuthenticated()) {
-      return $this->buildNoStoreResponse([
-        'error' => 'forbidden',
-        'message' => 'Authentication is required.',
-      ], 403);
+    $forbidden = $this->buildUnauthenticatedResponse();
+    if ($forbidden !== NULL) {
+      return $forbidden;
     }
 
     try {
       if (!$this->isSalesSharedRequest($request)) {
-        return $this->buildNoStoreResponse([
-          'error' => 'forbidden',
-          'message' => 'sales_shared=1 is required.',
-        ], 403);
+        return $this->buildForbiddenResponse('sales_shared=1 is required.');
       }
 
-      $isSales = $this->messageManager->resolveViewerRole((int) $account->id()) === 'sales';
-      $hasSharedPermission = $account->hasPermission('view shared sales unread counts')
-        || $account->hasPermission('administer applications');
-
-      if (!$isSales && !$hasSharedPermission) {
-        return $this->buildNoStoreResponse([
-          'error' => 'forbidden',
-          'message' => 'Missing permission: view shared sales unread counts.',
-        ], 403);
+      if (!$this->canUseSharedSales($this->currentUser())) {
+        return $this->buildForbiddenResponse('Missing permission: view shared sales unread counts.');
       }
 
       $applicationIds = $this->extractApplicationIds($request);
@@ -155,14 +137,14 @@ final class ApplicationUnreadController extends ControllerBase {
       ]);
     }
     catch (\Throwable $throwable) {
-      $this->getLogger('asu_application')->warning('Inbox summary endpoint failed: @message', [
-        '@message' => $throwable->getMessage(),
-      ]);
-
-      return $this->buildNoStoreResponse([
-        'error' => 'server_error',
-        'message' => 'Inbox summary endpoint failed.',
-      ], 500);
+      return $this->buildServerErrorResponse(
+        'Inbox summary endpoint failed',
+        $throwable,
+        [
+          'error' => 'server_error',
+          'message' => 'Inbox summary endpoint failed.',
+        ]
+      );
     }
   }
 
@@ -170,39 +152,23 @@ final class ApplicationUnreadController extends ControllerBase {
    * Marks applications as read for shared sales context.
    */
   public function markRead(Request $request): JsonResponse {
-    $account = $this->currentUser();
-    if (!$account->isAuthenticated()) {
-      return $this->buildNoStoreResponse([
-        'error' => 'forbidden',
-        'message' => 'Authentication is required.',
-      ], 403);
+    $forbidden = $this->buildUnauthenticatedResponse();
+    if ($forbidden !== NULL) {
+      return $forbidden;
     }
 
     try {
       if (!$this->isSalesSharedRequest($request)) {
-        return $this->buildNoStoreResponse([
-          'error' => 'forbidden',
-          'message' => 'sales_shared=1 is required.',
-        ], 403);
+        return $this->buildForbiddenResponse('sales_shared=1 is required.');
       }
 
-      $isSales = $this->messageManager->resolveViewerRole((int) $account->id()) === 'sales';
-      $hasSharedPermission = $account->hasPermission('view shared sales unread counts')
-        || $account->hasPermission('administer applications');
-
-      if (!$isSales && !$hasSharedPermission) {
-        return $this->buildNoStoreResponse([
-          'error' => 'forbidden',
-          'message' => 'Missing permission: view shared sales unread counts.',
-        ], 403);
+      if (!$this->canUseSharedSales($this->currentUser())) {
+        return $this->buildForbiddenResponse('Missing permission: view shared sales unread counts.');
       }
 
       $applicationIds = $this->extractApplicationIdsFromInput($request);
       if ($applicationIds === []) {
-        return $this->buildNoStoreResponse([
-          'error' => 'forbidden',
-          'message' => 'application_id or application_ids is required.',
-        ], 403);
+        return $this->buildForbiddenResponse('application_id or application_ids is required.');
       }
 
       $timestamp = $this->time->getRequestTime();
@@ -216,14 +182,14 @@ final class ApplicationUnreadController extends ControllerBase {
       ]);
     }
     catch (\Throwable $throwable) {
-      $this->getLogger('asu_application')->warning('Mark read endpoint failed: @message', [
-        '@message' => $throwable->getMessage(),
-      ]);
-
-      return $this->buildNoStoreResponse([
-        'error' => 'server_error',
-        'message' => 'Mark read endpoint failed.',
-      ], 500);
+      return $this->buildServerErrorResponse(
+        'Mark read endpoint failed',
+        $throwable,
+        [
+          'error' => 'server_error',
+          'message' => 'Mark read endpoint failed.',
+        ]
+      );
     }
   }
 
@@ -342,6 +308,49 @@ final class ApplicationUnreadController extends ControllerBase {
   private function isSalesSharedRequest(Request $request): bool {
     return $request->query->getBoolean('sales_shared')
       || $request->request->getBoolean('sales_shared');
+  }
+
+  /**
+   * Builds a generic forbidden response.
+   */
+  private function buildForbiddenResponse(string $message, array $extra = []): JsonResponse {
+    return $this->buildNoStoreResponse($extra + [
+      'error' => 'forbidden',
+      'message' => $message,
+    ], 403);
+  }
+
+  /**
+   * Returns authentication failure response when needed.
+   */
+  private function buildUnauthenticatedResponse(): ?JsonResponse {
+    if ($this->currentUser()->isAuthenticated()) {
+      return NULL;
+    }
+
+    return $this->buildForbiddenResponse('Authentication is required.');
+  }
+
+  /**
+   * Checks whether account can use shared sales mode.
+   */
+  private function canUseSharedSales(AccountInterface $account): bool {
+    $isSales = $this->messageManager->resolveViewerRole((int) $account->id()) === 'sales';
+    $hasSharedPermission = $account->hasPermission('view shared sales unread counts')
+      || $account->hasPermission('administer applications');
+
+    return $isSales || $hasSharedPermission;
+  }
+
+  /**
+   * Logs throwable and returns server error payload.
+   */
+  private function buildServerErrorResponse(string $logPrefix, \Throwable $throwable, array $data): JsonResponse {
+    $this->getLogger('asu_application')->warning($logPrefix . ': @message', [
+      '@message' => $throwable->getMessage(),
+    ]);
+
+    return $this->buildNoStoreResponse($data, 500);
   }
 
 }
