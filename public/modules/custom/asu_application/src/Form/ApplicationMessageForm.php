@@ -16,6 +16,7 @@ use Drupal\Core\Url;
 use Drupal\Component\Utility\Html;
 use Drupal\asu_application\ApplicationMessageManager;
 use Drupal\asu_application\Entity\Application;
+use Drupal\asu_application\Notification\ApplicationProjectResolverTrait;
 use Drupal\asu_application\Notification\SenderNameResolverTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -24,6 +25,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
  * Form for sending messages about an application to the salesperson.
  */
 final class ApplicationMessageForm extends FormBase {
+  use ApplicationProjectResolverTrait;
   use SenderNameResolverTrait;
 
   /**
@@ -78,7 +80,7 @@ final class ApplicationMessageForm extends FormBase {
     }
 
     $this->application = $asu_application;
-    $projectLabel = $this->messageManager->getProjectLabel($asu_application);
+    $projectLabel = $this->resolveApplicationProjectLabel($asu_application);
     $thread = $this->messageManager->loadThread((int) $asu_application->id());
     $currentUid = (int) $this->currentUser->id();
     $viewerRole = $this->messageManager->resolveViewerRole($currentUid);
@@ -162,16 +164,16 @@ final class ApplicationMessageForm extends FormBase {
     }
 
     $body = trim((string) $form_state->getValue('message'));
-    $salesperson = $this->messageManager->resolveSalesperson($this->application);
-    $recipientMail = $this->messageManager->resolveRecipientMail($this->application);
-    $projectLabel = $this->messageManager->getProjectLabel($this->application);
+    $salesperson = $this->resolveApplicationSalesperson($this->application);
+    $recipientMail = $this->resolveApplicationRecipientMail($this->application, $salesperson);
+    $projectLabel = $this->resolveApplicationProjectLabel($this->application);
     $recipientLangcode = ($salesperson && method_exists($salesperson, 'getPreferredLangcode') && $salesperson->getPreferredLangcode() !== '')
       ? $salesperson->getPreferredLangcode()
       : ($this->currentUser->getPreferredLangcode() ?: 'fi');
 
     $this->messageManager->createMessage(
       (int) $this->application->id(),
-      $this->messageManager->getProjectId($this->application),
+      (int) $this->application->getProjectId(),
       $body,
       'customer',
       (int) $this->currentUser->id(),
@@ -283,7 +285,7 @@ final class ApplicationMessageForm extends FormBase {
 
       if ($senderNamesByUid[$senderUid] !== '') {
         if ($senderRole === 'sales' && $senderNamesByUid[$senderUid] === 'rest_client' && $this->application) {
-          $salesperson = $this->messageManager->resolveSalesperson($this->application);
+          $salesperson = $this->resolveApplicationSalesperson($this->application);
           if ($salesperson && $salesperson->getDisplayName() !== '') {
             return $salesperson->getDisplayName();
           }
@@ -306,6 +308,13 @@ final class ApplicationMessageForm extends FormBase {
     }
 
     return $senderRole === 'sales';
+  }
+
+  /**
+   * Provides entity manager for project resolver trait.
+   */
+  protected function getEntityTypeManagerForProjectResolver(): EntityTypeManagerInterface {
+    return $this->entityTypeManager;
   }
 
   /**
