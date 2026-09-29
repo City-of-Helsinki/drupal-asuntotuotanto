@@ -9,6 +9,7 @@ use Drupal\Core\Url;
 use Drupal\Core\Site\Settings;
 use Drupal\file\Entity\File;
 use Drupal\file\IconMimeTypes;
+use Drupal\node\NodeInterface;
 use Drupal\paragraphs\Entity\Paragraph;
 use Drupal\Core\StringTranslation\ByteSizeMarkup;
 use Drupal\taxonomy\Entity\Term;
@@ -994,6 +995,130 @@ function asuntotuotanto_preprocess_paragraph(array &$variables) {
     $variables['street_name'] = $street_name ?? NULL;
     $variables['street_number'] = $street_number ?? NULL;
   }
+
+  if ($paragraph_type == 'latest_news') {
+    $parent_entity = $paragraph->getParentEntity();
+
+    if ($parent_entity instanceof NodeInterface && $parent_entity->bundle() === 'landing_page') {
+      $highlight_projects = asuntotuotanto_get_homepage_highlight_projects(4);
+      $variables['homepage_highlight_projects'] = $highlight_projects;
+
+      $variables['#cache']['tags'][] = 'node_list:project';
+      $variables['#cache']['contexts'][] = 'url.path';
+      $variables['#cache']['max-age'] = 300;
+
+      foreach ($highlight_projects as $highlight_project) {
+        if (!empty($highlight_project['cache_tags']) && is_array($highlight_project['cache_tags'])) {
+          $variables['#cache']['tags'] = array_merge($variables['#cache']['tags'], $highlight_project['cache_tags']);
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Builds project cards for homepage highlights.
+ */
+function asuntotuotanto_get_homepage_highlight_projects(int $limit = 4): array {
+  $query = \Drupal::entityQuery('node')
+    ->accessCheck(TRUE)
+    ->condition('type', 'project')
+    ->condition('status', 1);
+
+  $now = gmdate('Y-m-d\\TH:i:s');
+
+  $start_group = $query->orConditionGroup()
+    ->notExists('field_homepage_highlight_start')
+    ->condition('field_homepage_highlight_start', $now, '<=');
+  $end_group = $query->orConditionGroup()
+    ->notExists('field_homepage_highlight_end')
+    ->condition('field_homepage_highlight_end', $now, '>=');
+
+  $query->condition($start_group);
+  $query->condition($end_group);
+  $query->exists('field_homepage_highlight_text');
+  $query->sort('field_homepage_highlight_start', 'DESC');
+  $query->sort('changed', 'DESC');
+  $query->range(0, 20);
+
+  $node_storage = \Drupal::entityTypeManager()->getStorage('node');
+  $file_url_generator = \Drupal::service('file_url_generator');
+
+  $highlight_projects = [];
+  $project_ids = $query->execute();
+  if (empty($project_ids)) {
+    return $highlight_projects;
+  }
+
+  /** @var \Drupal\node\NodeInterface[] $projects */
+  $projects = $node_storage->loadMultiple($project_ids);
+  foreach ($projects as $project) {
+    if (count($highlight_projects) >= $limit) {
+      break;
+    }
+
+    if ($project->hasField('field_archived') && (int) $project->get('field_archived')->value === 1) {
+      continue;
+    }
+
+    if (!$project->hasField('field_homepage_highlight_text')) {
+      continue;
+    }
+
+    $highlight_text = trim(strip_tags((string) $project->get('field_homepage_highlight_text')->value));
+    if ($highlight_text === '') {
+      continue;
+    }
+
+    $image_file = NULL;
+    if ($project->hasField('field_homepage_highlight_image') && !$project->get('field_homepage_highlight_image')->isEmpty()) {
+      $image_file = $project->get('field_homepage_highlight_image')->entity;
+    }
+    elseif ($project->hasField('field_main_image') && !$project->get('field_main_image')->isEmpty()) {
+      $image_file = $project->get('field_main_image')->entity;
+    }
+
+    if (!$image_file instanceof File) {
+      continue;
+    }
+
+    $type_label = '';
+    $type_class = 'hitas';
+    if ($project->hasField('field_ownership_type') && !$project->get('field_ownership_type')->isEmpty()) {
+      $type_label = (string) $project->get('field_ownership_type')->entity?->label();
+      $normalized_type = mb_strtolower(trim($type_label));
+      if ($normalized_type === 'haso') {
+        $type_class = 'haso';
+      }
+      elseif ($normalized_type === 'puolihitas') {
+        $type_class = 'puolihitas';
+      }
+    }
+
+    $address_parts = [];
+    if ($project->hasField('field_street_address') && !$project->get('field_street_address')->isEmpty()) {
+      $address_parts[] = trim((string) $project->get('field_street_address')->value);
+    }
+    if ($project->hasField('field_city') && !$project->get('field_city')->isEmpty()) {
+      $address_parts[] = trim((string) $project->get('field_city')->value);
+    }
+    $address = implode(', ', array_filter($address_parts));
+
+    $highlight_projects[] = [
+      'title' => $project->label(),
+      'url' => $project->toUrl()->toString(),
+      'image_url' => $file_url_generator->generateString($image_file->getFileUri()),
+      'image_uri' => $image_file->getFileUri(),
+      'image_alt' => $project->label(),
+      'text' => $highlight_text,
+      'type_label' => $type_label,
+      'type_class' => $type_class,
+      'address' => $address,
+      'cache_tags' => $project->getCacheTags(),
+    ];
+  }
+
+  return $highlight_projects;
 }
 
 /**

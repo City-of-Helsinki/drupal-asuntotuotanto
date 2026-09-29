@@ -1,0 +1,38 @@
+uuid: 4ea657fd-7f96-425f-ad86-f5a5d89c24b4
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_homepage_highlight_image
+    - node.type.project
+  module:
+    - image
+id: node.project.field_homepage_highlight_image
+field_name: field_homepage_highlight_image
+entity_type: node
+bundle: project
+label: 'Homepage highlight image'
+description: 'Optional image for homepage highlight. If empty, main image is used.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:file'
+  handler_settings: {  }
+  file_directory: '[date:custom:Y]-[date:custom:m]'
+  file_extensions: 'png gif jpg jpeg'
+  max_filesize: ''
+  max_resolution: ''
+  min_resolution: ''
+  alt_field: false
+  alt_field_required: false
+  title_field: false
+  title_field_required: false
+  default_image:
+    uuid: ''
+    alt: ''
+    title: ''
+    width: null
+    height: null
+field_type: image

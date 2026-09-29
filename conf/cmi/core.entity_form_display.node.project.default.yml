@@ -55,6 +55,10 @@ dependencies:
     - field.field.node.project.field_has_elevator
     - field.field.node.project.field_has_sauna
     - field.field.node.project.field_heating_options
+    - field.field.node.project.field_homepage_highlight_end
+    - field.field.node.project.field_homepage_highlight_image
+    - field.field.node.project.field_homepage_highlight_start
+    - field.field.node.project.field_homepage_highlight_text
     - field.field.node.project.field_holding_type
     - field.field.node.project.field_housing_company
     - field.field.node.project.field_housing_manager
@@ -176,6 +180,10 @@ third_party_settings:
         - field_new_housing
         - field_apartment_count
         - field_new_development_status
+        - field_homepage_highlight_text
+        - field_homepage_highlight_image
+        - field_homepage_highlight_start
+        - field_homepage_highlight_end
         - field_holding_type
         - field_regular_bank_account
         - field_barred_bank_account
@@ -512,7 +520,7 @@ content:
     third_party_settings: {  }
   field_barred_bank_account:
     type: string_textfield
-    weight: 20
+    weight: 23
     region: content
     settings:
       size: 60
@@ -799,6 +807,34 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
+  field_homepage_highlight_end:
+    type: datetime_default
+    weight: 21
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_homepage_highlight_image:
+    type: image_image
+    weight: 19
+    region: content
+    settings:
+      progress_indicator: throbber
+      preview_image_style: thumbnail
+    third_party_settings: {  }
+  field_homepage_highlight_start:
+    type: datetime_default
+    weight: 20
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_homepage_highlight_text:
+    type: string_textarea
+    weight: 18
+    region: content
+    settings:
+      rows: 3
+      placeholder: ''
+    third_party_settings: {  }
   field_holding_type:
     type: options_buttons
     weight: 18
@@ -1060,7 +1096,7 @@ content:
     third_party_settings: {  }
   field_regular_bank_account:
     type: string_textfield
-    weight: 19
+    weight: 22
     region: content
     settings:
       size: 60
