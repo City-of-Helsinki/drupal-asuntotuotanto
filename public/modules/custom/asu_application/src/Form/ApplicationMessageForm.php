@@ -119,47 +119,7 @@ final class ApplicationMessageForm extends FormBase {
       ],
     ];
 
-    if ($thread === []) {
-      $form['thread_empty'] = [
-        '#type' => 'item',
-        '#title' => $this->t('Conversation'),
-        '#markup' => $this->t('No messages yet.'),
-      ];
-    }
-    else {
-      $items = [];
-      $senderNamesByUid = [];
-      foreach ($thread as $message) {
-        $senderLabel = $this->resolveMessageSenderName($message, $senderNamesByUid);
-        $created = (int) ($message->get('created')->value ?? 0);
-          $senderRole = (string) ($message->get('sender_role')->value ?? 'customer');
-          $isUnread = $created > $lastReadAt
-            && $this->isIncomingMessageForViewer($senderRole, $viewerRole);
-        $body = nl2br(Html::escape((string) $message->get('body')->value));
-        $timestamp = $created > 0 ? $this->dateFormatter->format($created, 'custom', 'd.m.Y H:i') : '';
-          $messageClasses = 'application-message-form__message' . ($isUnread ? ' application-message-form__message--new' : '');
-          $newLabel = $isUnread
-            ? '<span class="application-message-form__new-label">' . Html::escape((string) $this->t('New')) . '</span>'
-            : '';
-
-        $items[] = Markup::create(
-            '<div class="' . $messageClasses . '">'
-          . '<p><strong>' . Html::escape($senderLabel) . '</strong>'
-          . ($timestamp !== '' ? ' <span>' . Html::escape($timestamp) . '</span>' : '')
-            . $newLabel
-          . '</p><div>' . $body . '</div></div>'
-        );
-      }
-
-      $form['thread'] = [
-        '#theme' => 'item_list',
-        '#title' => $this->t('Conversation'),
-        '#items' => $items,
-        '#attributes' => [
-          'class' => ['application-message-form__thread'],
-        ],
-      ];
-    }
+    $this->buildThreadSection($form, $thread, $lastReadAt, $viewerRole);
 
     $form['message'] = [
       '#type' => 'textarea',
@@ -346,6 +306,69 @@ final class ApplicationMessageForm extends FormBase {
     }
 
     return $senderRole === 'sales';
+  }
+
+  /**
+   * Adds conversation section to the form.
+   *
+   * @param array<string, mixed> $form
+   *   Form render array.
+   * @param array<int, mixed> $thread
+   *   Thread messages.
+   * @param int $lastReadAt
+   *   Viewer last-read timestamp.
+   * @param string $viewerRole
+   *   Viewer role side.
+   */
+  private function buildThreadSection(array &$form, array $thread, int $lastReadAt, string $viewerRole): void {
+    if ($thread === []) {
+      $form['thread_empty'] = [
+        '#type' => 'item',
+        '#title' => $this->t('Conversation'),
+        '#markup' => $this->t('No messages yet.'),
+      ];
+      return;
+    }
+
+    $items = [];
+    $senderNamesByUid = [];
+    foreach ($thread as $message) {
+      $items[] = $this->buildThreadItemMarkup($message, $senderNamesByUid, $lastReadAt, $viewerRole);
+    }
+
+    $form['thread'] = [
+      '#theme' => 'item_list',
+      '#title' => $this->t('Conversation'),
+      '#items' => $items,
+      '#attributes' => [
+        'class' => ['application-message-form__thread'],
+      ],
+    ];
+  }
+
+  /**
+   * Builds one message item HTML for the thread list.
+   */
+  private function buildThreadItemMarkup($message, array &$senderNamesByUid, int $lastReadAt, string $viewerRole): Markup {
+    $senderLabel = $this->resolveMessageSenderName($message, $senderNamesByUid);
+    $created = (int) ($message->get('created')->value ?? 0);
+    $senderRole = (string) ($message->get('sender_role')->value ?? 'customer');
+    $isUnread = $created > $lastReadAt
+      && $this->isIncomingMessageForViewer($senderRole, $viewerRole);
+    $body = nl2br(Html::escape((string) $message->get('body')->value));
+    $timestamp = $created > 0 ? $this->dateFormatter->format($created, 'custom', 'd.m.Y H:i') : '';
+    $messageClasses = 'application-message-form__message' . ($isUnread ? ' application-message-form__message--new' : '');
+    $newLabel = $isUnread
+      ? '<span class="application-message-form__new-label">' . Html::escape((string) $this->t('New')) . '</span>'
+      : '';
+
+    return Markup::create(
+      '<div class="' . $messageClasses . '">'
+      . '<p><strong>' . Html::escape($senderLabel) . '</strong>'
+      . ($timestamp !== '' ? ' <span>' . Html::escape($timestamp) . '</span>' : '')
+      . $newLabel
+      . '</p><div>' . $body . '</div></div>'
+    );
   }
 
 }

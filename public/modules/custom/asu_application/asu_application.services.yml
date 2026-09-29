@@ -22,6 +22,8 @@ services:
       - '@entity_type.manager'
       - '@user.data'
       - '@state'
+      - '@database'
+      - '@datetime.time'
 
   asu_application.application_subscriber:
     class: Drupal\asu_application\EventSubscriber\ApplicationSubscriber

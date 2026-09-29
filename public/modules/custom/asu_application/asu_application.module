@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Datetime\DrupalDateTime;
+use Drupal\asu_application\Applications;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\query\QueryPluginBase;
 use Drupal\asu_application\Entity\Application;
@@ -104,7 +105,7 @@ function template_preprocess_asu_application(array &$variables) {
 
     static $unread_counts_by_application = NULL;
     if ($unread_counts_by_application === NULL) {
-      $application_pairs = \Drupal\asu_application\Applications::applicationsByUser((string) $current_user->id())
+      $application_pairs = Applications::applicationsByUser((string) $current_user->id())
         ->getApplicationsProjectPairs();
       $application_ids = array_map(static fn(array $pair): int => (int) ($pair['application_id'] ?? 0), $application_pairs);
       $application_ids = array_values(array_filter($application_ids));
@@ -506,7 +507,7 @@ function asu_application_preprocess_views_view(&$variables) {
 
     $current_user = \Drupal::currentUser();
     if ($current_user->isAuthenticated()) {
-      $application_pairs = \Drupal\asu_application\Applications::applicationsByUser((string) $current_user->id())
+      $application_pairs = Applications::applicationsByUser((string) $current_user->id())
         ->getApplicationsProjectPairs();
       $application_ids = array_map(static fn(array $pair): int => (int) ($pair['application_id'] ?? 0), $application_pairs);
       $application_ids = array_values(array_filter($application_ids));
