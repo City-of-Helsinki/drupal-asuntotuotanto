@@ -7,6 +7,7 @@
 #}
 
 {{ attach_library('asuntotuotanto/application-apartment-listing') }}
+{{ attach_library('asu_application/message_badges') }}
 {{ attach_library('asu_application/application_results') }}
 
 {%
@@ -178,13 +179,16 @@
               type: 'primary'
             } %}
           </div>
+          {% endif %}
 
+          {% if content['#teaser_values'].can_message %}
           <div class="application--action">
-            {% include "@asuntotuotanto/button/button.html.twig" with {
-              label: 'Message sales agent'|t,
-              href: content['#teaser_values'].messages_url,
-              type: 'secondary'
-            } %}
+            <a class="hds-button hds-button--secondary application-message-button{% if content['#teaser_values'].has_unread_messages %} application-message-button--has-unread{% endif %}" href="{{ content['#teaser_values'].messages_url }}" data-application-id="{{ content['#teaser_values'].application_id }}">
+              <span class="hds-button__label">{{ 'Message sales agent'|t }}</span>
+              {% if content['#teaser_values'].has_unread_messages %}
+                <span class="asu-unread-badge" aria-label="{{ '@count unread messages'|t({'@count': content['#teaser_values'].unread_message_count}) }}">{{ content['#teaser_values'].unread_message_count }}</span>
+              {% endif %}
+            </a>
           </div>
           {% endif %}
           <div class="application--action">

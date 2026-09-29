@@ -24,14 +24,27 @@
 {% for item in items %}
   {% if loop.index == 1 %}
     <button id="user-tools-toggle" class="user-tools__button" aria-controls="user-tools-dropdown" aria-expanded="false" aria-haspopup="true" aria-label="{{ 'Open user tools dropdown'|t }}">
-      {{ item.title }}
+      {% if asu_unread_messages_total|default(0) > 0 %}
+        <span class="asu-unread-badge asu-unread-badge--profile" aria-label="{{ '@count unread messages'|t({'@count': asu_unread_messages_total}) }}">{{ asu_unread_messages_total }}</span>
+      {% endif %}
+      <span class="user-tools__button-label">{{ item.title }}</span>
     </button>
 
     <div id="user-tools-dropdown" aria-hidden="true" class="user-tools__dropdown">
       <ul class="user-tools__links">
-        {% for link in item.below %}
+        {% for link_key, link in item.below %}
           <li class="user-tools__links-item">
-            {{ link(link.title, link.url, {'class': [link.is_link_active ? 'is-active', 'user-tools__link']}) }}
+            {{ link(
+              link.title,
+              link.url,
+              {
+                'class': [link.is_link_active ? 'is-active', 'user-tools__link'],
+                'data-unread-count': link.unread_count|default(0),
+                'aria-label': link.unread_count|default(0) > 0
+                  ? '@title, @count unread messages'|t({'@title': link.title, '@count': link.unread_count})
+                  : link.title
+              }
+            ) }}
           </li>
         {% endfor %}
       </ul>

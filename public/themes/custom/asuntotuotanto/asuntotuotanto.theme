@@ -35,12 +35,69 @@ function asuntotuotanto_get_icons_path() {
 }
 
 /**
+ * Returns unread message counts for current authenticated user.
+ *
+ * @return array{total:int, by_application: array<int, int>}
+ *   Total unread count and per-application counts.
+ */
+function asuntotuotanto_get_unread_message_counts(): array {
+  $account = \Drupal::currentUser();
+  if (!$account->isAuthenticated() || !\Drupal::moduleHandler()->moduleExists('asu_application')) {
+    return [
+      'total' => 0,
+      'by_application' => [],
+    ];
+  }
+
+  try {
+    $application_pairs = \Drupal\asu_application\Applications::applicationsByUser((string) $account->id())
+      ->getApplicationsProjectPairs();
+    $application_ids = array_map(static fn(array $pair): int => (int) ($pair['application_id'] ?? 0), $application_pairs);
+    $application_ids = array_values(array_filter($application_ids));
+
+    if ($application_ids === []) {
+      return [
+        'total' => 0,
+        'by_application' => [],
+      ];
+    }
+
+    /** @var \Drupal\asu_application\ApplicationMessageManager $message_manager */
+    $message_manager = \Drupal::service('asu_application.message_manager');
+    $by_application = $message_manager->getUnreadCountsForApplications((int) $account->id(), $application_ids);
+
+    return [
+      'total' => array_sum($by_application),
+      'by_application' => $by_application,
+    ];
+  }
+  catch (\Throwable $throwable) {
+    \Drupal::logger('asuntotuotanto')->warning('Unable to resolve unread message counts: @message', [
+      '@message' => $throwable->getMessage(),
+    ]);
+
+    return [
+      'total' => 0,
+      'by_application' => [],
+    ];
+  }
+}
+
+/**
  * Implements hook_preprocess().
  */
 function asuntotuotanto_preprocess(&$variables) {
   $variables['asuntotuotanto_icons_path'] = asuntotuotanto_get_icons_path();
   $variables['#attached']['drupalSettings']['asuntotuotanto_icons_path'] = $variables['asuntotuotanto_icons_path'];
-  $variables['current_user_id'] = \Drupal::currentUser()->id() ?? NULL;
+  $account = \Drupal::currentUser();
+  $variables['current_user_id'] = $account->id() ?? NULL;
+
+  $unread = asuntotuotanto_get_unread_message_counts();
+  $variables['asu_unread_messages_total'] = (int) $unread['total'];
+
+  if ($account->isAuthenticated()) {
+    $variables['#attached']['library'][] = 'asu_application/message_badges';
+  }
 }
 
 /**
@@ -66,6 +123,7 @@ function asuntotuotanto_preprocess_html(array &$variables) {
   $variables['#attached']['drupalSettings']['matomo_base_url'] = Settings::get('matomo_base_url') ?: 'https://matomo.hel.fi/';
   $variables['#attached']['drupalSettings']['matomo_site_id'] = Settings::get('matomo_site_id') ?: '80';
   $variables['#attached']['library'][] = 'asuntotuotanto/matomo';
+
   $path = \Drupal::service('path.current')->getPath();
   $path_parts = explode('/', $path);
 
@@ -183,15 +241,28 @@ function asuntotuotanto_preprocess_menu(&$variables) {
       break;
 
     case 'user-tools-menu':
-      $items = $variables['items']['asu_user_tools_menu.user_name']['below'];
+        if (empty($variables['items']['asu_user_tools_menu.user_name']['below'])) {
+          break;
+        }
+
+        $items = $variables['items']['asu_user_tools_menu.user_name']['below'];
+        $unread = asuntotuotanto_get_unread_message_counts();
+        $unread_total = (int) $unread['total'];
 
       $variables['#cache']['contexts'][] = 'user';
+      $variables['#cache']['max-age'] = 0;
+        $variables['asu_unread_messages_total'] = $unread_total;
+        $variables['#attached']['library'][] = 'asu_application/message_badges';
 
       foreach ($items as $key => $item) {
         $url = $item['url']->toString();
         $current_path = Url::fromRoute('<current>')->toString();
         $is_active = $current_path === $url;
         $variables['items']['asu_user_tools_menu.user_name']['below'][$key]['is_link_active'] = $is_active;
+
+          if ($key === 'asu_user_tools_menu.user_applications') {
+            $variables['items']['asu_user_tools_menu.user_name']['below'][$key]['unread_count'] = $unread_total;
+          }
       }
       break;
   }

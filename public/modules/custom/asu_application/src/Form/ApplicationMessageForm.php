@@ -80,6 +80,15 @@ final class ApplicationMessageForm extends FormBase {
     $this->application = $asu_application;
     $projectLabel = $this->messageManager->getProjectLabel($asu_application);
     $thread = $this->messageManager->loadThread((int) $asu_application->id());
+    $currentUid = (int) $this->currentUser->id();
+    $viewerRole = $this->messageManager->resolveViewerRole($currentUid);
+    $lastReadAt = $currentUid > 0
+      ? $this->messageManager->getThreadLastRead($currentUid, (int) $asu_application->id())
+      : 0;
+
+    if ($currentUid > 0) {
+      $this->messageManager->markThreadRead($currentUid, (int) $asu_application->id());
+    }
 
     $form['intro'] = [
       '#type' => 'container',
@@ -123,13 +132,21 @@ final class ApplicationMessageForm extends FormBase {
       foreach ($thread as $message) {
         $senderLabel = $this->resolveMessageSenderName($message, $senderNamesByUid);
         $created = (int) ($message->get('created')->value ?? 0);
+          $senderRole = (string) ($message->get('sender_role')->value ?? 'customer');
+          $isUnread = $created > $lastReadAt
+            && $this->isIncomingMessageForViewer($senderRole, $viewerRole);
         $body = nl2br(Html::escape((string) $message->get('body')->value));
         $timestamp = $created > 0 ? $this->dateFormatter->format($created, 'custom', 'd.m.Y H:i') : '';
+          $messageClasses = 'application-message-form__message' . ($isUnread ? ' application-message-form__message--new' : '');
+          $newLabel = $isUnread
+            ? '<span class="application-message-form__new-label">' . Html::escape((string) $this->t('New')) . '</span>'
+            : '';
 
         $items[] = Markup::create(
-          '<div class="application-message-form__message">'
+            '<div class="' . $messageClasses . '">'
           . '<p><strong>' . Html::escape($senderLabel) . '</strong>'
           . ($timestamp !== '' ? ' <span>' . Html::escape($timestamp) . '</span>' : '')
+            . $newLabel
           . '</p><div>' . $body . '</div></div>'
         );
       }
@@ -159,6 +176,7 @@ final class ApplicationMessageForm extends FormBase {
     ];
 
     $form['#attached']['library'][] = 'asu_application/application_results';
+    $form['#attached']['library'][] = 'asu_application/message_badges';
 
     $form['#cache'] = ['max-age' => 0];
 
@@ -317,6 +335,17 @@ final class ApplicationMessageForm extends FormBase {
     return $senderRole === 'sales'
       ? (string) $this->t('Sales agent')
       : (string) $this->t('Customer');
+  }
+
+  /**
+   * Returns whether a sender role is incoming for the current viewer side.
+   */
+  private function isIncomingMessageForViewer(string $senderRole, string $viewerRole): bool {
+    if ($viewerRole === 'sales') {
+      return $senderRole === 'customer';
+    }
+
+    return $senderRole === 'sales';
   }
 
 }

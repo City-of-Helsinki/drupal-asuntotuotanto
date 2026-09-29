@@ -7,6 +7,8 @@ services:
     class: Drupal\asu_application\ApplicationMessageManager
     arguments:
       - '@entity_type.manager'
+      - '@user.data'
+      - '@state'
 
   asu_application.application_subscriber:
     class: Drupal\asu_application\EventSubscriber\ApplicationSubscriber
