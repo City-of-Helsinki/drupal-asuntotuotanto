@@ -94,44 +94,6 @@ final class ApplicationMessageManager {
   }
 
   /**
-   * Resolves the salesperson assigned to the message application project.
-   */
-  public function resolveSalesperson(Application $application): ?UserInterface {
-    $project = $this->loadProject($application);
-    if (!$project) {
-      return NULL;
-    }
-
-    if (method_exists($project, 'getSalesPerson')) {
-      $salesperson = $project->getSalesPerson();
-      if ($salesperson instanceof UserInterface) {
-        return $salesperson;
-      }
-    }
-
-    if ($project->hasField('field_salesperson') && !$project->get('field_salesperson')->isEmpty()) {
-      $salesperson = $project->get('field_salesperson')->entity;
-      if ($salesperson instanceof UserInterface) {
-        return $salesperson;
-      }
-    }
-
-    return NULL;
-  }
-
-  /**
-   * Resolves the notification recipient email for the application project.
-   */
-  public function resolveRecipientMail(Application $application): string {
-    $salesperson = $this->resolveSalesperson($application);
-    if ($salesperson && $salesperson->getEmail()) {
-      return $salesperson->getEmail();
-    }
-
-    return (string) (getenv('DRUPAL_DEFAULT_FORM_EMAIL') ?: '');
-  }
-
-  /**
    * Resolves customer recipients for salesperson notifications.
    *
    * Includes application owner and mapped co-applicant accounts.
@@ -355,7 +317,7 @@ final class ApplicationMessageManager {
     if ($timestamp > $current) {
       $map[$applicationId] = $timestamp;
       $this->state->set(self::LAST_READ_SALES_SHARED_STATE_KEY, $map);
-      Cache::invalidateTags([$this->getSharedSalesUnreadCacheTag($applicationId)]);
+      Cache::invalidateTags([sprintf('asu_application_unread:sales:%d', $applicationId)]);
     }
   }
 
@@ -364,13 +326,6 @@ final class ApplicationMessageManager {
    */
   public function getUnreadCacheTag(int $uid, int $applicationId): string {
     return sprintf('asu_application_unread:%d:%d', $uid, $applicationId);
-  }
-
-  /**
-   * Returns cache tag for shared sales unread state of an application.
-   */
-  public function getSharedSalesUnreadCacheTag(int $applicationId): string {
-    return sprintf('asu_application_unread:sales:%d', $applicationId);
   }
 
   /**
@@ -498,41 +453,6 @@ final class ApplicationMessageManager {
   }
 
   /**
-   * Returns the project id for the application.
-   */
-  public function getProjectId(Application $application): int {
-    if ($application->hasField('project') && !$application->get('project')->isEmpty() && $application->get('project')->entity) {
-      return (int) $application->get('project')->entity->id();
-    }
-
-    return (int) ($application->get('project_id')->value ?? 0);
-  }
-
-  /**
-   * Returns the application project label.
-   */
-  public function getProjectLabel(Application $application): string {
-    $project = $this->loadProject($application);
-    return $project ? (string) $project->label() : '';
-  }
-
-  /**
-   * Loads the application project entity.
-   */
-  private function loadProject(Application $application): ?object {
-    if ($application->hasField('project') && !$application->get('project')->isEmpty() && $application->get('project')->entity) {
-      return $application->get('project')->entity;
-    }
-
-    $projectId = (int) ($application->get('project_id')->value ?? 0);
-    if ($projectId <= 0) {
-      return NULL;
-    }
-
-    return $this->entityTypeManager->getStorage('node')->load($projectId);
-  }
-
-  /**
    * Removes duplicate recipients by normalized email.
    *
    * @param array<int, array{uid:int, mail:string, langcode:string}> $recipients
@@ -604,7 +524,7 @@ final class ApplicationMessageManager {
     }
 
     Cache::invalidateTags([
-      $this->getSharedSalesUnreadCacheTag($applicationId),
+      sprintf('asu_application_unread:sales:%d', $applicationId),
     ]);
 
     if ($salespersonUid && $salespersonUid > 0) {
