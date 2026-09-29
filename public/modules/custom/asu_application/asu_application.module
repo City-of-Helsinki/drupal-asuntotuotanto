@@ -47,7 +47,7 @@ function asu_application_form_alter(&$form, &$form_state) {
     $form['#form_id'] === 'asu_application_hitas_add_form' ||
     $form['#form_id'] === 'asu_application_haso_add_form'
   ) {
-    $form['#attached']['library'][] = 'asu_application/application-submit';
+    $form['#attached']['library'][] = 'asu_application/application_submit';
 
     if (isset($form['#project_id'])) {
       $form['#attached']['drupalSettings']['asuApplication']['projectId'] = $form['#project_id'];
@@ -94,6 +94,34 @@ function template_preprocess_asu_application(array &$variables) {
   $variables['view_mode'] = $variables['elements']['#view_mode'];
   $id = $application->id->value;
   $projectId = $application->getProjectId();
+  $current_user = \Drupal::currentUser();
+  $can_message = FALSE;
+  $unread_count = 0;
+  $unread_cache_tag = NULL;
+
+  if ($current_user->isAuthenticated() && $application->access('view', $current_user)) {
+    $can_message = TRUE;
+
+    static $unread_counts_by_application = NULL;
+    if ($unread_counts_by_application === NULL) {
+      $application_pairs = \Drupal\asu_application\Applications::applicationsByUser((string) $current_user->id())
+        ->getApplicationsProjectPairs();
+      $application_ids = array_map(static fn(array $pair): int => (int) ($pair['application_id'] ?? 0), $application_pairs);
+      $application_ids = array_values(array_filter($application_ids));
+
+      if ($application_ids !== []) {
+        /** @var \Drupal\asu_application\ApplicationMessageManager $message_manager */
+        $message_manager = \Drupal::service('asu_application.message_manager');
+        $unread_counts_by_application = $message_manager->getUnreadCountsForApplications((int) $current_user->id(), $application_ids);
+      }
+      else {
+        $unread_counts_by_application = [];
+      }
+    }
+
+    $unread_count = (int) ($unread_counts_by_application[(int) $id] ?? 0);
+    $unread_cache_tag = sprintf('asu_application_unread:%d:%d', (int) $current_user->id(), (int) $id);
+  }
   try {
     /** @var \Drupal\asu_content\Entity\Project $project */
     $project = \Drupal::entityTypeManager()
@@ -164,6 +192,9 @@ function template_preprocess_asu_application(array &$variables) {
         'is_application_period' => $project->isApplicationPeriod(),
         'is_application_period_over' => $project->isApplicationPeriod('after'),
         'application_apartments' => $apartmentData,
+        'can_message' => $can_message,
+        'unread_message_count' => $unread_count,
+        'has_unread_messages' => $unread_count > 0,
         'error' => $application->hasError() ? $application->getError() : FALSE,
         'show_application_payments' => (
           (int) $application->getOwnerId() === (int) \Drupal::currentUser()->id() ||
@@ -255,9 +286,21 @@ function template_preprocess_asu_application(array &$variables) {
   $application_teaser_values['#cache'] = [
     'contexts' => ['user', 'languages:language_interface'],
     'tags' => ["asu_application_payment_list:{$id}"],
+    'max-age' => 0,
   ];
 
+  if ($unread_cache_tag) {
+    $application_teaser_values['#cache']['tags'][] = $unread_cache_tag;
+  }
+
   $variables['content'] = $application_teaser_values;
+
+  // Ensure the entity render output itself is uncached for unread state.
+  $variables['elements']['#cache']['contexts'][] = 'user';
+  $variables['elements']['#cache']['max-age'] = 0;
+  if ($unread_cache_tag) {
+    $variables['elements']['#cache']['tags'][] = $unread_cache_tag;
+  }
 }
 
 /**
@@ -455,8 +498,27 @@ function asu_application_preprocess_asu_application(array &$variables) {
  */
 function asu_application_preprocess_views_view(&$variables) {
   if ($variables['view']->id() == 'applications') {
-    $variables['#attached']['library'][] = 'asu_application/application-submit';
+    $variables['#attached']['library'][] = 'asu_application/application_submit';
     $variables['#attached']['drupalSettings']['asuApplication']['hasExistingApplication'] = TRUE;
+    // Keep application-row unread badges in sync with user read state.
+    $variables['view']->element['#cache']['contexts'][] = 'user';
+    $variables['view']->element['#cache']['max-age'] = 0;
+
+    $current_user = \Drupal::currentUser();
+    if ($current_user->isAuthenticated()) {
+      $application_pairs = \Drupal\asu_application\Applications::applicationsByUser((string) $current_user->id())
+        ->getApplicationsProjectPairs();
+      $application_ids = array_map(static fn(array $pair): int => (int) ($pair['application_id'] ?? 0), $application_pairs);
+      $application_ids = array_values(array_filter($application_ids));
+
+      if ($application_ids !== []) {
+        /** @var \Drupal\asu_application\ApplicationMessageManager $message_manager */
+        $message_manager = \Drupal::service('asu_application.message_manager');
+        foreach ($application_ids as $application_id) {
+          $variables['view']->element['#cache']['tags'][] = $message_manager->getUnreadCacheTag((int) $current_user->id(), (int) $application_id);
+        }
+      }
+    }
   }
 }
 

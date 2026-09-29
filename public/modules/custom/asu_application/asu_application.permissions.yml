@@ -22,4 +22,8 @@ view application payments:
 sync application payments:
   title: "Sync application payments"
   description: "Push application payment data from external systems"
+
+view shared sales unread counts:
+  title: "View shared sales unread counts"
+  description: "Access shared sales unread counts and sales inbox summary for application messaging endpoints"
   restrict access: true

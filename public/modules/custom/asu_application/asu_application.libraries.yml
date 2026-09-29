@@ -31,3 +31,9 @@ application_payments:
   dependencies:
     - core/jquery
     - core/drupal
+
+message_badges:
+  version: 1.x
+  css:
+    component:
+      assets/css/message-badges.css: {}
