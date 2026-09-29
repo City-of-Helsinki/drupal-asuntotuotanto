@@ -140,7 +140,18 @@ final class ApplicationMessageManager {
    *   Unique recipients by email.
    */
   public function resolveCustomerRecipients(Application $application): array {
-    $recipients = $this->getOwnerRecipients($application);
+    $recipients = [];
+
+    $owner = $application->getOwner();
+    if ($owner && $owner->getEmail()) {
+      $recipients[] = [
+        'uid' => (int) $owner->id(),
+        'mail' => (string) $owner->getEmail(),
+        'langcode' => method_exists($owner, 'getPreferredLangcode')
+          ? ($owner->getPreferredLangcode() ?: 'fi')
+          : 'fi',
+      ];
+    }
 
     $schema = $this->database->schema();
     if (!$schema->tableExists('asu_application_co_applicant_map')) {
@@ -173,7 +184,13 @@ final class ApplicationMessageManager {
 
     $coApplicantEmail = trim((string) ($mappingRow['co_applicant_email'] ?? ''));
     if ($hasCoApplicantEmailColumn) {
-      $this->appendEmailRecipient($recipients, $coApplicantEmail);
+      if (filter_var($coApplicantEmail, FILTER_VALIDATE_EMAIL)) {
+        $recipients[] = [
+          'uid' => 0,
+          'mail' => $coApplicantEmail,
+          'langcode' => 'fi',
+        ];
+      }
 
       // When explicit co-applicant email storage is available, avoid
       // hash-based lookup that may match an unrelated local test account.
@@ -186,66 +203,6 @@ final class ApplicationMessageManager {
       return $this->uniqueRecipientsByEmail($recipients);
     }
 
-    $this->appendMappedUserRecipients($recipients, $samlHash);
-
-    return $this->uniqueRecipientsByEmail($recipients);
-  }
-
-  /**
-   * Returns owner recipient list for notifications.
-   *
-   * @param \Drupal\asu_application\Entity\Application $application
-   *   Application entity.
-   *
-   * @return array<int, array{uid:int, mail:string, langcode:string}>
-   *   Owner recipient or empty list.
-   */
-  private function getOwnerRecipients(Application $application): array {
-    $owner = $application->getOwner();
-    if (!$owner || !$owner->getEmail()) {
-      return [];
-    }
-
-    return [
-      [
-        'uid' => (int) $owner->id(),
-        'mail' => (string) $owner->getEmail(),
-        'langcode' => method_exists($owner, 'getPreferredLangcode')
-          ? ($owner->getPreferredLangcode() ?: 'fi')
-          : 'fi',
-      ],
-    ];
-  }
-
-  /**
-   * Appends email recipient if valid.
-   *
-   * @param array<int, array{uid:int, mail:string, langcode:string}> $recipients
-   *   Recipient list passed by reference.
-   * @param string $email
-   *   Recipient email candidate.
-   */
-  private function appendEmailRecipient(array &$recipients, string $email): void {
-    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-      return;
-    }
-
-    $recipients[] = [
-      'uid' => 0,
-      'mail' => $email,
-      'langcode' => 'fi',
-    ];
-  }
-
-  /**
-   * Appends mapped co-applicant user recipients.
-   *
-   * @param array<int, array{uid:int, mail:string, langcode:string}> $recipients
-   *   Recipient list passed by reference.
-   * @param string $samlHash
-   *   SAML hash for mapped co-applicant.
-   */
-  private function appendMappedUserRecipients(array &$recipients, string $samlHash): void {
     $users = $this->entityTypeManager
       ->getStorage('user')
       ->loadByProperties(['field_saml_hash' => $samlHash]);
@@ -263,6 +220,8 @@ final class ApplicationMessageManager {
           : 'fi',
       ];
     }
+
+    return $this->uniqueRecipientsByEmail($recipients);
   }
 
   /**
@@ -294,11 +253,11 @@ final class ApplicationMessageManager {
     }
 
     if ($this->resolveViewerRole($uid) === 'sales') {
-      $map = $this->getSharedSalesLastReadMap();
+      $map = $this->getReadMap(TRUE);
       return (int) ($map[$applicationId] ?? 0);
     }
 
-    $map = $this->getLastReadMap($uid);
+    $map = $this->getReadMap(FALSE, $uid);
     return (int) ($map[$applicationId] ?? 0);
   }
 
@@ -318,7 +277,7 @@ final class ApplicationMessageManager {
       return;
     }
 
-    $map = $this->getLastReadMap($uid);
+    $map = $this->getReadMap(FALSE, $uid);
     $current = (int) ($map[$applicationId] ?? 0);
 
     if ($timestamp > $current) {
@@ -338,7 +297,7 @@ final class ApplicationMessageManager {
 
     $timestamp ??= $this->time->getRequestTime();
 
-    $map = $this->getSharedSalesLastReadMap();
+    $map = $this->getReadMap(TRUE);
     $current = (int) ($map[$applicationId] ?? 0);
 
     if ($timestamp > $current) {
@@ -394,8 +353,8 @@ final class ApplicationMessageManager {
 
     $incomingSenderRole = $viewerRole === 'sales' ? 'customer' : 'sales';
     $lastRead = $viewerRole === 'sales'
-      ? $this->getSharedSalesLastReadMap()
-      : $this->getLastReadMap($uid);
+      ? $this->getReadMap(TRUE)
+      : $this->getReadMap(FALSE, $uid);
 
     $rows = $this->database
       ->select('asu_application_message', 'm')
@@ -554,32 +513,11 @@ final class ApplicationMessageManager {
    * @return array<int, int>
    *   Map of application id => timestamp.
    */
-  private function getLastReadMap(int $uid): array {
-    $raw = $this->userData->get('asu_application', $uid, self::LAST_READ_USER_DATA_KEY);
-    if (!is_array($raw)) {
-      return [];
-    }
+  private function getReadMap(bool $salesShared, int $uid = 0): array {
+    $raw = $salesShared
+      ? $this->state->get(self::LAST_READ_SALES_SHARED_STATE_KEY, [])
+      : $this->userData->get('asu_application', $uid, self::LAST_READ_USER_DATA_KEY);
 
-    $map = [];
-    foreach ($raw as $applicationId => $timestamp) {
-      $appId = (int) $applicationId;
-      $ts = (int) $timestamp;
-      if ($appId > 0 && $ts >= 0) {
-        $map[$appId] = $ts;
-      }
-    }
-
-    return $map;
-  }
-
-  /**
-   * Returns shared sales last-read map.
-   *
-   * @return array<int, int>
-   *   Map of application id => timestamp.
-   */
-  private function getSharedSalesLastReadMap(): array {
-    $raw = $this->state->get(self::LAST_READ_SALES_SHARED_STATE_KEY, []);
     if (!is_array($raw)) {
       return [];
     }
@@ -608,57 +546,35 @@ final class ApplicationMessageManager {
       return;
     }
 
+    $targetUids = [];
     if ($senderRole === 'sales') {
-      $this->invalidateUnreadForCustomers($applicationId);
-      return;
-    }
-
-    $targetUids = [];
-    if ($salespersonUid && $salespersonUid > 0) {
-      $targetUids[] = (int) $salespersonUid;
-    }
-
-    Cache::invalidateTags([
-      $this->getSharedSalesUnreadCacheTag($applicationId),
-    ]);
-
-    $this->invalidateUserUnreadTags($applicationId, $targetUids);
-  }
-
-  /**
-   * Invalidates unread tags for customer recipients.
-   */
-  private function invalidateUnreadForCustomers(int $applicationId): void {
-    $targetUids = [];
-
-    try {
-      $application = $this->entityTypeManager->getStorage('asu_application')->load($applicationId);
-      if ($application instanceof Application) {
-        foreach ($this->resolveCustomerRecipients($application) as $recipient) {
-          $uid = (int) ($recipient['uid'] ?? 0);
-          if ($uid > 0) {
-            $targetUids[] = $uid;
+      try {
+        $application = $this->entityTypeManager->getStorage('asu_application')->load($applicationId);
+        if ($application instanceof Application) {
+          foreach ($this->resolveCustomerRecipients($application) as $recipient) {
+            $uid = (int) ($recipient['uid'] ?? 0);
+            if ($uid > 0) {
+              $targetUids[] = $uid;
+            }
           }
         }
       }
-    }
-    catch (\Throwable) {
-      // Skip recipient-based cache invalidation when related entity storages
-      // are unavailable in lightweight test environments.
+      catch (\Throwable) {
+        // Skip recipient-based cache invalidation when related entity storages
+        // are unavailable in lightweight test environments.
+      }
     }
 
-    $this->invalidateUserUnreadTags($applicationId, $targetUids);
-  }
+    if ($senderRole !== 'sales') {
+      Cache::invalidateTags([
+        $this->getSharedSalesUnreadCacheTag($applicationId),
+      ]);
 
-  /**
-   * Invalidates user/application unread tags.
-   *
-   * @param int $applicationId
-   *   Application id.
-   * @param int[] $targetUids
-   *   Target users.
-   */
-  private function invalidateUserUnreadTags(int $applicationId, array $targetUids): void {
+      if ($salespersonUid && $salespersonUid > 0) {
+        $targetUids[] = (int) $salespersonUid;
+      }
+    }
+
     if ($targetUids === []) {
       return;
     }
