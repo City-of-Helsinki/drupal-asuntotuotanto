@@ -23,7 +23,7 @@
 
 {% for item in items %}
   {% if loop.index == 1 %}
-    <button id="user-tools-toggle" class="user-tools__button" aria-controls="user-tools-dropdown" aria-expanded="false" aria-haspopup="true" aria-label="{{ item.title }}">
+    <button id="user-tools-toggle" class="user-tools__button" aria-controls="user-tools-dropdown" aria-expanded="false" aria-haspopup="true">
       {% if asu_unread_messages_total|default(0) > 0 %}
         <span class="asu-unread-badge asu-unread-badge--profile" aria-label="{{ '@count unread messages'|t({'@count': asu_unread_messages_total}) }}">{{ asu_unread_messages_total }}</span>
       {% endif %}
