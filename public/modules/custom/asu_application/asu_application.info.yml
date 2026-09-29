@@ -11,3 +11,5 @@ dependencies:
   - helfi_api_base:helfi_api_base
   - helfi_platform_config:helfi_platform_config
   - helfi_user_roles:helfi_user_roles
+"interface translation project": asu_application
+"interface translation server pattern": modules/custom/asu_application/translations/%language.po

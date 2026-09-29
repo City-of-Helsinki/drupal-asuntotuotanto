@@ -9,6 +9,7 @@ use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\query\QueryPluginBase;
 use Drupal\asu_application\Entity\Application;
+use Drupal\asu_application\Util\OfferMailTestLabel;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 use Drupal\file\Entity\File;
 use Drupal\user\Entity\User;
@@ -21,6 +22,17 @@ function asu_application_theme() {
     'asu_application' => [
       'render element' => 'elements',
       'template' => 'asu-application',
+    ],
+    'asu_application_offer_notification_mail' => [
+      'variables' => [
+        'project_name' => '',
+        'apartment_number' => '',
+        'customer_name' => '',
+        'customer_email' => '',
+        'valid_until' => '',
+        'action' => '',
+      ],
+      'template' => 'mail/asu-application-offer-notification-mail',
     ],
   ];
 }
@@ -57,17 +69,24 @@ function asu_application_form_alter(&$form, &$form_state) {
       $form['#attached']['drupalSettings']['asuApplication']['currentApplicationId'] = $form['#entity']->id();
     }
     if (isset($form['field_data_agreement_policy'])) {
-      $hitas = 'https://www.hel.fi/static/liitteet-2019/Kaupunginkanslia/Rekisteriselosteet/Kymp/Helsingin%20kaupungin%20Asuntotuotannon%20Hitas-asuntojen%20hakijarekisteri.pdf';
-      $haso = 'https://www.hel.fi/static/liitteet-2019/Kaupunginkanslia/Rekisteriselosteet/Kymp/Asumisoikeusasuntojen%20hakijarekisteri.pdf';
-      $link = $form['#form_id'] === 'asu_application_hitas_form' ? $hitas : $haso;
+      $hitas_privacy = 'https://www.hel.fi/static/liitteet-2019/Kaupunginkanslia/Rekisteriselosteet/Kymp/Helsingin%20kaupungin%20Asuntotuotannon%20Hitas-asuntojen%20hakemisen%20tietosuojaseloste.pdf';
+      $haso_privacy = 'https://www.hel.fi/static/liitteet-2019/Kaupunginkanslia/Rekisteriselosteet/Kymp/Helsingin%20kaupungin%20Asuntotuotannon%20asumisoikeusasuntojen%20hakemisen%20tietosuojaseloste.pdf';
+
+      $is_hitas = FALSE;
+      if (isset($form['#entity']) && $form['#entity'] instanceof Application) {
+        $is_hitas = $form['#entity']->bundle() === 'hitas';
+      }
+      else {
+        $is_hitas = str_contains($form['#form_id'], 'hitas');
+      }
+
+      $privacy_link = $is_hitas ? $hitas_privacy : $haso_privacy;
 
       $form['field_data_agreement_policy']['widget']['value']['#title'] =
         t(
-          'I have read <a target="_blank" href="@register">Registry policy</a>
-            and city\'s  <a target="_blank" href="@privacy">Privacy Statement</a>',
+          'I have read the city\'s <a target="_blank" href="@privacy">Privacy Statement</a>',
           [
-            '@register' => $link,
-            '@privacy' => 'https://www.hel.fi/fi/paatoksenteko-ja-hallinto/tietoa-helsingista/tietosuoja-ja-tiedonhallinta/tietosuoja',
+            '@privacy' => $privacy_link,
           ]
         );
     }
@@ -171,6 +190,7 @@ function template_preprocess_asu_application(array &$variables) {
       '#teaser_values' => [
         'application_id' => $application->id->value,
         'is_owner' => ((int) $application->getOwnerId() === (int) \Drupal::currentUser()->id()),
+        'can_message' => $application->access('view', \Drupal::currentUser(), TRUE)->isAllowed(),
         'backend_application_id' => $application->get('field_backend_id')->value,
         'project_uuid' => $project->uuid(),
         'language' => \Drupal::languageManager()->getCurrentLanguage()->getId(),
@@ -188,8 +208,20 @@ function template_preprocess_asu_application(array &$variables) {
         'unread_message_count' => $unread_count,
         'has_unread_messages' => $unread_count > 0,
         'error' => $application->hasError() ? $application->getError() : FALSE,
+        'show_application_payments' => (
+          (int) $application->getOwnerId() === (int) \Drupal::currentUser()->id() ||
+          \Drupal::currentUser()->hasPermission('view application payments') ||
+          \Drupal::currentUser()->hasPermission('administer applications')
+        ),
+        'application_payments' => [],
+        'application_payments_ui' => _asu_application_get_payments_ui_strings(),
       ],
     ];
+
+    if ($application_teaser_values['#teaser_values']['show_application_payments']) {
+      $application_teaser_values['#teaser_values']['application_payments'] = \Drupal::service('asu_application.payment_sync')
+        ->getPaymentsForApplication((int) $application->id(), (int) \Drupal::currentUser()->id());
+    }
 
     if ($variables['elements']['#view_mode'] == 'full') {
       $apartments = \Drupal::entityTypeManager()
@@ -264,13 +296,16 @@ function template_preprocess_asu_application(array &$variables) {
   }
 
   $application_teaser_values['#cache'] = [
-    'contexts' => ['user'],
+    'contexts' => ['user', 'languages:language_interface'],
+    'tags' => ["asu_application_payment_list:{$id}"],
     'max-age' => 0,
   ];
 
   if ($unread_cache_tag) {
     $application_teaser_values['#cache']['tags'][] = $unread_cache_tag;
   }
+
+  $variables['#attached']['drupalSettings']['asuApplicationOffer'] = _asu_application_get_offer_drupal_settings();
 
   $variables['content'] = $application_teaser_values;
 
@@ -280,6 +315,77 @@ function template_preprocess_asu_application(array &$variables) {
   if ($unread_cache_tag) {
     $variables['elements']['#cache']['tags'][] = $unread_cache_tag;
   }
+}
+
+/**
+ * Return localized payments UI labels with English fallback.
+ */
+function _asu_application_get_payments_ui_strings(): array {
+  $language = \Drupal::languageManager()->getCurrentLanguage()->getId();
+  $isFinnish = $language === 'fi';
+
+  return [
+    'show' => $isFinnish ? 'Asunnon maksut' : 'Apartment payments',
+    'hide' => $isFinnish ? 'Piilota asunnon maksut' : 'Hide apartment payments',
+    'empty' => $isFinnish ? 'Ei maksuja' : 'No payments',
+    'installment_type' => $isFinnish ? 'Maksulaji' : 'Installment type',
+    'amount' => $isFinnish ? 'Summa' : 'Amount',
+    'due_date' => $isFinnish ? 'Eräpäivä' : 'Due date',
+    'account_number' => $isFinnish ? 'IBAN-tilinumero' : 'IBAN account number',
+    'reference_number' => $isFinnish ? 'Viitenumero' : 'Reference number',
+    'user_mark' => $isFinnish ? 'Oma merkintä' : 'Personal note',
+    'mark_paid' => $isFinnish ? 'Merkitse maksetuksi' : 'Mark as paid',
+    'marked_paid' => $isFinnish ? 'Merkitty maksetuksi' : 'Marked as paid',
+    'mark_notice' => $isFinnish
+      ? 'Tämä on käyttäjän oma merkintä. Se ei vahvista maksun saapumista.'
+      : 'This is a personal note. It does not confirm that payment has arrived.',
+  ];
+}
+
+/**
+ * Return translated offer UI strings for JavaScript.
+ */
+function _asu_application_get_offer_drupal_settings(): array {
+  return [
+    'acceptOffer' => (string) t('Accept offer'),
+    'rejectOffer' => (string) t('Reject offer'),
+    'confirmAccept' => (string) t('Are you sure you want to accept this offer?'),
+    'confirmReject' => (string) t('Are you sure you want to reject this offer?'),
+    'offerStatusLabel' => (string) t('Offer status'),
+    'offerValidUntilLabel' => (string) t('Offer valid until'),
+    'showOfferDetails' => (string) t('Show offer details'),
+    'hideOfferDetails' => (string) t('Hide offer details'),
+    'loadingOfferDetails' => (string) t('Loading offer details…'),
+    'loadingOffers' => (string) t('Loading offers…'),
+    'offerDetailsError' => (string) t('Could not load offer details.'),
+    'offerAcceptedConfirmation' => (string) t('You have accepted this offer.'),
+    'offerRejectedConfirmation' => (string) t('You have rejected this offer.'),
+    'offerActionError' => (string) t('Could not update the offer. Please try again.'),
+    'acceptedLabel' => (string) t('accepted'),
+    'rejectedLabel' => (string) t('rejected'),
+    'offerAcceptedStatus' => (string) t('offer accepted'),
+    'offerRejectedStatus' => (string) t('Offer rejected'),
+    'projectMaterialbankLink' => (string) t('Project material bank'),
+    'apartmentPageLink' => (string) t('Apartment page'),
+    'offerExpiredLabel' => (string) t('Offer expired'),
+    'offerDetailLabels' => [
+      'apartment_number' => (string) t('Apartment'),
+      'apartment_structure' => (string) t('Apartment type'),
+      'living_area' => (string) t('Living area'),
+      'floor' => (string) t('Floor'),
+      'sales_price' => (string) t('Sales price'),
+      'debt_free_sales_price' => (string) t('Debt-free price'),
+      'maintenance_fee' => (string) t('Estimated maintenance fee'),
+      'has_children' => (string) t('Family with children'),
+      'current_right_of_occupancy_payment' => (string) t('Estimated right of occupancy payment'),
+      'right_of_occupancy_fee' => (string) t('Estimated right of occupancy fee'),
+      'right_of_occupancy_deposit' => (string) t('Deposit'),
+      'right_of_residence' => (string) t('Right of residence number'),
+      'is_age_over_55' => (string) t('Over 55'),
+      'is_right_of_occupancy_housing_changer' => (string) t('Switching right of occupancy home'),
+      'valid_until' => (string) t('Offer valid until'),
+    ],
+  ];
 }
 
 /**
@@ -301,31 +407,45 @@ function asu_application_cron() {
       ->condition('field_application_end_time', [$after, $before], 'BETWEEN')
       ->execute();
 
-    if (!$projects) {
-      return;
-    }
+    if ($projects) {
+      $applicationIds = \Drupal::entityTypeManager()
+        ->getStorage('asu_application')
+        ->getQuery()
+        ->accessCheck(TRUE)
+        ->condition('project_id', $projects, 'IN')
+        ->condition('field_locked', 0, '=')
+        ->execute();
 
-    $applicationIds = \Drupal::entityTypeManager()
-      ->getStorage('asu_application')
-      ->getQuery()
-      ->accessCheck(TRUE)
-      ->condition('project_id', $projects, 'IN')
-      ->condition('field_locked', 0, '=')
-      ->execute();
-
-    if (!$applicationIds) {
-      return;
-    }
-
-    $applications = Application::loadMultiple($applicationIds);
-    /** @var \Drupal\asu_application\Entity\Application $application */
-    foreach ($applications as $application) {
-      \Drupal::logger('asu_application')->info('Deleted draft application for project of id: ' . $application->getProjectId());
-      $application->delete();
+      if ($applicationIds) {
+        $applications = Application::loadMultiple($applicationIds);
+        /** @var \Drupal\asu_application\Entity\Application $application */
+        foreach ($applications as $application) {
+          \Drupal::logger('asu_application')->info('Deleted draft application for project of id: ' . $application->getProjectId());
+          $application->delete();
+        }
+      }
     }
   }
   catch (\Exception $e) {
     \Drupal::logger('asu_application_cron')->critical('Unable to perform application cron operation: ' . $e->getMessage());
+  }
+
+  try {
+    \Drupal::service('asu_application.offer_reminder')->processDueReminders();
+  }
+  catch (\Exception $e) {
+    \Drupal::logger('asu_application_cron')->critical(
+      'Unable to process offer reminders: ' . $e->getMessage()
+    );
+  }
+
+  try {
+    \Drupal::service('asu_application.offer_message')->processDueMessages();
+  }
+  catch (\Exception $e) {
+    \Drupal::logger('asu_application_cron')->critical(
+      'Unable to process offer messages: ' . $e->getMessage()
+    );
   }
 
 }
@@ -365,6 +485,38 @@ function asu_application_mail(string $key, array &$message, array $params) {
       elseif (!empty($params['message'])) {
         $message['body'][] = $params['message'];
       }
+      break;
+
+    case 'offer_accepted_notification':
+    case 'offer_rejected_notification':
+    case 'offer_reminder_notification':
+      $message['from'] = \Drupal::config('system.site')->get('mail');
+      $message['headers']['Content-Type'] = 'text/plain; charset=UTF-8';
+      $message['subject'] = OfferMailTestLabel::prefixSubject(
+        $params['subject'] ?? ''
+      );
+      $build = [
+        '#theme' => 'asu_application_offer_notification_mail',
+        '#project_name' => $params['project_name'] ?? '',
+        '#apartment_number' => $params['apartment_number'] ?? '',
+        '#customer_name' => $params['customer_name'] ?? '',
+        '#customer_email' => $params['customer_email'] ?? '',
+        '#valid_until' => $params['valid_until'] ?? '',
+        '#action' => $params['action'] ?? '',
+      ];
+      $body = (string) \Drupal::service('renderer')->renderPlain($build);
+      $message['body'][] = OfferMailTestLabel::prefixBody($body);
+      break;
+
+    case 'offer_created_notification':
+      $message['from'] = \Drupal::config('system.site')->get('mail');
+      $message['headers']['Content-Type'] = 'text/plain; charset=UTF-8';
+      $message['subject'] = OfferMailTestLabel::prefixSubject(
+        $params['subject'] ?? ''
+      );
+      $message['body'][] = OfferMailTestLabel::prefixBody(
+        (string) ($params['body'] ?? '')
+      );
       break;
   }
 }
@@ -407,9 +559,11 @@ function asu_application_preprocess_asu_application(array &$variables) {
 function asu_application_preprocess_views_view(&$variables) {
   if ($variables['view']->id() == 'applications') {
     $variables['#attached']['library'][] = 'asu_application/application_submit';
+    $variables['#attached']['library'][] = 'asuntotuotanto/application-apartment-listing';
     $variables['#attached']['drupalSettings']['asuApplication']['hasExistingApplication'] = TRUE;
-    // Keep application-row unread badges in sync with user read state.
+    $variables['#attached']['drupalSettings']['asuApplicationOffer'] = _asu_application_get_offer_drupal_settings();
     $variables['view']->element['#cache']['contexts'][] = 'user';
+    $variables['view']->element['#cache']['contexts'][] = 'languages:language_interface';
     $variables['view']->element['#cache']['max-age'] = 0;
 
     $current_user = \Drupal::currentUser();

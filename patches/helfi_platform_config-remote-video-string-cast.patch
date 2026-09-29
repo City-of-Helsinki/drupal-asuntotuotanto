@@ -1,0 +1,14 @@
+diff --git a/modules/helfi_media_remote_video/src/Hook/RemoteVideoHooks.php b/modules/helfi_media_remote_video/src/Hook/RemoteVideoHooks.php
+--- a/modules/helfi_media_remote_video/src/Hook/RemoteVideoHooks.php
++++ b/modules/helfi_media_remote_video/src/Hook/RemoteVideoHooks.php
+@@ -21,5 +21,9 @@ class RemoteVideoHooks {
+   #[Hook('preprocess_media_oembed_iframe')]
+   public static function preprocessMediaOembedIframe(array &$variables): void {
+-    $iframe = $variables['media']->__toString();
++    $iframe = (string) ($variables['media'] ?? '');
++
++    if ($iframe === '') {
++      return;
++    }
+ 
+     // Add scrolling="no" attribute to the inner iframe.

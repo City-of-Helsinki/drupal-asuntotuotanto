@@ -5,7 +5,7 @@
              $condition->setValue((bool) $condition->getValue());
            }
 -
--          $index_field_name = $field->getPropertyPath();
+-          $index_field_name = $field->getFieldIdentifier();
 -          // Use the property path if available.
 -          if (!empty($index_field_name)) {
 -            // Converting colon notation to Elasticsearch's dot notation.

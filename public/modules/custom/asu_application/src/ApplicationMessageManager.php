@@ -149,7 +149,7 @@ final class ApplicationMessageManager {
       ];
     }
 
-    $schema = \Drupal::database()->schema();
+    $schema = $this->database->schema();
     if (!$schema->tableExists('asu_application_co_applicant_map')) {
       return $this->uniqueRecipientsByEmail($recipients);
     }
@@ -160,7 +160,7 @@ final class ApplicationMessageManager {
     }
 
     $hasCoApplicantEmailColumn = $schema->fieldExists('asu_application_co_applicant_map', 'co_applicant_email');
-    $mapQuery = \Drupal::database()
+    $mapQuery = $this->database
       ->select('asu_application_co_applicant_map', 'm')
       ->fields('m', ['co_applicant_saml_hash']);
 

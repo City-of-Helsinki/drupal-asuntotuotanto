@@ -1,0 +1,27 @@
+diff --git a/user_bundle.install b/user_bundle.install
+index 8f3c2a1..9a4d5e6 100644
+--- a/user_bundle.install
++++ b/user_bundle.install
+@@ -44,7 +44,9 @@ function user_bundle_install() {
+   // Add a new "Type" column and filter into the admin/people view.
+   $module_handler = \Drupal::service('module_handler');
+   if ($module_handler->moduleExists('views')
+-    && ($view = \Drupal::configFactory()->getEditable('views.view.user_admin_people'))) {
++    && \Drupal::service('config.storage')->exists('views.view.user_admin_people')
++    && ($view = \Drupal::configFactory()->getEditable('views.view.user_admin_people'))
++    && !$view->isNew()) {
+     $base = $module_handler->getModule('user_bundle')->getPath() . '/install';
+ 
+     // Add "Type" field to view, as the third field.
+@@ -75,7 +77,10 @@ function user_bundle_install() {
+  */
+ function user_bundle_uninstall() {
+   // Remove "Type" column and filter from the admin/people view.
+-  if (\Drupal::service('module_handler')->moduleExists('views') && ($view = \Drupal::configFactory()->getEditable('views.view.user_admin_people'))) {
++  if (\Drupal::service('module_handler')->moduleExists('views')
++    && \Drupal::service('config.storage')->exists('views.view.user_admin_people')
++    && ($view = \Drupal::configFactory()->getEditable('views.view.user_admin_people'))
++    && !$view->isNew()) {
+     $properties = [
+       'display.default.display_options.fields',
+       'display.default.display_options.style.options.columns',

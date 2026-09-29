@@ -7,6 +7,7 @@ namespace Drupal\asu_user\Controller;
  * Contains \Drupal\asu_user\Controller\AuthController.
  */
 
+use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Path\PathValidatorInterface;
@@ -141,7 +142,15 @@ class AuthController extends SamlController {
     $function = function () use ($force_auth) {
       global $base_url;
       $config = $this->configFactory->get('samlauth.authentication');
-      $return_to = $config->get('login_redirect_url') ?? $base_url . '/user';
+      $destination = $this->requestStack->getCurrentRequest()->query->get('destination');
+      if (is_string($destination) && $destination !== '' && !UrlHelper::isExternal($destination)) {
+        $return_to = str_starts_with($destination, '/')
+          ? $base_url . $destination
+          : $base_url . '/' . $destination;
+      }
+      else {
+        $return_to = $config->get('login_redirect_url') ?: ($base_url . '/user');
+      }
 
       return $this->saml->login($return_to, [], $force_auth);
     };

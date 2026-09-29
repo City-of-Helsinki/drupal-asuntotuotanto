@@ -111,6 +111,9 @@ foreach ($routes as $route) {
 
 $settings['config_sync_directory'] = '../conf/cmi';
 $settings['file_public_path'] = getenv('DRUPAL_FILES_PUBLIC') ?: 'sites/default/files';
+if ($asuntotuotanto_url = getenv('ASU_ASUNTOTUOTANTO_URL')) {
+  $settings['file_public_base_url'] = rtrim($asuntotuotanto_url, '/') . '/' . trim($settings['file_public_path'], '/');
+}
 $settings['file_private_path'] = getenv('DRUPAL_FILES_PRIVATE') ?: 'sites/default/files/private';
 $settings['file_temp_path'] = getenv('DRUPAL_TMP_PATH') ?: '/tmp';
 
@@ -409,6 +412,20 @@ if ($env = getenv('APP_ENV')) {
 
   $settings['ASU_DJANGO_BACKEND_URL'] = getenv('ASU_DJANGO_BACKEND_URL');
 
+  // Mirror Django ALLOW_APPLICATIONS_TO_SOLD_APARTMENTS (default block; allow in dev/test).
+  $allow_applications_to_sold_apartments = FALSE;
+  if (($env_allow = getenv('ALLOW_APPLICATIONS_TO_SOLD_APARTMENTS')) !== FALSE) {
+    $allow_applications_to_sold_apartments = filter_var(
+      $env_allow,
+      FILTER_VALIDATE_BOOL,
+      FILTER_NULL_ON_FAILURE
+    ) ?? FALSE;
+  }
+  elseif (in_array($env, ['dev', 'local', 'development', 'testing', 'test', 'ci'], TRUE)) {
+    $allow_applications_to_sold_apartments = TRUE;
+  }
+  $settings['allow_applications_to_sold_apartments'] = $allow_applications_to_sold_apartments;
+
   // Supported values: https://github.com/Seldaek/monolog/blob/main/doc/01-usage.md#log-levels.
   $default_log_level = getenv('APP_ENV') === 'production' ? 'info' : 'debug';
   $settings['helfi_api_base.log_level'] = getenv('LOG_LEVEL') ?: $default_log_level;
@@ -416,6 +433,13 @@ if ($env = getenv('APP_ENV')) {
   if ($env === 'dev') {
     $orbstack = str_contains(php_uname('r'), 'orbstack');
     $config['search_api.server.asuntotuotanto']['backend_config']['connector_config']['url'] = $orbstack ? 'http://elastic.asuntotuotanto.orb.local' : 'http://elastic:9200';
+
+    // In local development, do not send outbound emails. Collect them to state
+    // so they can be inspected from the console (e.g. via drush).
+    $config['mailsystem.settings']['defaults']['sender'] = 'test_mail_collector';
+    $config['mailsystem.settings']['defaults']['formatter'] = 'test_mail_collector';
+    $config['mailsystem.settings']['modules']['symfony_mailer_lite']['none']['formatter'] = 'test_mail_collector';
+    $config['mailsystem.settings']['modules']['symfony_mailer_lite']['none']['sender'] = 'test_mail_collector';
 
     if ($orbstack) {
       // Mailer settings.

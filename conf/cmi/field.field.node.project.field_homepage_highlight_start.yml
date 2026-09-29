@@ -1,0 +1,21 @@
+uuid: 903550e6-b1f5-4501-833c-e847f7c2a0f0
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_homepage_highlight_start
+    - node.type.project
+  module:
+    - datetime
+id: node.project.field_homepage_highlight_start
+field_name: field_homepage_highlight_start
+entity_type: node
+bundle: project
+label: 'Homepage highlight starts'
+description: 'When this project highlight starts showing on the homepage.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: datetime

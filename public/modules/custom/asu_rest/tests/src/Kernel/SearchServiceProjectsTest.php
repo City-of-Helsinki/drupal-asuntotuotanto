@@ -48,6 +48,43 @@ final class SearchServiceProjectsTest extends SearchServiceKernelTestBase {
   }
 
   /**
+   * Tests that archived projects are excluded when no filters are applied.
+   */
+  public function testSearchProjectsExcludesArchivedProjectsByDefault(): void {
+    $activeProject = $this->createProject('Active Project', FALSE);
+    $this->createProject('Archived Project', TRUE);
+
+    $result = $this->searchService->searchProjects([], 0, 1000);
+
+    $this->assertSame(1, $result['total']);
+    $this->assertCount(1, $result['items']);
+
+    $this->assertSame($activeProject->uuid(), $result['items'][0]->uuid());
+  }
+
+  /**
+   * Tests that include_archived=true includes archived projects.
+   */
+  public function testSearchProjectsIncludesArchivedProjectsWhenRequested(): void {
+    $activeProject = $this->createProject('Active Project', FALSE);
+    $archivedProject = $this->createProject('Archived Project', TRUE);
+
+    $result = $this->searchService->searchProjects(['include_archived' => 'true'], 0, 1000);
+
+    $this->assertSame(2, $result['total']);
+    $this->assertCount(2, $result['items']);
+
+    $expectedUuids = [$activeProject->uuid(), $archivedProject->uuid()];
+    $actualUuids = array_map(
+      static fn (Node $project) => $project->uuid(),
+      $result['items']
+    );
+    sort($expectedUuids);
+    sort($actualUuids);
+    $this->assertSame($expectedUuids, $actualUuids);
+  }
+
+  /**
    * Tests that searchProjects filters results by project UUID.
    */
   public function testSearchProjectsFiltersByProjectUuid(): void {
@@ -88,22 +125,19 @@ final class SearchServiceProjectsTest extends SearchServiceKernelTestBase {
    *
    * @param string $title
    *   The project title.
+   * @param bool $archived
+   *   Whether the project should be archived.
    *
    * @return \Drupal\node\Entity\Node
    *   The created project node.
    */
-  private function createProject(string $title): Node {
-    $project = Node::create([
-      'type' => 'project',
-      'title' => $title,
-      'status' => 1,
-      'field_archived' => 0,
+  private function createProject(string $title, bool $archived = FALSE): Node {
+    return $this->createContentNode('project', $title, [
+      'field_archived' => $archived ? 1 : 0,
       'field_state_of_sale' => [
         ['target_id' => 'sold'],
       ],
     ]);
-    $project->save();
-    return $project;
   }
 
 }

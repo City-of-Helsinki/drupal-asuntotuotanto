@@ -9,6 +9,7 @@ use Drupal\Core\Url;
 use Drupal\Core\Site\Settings;
 use Drupal\file\Entity\File;
 use Drupal\file\IconMimeTypes;
+use Drupal\node\NodeInterface;
 use Drupal\paragraphs\Entity\Paragraph;
 use Drupal\Core\StringTranslation\ByteSizeMarkup;
 use Drupal\taxonomy\Entity\Term;
@@ -101,6 +102,19 @@ function asuntotuotanto_preprocess(&$variables) {
 }
 
 /**
+ * Implements hook_preprocess_HOOK().
+ */
+function asuntotuotanto_preprocess_form(array &$variables): void {
+  if (($variables['element']['#form_id'] ?? '') !== 'user_login_form') {
+    return;
+  }
+  $destination = \Drupal::request()->query->get('destination');
+  $variables['login_destination'] = is_string($destination) && $destination !== ''
+    ? $destination
+    : NULL;
+}
+
+/**
  * Implements hook_theme_suggestions_alter().
  *
  * {@inheritdoc}
@@ -167,6 +181,40 @@ function asuntotuotanto_preprocess_page(array &$variables) : void {
  */
 function asuntotuotanto_preprocess_menu(&$variables) {
   $menu_name = $variables['menu_name'];
+
+  if ($menu_name === 'footer-secondary') {
+    $default_privacy_url = 'https://www.hel.fi/fi/paatoksenteko-ja-hallinto/tietoa-helsingista/tietosuoja-ja-tiedonhallinta/tietosuoja';
+    $hitas_privacy_url = 'https://www.hel.fi/static/liitteet-2019/Kaupunginkanslia/Rekisteriselosteet/Kymp/Helsingin%20kaupungin%20Asuntotuotannon%20Hitas-asuntojen%20hakemisen%20tietosuojaseloste.pdf';
+    $haso_privacy_url = 'https://www.hel.fi/static/liitteet-2019/Kaupunginkanslia/Rekisteriselosteet/Kymp/Helsingin%20kaupungin%20Asuntotuotannon%20asumisoikeusasuntojen%20hakemisen%20tietosuojaseloste.pdf';
+
+    $current_path = strtolower(
+      \Drupal::service('path.current')->getPath()
+    );
+
+    $target_privacy_url = $default_privacy_url;
+    if (str_contains($current_path, '/hitas')) {
+      $target_privacy_url = $hitas_privacy_url;
+    }
+    elseif (str_contains($current_path, '/haso')) {
+      $target_privacy_url = $haso_privacy_url;
+    }
+
+    foreach ($variables['items'] as $key => $item) {
+      if (empty($item['url']) || !$item['url'] instanceof Url || !$item['url']->isExternal()) {
+        continue;
+      }
+
+      $item_url = rtrim($item['url']->toString(), '/');
+      $normalized_default_url = rtrim($default_privacy_url, '/');
+
+      if ($item_url === $normalized_default_url) {
+        $variables['items'][$key]['url'] = Url::fromUri($target_privacy_url);
+      }
+    }
+
+    // Ensure different sections (hitas/haso/other) get their own cached menu.
+    $variables['#cache']['contexts'][] = 'url.path';
+  }
 
   switch ($menu_name) {
     case 'main':
@@ -364,7 +412,8 @@ function asuntotuotanto_preprocess_views_view_table(&$variables) {
       $variables['rows'][$key]['reserved_or_sold'] = $reserved_or_sold;
       $variables['rows'][$key]['application_url'] = $project->getApplicationUrl(
         $apartment->field_apartment_number->value ?? NULL,
-        $apartment->field_apartment_state_of_sale->target_id ?? NULL
+        $apartment->field_apartment_state_of_sale->target_id ?? NULL,
+        (int) $apartment->id()
       );
       $variables['rows'][$key]['application_url_title'] = $apartment->getApplicationUrlTitle();
       $variables['rows'][$key]['is_free'] = $apartment->isFree();
@@ -1017,6 +1066,130 @@ function asuntotuotanto_preprocess_paragraph(array &$variables) {
     $variables['street_name'] = $street_name ?? NULL;
     $variables['street_number'] = $street_number ?? NULL;
   }
+
+  if ($paragraph_type == 'latest_news') {
+    $parent_entity = $paragraph->getParentEntity();
+
+    if ($parent_entity instanceof NodeInterface && $parent_entity->bundle() === 'landing_page') {
+      $highlight_projects = asuntotuotanto_get_homepage_highlight_projects(4);
+      $variables['homepage_highlight_projects'] = $highlight_projects;
+
+      $variables['#cache']['tags'][] = 'node_list:project';
+      $variables['#cache']['contexts'][] = 'url.path';
+      $variables['#cache']['max-age'] = 300;
+
+      foreach ($highlight_projects as $highlight_project) {
+        if (!empty($highlight_project['cache_tags']) && is_array($highlight_project['cache_tags'])) {
+          $variables['#cache']['tags'] = array_merge($variables['#cache']['tags'], $highlight_project['cache_tags']);
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Builds project cards for homepage highlights.
+ */
+function asuntotuotanto_get_homepage_highlight_projects(int $limit = 4): array {
+  $query = \Drupal::entityQuery('node')
+    ->accessCheck(TRUE)
+    ->condition('type', 'project')
+    ->condition('status', 1);
+
+  $now = gmdate('Y-m-d\\TH:i:s');
+
+  $start_group = $query->orConditionGroup()
+    ->notExists('field_homepage_highlight_start')
+    ->condition('field_homepage_highlight_start', $now, '<=');
+  $end_group = $query->orConditionGroup()
+    ->notExists('field_homepage_highlight_end')
+    ->condition('field_homepage_highlight_end', $now, '>=');
+
+  $query->condition($start_group);
+  $query->condition($end_group);
+  $query->exists('field_homepage_highlight_text');
+  $query->sort('field_homepage_highlight_start', 'DESC');
+  $query->sort('changed', 'DESC');
+  $query->range(0, 20);
+
+  $node_storage = \Drupal::entityTypeManager()->getStorage('node');
+  $file_url_generator = \Drupal::service('file_url_generator');
+
+  $highlight_projects = [];
+  $project_ids = $query->execute();
+  if (empty($project_ids)) {
+    return $highlight_projects;
+  }
+
+  /** @var \Drupal\node\NodeInterface[] $projects */
+  $projects = $node_storage->loadMultiple($project_ids);
+  foreach ($projects as $project) {
+    if (count($highlight_projects) >= $limit) {
+      break;
+    }
+
+    if ($project->hasField('field_archived') && (int) $project->get('field_archived')->value === 1) {
+      continue;
+    }
+
+    if (!$project->hasField('field_homepage_highlight_text')) {
+      continue;
+    }
+
+    $highlight_text = trim(strip_tags((string) $project->get('field_homepage_highlight_text')->value));
+    if ($highlight_text === '') {
+      continue;
+    }
+
+    $image_file = NULL;
+    if ($project->hasField('field_homepage_highlight_image') && !$project->get('field_homepage_highlight_image')->isEmpty()) {
+      $image_file = $project->get('field_homepage_highlight_image')->entity;
+    }
+    elseif ($project->hasField('field_main_image') && !$project->get('field_main_image')->isEmpty()) {
+      $image_file = $project->get('field_main_image')->entity;
+    }
+
+    if (!$image_file instanceof File) {
+      continue;
+    }
+
+    $type_label = '';
+    $type_class = 'hitas';
+    if ($project->hasField('field_ownership_type') && !$project->get('field_ownership_type')->isEmpty()) {
+      $type_label = (string) $project->get('field_ownership_type')->entity?->label();
+      $normalized_type = mb_strtolower(trim($type_label));
+      if ($normalized_type === 'haso') {
+        $type_class = 'haso';
+      }
+      elseif ($normalized_type === 'puolihitas') {
+        $type_class = 'puolihitas';
+      }
+    }
+
+    $address_parts = [];
+    if ($project->hasField('field_street_address') && !$project->get('field_street_address')->isEmpty()) {
+      $address_parts[] = trim((string) $project->get('field_street_address')->value);
+    }
+    if ($project->hasField('field_city') && !$project->get('field_city')->isEmpty()) {
+      $address_parts[] = trim((string) $project->get('field_city')->value);
+    }
+    $address = implode(', ', array_filter($address_parts));
+
+    $highlight_projects[] = [
+      'title' => $project->label(),
+      'url' => $project->toUrl()->toString(),
+      'image_url' => $file_url_generator->generateString($image_file->getFileUri()),
+      'image_uri' => $image_file->getFileUri(),
+      'image_alt' => $project->label(),
+      'text' => $highlight_text,
+      'type_label' => $type_label,
+      'type_class' => $type_class,
+      'address' => $address,
+      'cache_tags' => $project->getCacheTags(),
+    ];
+  }
+
+  return $highlight_projects;
 }
 
 /**
@@ -1164,9 +1337,70 @@ function get_project_apartment_teaser_values($project_id) {
  * Add fullscreen functionality to slick.
  */
 function asuntotuotanto_preprocess_blazy(&$variables) {
-  // dd($variables);
-  $variables['image']['#attributes']['data-image'] = \Drupal::service('file_url_generator')->generateAbsoluteString($variables['image']['#uri']);
-  $variables['#attached']['library'][] = 'asuntotuotanto/intense-images';
+  // Match the effective project showcase image ratio to prevent the default
+  // browser iframe strip height when Blazy sets width: 100%.
+  $showcase_ratio_style = 'display:block;width:100%;height:auto;min-height:330px;aspect-ratio:1024/445;';
+  $oembed_width = 1024;
+  $oembed_height = 445;
+  $uri = $variables['image']['#uri'] ?? NULL;
+
+  // Remote videos do not provide image URI here.
+  if (is_string($uri) && $uri !== '') {
+    $variables['image']['#attributes']['data-image'] = \Drupal::service('file_url_generator')->generateAbsoluteString($uri);
+    $variables['#attached']['library'][] = 'asuntotuotanto/intense-images';
+    return;
+  }
+
+  // Keep Blazy video iframe dimensions stable in Slick slides.
+  if (!isset($variables['iframe'])) {
+    return;
+  }
+
+  if (is_array($variables['iframe']) && isset($variables['iframe']['#attributes'])) {
+    $attributes = &$variables['iframe']['#attributes'];
+
+    if (is_array($attributes)) {
+      $attributes['width'] = (string) $oembed_width;
+      $attributes['height'] = (string) $oembed_height;
+
+      $existing_style = is_string($attributes['style'] ?? NULL) ? trim($attributes['style']) : '';
+      $attributes['style'] = $existing_style === ''
+        ? $showcase_ratio_style
+        : rtrim($existing_style, ';') . ';' . $showcase_ratio_style;
+    }
+    return;
+  }
+
+  if (is_string($variables['iframe']) && $variables['iframe'] !== '') {
+    $iframe = $variables['iframe'];
+
+    if (!str_contains($iframe, ' width=')) {
+      $iframe = preg_replace('/<iframe\\b/', '<iframe width="' . $oembed_width . '"', $iframe, 1) ?: $iframe;
+    }
+
+    if (!str_contains($iframe, ' height=')) {
+      $iframe = preg_replace('/<iframe\\b/', '<iframe height="' . $oembed_height . '"', $iframe, 1) ?: $iframe;
+    }
+
+    if (!str_contains($iframe, ' style=')) {
+      $iframe = preg_replace('/<iframe\\b/', '<iframe style="' . $showcase_ratio_style . '"', $iframe, 1) ?: $iframe;
+    }
+    else {
+      $iframe = preg_replace_callback('/<iframe\\b([^>]*)>/', static function (array $matches) use ($showcase_ratio_style): string {
+        $attributes = $matches[1];
+        if (!preg_match('/style="([^"]*)"/', $attributes, $style_match)) {
+          return '<iframe' . $attributes . '>';
+        }
+
+        $merged_style = rtrim($style_match[1], ';') . ';' . $showcase_ratio_style;
+        $attributes = str_replace($style_match[0], 'style="' . $merged_style . '"', $attributes);
+
+        return '<iframe' . $attributes . '>';
+      }, $iframe, 1) ?: $iframe;
+    }
+
+    $variables['iframe'] = $iframe;
+  }
 }
 
 /**

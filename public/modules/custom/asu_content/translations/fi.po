@@ -25163,7 +25163,7 @@ msgid "Archived"
 msgstr ""
 msgctxt "Workflow state label"
 msgid "Draft"
-msgstr ""
+msgstr "Luonnos"
 msgctxt "Workflow state label"
 msgid "Published"
 msgstr ""
@@ -40591,7 +40591,11 @@ msgid "I have underage children who are moving in with me"
 msgstr "Yksi tai useampi alaikäinen lapsi muuttaa kanssani."
 
 msgid "Application for"
-msgstr ""
+msgstr "Hakemus kohteeseen"
+
+msgid "Application for @project"
+msgstr "Hakemus kohteeseen @project"
+
 msgid "Select apartment"
 msgstr "Valitse huoneisto"
 
@@ -40632,6 +40636,9 @@ msgstr ""
 
 msgid "Edit application"
 msgstr "Muokkaa hakemusta"
+
+msgid "View the application"
+msgstr "Näytä hakemus"
 
 msgid "The application has been submitted successfully."
 msgstr "Hakemuksesi on lähetetty onnistuneesti."
@@ -43489,6 +43496,9 @@ msgstr "Helsingin kaupungin logo"
 msgid "You already have an offer or have been sold an apartment in this project and cannot submit a new application."
 msgstr "Sinulla on jo myyty tai tarjottu asunto tässä kohteessa etkä siksi voi tehdä uutta hakemusta."
 
+msgid "You cannot apply for an apartment that has already been sold."
+msgstr "Et voi hakea asuntoa, joka on jo myyty."
+
 msgid "Status"
 msgstr "Tila"
 
@@ -43562,7 +43572,79 @@ msgid "Offer status"
 msgstr "Tarjouksen tila"
 
 msgid "Offer valid until"
-msgstr "Tarjous voimassa asti"
+msgstr "Viimeinen voimassaolopäivä"
+
+msgid "Offers"
+msgstr "Tarjoukset"
+
+msgid "No offers"
+msgstr "Ei tarjouksia"
+
+msgid "You will see your offers here"
+msgstr "Näet tarjouksesi täällä"
+
+msgid "Show offer details"
+msgstr "Näytä tarjouksen tiedot"
+
+msgid "Hide offer details"
+msgstr "Piilota tarjouksen tiedot"
+
+msgid "Loading offer details…"
+msgstr "Ladataan tarjouksen tietoja…"
+
+msgid "Could not load offer details."
+msgstr "Tarjouksen tietoja ei voitu ladata."
+
+msgid "Project material bank"
+msgstr "Kohteen materiaalipankki"
+
+msgid "Apartment page"
+msgstr "Asunnon sivu"
+
+msgid "Offer expired"
+msgstr "Tarjous vanhentunut"
+
+msgid "Actions"
+msgstr "Toiminnot"
+
+msgid "Apartment type"
+msgstr "Huoneistotyyppi"
+
+msgid "Living area"
+msgstr "Pinta-ala"
+
+msgid "Floor"
+msgstr "Kerros"
+
+msgid "Sales price"
+msgstr "Myyntihinta"
+
+msgid "Debt-free price"
+msgstr "Velaton hinta"
+
+msgid "Estimated maintenance fee"
+msgstr "Alustava vastike"
+
+msgid "Family with children"
+msgstr "Lapsiperhe"
+
+msgid "Estimated right of occupancy payment"
+msgstr "Alustava asumisoikeusmaksu"
+
+msgid "Estimated right of occupancy fee"
+msgstr "Alustava käyttövastike"
+
+msgid "Deposit"
+msgstr "Käyttövakuus"
+
+msgid "Right of residence number"
+msgstr "Asumisoikeusnumero"
+
+msgid "Over 55"
+msgstr "Yli 55v"
+
+msgid "Switching right of occupancy home"
+msgstr "Asumisoikeusasunnon vaihtaja"
 
 msgid "Cancellation"
 msgstr "Peruutus"
@@ -43656,3 +43738,84 @@ msgstr "Muu asunto tarjottu samassa kohteessa"
 
 msgid "Offer rejected"
 msgstr "Tarjous hylätty"
+
+msgid "Accept offer"
+msgstr "Hyväksy tarjous"
+
+msgid "Reject offer"
+msgstr "Hylkää tarjous"
+
+msgid "Are you sure you want to accept this offer?"
+msgstr "Haluatko varmasti hyväksyä tämän tarjouksen?"
+
+msgid "Are you sure you want to reject this offer?"
+msgstr "Haluatko varmasti hylätä tämän tarjouksen?"
+
+msgid "Actions"
+msgstr "Toiminnot"
+
+msgid "Customer accepted apartment offer"
+msgstr "Asiakas hyväksyi asuntotarjouksen"
+
+msgid "Customer rejected apartment offer"
+msgstr "Asiakas hylkäsi asuntotarjouksen"
+
+msgid "Reminder: apartment offer awaiting customer response"
+msgstr "Muistutus: asiakas ei ole vielä vastannut asuntotarjoukseen"
+
+msgid "A customer has accepted an apartment offer."
+msgstr "Asiakas on hyväksynyt asuntotarjouksen."
+
+msgid "A customer has rejected an apartment offer."
+msgstr "Asiakas on hylännyt asuntotarjouksen."
+
+msgid "A customer has not yet responded to an apartment offer before the deadline."
+msgstr "Asiakas ei ole vielä vastannut asuntotarjoukseen ennen määräaikaa."
+
+msgid "Project"
+msgstr "Kohde"
+
+msgid "Apartment"
+msgstr "Asunto"
+
+msgid "Customer"
+msgstr "Asiakas"
+
+msgid "offer accepted"
+msgstr "Tarjous hyväksytty"
+
+msgid "Unknown project"
+msgstr "Tuntematon kohde"
+
+msgid "Already sent"
+msgstr "Jo lähetetty"
+
+msgid "User applications for active projects"
+msgstr "Käyttäjän hakemukset aktiivisiin kohteisiin"
+
+msgid "User has no applications for active projects."
+msgstr "Käyttäjällä ei ole hakemuksia aktiivisiin kohteisiin."
+
+msgid "Failed to fetch projects"
+msgstr "Kohteiden hakeminen epäonnistui"
+
+msgid "Select project"
+msgstr "Valitse kohde"
+
+msgid "(after-application)"
+msgstr "(jälkihakemus)"
+
+msgid "User or project was not selected"
+msgstr "Käyttäjää tai kohdetta ei valittu"
+
+msgid "Apartment to reserve"
+msgstr "Varattava huoneisto"
+
+msgid "You can reserve one apartment. Remove the selected apartment to choose another one."
+msgstr "Voit varata yhden huoneiston. Poista valittu huoneisto valitaksesi toisen."
+
+msgid "Selected apartment"
+msgstr "Valittu huoneisto"
+
+msgid "Make a reservation for @project"
+msgstr "Tee varaus kohteeseen @project"

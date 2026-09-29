@@ -294,9 +294,6 @@ final class SearchService {
       $query->condition('nid', $restrictApartmentIds, 'IN');
     }
 
-    $query->condition('field_apartment_state_of_sale', 'sold', '<>');
-    $query->exists('field_apartment_state_of_sale');
-
     $projectOwnershipTypes = $this->normalizeArrayParam($params['project_ownership_type'] ?? NULL, TRUE);
     $propertyOptions = $this->resolvePropertyOptions($params);
     $this->addApartmentPropertyConditions($query, $propertyOptions);
@@ -370,7 +367,7 @@ final class SearchService {
   /**
    * Get project IDs matching all project-level filters for apartment search.
    *
-   * Applies archived=0 and state-of-sale (exclude upcoming by default).
+   * Applies state-of-sale filtering (exclude upcoming by default).
    * Returns IDs to restrict apartments to matching projects.
    *
    * @return int[]
@@ -380,7 +377,9 @@ final class SearchService {
     $storage = $this->entityTypeManager->getStorage('node');
     $query = $storage->getQuery()->accessCheck(TRUE);
     $query->condition('type', 'project');
-    $query->condition('field_archived', 0);
+    if (!$this->shouldIncludeArchived($params)) {
+      $query->condition('field_archived', 0);
+    }
     $query->exists('field_apartments');
 
     $projectStatesOfSale = $this->normalizeArrayParam($params['project_state_of_sale'] ?? NULL, TRUE);
@@ -522,6 +521,10 @@ final class SearchService {
       ->accessCheck(TRUE)
       ->condition('type', 'project');
 
+    if (!$this->shouldIncludeArchived($params)) {
+      $query->condition('field_archived', 0);
+    }
+
     $projectUuids = $this->normalizeArrayParam(
       $this->getParam($params, 'project_uuid'),
       TRUE
@@ -529,8 +532,6 @@ final class SearchService {
     if ($projectUuids) {
       $query->condition('uuid', $projectUuids, 'IN');
     }
-
-    $query->condition('field_archived', 0);
 
     $projectStatesOfSale = $this->normalizeArrayParam(
       $this->getParam($params, 'project_state_of_sale'),
@@ -776,6 +777,13 @@ final class SearchService {
       return NULL;
     }
     return filter_var($value, FILTER_VALIDATE_BOOL, FILTER_NULL_ON_FAILURE);
+  }
+
+  /**
+   * Whether archived projects should be included in API results.
+   */
+  private function shouldIncludeArchived(array $params): bool {
+    return $this->normalizeBooleanParam($this->getParam($params, 'include_archived')) === TRUE;
   }
 
   /**

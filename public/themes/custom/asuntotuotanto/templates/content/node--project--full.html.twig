@@ -96,7 +96,8 @@
   'project'
 ]
 %}
-{% set images = content.field_images %}
+{% set gallery_media = content.field_project_gallery_media %}
+{% set legacy_images = content.field_images %}
 {% set district = content.field_district.0 %}
 {% set street_address = content.field_street_address.0['#context']['value'] %}
 {% set postal_code = content.field_postal_code.0['#context']['value'] %}
@@ -178,16 +179,21 @@
   </div>
 
   <div class="project__images wrapper wrapper--mw-1264 showcase-gallery" id="showcase_gallery">
+    {% set gallery_markup = gallery_media|render %}
+    {% if gallery_markup|trim is empty %}
+      {% set gallery_markup = legacy_images|render %}
+    {% endif %}
+
     <span class="showcase-gallery__label">
       {% trans %}
         Click on image for fullscreen
       {% endtrans %}
     </span>
-    {% if not images|render %}
+    {% if gallery_markup|trim is empty %}
       <div class="project__images--missing"></div>
     {% endif %}
-    {% if images|render %}
-      {{ images }}
+    {% if gallery_markup|trim is not empty %}
+      {{ gallery_markup|raw }}
     {% endif %}
   </div>
 

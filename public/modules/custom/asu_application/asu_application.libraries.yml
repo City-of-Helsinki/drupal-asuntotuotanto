@@ -26,3 +26,14 @@ message_badges:
   css:
     component:
       assets/css/message-badges.css: {}
+
+application_payments:
+  version: 1.x
+  js:
+    assets/js/application-payments.js: {}
+  css:
+    component:
+      assets/css/application-submit.css: {}
+  dependencies:
+    - core/jquery
+    - core/drupal

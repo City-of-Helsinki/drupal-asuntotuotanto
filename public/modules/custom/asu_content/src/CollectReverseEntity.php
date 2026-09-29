@@ -137,29 +137,40 @@ class CollectReverseEntity {
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
   protected function getReferrers($referring_entity, $field_name, array $bundles = [NULL]) {
-    $ids = &drupal_static(__FUNCTION__);
+    // Cache by referred entity (apartment), not by referrer (project). Caching
+    // by project id previously accumulated duplicate project entries while
+    // Search API indexed apartments in the same request.
+    $cache = &drupal_static(__FUNCTION__, []);
+    $cache_key = $referring_entity . ':' . $field_name . ':' . $this->currentEntity->id();
+    if (isset($cache[$cache_key])) {
+      return $cache[$cache_key];
+    }
+
     $referring_entities = [];
+    $seen_referrer_ids = [];
     $referring_entity_storage = $this->entityTypeManager->getStorage($referring_entity);
+    $node_storage = $this->entityTypeManager->getStorage('node');
 
     foreach ($bundles as $referring_bundle) {
       $result = $this->doGetReferrers($referring_entity_storage, $field_name, $referring_bundle);
-      $id = reset($result);
-      if (isset($ids[$id])) {
-        $referring_entities = $ids[$id];
+      if (!$result) {
+        continue;
       }
-      if ($result) {
-        foreach ($result as $referrer_id) {
-          $node_storage = $this->entityTypeManager->getStorage('node');
-          $referring_entities[] = [
-            'referring_entity_type' => $referring_entity,
-            'field_name' => $field_name,
-            'referring_entity_id' => $referrer_id,
-            'referring_entity' => $node_storage->load($referrer_id),
-          ];
-          $ids[$referrer_id] = $referring_entities;
+      foreach ($result as $referrer_id) {
+        if (isset($seen_referrer_ids[$referrer_id])) {
+          continue;
         }
+        $seen_referrer_ids[$referrer_id] = TRUE;
+        $referring_entities[] = [
+          'referring_entity_type' => $referring_entity,
+          'field_name' => $field_name,
+          'referring_entity_id' => $referrer_id,
+          'referring_entity' => $node_storage->load($referrer_id),
+        ];
       }
     }
+
+    $cache[$cache_key] = $referring_entities;
     return $referring_entities;
   }
 

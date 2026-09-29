@@ -55,6 +55,10 @@ dependencies:
     - field.field.node.project.field_has_elevator
     - field.field.node.project.field_has_sauna
     - field.field.node.project.field_heating_options
+    - field.field.node.project.field_homepage_highlight_end
+    - field.field.node.project.field_homepage_highlight_image
+    - field.field.node.project.field_homepage_highlight_start
+    - field.field.node.project.field_homepage_highlight_text
     - field.field.node.project.field_holding_type
     - field.field.node.project.field_housing_company
     - field.field.node.project.field_housing_manager
@@ -79,6 +83,7 @@ dependencies:
     - field.field.node.project.field_postal_code
     - field.field.node.project.field_pre_marketing_end_time
     - field.field.node.project.field_premarketing_start_time
+    - field.field.node.project.field_project_gallery_media
     - field.field.node.project.field_project_accessibility
     - field.field.node.project.field_project_area_description
     - field.field.node.project.field_project_attachments
@@ -127,6 +132,7 @@ dependencies:
     - image
     - inline_entity_form
     - link
+    - media_library
     - path
     - publication_date
     - scheduler
@@ -174,6 +180,10 @@ third_party_settings:
         - field_new_housing
         - field_apartment_count
         - field_new_development_status
+        - field_homepage_highlight_text
+        - field_homepage_highlight_image
+        - field_homepage_highlight_start
+        - field_homepage_highlight_end
         - field_holding_type
         - field_regular_bank_account
         - field_barred_bank_account
@@ -269,6 +279,7 @@ third_party_settings:
         - field_attachments_url
         - field_main_image
         - field_images
+        - field_project_gallery_media
         - field_shared_apartment_images
         - field_virtual_presentation_url
         - field_project_attachments
@@ -509,7 +520,7 @@ content:
     third_party_settings: {  }
   field_barred_bank_account:
     type: string_textfield
-    weight: 20
+    weight: 23
     region: content
     settings:
       size: 60
@@ -796,6 +807,34 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
+  field_homepage_highlight_end:
+    type: datetime_default
+    weight: 21
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_homepage_highlight_image:
+    type: image_image
+    weight: 19
+    region: content
+    settings:
+      progress_indicator: throbber
+      preview_image_style: thumbnail
+    third_party_settings: {  }
+  field_homepage_highlight_start:
+    type: datetime_default
+    weight: 20
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_homepage_highlight_text:
+    type: string_textarea
+    weight: 18
+    region: content
+    settings:
+      rows: 3
+      placeholder: ''
+    third_party_settings: {  }
   field_holding_type:
     type: options_buttons
     weight: 18
@@ -988,6 +1027,13 @@ content:
     settings:
       progress_indicator: throbber
     third_party_settings: {  }
+  field_project_gallery_media:
+    type: media_library_widget
+    weight: 27
+    region: content
+    settings:
+      media_types: {  }
+    third_party_settings: {  }
   field_project_description:
     type: text_textarea
     weight: 12
@@ -1050,7 +1096,7 @@ content:
     third_party_settings: {  }
   field_regular_bank_account:
     type: string_textfield
-    weight: 19
+    weight: 22
     region: content
     settings:
       size: 60

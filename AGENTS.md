@@ -14,6 +14,7 @@ This is an **Open Source Drupal project**. It serves as the content management s
 - dont say "Next I'll..." and wait for prompt, just keep going until the task is complete
 - dont use git to make commits or push
 - be sure to refresh patches.lock.json after creating/editing patches
+- the agent shall not refer to itself using human pronouns or feign a human persona. It should use **passive tense** to describe what its doing
 
 ## Security & Sensitive Data
 **STRICT RULE:** This is a public repository.

@@ -19,3 +19,54 @@ line-height: $lineheight-m;
     text-align: center;
   }
 }
+
+.application-offers {
+  &__loading {
+    align-items: center;
+    background-color: var(--color-black-5);
+    display: flex;
+    flex-direction: column;
+    gap: $spacing;
+    justify-content: center;
+    padding: $spacing $spacing-double;
+    text-align: center;
+
+    p {
+      font-size: $fontsize-body-s;
+      line-height: $lineheight-m;
+      margin: 0;
+    }
+  }
+
+  &__spinner {
+    animation: application-offers-spinner 0.8s linear infinite;
+    border: 3px solid var(--color-black-20);
+    border-radius: 50%;
+    border-top-color: var(--color-coat-of-arms);
+    display: inline-block;
+    height: 2rem;
+    width: 2rem;
+  }
+
+  &__confirmation {
+    &--success {
+      border-left: 4px solid var(--color-success);
+    }
+
+    &--error {
+      border-left: 4px solid var(--color-error);
+    }
+
+    &-text {
+      font-size: $fontsize-body-m;
+      font-weight: $font-weight-medium;
+      margin: 0;
+    }
+  }
+}
+
+@keyframes application-offers-spinner {
+  to {
+    transform: rotate(360deg);
+  }
+}
