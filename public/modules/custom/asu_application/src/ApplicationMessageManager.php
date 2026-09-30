@@ -94,6 +94,79 @@ final class ApplicationMessageManager {
   }
 
   /**
+   * Resolves the salesperson assigned to the message application project.
+   */
+  public function resolveSalesperson(Application $application): ?UserInterface {
+    $project = $this->loadProject($application);
+    if (!$project) {
+      return NULL;
+    }
+
+    if (method_exists($project, 'getSalesPerson')) {
+      $salesperson = $project->getSalesPerson();
+      if ($salesperson instanceof UserInterface) {
+        return $salesperson;
+      }
+    }
+
+    if ($project->hasField('field_salesperson') && !$project->get('field_salesperson')->isEmpty()) {
+      $salesperson = $project->get('field_salesperson')->entity;
+      if ($salesperson instanceof UserInterface) {
+        return $salesperson;
+      }
+    }
+
+    return NULL;
+  }
+
+  /**
+   * Resolves the notification recipient email for the application project.
+   */
+  public function resolveRecipientMail(Application $application): string {
+    $salesperson = $this->resolveSalesperson($application);
+    if ($salesperson && $salesperson->getEmail()) {
+      return $salesperson->getEmail();
+    }
+
+    return (string) (getenv('DRUPAL_DEFAULT_FORM_EMAIL') ?: '');
+  }
+
+  /**
+   * Returns the project id for the application.
+   */
+  public function getProjectId(Application $application): int {
+    if ($application->hasField('project') && !$application->get('project')->isEmpty() && $application->get('project')->entity) {
+      return (int) $application->get('project')->entity->id();
+    }
+
+    return (int) ($application->get('project_id')->value ?? 0);
+  }
+
+  /**
+   * Returns the application project label.
+   */
+  public function getProjectLabel(Application $application): string {
+    $project = $this->loadProject($application);
+    return $project ? (string) $project->label() : '';
+  }
+
+  /**
+   * Loads the application project entity.
+   */
+  private function loadProject(Application $application): ?object {
+    if ($application->hasField('project') && !$application->get('project')->isEmpty() && $application->get('project')->entity) {
+      return $application->get('project')->entity;
+    }
+
+    $projectId = (int) ($application->get('project_id')->value ?? 0);
+    if ($projectId <= 0) {
+      return NULL;
+    }
+
+    return $this->entityTypeManager->getStorage('node')->load($projectId);
+  }
+
+  /**
    * Resolves customer recipients for salesperson notifications.
    *
    * Includes application owner and mapped co-applicant accounts.
@@ -101,19 +174,32 @@ final class ApplicationMessageManager {
    * @return array<int, array{uid:int, mail:string, langcode:string}>
    *   Unique recipients by email.
    */
-  public function resolveCustomerRecipients(Application $application): array {
+  public function resolveCustomerRecipients(Application $application, ?string $fallbackCoApplicantEmail = NULL): array {
     $recipients = $this->getOwnerRecipients($application);
+    $fallbackCoApplicantEmail = trim((string) ($fallbackCoApplicantEmail ?? ''));
     $mappingRow = $this->loadCoApplicantMapping((int) $application->id());
 
     if ($mappingRow === NULL) {
+      $this->appendEmailRecipient($recipients, $fallbackCoApplicantEmail);
       return $this->uniqueRecipientsByEmail($recipients);
     }
 
     if (array_key_exists('co_applicant_email', $mappingRow)) {
-      $this->appendEmailRecipient($recipients, (string) ($mappingRow['co_applicant_email'] ?? ''));
+      $storedEmail = (string) ($mappingRow['co_applicant_email'] ?? '');
+      $this->appendEmailRecipient($recipients, $storedEmail);
+
+      if (trim($storedEmail) === '') {
+        $this->appendEmailRecipient($recipients, $fallbackCoApplicantEmail);
+        $this->persistCoApplicantEmail((int) $application->id(), $fallbackCoApplicantEmail);
+      }
 
       // When explicit co-applicant email storage is available, avoid
       // hash-based lookup that may match an unrelated local test account.
+      return $this->uniqueRecipientsByEmail($recipients);
+    }
+
+    if (filter_var($fallbackCoApplicantEmail, FILTER_VALIDATE_EMAIL)) {
+      $this->appendEmailRecipient($recipients, $fallbackCoApplicantEmail);
       return $this->uniqueRecipientsByEmail($recipients);
     }
 
@@ -125,6 +211,24 @@ final class ApplicationMessageManager {
     $this->appendMappedUserRecipients($recipients, $samlHash);
 
     return $this->uniqueRecipientsByEmail($recipients);
+  }
+
+  /**
+   * Persist co-applicant email for existing map row when missing.
+   */
+  private function persistCoApplicantEmail(int $applicationId, string $email): void {
+    if ($applicationId <= 0 || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+      return;
+    }
+
+    $this->database->update('asu_application_co_applicant_map')
+      ->fields([
+        'co_applicant_email' => $email,
+        'changed' => $this->time->getRequestTime(),
+      ])
+      ->condition('application_id', $applicationId)
+      ->condition('co_applicant_email', '', '=')
+      ->execute();
   }
 
   /**
