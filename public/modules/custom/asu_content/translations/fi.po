@@ -40501,8 +40501,8 @@ msgstr "Arvioitu valmistumisaika"
 msgid "The application period is open until @time on @date"
 msgstr "Hakuaika on voimassa @time @date asti"
 
-msgid "The application period has ended at @time on @date but you can still apply afterwards."
-msgstr "Kohteen hakuaika päättyi @time @date mutta voit silti tehdä jälkihakemuksen."
+msgid "You can still apply afterwards"
+msgstr "Voit silti tehdä jälkihakemuksen"
 
 msgid "Käännös tähän"
 msgstr ""
