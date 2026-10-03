@@ -1020,54 +1020,73 @@ function asuntotuotanto_preprocess_paragraph(array &$variables) {
  * Builds project cards for homepage highlights.
  */
 function asuntotuotanto_get_homepage_highlight_projects(int $limit = 4): array {
-  $query = \Drupal::entityQuery('node')
-    ->accessCheck(TRUE)
-    ->condition('type', 'project')
-    ->condition('status', 1);
-
   $now = gmdate('Y-m-d\\TH:i:s');
+  $manual_project_ids = asuntotuotanto_get_manual_homepage_highlight_project_ids($now);
+  $auto_project_ids = asuntotuotanto_get_projects_with_apartment_showing_time_ids($now);
 
-  $start_group = $query->orConditionGroup()
-    ->notExists('field_homepage_highlight_start')
-    ->condition('field_homepage_highlight_start', $now, '<=');
-  $end_group = $query->orConditionGroup()
-    ->notExists('field_homepage_highlight_end')
-    ->condition('field_homepage_highlight_end', $now, '>=');
-
-  $query->condition($start_group);
-  $query->condition($end_group);
-  $query->exists('field_homepage_highlight_text');
-  $query->sort('field_homepage_highlight_start', 'DESC');
-  $query->sort('changed', 'DESC');
-  $query->range(0, 20);
+  // Manual highlights first, then projects auto-promoted by apartment showing time.
+  $project_ids = array_values(array_unique(array_merge($manual_project_ids, $auto_project_ids)));
 
   $node_storage = \Drupal::entityTypeManager()->getStorage('node');
   $file_url_generator = \Drupal::service('file_url_generator');
 
   $highlight_projects = [];
-  $project_ids = $query->execute();
+  $candidate_projects = [];
   if (empty($project_ids)) {
     return $highlight_projects;
   }
 
+  $manual_project_lookup = array_fill_keys($manual_project_ids, TRUE);
+  $auto_project_lookup = array_fill_keys($auto_project_ids, TRUE);
+
   /** @var \Drupal\node\NodeInterface[] $projects */
   $projects = $node_storage->loadMultiple($project_ids);
-  foreach ($projects as $project) {
-    if (count($highlight_projects) >= $limit) {
-      break;
+  foreach ($project_ids as $index => $project_id) {
+
+    $project = $projects[$project_id] ?? NULL;
+    if (!$project instanceof NodeInterface) {
+      continue;
     }
 
     if ($project->hasField('field_archived') && (int) $project->get('field_archived')->value === 1) {
       continue;
     }
 
-    if (!$project->hasField('field_homepage_highlight_text')) {
+    $is_manual_highlight = isset($manual_project_lookup[$project_id]);
+    $is_auto_showing_time = isset($auto_project_lookup[$project_id]);
+    if (!$is_manual_highlight && !$is_auto_showing_time) {
       continue;
     }
 
-    $highlight_text = trim(strip_tags((string) $project->get('field_homepage_highlight_text')->value));
+    $highlight_text = '';
+    $highlight_datetime = '';
+    $highlight_timestamp = NULL;
+    $additional_cache_tags = [];
+
+    $showing_time_preview = asuntotuotanto_get_project_showing_time_preview($project, $now);
+    if (!empty($showing_time_preview['datetime_text'])) {
+      $highlight_datetime = $showing_time_preview['datetime_text'];
+      $highlight_timestamp = $showing_time_preview['timestamp'] ?? NULL;
+      $additional_cache_tags = array_merge($additional_cache_tags, $showing_time_preview['cache_tags'] ?? []);
+    }
+
+    if ($project->hasField('field_homepage_highlight_text')) {
+      $highlight_text = trim(strip_tags((string) $project->get('field_homepage_highlight_text')->value));
+    }
+
+    // Auto-promoted projects can skip manual highlight fields.
     if ($highlight_text === '') {
-      continue;
+      if ($is_auto_showing_time) {
+        if (!empty($showing_time_preview['text'])) {
+          $highlight_text = $showing_time_preview['text'];
+        }
+        else {
+          $highlight_text = (string) t('Esittelyaika');
+        }
+      }
+      else {
+        continue;
+      }
     }
 
     $image_file = NULL;
@@ -1104,21 +1123,162 @@ function asuntotuotanto_get_homepage_highlight_projects(int $limit = 4): array {
     }
     $address = implode(', ', array_filter($address_parts));
 
-    $highlight_projects[] = [
+    $candidate_projects[] = [
       'title' => $project->label(),
       'url' => $project->toUrl()->toString(),
       'image_url' => $file_url_generator->generateString($image_file->getFileUri()),
       'image_uri' => $image_file->getFileUri(),
       'image_alt' => $project->label(),
       'text' => $highlight_text,
+      'datetime_text' => $highlight_datetime,
       'type_label' => $type_label,
       'type_class' => $type_class,
       'address' => $address,
-      'cache_tags' => $project->getCacheTags(),
+      'cache_tags' => array_values(array_unique(array_merge($project->getCacheTags(), $additional_cache_tags))),
+      '_sort_has_showing' => $highlight_timestamp !== NULL,
+      '_sort_timestamp' => $highlight_timestamp !== NULL ? (int) $highlight_timestamp : PHP_INT_MAX,
+      '_sort_index' => $index,
     ];
   }
 
+  usort($candidate_projects, static function (array $a, array $b): int {
+    if ($a['_sort_has_showing'] !== $b['_sort_has_showing']) {
+      return $a['_sort_has_showing'] ? -1 : 1;
+    }
+
+    if ($a['_sort_has_showing'] && $a['_sort_timestamp'] !== $b['_sort_timestamp']) {
+      return $a['_sort_timestamp'] <=> $b['_sort_timestamp'];
+    }
+
+    return $a['_sort_index'] <=> $b['_sort_index'];
+  });
+
+  foreach (array_slice($candidate_projects, 0, $limit) as $item) {
+    unset($item['_sort_has_showing'], $item['_sort_timestamp'], $item['_sort_index']);
+    $highlight_projects[] = $item;
+  }
+
   return $highlight_projects;
+}
+
+/**
+ * Builds auto-highlight text from the earliest apartment showing time.
+ */
+function asuntotuotanto_get_project_showing_time_preview(NodeInterface $project, string $now): array {
+  if (!$project->hasField('field_apartments') || $project->get('field_apartments')->isEmpty()) {
+    return [];
+  }
+
+  $apartment_ids = array_values(array_filter(array_map(static function (array $item): int {
+    return (int) ($item['target_id'] ?? 0);
+  }, $project->get('field_apartments')->getValue())));
+
+  if (empty($apartment_ids)) {
+    return [];
+  }
+
+  $apartment_query = \Drupal::entityQuery('node')
+    ->accessCheck(TRUE)
+    ->condition('type', 'apartment')
+    ->condition('status', 1)
+    ->condition('nid', $apartment_ids, 'IN')
+    ->exists('field_showing_time')
+    ->condition('field_showing_time', $now, '>=')
+    ->sort('field_showing_time', 'ASC')
+    ->range(0, 1);
+
+  $matching_apartment_ids = $apartment_query->execute();
+  if (empty($matching_apartment_ids)) {
+    return [];
+  }
+
+  $apartment_id = (int) reset($matching_apartment_ids);
+  $apartment = \Drupal::entityTypeManager()->getStorage('node')->load($apartment_id);
+  if (!$apartment instanceof NodeInterface || !$apartment->hasField('field_showing_time') || $apartment->get('field_showing_time')->isEmpty()) {
+    return [];
+  }
+
+  $showing_time_value = (string) $apartment->get('field_showing_time')->value;
+  if ($showing_time_value === '') {
+    return [];
+  }
+
+  $showing_timestamp = strtotime($showing_time_value . ' UTC');
+  if ($showing_timestamp === FALSE) {
+    return [];
+  }
+
+  $showing_time_formatted = \Drupal::service('date.formatter')->format($showing_timestamp, 'custom', 'd.m.Y H:i');
+  $apartment_number = '';
+  if ($apartment->hasField('field_apartment_number') && !$apartment->get('field_apartment_number')->isEmpty()) {
+    $apartment_number = trim((string) $apartment->get('field_apartment_number')->value);
+  }
+
+  $prefix = (string) t('Esittelyaika');
+  $text = $apartment_number !== ''
+    ? "$prefix $apartment_number"
+    : $prefix;
+
+  return [
+    'text' => $text,
+    'datetime_text' => $showing_time_formatted,
+    'timestamp' => (int) $showing_timestamp,
+    'cache_tags' => $apartment->getCacheTags(),
+  ];
+}
+
+/**
+ * Returns project ids that are active based on manual homepage highlight fields.
+ */
+function asuntotuotanto_get_manual_homepage_highlight_project_ids(string $now): array {
+  $query = \Drupal::entityQuery('node')
+    ->accessCheck(TRUE)
+    ->condition('type', 'project')
+    ->condition('status', 1);
+
+  $start_group = $query->orConditionGroup()
+    ->notExists('field_homepage_highlight_start')
+    ->condition('field_homepage_highlight_start', $now, '<=');
+  $end_group = $query->orConditionGroup()
+    ->notExists('field_homepage_highlight_end')
+    ->condition('field_homepage_highlight_end', $now, '>=');
+
+  $query->condition($start_group);
+  $query->condition($end_group);
+  $query->exists('field_homepage_highlight_text');
+  $query->sort('field_homepage_highlight_start', 'DESC');
+  $query->sort('changed', 'DESC');
+  $query->range(0, 20);
+
+  return array_values($query->execute());
+}
+
+/**
+ * Returns project ids that have apartments with upcoming showing time.
+ */
+function asuntotuotanto_get_projects_with_apartment_showing_time_ids(string $now): array {
+  $apartment_query = \Drupal::entityQuery('node')
+    ->accessCheck(TRUE)
+    ->condition('type', 'apartment')
+    ->condition('status', 1)
+    ->exists('field_showing_time')
+    ->condition('field_showing_time', $now, '>=')
+    ->range(0, 1000);
+
+  $apartment_ids = $apartment_query->execute();
+  if (empty($apartment_ids)) {
+    return [];
+  }
+
+  $project_query = \Drupal::entityQuery('node')
+    ->accessCheck(TRUE)
+    ->condition('type', 'project')
+    ->condition('status', 1)
+    ->condition('field_apartments.target_id', $apartment_ids, 'IN')
+    ->sort('changed', 'DESC')
+    ->range(0, 40);
+
+  return array_values($project_query->execute());
 }
 
 /**
