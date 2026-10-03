@@ -91,8 +91,8 @@ class ElasticSearch extends ResourceBase {
       }
     }
     $url_params = ($url_params) ? implode('_', $url_params) : '';
-    // Bump cache namespace when response enum serialization changes.
-    $cid = 'asu_rest:apartment_list:v3:' . $ownership_type . $url_params;
+    // Bump cache namespace when response payload shape changes.
+    $cid = 'asu_rest:apartment_list:v4:' . $ownership_type . $url_params;
 
     $account = User::load(\Drupal::currentUser()->id());
     $debug = $account && $account->id() == 1;
@@ -324,6 +324,20 @@ class ElasticSearch extends ResourceBase {
             }
             return $normalize_enum($value);
           };
+          $get_datetime_values = static function (Node $node, string $field): array {
+            if (!$node->hasField($field) || $node->get($field)->isEmpty()) {
+              return [];
+            }
+
+            $values = [];
+            foreach ($node->get($field)->getValue() as $item) {
+              if (!empty($item['value']) && is_string($item['value'])) {
+                $values[] = $item['value'];
+              }
+            }
+
+            return array_values(array_unique($values));
+          };
 
           // Keep state enums in canonical form for FE logic.
           $apartment_state_of_sale = $get_term_enum($apartment_node, 'field_apartment_state_of_sale');
@@ -405,6 +419,7 @@ class ElasticSearch extends ResourceBase {
             'project_uuid' => $project_node->uuid(),
             'release_payment' => $this->toCents($get_scalar($apartment_node, 'field_release_payment')),
             'right_of_occupancy_payment' => $this->toCents($get_scalar($apartment_node, 'field_right_of_occupancy_payment')),
+            'showing_times' => $get_datetime_values($apartment_node, 'field_showing_time'),
             'title' => $apartment_node->label(),
             'url' => $this->buildAbsoluteUrl($apartment_node->toUrl()->toString()),
             'uuid' => $apartment_node->uuid(),

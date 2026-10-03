@@ -212,6 +212,22 @@
     padding: 0;
   }
 
+  .showcase-block__showcases.js-homepage-highlights-carousel {
+    display: block;
+
+    .showcase {
+      margin-top: 0;
+      max-width: none;
+      width: 100%;
+    }
+
+    &.slick-slider {
+      .slick-list {
+        max-height: 600px;
+      }
+    }
+  }
+
   .showcase-block__showcases.showcases-count--2 {
     @media screen and (min-width: $breakpoint-m) {
       display: grid;
