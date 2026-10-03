@@ -101,11 +101,7 @@
               {% set date = element.application_project_information['#teaser_values'].application_end_time|date("d.m.Y") %}
               {% set time = element.application_project_information['#teaser_values'].application_end_time|date("H.i") %}
               {% include "@hdbt/misc/icon.twig" with {icon: 'check-circle-fill', label: ''} %}
-                {% if element.application_project_information['#teaser_values'].can_apply_afterwards == TRUE %}
-                  {% trans %}
-                      You can still apply afterwards
-                  {% endtrans %}
-                {% else %}
+                {% if element.application_project_information['#teaser_values'].can_apply_afterwards != TRUE %}
                   {% trans %}
                     The application period is open until {{ time }} on {{ date }}
                   {% endtrans %}
