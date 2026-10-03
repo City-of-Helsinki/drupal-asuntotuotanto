@@ -1,7 +1,7 @@
 # Define asuntomyynti-react application library.
 haso-apartment-search:
   remote: https://github.com/City-of-Helsinki/asuntomyynti-react
-  version: 0.3.1
+  version: 1.7.2
   license:
     name: MIT
     url: https://github.com/City-of-Helsinki/asuntomyynti-react/blob/develop/README.md
@@ -16,7 +16,7 @@ haso-apartment-search:
 
 haso-apartment-upcoming:
   remote: https://github.com/City-of-Helsinki/asuntomyynti-react
-  version: 0.3.1
+  version: 1.7.2
   license:
     name: MIT
     url: https://github.com/City-of-Helsinki/asuntomyynti-react/blob/develop/README.md
@@ -31,7 +31,7 @@ haso-apartment-upcoming:
 
 hitas-apartment-search:
   remote: https://github.com/City-of-Helsinki/asuntomyynti-react
-  version: 0.3.1
+  version: 1.7.2
   license:
     name: MIT
     url: https://github.com/City-of-Helsinki/asuntomyynti-react/blob/develop/README.md
@@ -46,7 +46,7 @@ hitas-apartment-search:
 
 hitas-apartment-upcoming:
   remote: https://github.com/City-of-Helsinki/asuntomyynti-react
-  version: 0.3.1
+  version: 1.7.2
   license:
     name: MIT
     url: https://github.com/City-of-Helsinki/asuntomyynti-react/blob/develop/README.md
