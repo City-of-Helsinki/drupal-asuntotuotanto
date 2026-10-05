@@ -5,6 +5,7 @@ dependencies:
   config:
     - rest.resource.asu_apartment
     - rest.resource.asu_apartments
+    - rest.resource.asu_application_messages
     - rest.resource.asu_project
     - rest.resource.asu_project_apartments
     - rest.resource.asu_projects
@@ -19,6 +20,8 @@ permissions:
   - 'access content'
   - 'restful get asu_apartment'
   - 'restful get asu_apartments'
+  - 'restful get asu_application_messages'
+  - 'restful post asu_application_messages'
   - 'restful get asu_project'
   - 'restful get asu_project_apartments'
   - 'restful get asu_projects'

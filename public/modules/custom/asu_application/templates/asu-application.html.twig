@@ -7,7 +7,9 @@
 #}
 
 {{ attach_library('asuntotuotanto/application-apartment-listing') }}
+{{ attach_library('asu_application/message_badges') }}
 {{ attach_library('asu_application/application_results') }}
+{{ attach_library('asu_application/application_payments') }}
 
 {%
   set classes = [
@@ -170,15 +172,26 @@
   {% if view_mode == 'submitted_teaser' %}
     {{ _self.teaser_common(content['#teaser_values'], attributes, classes, app_id) }}
         <div class="application__actions">
-          <div>
           {% if content['#teaser_values'].is_owner %}
-          {% include "@asuntotuotanto/button/button.html.twig" with {
-            label: 'Open the application'|t,
-            href: content['#teaser_values'].application_url,
-            type: 'primary'
-          } %}
-          {% endif %}
+          <div class="application--action">
+            {% include "@asuntotuotanto/button/button.html.twig" with {
+              label: 'Open the application'|t,
+              href: content['#teaser_values'].application_url,
+              type: 'primary'
+            } %}
           </div>
+          {% endif %}
+
+          {% if content['#teaser_values'].can_message %}
+          <div class="application--action">
+            <a class="hds-button hds-button--secondary application-message-button{% if content['#teaser_values'].has_unread_messages %} application-message-button--has-unread{% endif %}" href="{{ content['#teaser_values'].messages_url }}" data-application-id="{{ content['#teaser_values'].application_id }}">
+              <span class="hds-button__label">{{ 'Message sales agent'|t }}</span>
+              {% if content['#teaser_values'].has_unread_messages %}
+                <span class="asu-unread-badge" aria-label="{{ '@count unread messages'|t({'@count': content['#teaser_values'].unread_message_count}) }}">{{ content['#teaser_values'].unread_message_count }}</span>
+              {% endif %}
+            </a>
+          </div>
+          {% endif %}
           <div class="application--action">
             <a class="hds-button hds-button--secondary application__lottery-link--toggle" data-application="{{ app_id }}">
               <span class="hds-button__label" data-application="{{ app_id }}">
@@ -188,6 +201,15 @@
               </span>
             </a>
           </div>
+          {% if content['#teaser_values'].show_application_payments %}
+          <div class="application--action">
+            <a class="hds-button hds-button--secondary application__payments-link--toggle" data-application="{{ app_id }}">
+              <span class="hds-button__label" data-application="{{ app_id }}">
+                {{ content['#teaser_values'].application_payments_ui.show }}
+              </span>
+            </a>
+          </div>
+          {% endif %}
           {% if content['#teaser_values'].is_owner and content['#teaser_values'].is_application_period and content['#teaser_values'].delete_url %}
           <div class="application--action">
             <form method="post" action="{{ content['#teaser_values'].delete_url }}">
@@ -220,6 +242,66 @@
         {% endtrans %}
       </a>
     </div>
+
+      {% if content['#teaser_values'].show_application_payments %}
+      <p class="application__payments-note is-hidden" data-application="{{ app_id }}">
+        {{ content['#teaser_values'].application_payments_ui.mark_notice }}
+      </p>
+      <table class="application__apartments application__results-table application__payments-table is-hidden" data-application="{{ app_id }}" data-empty-label="{{ content['#teaser_values'].application_payments_ui.empty|e('html_attr') }}" data-mark-paid-label="{{ content['#teaser_values'].application_payments_ui.mark_paid|e('html_attr') }}" data-marked-paid-label="{{ content['#teaser_values'].application_payments_ui.marked_paid|e('html_attr') }}" aria-hidden="true">
+        <thead>
+        <tr>
+          <th>{{ content['#teaser_values'].application_payments_ui.installment_type }}</th>
+          <th>{{ content['#teaser_values'].application_payments_ui.amount }}</th>
+          <th>{{ content['#teaser_values'].application_payments_ui.due_date }}</th>
+          <th>{{ content['#teaser_values'].application_payments_ui.account_number }}</th>
+          <th>{{ content['#teaser_values'].application_payments_ui.reference_number }}</th>
+          <th>{{ content['#teaser_values'].application_payments_ui.user_mark }}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% if content['#teaser_values'].application_payments|length > 0 %}
+          {% for payment in content['#teaser_values'].application_payments %}
+            <tr>
+              <td>{{ payment.installment_type }}</td>
+              <td>{{ payment.amount }}</td>
+              <td>{{ payment.due_date }}</td>
+              <td>{{ payment.account_number ?: '-' }}</td>
+              <td>{{ payment.reference_number ?: '-' }}</td>
+              <td>
+                <label>
+                  <input
+                    type="checkbox"
+                    class="application__payment-mark-checkbox"
+                    data-payment-id="{{ payment.payment_id }}"
+                    {% if payment.is_marked_paid %}checked{% endif %}
+                  >
+                  {{ content['#teaser_values'].application_payments_ui.mark_paid }}
+                </label>
+                <div class="application__payment-mark-status">
+                  {% if payment.is_marked_paid %}
+                    {{ content['#teaser_values'].application_payments_ui.marked_paid }}
+                    {% if payment.marked_paid_at %}
+                      {{ payment.marked_paid_at }}
+                    {% endif %}
+                  {% endif %}
+                </div>
+              </td>
+            </tr>
+          {% endfor %}
+        {% else %}
+          <tr>
+            <td colspan="6">{{ content['#teaser_values'].application_payments_ui.empty }}</td>
+          </tr>
+        {% endif %}
+        </tbody>
+      </table>
+
+    <div class="application__lottery application__lottery--hide is-hidden" data-application="{{ app_id }}" id="application__payments--hide--submitted">
+      <a class="application__lottery-link application__payments-link--hide">
+        {{ content['#teaser_values'].application_payments_ui.hide }}
+      </a>
+    </div>
+    {% endif %}
   {% endif %}
 
   {% if view_mode == 'draft_teaser' %}

@@ -14,6 +14,75 @@ asu_application.application_results:
   requirements:
     _permission: "create application"
 
+asu_application.application_payments:
+  path: "/user/application/payments"
+  defaults:
+    _controller: '\Drupal\asu_application\Controller\ApplicationPaymentController::getPayments'
+  methods: [POST]
+  requirements:
+    _permission: "create application"
+
+asu_application.application_payments_mark:
+  path: "/user/application/payments/mark"
+  defaults:
+    _controller: '\Drupal\asu_application\Controller\ApplicationPaymentController::markPayment'
+  methods: [POST]
+  requirements:
+    _permission: "create application"
+
+
+asu_application.offer_action:
+  path: "/user/offer/{offer_id}/{action}"
+  defaults:
+    _controller: '\Drupal\asu_application\Controller\OfferActionController::action'
+  methods: [POST]
+  requirements:
+    _user_is_logged_in: "TRUE"
+    offer_id: '\d+'
+    action: 'accept|reject'
+
+asu_application.offer_message:
+  path: "/user/offer/{offer_id}/message"
+  defaults:
+    _controller: '\Drupal\asu_application\Controller\OfferMessageController::message'
+  methods: [GET]
+  requirements:
+    _user_is_logged_in: "TRUE"
+    offer_id: '\d+'
+
+asu_application.offer_details:
+  path: "/user/offer/{offer_id}/details"
+  defaults:
+    _controller: '\Drupal\asu_application\Controller\OfferDetailsController::details'
+  methods: [GET]
+  requirements:
+    _user_is_logged_in: "TRUE"
+    offer_id: '\d+'
+
+asu_application.unread_counts:
+  path: "/user/application/unread-counts"
+  defaults:
+    _controller: '\Drupal\asu_application\Controller\ApplicationUnreadController::getUnreadCounts'
+  methods: [GET]
+  requirements:
+    _permission: "access content"
+
+asu_application.inbox_summary:
+  path: "/user/application/inbox-summary"
+  defaults:
+    _controller: '\Drupal\asu_application\Controller\ApplicationUnreadController::getInboxSummary'
+  methods: [GET]
+  requirements:
+    _permission: "access content"
+
+asu_application.mark_read:
+  path: "/user/application/mark-read"
+  defaults:
+    _controller: '\Drupal\asu_application\Controller\ApplicationUnreadController::markRead'
+  methods: [POST]
+  requirements:
+    _permission: "access content"
+
 asu_application.lottery_start:
   path: "/lottery/start/{project_uuid}"
   defaults:
@@ -41,6 +110,14 @@ asu_application.delete_secure:
     token: "[A-Za-z0-9-_]+"
   methods: ["POST", "DELETE"]
 
+asu_application.messages:
+  path: "/application/{asu_application}/messages"
+  defaults:
+    _form: '\Drupal\asu_application\Form\ApplicationMessageForm'
+    _title: "Contact sales agent"
+  requirements:
+    _entity_access: 'asu_application.view'
+
 asu_application.summary_project:
   path: "/admin/asu/project/{node}/applications/summary"
   defaults:
@@ -59,3 +136,11 @@ asu_application.summary_project_csv:
     _permission: "view application sync summary"
     _custom_access: '\Drupal\asu_application\Controller\ApplicationSummaryController::projectAccess'
     node: '\d+'
+
+asu_application.payment_sync:
+  path: "/api/asu/application-payments/sync"
+  defaults:
+    _controller: '\Drupal\asu_application\Controller\ApplicationPaymentWebhookController::sync'
+  methods: [POST]
+  requirements:
+    _permission: "sync application payments"

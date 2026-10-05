@@ -1,0 +1,290 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Drupal\asu_rest\Plugin\rest\resource;
+
+use Drupal\asu_api\Api\BackendApi\BackendApi;
+use Drupal\asu_application\ApplicationMessageManager;
+use Drupal\asu_application\Entity\Application;
+use Drupal\asu_application\Notification\SenderNameResolverTrait;
+use Drupal\Core\Cache\CacheableMetadata;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Mail\MailManagerInterface;
+use Drupal\Core\Session\AccountProxyInterface;
+use Drupal\rest\ModifiedResourceResponse;
+use Drupal\rest\Plugin\ResourceBase;
+use Drupal\rest\ResourceResponse;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
+
+/**
+ * Provides application message thread endpoint.
+ *
+ * @RestResource(
+ *   id = "asu_application_messages",
+ *   label = @Translation("Application messages"),
+ *   uri_paths = {
+ *     "canonical" = "/applications/{application_id}/messages",
+ *     "create" = "/applications/{application_id}/messages"
+ *   }
+ * )
+ */
+final class ApplicationMessages extends ResourceBase {
+  use SenderNameResolverTrait;
+
+  /**
+   * Constructs the resource.
+   */
+  public function __construct(
+    array $configuration,
+    $plugin_id,
+    $plugin_definition,
+    array $serializer_formats,
+    LoggerInterface $logger,
+    private readonly ApplicationMessageManager $messageManager,
+    private readonly AccountProxyInterface $currentUser,
+    private readonly RequestStack $requestStack,
+    private readonly MailManagerInterface $mailManager,
+    private readonly BackendApi $backendApi,
+    private readonly EntityTypeManagerInterface $entityTypeManager,
+  ) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition, $serializer_formats, $logger);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition): self {
+    return new self(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->getParameter('serializer.formats'),
+      $container->get('logger.factory')->get('asu_rest'),
+      $container->get('asu_application.message_manager'),
+      $container->get('current_user'),
+      $container->get('request_stack'),
+      $container->get('plugin.manager.mail'),
+      $container->get('asu_api.backendapi'),
+      $container->get('entity_type.manager'),
+    );
+  }
+
+  /**
+   * Responds to GET requests.
+   */
+  public function get(int $application_id): ResourceResponse {
+    $application = Application::load($application_id);
+    if (!$application) {
+      return new ResourceResponse(['message' => 'Application not found.'], 404, $this->getTestingHeaders());
+    }
+
+    if (!$this->canReadThread($application)) {
+      return new ResourceResponse(['message' => 'Access denied.'], 403, $this->getTestingHeaders());
+    }
+
+    $messages = $this->messageManager->loadThread($application_id);
+    $items = [];
+
+    foreach ($messages as $message) {
+      $items[] = [
+        'id' => (int) $message->id(),
+        'application_id' => (int) $message->get('application_id')->value,
+        'project_id' => (int) $message->get('project_id')->value,
+        'sender_role' => (string) $message->get('sender_role')->value,
+        'sender_uid' => $message->get('sender_uid')->isEmpty() ? NULL : (int) $message->get('sender_uid')->target_id,
+        'salesperson_uid' => $message->get('salesperson_uid')->isEmpty() ? NULL : (int) $message->get('salesperson_uid')->target_id,
+        'recipient_mail' => (string) $message->get('recipient_mail')->value,
+        'body' => (string) $message->get('body')->value,
+        'created' => (int) $message->get('created')->value,
+      ];
+    }
+
+    $response = new ResourceResponse([
+      'application_id' => $application_id,
+      'count' => count($items),
+      'items' => $items,
+    ], 200, $this->getTestingHeaders());
+
+    // This endpoint is used as a live conversation thread and must always
+    // return latest messages.
+    $cacheability = new CacheableMetadata();
+    $cacheability->setCacheMaxAge(0);
+    $response->addCacheableDependency($cacheability);
+
+    return $response;
+  }
+
+  /**
+   * Responds to POST requests.
+   */
+  public function post(array $data = []): ModifiedResourceResponse {
+    $application_id = (int) ($this->requestStack->getCurrentRequest()?->attributes->get('application_id') ?? 0);
+    if ($application_id <= 0) {
+      return new ModifiedResourceResponse(['message' => 'Application id is missing from request path.'], 400, $this->getTestingHeaders());
+    }
+
+    $application = Application::load($application_id);
+    if (!$application) {
+      return new ModifiedResourceResponse(['message' => 'Application not found.'], 404, $this->getTestingHeaders());
+    }
+
+    $senderRole = (string) ($data['sender_role'] ?? 'sales');
+    if (!in_array($senderRole, ['sales', 'customer'], TRUE)) {
+      return new ModifiedResourceResponse(['message' => 'Invalid sender_role. Allowed values: sales, customer.'], 400, $this->getTestingHeaders());
+    }
+
+    if (!$this->canWriteThread($application, $senderRole)) {
+      return new ModifiedResourceResponse(['message' => 'Access denied.'], 403, $this->getTestingHeaders());
+    }
+
+    $body = trim((string) ($data['body'] ?? ''));
+    if ($body === '') {
+      return new ModifiedResourceResponse(['message' => 'Missing required field: body.'], 400, $this->getTestingHeaders());
+    }
+
+    $coApplicantEmail = trim((string) ($data['co_applicant_email'] ?? ''));
+
+    $salesperson = $senderRole === 'sales' ? $this->messageManager->resolveSalesperson($application) : NULL;
+    $salespersonUid = $salesperson ? (int) $salesperson->id() : NULL;
+
+    $message = $this->messageManager->createMessage(
+      $application_id,
+      $this->messageManager->getProjectId($application),
+      $body,
+      $senderRole,
+      $this->currentUser->isAuthenticated() ? (int) $this->currentUser->id() : NULL,
+      $salespersonUid,
+      (string) ($data['recipient_mail'] ?? ''),
+    );
+
+    if ($senderRole === 'sales') {
+      $customerRecipients = $this->messageManager->resolveCustomerRecipients($application, $coApplicantEmail);
+      foreach ($customerRecipients as $recipient) {
+        $buyerMail = (string) ($recipient['mail'] ?? '');
+        if ($buyerMail === '') {
+          continue;
+        }
+
+        $buyerLangcode = (string) ($recipient['langcode'] ?? 'fi');
+        $customerThreadUrl = $this->getCustomerThreadUrl($application_id);
+        $projectLabel = $this->messageManager->getProjectLabel($application);
+        $senderName = $this->resolveSenderName();
+        $subject = (string) $this->t(
+          'New reply about your application @id',
+          ['@id' => (string) $application_id],
+          ['langcode' => $buyerLangcode],
+        );
+        $lines = [
+          (string) $this->t('You have received a new message in the application service.', [], ['langcode' => $buyerLangcode]),
+          '',
+          (string) $this->t('Project: @project', ['@project' => $projectLabel !== '' ? $projectLabel : '-'], ['langcode' => $buyerLangcode]),
+          (string) $this->t('Application ID: @id', ['@id' => (string) $application_id], ['langcode' => $buyerLangcode]),
+          (string) $this->t('Sender: @name', ['@name' => $senderName], ['langcode' => $buyerLangcode]),
+          '',
+          (string) $this->t('Message content:', [], ['langcode' => $buyerLangcode]),
+          '',
+          $body,
+          '',
+        ];
+
+        if ($customerThreadUrl !== '') {
+          $lines[] = (string) $this->t('Open chat: @url', ['@url' => $customerThreadUrl], ['langcode' => $buyerLangcode]);
+        }
+
+        $lines[] = (string) $this->t('This is an automated message. Please do not reply to this email.', [], ['langcode' => $buyerLangcode]);
+
+        $this->mailManager->mail('asu_application', 'application_message_notification', $buyerMail, $buyerLangcode, [
+          'subject' => $subject,
+          'message_lines' => $lines,
+        ], NULL, TRUE);
+      }
+    }
+
+    return new ModifiedResourceResponse([
+      'message' => 'Message created.',
+      'item' => [
+        'id' => (int) $message->id(),
+        'application_id' => (int) $message->get('application_id')->value,
+        'project_id' => (int) $message->get('project_id')->value,
+        'sender_role' => (string) $message->get('sender_role')->value,
+        'sender_uid' => $message->get('sender_uid')->isEmpty() ? NULL : (int) $message->get('sender_uid')->target_id,
+        'salesperson_uid' => $message->get('salesperson_uid')->isEmpty() ? NULL : (int) $message->get('salesperson_uid')->target_id,
+        'recipient_mail' => (string) $message->get('recipient_mail')->value,
+        'body' => (string) $message->get('body')->value,
+        'created' => (int) $message->get('created')->value,
+      ],
+    ], 200, $this->getTestingHeaders());
+  }
+
+  /**
+   * Checks read access to message thread.
+   */
+  private function canReadThread(Application $application): bool {
+    return $application->access('view', $this->currentUser, TRUE)->isAllowed()
+      || $this->currentUser->hasPermission('restful get asu_application_messages');
+  }
+
+  /**
+   * Checks write access to message thread.
+   */
+  private function canWriteThread(Application $application, string $senderRole): bool {
+    if ($senderRole === 'customer') {
+      // Customer messages must be tied to a real authenticated account with
+      // application visibility (owner or mapped co-applicant).
+      return $this->currentUser->isAuthenticated()
+        && $application->access('view', $this->currentUser, TRUE)->isAllowed();
+    }
+
+    return $application->access('update', $this->currentUser, TRUE)->isAllowed()
+      || $this->currentUser->hasPermission('restful post asu_application_messages');
+  }
+
+  /**
+   * Resolves sender name for notification emails.
+   */
+  private function resolveSenderName(): string {
+    return $this->resolveNotificationSenderName(
+      $this->currentUser,
+      $this->backendApi,
+      $this->entityTypeManager,
+      (string) $this->t('Sales agent'),
+    );
+  }
+
+  /**
+   * Builds customer-facing message thread URL.
+   */
+  private function getCustomerThreadUrl(int $applicationId): string {
+    return $this->buildAbsoluteUrl('/application/' . $applicationId . '/messages');
+  }
+
+  /**
+   * Builds an absolute URL using configured public base URL when available.
+   */
+  private function buildAbsoluteUrl(string $path): string {
+    $baseUrl = getenv('ASU_ASUNTOTUOTANTO_URL');
+    if ($baseUrl) {
+      return rtrim($baseUrl, '/') . $path;
+    }
+
+    $request = $this->requestStack->getCurrentRequest();
+    $host = $request ? $request->getSchemeAndHttpHost() : '';
+
+    return $host . $path;
+  }
+
+  /**
+   * Add testing headers for local development.
+   */
+  private function getTestingHeaders(): array {
+    return getenv('APP_ENV') === 'testing' ? [
+      'Access-Control-Allow-Origin' => '*',
+      'Access-Control-Allow-Methods' => '*',
+      'Access-Control-Allow-Headers' => '*',
+    ] : [];
+  }
+
+}
