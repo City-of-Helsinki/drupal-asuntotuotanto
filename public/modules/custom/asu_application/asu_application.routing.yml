@@ -30,35 +30,6 @@ asu_application.application_payments_mark:
   requirements:
     _permission: "create application"
 
-
-asu_application.offer_action:
-  path: "/user/offer/{offer_id}/{action}"
-  defaults:
-    _controller: '\Drupal\asu_application\Controller\OfferActionController::action'
-  methods: [POST]
-  requirements:
-    _user_is_logged_in: "TRUE"
-    offer_id: '\d+'
-    action: 'accept|reject'
-
-asu_application.offer_message:
-  path: "/user/offer/{offer_id}/message"
-  defaults:
-    _controller: '\Drupal\asu_application\Controller\OfferMessageController::message'
-  methods: [GET]
-  requirements:
-    _user_is_logged_in: "TRUE"
-    offer_id: '\d+'
-
-asu_application.offer_details:
-  path: "/user/offer/{offer_id}/details"
-  defaults:
-    _controller: '\Drupal\asu_application\Controller\OfferDetailsController::details'
-  methods: [GET]
-  requirements:
-    _user_is_logged_in: "TRUE"
-    offer_id: '\d+'
-
 asu_application.unread_counts:
   path: "/user/application/unread-counts"
   defaults:
