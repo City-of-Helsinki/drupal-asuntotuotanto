@@ -1281,15 +1281,9 @@ function asuntotuotanto_get_project_showing_time_preview(NodeInterface $project,
   }
 
   $showing_time_formatted = \Drupal::service('date.formatter')->format($showing_timestamp, 'custom', 'd.m.Y H:i');
-  $apartment_number = '';
-  if ($apartment->hasField('field_apartment_number') && !$apartment->get('field_apartment_number')->isEmpty()) {
-    $apartment_number = trim((string) $apartment->get('field_apartment_number')->value);
-  }
 
   $prefix = (string) t('Esittelyaika');
-  $text = $apartment_number !== ''
-    ? "$prefix $apartment_number"
-    : $prefix;
+  $text = $prefix;
 
   return [
     'text' => $text,
