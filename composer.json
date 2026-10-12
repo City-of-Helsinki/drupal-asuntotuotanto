@@ -204,7 +204,8 @@
             "ignore-dependency-patches": [
                 "drupal/helfi_platform_config",
                 "drupal/big_pipe_sessionless",
-                "drupal/helfi_azure_fs"
+                "drupal/helfi_azure_fs",
+                "drupal/flysystem"
             ]
         },
         "drupal-lenient": {

@@ -1,5 +1,5 @@
 {
-    "_hash": "e75f269e3e7ba688c2746ce74f60ec757993f21f9e3b3dd4a2e751ccde9c0241",
+    "_hash": "5c60dd1aaf7da39c763a0131db5fdf6e8a377053011ade15d0a8096427ec33a7",
     "patches": {
         "drupal/helfi_platform_config": [
             {
@@ -182,18 +182,6 @@
                 "depth": 1,
                 "extra": {
                     "provenance": "root"
-                }
-            }
-        ],
-        "drupal/flysystem": [
-            {
-                "package": "drupal/flysystem",
-                "description": "[#3525203] Remove duplicated Add content button (https://www.drupal.org/i/3525203)",
-                "url": "./public/modules/contrib/helfi_azure_fs/patches/3525203.patch",
-                "sha256": "d0ae42c0919e7eda3dae191f3dd5b83fc38ea99dd6f428c5eb57cf4fe0e0d166",
-                "depth": 1,
-                "extra": {
-                    "provenance": "dependency:drupal/flysystem"
                 }
             }
         ],
