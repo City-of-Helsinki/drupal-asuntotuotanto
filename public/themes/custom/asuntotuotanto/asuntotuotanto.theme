@@ -1295,8 +1295,7 @@ function asuntotuotanto_get_project_showing_time_preview(NodeInterface $project,
 }
 
 /**
- * Returns project ids that are active
- * based on manual homepage highlight fields.
+ * Returns active project IDs from manual homepage highlight fields.
  */
 function asuntotuotanto_get_manual_homepage_highlight_project_ids(string $now): array {
   $query = \Drupal::entityQuery('node')
