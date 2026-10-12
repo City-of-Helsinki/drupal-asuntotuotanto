@@ -34,7 +34,7 @@
         "drupal/encrypt": "^3.2",
         "drupal/externalauth": "^2.0",
         "drupal/field_group": "^4.0",
-        "drupal/flysystem": "^2.3",
+        "drupal/flysystem": "^3.0",
         "drupal/gdpr_compliance": "^1.25",
         "drupal/gin": "^5.0",
         "drupal/gin_login": "^2.1",
@@ -43,7 +43,7 @@
         "drupal/hdbt": "^6.16",
         "drupal/hdbt_admin": "^3.4",
         "drupal/helfi_api_base": "^2.8",
-        "drupal/helfi_azure_fs": "^2.2",
+        "drupal/helfi_azure_fs": "^3.0",
         "drupal/helfi_platform_config": "^5.1",
         "drupal/helfi_tunnistamo": "^3.1",
         "drupal/honeypot": "^2.2",
@@ -203,7 +203,8 @@
         "composer-patches": {
             "ignore-dependency-patches": [
                 "drupal/helfi_platform_config",
-                "drupal/big_pipe_sessionless"
+                "drupal/big_pipe_sessionless",
+                "drupal/helfi_azure_fs"
             ]
         },
         "drupal-lenient": {
@@ -217,6 +218,23 @@
         }
     },
     "repositories": [
+        {
+            "type": "package",
+            "package": {
+                "name": "drupal/imagecache_external",
+                "version": "3.0.9",
+                "type": "drupal-module",
+                "source": {
+                    "url": "https://git.drupalcode.org/project/imagecache_external.git",
+                    "type": "git",
+                    "reference": "3.0.9"
+                },
+                "require": {
+                    "drupal/core": "^10.1 || ^11",
+                    "enshrined/svg-sanitize": "^0.22 || ^1.0"
+                }
+            }
+        },
         {
             "type": "package",
             "package": {
