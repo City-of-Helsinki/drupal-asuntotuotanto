@@ -1096,7 +1096,8 @@ function asuntotuotanto_get_homepage_highlight_projects(int $limit = 4): array {
   $manual_project_ids = asuntotuotanto_get_manual_homepage_highlight_project_ids($now);
   $auto_project_ids = asuntotuotanto_get_projects_with_apartment_showing_time_ids($now);
 
-  // Manual highlights first, then projects auto-promoted by apartment showing time.
+  // Manual highlights first, then projects auto-promoted
+  // by apartment showing time.
   $project_ids = array_values(array_unique(array_merge($manual_project_ids, $auto_project_ids)));
 
   $node_storage = \Drupal::entityTypeManager()->getStorage('node');
@@ -1294,7 +1295,8 @@ function asuntotuotanto_get_project_showing_time_preview(NodeInterface $project,
 }
 
 /**
- * Returns project ids that are active based on manual homepage highlight fields.
+ * Returns project ids that are active
+ * based on manual homepage highlight fields.
  */
 function asuntotuotanto_get_manual_homepage_highlight_project_ids(string $now): array {
   $query = \Drupal::entityQuery('node')
