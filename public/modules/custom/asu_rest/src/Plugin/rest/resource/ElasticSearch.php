@@ -92,7 +92,7 @@ class ElasticSearch extends ResourceBase {
     }
     $url_params = ($url_params) ? implode('_', $url_params) : '';
     // Bump cache namespace when response payload shape changes.
-    $cid = 'asu_rest:apartment_list:v4:' . $ownership_type . $url_params;
+    $cid = 'asu_rest:apartment_list:v6:' . $ownership_type . $url_params;
 
     $account = User::load(\Drupal::currentUser()->id());
     $debug = $account && $account->id() == 1;
@@ -338,6 +338,59 @@ class ElasticSearch extends ResourceBase {
 
             return array_values(array_unique($values));
           };
+          $get_showing_time_field = static function (Node $node): string {
+            if ($node->hasField('field_showing_time_range') && !$node->get('field_showing_time_range')->isEmpty()) {
+              return 'field_showing_time_range';
+            }
+
+            return 'field_showing_time';
+          };
+          $build_showing_time_ranges = static function (Node $node, string $field): array {
+            if (!$node->hasField($field) || $node->get($field)->isEmpty()) {
+              return [];
+            }
+
+            $ranges = [];
+            foreach ($node->get($field)->getValue() as $item) {
+              $showing_time = isset($item['value']) && is_string($item['value']) ? $item['value'] : '';
+              if ($showing_time === '') {
+                continue;
+              }
+
+              $start_timestamp = strtotime($showing_time . ' UTC');
+              if ($start_timestamp === FALSE) {
+                continue;
+              }
+
+              $end_value = isset($item['end_value']) && is_string($item['end_value']) ? $item['end_value'] : '';
+              $end_timestamp = NULL;
+              if ($end_value !== '') {
+                $parsed_end_timestamp = strtotime($end_value . ' UTC');
+                if ($parsed_end_timestamp !== FALSE && $parsed_end_timestamp > $start_timestamp) {
+                  $end_timestamp = $parsed_end_timestamp;
+                }
+              }
+
+              $start_text = \Drupal::service('date.formatter')->format($start_timestamp, 'custom', 'd.m.Y H:i');
+
+              $display = $start_text;
+              $end_output = NULL;
+              if ($end_timestamp !== NULL) {
+                $same_day = gmdate('Y-m-d', $start_timestamp) === gmdate('Y-m-d', $end_timestamp);
+                $end_text = \Drupal::service('date.formatter')->format($end_timestamp, 'custom', $same_day ? 'H:i' : 'd.m.Y H:i');
+                $display = $start_text . ' - ' . $end_text;
+                $end_output = gmdate('Y-m-d\\TH:i:s', $end_timestamp);
+              }
+
+              $ranges[] = [
+                'start' => $showing_time,
+                'end' => $end_output,
+                'display' => $display,
+              ];
+            }
+
+            return $ranges;
+          };
 
           // Keep state enums in canonical form for FE logic.
           $apartment_state_of_sale = $get_term_enum($apartment_node, 'field_apartment_state_of_sale');
@@ -368,6 +421,9 @@ class ElasticSearch extends ResourceBase {
           $project_state_of_sale = $get_term_enum($project_node, 'field_state_of_sale');
 
           $room_count = $this->resolveApartmentRoomCount($apartment_node);
+          $showing_time_field = $get_showing_time_field($apartment_node);
+          $showing_times = $get_datetime_values($apartment_node, $showing_time_field);
+          $showing_time_ranges = $build_showing_time_ranges($apartment_node, $showing_time_field);
 
           $apartment_number = $get_scalar($apartment_node, 'field_apartment_number');
           $application_url = '';
@@ -419,7 +475,8 @@ class ElasticSearch extends ResourceBase {
             'project_uuid' => $project_node->uuid(),
             'release_payment' => $this->toCents($get_scalar($apartment_node, 'field_release_payment')),
             'right_of_occupancy_payment' => $this->toCents($get_scalar($apartment_node, 'field_right_of_occupancy_payment')),
-            'showing_times' => $get_datetime_values($apartment_node, 'field_showing_time'),
+            'showing_times' => $showing_times,
+            'showing_time_ranges' => $showing_time_ranges,
             'title' => $apartment_node->label(),
             'url' => $this->buildAbsoluteUrl($apartment_node->toUrl()->toString()),
             'uuid' => $apartment_node->uuid(),
