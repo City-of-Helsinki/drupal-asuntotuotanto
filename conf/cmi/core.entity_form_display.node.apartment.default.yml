@@ -42,6 +42,7 @@ dependencies:
     - field.field.node.apartment.field_sales_price
     - field.field.node.apartment.field_services_description
     - field.field.node.apartment.field_showing_time
+    - field.field.node.apartment.field_showing_time_range
     - field.field.node.apartment.field_stock_end_number
     - field.field.node.apartment.field_stock_start_number
     - field.field.node.apartment.field_storage_description
@@ -52,6 +53,7 @@ dependencies:
     - node.type.apartment
   module:
     - datetime
+    - datetime_range
     - field_group
     - file
     - hdbt_admin_tools
@@ -89,7 +91,7 @@ third_party_settings:
         - field_application_url
         - field_stock_start_number
         - field_stock_end_number
-        - field_showing_time
+        - field_showing_time_range
         - field_has_yard
         - field_has_terrace
         - field_has_balcony
@@ -436,6 +438,12 @@ content:
     third_party_settings: {  }
   field_showing_time:
     type: datetime_default
+    weight: 12
+    region: hidden
+    settings: {  }
+    third_party_settings: {  }
+  field_showing_time_range:
+    type: daterange_default
     weight: 12
     region: content
     settings: {  }
