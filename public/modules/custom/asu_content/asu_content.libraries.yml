@@ -2,9 +2,3 @@ asu_editform:
   version: 1.x
   js:
     assets/js/asu_editform.js: {}
-
-asu_apartment_showing_time:
-  version: 1.x
-  css:
-    theme:
-      assets/css/asu_apartment_showing_time.css: {}
