@@ -198,7 +198,6 @@ function asu_content_apartment_showing_time_duration_validate(array &$form, Form
     }
 
     $end_timestamp = $start_timestamp + ($duration * 60);
-    $end_value = gmdate('Y-m-d\\TH:i:s', $end_timestamp);
     $end_date = gmdate('Y-m-d', $end_timestamp);
     $end_time = gmdate('H:i:s', $end_timestamp);
 
@@ -604,7 +603,10 @@ function asu_content_entity_presave(EntityInterface $entity) {
           }
 
           $duration_minutes = 0;
-          if (isset($rows_input[$delta]['showing_duration_minutes']) && is_scalar($rows_input[$delta]['showing_duration_minutes'])) {
+          if (
+            isset($rows_input[$delta]['showing_duration_minutes'])
+            && is_scalar($rows_input[$delta]['showing_duration_minutes'])
+          ) {
             $duration_minutes = (int) $rows_input[$delta]['showing_duration_minutes'];
           }
 
@@ -613,7 +615,7 @@ function asu_content_entity_presave(EntityInterface $entity) {
             continue;
           }
 
-          // Keep data valid even if UI duration was not provided for some reason.
+          // Keep data valid even if UI duration is missing.
           $effective_duration = $duration_minutes > 0 ? $duration_minutes : 60;
           $range['end_value'] = gmdate('Y-m-d\\TH:i:s', $start_timestamp + ($effective_duration * 60));
         }
