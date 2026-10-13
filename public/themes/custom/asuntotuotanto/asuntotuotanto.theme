@@ -1250,41 +1250,38 @@ function asuntotuotanto_get_project_showing_time_preview(NodeInterface $project,
     return [];
   }
 
-  $now_timestamp = strtotime($now . ' UTC');
-  if ($now_timestamp === FALSE) {
+  $apartment_query = \Drupal::entityQuery('node')
+    ->accessCheck(TRUE)
+    ->condition('type', 'apartment')
+    ->condition('status', 1)
+    ->condition('nid', $apartment_ids, 'IN')
+    ->exists('field_showing_time')
+    ->condition('field_showing_time', $now, '>=')
+    ->sort('field_showing_time', 'ASC')
+    ->range(0, 1);
+
+  $matching_apartment_ids = $apartment_query->execute();
+  if (empty($matching_apartment_ids)) {
     return [];
   }
 
-  $apartments = \Drupal::entityTypeManager()->getStorage('node')->loadMultiple($apartment_ids);
-
-  $closest_showing_start = NULL;
-  $closest_showing_end = NULL;
-  $closest_apartment = NULL;
-
-  foreach ($apartments as $apartment) {
-    if (!$apartment instanceof NodeInterface || !$apartment->isPublished()) {
-      continue;
-    }
-
-    foreach (asuntotuotanto_get_apartment_showing_ranges($apartment) as $showing_range) {
-      $showing_timestamp = $showing_range['start'];
-      if ($showing_timestamp < $now_timestamp) {
-        continue;
-      }
-
-      if ($closest_showing_start === NULL || $showing_timestamp < $closest_showing_start) {
-        $closest_showing_start = $showing_timestamp;
-        $closest_showing_end = $showing_range['end'];
-        $closest_apartment = $apartment;
-      }
-    }
-  }
-
-  if ($closest_showing_start === NULL || !$closest_apartment instanceof NodeInterface) {
+  $apartment_id = (int) reset($matching_apartment_ids);
+  $apartment = \Drupal::entityTypeManager()->getStorage('node')->load($apartment_id);
+  if (!$apartment instanceof NodeInterface || !$apartment->hasField('field_showing_time') || $apartment->get('field_showing_time')->isEmpty()) {
     return [];
   }
 
-  $showing_time_formatted = asuntotuotanto_format_showing_time_range($closest_showing_start, $closest_showing_end);
+  $showing_time_value = (string) $apartment->get('field_showing_time')->value;
+  if ($showing_time_value === '') {
+    return [];
+  }
+
+  $showing_timestamp = strtotime($showing_time_value . ' UTC');
+  if ($showing_timestamp === FALSE) {
+    return [];
+  }
+
+  $showing_time_formatted = \Drupal::service('date.formatter')->format($showing_timestamp, 'custom', 'd.m.Y H:i');
 
   $prefix = (string) t('Esittelyaika');
   $text = $prefix;
@@ -1292,77 +1289,13 @@ function asuntotuotanto_get_project_showing_time_preview(NodeInterface $project,
   return [
     'text' => $text,
     'datetime_text' => $showing_time_formatted,
-    'timestamp' => (int) $closest_showing_start,
-    'cache_tags' => $closest_apartment->getCacheTags(),
+    'timestamp' => (int) $showing_timestamp,
+    'cache_tags' => $apartment->getCacheTags(),
   ];
 }
 
 /**
- * Returns parsed showing time ranges from the apartment node.
- */
-function asuntotuotanto_get_apartment_showing_ranges(NodeInterface $apartment): array {
-  $items = [];
-
-  if ($apartment->hasField('field_showing_time_range') && !$apartment->get('field_showing_time_range')->isEmpty()) {
-    $items = $apartment->get('field_showing_time_range')->getValue();
-  }
-  elseif ($apartment->hasField('field_showing_time') && !$apartment->get('field_showing_time')->isEmpty()) {
-    $items = $apartment->get('field_showing_time')->getValue();
-  }
-
-  if (empty($items)) {
-    return [];
-  }
-
-  $ranges = [];
-  foreach ($items as $item) {
-    $start_value = isset($item['value']) && is_string($item['value']) ? $item['value'] : '';
-    if ($start_value === '') {
-      continue;
-    }
-
-    $start_timestamp = strtotime($start_value . ' UTC');
-    if ($start_timestamp === FALSE) {
-      continue;
-    }
-
-    $end_timestamp = NULL;
-    $end_value = isset($item['end_value']) && is_string($item['end_value']) ? $item['end_value'] : '';
-    if ($end_value !== '') {
-      $parsed_end_timestamp = strtotime($end_value . ' UTC');
-      if ($parsed_end_timestamp !== FALSE && $parsed_end_timestamp > $start_timestamp) {
-        $end_timestamp = $parsed_end_timestamp;
-      }
-    }
-
-    $ranges[] = [
-      'start' => $start_timestamp,
-      'end' => $end_timestamp,
-    ];
-  }
-
-  return $ranges;
-}
-
-/**
- * Formats showing time as a start-end range when end time is available.
- */
-function asuntotuotanto_format_showing_time_range(int $start_timestamp, ?int $end_timestamp = NULL): string {
-  $date_formatter = \Drupal::service('date.formatter');
-  $start_text = $date_formatter->format($start_timestamp, 'custom', 'd.m.Y H:i');
-
-  if ($end_timestamp === NULL || $end_timestamp <= $start_timestamp) {
-    return $start_text;
-  }
-
-  $same_day = gmdate('Y-m-d', $start_timestamp) === gmdate('Y-m-d', $end_timestamp);
-  $end_text = $date_formatter->format($end_timestamp, 'custom', $same_day ? 'H:i' : 'd.m.Y H:i');
-
-  return $start_text . ' - ' . $end_text;
-}
-
-/**
- * Returns project ids that are active based on manual homepage highlight fields.
+ * Returns active project IDs from manual homepage highlight fields.
  */
 function asuntotuotanto_get_manual_homepage_highlight_project_ids(string $now): array {
   $query = \Drupal::entityQuery('node')
@@ -1395,13 +1328,9 @@ function asuntotuotanto_get_projects_with_apartment_showing_time_ids(string $now
     ->accessCheck(TRUE)
     ->condition('type', 'apartment')
     ->condition('status', 1)
-    ->range(0, 1000);
-
-  $showing_time_group = $apartment_query->orConditionGroup()
+    ->exists('field_showing_time')
     ->condition('field_showing_time', $now, '>=')
-    ->condition('field_showing_time_range.value', $now, '>=');
-
-  $apartment_query->condition($showing_time_group);
+    ->range(0, 1000);
 
   $apartment_ids = $apartment_query->execute();
   if (empty($apartment_ids)) {

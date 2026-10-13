@@ -43,7 +43,6 @@ dependencies:
     - field.field.node.apartment.field_sales_price
     - field.field.node.apartment.field_services_description
     - field.field.node.apartment.field_showing_time
-    - field.field.node.apartment.field_showing_time_range
     - field.field.node.apartment.field_stock_end_number
     - field.field.node.apartment.field_stock_start_number
     - field.field.node.apartment.field_storage_description
@@ -138,7 +137,6 @@ hidden:
   field_services_description: true
   field_shareholder_meeting_date: true
   field_showing_time: true
-  field_showing_time_range: true
   field_stock_end_number: true
   field_stock_start_number: true
   field_storage_description: true
