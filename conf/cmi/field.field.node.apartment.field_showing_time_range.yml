@@ -1,0 +1,21 @@
+uuid: 2ac45b47-5674-4622-b6ca-13c59fe9cf75
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_showing_time_range
+    - node.type.apartment
+  module:
+    - datetime_range
+id: node.apartment.field_showing_time_range
+field_name: field_showing_time_range
+entity_type: node
+bundle: apartment
+label: 'Showing time'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: daterange
