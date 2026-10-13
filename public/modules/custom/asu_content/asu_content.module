@@ -76,6 +76,7 @@ function asu_content_form_node_form_alter(&$form, $form_state) {
   asu_content_show_computed_fields($form, $form_state);
   asu_content_project_add_archived_handling($form, $form_state);
   asu_content_hide_field_in_apartment_edit($form, $form_state);
+  asu_content_apartment_showing_time_duration_widget($form, $form_state);
 
   // Only show this when editing the form.
   if (!$form_state->isSubmitted()) {
@@ -84,6 +85,166 @@ function asu_content_form_node_form_alter(&$form, $form_state) {
     $entity = $form_state->getFormObject()->getEntity();
     asu_content_check_apartment_integration_fields($form, $entity, "form");
   }
+}
+
+/**
+ * Replace showing time end datetime with duration input on apartment forms.
+ */
+function asu_content_apartment_showing_time_duration_widget(array &$form, FormStateInterface $form_state): void {
+  if (!in_array($form['#form_id'] ?? '', ['node_apartment_form', 'node_apartment_edit_form'], TRUE)) {
+    return;
+  }
+
+  if (!isset($form['field_showing_time_range']['widget']) || !is_array($form['field_showing_time_range']['widget'])) {
+    return;
+  }
+
+  $form['#attached']['library'][] = 'asu_content/asu_apartment_showing_time';
+  $form['field_showing_time_range']['#attributes']['class'][] = 'asu-showing-time-range';
+
+  $submitted_rows = $form_state->getUserInput()['field_showing_time_range'] ?? [];
+  $entity = $form_state->getFormObject()?->getEntity();
+  $stored_rows = [];
+  if ($entity instanceof Node && $entity->hasField('field_showing_time_range') && !$entity->get('field_showing_time_range')->isEmpty()) {
+    $stored_rows = $entity->get('field_showing_time_range')->getValue();
+  }
+
+  foreach (Element::children($form['field_showing_time_range']['widget']) as $delta) {
+    if (!is_numeric((string) $delta)) {
+      continue;
+    }
+
+    if (!isset($form['field_showing_time_range']['widget'][$delta]['value'])) {
+      continue;
+    }
+
+    $row_element = &$form['field_showing_time_range']['widget'][$delta];
+
+    if (isset($row_element['end_value'])) {
+      $row_element['end_value']['#access'] = FALSE;
+    }
+
+    $default_duration = '';
+    if (isset($submitted_rows[$delta]['showing_duration_minutes']) && is_scalar($submitted_rows[$delta]['showing_duration_minutes'])) {
+      $default_duration = (string) $submitted_rows[$delta]['showing_duration_minutes'];
+    }
+    elseif (isset($stored_rows[$delta]['value'], $stored_rows[$delta]['end_value'])
+      && is_string($stored_rows[$delta]['value'])
+      && is_string($stored_rows[$delta]['end_value'])) {
+      $start_timestamp = strtotime($stored_rows[$delta]['value'] . ' UTC');
+      $end_timestamp = strtotime($stored_rows[$delta]['end_value'] . ' UTC');
+      if ($start_timestamp !== FALSE && $end_timestamp !== FALSE && $end_timestamp > $start_timestamp) {
+        $default_duration = (string) intdiv($end_timestamp - $start_timestamp, 60);
+      }
+    }
+
+    $row_element['showing_duration_minutes'] = [
+      '#type' => 'number',
+      '#title' => t('Esittelyn kesto (minuuttia)'),
+      '#default_value' => $default_duration,
+      '#min' => 1,
+      '#step' => 1,
+      '#weight' => 2,
+    ];
+  }
+
+  $validators = $form['#validate'] ?? [];
+  $validators = array_values(array_filter($validators, static function ($handler): bool {
+    return $handler !== 'asu_content_apartment_showing_time_duration_validate';
+  }));
+  array_unshift($validators, 'asu_content_apartment_showing_time_duration_validate');
+  $form['#validate'] = $validators;
+}
+
+/**
+ * Builds daterange end values from per-row duration inputs.
+ */
+function asu_content_apartment_showing_time_duration_validate(array &$form, FormStateInterface $form_state): void {
+  if (!in_array($form['#form_id'] ?? '', ['node_apartment_form', 'node_apartment_edit_form'], TRUE)) {
+    return;
+  }
+
+  $rows = $form_state->getUserInput()['field_showing_time_range'] ?? [];
+  if (!is_array($rows)) {
+    return;
+  }
+
+  $input = $form_state->getUserInput();
+  $user_timezone = new \DateTimeZone(date_default_timezone_get());
+
+  foreach ($rows as $delta => $row) {
+    if (!is_numeric((string) $delta) || !is_array($row)) {
+      continue;
+    }
+
+    $duration = isset($row['showing_duration_minutes']) && is_scalar($row['showing_duration_minutes'])
+      ? (int) $row['showing_duration_minutes']
+      : 0;
+
+    $start_timestamp = asu_content_parse_datetime_widget_input($row['value'] ?? NULL);
+    if ($start_timestamp === NULL) {
+      continue;
+    }
+
+    if ($duration <= 0) {
+      $form_state->setErrorByName("field_showing_time_range][$delta][showing_duration_minutes", t('Esittelyn kesto (minuuttia) on pakollinen, kun aloituspäivämäärä on annettu.'));
+      if (isset($input['field_showing_time_range'][$delta])) {
+        $input['field_showing_time_range'][$delta]['end_value'] = [
+          'date' => '',
+          'time' => '',
+        ];
+      }
+      continue;
+    }
+
+    $end_timestamp = $start_timestamp + ($duration * 60);
+    $end_date = gmdate('Y-m-d', $end_timestamp);
+    $end_time = gmdate('H:i:s', $end_timestamp);
+
+    $end_date_object = DrupalDateTime::createFromTimestamp($end_timestamp, $user_timezone);
+
+    $form_state->setValue(['field_showing_time_range', $delta, 'end_value'], $end_date_object);
+    $form_state->setValue(['field_showing_time_range', 'widget', $delta, 'end_value'], $end_date_object);
+
+    if (isset($input['field_showing_time_range'][$delta])) {
+      $input['field_showing_time_range'][$delta]['end_value'] = [
+        'date' => $end_date,
+        'time' => $end_time,
+      ];
+    }
+  }
+
+  $form_state->setUserInput($input);
+}
+
+/**
+ * Parse datetime widget input into timestamp.
+ */
+function asu_content_parse_datetime_widget_input(mixed $value): ?int {
+  if (is_string($value) && $value !== '') {
+    $timestamp = strtotime($value . ' UTC');
+    return $timestamp === FALSE ? NULL : $timestamp;
+  }
+
+  if (is_array($value)) {
+    $date = isset($value['date']) && is_string($value['date']) ? trim($value['date']) : '';
+    $time = isset($value['time']) && is_string($value['time']) ? trim($value['time']) : '';
+    if ($date === '') {
+      return NULL;
+    }
+
+    $date_time_string = trim($date . ' ' . ($time !== '' ? $time : '00:00:00'));
+    $formats = ['d/m/Y H:i:s', 'd/m/Y H:i', 'Y-m-d H:i:s', 'Y-m-d H:i'];
+    $timezone = new \DateTimeZone(date_default_timezone_get());
+    foreach ($formats as $format) {
+      $date_time = \DateTimeImmutable::createFromFormat($format, $date_time_string, $timezone);
+      if ($date_time instanceof \DateTimeImmutable) {
+        return $date_time->getTimestamp();
+      }
+    }
+  }
+
+  return NULL;
 }
 
 /**
@@ -428,6 +589,41 @@ function asu_content_entity_presave(EntityInterface $entity) {
     method_exists($entity, 'getType')
   ) {
     if ($entity->getType() == 'apartment') {
+      // Ensure daterange items always have end_value before storage.
+      if ($entity->hasField('field_showing_time_range') && !$entity->get('field_showing_time_range')->isEmpty()) {
+        $rows_input = \Drupal::requestStack()->getCurrentRequest()->request->all()['field_showing_time_range'] ?? [];
+        $ranges = $entity->get('field_showing_time_range')->getValue();
+
+        foreach ($ranges as $delta => &$range) {
+          $start_value = isset($range['value']) && is_string($range['value']) ? $range['value'] : '';
+          $end_value = isset($range['end_value']) && is_string($range['end_value']) ? $range['end_value'] : '';
+
+          if ($start_value === '' || $end_value !== '') {
+            continue;
+          }
+
+          $duration_minutes = 0;
+          if (
+            isset($rows_input[$delta]['showing_duration_minutes'])
+            && is_scalar($rows_input[$delta]['showing_duration_minutes'])
+          ) {
+            $duration_minutes = (int) $rows_input[$delta]['showing_duration_minutes'];
+          }
+
+          $start_timestamp = strtotime($start_value . ' UTC');
+          if ($start_timestamp === FALSE) {
+            continue;
+          }
+
+          // Keep data valid even if UI duration is missing.
+          $effective_duration = $duration_minutes > 0 ? $duration_minutes : 60;
+          $range['end_value'] = gmdate('Y-m-d\\TH:i:s', $start_timestamp + ($effective_duration * 60));
+        }
+        unset($range);
+
+        $entity->set('field_showing_time_range', $ranges);
+      }
+
       // Apartment title is generated using project information.
       if (!$entity->isNew()) {
         $title = $entity->getTitle() ?? t('Apartment');
