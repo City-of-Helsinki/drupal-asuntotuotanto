@@ -42,6 +42,7 @@ dependencies:
     - field.field.node.apartment.field_sales_price
     - field.field.node.apartment.field_services_description
     - field.field.node.apartment.field_showing_time
+    - field.field.node.apartment.field_showing_time_range
     - field.field.node.apartment.field_stock_end_number
     - field.field.node.apartment.field_stock_start_number
     - field.field.node.apartment.field_storage_description
@@ -54,6 +55,7 @@ dependencies:
   module:
     - asu_content
     - datetime
+    - datetime_range
     - file
     - image
     - link
@@ -557,6 +559,7 @@ hidden:
   field_housing_company_fee: true
   field_price_m2: true
   field_project_url: true
+  field_showing_time_range: true
   langcode: true
   multiple_values_field: true
   published_at: true
