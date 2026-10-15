@@ -92,7 +92,7 @@ class ElasticSearch extends ResourceBase {
     }
     $url_params = ($url_params) ? implode('_', $url_params) : '';
     // Bump cache namespace when response payload shape changes.
-    $cid = 'asu_rest:apartment_list:v6:' . $ownership_type . $url_params;
+    $cid = 'asu_rest:apartment_list:v7:' . $ownership_type . $url_params;
 
     $account = User::load(\Drupal::currentUser()->id());
     $debug = $account && $account->id() == 1;
@@ -170,6 +170,9 @@ class ElasticSearch extends ResourceBase {
           [$price_min, $price_max] = [$price_max, $price_min];
         }
 
+        $property_options = $this->resolvePropertyOptions($request_data);
+        $floor_options = $this->resolveFloorOptions($request_data);
+
         if ($ownership_type === 'haso') {
           // Legacy FE sends HASO max as 5500 -> 550000000. Convert to
           // comparable payload scale (5 500 000) for HASO cards.
@@ -205,6 +208,18 @@ class ElasticSearch extends ResourceBase {
           $apartment_id = (int) $apartment_node->id();
           $project_node = $apartment_project_map[$apartment_id] ?? NULL;
           if (!$project_node || !$project_node->isPublished()) {
+            continue;
+          }
+
+          if (!$this->matchesProjectPropertyFilters($project_node, $property_options)) {
+            continue;
+          }
+
+          if (!$this->matchesApartmentPropertyFilters($apartment_node, $property_options)) {
+            continue;
+          }
+
+          if (!$this->matchesFloorFilters($apartment_node, $floor_options)) {
             continue;
           }
 
@@ -526,6 +541,234 @@ class ElasticSearch extends ResourceBase {
     }
 
     return array_values(array_unique(array_filter($normalized, static fn (int $v): bool => $v > 0)));
+  }
+
+  /**
+   * Normalize request properties to lowercase values.
+   *
+   * @return string[]
+   *   Normalized property keys.
+   */
+  private function normalizePropertyList(mixed $raw): array {
+    if ($raw === NULL || $raw === '') {
+      return [];
+    }
+
+    if (is_string($raw)) {
+      $raw = array_map('trim', explode(',', $raw));
+    }
+
+    if (!is_array($raw)) {
+      return [];
+    }
+
+    $normalized = [];
+    foreach ($raw as $value) {
+      if (!is_scalar($value)) {
+        continue;
+      }
+      $item = strtolower(trim((string) $value));
+      if ($item !== '') {
+        $normalized[] = $item;
+      }
+    }
+
+    return array_values(array_unique($normalized));
+  }
+
+  /**
+   * Normalize mixed query value into nullable boolean.
+   */
+  private function normalizeBooleanParam(mixed $value): ?bool {
+    if ($value === NULL || $value === '') {
+      return NULL;
+    }
+
+    if (is_bool($value)) {
+      return $value;
+    }
+
+    if (is_numeric($value)) {
+      return ((int) $value) !== 0;
+    }
+
+    if (is_string($value)) {
+      $normalized = strtolower(trim($value));
+      if (in_array($normalized, ['1', 'true', 'yes', 'on'], TRUE)) {
+        return TRUE;
+      }
+      if (in_array($normalized, ['0', 'false', 'no', 'off'], TRUE)) {
+        return FALSE;
+      }
+    }
+
+    return NULL;
+  }
+
+  /**
+   * Resolve apartment and project property options from request payload.
+   *
+   * @return array<string, ?bool>
+   *   Normalized property options.
+   */
+  private function resolvePropertyOptions(array $requestData): array {
+    $properties = $this->normalizePropertyList($requestData['properties'] ?? NULL);
+    $resolve = function (string $key) use ($requestData, $properties): ?bool {
+      $direct = $this->normalizeBooleanParam($requestData[$key] ?? NULL);
+      if ($direct !== NULL) {
+        return $direct;
+      }
+      return in_array($key, $properties, TRUE) ? TRUE : NULL;
+    };
+
+    return [
+      'project_has_elevator' => $resolve('project_has_elevator'),
+      'project_has_sauna' => $resolve('project_has_sauna'),
+      'has_apartment_sauna' => $resolve('has_apartment_sauna'),
+      'has_terrace' => $resolve('has_terrace'),
+      'has_balcony' => $resolve('has_balcony'),
+      'has_yard' => $resolve('has_yard'),
+    ];
+  }
+
+  /**
+   * Resolve floor-related options from request payload.
+   *
+   * @return array<string, ?bool>
+   *   Normalized floor options.
+   */
+  private function resolveFloorOptions(array $requestData): array {
+    $properties = $this->normalizePropertyList($requestData['properties'] ?? NULL);
+    $resolve = function (string $key) use ($requestData, $properties): ?bool {
+      $direct = $this->normalizeBooleanParam($requestData[$key] ?? NULL);
+      if ($direct !== NULL) {
+        return $direct;
+      }
+      return in_array($key, $properties, TRUE) ? TRUE : NULL;
+    };
+
+    return [
+      'top_floor' => $resolve('top_floor'),
+      'bottom_floor' => $resolve('bottom_floor'),
+      'not_top_floor' => $resolve('not_top_floor'),
+      'not_bottom_floor' => $resolve('not_bottom_floor'),
+    ];
+  }
+
+  /**
+   * Read a scalar integer field value from a node.
+   */
+  private function getNodeInt(Node $node, string $fieldName): ?int {
+    if (!$node->hasField($fieldName) || $node->get($fieldName)->isEmpty()) {
+      return NULL;
+    }
+
+    $raw = (string) $node->get($fieldName)->value;
+    if ($raw === '' || !is_numeric($raw)) {
+      return NULL;
+    }
+
+    return (int) $raw;
+  }
+
+  /**
+   * Read a scalar boolean field value from a node.
+   */
+  private function getNodeBoolean(Node $node, string $fieldName): ?bool {
+    if (!$node->hasField($fieldName) || $node->get($fieldName)->isEmpty()) {
+      return NULL;
+    }
+
+    return ((string) $node->get($fieldName)->value) === '1';
+  }
+
+  /**
+   * Match project-level boolean filters against a project node.
+   */
+  private function matchesProjectPropertyFilters(Node $project, array $options): bool {
+    $checks = [
+      'project_has_elevator' => 'field_has_elevator',
+      'project_has_sauna' => 'field_has_sauna',
+    ];
+
+    foreach ($checks as $optionKey => $fieldName) {
+      $expected = $options[$optionKey] ?? NULL;
+      if ($expected === NULL) {
+        continue;
+      }
+
+      $actual = $this->getNodeBoolean($project, $fieldName);
+      if ($actual === NULL || $actual !== $expected) {
+        return FALSE;
+      }
+    }
+
+    return TRUE;
+  }
+
+  /**
+   * Match apartment-level boolean filters against an apartment node.
+   */
+  private function matchesApartmentPropertyFilters(Node $apartment, array $options): bool {
+    $checks = [
+      'has_apartment_sauna' => 'field_has_apartment_sauna',
+      'has_terrace' => 'field_has_terrace',
+      'has_balcony' => 'field_has_balcony',
+      'has_yard' => 'field_has_yard',
+    ];
+
+    foreach ($checks as $optionKey => $fieldName) {
+      $expected = $options[$optionKey] ?? NULL;
+      if ($expected === NULL) {
+        continue;
+      }
+
+      $actual = $this->getNodeBoolean($apartment, $fieldName);
+      if ($actual === NULL || $actual !== $expected) {
+        return FALSE;
+      }
+    }
+
+    return TRUE;
+  }
+
+  /**
+   * Match floor-related filters using floor and floor_max.
+   */
+  private function matchesFloorFilters(Node $apartment, array $options): bool {
+    $hasFloorFilter = FALSE;
+    foreach ($options as $value) {
+      if ($value !== NULL) {
+        $hasFloorFilter = TRUE;
+        break;
+      }
+    }
+    if (!$hasFloorFilter) {
+      return TRUE;
+    }
+
+    $floor = $this->getNodeInt($apartment, 'field_floor');
+    $floorMax = $this->getNodeInt($apartment, 'field_floor_max');
+
+    $top = $floor !== NULL && $floorMax !== NULL && $floorMax > 0 && $floor === $floorMax;
+    $bottom = $floor !== NULL && $floor === 1;
+    $notTop = $floor !== NULL && $floorMax !== NULL && $floorMax > 0 && $floor !== $floorMax;
+    $notBottom = $floor !== NULL && $floor !== 1;
+
+    if (($options['top_floor'] ?? NULL) !== NULL && ($options['top_floor'] !== $top)) {
+      return FALSE;
+    }
+    if (($options['bottom_floor'] ?? NULL) !== NULL && ($options['bottom_floor'] !== $bottom)) {
+      return FALSE;
+    }
+    if (($options['not_top_floor'] ?? NULL) !== NULL && ($options['not_top_floor'] !== $notTop)) {
+      return FALSE;
+    }
+    if (($options['not_bottom_floor'] ?? NULL) !== NULL && ($options['not_bottom_floor'] !== $notBottom)) {
+      return FALSE;
+    }
+
+    return TRUE;
   }
 
   /**
