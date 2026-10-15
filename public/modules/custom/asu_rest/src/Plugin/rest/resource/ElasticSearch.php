@@ -801,7 +801,9 @@ class ElasticSearch extends ResourceBase {
    * Match optional boolean filters against computed actual values.
    *
    * @param array<string, ?bool> $options
+   *   Requested filter values keyed by option name.
    * @param array<string, bool> $actualValues
+   *   Computed boolean values keyed by the same option names.
    */
   private function matchesOptionalBooleanFilters(array $options, array $actualValues): bool {
     foreach ($actualValues as $optionKey => $actual) {
@@ -820,6 +822,9 @@ class ElasticSearch extends ResourceBase {
    * Supports normalized frontend contract:
    * - floor_min (optional integer)
    * - floor_max (optional integer)
+   *
+   * @param array<string, mixed> $requestData
+   *   Request payload containing optional floor_min and floor_max values.
    *
    * @return array{0:?int,1:?int,2:?string}
    *   [min, max, error]. Error is non-null for invalid input.
@@ -844,6 +849,11 @@ class ElasticSearch extends ResourceBase {
 
   /**
    * Normalize optional integer request value.
+   *
+   * @param mixed $raw
+   *   Raw request value to parse as integer.
+   * @param string $key
+   *   Request key name used in validation error message.
    *
    * @return array{0:?int,1:?string}
    *   [value, error]. Error is non-null for invalid input.
@@ -1115,6 +1125,7 @@ class ElasticSearch extends ResourceBase {
    * Sort min/max bounds when both are present.
    *
    * @return array{0:?float,1:?float}
+   *   Bounds ordered as [min, max].
    */
   private function sortBounds(?float $min, ?float $max): array {
     if ($min !== NULL && $max !== NULL && $min > $max) {
