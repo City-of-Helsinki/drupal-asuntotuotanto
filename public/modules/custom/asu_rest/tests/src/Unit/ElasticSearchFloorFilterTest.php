@@ -47,7 +47,12 @@ final class ElasticSearchFloorFilterTest extends UnitTestCase {
       'negative floor is allowed' => [['floor_min' => '-1', 'floor_max' => '2'], -1, 2, NULL],
       'invalid floor_min value' => [['floor_min' => 'abc'], NULL, NULL, 'Invalid floor_min. Expected integer value.'],
       'invalid floor_max decimal string' => [['floor_max' => '3.5'], NULL, NULL, 'Invalid floor_max. Expected integer value.'],
-      'floor min greater than max' => [['floor_min' => '6', 'floor_max' => '3'], NULL, NULL, 'Invalid floor range: floor_min cannot be greater than floor_max.'],
+      'floor min greater than max' => [
+        ['floor_min' => '6', 'floor_max' => '3'],
+        NULL,
+        NULL,
+        'Invalid floor range: floor_min cannot be greater than floor_max.',
+      ],
     ];
   }
 

@@ -161,14 +161,10 @@ class ElasticSearch extends ResourceBase {
         $room_count_filter = $this->normalizeRoomCountFilter($parameters->get('room_count'));
 
         [$living_area_min, $living_area_max] = $this->normalizeLivingAreaBoundsForFilter($request_data);
-        if ($living_area_min !== NULL && $living_area_max !== NULL && $living_area_min > $living_area_max) {
-          [$living_area_min, $living_area_max] = [$living_area_max, $living_area_min];
-        }
+        [$living_area_min, $living_area_max] = $this->sortBounds($living_area_min, $living_area_max);
 
         [$price_min, $price_max] = $this->normalizePriceBoundsForFilter($request_data);
-        if ($price_min !== NULL && $price_max !== NULL && $price_min > $price_max) {
-          [$price_min, $price_max] = [$price_max, $price_min];
-        }
+        [$price_min, $price_max] = $this->sortBounds($price_min, $price_max);
 
         [$floor_min, $floor_max, $floor_error] = $this->normalizeFloorBoundsForFilter($request_data);
         if ($floor_error !== NULL) {
@@ -745,14 +741,7 @@ class ElasticSearch extends ResourceBase {
    * Match floor-related filters using floor and floor_max.
    */
   private function matchesFloorFilters(Node $apartment, array $options): bool {
-    $hasFloorFilter = FALSE;
-    foreach ($options as $value) {
-      if ($value !== NULL) {
-        $hasFloorFilter = TRUE;
-        break;
-      }
-    }
-    if (!$hasFloorFilter) {
+    if (!$this->hasAnyNonNullOption($options)) {
       return TRUE;
     }
 
@@ -764,17 +753,39 @@ class ElasticSearch extends ResourceBase {
     $notTop = $floor !== NULL && $floorMax !== NULL && $floorMax > 0 && $floor !== $floorMax;
     $notBottom = $floor !== NULL && $floor !== 1;
 
-    if (($options['top_floor'] ?? NULL) !== NULL && ($options['top_floor'] !== $top)) {
-      return FALSE;
+    return $this->matchesOptionalBooleanFilters($options, [
+      'top_floor' => $top,
+      'bottom_floor' => $bottom,
+      'not_top_floor' => $notTop,
+      'not_bottom_floor' => $notBottom,
+    ]);
+  }
+
+  /**
+   * Check whether at least one filter option is explicitly set.
+   */
+  private function hasAnyNonNullOption(array $options): bool {
+    foreach ($options as $value) {
+      if ($value !== NULL) {
+        return TRUE;
+      }
     }
-    if (($options['bottom_floor'] ?? NULL) !== NULL && ($options['bottom_floor'] !== $bottom)) {
-      return FALSE;
-    }
-    if (($options['not_top_floor'] ?? NULL) !== NULL && ($options['not_top_floor'] !== $notTop)) {
-      return FALSE;
-    }
-    if (($options['not_bottom_floor'] ?? NULL) !== NULL && ($options['not_bottom_floor'] !== $notBottom)) {
-      return FALSE;
+
+    return FALSE;
+  }
+
+  /**
+   * Match optional boolean filters against computed actual values.
+   *
+   * @param array<string, ?bool> $options
+   * @param array<string, bool> $actualValues
+   */
+  private function matchesOptionalBooleanFilters(array $options, array $actualValues): bool {
+    foreach ($actualValues as $optionKey => $actual) {
+      $expected = $options[$optionKey] ?? NULL;
+      if ($expected !== NULL && $expected !== $actual) {
+        return FALSE;
+      }
     }
 
     return TRUE;
@@ -791,42 +802,12 @@ class ElasticSearch extends ResourceBase {
    *   [min, max, error]. Error is non-null for invalid input.
    */
   private function normalizeFloorBoundsForFilter(array $requestData): array {
-    $normalize = function (mixed $raw, string $key): array {
-      if ($raw === NULL || $raw === '') {
-        return [NULL, NULL];
-      }
-
-      if (is_string($raw)) {
-        $raw = trim($raw);
-        if ($raw === '') {
-          return [NULL, NULL];
-        }
-      }
-
-      if (is_int($raw)) {
-        return [$raw, NULL];
-      }
-
-      if (is_float($raw)) {
-        if (floor($raw) === $raw) {
-          return [(int) $raw, NULL];
-        }
-        return [NULL, sprintf('Invalid %s. Expected integer value.', $key)];
-      }
-
-      if (is_string($raw) && preg_match('/^-?\d+$/', $raw) === 1) {
-        return [(int) $raw, NULL];
-      }
-
-      return [NULL, sprintf('Invalid %s. Expected integer value.', $key)];
-    };
-
-    [$min, $minError] = $normalize($requestData['floor_min'] ?? NULL, 'floor_min');
+    [$min, $minError] = $this->normalizeOptionalIntegerParam($requestData['floor_min'] ?? NULL, 'floor_min');
     if ($minError !== NULL) {
       return [NULL, NULL, $minError];
     }
 
-    [$max, $maxError] = $normalize($requestData['floor_max'] ?? NULL, 'floor_max');
+    [$max, $maxError] = $this->normalizeOptionalIntegerParam($requestData['floor_max'] ?? NULL, 'floor_max');
     if ($maxError !== NULL) {
       return [NULL, NULL, $maxError];
     }
@@ -839,25 +820,43 @@ class ElasticSearch extends ResourceBase {
   }
 
   /**
+   * Normalize optional integer request value.
+   *
+   * @return array{0:?int,1:?string}
+   *   [value, error]. Error is non-null for invalid input.
+   */
+  private function normalizeOptionalIntegerParam(mixed $raw, string $key): array {
+    if ($raw === NULL || $raw === '') {
+      return [NULL, NULL];
+    }
+
+    if (is_string($raw)) {
+      $raw = trim($raw);
+      if ($raw === '') {
+        return [NULL, NULL];
+      }
+    }
+
+    if (is_int($raw)) {
+      return [$raw, NULL];
+    }
+
+    if (is_float($raw) && floor($raw) === $raw) {
+      return [(int) $raw, NULL];
+    }
+
+    if (is_string($raw) && preg_match('/^-?\d+$/', $raw) === 1) {
+      return [(int) $raw, NULL];
+    }
+
+    return [NULL, sprintf('Invalid %s. Expected integer value.', $key)];
+  }
+
+  /**
    * Check if apartment floor is within optional floor bounds.
    */
   private function matchesFloorBoundsFilter(?int $floor, ?int $min, ?int $max): bool {
-    if ($min === NULL && $max === NULL) {
-      return TRUE;
-    }
-
-    if ($floor === NULL) {
-      return FALSE;
-    }
-
-    if ($min !== NULL && $floor < $min) {
-      return FALSE;
-    }
-    if ($max !== NULL && $floor > $max) {
-      return FALSE;
-    }
-
-    return TRUE;
+    return $this->matchesNumericBounds($floor !== NULL ? (float) $floor : NULL, $min !== NULL ? (float) $min : NULL, $max !== NULL ? (float) $max : NULL);
   }
 
   /**
@@ -936,56 +935,15 @@ class ElasticSearch extends ResourceBase {
    */
   private function normalizeLivingAreaBoundsForFilter(array $requestData): array {
     $rangeParam = $requestData['living_area'] ?? $requestData['area'] ?? NULL;
-    $minRaw = $requestData['living_area_min'] ?? $requestData['area_min'] ?? NULL;
-    $maxRaw = $requestData['living_area_max'] ?? $requestData['area_max'] ?? NULL;
+    [$minRaw, $maxRaw] = $this->extractRangeRawValues(
+      $rangeParam,
+      $requestData['living_area_min'] ?? $requestData['area_min'] ?? NULL,
+      $requestData['living_area_max'] ?? $requestData['area_max'] ?? NULL,
+      TRUE,
+    );
 
-    if (is_array($rangeParam)) {
-      if ($minRaw === NULL && array_key_exists(0, $rangeParam)) {
-        $candidate = $rangeParam[0];
-        if ($candidate !== '' && $candidate !== NULL && is_numeric($candidate)) {
-          $minRaw = $candidate;
-        }
-      }
-      if ($maxRaw === NULL && array_key_exists(1, $rangeParam)) {
-        $candidate = $rangeParam[1];
-        if ($candidate !== '' && $candidate !== NULL && is_numeric($candidate)) {
-          $maxRaw = $candidate;
-        }
-      }
-      // Fallback for single-item arrays.
-      if ($maxRaw === NULL && $minRaw === NULL && array_key_exists(0, $rangeParam)) {
-        $candidate = $rangeParam[0];
-        if ($candidate !== '' && $candidate !== NULL && is_numeric($candidate)) {
-          $maxRaw = $candidate;
-        }
-      }
-    }
-    elseif (is_string($rangeParam) && str_contains($rangeParam, ',')) {
-      [$left, $right] = array_pad(explode(',', $rangeParam, 2), 2, '');
-      $left = trim($left);
-      $right = trim($right);
-
-      if ($minRaw === NULL && $left !== '' && is_numeric($left)) {
-        $minRaw = $left;
-      }
-      if ($maxRaw === NULL && $right !== '' && is_numeric($right)) {
-        $maxRaw = $right;
-      }
-    }
-    elseif ($maxRaw === NULL && is_numeric($rangeParam)) {
-      // Backward-compatible shorthand: living_area=70 means upper bound.
-      $maxRaw = $rangeParam;
-    }
-
-    $min = is_numeric($minRaw) ? (float) $minRaw : NULL;
-    $max = is_numeric($maxRaw) ? (float) $maxRaw : NULL;
-
-    if ($min !== NULL && $min <= 0) {
-      $min = NULL;
-    }
-    if ($max !== NULL && $max <= 0) {
-      $max = NULL;
-    }
+    $min = $this->normalizePositiveFloat($minRaw);
+    $max = $this->normalizePositiveFloat($maxRaw);
 
     return [$min, $max];
   }
@@ -994,22 +952,7 @@ class ElasticSearch extends ResourceBase {
    * Check if apartment living area is inside optional min/max bounds.
    */
   private function matchesLivingAreaFilter(?float $livingArea, ?float $min, ?float $max): bool {
-    if ($min === NULL && $max === NULL) {
-      return TRUE;
-    }
-
-    if ($livingArea === NULL) {
-      return FALSE;
-    }
-
-    if ($min !== NULL && $livingArea < $min) {
-      return FALSE;
-    }
-    if ($max !== NULL && $livingArea > $max) {
-      return FALSE;
-    }
-
-    return TRUE;
+    return $this->matchesNumericBounds($livingArea, $min, $max);
   }
 
   /**
@@ -1023,46 +966,15 @@ class ElasticSearch extends ResourceBase {
    */
   private function normalizePriceBoundsForFilter(array $requestData): array {
     $priceParam = $requestData['price'] ?? NULL;
-    $minRaw = $requestData['price_min'] ?? NULL;
-    $maxRaw = $requestData['price_max'] ?? NULL;
+    [$minRaw, $maxRaw] = $this->extractRangeRawValues(
+      $priceParam,
+      $requestData['price_min'] ?? NULL,
+      $requestData['price_max'] ?? NULL,
+      TRUE,
+    );
 
-    if (is_array($priceParam)) {
-      $values = array_values(array_filter($priceParam, static fn ($v) => $v !== '' && $v !== NULL));
-      if ($minRaw === NULL && isset($values[0]) && is_numeric($values[0])) {
-        $minRaw = $values[0];
-      }
-      if ($maxRaw === NULL && $values) {
-        $last = end($values);
-        if ($last !== FALSE && is_numeric($last)) {
-          $maxRaw = $last;
-        }
-      }
-    }
-    elseif (is_string($priceParam) && str_contains($priceParam, ',')) {
-      $values = array_values(array_filter(array_map('trim', explode(',', $priceParam)), static fn ($v): bool => $v !== ''));
-      if ($minRaw === NULL && isset($values[0]) && is_numeric($values[0])) {
-        $minRaw = $values[0];
-      }
-      if ($maxRaw === NULL && $values) {
-        $last = end($values);
-        if ($last !== FALSE && is_numeric($last)) {
-          $maxRaw = $last;
-        }
-      }
-    }
-    elseif ($maxRaw === NULL && is_numeric($priceParam)) {
-      $maxRaw = $priceParam;
-    }
-
-    $min = is_numeric($minRaw) ? (float) $minRaw : NULL;
-    $max = is_numeric($maxRaw) ? (float) $maxRaw : NULL;
-
-    if ($min !== NULL && $min <= 0) {
-      $min = NULL;
-    }
-    if ($max !== NULL && $max <= 0) {
-      $max = NULL;
-    }
+    $min = $this->normalizePositiveFloat($minRaw);
+    $max = $this->normalizePositiveFloat($maxRaw);
 
     return [$min, $max];
   }
@@ -1071,19 +983,86 @@ class ElasticSearch extends ResourceBase {
    * Check if apartment comparable price is inside optional min/max bounds.
    */
   private function matchesPriceFilter(Node $apartment, ?float $priceMin, ?float $priceMax, string $ownershipType): bool {
-    if ($priceMin === NULL && $priceMax === NULL) {
+    $value = $this->resolveComparablePrice($apartment, $ownershipType);
+    return $this->matchesNumericBounds($value, $priceMin, $priceMax);
+  }
+
+  /**
+   * Extract raw min/max values from array/csv/single-value payloads.
+   *
+   * @return array{0:mixed,1:mixed}
+   *   [minRaw, maxRaw]
+   */
+  private function extractRangeRawValues(mixed $rangeParam, mixed $minRaw, mixed $maxRaw, bool $singleNumericAsMax): array {
+    if (is_array($rangeParam)) {
+      $values = array_values(array_filter($rangeParam, static fn ($v): bool => $v !== '' && $v !== NULL));
+      if ($minRaw === NULL && isset($values[0]) && is_numeric($values[0])) {
+        $minRaw = $values[0];
+      }
+      if ($maxRaw === NULL && isset($values[1]) && is_numeric($values[1])) {
+        $maxRaw = $values[1];
+      }
+      if ($singleNumericAsMax && $maxRaw === NULL && $minRaw === NULL && isset($values[0]) && is_numeric($values[0])) {
+        $maxRaw = $values[0];
+      }
+    }
+    elseif (is_string($rangeParam) && str_contains($rangeParam, ',')) {
+      $values = array_values(array_filter(array_map('trim', explode(',', $rangeParam)), static fn ($v): bool => $v !== ''));
+      if ($minRaw === NULL && isset($values[0]) && is_numeric($values[0])) {
+        $minRaw = $values[0];
+      }
+      if ($maxRaw === NULL && isset($values[1]) && is_numeric($values[1])) {
+        $maxRaw = $values[1];
+      }
+    }
+    elseif ($singleNumericAsMax && $maxRaw === NULL && is_numeric($rangeParam)) {
+      $maxRaw = $rangeParam;
+    }
+
+    return [$minRaw, $maxRaw];
+  }
+
+  /**
+   * Normalize a positive numeric value, else return NULL.
+   */
+  private function normalizePositiveFloat(mixed $value): ?float {
+    if (!is_numeric($value)) {
+      return NULL;
+    }
+
+    $normalized = (float) $value;
+    return $normalized > 0 ? $normalized : NULL;
+  }
+
+  /**
+   * Sort min/max bounds when both are present.
+   *
+   * @return array{0:?float,1:?float}
+   */
+  private function sortBounds(?float $min, ?float $max): array {
+    if ($min !== NULL && $max !== NULL && $min > $max) {
+      return [$max, $min];
+    }
+
+    return [$min, $max];
+  }
+
+  /**
+   * Match optional numeric bounds against a nullable value.
+   */
+  private function matchesNumericBounds(?float $value, ?float $min, ?float $max): bool {
+    if ($min === NULL && $max === NULL) {
       return TRUE;
     }
 
-    $value = $this->resolveComparablePrice($apartment, $ownershipType);
     if ($value === NULL) {
       return FALSE;
     }
 
-    if ($priceMin !== NULL && $value < $priceMin) {
+    if ($min !== NULL && $value < $min) {
       return FALSE;
     }
-    if ($priceMax !== NULL && $value > $priceMax) {
+    if ($max !== NULL && $value > $max) {
       return FALSE;
     }
 
