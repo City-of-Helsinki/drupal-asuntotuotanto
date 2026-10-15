@@ -170,6 +170,11 @@ class ElasticSearch extends ResourceBase {
           [$price_min, $price_max] = [$price_max, $price_min];
         }
 
+        [$floor_min, $floor_max, $floor_error] = $this->normalizeFloorBoundsForFilter($request_data);
+        if ($floor_error !== NULL) {
+          return new ModifiedResourceResponse(['message' => $floor_error], 400, $headers);
+        }
+
         $property_options = $this->resolvePropertyOptions($request_data);
         $floor_options = $this->resolveFloorOptions($request_data);
 
@@ -220,6 +225,10 @@ class ElasticSearch extends ResourceBase {
           }
 
           if (!$this->matchesFloorFilters($apartment_node, $floor_options)) {
+            continue;
+          }
+
+          if (!$this->matchesFloorBoundsFilter($this->getNodeInt($apartment_node, 'field_floor'), $floor_min, $floor_max)) {
             continue;
           }
 
@@ -765,6 +774,86 @@ class ElasticSearch extends ResourceBase {
       return FALSE;
     }
     if (($options['not_bottom_floor'] ?? NULL) !== NULL && ($options['not_bottom_floor'] !== $notBottom)) {
+      return FALSE;
+    }
+
+    return TRUE;
+  }
+
+  /**
+   * Normalize floor bounds from request payload.
+   *
+   * Supports normalized frontend contract:
+   * - floor_min (optional integer)
+   * - floor_max (optional integer)
+   *
+   * @return array{0:?int,1:?int,2:?string}
+   *   [min, max, error]. Error is non-null for invalid input.
+   */
+  private function normalizeFloorBoundsForFilter(array $requestData): array {
+    $normalize = function (mixed $raw, string $key): array {
+      if ($raw === NULL || $raw === '') {
+        return [NULL, NULL];
+      }
+
+      if (is_string($raw)) {
+        $raw = trim($raw);
+        if ($raw === '') {
+          return [NULL, NULL];
+        }
+      }
+
+      if (is_int($raw)) {
+        return [$raw, NULL];
+      }
+
+      if (is_float($raw)) {
+        if (floor($raw) === $raw) {
+          return [(int) $raw, NULL];
+        }
+        return [NULL, sprintf('Invalid %s. Expected integer value.', $key)];
+      }
+
+      if (is_string($raw) && preg_match('/^-?\d+$/', $raw) === 1) {
+        return [(int) $raw, NULL];
+      }
+
+      return [NULL, sprintf('Invalid %s. Expected integer value.', $key)];
+    };
+
+    [$min, $minError] = $normalize($requestData['floor_min'] ?? NULL, 'floor_min');
+    if ($minError !== NULL) {
+      return [NULL, NULL, $minError];
+    }
+
+    [$max, $maxError] = $normalize($requestData['floor_max'] ?? NULL, 'floor_max');
+    if ($maxError !== NULL) {
+      return [NULL, NULL, $maxError];
+    }
+
+    if ($min !== NULL && $max !== NULL && $min > $max) {
+      return [NULL, NULL, 'Invalid floor range: floor_min cannot be greater than floor_max.'];
+    }
+
+    return [$min, $max, NULL];
+  }
+
+  /**
+   * Check if apartment floor is within optional floor bounds.
+   */
+  private function matchesFloorBoundsFilter(?int $floor, ?int $min, ?int $max): bool {
+    if ($min === NULL && $max === NULL) {
+      return TRUE;
+    }
+
+    if ($floor === NULL) {
+      return FALSE;
+    }
+
+    if ($min !== NULL && $floor < $min) {
+      return FALSE;
+    }
+    if ($max !== NULL && $floor > $max) {
       return FALSE;
     }
 
