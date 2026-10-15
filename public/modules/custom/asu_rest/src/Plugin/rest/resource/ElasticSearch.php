@@ -254,15 +254,25 @@ class ElasticSearch extends ResourceBase {
           }
 
           $project_main_image_url = '';
-          if ($project_node->hasField('field_main_image_url') && !$project_node->get('field_main_image_url')->isEmpty()) {
+          if (
+            $project_node->hasField('field_main_image_url')
+            && !$project_node->get('field_main_image_url')->isEmpty()
+          ) {
             $project_main_image_url = $this->normalizeImageUrl((string) $project_node->get('field_main_image_url')->value);
           }
-          elseif ($project_node->hasField('field_main_image') && !$project_node->get('field_main_image')->isEmpty() && $project_node->get('field_main_image')->entity) {
+          elseif (
+            $project_node->hasField('field_main_image')
+            && !$project_node->get('field_main_image')->isEmpty()
+            && $project_node->get('field_main_image')->entity
+          ) {
             $project_main_image_url = $this->normalizeImageUrl((string) $project_node->get('field_main_image')->entity->getFileUri());
           }
 
           $project_application_end_time = '';
-          if ($project_node->hasField('field_project_application_end_time') && !$project_node->get('field_project_application_end_time')->isEmpty()) {
+          if (
+            $project_node->hasField('field_project_application_end_time')
+            && !$project_node->get('field_project_application_end_time')->isEmpty()
+          ) {
             $project_application_end_time = (string) $project_node->get('field_project_application_end_time')->value;
           }
           elseif ($project_node->hasField('field_application_end_time') && !$project_node->get('field_application_end_time')->isEmpty()) {
@@ -270,15 +280,24 @@ class ElasticSearch extends ResourceBase {
           }
 
           $project_application_start_time = '';
-          if ($project_node->hasField('field_project_application_start_time') && !$project_node->get('field_project_application_start_time')->isEmpty()) {
+          if (
+            $project_node->hasField('field_project_application_start_time')
+            && !$project_node->get('field_project_application_start_time')->isEmpty()
+          ) {
             $project_application_start_time = (string) $project_node->get('field_project_application_start_time')->value;
           }
-          elseif ($project_node->hasField('field_application_start_time') && !$project_node->get('field_application_start_time')->isEmpty()) {
+          elseif (
+            $project_node->hasField('field_application_start_time')
+            && !$project_node->get('field_application_start_time')->isEmpty()
+          ) {
             $project_application_start_time = (string) $project_node->get('field_application_start_time')->value;
           }
 
           $project_can_apply_afterwards = FALSE;
-          if ($project_node->hasField('field_project_can_apply_afterwards') && !$project_node->get('field_project_can_apply_afterwards')->isEmpty()) {
+          if (
+            $project_node->hasField('field_project_can_apply_afterwards')
+            && !$project_node->get('field_project_can_apply_afterwards')->isEmpty()
+          ) {
             $project_can_apply_afterwards = (bool) $project_node->get('field_project_can_apply_afterwards')->value;
           }
           elseif ($project_node->hasField('field_can_apply_afterwards') && !$project_node->get('field_can_apply_afterwards')->isEmpty()) {
@@ -468,8 +487,12 @@ class ElasticSearch extends ResourceBase {
             'apartment_structure' => $apartment_structure,
             'application_url' => $application_url,
             'debt_free_sales_price' => $this->toCents($get_scalar($apartment_node, 'field_debt_free_sales_price')),
-            'floor' => $get_scalar($apartment_node, 'field_floor') !== '' ? intval($get_scalar($apartment_node, 'field_floor')) : NULL,
-            'floor_max' => $get_scalar($apartment_node, 'field_floor_max') !== '' ? intval($get_scalar($apartment_node, 'field_floor_max')) : NULL,
+            'floor' => $get_scalar($apartment_node, 'field_floor') !== ''
+              ? intval($get_scalar($apartment_node, 'field_floor'))
+              : NULL,
+            'floor_max' => $get_scalar($apartment_node, 'field_floor_max') !== ''
+              ? intval($get_scalar($apartment_node, 'field_floor_max'))
+              : NULL,
             'housing_company_fee' => $this->toCents($get_scalar($apartment_node, 'field_housing_company_fee')),
             'living_area' => floatval($get_scalar($apartment_node, 'field_living_area') ?: 0),
             'nid' => intval($apartment_node->id()),
@@ -856,7 +879,11 @@ class ElasticSearch extends ResourceBase {
    * Check if apartment floor is within optional floor bounds.
    */
   private function matchesFloorBoundsFilter(?int $floor, ?int $min, ?int $max): bool {
-    return $this->matchesNumericBounds($floor !== NULL ? (float) $floor : NULL, $min !== NULL ? (float) $min : NULL, $max !== NULL ? (float) $max : NULL);
+    return $this->matchesNumericBounds(
+      $floor !== NULL ? (float) $floor : NULL,
+      $min !== NULL ? (float) $min : NULL,
+      $max !== NULL ? (float) $max : NULL,
+    );
   }
 
   /**
@@ -995,31 +1022,81 @@ class ElasticSearch extends ResourceBase {
    */
   private function extractRangeRawValues(mixed $rangeParam, mixed $minRaw, mixed $maxRaw, bool $singleNumericAsMax): array {
     if (is_array($rangeParam)) {
-      $values = array_values(array_filter($rangeParam, static fn ($v): bool => $v !== '' && $v !== NULL));
-      if ($minRaw === NULL && isset($values[0]) && is_numeric($values[0])) {
-        $minRaw = $values[0];
-      }
-      if ($maxRaw === NULL && isset($values[1]) && is_numeric($values[1])) {
-        $maxRaw = $values[1];
-      }
-      if ($singleNumericAsMax && $maxRaw === NULL && $minRaw === NULL && isset($values[0]) && is_numeric($values[0])) {
-        $maxRaw = $values[0];
-      }
+      return $this->extractRangeRawValuesFromArray($rangeParam, $minRaw, $maxRaw, $singleNumericAsMax);
     }
-    elseif (is_string($rangeParam) && str_contains($rangeParam, ',')) {
-      $values = array_values(array_filter(array_map('trim', explode(',', $rangeParam)), static fn ($v): bool => $v !== ''));
-      if ($minRaw === NULL && isset($values[0]) && is_numeric($values[0])) {
-        $minRaw = $values[0];
-      }
-      if ($maxRaw === NULL && isset($values[1]) && is_numeric($values[1])) {
-        $maxRaw = $values[1];
-      }
+
+    if (is_string($rangeParam) && str_contains($rangeParam, ',')) {
+      return $this->extractRangeRawValuesFromCsv($rangeParam, $minRaw, $maxRaw);
     }
-    elseif ($singleNumericAsMax && $maxRaw === NULL && is_numeric($rangeParam)) {
+
+    if ($singleNumericAsMax && $maxRaw === NULL && is_numeric($rangeParam)) {
       $maxRaw = $rangeParam;
     }
 
     return [$minRaw, $maxRaw];
+  }
+
+  /**
+   * Extract range raw values from an array payload.
+   *
+   * @return array{0:mixed,1:mixed}
+   *   [minRaw, maxRaw]
+   */
+  private function extractRangeRawValuesFromArray(array $rangeParam, mixed $minRaw, mixed $maxRaw, bool $singleNumericAsMax): array {
+    $values = array_values(array_filter($rangeParam, static fn ($v): bool => $v !== '' && $v !== NULL));
+    return $this->extractRangeRawValuesFromIndexedValues($values, $minRaw, $maxRaw, $singleNumericAsMax);
+  }
+
+  /**
+   * Extract range raw values from a CSV payload.
+   *
+   * @return array{0:mixed,1:mixed}
+   *   [minRaw, maxRaw]
+   */
+  private function extractRangeRawValuesFromCsv(string $rangeParam, mixed $minRaw, mixed $maxRaw): array {
+    $values = array_values(
+      array_filter(
+        array_map('trim', explode(',', $rangeParam)),
+        static fn ($v): bool => $v !== '',
+      )
+    );
+
+    return $this->extractRangeRawValuesFromIndexedValues($values, $minRaw, $maxRaw, FALSE);
+  }
+
+  /**
+   * Extract range raw values from indexed values.
+   *
+   * @return array{0:mixed,1:mixed}
+   *   [minRaw, maxRaw]
+   */
+  private function extractRangeRawValuesFromIndexedValues(array $values, mixed $minRaw, mixed $maxRaw, bool $singleNumericAsMax): array {
+    $first = $this->getNumericIndexedValue($values, 0);
+    $second = $this->getNumericIndexedValue($values, 1);
+
+    if ($minRaw === NULL && $first !== NULL) {
+      $minRaw = $first;
+    }
+    if ($maxRaw === NULL && $second !== NULL) {
+      $maxRaw = $second;
+    }
+
+    if ($singleNumericAsMax && $maxRaw === NULL && $minRaw === NULL && $first !== NULL) {
+      $maxRaw = $first;
+    }
+
+    return [$minRaw, $maxRaw];
+  }
+
+  /**
+   * Get numeric value by index from values array.
+   */
+  private function getNumericIndexedValue(array $values, int $index): mixed {
+    if (!isset($values[$index]) || !is_numeric($values[$index])) {
+      return NULL;
+    }
+
+    return $values[$index];
   }
 
   /**
