@@ -159,6 +159,10 @@ final class Filters extends ResourceBase {
       'has_terrace',
       'has_balcony',
       'has_yard',
+      'top_floor',
+      'bottom_floor',
+      'not_top_floor',
+      'not_bottom_floor',
     ];
   }
 
