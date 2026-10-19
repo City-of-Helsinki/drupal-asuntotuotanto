@@ -24,9 +24,9 @@
         "drupal/config_terms": "^1.9",
         "drupal/consumers": "^1.24",
         "drupal/context": "^5.0@RC",
-        "drupal/core": "~11.3.16",
-        "drupal/core-composer-scaffold": "~11.3.16",
-        "drupal/core-recommended": "~11.3.16",
+        "drupal/core": "~11.3.19",
+        "drupal/core-composer-scaffold": "~11.3.19",
+        "drupal/core-recommended": "~11.3.19",
         "drupal/ctools": "^4.1",
         "drupal/default_content": "^2.0@alpha",
         "drupal/diff": "2.0.1 as 1.10.0",
@@ -34,7 +34,7 @@
         "drupal/encrypt": "^3.2",
         "drupal/externalauth": "^2.0",
         "drupal/field_group": "^4.0",
-        "drupal/flysystem": "^2.3",
+        "drupal/flysystem": "^3.0",
         "drupal/gdpr_compliance": "^1.25",
         "drupal/gin": "^5.0",
         "drupal/gin_login": "^2.1",
@@ -43,7 +43,7 @@
         "drupal/hdbt": "^6.16",
         "drupal/hdbt_admin": "^3.4",
         "drupal/helfi_api_base": "^2.8",
-        "drupal/helfi_azure_fs": "^2.2",
+        "drupal/helfi_azure_fs": "^3.0",
         "drupal/helfi_platform_config": "^5.1",
         "drupal/helfi_tunnistamo": "^3.1",
         "drupal/honeypot": "^2.2",
@@ -98,7 +98,7 @@
         "behat/mink": "^1.11",
         "dealerdirect/phpcodesniffer-composer-installer": "^1.0.0",
         "drupal/coder": "^8.3",
-        "drupal/core-dev": "~11.3.16",
+        "drupal/core-dev": "~11.3.19",
         "drupal/devel": "^5.0",
         "mikey179/vfsstream": "^1.6",
         "phpspec/prophecy-phpunit": "^2",
@@ -203,7 +203,9 @@
         "composer-patches": {
             "ignore-dependency-patches": [
                 "drupal/helfi_platform_config",
-                "drupal/big_pipe_sessionless"
+                "drupal/big_pipe_sessionless",
+                "drupal/helfi_azure_fs",
+                "drupal/flysystem"
             ]
         },
         "drupal-lenient": {
@@ -217,6 +219,23 @@
         }
     },
     "repositories": [
+        {
+            "type": "package",
+            "package": {
+                "name": "drupal/imagecache_external",
+                "version": "3.0.9",
+                "type": "drupal-module",
+                "source": {
+                    "url": "https://git.drupalcode.org/project/imagecache_external.git",
+                    "type": "git",
+                    "reference": "3.0.9"
+                },
+                "require": {
+                    "drupal/core": "^10.1 || ^11",
+                    "enshrined/svg-sanitize": "^0.22 || ^1.0"
+                }
+            }
+        },
         {
             "type": "package",
             "package": {
