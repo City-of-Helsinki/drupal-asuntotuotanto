@@ -8,6 +8,7 @@ libraries:
   - "asu_application/application-results.js"
 dependencies:
   - drupal:node
+  - asu_api:asu_api
   - helfi_api_base:helfi_api_base
   - helfi_platform_config:helfi_platform_config
   - helfi_user_roles:helfi_user_roles
