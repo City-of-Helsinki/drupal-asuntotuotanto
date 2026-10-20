@@ -1,0 +1,71 @@
+@import "../node_modules/leaflet/dist/leaflet.css";
+
+body {
+  margin: 0;
+  font-family: var(--font-default);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#asu_react_search,
+#asu_react_project_apartments {
+  * {
+    box-sizing: border-box;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-weight: 700;
+  }
+}
+
+.leaflet-container {
+  height: 80vh;
+  width: 100%;
+  position: relative;
+  z-index: 1;
+  min-height: 400px;
+
+  @media (max-width: 768px) {
+    min-height: 300px;
+  }
+}
+
+.sr-only {
+  border: 0;
+  clip: rect(0, 0, 0, 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
+}
+
+.carousel {
+  position: relative;
+
+  @media (min-width: 769px) and (max-width: 850px){
+    &::before {
+      content: "";
+      padding-top: 100%;
+      display: block;
+    }
+  }
+}
+
+.carousel,
+.carousel__slider,
+.carousel__slider-tray,
+.carousel__slide,
+.carousel__inner-slide {
+  display: flex;
+}
+
+.carousel__slider-tray {
+  height: 100%;
+}
+
+.carousel__slide {
+  height: 100%;
+  padding-bottom: 0 !important;
+}

@@ -1,0 +1,40 @@
+.completionTime,
+.applicationTime,
+.applicationSent,
+.moveInTime,
+.upcomingDescription {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: var(--spacing-xs);
+
+  svg {
+    flex-grow: 0;
+    flex-shrink: 0;
+  }
+
+  span {
+    line-height: 24px;
+  }
+
+  &.dense {
+    margin-bottom: var(--spacing-2-xs);
+  }
+
+  a {
+    font-weight: bold;
+    text-decoration: underline;
+    color: inherit;
+  }
+}
+
+.completionTime {
+  margin-top: var(--spacing-s);
+
+  &.dense {
+    margin-top: var(--spacing-xs);
+  }
+}
+
+.deadlines > div:last-child {
+  margin-bottom: 0 !important;
+}
