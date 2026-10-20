@@ -28,6 +28,7 @@
   },
   "scripts": {
     "dev": "vite",
+    "dev:drupal": "cross-env VITE_HTTPS=true vite --host 0.0.0.0 --strictPort",
     "build": "tsc -b && vite build && node scripts/create-iife-wrapper.cjs",
     "test": "vitest",
     "lint": "eslint .",
@@ -44,7 +45,8 @@
     "copy-files:haso": "node scripts/copy-dist-files.cjs haso",
     "copy-files:haso-upcoming": "node scripts/copy-dist-files.cjs haso_upcoming",
     "create-zip": "node scripts/create-zip.cjs",
-    "dist": "rimraf dist && npm run create-dist-package-folder && npm run create-hitas && npm run copy-files:hitas && npm run create-hitas-upcoming && npm run copy-files:hitas-upcoming && npm run create-haso && npm run copy-files:haso && npm run create-haso-upcoming && npm run copy-files:haso-upcoming && npm run create-zip"
+    "drupal:build": "rimraf dist && npm run create-dist-package-folder && npm run create-hitas && npm run copy-files:hitas && npm run create-hitas-upcoming && npm run copy-files:hitas-upcoming && npm run create-haso && npm run copy-files:haso && npm run create-haso-upcoming && npm run copy-files:haso-upcoming",
+    "dist": "npm run drupal:build && npm run create-zip"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^6.9.1",
@@ -52,6 +54,7 @@
     "@testing-library/user-event": "^14.5.2",
     "@types/leaflet": "^1.9.14",
     "@types/node": "^24.0.14",
+    "@vitejs/plugin-basic-ssl": "^2.3.0",
     "@vitejs/plugin-react-swc": "^3.9.0",
     "archiver": "^7.0.1",
     "cross-env": "^10.1.0",
