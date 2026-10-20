@@ -88,4 +88,12 @@ function asu_apartment_search_library_info_alter(array &$libraries, string $exte
       $library['version'] = substr(hash('sha256', implode('|', $signature_parts)), 0, 12);
     }
   }
+
+  // Load the app directly from Vite only when explicitly enabled locally.
+  $dev_server = getenv('ASUNTOMYYNTI_REACT_DEV_SERVER');
+  if (is_string($dev_server) && $dev_server !== '' && \Drupal::service('kernel')->getEnvironment() === 'dev') {
+    foreach ($libraries as &$library) {
+      $library = \Drupal\asu_apartment_search\Asset\DevLibraryBuilder::build($library, $dev_server);
+    }
+  }
 }

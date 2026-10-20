@@ -63,15 +63,6 @@
             "time": "2025-03-13T08:50:04+00:00"
         },
         {
-            "name": "asuntomyynti/react",
-            "version": "1.7.0",
-            "dist": {
-                "type": "zip",
-                "url": "https://github.com/City-of-Helsinki/asuntomyynti-react/releases/download/v1.7.0/asuntomyynti-react-1.7.0.zip"
-            },
-            "type": "library"
-        },
-        {
             "name": "async-aws/core",
             "version": "1.30.0",
             "source": {

@@ -8,6 +8,7 @@ services:
       - ssh:/tmp/druid_ssh-agent:ro
     environment:
       APP_ENV: "${APP_ENV:-dev}"
+      ASUNTOMYYNTI_REACT_DEV_SERVER: "${ASUNTOMYYNTI_REACT_DEV_SERVER:-}"
       DRUPAL_ROUTES: "https://varnish-${DRUPAL_HOSTNAME},https://helfi-proxy.docker.so,http://${COMPOSE_PROJECT_NAME}-varnish"
       STAGE_FILE_PROXY_ORIGIN: "${STAGE_FILE_PROXY_ORIGIN}"
       STAGE_FILE_PROXY_ORIGIN_DIR: "${STAGE_FILE_PROXY_ORIGIN_DIR}"
@@ -42,8 +43,8 @@ services:
       - "traefik.http.services.${COMPOSE_PROJECT_NAME}-app.loadbalancer.server.port=8080"
       - "traefik.docker.network=stonehenge-network"
     #extra_hosts:
-      #- "host.docker.internal:host-gateway"
-      #- "${DRUPAL_HOSTNAME}:host-gateway"
+    #- "host.docker.internal:host-gateway"
+    #- "${DRUPAL_HOSTNAME}:host-gateway"
 
   db:
     container_name: "${COMPOSE_PROJECT_NAME}-db"
@@ -65,7 +66,7 @@ services:
       - cluster.initial_master_nodes="${COMPOSE_PROJECT_NAME}-elastic"
       - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-      - "http.cors.allow-origin=\"*\""
+      - 'http.cors.allow-origin="*"'
       - "http.cors.enabled=true"
       - "http.cors.allow-headers=X-Requested-With,X-Auth-Token,Content-Type,Content-Length,Authorization"
       - "http.cors.allow-credentials=true"
@@ -131,7 +132,6 @@ services:
 #      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-varnish.tls=true"
 #      - "traefik.http.services.${COMPOSE_PROJECT_NAME}-varnish.loadbalancer.server.port=6081"
 #      - "traefik.docker.network=stonehenge-network"
-
 
 networks:
   internal:

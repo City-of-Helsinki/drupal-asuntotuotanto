@@ -7,7 +7,6 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "require": {
-        "asuntomyynti/react": "^1.7.0",
         "composer/installers": "^2.3",
         "cweagans/composer-patches": "^2.0",
         "dinbror/blazy": "^1.8",
@@ -308,17 +307,6 @@
         {
             "type": "package",
             "package": {
-                "name": "asuntomyynti/react",
-                "version": "1.7.0",
-                "dist": {
-                    "url": "https://github.com/City-of-Helsinki/asuntomyynti-react/releases/download/v1.7.0/asuntomyynti-react-1.7.0.zip",
-                    "type": "zip"
-                }
-            }
-        },
-        {
-            "type": "package",
-            "package": {
                 "name": "dinbror/blazy",
                 "version": "1.8.2",
                 "type": "drupal-library",
@@ -334,11 +322,9 @@
         "test-php": "vendor/bin/phpunit -c $PWD/phpunit.xml.dist",
         "copy-commit-message-script": "make copy-commit-message-script || true",
         "post-install-cmd": [
-            "rsync -a vendor/asuntomyynti/react public/modules/custom/asu_apartment_search/assets || true",
             "@copy-commit-message-script"
         ],
         "post-update-cmd": [
-            "rsync -a vendor/asuntomyynti/react public/modules/custom/asu_apartment_search/assets || true",
             "@copy-commit-message-script"
         ]
     }
