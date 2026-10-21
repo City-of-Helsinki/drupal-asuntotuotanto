@@ -1,24 +1,61 @@
+.asu-showing-time-range-hidden {
+  display: none;
+}
+
 .asu-showing-time-range .fieldset__wrapper {
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(340px, 1fr) 220px;
   align-items: flex-start;
-  gap: 16px;
-  flex-wrap: wrap;
+  column-gap: 16px;
+  row-gap: 12px;
 }
 
-.asu-showing-time-range .form-item.form-datetime-wrapper {
-  margin-bottom: 0;
+.asu-showing-time-range .fieldset__wrapper > .form-item {
+  display: grid;
+  grid-template-rows: auto auto;
+  align-content: start;
+  margin: 0;
 }
 
-.asu-showing-time-range .form-item.form-datetime-wrapper > .form-item__label,
+.asu-showing-time-range .form-item.form-datetime-wrapper > h4.form-item__label,
+.asu-showing-time-range .js-form-type-number > label.form-item__label,
 .asu-showing-time-range .js-form-type-number > .form-item__label {
-  margin-bottom: 8px;
+  display: block;
+  margin: 0 0 8px;
   line-height: 1.2;
 }
 
-.asu-showing-time-range .form-item.form-datetime-wrapper > .form-item__label {
+.asu-showing-time-range .form-item.form-datetime-wrapper > h4.form-item__label {
+  padding: 0;
+}
+
+.asu-showing-time-range .form-item.form-datetime-wrapper > .form-items-inline {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 0;
+}
+
+.asu-showing-time-range .form-item.form-datetime-wrapper > .form-items-inline > .form-item {
+  margin: 0;
+}
+
+.asu-showing-time-range .js-form-type-number > .form-number,
+.asu-showing-time-range .js-form-type-number > input {
   margin-top: 0;
 }
 
 .asu-showing-time-range .js-form-type-number {
   width: 220px;
+}
+
+@media (max-width: 768px) {
+  .asu-showing-time-range .fieldset__wrapper {
+    grid-template-columns: 1fr;
+  }
+
+  .asu-showing-time-range .js-form-type-number {
+    width: 100%;
+    max-width: 320px;
+  }
 }
