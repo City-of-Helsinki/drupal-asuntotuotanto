@@ -513,6 +513,7 @@ class ElasticSearch extends ResourceBase {
             'project_possession_transfer_date' => $get_scalar($project_node, 'field_possession_transfer_date'),
             'project_state_of_sale' => $project_state_of_sale,
             'project_street_address' => $get_scalar($project_node, 'field_street_address'),
+            'project_homepage_highlight_text' => $get_scalar($project_node, 'field_homepage_highlight_text'),
             'project_upcoming_description' => $get_scalar($project_node, 'field_upcoming_description'),
             'project_url' => $this->buildAbsoluteUrl($project_node->toUrl()->toString()),
             'project_uuid' => $project_node->uuid(),
@@ -1036,7 +1037,17 @@ class ElasticSearch extends ResourceBase {
     }
 
     if (is_string($rangeParam) && str_contains($rangeParam, ',')) {
-      return $this->extractRangeRawValuesFromCsv($rangeParam, $minRaw, $maxRaw);
+      [$resolvedMinRaw, $resolvedMaxRaw] = $this->extractRangeRawValuesFromCsv($rangeParam, $minRaw, $maxRaw);
+
+      [$left, $right] = array_pad(array_map('trim', explode(',', $rangeParam, 2)), 2, '');
+      if ($left === '' && $right !== '' && $resolvedMinRaw !== NULL && $resolvedMaxRaw === NULL) {
+        return [$minRaw, $resolvedMinRaw];
+      }
+      if ($right === '' && $left !== '' && $resolvedMinRaw !== NULL && $resolvedMaxRaw === NULL) {
+        return [$resolvedMinRaw, $maxRaw];
+      }
+
+      return [$resolvedMinRaw, $resolvedMaxRaw];
     }
 
     if ($singleNumericAsMax && $maxRaw === NULL && is_numeric($rangeParam)) {

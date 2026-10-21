@@ -328,10 +328,6 @@ final class Initialize extends ResourceBase {
       'HAS_TERRACE',
       'HAS_BALCONY',
       'HAS_YARD',
-      'TOP_FLOOR',
-      'BOTTOM_FLOOR',
-      'NOT_TOP_FLOOR',
-      'NOT_BOTTOM_FLOOR',
     ];
   }
 
