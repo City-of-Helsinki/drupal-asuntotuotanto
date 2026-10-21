@@ -439,13 +439,13 @@ content:
   field_showing_time:
     type: datetime_default
     weight: 12
-    region: hidden
+    region: content
     settings: {  }
     third_party_settings: {  }
   field_showing_time_range:
     type: daterange_default
     weight: 12
-    region: content
+    region: hidden
     settings: {  }
     third_party_settings: {  }
   field_stock_end_number:
