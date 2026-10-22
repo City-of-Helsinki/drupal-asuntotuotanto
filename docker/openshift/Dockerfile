@@ -1,4 +1,4 @@
-ARG DRUPAL_DOCKER_TAG=8.3
+ARG DRUPAL_DOCKER_TAG=8.4
 FROM ghcr.io/city-of-helsinki/drupal-docker-base:${DRUPAL_DOCKER_TAG}
 
 COPY / /var/www/html/
@@ -21,4 +21,4 @@ RUN chmod +x /crons/* /usr/local/bin/cron-entrypoint
 COPY docker/openshift/custom.locations /etc/nginx/conf.d/custom.locations
 
 # Project-specific ini settings
-COPY docker/openshift/php-ini-overrides.ini /etc/php83/conf.d/
+COPY docker/openshift/php-ini-overrides.ini /etc/php84/conf.d/
