@@ -12,7 +12,7 @@ jobs:
       image: ghcr.io/city-of-helsinki/drupal-php-docker:8.4-alpine
     services:
       db:
-        image: mysql:8
+        image: mariadb:11.8
         env:
           MYSQL_USER: drupal
           MYSQL_PASSWORD: drupal
