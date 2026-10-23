@@ -195,6 +195,23 @@
     {% if gallery_markup|trim is not empty %}
       {{ gallery_markup|raw }}
     {% endif %}
+
+    {% if project_showing_overlay_text %}
+      {% set overlay_bg = 'var(--color-engel)' %}
+      {% if project_type|lower == 'haso' %}
+        {% set overlay_bg = 'var(--color-copper-medium-light)' %}
+      {% elseif project_type|lower == 'puolihitas' %}
+        {% set overlay_bg = 'var(--color-engel-light)' %}
+      {% endif %}
+
+      <div class="project__showing-overlay" style="background-color: {{ overlay_bg }}; color: var(--color-black-90); font-weight: 700; font-size: 2rem; line-height: 1.2; margin-top: 0; padding: 18px 24px; text-align: center;">
+        {% if project_showing_overlay_datetime %}
+          {{ project_showing_overlay_text }}: {{ project_showing_overlay_datetime }}
+        {% else %}
+          {{ project_showing_overlay_text }}
+        {% endif %}
+      </div>
+    {% endif %}
   </div>
 
   <nav class="project__anchor-navigation project__anchor-navigation--desktop wrapper wrapper--mw-1264">

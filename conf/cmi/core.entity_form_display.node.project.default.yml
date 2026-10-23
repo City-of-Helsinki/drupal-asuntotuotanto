@@ -84,6 +84,8 @@ dependencies:
     - field.field.node.project.field_pre_marketing_end_time
     - field.field.node.project.field_premarketing_start_time
     - field.field.node.project.field_project_gallery_media
+    - field.field.node.project.field_project_showing_time
+    - field.field.node.project.field_project_showing_time_range
     - field.field.node.project.field_project_accessibility
     - field.field.node.project.field_project_area_description
     - field.field.node.project.field_project_attachments
@@ -126,6 +128,7 @@ dependencies:
     - asu_csv_import
     - asu_tasklist
     - datetime
+    - datetime_range
     - field_group
     - file
     - hdbt_admin_tools
@@ -257,6 +260,8 @@ third_party_settings:
         - field_pre_marketing_end_time
         - field_application_start_time
         - field_application_end_time
+        - field_project_showing_time
+        - field_project_showing_time_range
         - field_material_choice_dl
         - field_shareholder_meeting_date
         - field_estimated_completion
@@ -1049,6 +1054,18 @@ content:
     settings:
       size: 60
       placeholder: ''
+    third_party_settings: {  }
+  field_project_showing_time:
+    type: datetime_default
+    weight: 18
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_project_showing_time_range:
+    type: daterange_default
+    weight: 18
+    region: hidden
+    settings: {  }
     third_party_settings: {  }
   field_property_id:
     type: string_textfield
