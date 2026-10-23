@@ -767,6 +767,26 @@ function asuntotuotanto_preprocess_node(&$variables) {
       $variables['application_start_time'] = $application_start;
       $variables['application_end_time'] = $application_end;
 
+      $showing_preview = asuntotuotanto_get_project_showing_time_preview($project, gmdate('Y-m-d\\TH:i:s'));
+      $overlay_text = '';
+      $overlay_datetime = '';
+
+      if (!empty($showing_preview['datetime_text'])) {
+        $overlay_text = !empty($showing_preview['text']) ? (string) $showing_preview['text'] : (string) t('Esittelyaika');
+        $overlay_datetime = (string) $showing_preview['datetime_text'];
+      }
+      else {
+        if ($project->hasField('field_homepage_highlight_text')) {
+          $overlay_text = trim(strip_tags((string) $project->get('field_homepage_highlight_text')->value));
+        }
+        if ($overlay_text === '' && $project->hasField('field_upcoming_description')) {
+          $overlay_text = trim(strip_tags((string) $project->get('field_upcoming_description')->value));
+        }
+      }
+
+      $variables['project_showing_overlay_text'] = $overlay_text;
+      $variables['project_showing_overlay_datetime'] = $overlay_datetime;
+
       $variables['apartments_count'] = count($apartments) < 2 ? 0 : count($apartments);
       $variables['apartment_sales_prices'] = $apartment_sales_prices_string;
       $variables['apartment_debt_free_sales_prices'] = $apartment_debt_free_sales_prices_string;
@@ -1238,6 +1258,38 @@ function asuntotuotanto_get_homepage_highlight_projects(int $limit = 4): array {
  * Builds auto-highlight text from the earliest apartment showing time.
  */
 function asuntotuotanto_get_project_showing_time_preview(NodeInterface $project, string $now): array {
+  $now_timestamp = strtotime($now . ' UTC');
+  if ($now_timestamp === FALSE) {
+    return [];
+  }
+
+  $project_showing_ranges = asuntotuotanto_get_node_showing_ranges($project);
+  $closest_project_showing_start = NULL;
+  $closest_project_showing_end = NULL;
+
+  foreach ($project_showing_ranges as $showing_range) {
+    $showing_timestamp = $showing_range['start'];
+    if ($showing_timestamp < $now_timestamp) {
+      continue;
+    }
+
+    if ($closest_project_showing_start === NULL || $showing_timestamp < $closest_project_showing_start) {
+      $closest_project_showing_start = $showing_timestamp;
+      $closest_project_showing_end = $showing_range['end'];
+    }
+  }
+
+  if ($closest_project_showing_start !== NULL) {
+    $showing_time_formatted = asuntotuotanto_format_showing_time_range($closest_project_showing_start, $closest_project_showing_end);
+
+    return [
+      'text' => (string) t('Esittelyaika'),
+      'datetime_text' => $showing_time_formatted,
+      'timestamp' => (int) $closest_project_showing_start,
+      'cache_tags' => $project->getCacheTags(),
+    ];
+  }
+
   if (!$project->hasField('field_apartments') || $project->get('field_apartments')->isEmpty()) {
     return [];
   }
@@ -1247,11 +1299,6 @@ function asuntotuotanto_get_project_showing_time_preview(NodeInterface $project,
   }, $project->get('field_apartments')->getValue())));
 
   if (empty($apartment_ids)) {
-    return [];
-  }
-
-  $now_timestamp = strtotime($now . ' UTC');
-  if ($now_timestamp === FALSE) {
     return [];
   }
 
@@ -1301,17 +1348,59 @@ function asuntotuotanto_get_project_showing_time_preview(NodeInterface $project,
  * Returns parsed showing time ranges from the apartment node.
  */
 function asuntotuotanto_get_apartment_showing_ranges(NodeInterface $apartment): array {
+  return asuntotuotanto_get_node_showing_ranges($apartment);
+}
+
+/**
+ * Returns parsed showing time ranges from any node with showing fields.
+ */
+function asuntotuotanto_get_node_showing_ranges(NodeInterface $node): array {
   $items = [];
 
-  if ($apartment->hasField('field_showing_time_range') && !$apartment->get('field_showing_time_range')->isEmpty()) {
-    $items = $apartment->get('field_showing_time_range')->getValue();
+  $range_field_candidates = [
+    'field_project_showing_time_range',
+    'field_showing_time_range',
+  ];
+  foreach ($range_field_candidates as $field_name) {
+    if ($node->hasField($field_name) && !$node->get($field_name)->isEmpty()) {
+      $items = $node->get($field_name)->getValue();
+      break;
+    }
   }
-  elseif ($apartment->hasField('field_showing_time') && !$apartment->get('field_showing_time')->isEmpty()) {
-    $items = $apartment->get('field_showing_time')->getValue();
+
+  if (empty($items)) {
+    $datetime_field_candidates = [
+      'field_project_showing_time',
+      'field_showing_time',
+    ];
+    foreach ($datetime_field_candidates as $field_name) {
+      if ($node->hasField($field_name) && !$node->get($field_name)->isEmpty()) {
+        $items = $node->get($field_name)->getValue();
+        break;
+      }
+    }
   }
 
   if (empty($items)) {
     return [];
+  }
+
+  $duration_minutes = NULL;
+  $duration_field_candidates = [
+    'field_project_showing_duration_minutes',
+    'field_showing_duration_minutes',
+  ];
+  foreach ($duration_field_candidates as $duration_field) {
+    if ($node->hasField($duration_field) && !$node->get($duration_field)->isEmpty()) {
+      $raw_duration = (string) $node->get($duration_field)->value;
+      if ($raw_duration !== '' && is_numeric($raw_duration)) {
+        $candidate = (int) $raw_duration;
+        if ($candidate > 0) {
+          $duration_minutes = $candidate;
+          break;
+        }
+      }
+    }
   }
 
   $ranges = [];
@@ -1333,6 +1422,9 @@ function asuntotuotanto_get_apartment_showing_ranges(NodeInterface $apartment): 
       if ($parsed_end_timestamp !== FALSE && $parsed_end_timestamp > $start_timestamp) {
         $end_timestamp = $parsed_end_timestamp;
       }
+    }
+    elseif ($duration_minutes !== NULL) {
+      $end_timestamp = $start_timestamp + ($duration_minutes * 60);
     }
 
     $ranges[] = [
@@ -1391,6 +1483,39 @@ function asuntotuotanto_get_manual_homepage_highlight_project_ids(string $now): 
  * Returns project ids that have apartments with upcoming showing time.
  */
 function asuntotuotanto_get_projects_with_apartment_showing_time_ids(string $now): array {
+  $field_definitions = \Drupal::service('entity_field.manager')->getFieldDefinitions('node', 'project');
+  $project_showing_query_conditions = [];
+
+  if (isset($field_definitions['field_project_showing_time_range'])) {
+    $project_showing_query_conditions[] = ['field' => 'field_project_showing_time_range.value', 'value' => $now];
+  }
+  if (isset($field_definitions['field_showing_time_range'])) {
+    $project_showing_query_conditions[] = ['field' => 'field_showing_time_range.value', 'value' => $now];
+  }
+  if (isset($field_definitions['field_project_showing_time'])) {
+    $project_showing_query_conditions[] = ['field' => 'field_project_showing_time', 'value' => $now];
+  }
+  if (isset($field_definitions['field_showing_time'])) {
+    $project_showing_query_conditions[] = ['field' => 'field_showing_time', 'value' => $now];
+  }
+
+  if ($project_showing_query_conditions !== []) {
+    $project_query = \Drupal::entityQuery('node')
+      ->accessCheck(TRUE)
+      ->condition('type', 'project')
+      ->condition('status', 1)
+      ->sort('changed', 'DESC')
+      ->range(0, 40);
+
+    $showing_group = $project_query->orConditionGroup();
+    foreach ($project_showing_query_conditions as $condition) {
+      $showing_group->condition($condition['field'], $condition['value'], '>=');
+    }
+    $project_query->condition($showing_group);
+
+    return array_values($project_query->execute());
+  }
+
   $apartment_query = \Drupal::entityQuery('node')
     ->accessCheck(TRUE)
     ->condition('type', 'apartment')

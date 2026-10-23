@@ -1,0 +1,20 @@
+uuid: 552ce9f3-fc29-4f43-9fb8-d735407d5eeb
+langcode: en
+status: true
+dependencies:
+  module:
+    - datetime_range
+    - node
+id: node.field_project_showing_time_range
+field_name: field_project_showing_time_range
+entity_type: node
+type: daterange
+settings:
+  datetime_type: datetime
+module: datetime_range
+locked: false
+cardinality: -1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false
