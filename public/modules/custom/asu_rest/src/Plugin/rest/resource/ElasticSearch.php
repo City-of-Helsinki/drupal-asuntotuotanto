@@ -92,7 +92,7 @@ class ElasticSearch extends ResourceBase {
     }
     $url_params = ($url_params) ? implode('_', $url_params) : '';
     // Bump cache namespace when response payload shape changes.
-    $cid = 'asu_rest:apartment_list:v7:' . $ownership_type . $url_params;
+    $cid = 'asu_rest:apartment_list:v8:' . $ownership_type . $url_params;
 
     $account = User::load(\Drupal::currentUser()->id());
     $debug = $account && $account->id() == 1;
@@ -377,59 +377,6 @@ class ElasticSearch extends ResourceBase {
 
             return array_values(array_unique($values));
           };
-          $get_showing_time_field = static function (Node $node): string {
-            if ($node->hasField('field_showing_time_range') && !$node->get('field_showing_time_range')->isEmpty()) {
-              return 'field_showing_time_range';
-            }
-
-            return 'field_showing_time';
-          };
-          $build_showing_time_ranges = static function (Node $node, string $field): array {
-            if (!$node->hasField($field) || $node->get($field)->isEmpty()) {
-              return [];
-            }
-
-            $ranges = [];
-            foreach ($node->get($field)->getValue() as $item) {
-              $showing_time = isset($item['value']) && is_string($item['value']) ? $item['value'] : '';
-              if ($showing_time === '') {
-                continue;
-              }
-
-              $start_timestamp = strtotime($showing_time . ' UTC');
-              if ($start_timestamp === FALSE) {
-                continue;
-              }
-
-              $end_value = isset($item['end_value']) && is_string($item['end_value']) ? $item['end_value'] : '';
-              $end_timestamp = NULL;
-              if ($end_value !== '') {
-                $parsed_end_timestamp = strtotime($end_value . ' UTC');
-                if ($parsed_end_timestamp !== FALSE && $parsed_end_timestamp > $start_timestamp) {
-                  $end_timestamp = $parsed_end_timestamp;
-                }
-              }
-
-              $start_text = \Drupal::service('date.formatter')->format($start_timestamp, 'custom', 'd.m.Y H:i');
-
-              $display = $start_text;
-              $end_output = NULL;
-              if ($end_timestamp !== NULL) {
-                $same_day = gmdate('Y-m-d', $start_timestamp) === gmdate('Y-m-d', $end_timestamp);
-                $end_text = \Drupal::service('date.formatter')->format($end_timestamp, 'custom', $same_day ? 'H:i' : 'd.m.Y H:i');
-                $display = $start_text . ' - ' . $end_text;
-                $end_output = gmdate('Y-m-d\\TH:i:s', $end_timestamp);
-              }
-
-              $ranges[] = [
-                'start' => $showing_time,
-                'end' => $end_output,
-                'display' => $display,
-              ];
-            }
-
-            return $ranges;
-          };
 
           // Keep state enums in canonical form for FE logic.
           $apartment_state_of_sale = $get_term_enum($apartment_node, 'field_apartment_state_of_sale');
@@ -460,9 +407,32 @@ class ElasticSearch extends ResourceBase {
           $project_state_of_sale = $get_term_enum($project_node, 'field_state_of_sale');
 
           $room_count = $this->resolveApartmentRoomCount($apartment_node);
-          $showing_time_field = $get_showing_time_field($apartment_node);
-          $showing_times = $get_datetime_values($apartment_node, $showing_time_field);
-          $showing_time_ranges = $build_showing_time_ranges($apartment_node, $showing_time_field);
+          $project_showing_time_field = $this->resolveShowingTimeField($project_node);
+          $showing_times = [];
+          $showing_time_ranges = [];
+          $showing_node = $apartment_node;
+          $showing_time_field = $this->resolveShowingTimeField($apartment_node);
+          if ($project_showing_time_field !== NULL) {
+            $showing_node = $project_node;
+            $showing_time_field = $project_showing_time_field;
+          }
+
+          if ($showing_time_field !== NULL) {
+            $showing_times = $get_datetime_values($showing_node, $showing_time_field);
+            $showing_time_ranges = $this->buildShowingTimeRanges(
+              $showing_node,
+              $showing_time_field,
+              $this->resolveShowingDurationMinutes($showing_node),
+            );
+          }
+
+          $project_upcoming_description = $this->buildProjectShowingDescription($project_node);
+          if ($project_upcoming_description === '') {
+            $project_upcoming_description = $get_scalar($project_node, 'field_homepage_highlight_text');
+          }
+          if ($project_upcoming_description === '') {
+            $project_upcoming_description = $get_scalar($project_node, 'field_upcoming_description');
+          }
 
           $apartment_number = $get_scalar($apartment_node, 'field_apartment_number');
           $application_url = '';
@@ -514,7 +484,7 @@ class ElasticSearch extends ResourceBase {
             'project_state_of_sale' => $project_state_of_sale,
             'project_street_address' => $get_scalar($project_node, 'field_street_address'),
             'project_homepage_highlight_text' => $get_scalar($project_node, 'field_homepage_highlight_text'),
-            'project_upcoming_description' => $get_scalar($project_node, 'field_upcoming_description'),
+            'project_upcoming_description' => $project_upcoming_description,
             'project_url' => $this->buildAbsoluteUrl($project_node->toUrl()->toString()),
             'project_uuid' => $project_node->uuid(),
             'release_payment' => $this->toCents($get_scalar($apartment_node, 'field_release_payment')),
@@ -550,6 +520,138 @@ class ElasticSearch extends ResourceBase {
    */
   protected function isApartmentVisibleInPublicSearch(string $apartmentStateOfSale): bool {
     return strtoupper($apartmentStateOfSale) !== 'SOLD';
+  }
+
+  /**
+   * Resolve first available showing time field for the given node.
+   */
+  private function resolveShowingTimeField(Node $node): ?string {
+    $candidates = [
+      'field_project_showing_time_range',
+      'field_showing_time_range',
+      'field_project_showing_time',
+      'field_showing_time',
+    ];
+
+    foreach ($candidates as $field) {
+      if ($node->hasField($field) && !$node->get($field)->isEmpty()) {
+        return $field;
+      }
+    }
+
+    return NULL;
+  }
+
+  /**
+   * Resolve optional default duration (minutes) used for datetime fields.
+   */
+  private function resolveShowingDurationMinutes(Node $node): ?int {
+    $duration_fields = [
+      'field_project_showing_duration_minutes',
+      'field_showing_duration_minutes',
+    ];
+
+    foreach ($duration_fields as $field) {
+      if (!$node->hasField($field) || $node->get($field)->isEmpty()) {
+        continue;
+      }
+
+      $raw = (string) $node->get($field)->value;
+      if ($raw !== '' && is_numeric($raw)) {
+        $duration = (int) $raw;
+        if ($duration > 0) {
+          return $duration;
+        }
+      }
+    }
+
+    return NULL;
+  }
+
+  /**
+   * Build showing time ranges with formatted display strings.
+   *
+   * @return array<int, array{start:string,end:?string,display:string}>
+   *   Normalized showing ranges.
+   */
+  private function buildShowingTimeRanges(Node $node, string $field, ?int $defaultDurationMinutes = NULL): array {
+    if (!$node->hasField($field) || $node->get($field)->isEmpty()) {
+      return [];
+    }
+
+    $ranges = [];
+    foreach ($node->get($field)->getValue() as $item) {
+      $showing_time = isset($item['value']) && is_string($item['value']) ? $item['value'] : '';
+      if ($showing_time === '') {
+        continue;
+      }
+
+      $start_timestamp = strtotime($showing_time . ' UTC');
+      if ($start_timestamp === FALSE) {
+        continue;
+      }
+
+      $end_timestamp = NULL;
+      $end_value = isset($item['end_value']) && is_string($item['end_value']) ? $item['end_value'] : '';
+      if ($end_value !== '') {
+        $parsed_end_timestamp = strtotime($end_value . ' UTC');
+        if ($parsed_end_timestamp !== FALSE && $parsed_end_timestamp > $start_timestamp) {
+          $end_timestamp = $parsed_end_timestamp;
+        }
+      }
+      elseif ($defaultDurationMinutes !== NULL && $defaultDurationMinutes > 0) {
+        $end_timestamp = $start_timestamp + ($defaultDurationMinutes * 60);
+      }
+
+      $start_text = \Drupal::service('date.formatter')->format($start_timestamp, 'custom', 'd.m.Y H:i');
+
+      $display = $start_text;
+      $end_output = NULL;
+      if ($end_timestamp !== NULL) {
+        $same_day = gmdate('Y-m-d', $start_timestamp) === gmdate('Y-m-d', $end_timestamp);
+        $end_text = \Drupal::service('date.formatter')->format($end_timestamp, 'custom', $same_day ? 'H:i' : 'd.m.Y H:i');
+        $display = $start_text . ' - ' . $end_text;
+        $end_output = gmdate('Y-m-d\\TH:i:s', $end_timestamp);
+      }
+
+      $ranges[] = [
+        'start' => $showing_time,
+        'end' => $end_output,
+        'display' => $display,
+      ];
+    }
+
+    return $ranges;
+  }
+
+  /**
+   * Build project-level showing description from the nearest upcoming entry.
+   */
+  private function buildProjectShowingDescription(Node $project): string {
+    $field = $this->resolveShowingTimeField($project);
+    if ($field === NULL) {
+      return '';
+    }
+
+    $ranges = $this->buildShowingTimeRanges($project, $field, $this->resolveShowingDurationMinutes($project));
+    if ($ranges === []) {
+      return '';
+    }
+
+    $now = time();
+    $fallback = '';
+    foreach ($ranges as $range) {
+      if ($fallback === '' && $range['display'] !== '') {
+        $fallback = $range['display'];
+      }
+
+      $start_timestamp = strtotime($range['start'] . ' UTC');
+      if ($start_timestamp !== FALSE && $start_timestamp >= $now && $range['display'] !== '') {
+        return $range['display'];
+      }
+    }
+
+    return $fallback;
   }
 
   /**

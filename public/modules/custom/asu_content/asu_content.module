@@ -77,7 +77,9 @@ function asu_content_form_node_form_alter(&$form, $form_state) {
   asu_content_project_add_archived_handling($form, $form_state);
   asu_content_hide_field_in_apartment_edit($form, $form_state);
   asu_content_prefer_legacy_showing_time_field($form);
+  asu_content_prefer_project_showing_time_field($form);
   asu_content_apartment_showing_time_duration_widget($form, $form_state);
+  asu_content_project_showing_time_duration_widget($form, $form_state);
 
   // Only show this when editing the form.
   if (!$form_state->isSubmitted()) {
@@ -93,12 +95,19 @@ function asu_content_form_node_form_alter(&$form, $form_state) {
  */
 function asu_content_form_alter(array &$form, FormStateInterface $form_state, string $form_id): void {
   $entity = $form['#entity'] ?? NULL;
-  if (!$entity instanceof Node || $entity->bundle() !== 'apartment') {
+  if (!$entity instanceof Node || !in_array($entity->bundle(), ['apartment', 'project'], TRUE)) {
     return;
   }
 
-  asu_content_prefer_legacy_showing_time_field($form);
-  asu_content_apartment_showing_time_duration_widget($form, $form_state);
+  if ($entity->bundle() === 'apartment') {
+    asu_content_prefer_legacy_showing_time_field($form);
+    asu_content_apartment_showing_time_duration_widget($form, $form_state);
+  }
+
+  if ($entity->bundle() === 'project') {
+    asu_content_prefer_project_showing_time_field($form);
+    asu_content_project_showing_time_duration_widget($form, $form_state);
+  }
 }
 
 /**
@@ -116,38 +125,87 @@ function asu_content_prefer_legacy_showing_time_field(array &$form): void {
 }
 
 /**
+ * Keep project showing time range field hidden on project forms.
+ */
+function asu_content_prefer_project_showing_time_field(array &$form): void {
+  if (isset($form['field_project_showing_time'])) {
+    $form['field_project_showing_time']['#access'] = TRUE;
+  }
+
+  if (isset($form['field_project_showing_time_range'])) {
+    $form['field_project_showing_time_range']['#access'] = TRUE;
+    $form['field_project_showing_time_range']['#attributes']['class'][] = 'asu-showing-time-range-hidden';
+  }
+}
+
+/**
  * Replace showing time end datetime with duration input on apartment forms.
  */
 function asu_content_apartment_showing_time_duration_widget(array &$form, FormStateInterface $form_state): void {
-  if (!isset($form['field_showing_time']['widget']) || !is_array($form['field_showing_time']['widget'])) {
+  asu_content_showing_time_duration_widget_for_field(
+    $form,
+    $form_state,
+    'field_showing_time',
+    'field_showing_time_range',
+    'asu_content_apartment_showing_time_duration_validate',
+    'asu_content_apartment_showing_time_entity_builder'
+  );
+}
+
+/**
+ * Replace project showing time end datetime with duration input.
+ */
+function asu_content_project_showing_time_duration_widget(array &$form, FormStateInterface $form_state): void {
+  asu_content_showing_time_duration_widget_for_field(
+    $form,
+    $form_state,
+    'field_project_showing_time',
+    'field_project_showing_time_range',
+    'asu_content_project_showing_time_duration_validate',
+    'asu_content_project_showing_time_entity_builder'
+  );
+}
+
+/**
+ * Inject duration field and handlers for a showing time datetime field.
+ */
+function asu_content_showing_time_duration_widget_for_field(
+  array &$form,
+  FormStateInterface $form_state,
+  string $time_field,
+  string $range_field,
+  string $validate_handler,
+  string $entity_builder_handler,
+): void {
+  if (!isset($form[$time_field]['widget']) || !is_array($form[$time_field]['widget'])) {
     return;
   }
 
   $form['#attached']['library'][] = 'asu_content/asu_apartment_showing_time';
-  $form['field_showing_time']['#attributes']['class'][] = 'asu-showing-time-range';
+  $form[$time_field]['#attributes']['class'][] = 'asu-showing-time-range';
 
   $entity = $form['#entity'] ?? $form_state->getFormObject()?->getEntity();
   $legacy_rows = [];
-  if ($entity instanceof Node && $entity->hasField('field_showing_time')) {
-    $legacy_rows = $entity->get('field_showing_time')->getValue();
+  if ($entity instanceof Node && $entity->hasField($time_field)) {
+    $legacy_rows = $entity->get($time_field)->getValue();
   }
 
-  $submitted_rows = asu_content_extract_showing_time_rows($form_state->getUserInput(), $legacy_rows);
+  $submitted_rows = asu_content_extract_showing_time_rows($form_state->getUserInput(), $legacy_rows, $time_field);
   $stored_ranges = [];
-  if ($entity instanceof Node && $entity->hasField('field_showing_time_range') && !$entity->get('field_showing_time_range')->isEmpty()) {
-    $stored_ranges = $entity->get('field_showing_time_range')->getValue();
+  if ($entity instanceof Node && $entity->hasField($range_field) && !$entity->get($range_field)->isEmpty()) {
+    $stored_ranges = $entity->get($range_field)->getValue();
   }
 
-  foreach (Element::children($form['field_showing_time']['widget']) as $delta) {
+  foreach (Element::children($form[$time_field]['widget']) as $delta) {
     if (!is_numeric((string) $delta)) {
       continue;
     }
 
-    if (!isset($form['field_showing_time']['widget'][$delta]['value'])) {
+    if (!isset($form[$time_field]['widget'][$delta]['value'])) {
       continue;
     }
 
-    $row_element = &$form['field_showing_time']['widget'][$delta];
+    $row_element = &$form[$time_field]['widget'][$delta];
 
     if (isset($row_element['value']) && is_array($row_element['value'])) {
       $row_element['value']['#title'] = t('Esittelyaika');
@@ -179,17 +237,17 @@ function asu_content_apartment_showing_time_duration_widget(array &$form, FormSt
   }
 
   $validators = $form['#validate'] ?? [];
-  $validators = array_values(array_filter($validators, static function ($handler): bool {
-    return $handler !== 'asu_content_apartment_showing_time_duration_validate';
+  $validators = array_values(array_filter($validators, static function ($handler) use ($validate_handler): bool {
+    return $handler !== $validate_handler;
   }));
-  array_unshift($validators, 'asu_content_apartment_showing_time_duration_validate');
+  array_unshift($validators, $validate_handler);
   $form['#validate'] = $validators;
 
   $entity_builders = $form['#entity_builders'] ?? [];
-  $entity_builders = array_values(array_filter($entity_builders, static function ($handler): bool {
-    return $handler !== 'asu_content_apartment_showing_time_entity_builder';
+  $entity_builders = array_values(array_filter($entity_builders, static function ($handler) use ($entity_builder_handler): bool {
+    return $handler !== $entity_builder_handler;
   }));
-  $entity_builders[] = 'asu_content_apartment_showing_time_entity_builder';
+  $entity_builders[] = $entity_builder_handler;
   $form['#entity_builders'] = $entity_builders;
 }
 
@@ -197,13 +255,27 @@ function asu_content_apartment_showing_time_duration_widget(array &$form, FormSt
  * Builds daterange end values from per-row duration inputs.
  */
 function asu_content_apartment_showing_time_duration_validate(array &$form, FormStateInterface $form_state): void {
+  asu_content_showing_time_duration_validate_for_field($form, $form_state, 'apartment', 'field_showing_time');
+}
+
+/**
+ * Builds daterange end values from per-row duration inputs for projects.
+ */
+function asu_content_project_showing_time_duration_validate(array &$form, FormStateInterface $form_state): void {
+  asu_content_showing_time_duration_validate_for_field($form, $form_state, 'project', 'field_project_showing_time');
+}
+
+/**
+ * Shared validator for showing time duration input.
+ */
+function asu_content_showing_time_duration_validate_for_field(array &$form, FormStateInterface $form_state, string $bundle, string $time_field): void {
   $entity = $form['#entity'] ?? $form_state->getFormObject()?->getEntity();
-  if (!$entity instanceof Node || $entity->bundle() !== 'apartment') {
+  if (!$entity instanceof Node || $entity->bundle() !== $bundle || !$entity->hasField($time_field)) {
     return;
   }
 
-  $legacy_rows = $entity->get('field_showing_time')->getValue();
-  $rows = asu_content_extract_showing_time_rows($form_state->getUserInput(), $legacy_rows);
+  $legacy_rows = $entity->get($time_field)->getValue();
+  $rows = asu_content_extract_showing_time_rows($form_state->getUserInput(), $legacy_rows, $time_field);
   if ($rows === []) {
     return;
   }
@@ -220,7 +292,7 @@ function asu_content_apartment_showing_time_duration_validate(array &$form, Form
     }
 
     if ($duration_minutes <= 0) {
-      $form_state->setErrorByName("field_showing_time][$delta][showing_duration_minutes", t('Esittelyn kesto (minuuttia) on pakollinen, kun aloituspäivämäärä on annettu.'));
+      $form_state->setErrorByName("{$time_field}][$delta][showing_duration_minutes", t('Esittelyn kesto (minuuttia) on pakollinen, kun aloituspäivämäärä on annettu.'));
     }
   }
 }
@@ -229,17 +301,52 @@ function asu_content_apartment_showing_time_duration_validate(array &$form, Form
  * Entity builder for apartment showing duration in regular and IEF forms.
  */
 function asu_content_apartment_showing_time_entity_builder(string $entity_type, EntityInterface $entity, array &$form, FormStateInterface $form_state): void {
-  if ($entity_type !== 'node' || !$entity instanceof Node || $entity->bundle() !== 'apartment') {
+  asu_content_showing_time_entity_builder_for_field(
+    $entity_type,
+    $entity,
+    $form_state,
+    'apartment',
+    'field_showing_time',
+    'field_showing_time_range'
+  );
+}
+
+/**
+ * Entity builder for project showing duration in project edit form.
+ */
+function asu_content_project_showing_time_entity_builder(string $entity_type, EntityInterface $entity, array &$form, FormStateInterface $form_state): void {
+  asu_content_showing_time_entity_builder_for_field(
+    $entity_type,
+    $entity,
+    $form_state,
+    'project',
+    'field_project_showing_time',
+    'field_project_showing_time_range'
+  );
+}
+
+/**
+ * Shared entity builder for showing time range values.
+ */
+function asu_content_showing_time_entity_builder_for_field(
+  string $entity_type,
+  EntityInterface $entity,
+  FormStateInterface $form_state,
+  string $bundle,
+  string $time_field,
+  string $range_field,
+): void {
+  if ($entity_type !== 'node' || !$entity instanceof Node || $entity->bundle() !== $bundle) {
     return;
   }
 
-  if (!$entity->hasField('field_showing_time') || !$entity->hasField('field_showing_time_range')) {
+  if (!$entity->hasField($time_field) || !$entity->hasField($range_field)) {
     return;
   }
 
-  $legacy_rows = $entity->get('field_showing_time')->getValue();
-  $rows_input = asu_content_extract_showing_time_rows($form_state->getUserInput(), $legacy_rows);
-  $existing_ranges = $entity->get('field_showing_time_range')->getValue();
+  $legacy_rows = $entity->get($time_field)->getValue();
+  $rows_input = asu_content_extract_showing_time_rows($form_state->getUserInput(), $legacy_rows, $time_field);
+  $existing_ranges = $entity->get($range_field)->getValue();
   $ranges = [];
 
   foreach ($legacy_rows as $delta => $row) {
@@ -276,7 +383,7 @@ function asu_content_apartment_showing_time_entity_builder(string $entity_type, 
     ];
   }
 
-  $entity->set('field_showing_time_range', $ranges);
+  $entity->set($range_field, $ranges);
 }
 
 /**
@@ -312,8 +419,8 @@ function asu_content_parse_datetime_widget_input(mixed $value): ?int {
 /**
  * Locate showing time rows in nested request payload.
  */
-function asu_content_extract_showing_time_rows(array $input, array $legacy_rows): array {
-  $row_sets = asu_content_collect_showing_time_row_sets($input);
+function asu_content_extract_showing_time_rows(array $input, array $legacy_rows, string $time_field = 'field_showing_time'): array {
+  $row_sets = asu_content_collect_showing_time_row_sets($input, $time_field);
   if ($row_sets === []) {
     return [];
   }
@@ -363,11 +470,11 @@ function asu_content_extract_showing_time_rows(array $input, array $legacy_rows)
 /**
  * Collect all showing_time row sets from nested request payload.
  */
-function asu_content_collect_showing_time_row_sets(array $input): array {
+function asu_content_collect_showing_time_row_sets(array $input, string $time_field = 'field_showing_time'): array {
   $row_sets = [];
 
-  if (isset($input['field_showing_time']) && is_array($input['field_showing_time'])) {
-    $rows = asu_content_normalize_showing_time_rows($input['field_showing_time']);
+  if (isset($input[$time_field]) && is_array($input[$time_field])) {
+    $rows = asu_content_normalize_showing_time_rows($input[$time_field]);
     if ($rows !== []) {
       $row_sets[] = $rows;
     }
@@ -375,7 +482,7 @@ function asu_content_collect_showing_time_row_sets(array $input): array {
 
   foreach ($input as $value) {
     if (is_array($value)) {
-      $row_sets = array_merge($row_sets, asu_content_collect_showing_time_row_sets($value));
+      $row_sets = array_merge($row_sets, asu_content_collect_showing_time_row_sets($value, $time_field));
     }
   }
 
