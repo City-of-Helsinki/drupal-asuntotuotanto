@@ -46,14 +46,70 @@ final class SanitizedDumpManager {
       throw new \RuntimeException(sprintf('Unable to create dump directory %s.', $directory));
     }
 
-    $this->retention->prune($directory, $keep);
-
-    $outfile = $directory . '/sanitized_' . date('YmdHis') . '.sql';
     $info = Database::getConnectionInfo('default')['default'];
     if (($info['driver'] ?? '') !== 'mysql') {
       throw new \RuntimeException('Sanitized dumps require a MySQL/MariaDB database.');
     }
 
+    return $this->writeAndRotate(
+      $directory,
+      $keep,
+      fn (string $path) => $this->dumpDatabase($info, $path),
+    );
+  }
+
+  /**
+   * Write a dump via a .tmp file, then prune older dumps.
+   *
+   * A failed or empty dump is removed and existing dumps are left untouched.
+   *
+   * @param string $directory
+   *   Existing target directory.
+   * @param int $keep
+   *   Number of newest sanitized_*.sql files to keep after creating.
+   * @param callable $write
+   *   Writes the dump to the path it is given.
+   *
+   * @return string
+   *   Path of the created dump file.
+   *
+   * @throws \Throwable
+   *   When writing fails or produces an empty file.
+   */
+  public function writeAndRotate(string $directory, int $keep, callable $write): string {
+    $outfile = $directory . '/sanitized_' . date('YmdHis') . '.sql';
+    $tmpfile = $outfile . '.tmp';
+
+    try {
+      $write($tmpfile);
+      clearstatcache(TRUE, $tmpfile);
+      if (!is_file($tmpfile) || filesize($tmpfile) === 0) {
+        throw new \RuntimeException('Unable to create sanitized database dump.');
+      }
+      if (!rename($tmpfile, $outfile)) {
+        throw new \RuntimeException(sprintf('Unable to move dump to %s.', $outfile));
+      }
+    }
+    catch (\Throwable $e) {
+      if (is_file($tmpfile)) {
+        unlink($tmpfile);
+      }
+      throw $e;
+    }
+
+    $this->retention->prune($directory, $keep);
+    return $outfile;
+  }
+
+  /**
+   * Dump the database to a file with ASU PII expressions applied.
+   *
+   * @param array $info
+   *   Database connection info for the default connection.
+   * @param string $path
+   *   Destination file.
+   */
+  private function dumpDatabase(array $info, string $path): void {
     $host = $info['host'] ?? '127.0.0.1';
     $port = $info['port'] ?? '3306';
     $dsn = sprintf('mysql:host=%s;port=%s;dbname=%s', $host, $port, $info['database']);
@@ -70,13 +126,7 @@ final class SanitizedDumpManager {
         'gdpr-replacements' => SanitizerConfig::replacements(),
       ]
     );
-    $dump->start($outfile);
-
-    if (!is_file($outfile) || filesize($outfile) === 0) {
-      throw new \RuntimeException('Unable to create sanitized database dump.');
-    }
-
-    return $outfile;
+    $dump->start($path);
   }
 
   /**

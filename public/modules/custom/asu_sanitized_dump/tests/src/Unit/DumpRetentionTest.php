@@ -70,6 +70,27 @@ final class DumpRetentionTest extends UnitTestCase {
   }
 
   /**
+   * Prune orders dumps by the timestamp in their name, not by mtime.
+   *
+   * - Five dumps exist; the oldest by name has the newest mtime (e.g. copied)
+   * - prune(keep=4) still deletes the oldest by name.
+   */
+  public function testPruneOrdersByNameNotMtime(): void {
+    $created = [];
+    for ($i = 1; $i <= 5; $i++) {
+      $path = $this->directory . "/sanitized_2026010{$i}120000.sql";
+      file_put_contents($path, "dump-$i");
+      touch($path, 1_700_000_000 - $i);
+      clearstatcache(TRUE, $path);
+      $created[] = $path;
+    }
+
+    $deleted = (new DumpRetention())->prune($this->directory, 4);
+
+    $this->assertSame([$created[0]], $deleted);
+  }
+
+  /**
    * Prune is a no-op when fewer than keep files exist.
    *
    * - Two dump files exist

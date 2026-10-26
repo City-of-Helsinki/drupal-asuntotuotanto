@@ -62,13 +62,48 @@ make create-sanitized-dump
 ```
 
 This writes `sanitized_YYYYMMDDHHMMSS.sql` and keeps the four newest dumps in
-that directory. Copy the file out of the pod afterwards. Do not commit dump
-files (`*.sql` is gitignored).
+that directory. The dump is written to a `.tmp` file first and renamed only when
+it succeeds; older dumps are deleted only after that, so a failed dump leaves
+existing ones untouched. Copy the file out of the pod afterwards. Do not commit
+dump files (`*.sql` is gitignored).
 
 Do **not** use `drush sql:sanitize` on production — that command updates live
-rows. Prefer `drush asu:sql:sanitized-dump` / `drush sql-dump-gdpr` for sharing.
+rows. `drush sql:dump-gdpr` (from the gdpr_dumper module) is blocked: it does
+not apply the ASU rules and would leak applicant data.
 
-After importing a sanitized dump locally, user passwords are set to `localdev`.
+Data of session, log, cache, flood, login history, `authmap`, `honeypot_user`
+(IP addresses) and `key_value_expire` (tempstore, e.g. draft forms) tables is
+left out of the dump.
 
-Note: use `drush asu:sql:sanitized-dump` (or `make create-sanitized-dump`), not
-`drush sql:dump-gdpr` alone — the ASU PII map is applied by the custom command.
+### Restore together with the backend
+
+Drupal users are linked to backend profiles by Drupal `users.uuid` == Django
+`Profile.id`, which both dumps keep. The masked copies in
+`field_backend_profile` / `field_backend_password` must be recomputed for the
+target environment:
+
+1. Import this dump into MariaDB and the backend's sanitized dump into Postgres
+   (see apartment-application-service README).
+2. In the backend container, generate the fix and apply it here:
+
+```
+./manage.py drupal_restore_credentials_sql --i-know-this-is-a-restored-dump > fix.sql
+drush sql:query --file=fix.sql
+```
+
+3. Run `drush cr`. Until step 2 is done, Drupal users cannot reach the backend.
+
+User passwords in the dump are set to `localdev`.
+
+### What is kept, and adding fields
+
+The rules live in `asu_sanitized_dump/src/Config/SanitizerConfig.php`. Kept on
+purpose: ids and links to the backend (`users.uuid`, `field_backend_profile`,
+`field_backend_id`), and `field_right_of_residence_number`, which drives HASO
+queue ordering.
+
+`SanitizerCoverageKernelTest` fails when a field of the user, application,
+message or subscription entities has no rule. Add a rule in `expressions()` if
+the field can hold personal data, otherwise add it to `SAFE_FIELDS`. Custom
+tables outside entities (like `asu_application_co_applicant_map`) are not
+covered by that test; add rules for them by hand.

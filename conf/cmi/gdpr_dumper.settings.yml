@@ -1,14 +1,5 @@
-gdpr_expressions:
-  users_field_data:
-    init: 'uid'
-gdpr_replacements:
-  users_field_data:
-    name:
-      formatter: 'userName'
-    mail:
-      formatter: 'email'
-    pass:
-      formatter: 'clear'
+gdpr_expressions: {  }
+gdpr_replacements: {  }
 drivers:
   mysql:
     dump_command: 'mysqldump'

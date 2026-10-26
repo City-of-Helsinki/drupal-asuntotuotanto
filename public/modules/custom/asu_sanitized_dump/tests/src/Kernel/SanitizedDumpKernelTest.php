@@ -41,7 +41,11 @@ final class SanitizedDumpKernelTest extends KernelTestBase {
     'message_mail' => 'pii.message.xyz99@hel.example',
     'subscription_email' => 'pii.subscription.xyz99@hel.example',
     'co_hash' => 'pii-co-applicant-hash-xyz99',
+    'co_email' => 'pii.co.applicant.xyz99@hel.example',
     'confirm_token' => 'pii-confirm-token-xyz99',
+    'first_name' => 'PiiMaijaFirstXyz99',
+    'last_name' => 'PiiMeikalainenXyz99',
+    'co_applicant_email' => 'pii.coapp.field.xyz99@hel.example',
   ];
 
   /**
@@ -144,8 +148,8 @@ final class SanitizedDumpKernelTest extends KernelTestBase {
       'status' => 1,
       'main_applicant' => [
         [
-          'first_name' => 'Maija',
-          'last_name' => 'Meikalainen',
+          'first_name' => self::PII['first_name'],
+          'last_name' => self::PII['last_name'],
           'date_of_birth' => '1990-05-05',
           'personal_id' => self::PII['personal_id'],
           'address' => self::PII['address'],
@@ -153,6 +157,19 @@ final class SanitizedDumpKernelTest extends KernelTestBase {
           'city' => 'Helsinki',
           'phone' => self::PII['phone'],
           'email' => self::PII['applicant_email'],
+        ],
+      ],
+      'applicant' => [
+        [
+          'first_name' => 'Co',
+          'last_name' => 'Applicant',
+          'date_of_birth' => '1991-06-06',
+          'personal_id' => '123B',
+          'address' => 'Coapplicant street 1',
+          'postal_code' => '00200',
+          'city' => 'Helsinki',
+          'phone' => '+358409998877',
+          'email' => self::PII['co_applicant_email'],
         ],
       ],
     ]);
@@ -180,6 +197,7 @@ final class SanitizedDumpKernelTest extends KernelTestBase {
       ->fields([
         'application_id' => (int) $application->id(),
         'co_applicant_saml_hash' => self::PII['co_hash'],
+        'co_applicant_email' => self::PII['co_email'],
         'created' => time(),
         'changed' => time(),
       ])
@@ -264,12 +282,11 @@ final class SanitizedDumpKernelTest extends KernelTestBase {
       $expressions[$prefix . $table] = $columns;
     }
 
+    // Dump every table of this test site, not only the configured ones, so
+    // personal data in an unconfigured table or column fails the test.
     $tables = [];
-    $schema = Database::getConnection()->schema();
-    foreach (array_keys(SanitizerConfig::expressions()) as $table) {
-      if ($schema->tableExists($table)) {
-        $tables[] = $prefix . $table;
-      }
+    foreach (Database::getConnection()->schema()->findTables('%') as $table) {
+      $tables[] = $prefix . $table;
     }
     $this->assertNotEmpty($tables);
 
@@ -336,6 +353,12 @@ final class SanitizedDumpKernelTest extends KernelTestBase {
           'type' => 'varchar',
           'length' => 255,
           'not null' => TRUE,
+        ],
+        'co_applicant_email' => [
+          'type' => 'varchar',
+          'length' => 255,
+          'not null' => FALSE,
+          'default' => '',
         ],
         'created' => [
           'type' => 'int',

@@ -29,3 +29,5 @@ sql:
       - 'login_history'
       - 'users_data'
       - 'authmap'
+      - 'honeypot_user'
+      - 'key_value_expire'

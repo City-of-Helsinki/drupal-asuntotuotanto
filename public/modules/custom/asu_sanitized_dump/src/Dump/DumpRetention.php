@@ -27,9 +27,9 @@ final class DumpRetention {
       return [];
     }
 
-    usort($files, static function (string $a, string $b): int {
-      return filemtime($b) <=> filemtime($a);
-    });
+    // Names embed a fixed-width timestamp, so they sort chronologically even
+    // when copying the files has changed their mtimes.
+    rsort($files, SORT_STRING);
 
     $deleted = [];
     foreach (array_slice($files, $keep) as $old) {

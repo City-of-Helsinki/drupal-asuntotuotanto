@@ -37,6 +37,101 @@ final class SanitizerConfig {
   ];
 
   /**
+   * Entity types whose stored data can contain personal data.
+   *
+   * Every column of their fields must be sanitized in expressions() or the
+   * field listed in SAFE_FIELDS; SanitizerCoverageKernelTest enforces this.
+   */
+  public const PII_ENTITY_TYPES = [
+    'user',
+    'asu_application',
+    'asu_application_message',
+    'asu_project_subscription',
+  ];
+
+  /**
+   * Fields of PII entity types that are safe to dump unchanged.
+   *
+   * Ids, references, flags, timestamps and fixed-vocabulary values. Keys
+   * linking to the backend (users.uuid, field_backend_profile,
+   * field_backend_id) must be kept for the restored data to work.
+   */
+  public const SAFE_FIELDS = [
+    'user' => [
+      'uid',
+      'uuid',
+      'langcode',
+      'preferred_langcode',
+      'preferred_admin_langcode',
+      'timezone',
+      'status',
+      'created',
+      'changed',
+      'access',
+      'login',
+      'default_langcode',
+      'roles',
+      'field_backend_profile',
+      'field_email_is_valid',
+    ],
+    'asu_application' => [
+      'id',
+      'vid',
+      'bundle',
+      'uuid',
+      'status',
+      'uid',
+      'parent_id',
+      'project_id',
+      'project',
+      'field_backend_id',
+      'has_children',
+      'created_admin',
+      'created_by',
+      'create_to_django',
+      'created',
+      'changed',
+      'field_locked',
+      // Fixed error messages looked up by backend error code.
+      'error',
+      'revision_timestamp',
+      'revision_uid',
+      'revision_default',
+      'apartment',
+      'field_agreement_policy',
+      'field_aso_changer',
+      'field_data_agreement_policy',
+      'field_hitas_owner',
+      'field_is_new_permit_number',
+      // Kept on purpose: drives HASO queue ordering (also kept in Django).
+      'field_right_of_residence_number',
+    ],
+    'asu_application_message' => [
+      'id',
+      'uuid',
+      'application_id',
+      'project_id',
+      'sender_uid',
+      'salesperson_uid',
+      'sender_role',
+      'created',
+      'changed',
+    ],
+    'asu_project_subscription' => [
+      'id',
+      'uuid',
+      'langcode',
+      'project',
+      'uid',
+      'is_confirmed',
+      'unsubscribed_at',
+      'last_notified_state',
+      'created',
+      'changed',
+    ],
+  ];
+
+  /**
    * Tables whose data should be omitted (structure only) in sanitized dumps.
    *
    * @return string[]
@@ -57,6 +152,10 @@ final class SanitizerConfig {
       'sessions',
       'watchdog',
       'feeds_log',
+      // Visitor IP addresses.
+      'honeypot_user',
+      // Private tempstore and other expiring state, e.g. draft form values.
+      'key_value_expire',
     ];
   }
 
@@ -88,6 +187,10 @@ final class SanitizerConfig {
           'co_applicant_saml_hash',
           "MD5(CONCAT(application_id, '-co-applicant'))"
         ),
+        'co_applicant_email' => self::keepEmptyOr(
+          'co_applicant_email',
+          "CONCAT('co-applicant+', application_id, '@example.com')"
+        ),
       ],
       'asu_project_subscription' => [
         'email' => self::keepEmptyOr(
@@ -117,18 +220,25 @@ final class SanitizerConfig {
       ],
     ];
 
-    foreach (['main_applicant', 'applicant'] as $field_name) {
-      foreach (['asu_application', 'asu_application_revision'] as $prefix) {
-        $table = $prefix . '__' . $field_name;
-        $expressions[$table] = self::applicantFieldExpressions($field_name);
-      }
-    }
+    // main_applicant and applicant are single-value base fields, stored as
+    // columns of the asu_application base table (not revisionable).
+    $expressions['asu_application'] = array_merge(
+      self::applicantFieldExpressions('main_applicant'),
+      self::applicantFieldExpressions('applicant'),
+    );
+    $expressions['asu_application_revision'] = [
+      'revision_log' => self::keepEmptyOr('revision_log', "'Anonymized revision log'"),
+    ];
 
+    // field_backend_profile and field_backend_password are masked with the
+    // source backend's HASHIDS_SALT. After restoring, the backend command
+    // `drupal_restore_credentials_sql` recomputes both for the target
+    // environment; until then the password placeholder fails login on purpose.
     $user_fields = [
       'field_phone_number' => "CONCAT('+358400', LPAD(entity_id, 6, '0'))",
       'field_full_name' => "CONCAT('User ', entity_id)",
       'field_saml_hash' => "MD5(CONCAT(entity_id, '-saml'))",
-      'field_backend_password' => "'anonymized-backend-password'",
+      'field_backend_password' => "'run-drupal-restore-credentials-sql'",
       'field_hel_profiili_uid' => "CONCAT('helsinki-profile-', entity_id)",
     ];
     foreach ($user_fields as $field_name => $replacement) {
@@ -187,7 +297,7 @@ final class SanitizerConfig {
   }
 
   /**
-   * Expressions for asu_main_applicant / asu_applicant field tables.
+   * Expressions for main_applicant / applicant columns on asu_application.
    *
    * @param string $field_name
    *   Field machine name (main_applicant or applicant).
@@ -197,20 +307,20 @@ final class SanitizerConfig {
    */
   private static function applicantFieldExpressions(string $field_name): array {
     $map = [
-      'first_name' => "CONCAT('First', entity_id)",
-      'last_name' => "CONCAT('Last', entity_id)",
+      'first_name' => "CONCAT('First', id)",
+      'last_name' => "CONCAT('Last', id)",
       'date_of_birth' => "'1990-01-01'",
       'personal_id' => "'1234A'",
-      'address' => "CONCAT(entity_id, ' Example Street')",
+      'address' => "CONCAT(id, ' Example Street')",
       'postal_code' => "'00100'",
       'city' => "'Helsinki'",
-      'phone' => "CONCAT('+358401', LPAD(entity_id, 6, '0'))",
-      'email' => "CONCAT('applicant+', entity_id, '@example.com')",
+      'phone' => "CONCAT('+358401', LPAD(id, 6, '0'))",
+      'email' => "CONCAT('$field_name+', id, '@example.com')",
     ];
 
     $expressions = [];
     foreach (self::APPLICANT_PROPERTIES as $property) {
-      $column = $field_name . '_' . $property;
+      $column = $field_name . '__' . $property;
       $expressions[$column] = self::keepEmptyOr($column, $map[$property]);
     }
     return $expressions;

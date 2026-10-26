@@ -20,7 +20,7 @@ final class SanitizerConfigTest extends UnitTestCase {
    * Required ASU PII columns must appear in the expression map.
    *
    * - users_field_data identity columns are configured
-   * - Applicant dedicated field tables include personal_id and email
+   * - Applicant columns on the asu_application base table are configured
    * - Subscription and co-applicant hash columns are configured
    * - User field tables for phone/saml/password are configured.
    */
@@ -31,14 +31,17 @@ final class SanitizerConfigTest extends UnitTestCase {
       'users_field_data.mail',
       'users_field_data.pass',
       'users_field_data.init',
-      'asu_application__main_applicant.main_applicant_email',
-      'asu_application__main_applicant.main_applicant_personal_id',
-      'asu_application__applicant.applicant_email',
-      'asu_application_revision__main_applicant.main_applicant_first_name',
+      'asu_application.main_applicant__email',
+      'asu_application.main_applicant__personal_id',
+      'asu_application.main_applicant__first_name',
+      'asu_application.applicant__email',
+      'asu_application.applicant__personal_id',
+      'asu_application_revision.revision_log',
       'asu_application__field_personal_id.field_personal_id_value',
       'asu_application_message.recipient_mail',
       'asu_application_message.body',
       'asu_application_co_applicant_map.co_applicant_saml_hash',
+      'asu_application_co_applicant_map.co_applicant_email',
       'asu_project_subscription.email',
       'asu_project_subscription.confirm_token',
       'user__field_phone_number.field_phone_number_value',
@@ -80,7 +83,7 @@ final class SanitizerConfigTest extends UnitTestCase {
    * - Applicant email expression keeps empty values.
    */
   public function testEmptyValuesArePreservedInExpressions(): void {
-    $email = SanitizerConfig::expressions()['asu_application__main_applicant']['main_applicant_email'];
+    $email = SanitizerConfig::expressions()['asu_application']['main_applicant__email'];
     $this->assertStringContainsString('IS NULL', $email);
     $this->assertStringContainsString("= ''", $email);
   }
@@ -88,11 +91,12 @@ final class SanitizerConfigTest extends UnitTestCase {
   /**
    * Structure-only table list includes auth and session-related data.
    *
-   * - authmap, sessions, flood, users_data are listed.
+   * - authmap, sessions, flood, users_data, login_history are listed
+   * - honeypot_user (IP addresses) and key_value_expire (tempstore) are listed.
    */
   public function testStructureTablesIncludeSensitiveSessionData(): void {
     $tables = SanitizerConfig::structureTables();
-    foreach (['authmap', 'sessions', 'flood', 'users_data', 'login_history'] as $table) {
+    foreach (['authmap', 'sessions', 'flood', 'users_data', 'login_history', 'honeypot_user', 'key_value_expire'] as $table) {
       $this->assertContains($table, $tables);
     }
   }
