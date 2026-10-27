@@ -1,0 +1,87 @@
+{
+  "name": "asuntomyynti-react",
+  "version": "1.7.6",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
+  "dependencies": {
+    "@sentry/react": "^10.39.0",
+    "@tanstack/react-query": "^5.90.21",
+    "@types/classnames": "^2.3.1",
+    "@types/react": "^18.2.79",
+    "@types/react-dom": "^18.2.25",
+    "axios": "^1.13.5",
+    "classnames": "^2.2.6",
+    "date-fns": "^4.1.0",
+    "hds-design-tokens": "^4.4.0",
+    "hds-react": "^4.4.0",
+    "i18next": "^25.8.10",
+    "leaflet": "^1.9.4",
+    "pure-react-carousel": "^1.27.6",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-i18next": "^16.5.4",
+    "react-leaflet": "^4.2.1",
+    "react-router-dom": "^7.13.0"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build && node scripts/create-iife-wrapper.cjs",
+    "test": "vitest",
+    "lint": "eslint .",
+    "preview": "vite preview",
+    "prepare": "husky",
+    "rimraf": "rimraf",
+    "create-dist-package-folder": "node -e \"require('fs').mkdirSync('dist/react', {recursive:true})\"",
+    "create-hitas": "cross-env VITE_PROJECT_OWNERSHIP_TYPE=hitas VITE_SHOW_UPCOMING_ONLY=false npm run build",
+    "create-hitas-upcoming": "cross-env VITE_PROJECT_OWNERSHIP_TYPE=hitas VITE_SHOW_UPCOMING_ONLY=true npm run build",
+    "create-haso": "cross-env VITE_PROJECT_OWNERSHIP_TYPE=haso VITE_SHOW_UPCOMING_ONLY=false npm run build",
+    "create-haso-upcoming": "cross-env VITE_PROJECT_OWNERSHIP_TYPE=haso VITE_SHOW_UPCOMING_ONLY=true npm run build",
+    "copy-files:hitas": "node scripts/copy-dist-files.cjs hitas",
+    "copy-files:hitas-upcoming": "node scripts/copy-dist-files.cjs hitas_upcoming",
+    "copy-files:haso": "node scripts/copy-dist-files.cjs haso",
+    "copy-files:haso-upcoming": "node scripts/copy-dist-files.cjs haso_upcoming",
+    "create-zip": "node scripts/create-zip.cjs",
+    "dist": "rimraf dist && npm run create-dist-package-folder && npm run create-hitas && npm run copy-files:hitas && npm run create-hitas-upcoming && npm run copy-files:hitas-upcoming && npm run create-haso && npm run copy-files:haso && npm run create-haso-upcoming && npm run copy-files:haso-upcoming && npm run create-zip"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^14.3.1",
+    "@testing-library/user-event": "^14.5.2",
+    "@types/leaflet": "^1.9.14",
+    "@types/node": "^24.0.14",
+    "@vitejs/plugin-react-swc": "^3.9.0",
+    "archiver": "^7.0.1",
+    "cross-env": "^10.1.0",
+    "eslint": "^9.25.0",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-react-refresh": "^0.4.19",
+    "globals": "^16.0.0",
+    "husky": "^9.1.7",
+    "jsdom": "^26.1.0",
+    "lint-staged": "^15.2.11",
+    "prettier": "^3.4.2",
+    "react-test-renderer": "^18.2.0",
+    "rimraf": "^6.0.1",
+    "sass-embedded": "^1.89.2",
+    "typescript": "~5.8.3",
+    "typescript-eslint": "^8.56.0",
+    "vite": "^7.0.4",
+    "vitest": "^3.2.4"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,css}": [
+      "eslint",
+      "prettier --write"
+    ]
+  },
+  "overrides": {
+    "ejs": "^3.1.7",
+    "immer": "^9.0.6",
+    "react": "$react",
+    "react-dom": "$react-dom",
+    "shell-quote": "^1.7.3"
+  }
+}

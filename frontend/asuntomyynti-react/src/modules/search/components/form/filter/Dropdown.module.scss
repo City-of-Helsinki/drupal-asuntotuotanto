@@ -1,0 +1,123 @@
+.container {
+  border: 2px solid rgb(128, 128, 128);
+  border-radius: 2px;
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  width: 100%;
+
+  @media (max-width: 768px) {
+    position: relative;
+  }
+
+  &.active {
+    z-index: 1000;
+  }
+}
+
+.content {
+  display: none;
+  flex-direction: column;
+  border-top: solid 1px var(--color-black-20);
+  border-bottom: solid 1px var(--color-black-20);
+  max-height: 262px;
+  overflow-y: scroll;
+  padding: 14px;
+  height: 100%;
+}
+
+.footer {
+  display: none;
+}
+
+.active > .content,
+.active > .footer {
+  display: flex;
+}
+
+.option {
+  padding: 10px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.underline {
+  border-bottom: solid 3px var(--color-bus);
+}
+
+.title {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+  padding-right: 24px;
+}
+
+.label::after {
+  content: '';
+  display: block;
+  border-right: solid 2px #000000;
+  border-bottom: solid 2px #000000;
+  transform: rotate(45deg);
+  width: 8px;
+  height: 8px;
+  position: absolute;
+  right: 14px;
+
+  .active & {
+    transform: rotate(-135deg);
+  }
+}
+
+.icon {
+  height: 24px;
+  width: 24px;
+  margin-right: 10px;
+  text-align: center;
+}
+
+.clearButton {
+  all: unset;
+  box-shadow: none;
+  border-radius: 0;
+  border: none;
+  padding: 14px;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 500;
+  color: rgb(26, 26, 26);
+  width: 100%;
+  cursor: pointer;
+  &:focus {
+    outline: #0072c6 5px auto;
+    outline-offset: 5px;
+  }
+}
+
+.clearButton:disabled {
+  color: rgb(153, 152, 152);
+}
+
+.label {
+  all: unset;
+  white-space: nowrap;
+  display: flex;
+  flex-direction: row;
+  color: rgb(26, 26, 26);
+  font-size: 16px;
+  cursor: pointer;
+  width: 100%;
+  align-items: center;
+  min-height: 52px;
+  user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -webkit-user-select: none;
+  padding: 10px;
+  &:focus {
+    outline: #0072c6 5px auto;
+    outline-offset: 5px;
+  }
+}
