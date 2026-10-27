@@ -83,7 +83,7 @@ Drupal users are linked to backend profiles by Drupal `users.uuid` == Django
 target environment:
 
 1. Import this dump into MariaDB and the backend's sanitized dump into Postgres
-   (see apartment-application-service README).
+   (see the [apartment-application-service README](https://github.com/City-of-Helsinki/apartment-application-service/blob/main/README.md#anonymized-database-dump)).
 2. In the backend container, generate the fix and apply it here:
 
 ```
@@ -92,6 +92,10 @@ drush sql:query --file=fix.sql
 ```
 
 3. Run `drush cr`. Until step 2 is done, Drupal users cannot reach the backend.
+
+An end-to-end check of this cycle against the local dev stacks is in
+apartment-application-service:
+[docs/sanitized-dump-restore-check.md](https://github.com/City-of-Helsinki/apartment-application-service/blob/main/docs/sanitized-dump-restore-check.md).
 
 User passwords in the dump are set to `localdev`.
 
