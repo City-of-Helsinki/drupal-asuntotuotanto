@@ -1,7 +1,0 @@
-gdpr_expressions: {  }
-gdpr_replacements: {  }
-drivers:
-  mysql:
-    dump_command: 'mysqldump'
-  pqsql:
-    dump_command: 'pg_dump'

@@ -68,8 +68,9 @@ existing ones untouched. Copy the file out of the pod afterwards. Do not commit
 dump files (`*.sql` is gitignored).
 
 Do **not** use `drush sql:sanitize` on production — that command updates live
-rows. `drush sql:dump-gdpr` (from the gdpr_dumper module) is blocked: it does
-not apply the ASU rules and would leak applicant data.
+rows. The command uses the `druidfi/gdpr-mysqldump` library directly; the
+`gdpr_dumper` Drupal module (and its `drush sql:dump-gdpr`, which does not apply
+the ASU rules) is not installed.
 
 Data of session, log, cache, flood, login history, `authmap`, `honeypot_user`
 (IP addresses) and `key_value_expire` (tempstore, e.g. draft forms) tables is
@@ -108,6 +109,10 @@ queue ordering.
 
 `SanitizerCoverageKernelTest` fails when a field of the user, application,
 message or subscription entities has no rule. Add a rule in `expressions()` if
-the field can hold personal data, otherwise add it to `SAFE_FIELDS`. Custom
-tables outside entities (like `asu_application_co_applicant_map`) are not
-covered by that test; add rules for them by hand.
+the field can hold personal data, otherwise add it to `SAFE_FIELDS`.
+
+Custom tables outside entities (like `asu_application_co_applicant_map`) are
+listed in `CUSTOM_TABLES` with their safe columns. Before dumping, the command
+reads their live columns and refuses to run if any column has neither a rule
+nor a safe listing. A new custom table that can hold personal data must be
+added to `CUSTOM_TABLES` by hand.

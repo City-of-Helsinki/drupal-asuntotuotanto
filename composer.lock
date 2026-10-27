@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "055d2aa3a6094e7c8661a5fb564e5b2f",
+    "content-hash": "3ed653a7d266603f201cff51a2d3afbf",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -2336,55 +2336,6 @@
                 "source": "https://github.com/dompdf/php-font-lib/tree/1.0.2"
             },
             "time": "2026-01-20T14:10:26+00:00"
-        },
-        {
-            "name": "druidfi/drush-gdpr-dumper",
-            "version": "4.0.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/druidfi/drush-gdpr-dumper.git",
-                "reference": "ad6d9c38171c97294a3dc267d7cfee07bc90bd98"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/druidfi/drush-gdpr-dumper/zipball/ad6d9c38171c97294a3dc267d7cfee07bc90bd98",
-                "reference": "ad6d9c38171c97294a3dc267d7cfee07bc90bd98",
-                "shasum": ""
-            },
-            "require": {
-                "druidfi/gdpr-mysqldump": "^2.0",
-                "drupal/core-recommended": "^10.3 || ^11",
-                "drush/drush": "^13",
-                "php": "^8.2",
-                "webflo/drupal-finder": "^1.3.0"
-            },
-            "type": "drupal-module",
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "GPL-2.0-or-later"
-            ],
-            "authors": [
-                {
-                    "name": "Druid.fi",
-                    "homepage": "https://github.com/druidfi",
-                    "role": "Maintainer"
-                },
-                {
-                    "name": "Robin Ingelbrecht",
-                    "homepage": "https://github.com/robiningelbrecht"
-                },
-                {
-                    "name": "Marko Korhonen",
-                    "homepage": "https://github.com/back-2-95"
-                }
-            ],
-            "description": "A drop-in replacement for mysqldump that optionally sanitizes DB fields for better GDPR conformity.",
-            "support": {
-                "issues": "https://github.com/druidfi/drush-gdpr-dumper/issues",
-                "source": "https://github.com/druidfi/drush-gdpr-dumper/tree/4.0.0"
-            },
-            "abandoned": true,
-            "time": "2025-04-15T05:40:13+00:00"
         },
         {
             "name": "druidfi/gdpr-mysqldump",

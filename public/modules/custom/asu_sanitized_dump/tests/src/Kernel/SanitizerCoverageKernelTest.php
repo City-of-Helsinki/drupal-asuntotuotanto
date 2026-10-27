@@ -121,6 +121,28 @@ final class SanitizerCoverageKernelTest extends KernelTestBase {
   }
 
   /**
+   * Custom tables built by their real update hooks are fully classified.
+   *
+   * - asu_application_co_applicant_map is created by asu_application
+   *   update hooks 9013 and 9016, as on production
+   * - Every column has an expression or is listed in CUSTOM_TABLES.
+   */
+  public function testCustomTablesAreClassified(): void {
+    $this->container->get('module_handler')->loadInclude('asu_application', 'install');
+    asu_application_update_9013();
+    asu_application_update_9016();
+
+    $connection = $this->container->get('database');
+    $table_columns = [];
+    foreach (array_keys(SanitizerConfig::CUSTOM_TABLES) as $table) {
+      $this->assertTrue($connection->schema()->tableExists($table), "$table was not created.");
+      $table_columns[$table] = $connection->query('SHOW COLUMNS FROM {' . $table . '}')->fetchCol();
+    }
+
+    $this->assertSame([], SanitizerConfig::unclassifiedCustomColumns($table_columns));
+  }
+
+  /**
    * Install the site's exported field storages for the PII entity types.
    */
   private function installSiteFieldStorages(): void {

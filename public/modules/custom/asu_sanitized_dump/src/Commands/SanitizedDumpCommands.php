@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\asu_sanitized_dump\Commands;
 
-use Consolidation\AnnotatedCommand\Hooks\HookManager;
 use Drupal\asu_sanitized_dump\Dump\SanitizedDumpManager;
 use Drush\Attributes as CLI;
 use Drush\Commands\DrushCommands;
@@ -55,17 +54,6 @@ final class SanitizedDumpCommands extends DrushCommands {
     $this->logger()->success(dt('Sanitized dump saved to !path', ['!path' => $path]));
     $this->logger()->notice(dt('Live database rows were not modified. Local password for imported users is "localdev".'));
     return $path;
-  }
-
-  /**
-   * Block gdpr_dumper's own command, which does not apply the ASU PII map.
-   *
-   * @throws \RuntimeException
-   *   Always.
-   */
-  #[CLI\Hook(type: HookManager::ARGUMENT_VALIDATOR, target: 'sql:dump-gdpr')]
-  public function blockUnsanitizedGdprDump(): void {
-    throw new \RuntimeException(dt('sql:dump-gdpr does not anonymize ASU personal data. Use "drush asu:sql:sanitized-dump" instead.'));
   }
 
 }

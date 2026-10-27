@@ -51,6 +51,8 @@ final class SanitizedDumpManager {
       throw new \RuntimeException('Sanitized dumps require a MySQL/MariaDB database.');
     }
 
+    $this->assertCustomTablesClassified();
+
     return $this->writeAndRotate(
       $directory,
       $keep,
@@ -152,6 +154,34 @@ final class SanitizedDumpManager {
     }
 
     return array_values(array_unique($matched));
+  }
+
+  /**
+   * Refuse to dump when a custom PII table has an unclassified column.
+   *
+   * Custom tables are created by update hooks, outside entity storage, so the
+   * coverage test cannot see columns added later. Checking the live schema
+   * makes such a column fail the dump instead of leaking.
+   *
+   * @throws \RuntimeException
+   *   When a column has neither an expression nor a safe listing.
+   */
+  private function assertCustomTablesClassified(): void {
+    $connection = Database::getConnection();
+    $table_columns = [];
+    foreach (array_keys(SanitizerConfig::CUSTOM_TABLES) as $table) {
+      if ($connection->schema()->tableExists($table)) {
+        $table_columns[$table] = $connection->query('SHOW COLUMNS FROM {' . $table . '}')->fetchCol();
+      }
+    }
+
+    $unclassified = SanitizerConfig::unclassifiedCustomColumns($table_columns);
+    if ($unclassified !== []) {
+      throw new \RuntimeException(sprintf(
+        'Refusing to dump: unclassified columns %s. Add an expression or a safe listing in SanitizerConfig.',
+        implode(', ', $unclassified),
+      ));
+    }
   }
 
 }

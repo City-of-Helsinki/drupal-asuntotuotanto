@@ -132,6 +132,43 @@ final class SanitizerConfig {
   ];
 
   /**
+   * Custom (non-entity) tables that can hold personal data.
+   *
+   * Table → columns that are safe to dump unchanged. Every other column must
+   * have an expression; SanitizedDumpManager refuses to dump otherwise.
+   */
+  public const CUSTOM_TABLES = [
+    'asu_application_co_applicant_map' => [
+      'application_id',
+      'created',
+      'changed',
+    ],
+  ];
+
+  /**
+   * Columns of existing custom tables that are neither sanitized nor safe.
+   *
+   * @param array<string, string[]> $table_columns
+   *   Actual columns per custom table; tables that do not exist are omitted.
+   *
+   * @return string[]
+   *   "table.column" identifiers.
+   */
+  public static function unclassifiedCustomColumns(array $table_columns): array {
+    $expressions = self::expressions();
+    $unclassified = [];
+    foreach ($table_columns as $table => $columns) {
+      $safe = self::CUSTOM_TABLES[$table] ?? [];
+      foreach ($columns as $column) {
+        if (!in_array($column, $safe, TRUE) && !isset($expressions[$table][$column])) {
+          $unclassified[] = "$table.$column";
+        }
+      }
+    }
+    return $unclassified;
+  }
+
+  /**
    * Tables whose data should be omitted (structure only) in sanitized dumps.
    *
    * @return string[]
@@ -258,9 +295,8 @@ final class SanitizerConfig {
    *   Table → column → Faker formatter config.
    */
   public static function replacements(): array {
-    // Expressions handle unique keys and empty passthrough. Returning an empty
-    // map clears the module defaults that would otherwise Faker-replace
-    // users_field_data.name/mail and break unique indexes.
+    // Expressions handle unique keys and empty passthrough; Faker values can
+    // collide and break unique indexes such as users_field_data.name/mail.
     return [];
   }
 

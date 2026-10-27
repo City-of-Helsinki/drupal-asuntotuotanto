@@ -55,6 +55,35 @@ final class SanitizerConfigTest extends UnitTestCase {
   }
 
   /**
+   * Custom table columns must be sanitized or listed as safe.
+   *
+   * - The current co-applicant map columns are all classified
+   * - A new, unknown column is reported
+   * - Tables missing from the input (not created yet) are ignored.
+   */
+  public function testUnclassifiedCustomColumns(): void {
+    $columns = [
+      'application_id',
+      'co_applicant_saml_hash',
+      'co_applicant_email',
+      'created',
+      'changed',
+    ];
+    $this->assertSame([], SanitizerConfig::unclassifiedCustomColumns([
+      'asu_application_co_applicant_map' => $columns,
+    ]));
+
+    $this->assertSame(
+      ['asu_application_co_applicant_map.co_applicant_phone'],
+      SanitizerConfig::unclassifiedCustomColumns([
+        'asu_application_co_applicant_map' => [...$columns, 'co_applicant_phone'],
+      ])
+    );
+
+    $this->assertSame([], SanitizerConfig::unclassifiedCustomColumns([]));
+  }
+
+  /**
    * Replacements map stays empty so Faker cannot break unique keys.
    *
    * - replacements() returns an empty array.

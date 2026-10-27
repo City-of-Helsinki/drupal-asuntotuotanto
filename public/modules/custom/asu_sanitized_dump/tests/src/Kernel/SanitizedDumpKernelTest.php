@@ -264,6 +264,37 @@ final class SanitizedDumpKernelTest extends KernelTestBase {
   }
 
   /**
+   * The dump refuses to run when a custom table gains an unclassified column.
+   *
+   * - A column is added to the co-applicant map, as a later update hook might
+   * - createDump() throws and names the column
+   * - No dump file is written.
+   */
+  public function testDumpRefusesUnclassifiedCustomColumn(): void {
+    Database::getConnection()->schema()->addField('asu_application_co_applicant_map', 'co_applicant_phone', [
+      'type' => 'varchar',
+      'length' => 32,
+      'not null' => FALSE,
+    ]);
+    $directory = sys_get_temp_dir() . '/asu_sanitized_guard_' . uniqid('', TRUE);
+
+    try {
+      $this->container->get('asu_sanitized_dump.dump_manager')->createDump($directory);
+      $this->fail('Expected the dump to be refused.');
+    }
+    catch (\RuntimeException $e) {
+      $this->assertStringContainsString('asu_application_co_applicant_map.co_applicant_phone', $e->getMessage());
+    }
+    finally {
+      $files = glob($directory . '/*') ?: [];
+      array_map('unlink', $files);
+      @rmdir($directory);
+    }
+
+    $this->assertSame([], $files);
+  }
+
+  /**
    * Run MysqldumpGdpr for ASU tables using the test DB connection.
    *
    * @param string $dump_file
@@ -338,43 +369,10 @@ final class SanitizedDumpKernelTest extends KernelTestBase {
    * Ensure co-applicant map table exists for dump coverage.
    */
   private function ensureCoApplicantMapTable(): void {
-    $schema = Database::getConnection()->schema();
-    if ($schema->tableExists('asu_application_co_applicant_map')) {
-      return;
-    }
-    $schema->createTable('asu_application_co_applicant_map', [
-      'fields' => [
-        'application_id' => [
-          'type' => 'int',
-          'unsigned' => TRUE,
-          'not null' => TRUE,
-        ],
-        'co_applicant_saml_hash' => [
-          'type' => 'varchar',
-          'length' => 255,
-          'not null' => TRUE,
-        ],
-        'co_applicant_email' => [
-          'type' => 'varchar',
-          'length' => 255,
-          'not null' => FALSE,
-          'default' => '',
-        ],
-        'created' => [
-          'type' => 'int',
-          'unsigned' => TRUE,
-          'not null' => TRUE,
-          'default' => 0,
-        ],
-        'changed' => [
-          'type' => 'int',
-          'unsigned' => TRUE,
-          'not null' => TRUE,
-          'default' => 0,
-        ],
-      ],
-      'primary key' => ['application_id'],
-    ]);
+    // Use the real update hooks so the test table matches production.
+    $this->container->get('module_handler')->loadInclude('asu_application', 'install');
+    asu_application_update_9013();
+    asu_application_update_9016();
   }
 
 }
