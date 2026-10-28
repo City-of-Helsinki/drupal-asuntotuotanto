@@ -98,7 +98,10 @@ An end-to-end check of this cycle against the local dev stacks is in
 apartment-application-service:
 [docs/sanitized-dump-restore-check.md](https://github.com/City-of-Helsinki/apartment-application-service/blob/main/docs/sanitized-dump-restore-check.md).
 
-User passwords in the dump are set to `localdev`.
+User passwords in the dump are set to `localdev`. To use another password, set
+`ASU_SANITIZED_DUMP_PASSWORD_HASH` to a Drupal password hash when dumping, e.g.
+from `drush php:eval "echo \Drupal::service('password')->hash('secret');"`.
+A plain password in the variable is refused.
 
 ### What is kept, and adding fields
 

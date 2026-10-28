@@ -10,14 +10,54 @@ namespace Drupal\asu_sanitized_dump\Config;
 final class SanitizerConfig {
 
   /**
-   * Known local-dev password after importing a sanitized dump.
+   * Password of every imported user when the env variable is not set.
    */
   public const LOCALDEV_PASSWORD = 'localdev';
 
   /**
-   * Bcrypt hash of LOCALDEV_PASSWORD for users_field_data.pass.
+   * Env variable holding the password hash written to users_field_data.pass.
    */
-  public const LOCALDEV_PASSWORD_HASH = '$2y$10$NfyVaGxVi9dvgv3O0oyc7e.bN5pCkZH/HSr63rEBqQ1IRAmo8k8Fy';
+  public const PASSWORD_HASH_ENV = 'ASU_SANITIZED_DUMP_PASSWORD_HASH';
+
+  /**
+   * Hash of LOCALDEV_PASSWORD, generated once per run when needed.
+   *
+   * @var string|null
+   */
+  private static ?string $defaultPasswordHash = NULL;
+
+  /**
+   * Password hash for imported users, from PASSWORD_HASH_ENV or the default.
+   *
+   * @return string
+   *   A Drupal password hash, e.g. from `drush php:eval
+   *   "echo \Drupal::service('password')->hash('secret');"`.
+   *
+   * @throws \RuntimeException
+   *   When the env value does not look like a password hash.
+   */
+  public static function passwordHash(): string {
+    $hash = getenv(self::PASSWORD_HASH_ENV);
+    if ($hash === FALSE || $hash === '') {
+      // Generated rather than stored, so no password hash lives in the code.
+      // Drupal's password service verifies bcrypt hashes with
+      // password_verify().
+      return self::$defaultPasswordHash ??= password_hash(self::LOCALDEV_PASSWORD, PASSWORD_BCRYPT);
+    }
+    // Drupal hashes start with "$" ($2y$ bcrypt, $S$ phpass). A plain password
+    // here would lock every imported user out.
+    if (!str_starts_with($hash, '$')) {
+      throw new \RuntimeException(sprintf('%s must be a password hash, not a plain password.', self::PASSWORD_HASH_ENV));
+    }
+    return $hash;
+  }
+
+  /**
+   * Whether imported users get the default LOCALDEV_PASSWORD.
+   */
+  public static function usesDefaultPassword(): bool {
+    return in_array(getenv(self::PASSWORD_HASH_ENV), [FALSE, ''], TRUE);
+  }
 
   /**
    * Applicant multi-column field property names stored in SQL.
@@ -203,7 +243,7 @@ final class SanitizerConfig {
    *   Table → column → SQL expression.
    */
   public static function expressions(): array {
-    $hash = "'" . str_replace("'", "''", self::LOCALDEV_PASSWORD_HASH) . "'";
+    $hash = "'" . str_replace("'", "''", self::passwordHash()) . "'";
 
     $expressions = [
       'users_field_data' => [

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\asu_sanitized_dump\Commands;
 
+use Drupal\asu_sanitized_dump\Config\SanitizerConfig;
 use Drupal\asu_sanitized_dump\Dump\SanitizedDumpManager;
 use Drush\Attributes as CLI;
 use Drush\Commands\DrushCommands;
@@ -52,7 +53,12 @@ final class SanitizedDumpCommands extends DrushCommands {
 
     $path = $this->dumpManager->createDump((string) $directory, $keep);
     $this->logger()->success(dt('Sanitized dump saved to !path', ['!path' => $path]));
-    $this->logger()->notice(dt('Live database rows were not modified. Local password for imported users is "localdev".'));
+    $password = SanitizerConfig::usesDefaultPassword()
+      ? dt('"!password"', ['!password' => SanitizerConfig::LOCALDEV_PASSWORD])
+      : dt('the one hashed in !env', ['!env' => SanitizerConfig::PASSWORD_HASH_ENV]);
+    $this->logger()->notice(dt('Live database rows were not modified. Password for imported users is !password.', [
+      '!password' => $password,
+    ]));
     return $path;
   }
 

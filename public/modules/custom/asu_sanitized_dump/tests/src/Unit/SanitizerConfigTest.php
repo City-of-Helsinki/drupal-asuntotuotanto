@@ -97,13 +97,54 @@ final class SanitizerConfigTest extends UnitTestCase {
    *
    * - name concatenates uid
    * - mail uses localhost.localdomain pattern
-   * - pass uses the localdev hash constant.
+   * - pass uses a generated hash of the localdev password when the env
+   *   variable is not set.
    */
   public function testUsersFieldDataUsesSqlExpressions(): void {
+    putenv(SanitizerConfig::PASSWORD_HASH_ENV);
     $expressions = SanitizerConfig::expressions()['users_field_data'];
     $this->assertStringContainsString("CONCAT('user', uid)", $expressions['name']);
     $this->assertStringContainsString('@localhost.localdomain', $expressions['mail']);
-    $this->assertStringContainsString(SanitizerConfig::LOCALDEV_PASSWORD_HASH, $expressions['pass']);
+    $hash = SanitizerConfig::passwordHash();
+    $this->assertStringContainsString($hash, $expressions['pass']);
+    $this->assertTrue(password_verify(SanitizerConfig::LOCALDEV_PASSWORD, $hash));
+    $this->assertSame($hash, SanitizerConfig::passwordHash(), 'The default hash is generated once per run.');
+    $this->assertTrue(SanitizerConfig::usesDefaultPassword());
+  }
+
+  /**
+   * The password hash can be set with an env variable.
+   *
+   * - A hash in the env variable is used for users_field_data.pass
+   * - usesDefaultPassword() reports the override.
+   */
+  public function testPasswordHashFromEnv(): void {
+    $hash = password_hash('env-test-password', PASSWORD_BCRYPT);
+    putenv(SanitizerConfig::PASSWORD_HASH_ENV . '=' . $hash);
+    try {
+      $this->assertSame($hash, SanitizerConfig::passwordHash());
+      $this->assertStringContainsString($hash, SanitizerConfig::expressions()['users_field_data']['pass']);
+      $this->assertFalse(SanitizerConfig::usesDefaultPassword());
+    }
+    finally {
+      putenv(SanitizerConfig::PASSWORD_HASH_ENV);
+    }
+  }
+
+  /**
+   * A plain password in the env variable is rejected.
+   *
+   * - passwordHash() throws instead of writing an unusable hash.
+   */
+  public function testPlainPasswordInEnvIsRejected(): void {
+    putenv(SanitizerConfig::PASSWORD_HASH_ENV . '=secret');
+    try {
+      $this->expectException(\RuntimeException::class);
+      SanitizerConfig::passwordHash();
+    }
+    finally {
+      putenv(SanitizerConfig::PASSWORD_HASH_ENV);
+    }
   }
 
   /**

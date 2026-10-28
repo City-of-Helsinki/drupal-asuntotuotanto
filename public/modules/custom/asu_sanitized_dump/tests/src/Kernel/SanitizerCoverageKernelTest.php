@@ -57,24 +57,13 @@ final class SanitizerCoverageKernelTest extends KernelTestBase {
    */
   public function testEveryPiiEntityColumnIsClassified(): void {
     $expressions = SanitizerConfig::expressions();
-    $entity_type_manager = $this->container->get('entity_type.manager');
 
     $unclassified = [];
     foreach (SanitizerConfig::PII_ENTITY_TYPES as $entity_type) {
       $safe_fields = SanitizerConfig::SAFE_FIELDS[$entity_type] ?? [];
-      $mapping = $entity_type_manager->getStorage($entity_type)->getTableMapping();
-      foreach ($mapping->getTableNames() as $table) {
-        $table_columns = $mapping->getAllColumns($table);
-        foreach ($mapping->getFieldNames($table) as $field) {
-          if (in_array($field, $safe_fields, TRUE)) {
-            continue;
-          }
-          $columns = array_intersect($mapping->getColumnNames($field), $table_columns);
-          foreach ($columns as $column) {
-            if (!isset($expressions[$table][$column])) {
-              $unclassified[] = "$entity_type.$field ($table.$column)";
-            }
-          }
+      foreach ($this->fieldColumns($entity_type) as [$table, $field, $column]) {
+        if (!in_array($field, $safe_fields, TRUE) && !isset($expressions[$table][$column])) {
+          $unclassified[] = "$entity_type.$field ($table.$column)";
         }
       }
     }
@@ -82,8 +71,33 @@ final class SanitizerCoverageKernelTest extends KernelTestBase {
     $this->assertSame(
       [],
       $unclassified,
-      'Add these columns to SanitizerConfig::expressions() if they can hold personal data, otherwise add the field to SanitizerConfig::SAFE_FIELDS.'
+      'Add these columns to SanitizerConfig::expressions() if they can hold '
+      . 'personal data, otherwise add the field to SanitizerConfig::SAFE_FIELDS.'
     );
+  }
+
+  /**
+   * Yield every field column stored in the entity type's tables.
+   *
+   * Drupal's structural columns (bundle, delta, ...) are not field columns
+   * and are skipped.
+   *
+   * @param string $entity_type
+   *   Entity type id.
+   *
+   * @return \Generator<array{string, string, string}>
+   *   [table, field name, column] triples.
+   */
+  private function fieldColumns(string $entity_type): \Generator {
+    $mapping = $this->container->get('entity_type.manager')->getStorage($entity_type)->getTableMapping();
+    foreach ($mapping->getTableNames() as $table) {
+      $table_columns = $mapping->getAllColumns($table);
+      foreach ($mapping->getFieldNames($table) as $field) {
+        foreach (array_intersect($mapping->getColumnNames($field), $table_columns) as $column) {
+          yield [$table, $field, $column];
+        }
+      }
+    }
   }
 
   /**
