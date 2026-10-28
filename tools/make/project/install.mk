@@ -28,11 +28,15 @@ helfi-drush-enable-modules: ## Enable modules and base configurations.
 	$(call drush,en -y helfi_platform_config helfi_base_config)
 
 SANITIZED_DUMP_DIR ?= .
+# DOCKER_PROJECT_ROOT comes from docker.mk, which is only included where a
+# docker binary exists (the host). Inside the container, use make's own
+# working directory instead. Absolute SANITIZED_DUMP_DIR values are used as-is.
+SANITIZED_DUMP_PATH = $(if $(filter /%,$(SANITIZED_DUMP_DIR)),$(SANITIZED_DUMP_DIR),$(or $(DOCKER_PROJECT_ROOT),$(CURDIR))/$(SANITIZED_DUMP_DIR))
 
 PHONY += create-sanitized-dump
 create-sanitized-dump: ## Create anonymized SQL dump (does not modify live DB).
-	$(call step,Create sanitized dump in $(SANITIZED_DUMP_DIR)...)
-	$(call drush,asu:sql:sanitized-dump --directory=${DOCKER_PROJECT_ROOT}/$(SANITIZED_DUMP_DIR))
+	$(call step,Create sanitized dump in $(SANITIZED_DUMP_PATH)...)
+	$(call drush,asu:sql:sanitized-dump --directory=$(SANITIZED_DUMP_PATH))
 
 PHONY += drush-locale-update
 drush-locale-update: ## Update translations.

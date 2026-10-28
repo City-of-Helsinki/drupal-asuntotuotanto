@@ -24,6 +24,7 @@ public/sites/default/local.settings.php
 public/sites/default/local.services.yml
 
 *.sql
+sanitized_*.sql.tmp
 *.env.local
 
 # Ignore OSX generated files
