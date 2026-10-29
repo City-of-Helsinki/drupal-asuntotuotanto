@@ -35,3 +35,5 @@ sanitized_*.sql.tmp
 !*.keepme
 .phpunit.*
 compose-dev.yaml
+
+.claude
