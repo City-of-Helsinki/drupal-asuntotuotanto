@@ -55,6 +55,23 @@ final class SanitizerConfigTest extends UnitTestCase {
   }
 
   /**
+   * Safe field lists load from data/safe_fields.yml.
+   *
+   * - Every PII entity type has a non-empty list of field names
+   * - Linking keys are listed as safe
+   * - An unknown entity type has no safe fields.
+   */
+  public function testSafeFieldsLoad(): void {
+    foreach (SanitizerConfig::PII_ENTITY_TYPES as $entity_type) {
+      $fields = SanitizerConfig::safeFields($entity_type);
+      $this->assertNotEmpty($fields, "No safe fields for $entity_type");
+      $this->assertContainsOnly('string', $fields);
+    }
+    $this->assertContains('field_backend_profile', SanitizerConfig::safeFields('user'));
+    $this->assertSame([], SanitizerConfig::safeFields('node'));
+  }
+
+  /**
    * Custom table columns must be sanitized or listed as safe.
    *
    * - The current co-applicant map columns are all classified

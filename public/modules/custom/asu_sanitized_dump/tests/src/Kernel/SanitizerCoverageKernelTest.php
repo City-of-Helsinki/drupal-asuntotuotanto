@@ -53,14 +53,14 @@ final class SanitizerCoverageKernelTest extends KernelTestBase {
    * - Every field column in every table of the PII entity types is checked
    * - Drupal's structural columns (bundle, delta, ...) are skipped
    * - A column fails unless it has an expression or its field is in
-   *   SAFE_FIELDS.
+   *   data/safe_fields.yml.
    */
   public function testEveryPiiEntityColumnIsClassified(): void {
     $expressions = SanitizerConfig::expressions();
 
     $unclassified = [];
     foreach (SanitizerConfig::PII_ENTITY_TYPES as $entity_type) {
-      $safe_fields = SanitizerConfig::SAFE_FIELDS[$entity_type] ?? [];
+      $safe_fields = SanitizerConfig::safeFields($entity_type);
       foreach ($this->fieldColumns($entity_type) as [$table, $field, $column]) {
         if (!in_array($field, $safe_fields, TRUE) && !isset($expressions[$table][$column])) {
           $unclassified[] = "$entity_type.$field ($table.$column)";
@@ -72,7 +72,7 @@ final class SanitizerCoverageKernelTest extends KernelTestBase {
       [],
       $unclassified,
       'Add these columns to SanitizerConfig::expressions() if they can hold '
-      . 'personal data, otherwise add the field to SanitizerConfig::SAFE_FIELDS.'
+      . 'personal data, otherwise add the field to data/safe_fields.yml.'
     );
   }
 

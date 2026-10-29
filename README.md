@@ -112,7 +112,8 @@ queue ordering.
 
 `SanitizerCoverageKernelTest` fails when a field of the user, application,
 message or subscription entities has no rule. Add a rule in `expressions()` if
-the field can hold personal data, otherwise add it to `SAFE_FIELDS`.
+the field can hold personal data, otherwise add it to
+`asu_sanitized_dump/data/safe_fields.yml`.
 
 Custom tables outside entities (like `asu_application_co_applicant_map`) are
 listed in `CUSTOM_TABLES` with their safe columns. Before dumping, the command

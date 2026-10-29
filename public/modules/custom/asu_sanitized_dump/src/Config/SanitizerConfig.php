@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Drupal\asu_sanitized_dump\Config;
 
+use Drupal\Component\Serialization\Yaml;
+
 /**
  * Builds GDPR dump SQL expressions and Faker replacements for ASU PII.
  */
@@ -80,7 +82,7 @@ final class SanitizerConfig {
    * Entity types whose stored data can contain personal data.
    *
    * Every column of their fields must be sanitized in expressions() or the
-   * field listed in SAFE_FIELDS; SanitizerCoverageKernelTest enforces this.
+   * field listed in safeFields(); SanitizerCoverageKernelTest enforces this.
    */
   public const PII_ENTITY_TYPES = [
     'user',
@@ -90,86 +92,34 @@ final class SanitizerConfig {
   ];
 
   /**
-   * Fields of PII entity types that are safe to dump unchanged.
-   *
-   * Ids, references, flags, timestamps and fixed-vocabulary values. Keys
-   * linking to the backend (users.uuid, field_backend_profile,
-   * field_backend_id) must be kept for the restored data to work.
+   * Module-relative path of the safe field lists.
    */
-  public const SAFE_FIELDS = [
-    'user' => [
-      'uid',
-      'uuid',
-      'langcode',
-      'preferred_langcode',
-      'preferred_admin_langcode',
-      'timezone',
-      'status',
-      'created',
-      'changed',
-      'access',
-      'login',
-      'default_langcode',
-      'roles',
-      'field_backend_profile',
-      'field_email_is_valid',
-    ],
-    'asu_application' => [
-      'id',
-      'vid',
-      'bundle',
-      'uuid',
-      'status',
-      'uid',
-      'parent_id',
-      'project_id',
-      'project',
-      'field_backend_id',
-      'has_children',
-      'created_admin',
-      'created_by',
-      'create_to_django',
-      'created',
-      'changed',
-      'field_locked',
-      // Fixed error messages looked up by backend error code.
-      'error',
-      'revision_timestamp',
-      'revision_uid',
-      'revision_default',
-      'apartment',
-      'field_agreement_policy',
-      'field_aso_changer',
-      'field_data_agreement_policy',
-      'field_hitas_owner',
-      'field_is_new_permit_number',
-      // Kept on purpose: drives HASO queue ordering (also kept in Django).
-      'field_right_of_residence_number',
-    ],
-    'asu_application_message' => [
-      'id',
-      'uuid',
-      'application_id',
-      'project_id',
-      'sender_uid',
-      'salesperson_uid',
-      'sender_role',
-      'created',
-      'changed',
-    ],
-    'asu_project_subscription' => [
-      'id',
-      'uuid',
-      'langcode',
-      'project',
-      'uid',
-      'is_confirmed',
-      'unsubscribed_at',
-      'last_notified_state',
-      'created',
-      'changed',
-    ],
-  ];
+  private const SAFE_FIELDS_FILE = 'data/safe_fields.yml';
+
+  /**
+   * Safe field lists, loaded once per run.
+   *
+   * @var array<string, string[]>|null
+   */
+  private static ?array $safeFields = NULL;
+
+  /**
+   * Fields of a PII entity type that are safe to dump unchanged.
+   *
+   * The lists live in data/safe_fields.yml, with the reasoning for each.
+   *
+   * @param string $entity_type
+   *   Entity type id from PII_ENTITY_TYPES.
+   *
+   * @return string[]
+   *   Field names.
+   */
+  public static function safeFields(string $entity_type): array {
+    self::$safeFields ??= Yaml::decode(
+      file_get_contents(dirname(__DIR__, 2) . '/' . self::SAFE_FIELDS_FILE)
+    );
+    return self::$safeFields[$entity_type] ?? [];
+  }
 
   /**
    * Custom (non-entity) tables that can hold personal data.
