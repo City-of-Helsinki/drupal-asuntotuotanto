@@ -14,6 +14,7 @@ use Drupal\Core\Render\Markup;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\Url;
 use Drupal\Component\Utility\Html;
+use Drupal\asu_application\ApplicationAttachmentManager;
 use Drupal\asu_application\ApplicationMessageManager;
 use Drupal\asu_application\Entity\Application;
 use Drupal\asu_application\Notification\ApplicationProjectResolverTrait;
@@ -40,6 +41,7 @@ final class ApplicationMessageForm extends FormBase {
    */
   public function __construct(
     private readonly ApplicationMessageManager $messageManager,
+    private readonly ApplicationAttachmentManager $attachmentManager,
     private readonly MailManagerInterface $mailManager,
     private readonly DateFormatterInterface $dateFormatter,
     private readonly AccountProxyInterface $currentUser,
@@ -55,6 +57,7 @@ final class ApplicationMessageForm extends FormBase {
   public static function create(ContainerInterface $container): self {
     return new self(
       $container->get('asu_application.message_manager'),
+      $container->get('asu_application.attachment_manager'),
       $container->get('plugin.manager.mail'),
       $container->get('date.formatter'),
       $container->get('current_user'),
@@ -82,6 +85,8 @@ final class ApplicationMessageForm extends FormBase {
     $this->application = $asu_application;
     $projectLabel = $this->resolveApplicationProjectLabel($asu_application);
     $thread = $this->messageManager->loadThread((int) $asu_application->id());
+    $messageIds = array_map(static fn ($message): int => (int) $message->id(), $thread);
+    $attachmentsByMessageId = $this->attachmentManager->getAttachmentsByMessageIds($messageIds);
     $currentUid = (int) $this->currentUser->id();
     $viewerRole = $this->messageManager->resolveViewerRole($currentUid);
     $lastReadAt = $currentUid > 0
@@ -121,7 +126,7 @@ final class ApplicationMessageForm extends FormBase {
       ],
     ];
 
-    $this->buildThreadSection($form, $thread, $lastReadAt, $viewerRole);
+    $this->buildThreadSection($form, $thread, $attachmentsByMessageId, $lastReadAt, $viewerRole);
 
     $form['message'] = [
       '#type' => 'textarea',
@@ -324,12 +329,14 @@ final class ApplicationMessageForm extends FormBase {
    *   Form render array.
    * @param array<int, mixed> $thread
    *   Thread messages.
+  * @param array<int, array<int, array<string, mixed>>> $attachmentsByMessageId
+  *   Attachments indexed by message id.
    * @param int $lastReadAt
    *   Viewer last-read timestamp.
    * @param string $viewerRole
    *   Viewer role side.
    */
-  private function buildThreadSection(array &$form, array $thread, int $lastReadAt, string $viewerRole): void {
+  private function buildThreadSection(array &$form, array $thread, array $attachmentsByMessageId, int $lastReadAt, string $viewerRole): void {
     if ($thread === []) {
       $form['thread_empty'] = [
         '#type' => 'item',
@@ -342,7 +349,13 @@ final class ApplicationMessageForm extends FormBase {
     $items = [];
     $senderNamesByUid = [];
     foreach ($thread as $message) {
-      $items[] = $this->buildThreadItemMarkup($message, $senderNamesByUid, $lastReadAt, $viewerRole);
+      $items[] = $this->buildThreadItemMarkup(
+        $message,
+        $senderNamesByUid,
+        $attachmentsByMessageId[(int) $message->id()] ?? [],
+        $lastReadAt,
+        $viewerRole,
+      );
     }
 
     $form['thread'] = [
@@ -358,7 +371,7 @@ final class ApplicationMessageForm extends FormBase {
   /**
    * Builds one message item HTML for the thread list.
    */
-  private function buildThreadItemMarkup($message, array &$senderNamesByUid, int $lastReadAt, string $viewerRole): Markup {
+  private function buildThreadItemMarkup($message, array &$senderNamesByUid, array $attachments, int $lastReadAt, string $viewerRole): Markup {
     $senderLabel = $this->resolveMessageSenderName($message, $senderNamesByUid);
     $created = (int) ($message->get('created')->value ?? 0);
     $senderRole = (string) ($message->get('sender_role')->value ?? 'customer');
@@ -370,13 +383,40 @@ final class ApplicationMessageForm extends FormBase {
     $newLabel = $isUnread
       ? '<span class="application-message-form__new-label">' . Html::escape((string) $this->t('New')) . '</span>'
       : '';
+    $attachmentsMarkup = '';
+    if ($attachments !== []) {
+      $attachmentItems = [];
+      foreach ($attachments as $attachment) {
+        if (!is_array($attachment)) {
+          continue;
+        }
+
+        $name = Html::escape((string) ($attachment['display_name'] ?? 'attachment'));
+        $downloadUrl = (string) ($attachment['download_url'] ?? '');
+        if ($downloadUrl === '' || !str_starts_with($downloadUrl, '/')) {
+          continue;
+        }
+
+        $href = Html::escape($downloadUrl);
+        $attachmentItems[] = '<li><a href="' . $href . '">' . $name . '</a></li>';
+      }
+
+      if ($attachmentItems !== []) {
+        $attachmentsMarkup = '<div class="application-message-form__attachments">'
+          . '<strong>' . Html::escape((string) $this->t('Attachments')) . ':</strong>'
+          . '<ul>' . implode('', $attachmentItems) . '</ul>'
+          . '</div>';
+      }
+    }
 
     return Markup::create(
       '<div class="' . $messageClasses . '">'
       . '<p><strong>' . Html::escape($senderLabel) . '</strong>'
       . ($timestamp !== '' ? ' <span>' . Html::escape($timestamp) . '</span>' : '')
       . $newLabel
-      . '</p><div>' . $body . '</div></div>'
+      . '</p><div>' . $body . '</div>'
+      . $attachmentsMarkup
+      . '</div>'
     );
   }
 

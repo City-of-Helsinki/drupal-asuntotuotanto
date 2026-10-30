@@ -82,3 +82,17 @@
   font-weight: 700;
   text-transform: uppercase;
 }
+
+.application-message-form__thread .application-message-form__attachments {
+  margin-top: 1rem;
+}
+
+.application-message-form__thread .application-message-form__attachments > strong {
+  display: block;
+  margin-bottom: 0.125rem;
+}
+
+.application-message-form__thread .application-message-form__attachments > ul {
+  margin: 0 !important;
+  padding-left: 1.25rem;
+}

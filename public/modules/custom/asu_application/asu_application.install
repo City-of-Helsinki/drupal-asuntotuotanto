@@ -487,3 +487,193 @@ function asu_application_update_9018(): void {
 
   \Drupal::entityDefinitionUpdateManager()->installEntityType($entity_type);
 }
+
+/**
+ * Create attachment and attachment mapping tables for message files.
+ */
+function asu_application_update_9019(): void {
+  $schema = \Drupal::database()->schema();
+
+  if (!$schema->tableExists('asu_application_attachment')) {
+    $schema->createTable('asu_application_attachment', [
+      'description' => 'Stores message attachment metadata.',
+      'fields' => [
+        'id' => [
+          'type' => 'serial',
+          'unsigned' => TRUE,
+          'not null' => TRUE,
+        ],
+        'display_name' => [
+          'type' => 'varchar',
+          'length' => 255,
+          'not null' => TRUE,
+          'default' => '',
+        ],
+        'mime_type' => [
+          'type' => 'varchar',
+          'length' => 127,
+          'not null' => TRUE,
+          'default' => '',
+        ],
+        'size_bytes' => [
+          'type' => 'int',
+          'size' => 'big',
+          'unsigned' => TRUE,
+          'not null' => TRUE,
+          'default' => 0,
+        ],
+        'storage_uri' => [
+          'type' => 'varchar',
+          'length' => 512,
+          'not null' => TRUE,
+          'default' => '',
+        ],
+        'file_id' => [
+          'type' => 'int',
+          'unsigned' => TRUE,
+          'not null' => TRUE,
+          'default' => 0,
+        ],
+        'media_id' => [
+          'type' => 'int',
+          'unsigned' => TRUE,
+          'not null' => FALSE,
+          'default' => 0,
+        ],
+        'active' => [
+          'type' => 'int',
+          'size' => 'tiny',
+          'unsigned' => TRUE,
+          'not null' => TRUE,
+          'default' => 1,
+        ],
+        'customer_visible' => [
+          'type' => 'int',
+          'size' => 'tiny',
+          'unsigned' => TRUE,
+          'not null' => TRUE,
+          'default' => 1,
+        ],
+        'revoked' => [
+          'type' => 'int',
+          'size' => 'tiny',
+          'unsigned' => TRUE,
+          'not null' => TRUE,
+          'default' => 0,
+        ],
+        'archived' => [
+          'type' => 'int',
+          'size' => 'tiny',
+          'unsigned' => TRUE,
+          'not null' => TRUE,
+          'default' => 0,
+        ],
+        'created' => [
+          'type' => 'int',
+          'unsigned' => TRUE,
+          'not null' => TRUE,
+          'default' => 0,
+        ],
+        'created_by' => [
+          'type' => 'int',
+          'unsigned' => TRUE,
+          'not null' => TRUE,
+          'default' => 0,
+        ],
+      ],
+      'primary key' => ['id'],
+      'indexes' => [
+        'active_visibility' => ['active', 'customer_visible', 'revoked', 'archived'],
+        'file_id' => ['file_id'],
+        'media_id' => ['media_id'],
+      ],
+    ]);
+  }
+
+  if (!$schema->tableExists('asu_application_message_attachment')) {
+    $schema->createTable('asu_application_message_attachment', [
+      'description' => 'Maps application messages to reusable attachments.',
+      'fields' => [
+        'message_id' => [
+          'type' => 'int',
+          'unsigned' => TRUE,
+          'not null' => TRUE,
+        ],
+        'attachment_id' => [
+          'type' => 'int',
+          'unsigned' => TRUE,
+          'not null' => TRUE,
+        ],
+        'ordering' => [
+          'type' => 'int',
+          'unsigned' => TRUE,
+          'not null' => TRUE,
+          'default' => 0,
+        ],
+        'attached_at' => [
+          'type' => 'int',
+          'unsigned' => TRUE,
+          'not null' => TRUE,
+          'default' => 0,
+        ],
+        'attached_by' => [
+          'type' => 'int',
+          'unsigned' => TRUE,
+          'not null' => TRUE,
+          'default' => 0,
+        ],
+      ],
+      'primary key' => ['message_id', 'attachment_id'],
+      'indexes' => [
+        'attachment_id' => ['attachment_id'],
+        'message_id_ordering' => ['message_id', 'ordering', 'attached_at'],
+      ],
+    ]);
+  }
+}
+
+/**
+ * Seed attachment security defaults for existing installations.
+ */
+function asu_application_update_9020(): void {
+  $config = \Drupal::configFactory()->getEditable('asu_application.settings');
+
+  if ($config->get('attachments.allowed_mime_types') === NULL) {
+    $config->set('attachments.allowed_mime_types', [
+      'application/pdf',
+      'image/jpeg',
+      'image/png',
+      'text/plain',
+      'application/msword',
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    ]);
+  }
+
+  if ($config->get('attachments.max_file_size_bytes') === NULL) {
+    $config->set('attachments.max_file_size_bytes', 20971520);
+  }
+
+  if ($config->get('attachments.rate_limit.per_user') === NULL) {
+    $config->set('attachments.rate_limit.per_user', 30);
+  }
+
+  if ($config->get('attachments.rate_limit.per_attachment') === NULL) {
+    $config->set('attachments.rate_limit.per_attachment', 20);
+  }
+
+  if ($config->get('attachments.rate_limit.window_seconds') === NULL) {
+    $config->set('attachments.rate_limit.window_seconds', 60);
+  }
+
+  $config->save(TRUE);
+}
+
+/**
+ * Seed upload per-user rate limit for existing attachment settings.
+ */
+function asu_application_update_9021(): void {
+  $config = \Drupal::configFactory()->getEditable('asu_application.settings');
+  if ($config->get('attachments.rate_limit.upload_per_user') === NULL) {
+    $config->set('attachments.rate_limit.upload_per_user', 20)->save(TRUE);
+  }
+}
