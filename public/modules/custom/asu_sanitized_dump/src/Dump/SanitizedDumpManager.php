@@ -126,7 +126,10 @@ final class SanitizedDumpManager {
         'no-data' => $this->resolveStructureTables(),
         'gdpr-expressions' => SanitizerConfig::expressions(),
         'gdpr-replacements' => SanitizerConfig::replacements(),
-      ]
+      ],
+      // Same PDO options as Drupal, e.g. the TLS settings in
+      // azure.settings.php that Azure MySQL requires.
+      $info['pdo'] ?? [],
     );
     $dump->start($path);
   }
