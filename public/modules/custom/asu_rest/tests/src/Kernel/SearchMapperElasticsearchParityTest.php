@@ -240,6 +240,27 @@ final class SearchMapperElasticsearchParityTest extends SearchMapperKernelTestBa
   }
 
   /**
+   * Apartment listing exposes showing_times as a list for Django contract.
+   */
+  public function testApartmentListingShowingTimesIsList(): void {
+    $mappedWithValue = $this->mapApartmentListing(
+      'Showing project',
+      'A 3',
+      ['field_showing_time' => '2026-10-30T10:30:00']
+    );
+
+    $this->assertArrayHasKey('showing_times', $mappedWithValue);
+    $this->assertIsArray($mappedWithValue['showing_times']);
+    $this->assertCount(1, $mappedWithValue['showing_times']);
+    $this->assertIsString($mappedWithValue['showing_times'][0]);
+    $this->assertNotSame('', $mappedWithValue['showing_times'][0]);
+
+    $mappedWithoutValue = $this->mapApartmentListing('No showing project', 'A 4');
+    $this->assertArrayHasKey('showing_times', $mappedWithoutValue);
+    $this->assertSame([], $mappedWithoutValue['showing_times']);
+  }
+
+  /**
    * Map a listing payload for a new apartment on a new project.
    *
    * @param string $projectTitle
@@ -292,6 +313,7 @@ final class SearchMapperElasticsearchParityTest extends SearchMapperKernelTestBa
     foreach ([
       'field_apartment_number',
       'field_apartment_structure',
+      'field_showing_time',
       'field_floor',
       'field_floor_max',
       'field_living_area',
