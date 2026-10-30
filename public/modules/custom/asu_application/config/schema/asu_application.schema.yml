@@ -11,3 +11,37 @@ asu_application.application_type.*:
     label:
       type: label
       label: 'Label'
+
+asu_application.settings:
+  type: config_object
+  label: 'ASU application settings'
+  mapping:
+    attachments:
+      type: mapping
+      label: 'Attachment security settings'
+      mapping:
+        allowed_mime_types:
+          type: sequence
+          label: 'Allowed MIME types'
+          sequence:
+            type: string
+            label: 'MIME type'
+        max_file_size_bytes:
+          type: integer
+          label: 'Maximum allowed file size in bytes'
+        rate_limit:
+          type: mapping
+          label: 'Download rate limit settings'
+          mapping:
+            per_user:
+              type: integer
+              label: 'Per-user limit for flood window'
+            per_attachment:
+              type: integer
+              label: 'Per-attachment limit for flood window'
+            upload_per_user:
+              type: integer
+              label: 'Per-user upload limit for flood window'
+            window_seconds:
+              type: integer
+              label: 'Flood window in seconds'
