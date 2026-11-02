@@ -91,8 +91,8 @@ class ElasticSearch extends ResourceBase {
       }
     }
     $url_params = ($url_params) ? implode('_', $url_params) : '';
-    // Bump cache namespace when response serialization changes.
-    $cid = 'asu_rest:apartment_list:v4:' . $ownership_type . $url_params;
+    // Bump cache namespace when response payload shape changes.
+    $cid = 'asu_rest:apartment_list:v8:' . $ownership_type . $url_params;
 
     $account = User::load(\Drupal::currentUser()->id());
     $debug = $account && $account->id() == 1;
@@ -161,14 +161,18 @@ class ElasticSearch extends ResourceBase {
         $room_count_filter = $this->normalizeRoomCountFilter($parameters->get('room_count'));
 
         [$living_area_min, $living_area_max] = $this->normalizeLivingAreaBoundsForFilter($request_data);
-        if ($living_area_min !== NULL && $living_area_max !== NULL && $living_area_min > $living_area_max) {
-          [$living_area_min, $living_area_max] = [$living_area_max, $living_area_min];
-        }
+        [$living_area_min, $living_area_max] = $this->sortBounds($living_area_min, $living_area_max);
 
         [$price_min, $price_max] = $this->normalizePriceBoundsForFilter($request_data);
-        if ($price_min !== NULL && $price_max !== NULL && $price_min > $price_max) {
-          [$price_min, $price_max] = [$price_max, $price_min];
+        [$price_min, $price_max] = $this->sortBounds($price_min, $price_max);
+
+        [$floor_min, $floor_max, $floor_error] = $this->normalizeFloorBoundsForFilter($request_data);
+        if ($floor_error !== NULL) {
+          return new ModifiedResourceResponse(['message' => $floor_error], 400, $headers);
         }
+
+        $property_options = $this->resolvePropertyOptions($request_data);
+        $floor_options = $this->resolveFloorOptions($request_data);
 
         if ($ownership_type === 'haso') {
           // Legacy FE sends HASO max as 5500 -> 550000000. Convert to
@@ -208,6 +212,22 @@ class ElasticSearch extends ResourceBase {
             continue;
           }
 
+          if (!$this->matchesProjectPropertyFilters($project_node, $property_options)) {
+            continue;
+          }
+
+          if (!$this->matchesApartmentPropertyFilters($apartment_node, $property_options)) {
+            continue;
+          }
+
+          if (!$this->matchesFloorFilters($apartment_node, $floor_options)) {
+            continue;
+          }
+
+          if (!$this->matchesFloorBoundsFilter($this->getNodeInt($apartment_node, 'field_floor'), $floor_min, $floor_max)) {
+            continue;
+          }
+
           if (!$this->matchesRoomCountFilter($this->resolveApartmentRoomCount($apartment_node), $room_count_filter)) {
             continue;
           }
@@ -234,15 +254,25 @@ class ElasticSearch extends ResourceBase {
           }
 
           $project_main_image_url = '';
-          if ($project_node->hasField('field_main_image_url') && !$project_node->get('field_main_image_url')->isEmpty()) {
+          if (
+            $project_node->hasField('field_main_image_url')
+            && !$project_node->get('field_main_image_url')->isEmpty()
+          ) {
             $project_main_image_url = $this->normalizeImageUrl((string) $project_node->get('field_main_image_url')->value);
           }
-          elseif ($project_node->hasField('field_main_image') && !$project_node->get('field_main_image')->isEmpty() && $project_node->get('field_main_image')->entity) {
+          elseif (
+            $project_node->hasField('field_main_image')
+            && !$project_node->get('field_main_image')->isEmpty()
+            && $project_node->get('field_main_image')->entity
+          ) {
             $project_main_image_url = $this->normalizeImageUrl((string) $project_node->get('field_main_image')->entity->getFileUri());
           }
 
           $project_application_end_time = '';
-          if ($project_node->hasField('field_project_application_end_time') && !$project_node->get('field_project_application_end_time')->isEmpty()) {
+          if (
+            $project_node->hasField('field_project_application_end_time')
+            && !$project_node->get('field_project_application_end_time')->isEmpty()
+          ) {
             $project_application_end_time = (string) $project_node->get('field_project_application_end_time')->value;
           }
           elseif ($project_node->hasField('field_application_end_time') && !$project_node->get('field_application_end_time')->isEmpty()) {
@@ -250,15 +280,24 @@ class ElasticSearch extends ResourceBase {
           }
 
           $project_application_start_time = '';
-          if ($project_node->hasField('field_project_application_start_time') && !$project_node->get('field_project_application_start_time')->isEmpty()) {
+          if (
+            $project_node->hasField('field_project_application_start_time')
+            && !$project_node->get('field_project_application_start_time')->isEmpty()
+          ) {
             $project_application_start_time = (string) $project_node->get('field_project_application_start_time')->value;
           }
-          elseif ($project_node->hasField('field_application_start_time') && !$project_node->get('field_application_start_time')->isEmpty()) {
+          elseif (
+            $project_node->hasField('field_application_start_time')
+            && !$project_node->get('field_application_start_time')->isEmpty()
+          ) {
             $project_application_start_time = (string) $project_node->get('field_application_start_time')->value;
           }
 
           $project_can_apply_afterwards = FALSE;
-          if ($project_node->hasField('field_project_can_apply_afterwards') && !$project_node->get('field_project_can_apply_afterwards')->isEmpty()) {
+          if (
+            $project_node->hasField('field_project_can_apply_afterwards')
+            && !$project_node->get('field_project_can_apply_afterwards')->isEmpty()
+          ) {
             $project_can_apply_afterwards = (bool) $project_node->get('field_project_can_apply_afterwards')->value;
           }
           elseif ($project_node->hasField('field_can_apply_afterwards') && !$project_node->get('field_can_apply_afterwards')->isEmpty()) {
@@ -324,6 +363,20 @@ class ElasticSearch extends ResourceBase {
             }
             return $normalize_enum($value);
           };
+          $get_datetime_values = static function (Node $node, string $field): array {
+            if (!$node->hasField($field) || $node->get($field)->isEmpty()) {
+              return [];
+            }
+
+            $values = [];
+            foreach ($node->get($field)->getValue() as $item) {
+              if (!empty($item['value']) && is_string($item['value'])) {
+                $values[] = $item['value'];
+              }
+            }
+
+            return array_values(array_unique($values));
+          };
 
           // Keep state enums in canonical form for FE logic.
           $apartment_state_of_sale = $get_term_enum($apartment_node, 'field_apartment_state_of_sale');
@@ -354,6 +407,32 @@ class ElasticSearch extends ResourceBase {
           $project_state_of_sale = $get_term_enum($project_node, 'field_state_of_sale');
 
           $room_count = $this->resolveApartmentRoomCount($apartment_node);
+          $project_showing_time_field = $this->resolveShowingTimeField($project_node);
+          $showing_times = [];
+          $showing_time_ranges = [];
+          $showing_node = $apartment_node;
+          $showing_time_field = $this->resolveShowingTimeField($apartment_node);
+          if ($project_showing_time_field !== NULL) {
+            $showing_node = $project_node;
+            $showing_time_field = $project_showing_time_field;
+          }
+
+          if ($showing_time_field !== NULL) {
+            $showing_times = $get_datetime_values($showing_node, $showing_time_field);
+            $showing_time_ranges = $this->buildShowingTimeRanges(
+              $showing_node,
+              $showing_time_field,
+              $this->resolveShowingDurationMinutes($showing_node),
+            );
+          }
+
+          $project_upcoming_description = $this->buildProjectShowingDescription($project_node);
+          if ($project_upcoming_description === '') {
+            $project_upcoming_description = $get_scalar($project_node, 'field_homepage_highlight_text');
+          }
+          if ($project_upcoming_description === '') {
+            $project_upcoming_description = $get_scalar($project_node, 'field_upcoming_description');
+          }
 
           $apartment_number = $get_scalar($apartment_node, 'field_apartment_number');
           $application_url = '';
@@ -396,11 +475,14 @@ class ElasticSearch extends ResourceBase {
             'project_possession_transfer_date' => $get_scalar($project_node, 'field_possession_transfer_date'),
             'project_state_of_sale' => $project_state_of_sale,
             'project_street_address' => $get_scalar($project_node, 'field_street_address'),
-            'project_upcoming_description' => $get_scalar($project_node, 'field_upcoming_description'),
+            'project_homepage_highlight_text' => $get_scalar($project_node, 'field_homepage_highlight_text'),
+            'project_upcoming_description' => $project_upcoming_description,
             'project_url' => $this->buildAbsoluteUrl($project_node->toUrl()->toString()),
             'project_uuid' => $project_node->uuid(),
             'release_payment' => floatval($get_scalar($apartment_node, 'field_release_payment') ?: 0),
             'right_of_occupancy_payment' => floatval($get_scalar($apartment_node, 'field_right_of_occupancy_payment') ?: 0),
+            'showing_times' => $showing_times,
+            'showing_time_ranges' => $showing_time_ranges,
             'title' => $apartment_node->label(),
             'url' => $this->buildAbsoluteUrl($apartment_node->toUrl()->toString()),
             'uuid' => $apartment_node->uuid(),
@@ -433,6 +515,138 @@ class ElasticSearch extends ResourceBase {
   }
 
   /**
+   * Resolve first available showing time field for the given node.
+   */
+  private function resolveShowingTimeField(Node $node): ?string {
+    $candidates = [
+      'field_project_showing_time_range',
+      'field_showing_time_range',
+      'field_project_showing_time',
+      'field_showing_time',
+    ];
+
+    foreach ($candidates as $field) {
+      if ($node->hasField($field) && !$node->get($field)->isEmpty()) {
+        return $field;
+      }
+    }
+
+    return NULL;
+  }
+
+  /**
+   * Resolve optional default duration (minutes) used for datetime fields.
+   */
+  private function resolveShowingDurationMinutes(Node $node): ?int {
+    $duration_fields = [
+      'field_project_showing_duration_minutes',
+      'field_showing_duration_minutes',
+    ];
+
+    foreach ($duration_fields as $field) {
+      if (!$node->hasField($field) || $node->get($field)->isEmpty()) {
+        continue;
+      }
+
+      $raw = (string) $node->get($field)->value;
+      if ($raw !== '' && is_numeric($raw)) {
+        $duration = (int) $raw;
+        if ($duration > 0) {
+          return $duration;
+        }
+      }
+    }
+
+    return NULL;
+  }
+
+  /**
+   * Build showing time ranges with formatted display strings.
+   *
+   * @return array<int, array{start:string,end:?string,display:string}>
+   *   Normalized showing ranges.
+   */
+  private function buildShowingTimeRanges(Node $node, string $field, ?int $defaultDurationMinutes = NULL): array {
+    if (!$node->hasField($field) || $node->get($field)->isEmpty()) {
+      return [];
+    }
+
+    $ranges = [];
+    foreach ($node->get($field)->getValue() as $item) {
+      $showing_time = isset($item['value']) && is_string($item['value']) ? $item['value'] : '';
+      if ($showing_time === '') {
+        continue;
+      }
+
+      $start_timestamp = strtotime($showing_time . ' UTC');
+      if ($start_timestamp === FALSE) {
+        continue;
+      }
+
+      $end_timestamp = NULL;
+      $end_value = isset($item['end_value']) && is_string($item['end_value']) ? $item['end_value'] : '';
+      if ($end_value !== '') {
+        $parsed_end_timestamp = strtotime($end_value . ' UTC');
+        if ($parsed_end_timestamp !== FALSE && $parsed_end_timestamp > $start_timestamp) {
+          $end_timestamp = $parsed_end_timestamp;
+        }
+      }
+      elseif ($defaultDurationMinutes !== NULL && $defaultDurationMinutes > 0) {
+        $end_timestamp = $start_timestamp + ($defaultDurationMinutes * 60);
+      }
+
+      $start_text = \Drupal::service('date.formatter')->format($start_timestamp, 'custom', 'd.m.Y H:i');
+
+      $display = $start_text;
+      $end_output = NULL;
+      if ($end_timestamp !== NULL) {
+        $same_day = gmdate('Y-m-d', $start_timestamp) === gmdate('Y-m-d', $end_timestamp);
+        $end_text = \Drupal::service('date.formatter')->format($end_timestamp, 'custom', $same_day ? 'H:i' : 'd.m.Y H:i');
+        $display = $start_text . ' - ' . $end_text;
+        $end_output = gmdate('Y-m-d\\TH:i:s', $end_timestamp);
+      }
+
+      $ranges[] = [
+        'start' => $showing_time,
+        'end' => $end_output,
+        'display' => $display,
+      ];
+    }
+
+    return $ranges;
+  }
+
+  /**
+   * Build project-level showing description from the nearest upcoming entry.
+   */
+  private function buildProjectShowingDescription(Node $project): string {
+    $field = $this->resolveShowingTimeField($project);
+    if ($field === NULL) {
+      return '';
+    }
+
+    $ranges = $this->buildShowingTimeRanges($project, $field, $this->resolveShowingDurationMinutes($project));
+    if ($ranges === []) {
+      return '';
+    }
+
+    $now = time();
+    $fallback = '';
+    foreach ($ranges as $range) {
+      if ($fallback === '' && $range['display'] !== '') {
+        $fallback = $range['display'];
+      }
+
+      $start_timestamp = strtotime($range['start'] . ' UTC');
+      if ($start_timestamp !== FALSE && $start_timestamp >= $now && $range['display'] !== '') {
+        return $range['display'];
+      }
+    }
+
+    return $fallback;
+  }
+
+  /**
    * Normalize room count filter values from request payload.
    */
   private function normalizeRoomCountFilter(mixed $raw): array {
@@ -450,6 +664,331 @@ class ElasticSearch extends ResourceBase {
     }
 
     return array_values(array_unique(array_filter($normalized, static fn (int $v): bool => $v > 0)));
+  }
+
+  /**
+   * Normalize request properties to lowercase values.
+   *
+   * @return string[]
+   *   Normalized property keys.
+   */
+  private function normalizePropertyList(mixed $raw): array {
+    if ($raw === NULL || $raw === '') {
+      return [];
+    }
+
+    if (is_string($raw)) {
+      $raw = array_map('trim', explode(',', $raw));
+    }
+
+    if (!is_array($raw)) {
+      return [];
+    }
+
+    $normalized = [];
+    foreach ($raw as $value) {
+      if (!is_scalar($value)) {
+        continue;
+      }
+      $item = strtolower(trim((string) $value));
+      if ($item !== '') {
+        $normalized[] = $item;
+      }
+    }
+
+    return array_values(array_unique($normalized));
+  }
+
+  /**
+   * Normalize mixed query value into nullable boolean.
+   */
+  private function normalizeBooleanParam(mixed $value): ?bool {
+    if ($value === NULL || $value === '') {
+      return NULL;
+    }
+
+    if (is_bool($value)) {
+      return $value;
+    }
+
+    if (is_numeric($value)) {
+      return ((int) $value) !== 0;
+    }
+
+    if (is_string($value)) {
+      $normalized = strtolower(trim($value));
+      if (in_array($normalized, ['1', 'true', 'yes', 'on'], TRUE)) {
+        return TRUE;
+      }
+      if (in_array($normalized, ['0', 'false', 'no', 'off'], TRUE)) {
+        return FALSE;
+      }
+    }
+
+    return NULL;
+  }
+
+  /**
+   * Resolve apartment and project property options from request payload.
+   *
+   * @return array<string, ?bool>
+   *   Normalized property options.
+   */
+  private function resolvePropertyOptions(array $requestData): array {
+    $properties = $this->normalizePropertyList($requestData['properties'] ?? NULL);
+    $resolve = function (string $key) use ($requestData, $properties): ?bool {
+      $direct = $this->normalizeBooleanParam($requestData[$key] ?? NULL);
+      if ($direct !== NULL) {
+        return $direct;
+      }
+      return in_array($key, $properties, TRUE) ? TRUE : NULL;
+    };
+
+    return [
+      'project_has_elevator' => $resolve('project_has_elevator'),
+      'project_has_sauna' => $resolve('project_has_sauna'),
+      'has_apartment_sauna' => $resolve('has_apartment_sauna'),
+      'has_terrace' => $resolve('has_terrace'),
+      'has_balcony' => $resolve('has_balcony'),
+      'has_yard' => $resolve('has_yard'),
+    ];
+  }
+
+  /**
+   * Resolve floor-related options from request payload.
+   *
+   * @return array<string, ?bool>
+   *   Normalized floor options.
+   */
+  private function resolveFloorOptions(array $requestData): array {
+    $properties = $this->normalizePropertyList($requestData['properties'] ?? NULL);
+    $resolve = function (string $key) use ($requestData, $properties): ?bool {
+      $direct = $this->normalizeBooleanParam($requestData[$key] ?? NULL);
+      if ($direct !== NULL) {
+        return $direct;
+      }
+      return in_array($key, $properties, TRUE) ? TRUE : NULL;
+    };
+
+    return [
+      'top_floor' => $resolve('top_floor'),
+      'bottom_floor' => $resolve('bottom_floor'),
+      'not_top_floor' => $resolve('not_top_floor'),
+      'not_bottom_floor' => $resolve('not_bottom_floor'),
+    ];
+  }
+
+  /**
+   * Read a scalar integer field value from a node.
+   */
+  private function getNodeInt(Node $node, string $fieldName): ?int {
+    if (!$node->hasField($fieldName) || $node->get($fieldName)->isEmpty()) {
+      return NULL;
+    }
+
+    $raw = (string) $node->get($fieldName)->value;
+    if ($raw === '' || !is_numeric($raw)) {
+      return NULL;
+    }
+
+    return (int) $raw;
+  }
+
+  /**
+   * Read a scalar boolean field value from a node.
+   */
+  private function getNodeBoolean(Node $node, string $fieldName): ?bool {
+    if (!$node->hasField($fieldName) || $node->get($fieldName)->isEmpty()) {
+      return NULL;
+    }
+
+    return ((string) $node->get($fieldName)->value) === '1';
+  }
+
+  /**
+   * Match project-level boolean filters against a project node.
+   */
+  private function matchesProjectPropertyFilters(Node $project, array $options): bool {
+    $checks = [
+      'project_has_elevator' => 'field_has_elevator',
+      'project_has_sauna' => 'field_has_sauna',
+    ];
+
+    foreach ($checks as $optionKey => $fieldName) {
+      $expected = $options[$optionKey] ?? NULL;
+      if ($expected === NULL) {
+        continue;
+      }
+
+      $actual = $this->getNodeBoolean($project, $fieldName);
+      if ($actual === NULL || $actual !== $expected) {
+        return FALSE;
+      }
+    }
+
+    return TRUE;
+  }
+
+  /**
+   * Match apartment-level boolean filters against an apartment node.
+   */
+  private function matchesApartmentPropertyFilters(Node $apartment, array $options): bool {
+    $checks = [
+      'has_apartment_sauna' => 'field_has_apartment_sauna',
+      'has_terrace' => 'field_has_terrace',
+      'has_balcony' => 'field_has_balcony',
+      'has_yard' => 'field_has_yard',
+    ];
+
+    foreach ($checks as $optionKey => $fieldName) {
+      $expected = $options[$optionKey] ?? NULL;
+      if ($expected === NULL) {
+        continue;
+      }
+
+      $actual = $this->getNodeBoolean($apartment, $fieldName);
+      if ($actual === NULL || $actual !== $expected) {
+        return FALSE;
+      }
+    }
+
+    return TRUE;
+  }
+
+  /**
+   * Match floor-related filters using floor and floor_max.
+   */
+  private function matchesFloorFilters(Node $apartment, array $options): bool {
+    if (!$this->hasAnyNonNullOption($options)) {
+      return TRUE;
+    }
+
+    $floor = $this->getNodeInt($apartment, 'field_floor');
+    $floorMax = $this->getNodeInt($apartment, 'field_floor_max');
+
+    $top = $floor !== NULL && $floorMax !== NULL && $floorMax > 0 && $floor === $floorMax;
+    $bottom = $floor !== NULL && $floor === 1;
+    $notTop = $floor !== NULL && $floorMax !== NULL && $floorMax > 0 && $floor !== $floorMax;
+    $notBottom = $floor !== NULL && $floor !== 1;
+
+    return $this->matchesOptionalBooleanFilters($options, [
+      'top_floor' => $top,
+      'bottom_floor' => $bottom,
+      'not_top_floor' => $notTop,
+      'not_bottom_floor' => $notBottom,
+    ]);
+  }
+
+  /**
+   * Check whether at least one filter option is explicitly set.
+   */
+  private function hasAnyNonNullOption(array $options): bool {
+    foreach ($options as $value) {
+      if ($value !== NULL) {
+        return TRUE;
+      }
+    }
+
+    return FALSE;
+  }
+
+  /**
+   * Match optional boolean filters against computed actual values.
+   *
+   * @param array<string, ?bool> $options
+   *   Requested filter values keyed by option name.
+   * @param array<string, bool> $actualValues
+   *   Computed boolean values keyed by the same option names.
+   */
+  private function matchesOptionalBooleanFilters(array $options, array $actualValues): bool {
+    foreach ($actualValues as $optionKey => $actual) {
+      $expected = $options[$optionKey] ?? NULL;
+      if ($expected !== NULL && $expected !== $actual) {
+        return FALSE;
+      }
+    }
+
+    return TRUE;
+  }
+
+  /**
+   * Normalize floor bounds from request payload.
+   *
+   * Supports normalized frontend contract:
+   * - floor_min (optional integer)
+   * - floor_max (optional integer)
+   *
+   * @param array<string, mixed> $requestData
+   *   Request payload containing optional floor_min and floor_max values.
+   *
+   * @return array{0:?int,1:?int,2:?string}
+   *   [min, max, error]. Error is non-null for invalid input.
+   */
+  private function normalizeFloorBoundsForFilter(array $requestData): array {
+    [$min, $minError] = $this->normalizeOptionalIntegerParam($requestData['floor_min'] ?? NULL, 'floor_min');
+    if ($minError !== NULL) {
+      return [NULL, NULL, $minError];
+    }
+
+    [$max, $maxError] = $this->normalizeOptionalIntegerParam($requestData['floor_max'] ?? NULL, 'floor_max');
+    if ($maxError !== NULL) {
+      return [NULL, NULL, $maxError];
+    }
+
+    if ($min !== NULL && $max !== NULL && $min > $max) {
+      return [NULL, NULL, 'Invalid floor range: floor_min cannot be greater than floor_max.'];
+    }
+
+    return [$min, $max, NULL];
+  }
+
+  /**
+   * Normalize optional integer request value.
+   *
+   * @param mixed $raw
+   *   Raw request value to parse as integer.
+   * @param string $key
+   *   Request key name used in validation error message.
+   *
+   * @return array{0:?int,1:?string}
+   *   [value, error]. Error is non-null for invalid input.
+   */
+  private function normalizeOptionalIntegerParam(mixed $raw, string $key): array {
+    if ($raw === NULL || $raw === '') {
+      return [NULL, NULL];
+    }
+
+    if (is_string($raw)) {
+      $raw = trim($raw);
+      if ($raw === '') {
+        return [NULL, NULL];
+      }
+    }
+
+    if (is_int($raw)) {
+      return [$raw, NULL];
+    }
+
+    if (is_float($raw) && floor($raw) === $raw) {
+      return [(int) $raw, NULL];
+    }
+
+    if (is_string($raw) && preg_match('/^-?\d+$/', $raw) === 1) {
+      return [(int) $raw, NULL];
+    }
+
+    return [NULL, sprintf('Invalid %s. Expected integer value.', $key)];
+  }
+
+  /**
+   * Check if apartment floor is within optional floor bounds.
+   */
+  private function matchesFloorBoundsFilter(?int $floor, ?int $min, ?int $max): bool {
+    return $this->matchesNumericBounds(
+      $floor !== NULL ? (float) $floor : NULL,
+      $min !== NULL ? (float) $min : NULL,
+      $max !== NULL ? (float) $max : NULL,
+    );
   }
 
   /**
@@ -528,56 +1067,15 @@ class ElasticSearch extends ResourceBase {
    */
   private function normalizeLivingAreaBoundsForFilter(array $requestData): array {
     $rangeParam = $requestData['living_area'] ?? $requestData['area'] ?? NULL;
-    $minRaw = $requestData['living_area_min'] ?? $requestData['area_min'] ?? NULL;
-    $maxRaw = $requestData['living_area_max'] ?? $requestData['area_max'] ?? NULL;
+    [$minRaw, $maxRaw] = $this->extractRangeRawValues(
+      $rangeParam,
+      $requestData['living_area_min'] ?? $requestData['area_min'] ?? NULL,
+      $requestData['living_area_max'] ?? $requestData['area_max'] ?? NULL,
+      TRUE,
+    );
 
-    if (is_array($rangeParam)) {
-      if ($minRaw === NULL && array_key_exists(0, $rangeParam)) {
-        $candidate = $rangeParam[0];
-        if ($candidate !== '' && $candidate !== NULL && is_numeric($candidate)) {
-          $minRaw = $candidate;
-        }
-      }
-      if ($maxRaw === NULL && array_key_exists(1, $rangeParam)) {
-        $candidate = $rangeParam[1];
-        if ($candidate !== '' && $candidate !== NULL && is_numeric($candidate)) {
-          $maxRaw = $candidate;
-        }
-      }
-      // Fallback for single-item arrays.
-      if ($maxRaw === NULL && $minRaw === NULL && array_key_exists(0, $rangeParam)) {
-        $candidate = $rangeParam[0];
-        if ($candidate !== '' && $candidate !== NULL && is_numeric($candidate)) {
-          $maxRaw = $candidate;
-        }
-      }
-    }
-    elseif (is_string($rangeParam) && str_contains($rangeParam, ',')) {
-      [$left, $right] = array_pad(explode(',', $rangeParam, 2), 2, '');
-      $left = trim($left);
-      $right = trim($right);
-
-      if ($minRaw === NULL && $left !== '' && is_numeric($left)) {
-        $minRaw = $left;
-      }
-      if ($maxRaw === NULL && $right !== '' && is_numeric($right)) {
-        $maxRaw = $right;
-      }
-    }
-    elseif ($maxRaw === NULL && is_numeric($rangeParam)) {
-      // Backward-compatible shorthand: living_area=70 means upper bound.
-      $maxRaw = $rangeParam;
-    }
-
-    $min = is_numeric($minRaw) ? (float) $minRaw : NULL;
-    $max = is_numeric($maxRaw) ? (float) $maxRaw : NULL;
-
-    if ($min !== NULL && $min <= 0) {
-      $min = NULL;
-    }
-    if ($max !== NULL && $max <= 0) {
-      $max = NULL;
-    }
+    $min = $this->normalizePositiveFloat($minRaw);
+    $max = $this->normalizePositiveFloat($maxRaw);
 
     return [$min, $max];
   }
@@ -586,22 +1084,7 @@ class ElasticSearch extends ResourceBase {
    * Check if apartment living area is inside optional min/max bounds.
    */
   private function matchesLivingAreaFilter(?float $livingArea, ?float $min, ?float $max): bool {
-    if ($min === NULL && $max === NULL) {
-      return TRUE;
-    }
-
-    if ($livingArea === NULL) {
-      return FALSE;
-    }
-
-    if ($min !== NULL && $livingArea < $min) {
-      return FALSE;
-    }
-    if ($max !== NULL && $livingArea > $max) {
-      return FALSE;
-    }
-
-    return TRUE;
+    return $this->matchesNumericBounds($livingArea, $min, $max);
   }
 
   /**
@@ -615,46 +1098,15 @@ class ElasticSearch extends ResourceBase {
    */
   private function normalizePriceBoundsForFilter(array $requestData): array {
     $priceParam = $requestData['price'] ?? NULL;
-    $minRaw = $requestData['price_min'] ?? NULL;
-    $maxRaw = $requestData['price_max'] ?? NULL;
+    [$minRaw, $maxRaw] = $this->extractRangeRawValues(
+      $priceParam,
+      $requestData['price_min'] ?? NULL,
+      $requestData['price_max'] ?? NULL,
+      TRUE,
+    );
 
-    if (is_array($priceParam)) {
-      $values = array_values(array_filter($priceParam, static fn ($v) => $v !== '' && $v !== NULL));
-      if ($minRaw === NULL && isset($values[0]) && is_numeric($values[0])) {
-        $minRaw = $values[0];
-      }
-      if ($maxRaw === NULL && $values) {
-        $last = end($values);
-        if ($last !== FALSE && is_numeric($last)) {
-          $maxRaw = $last;
-        }
-      }
-    }
-    elseif (is_string($priceParam) && str_contains($priceParam, ',')) {
-      $values = array_values(array_filter(array_map('trim', explode(',', $priceParam)), static fn ($v): bool => $v !== ''));
-      if ($minRaw === NULL && isset($values[0]) && is_numeric($values[0])) {
-        $minRaw = $values[0];
-      }
-      if ($maxRaw === NULL && $values) {
-        $last = end($values);
-        if ($last !== FALSE && is_numeric($last)) {
-          $maxRaw = $last;
-        }
-      }
-    }
-    elseif ($maxRaw === NULL && is_numeric($priceParam)) {
-      $maxRaw = $priceParam;
-    }
-
-    $min = is_numeric($minRaw) ? (float) $minRaw : NULL;
-    $max = is_numeric($maxRaw) ? (float) $maxRaw : NULL;
-
-    if ($min !== NULL && $min <= 0) {
-      $min = NULL;
-    }
-    if ($max !== NULL && $max <= 0) {
-      $max = NULL;
-    }
+    $min = $this->normalizePositiveFloat($minRaw);
+    $max = $this->normalizePositiveFloat($maxRaw);
 
     return [$min, $max];
   }
@@ -663,19 +1115,147 @@ class ElasticSearch extends ResourceBase {
    * Check if apartment comparable price is inside optional min/max bounds.
    */
   private function matchesPriceFilter(Node $apartment, ?float $priceMin, ?float $priceMax, string $ownershipType): bool {
-    if ($priceMin === NULL && $priceMax === NULL) {
+    $value = $this->resolveComparablePrice($apartment, $ownershipType);
+    return $this->matchesNumericBounds($value, $priceMin, $priceMax);
+  }
+
+  /**
+   * Extract raw min/max values from array/csv/single-value payloads.
+   *
+   * @return array{0:mixed,1:mixed}
+   *   [minRaw, maxRaw]
+   */
+  private function extractRangeRawValues(mixed $rangeParam, mixed $minRaw, mixed $maxRaw, bool $singleNumericAsMax): array {
+    if (is_array($rangeParam)) {
+      return $this->extractRangeRawValuesFromArray($rangeParam, $minRaw, $maxRaw, $singleNumericAsMax);
+    }
+
+    if (is_string($rangeParam) && str_contains($rangeParam, ',')) {
+      [$resolvedMinRaw, $resolvedMaxRaw] = $this->extractRangeRawValuesFromCsv($rangeParam, $minRaw, $maxRaw);
+
+      [$left, $right] = array_pad(array_map('trim', explode(',', $rangeParam, 2)), 2, '');
+      if ($left === '' && $right !== '' && $resolvedMinRaw !== NULL && $resolvedMaxRaw === NULL) {
+        return [$minRaw, $resolvedMinRaw];
+      }
+      if ($right === '' && $left !== '' && $resolvedMinRaw !== NULL && $resolvedMaxRaw === NULL) {
+        return [$resolvedMinRaw, $maxRaw];
+      }
+
+      return [$resolvedMinRaw, $resolvedMaxRaw];
+    }
+
+    if ($singleNumericAsMax && $maxRaw === NULL && is_numeric($rangeParam)) {
+      $maxRaw = $rangeParam;
+    }
+
+    return [$minRaw, $maxRaw];
+  }
+
+  /**
+   * Extract range raw values from an array payload.
+   *
+   * @return array{0:mixed,1:mixed}
+   *   [minRaw, maxRaw]
+   */
+  private function extractRangeRawValuesFromArray(array $rangeParam, mixed $minRaw, mixed $maxRaw, bool $singleNumericAsMax): array {
+    $values = array_values(array_filter($rangeParam, static fn ($v): bool => $v !== '' && $v !== NULL));
+    return $this->extractRangeRawValuesFromIndexedValues($values, $minRaw, $maxRaw, $singleNumericAsMax);
+  }
+
+  /**
+   * Extract range raw values from a CSV payload.
+   *
+   * @return array{0:mixed,1:mixed}
+   *   [minRaw, maxRaw]
+   */
+  private function extractRangeRawValuesFromCsv(string $rangeParam, mixed $minRaw, mixed $maxRaw): array {
+    $values = array_values(
+      array_filter(
+        array_map('trim', explode(',', $rangeParam)),
+        static fn ($v): bool => $v !== '',
+      )
+    );
+
+    return $this->extractRangeRawValuesFromIndexedValues($values, $minRaw, $maxRaw, FALSE);
+  }
+
+  /**
+   * Extract range raw values from indexed values.
+   *
+   * @return array{0:mixed,1:mixed}
+   *   [minRaw, maxRaw]
+   */
+  private function extractRangeRawValuesFromIndexedValues(array $values, mixed $minRaw, mixed $maxRaw, bool $singleNumericAsMax): array {
+    $first = $this->getNumericIndexedValue($values, 0);
+    $second = $this->getNumericIndexedValue($values, 1);
+
+    if ($minRaw === NULL && $first !== NULL) {
+      $minRaw = $first;
+    }
+    if ($maxRaw === NULL && $second !== NULL) {
+      $maxRaw = $second;
+    }
+
+    if ($singleNumericAsMax && $maxRaw === NULL && $minRaw === NULL && $first !== NULL) {
+      $maxRaw = $first;
+    }
+
+    return [$minRaw, $maxRaw];
+  }
+
+  /**
+   * Get numeric value by index from values array.
+   */
+  private function getNumericIndexedValue(array $values, int $index): mixed {
+    if (!isset($values[$index]) || !is_numeric($values[$index])) {
+      return NULL;
+    }
+
+    return $values[$index];
+  }
+
+  /**
+   * Normalize a positive numeric value, else return NULL.
+   */
+  private function normalizePositiveFloat(mixed $value): ?float {
+    if (!is_numeric($value)) {
+      return NULL;
+    }
+
+    $normalized = (float) $value;
+    return $normalized > 0 ? $normalized : NULL;
+  }
+
+  /**
+   * Sort min/max bounds when both are present.
+   *
+   * @return array{0:?float,1:?float}
+   *   Bounds ordered as [min, max].
+   */
+  private function sortBounds(?float $min, ?float $max): array {
+    if ($min !== NULL && $max !== NULL && $min > $max) {
+      return [$max, $min];
+    }
+
+    return [$min, $max];
+  }
+
+  /**
+   * Match optional numeric bounds against a nullable value.
+   */
+  private function matchesNumericBounds(?float $value, ?float $min, ?float $max): bool {
+    if ($min === NULL && $max === NULL) {
       return TRUE;
     }
 
-    $value = $this->resolveComparablePrice($apartment, $ownershipType);
     if ($value === NULL) {
       return FALSE;
     }
 
-    if ($priceMin !== NULL && $value < $priceMin) {
+    if ($min !== NULL && $value < $min) {
       return FALSE;
     }
-    if ($priceMax !== NULL && $value > $priceMax) {
+    if ($max !== NULL && $value > $max) {
       return FALSE;
     }
 

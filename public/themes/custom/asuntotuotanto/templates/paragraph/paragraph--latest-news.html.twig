@@ -47,6 +47,55 @@
 %}
 {% block paragraph %}
   {% set title = content.field_title.0 %}
+  {% set highlight_projects = homepage_highlight_projects ?? [] %}
+  {% set highlights_use_carousel = highlight_projects|length > 1 %}
+
+  {% block homepage_highlights %}
+    {% if highlight_projects is not empty %}
+      {% if highlights_use_carousel %}
+        {{ attach_library('asuntotuotanto/showcase-gallery') }}
+      {% endif %}
+      <section class="showcase-block showcase-block--homepage-highlights showcase-gallery" aria-label="{{ 'Highlighted projects'|t }}" style="width: 100%; max-width: 1160px; margin-left: auto; margin-right: auto; box-sizing: border-box; overflow: visible;">
+        <div class="showcase-block__content" style="background-color: transparent; padding: 0; width: 100%;">
+          <ul class="showcase-block__showcases{% if highlights_use_carousel %} js-homepage-highlights-carousel{% else %} showcases-count--{{ highlight_projects|length }}{% endif %}"{% if highlights_use_carousel %} style="display: block; width: 100%; margin: 0; padding: 0;"{% endif %} data-homepage-highlights-carousel="{{ highlights_use_carousel ? '1' : '0' }}">
+            {% for project in highlight_projects %}
+              {% set panel_bg = 'var(--color-engel)' %}
+              {% set highlight_item_class = highlights_use_carousel ? 'homepage-highlight-slide' : 'showcase' %}
+              {% if project.type_class == 'haso' %}
+                {% set panel_bg = 'var(--color-copper-medium-light)' %}
+              {% elseif project.type_class == 'puolihitas' %}
+                {% set panel_bg = 'var(--color-engel-light)' %}
+              {% endif %}
+              <li class="{{ highlight_item_class }}" style="height: 600px; max-height: 600px; overflow: hidden; margin-top: 0; max-width: none; width: 100%; display: block;">
+                <a class="liftup-with-image-and-links liftup-with-image-and-links--design-image-on-left" href="{{ project.url }}" style="display: block; width: 100%; height: 100%; max-height: 100%; overflow: hidden; position: relative;">
+                  <div class="liftup-with-image-and-links__image" style="height: 100%; width: 100%;">
+                    <img src="{{ project.image_url }}" alt="{{ project.image_alt }}" loading="lazy" style="display: block; width: 100%; height: 100%; object-fit: cover; object-position: center;" />
+                  </div>
+                  <div class="liftup-with-image-and-links__container">
+                    <div class="liftup-with-image-and-links__content" style="background-color: {{ panel_bg }}; padding: 24px; min-height: 0; left: auto; right: 0; top: 10%; transform: none; width: 40%;">
+                      {% if project.type_label %}
+                        <p class="project__ownership-type project__ownership-type--{{ project.type_class|default('hitas') }}">
+                          <span class="visually-hidden">({{ 'Ownership type'|t }})</span>
+                          {{ project.type_label }}
+                        </p>
+                      {% endif %}
+                      <h3 class="liftup-with-image-and-links__title" style="font-size: 1.75rem; margin-bottom: 12px;">{{ project.text }}</h3>
+                      {% if project.datetime_text %}
+                        <p class="homepage-highlight__datetime" style="margin: 0 0 12px; font-size: 1.125rem; font-weight: 500; line-height: 1.4;">{{ project.datetime_text }}</p>
+                      {% endif %}
+                      <div class="liftup-with-image-and-links__desc">
+                        <p class="project__address">{{ project.title }}</p>
+                      </div>
+                    </div>
+                  </div>
+                </a>
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </section>
+    {% endif %}
+  {% endblock %}
 
   <div{{ attributes.addClass(classes) }}>
     {% block container_content %}

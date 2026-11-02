@@ -1,0 +1,20 @@
+uuid: cddae03f-122b-48f7-b7f4-d32240f9739c
+langcode: en
+status: true
+dependencies:
+  module:
+    - datetime
+    - node
+id: node.field_project_showing_time
+field_name: field_project_showing_time
+entity_type: node
+type: datetime
+settings:
+  datetime_type: datetime
+module: datetime
+locked: false
+cardinality: -1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

@@ -10,6 +10,7 @@ use Drupal\Core\Site\Settings;
 use Drupal\asu_application\Applications;
 use Drupal\file\Entity\File;
 use Drupal\file\IconMimeTypes;
+use Drupal\node\NodeInterface;
 use Drupal\paragraphs\Entity\Paragraph;
 use Drupal\Core\StringTranslation\ByteSizeMarkup;
 use Drupal\taxonomy\Entity\Term;
@@ -752,6 +753,26 @@ function asuntotuotanto_preprocess_node(&$variables) {
       $variables['application_start_time'] = $application_start;
       $variables['application_end_time'] = $application_end;
 
+      $showing_preview = asuntotuotanto_get_project_showing_time_preview($project, gmdate('Y-m-d\\TH:i:s'));
+      $overlay_text = '';
+      $overlay_datetime = '';
+
+      if (!empty($showing_preview['datetime_text'])) {
+        $overlay_text = !empty($showing_preview['text']) ? (string) $showing_preview['text'] : (string) t('Esittelyaika');
+        $overlay_datetime = (string) $showing_preview['datetime_text'];
+      }
+      else {
+        if ($project->hasField('field_homepage_highlight_text')) {
+          $overlay_text = trim(strip_tags((string) $project->get('field_homepage_highlight_text')->value));
+        }
+        if ($overlay_text === '' && $project->hasField('field_upcoming_description')) {
+          $overlay_text = trim(strip_tags((string) $project->get('field_upcoming_description')->value));
+        }
+      }
+
+      $variables['project_showing_overlay_text'] = $overlay_text;
+      $variables['project_showing_overlay_datetime'] = $overlay_datetime;
+
       $variables['apartments_count'] = count($apartments) < 2 ? 0 : count($apartments);
       $variables['apartment_sales_prices'] = $apartment_sales_prices_string;
       $variables['apartment_debt_free_sales_prices'] = $apartment_debt_free_sales_prices_string;
@@ -1052,6 +1073,461 @@ function asuntotuotanto_preprocess_paragraph(array &$variables) {
     $variables['street_name'] = $street_name ?? NULL;
     $variables['street_number'] = $street_number ?? NULL;
   }
+
+  if ($paragraph_type == 'latest_news') {
+    $parent_entity = $paragraph->getParentEntity();
+
+    if ($parent_entity instanceof NodeInterface && $parent_entity->bundle() === 'landing_page') {
+      $highlight_projects = asuntotuotanto_get_homepage_highlight_projects(4);
+      $variables['homepage_highlight_projects'] = $highlight_projects;
+
+      $variables['#cache']['tags'][] = 'node_list:project';
+      $variables['#cache']['contexts'][] = 'url.path';
+      $variables['#cache']['max-age'] = 300;
+
+      foreach ($highlight_projects as $highlight_project) {
+        if (!empty($highlight_project['cache_tags']) && is_array($highlight_project['cache_tags'])) {
+          $variables['#cache']['tags'] = array_merge($variables['#cache']['tags'], $highlight_project['cache_tags']);
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Builds project cards for homepage highlights.
+ */
+function asuntotuotanto_get_homepage_highlight_projects(int $limit = 4): array {
+  $now = gmdate('Y-m-d\\TH:i:s');
+  $manual_project_ids = asuntotuotanto_get_manual_homepage_highlight_project_ids($now);
+  $auto_project_ids = asuntotuotanto_get_projects_with_apartment_showing_time_ids($now);
+
+  // Manual highlights first, then projects auto-promoted by apartment
+  // showing time.
+  $project_ids = array_values(array_unique(array_merge($manual_project_ids, $auto_project_ids)));
+
+  $node_storage = \Drupal::entityTypeManager()->getStorage('node');
+  $file_url_generator = \Drupal::service('file_url_generator');
+
+  $highlight_projects = [];
+  $candidate_projects = [];
+  if (empty($project_ids)) {
+    return $highlight_projects;
+  }
+
+  $manual_project_lookup = array_fill_keys($manual_project_ids, TRUE);
+  $auto_project_lookup = array_fill_keys($auto_project_ids, TRUE);
+
+  /** @var \Drupal\node\NodeInterface[] $projects */
+  $projects = $node_storage->loadMultiple($project_ids);
+  foreach ($project_ids as $index => $project_id) {
+
+    $project = $projects[$project_id] ?? NULL;
+    if (!$project instanceof NodeInterface) {
+      continue;
+    }
+
+    if ($project->hasField('field_archived') && (int) $project->get('field_archived')->value === 1) {
+      continue;
+    }
+
+    $is_manual_highlight = isset($manual_project_lookup[$project_id]);
+    $is_auto_showing_time = isset($auto_project_lookup[$project_id]);
+    if (!$is_manual_highlight && !$is_auto_showing_time) {
+      continue;
+    }
+
+    $highlight_text = '';
+    $highlight_datetime = '';
+    $highlight_timestamp = NULL;
+    $additional_cache_tags = [];
+
+    $showing_time_preview = asuntotuotanto_get_project_showing_time_preview($project, $now);
+    if (!empty($showing_time_preview['datetime_text'])) {
+      $highlight_datetime = $showing_time_preview['datetime_text'];
+      $highlight_timestamp = $showing_time_preview['timestamp'] ?? NULL;
+      $additional_cache_tags = array_merge($additional_cache_tags, $showing_time_preview['cache_tags'] ?? []);
+    }
+
+    if ($project->hasField('field_homepage_highlight_text')) {
+      $highlight_text = trim(strip_tags((string) $project->get('field_homepage_highlight_text')->value));
+    }
+
+    // Auto-promoted projects can skip manual highlight fields.
+    if ($highlight_text === '') {
+      if ($is_auto_showing_time) {
+        if (!empty($showing_time_preview['text'])) {
+          $highlight_text = $showing_time_preview['text'];
+        }
+        else {
+          $highlight_text = (string) t('Esittelyaika');
+        }
+      }
+      else {
+        continue;
+      }
+    }
+
+    $image_file = NULL;
+    if ($project->hasField('field_homepage_highlight_image') && !$project->get('field_homepage_highlight_image')->isEmpty()) {
+      $image_file = $project->get('field_homepage_highlight_image')->entity;
+    }
+    elseif ($project->hasField('field_main_image') && !$project->get('field_main_image')->isEmpty()) {
+      $image_file = $project->get('field_main_image')->entity;
+    }
+
+    if (!$image_file instanceof File) {
+      continue;
+    }
+
+    $type_label = '';
+    $type_class = 'hitas';
+    if ($project->hasField('field_ownership_type') && !$project->get('field_ownership_type')->isEmpty()) {
+      $type_label = (string) $project->get('field_ownership_type')->entity?->label();
+      $normalized_type = mb_strtolower(trim($type_label));
+      if ($normalized_type === 'haso') {
+        $type_class = 'haso';
+      }
+      elseif ($normalized_type === 'puolihitas') {
+        $type_class = 'puolihitas';
+      }
+    }
+
+    $address_parts = [];
+    if ($project->hasField('field_street_address') && !$project->get('field_street_address')->isEmpty()) {
+      $address_parts[] = trim((string) $project->get('field_street_address')->value);
+    }
+    if ($project->hasField('field_city') && !$project->get('field_city')->isEmpty()) {
+      $address_parts[] = trim((string) $project->get('field_city')->value);
+    }
+    $address = implode(', ', array_filter($address_parts));
+
+    $candidate_projects[] = [
+      'title' => $project->label(),
+      'url' => $project->toUrl()->toString(),
+      'image_url' => $file_url_generator->generateString($image_file->getFileUri()),
+      'image_uri' => $image_file->getFileUri(),
+      'image_alt' => $project->label(),
+      'text' => $highlight_text,
+      'datetime_text' => $highlight_datetime,
+      'type_label' => $type_label,
+      'type_class' => $type_class,
+      'address' => $address,
+      'cache_tags' => array_values(array_unique(array_merge($project->getCacheTags(), $additional_cache_tags))),
+      '_sort_has_showing' => $highlight_timestamp !== NULL,
+      '_sort_timestamp' => $highlight_timestamp !== NULL ? (int) $highlight_timestamp : PHP_INT_MAX,
+      '_sort_index' => $index,
+    ];
+  }
+
+  usort($candidate_projects, static function (array $a, array $b): int {
+    if ($a['_sort_has_showing'] !== $b['_sort_has_showing']) {
+      return $a['_sort_has_showing'] ? -1 : 1;
+    }
+
+    if ($a['_sort_has_showing'] && $a['_sort_timestamp'] !== $b['_sort_timestamp']) {
+      return $a['_sort_timestamp'] <=> $b['_sort_timestamp'];
+    }
+
+    return $a['_sort_index'] <=> $b['_sort_index'];
+  });
+
+  foreach (array_slice($candidate_projects, 0, $limit) as $item) {
+    unset($item['_sort_has_showing'], $item['_sort_timestamp'], $item['_sort_index']);
+    $highlight_projects[] = $item;
+  }
+
+  return $highlight_projects;
+}
+
+/**
+ * Builds auto-highlight text from the earliest apartment showing time.
+ */
+function asuntotuotanto_get_project_showing_time_preview(NodeInterface $project, string $now): array {
+  $now_timestamp = strtotime($now . ' UTC');
+  if ($now_timestamp === FALSE) {
+    return [];
+  }
+
+  $project_showing_ranges = asuntotuotanto_get_node_showing_ranges($project);
+  $closest_project_showing_start = NULL;
+  $closest_project_showing_end = NULL;
+
+  foreach ($project_showing_ranges as $showing_range) {
+    $showing_timestamp = $showing_range['start'];
+    if ($showing_timestamp < $now_timestamp) {
+      continue;
+    }
+
+    if ($closest_project_showing_start === NULL || $showing_timestamp < $closest_project_showing_start) {
+      $closest_project_showing_start = $showing_timestamp;
+      $closest_project_showing_end = $showing_range['end'];
+    }
+  }
+
+  if ($closest_project_showing_start !== NULL) {
+    $showing_time_formatted = asuntotuotanto_format_showing_time_range($closest_project_showing_start, $closest_project_showing_end);
+
+    return [
+      'text' => (string) t('Esittelyaika'),
+      'datetime_text' => $showing_time_formatted,
+      'timestamp' => (int) $closest_project_showing_start,
+      'cache_tags' => $project->getCacheTags(),
+    ];
+  }
+
+  if (!$project->hasField('field_apartments') || $project->get('field_apartments')->isEmpty()) {
+    return [];
+  }
+
+  $apartment_ids = array_values(array_filter(array_map(static function (array $item): int {
+    return (int) ($item['target_id'] ?? 0);
+  }, $project->get('field_apartments')->getValue())));
+
+  if (empty($apartment_ids)) {
+    return [];
+  }
+
+  $apartments = \Drupal::entityTypeManager()->getStorage('node')->loadMultiple($apartment_ids);
+
+  $closest_showing_start = NULL;
+  $closest_showing_end = NULL;
+  $closest_apartment = NULL;
+
+  foreach ($apartments as $apartment) {
+    if (!$apartment instanceof NodeInterface || !$apartment->isPublished()) {
+      continue;
+    }
+
+    foreach (asuntotuotanto_get_apartment_showing_ranges($apartment) as $showing_range) {
+      $showing_timestamp = $showing_range['start'];
+      if ($showing_timestamp < $now_timestamp) {
+        continue;
+      }
+
+      if ($closest_showing_start === NULL || $showing_timestamp < $closest_showing_start) {
+        $closest_showing_start = $showing_timestamp;
+        $closest_showing_end = $showing_range['end'];
+        $closest_apartment = $apartment;
+      }
+    }
+  }
+
+  if ($closest_showing_start === NULL || !$closest_apartment instanceof NodeInterface) {
+    return [];
+  }
+
+  $showing_time_formatted = asuntotuotanto_format_showing_time_range($closest_showing_start, $closest_showing_end);
+
+  $prefix = (string) t('Esittelyaika');
+  $text = $prefix;
+
+  return [
+    'text' => $text,
+    'datetime_text' => $showing_time_formatted,
+    'timestamp' => (int) $closest_showing_start,
+    'cache_tags' => $closest_apartment->getCacheTags(),
+  ];
+}
+
+/**
+ * Returns parsed showing time ranges from the apartment node.
+ */
+function asuntotuotanto_get_apartment_showing_ranges(NodeInterface $apartment): array {
+  return asuntotuotanto_get_node_showing_ranges($apartment);
+}
+
+/**
+ * Returns parsed showing time ranges from any node with showing fields.
+ */
+function asuntotuotanto_get_node_showing_ranges(NodeInterface $node): array {
+  $items = [];
+
+  $range_field_candidates = [
+    'field_project_showing_time_range',
+    'field_showing_time_range',
+  ];
+  foreach ($range_field_candidates as $field_name) {
+    if ($node->hasField($field_name) && !$node->get($field_name)->isEmpty()) {
+      $items = $node->get($field_name)->getValue();
+      break;
+    }
+  }
+
+  if (empty($items)) {
+    $datetime_field_candidates = [
+      'field_project_showing_time',
+      'field_showing_time',
+    ];
+    foreach ($datetime_field_candidates as $field_name) {
+      if ($node->hasField($field_name) && !$node->get($field_name)->isEmpty()) {
+        $items = $node->get($field_name)->getValue();
+        break;
+      }
+    }
+  }
+
+  if (empty($items)) {
+    return [];
+  }
+
+  $duration_minutes = NULL;
+  $duration_field_candidates = [
+    'field_project_showing_duration_minutes',
+    'field_showing_duration_minutes',
+  ];
+  foreach ($duration_field_candidates as $duration_field) {
+    if ($node->hasField($duration_field) && !$node->get($duration_field)->isEmpty()) {
+      $raw_duration = (string) $node->get($duration_field)->value;
+      if ($raw_duration !== '' && is_numeric($raw_duration)) {
+        $candidate = (int) $raw_duration;
+        if ($candidate > 0) {
+          $duration_minutes = $candidate;
+          break;
+        }
+      }
+    }
+  }
+
+  $ranges = [];
+  foreach ($items as $item) {
+    $start_value = isset($item['value']) && is_string($item['value']) ? $item['value'] : '';
+    if ($start_value === '') {
+      continue;
+    }
+
+    $start_timestamp = strtotime($start_value . ' UTC');
+    if ($start_timestamp === FALSE) {
+      continue;
+    }
+
+    $end_timestamp = NULL;
+    $end_value = isset($item['end_value']) && is_string($item['end_value']) ? $item['end_value'] : '';
+    if ($end_value !== '') {
+      $parsed_end_timestamp = strtotime($end_value . ' UTC');
+      if ($parsed_end_timestamp !== FALSE && $parsed_end_timestamp > $start_timestamp) {
+        $end_timestamp = $parsed_end_timestamp;
+      }
+    }
+    elseif ($duration_minutes !== NULL) {
+      $end_timestamp = $start_timestamp + ($duration_minutes * 60);
+    }
+
+    $ranges[] = [
+      'start' => $start_timestamp,
+      'end' => $end_timestamp,
+    ];
+  }
+
+  return $ranges;
+}
+
+/**
+ * Formats showing time as a start-end range when end time is available.
+ */
+function asuntotuotanto_format_showing_time_range(int $start_timestamp, ?int $end_timestamp = NULL): string {
+  $date_formatter = \Drupal::service('date.formatter');
+  $start_text = $date_formatter->format($start_timestamp, 'custom', 'd.m.Y H:i');
+
+  if ($end_timestamp === NULL || $end_timestamp <= $start_timestamp) {
+    return $start_text;
+  }
+
+  $same_day = gmdate('Y-m-d', $start_timestamp) === gmdate('Y-m-d', $end_timestamp);
+  $end_text = $date_formatter->format($end_timestamp, 'custom', $same_day ? 'H:i' : 'd.m.Y H:i');
+
+  return $start_text . ' - ' . $end_text;
+}
+
+/**
+ * Returns active project ids from manual homepage highlight fields.
+ */
+function asuntotuotanto_get_manual_homepage_highlight_project_ids(string $now): array {
+  $query = \Drupal::entityQuery('node')
+    ->accessCheck(TRUE)
+    ->condition('type', 'project')
+    ->condition('status', 1);
+
+  $start_group = $query->orConditionGroup()
+    ->notExists('field_homepage_highlight_start')
+    ->condition('field_homepage_highlight_start', $now, '<=');
+  $end_group = $query->orConditionGroup()
+    ->notExists('field_homepage_highlight_end')
+    ->condition('field_homepage_highlight_end', $now, '>=');
+
+  $query->condition($start_group);
+  $query->condition($end_group);
+  $query->exists('field_homepage_highlight_text');
+  $query->sort('field_homepage_highlight_start', 'DESC');
+  $query->sort('changed', 'DESC');
+  $query->range(0, 20);
+
+  return array_values($query->execute());
+}
+
+/**
+ * Returns project ids that have apartments with upcoming showing time.
+ */
+function asuntotuotanto_get_projects_with_apartment_showing_time_ids(string $now): array {
+  $field_definitions = \Drupal::service('entity_field.manager')->getFieldDefinitions('node', 'project');
+  $project_showing_query_conditions = [];
+
+  if (isset($field_definitions['field_project_showing_time_range'])) {
+    $project_showing_query_conditions[] = ['field' => 'field_project_showing_time_range.value', 'value' => $now];
+  }
+  if (isset($field_definitions['field_showing_time_range'])) {
+    $project_showing_query_conditions[] = ['field' => 'field_showing_time_range.value', 'value' => $now];
+  }
+  if (isset($field_definitions['field_project_showing_time'])) {
+    $project_showing_query_conditions[] = ['field' => 'field_project_showing_time', 'value' => $now];
+  }
+  if (isset($field_definitions['field_showing_time'])) {
+    $project_showing_query_conditions[] = ['field' => 'field_showing_time', 'value' => $now];
+  }
+
+  if ($project_showing_query_conditions !== []) {
+    $project_query = \Drupal::entityQuery('node')
+      ->accessCheck(TRUE)
+      ->condition('type', 'project')
+      ->condition('status', 1)
+      ->sort('changed', 'DESC')
+      ->range(0, 40);
+
+    $showing_group = $project_query->orConditionGroup();
+    foreach ($project_showing_query_conditions as $condition) {
+      $showing_group->condition($condition['field'], $condition['value'], '>=');
+    }
+    $project_query->condition($showing_group);
+
+    return array_values($project_query->execute());
+  }
+
+  $apartment_query = \Drupal::entityQuery('node')
+    ->accessCheck(TRUE)
+    ->condition('type', 'apartment')
+    ->condition('status', 1)
+    ->range(0, 1000);
+
+  $showing_time_group = $apartment_query->orConditionGroup()
+    ->condition('field_showing_time', $now, '>=')
+    ->condition('field_showing_time_range.value', $now, '>=');
+
+  $apartment_query->condition($showing_time_group);
+
+  $apartment_ids = $apartment_query->execute();
+  if (empty($apartment_ids)) {
+    return [];
+  }
+
+  $project_query = \Drupal::entityQuery('node')
+    ->accessCheck(TRUE)
+    ->condition('type', 'project')
+    ->condition('status', 1)
+    ->condition('field_apartments.target_id', $apartment_ids, 'IN')
+    ->sort('changed', 'DESC')
+    ->range(0, 40);
+
+  return array_values($project_query->execute());
 }
 
 /**
