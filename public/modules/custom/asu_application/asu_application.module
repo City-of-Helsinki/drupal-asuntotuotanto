@@ -543,9 +543,12 @@ function asu_application_preprocess_asu_application(array &$variables) {
 function asu_application_preprocess_views_view(&$variables) {
   if ($variables['view']->id() == 'applications') {
     $variables['#attached']['library'][] = 'asu_application/application_submit';
+    $variables['#attached']['library'][] = 'asuntotuotanto/application-apartment-listing';
     $variables['#attached']['drupalSettings']['asuApplication']['hasExistingApplication'] = TRUE;
+    $variables['#attached']['drupalSettings']['asuApplicationOffer'] = _asu_application_get_offer_drupal_settings();
     // Keep application-row unread badges in sync with user read state.
     $variables['view']->element['#cache']['contexts'][] = 'user';
+    $variables['view']->element['#cache']['contexts'][] = 'languages:language_interface';
     $variables['view']->element['#cache']['max-age'] = 0;
 
     $current_user = \Drupal::currentUser();
