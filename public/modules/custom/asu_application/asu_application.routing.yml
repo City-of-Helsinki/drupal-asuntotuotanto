@@ -54,6 +54,16 @@ asu_application.mark_read:
   requirements:
     _permission: "access content"
 
+asu_application.offer_action:
+  path: "/user/offer/{offer_id}/{action}"
+  defaults:
+    _controller: '\Drupal\asu_application\Controller\OfferActionController::action'
+  methods: [POST]
+  requirements:
+    _user_is_logged_in: "TRUE"
+    offer_id: '\d+'
+    action: 'accept|reject'
+
 asu_application.lottery_start:
   path: "/lottery/start/{project_uuid}"
   defaults:

@@ -32,6 +32,33 @@
 #}
 <section class="user-profile__section">
   <h2>
+    {{ 'Offers'|t }}
+  </h2>
+
+  <div class="application-status-message application-status-message--offers" id="application-offers-empty">
+    <h2>
+      {{ 'No offers'|t }}
+    </h2>
+    <p>
+      {{ 'You will see your offers here'|t }}
+    </p>
+  </div>
+
+  <table class="application__apartments application__results-table is-hidden application__offers-table" id="application-offers-table" aria-hidden="true">
+    <thead>
+      <tr>
+        <th>{% trans %}Project{% endtrans %}</th>
+        <th>{% trans %}Apartment{% endtrans %}</th>
+        <th>{% trans %}Offer status{% endtrans %}</th>
+        <th>{% trans %}Offer valid until{% endtrans %}</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <ul class="application__apartments application__apartments--mobile application__results-mobile-list is-hidden application__offers-list" id="application-offers-list" aria-hidden="true"></ul>
+
+  <h2>
     {% trans %}
       Application submitted
     {% endtrans %}

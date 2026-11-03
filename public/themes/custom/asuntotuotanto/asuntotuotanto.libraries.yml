@@ -3,10 +3,13 @@ application-form-actions:
     dist/js/applicationFormActions.min.js: {}
 
 application-apartment-listing:
+  version: 1.1.0
   js:
     dist/js/applicationApartmentListing.min.js: {}
   dependencies:
     - core/jquery
+    - core/drupal
+    - core/drupalSettings
 
 showcase-gallery:
   js:
