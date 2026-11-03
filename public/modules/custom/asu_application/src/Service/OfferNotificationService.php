@@ -93,6 +93,56 @@ class OfferNotificationService {
   }
 
   /**
+   * Send the initial offer email to customer recipients.
+   *
+   * @return bool
+   *   TRUE when the mail plugin reported a successful send.
+   */
+  public function sendOfferCreatedNotification(
+    string $recipients,
+    string $subject,
+    string $body,
+  ): bool {
+    if ($recipients === '') {
+      $this->logger->warning(
+        'Skipped offer_created_notification: no recipient emails.'
+      );
+      return FALSE;
+    }
+
+    $langcode = $this->languageManager->getDefaultLanguage()->getId();
+    $result = $this->mailManager->mail(
+      'asu_application',
+      'offer_created_notification',
+      $recipients,
+      $langcode,
+      [
+        'subject' => $subject,
+        'body' => $body,
+      ],
+      NULL,
+      TRUE,
+    );
+
+    return $this->wasMailSentSuccessfully($result);
+  }
+
+  /**
+   * Determine whether mail delivery should be treated as successful.
+   *
+   * In local dev, asu_content_mail_alter logs outgoing mail and blocks send,
+   * which makes the mail plugin report failure even though the message was
+   * generated correctly.
+   */
+  private function wasMailSentSuccessfully(array $result): bool {
+    if (!empty($result['result'])) {
+      return TRUE;
+    }
+
+    return getenv('APP_ENV') === 'dev';
+  }
+
+  /**
    * Send a salesperson notification email.
    */
   private function sendNotification(
