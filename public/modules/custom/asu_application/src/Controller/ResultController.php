@@ -64,9 +64,16 @@ class ResultController extends ControllerBase {
       return new AjaxResponse([], 401);
     }
 
+    $request = $this->requestStack->getCurrentRequest();
+    $noCache = (string) $request?->get('no_cache') === '1';
+
     $cid = 'asu_application_result_' . $user->id() . '_' . $applicationId;
-    if ($cached = $this->cache()->get($cid)) {
-      return new AjaxResponse(json_decode($cached->data, TRUE, 200));
+    if (!$noCache && ($cached = $this->cache()->get($cid))) {
+      $cachedResults = json_decode($cached->data, TRUE, 512);
+      if (is_array($cachedResults) && !$this->shouldRefreshCachedResults($cachedResults)) {
+        return new AjaxResponse($cachedResults);
+      }
+      $this->cache()->delete($cid);
     }
 
     // Backend API authentication data may exist only on the owner account.
@@ -110,8 +117,25 @@ class ResultController extends ControllerBase {
       $results[] = $this->buildResultItem($result);
     }
 
-    $this->cache()->set($cid, json_encode($results), (time() + 60 * 60));
+    if (!$noCache) {
+      $this->cache()->set($cid, json_encode($results), (time() + 60 * 60));
+    }
     return new AjaxResponse($results);
+  }
+
+  /**
+   * Detect stale cache entries created before an offer was attached.
+   */
+  private function shouldRefreshCachedResults(array $results): bool {
+    foreach ($results as $item) {
+      if (!is_array($item)) {
+        continue;
+      }
+      if (($item['state'] ?? '') === 'offered' && empty($item['offer'])) {
+        return TRUE;
+      }
+    }
+    return FALSE;
   }
 
   /**
@@ -221,16 +245,52 @@ class ResultController extends ControllerBase {
       return NULL;
     }
     $offerState = $raw['state'] ?? NULL;
+    $validUntil = $raw['valid_until'] ?? NULL;
+    $isExpired = $this->resolveOfferIsExpired(
+      $raw['is_expired'] ?? NULL,
+      $offerState,
+      $validUntil,
+    );
+    $stateLabel = ($isExpired && $offerState === 'pending')
+      ? (string) $this->t('Offer expired')
+      : $this->translateResultValue($offerState);
+
     return [
       'id' => $raw['id'] ?? NULL,
       'created_at' => $raw['created_at'] ?? NULL,
-      'valid_until' => $raw['valid_until'] ?? NULL,
+      'valid_until' => $validUntil,
       'state' => $offerState,
-      'state_label' => $this->translateResultValue($offerState),
+      'state_label' => $stateLabel,
       'concluded_at' => $raw['concluded_at'] ?? NULL,
       'comment' => $raw['comment'] ?? NULL,
-      'is_expired' => $raw['is_expired'] ?? NULL,
+      'is_expired' => $isExpired,
     ];
+  }
+
+  /**
+   * Resolve whether a pending offer has passed its valid until date.
+   */
+  private function resolveOfferIsExpired(
+    mixed $isExpired,
+    ?string $offerState,
+    mixed $validUntil,
+  ): bool {
+    if ($isExpired === TRUE || $isExpired === 1 || $isExpired === '1') {
+      return TRUE;
+    }
+    if ($offerState !== 'pending' || empty($validUntil)) {
+      return FALSE;
+    }
+
+    try {
+      $validUntilDate = new \DateTimeImmutable((string) $validUntil);
+      $today = new \DateTimeImmutable('today');
+    }
+    catch (\Exception) {
+      return FALSE;
+    }
+
+    return $validUntilDate < $today;
   }
 
   /**
@@ -244,6 +304,9 @@ class ResultController extends ControllerBase {
     switch ($value) {
       case 'offered':
         return (string) $this->t('offered');
+
+      case 'offer_accepted':
+        return (string) $this->t('offer accepted');
 
       case 'pending':
         return (string) $this->t('pending');

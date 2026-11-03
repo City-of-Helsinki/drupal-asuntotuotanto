@@ -10,6 +10,7 @@ use Drupal\asu_application\Applications;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\query\QueryPluginBase;
 use Drupal\asu_application\Entity\Application;
+use Drupal\asu_application\Util\OfferMailTestLabel;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 use Drupal\file\Entity\File;
 use Drupal\user\Entity\User;
@@ -22,6 +23,17 @@ function asu_application_theme() {
     'asu_application' => [
       'render element' => 'elements',
       'template' => 'asu-application',
+    ],
+    'asu_application_offer_notification_mail' => [
+      'variables' => [
+        'project_name' => '',
+        'apartment_number' => '',
+        'customer_name' => '',
+        'customer_email' => '',
+        'valid_until' => '',
+        'action' => '',
+      ],
+      'template' => 'mail/asu-application-offer-notification-mail',
     ],
   ];
 }
@@ -294,6 +306,8 @@ function template_preprocess_asu_application(array &$variables) {
     $application_teaser_values['#cache']['tags'][] = $unread_cache_tag;
   }
 
+  $variables['#attached']['drupalSettings']['asuApplicationOffer'] = _asu_application_get_offer_drupal_settings();
+
   $variables['content'] = $application_teaser_values;
 
   // Ensure the entity render output itself is uncached for unread state.
@@ -394,31 +408,45 @@ function asu_application_cron() {
       ->condition('field_application_end_time', [$after, $before], 'BETWEEN')
       ->execute();
 
-    if (!$projects) {
-      return;
-    }
+    if ($projects) {
+      $applicationIds = \Drupal::entityTypeManager()
+        ->getStorage('asu_application')
+        ->getQuery()
+        ->accessCheck(TRUE)
+        ->condition('project_id', $projects, 'IN')
+        ->condition('field_locked', 0, '=')
+        ->execute();
 
-    $applicationIds = \Drupal::entityTypeManager()
-      ->getStorage('asu_application')
-      ->getQuery()
-      ->accessCheck(TRUE)
-      ->condition('project_id', $projects, 'IN')
-      ->condition('field_locked', 0, '=')
-      ->execute();
-
-    if (!$applicationIds) {
-      return;
-    }
-
-    $applications = Application::loadMultiple($applicationIds);
-    /** @var \Drupal\asu_application\Entity\Application $application */
-    foreach ($applications as $application) {
-      \Drupal::logger('asu_application')->info('Deleted draft application for project of id: ' . $application->getProjectId());
-      $application->delete();
+      if ($applicationIds) {
+        $applications = Application::loadMultiple($applicationIds);
+        /** @var \Drupal\asu_application\Entity\Application $application */
+        foreach ($applications as $application) {
+          \Drupal::logger('asu_application')->info('Deleted draft application for project of id: ' . $application->getProjectId());
+          $application->delete();
+        }
+      }
     }
   }
   catch (\Exception $e) {
     \Drupal::logger('asu_application_cron')->critical('Unable to perform application cron operation: ' . $e->getMessage());
+  }
+
+  try {
+    \Drupal::service('asu_application.offer_reminder')->processDueReminders();
+  }
+  catch (\Exception $e) {
+    \Drupal::logger('asu_application_cron')->critical(
+      'Unable to process offer reminders: ' . $e->getMessage()
+    );
+  }
+
+  try {
+    \Drupal::service('asu_application.offer_message')->processDueMessages();
+  }
+  catch (\Exception $e) {
+    \Drupal::logger('asu_application_cron')->critical(
+      'Unable to process offer messages: ' . $e->getMessage()
+    );
   }
 
 }
@@ -458,6 +486,38 @@ function asu_application_mail(string $key, array &$message, array $params) {
       elseif (!empty($params['message'])) {
         $message['body'][] = $params['message'];
       }
+      break;
+
+    case 'offer_accepted_notification':
+    case 'offer_rejected_notification':
+    case 'offer_reminder_notification':
+      $message['from'] = \Drupal::config('system.site')->get('mail');
+      $message['headers']['Content-Type'] = 'text/plain; charset=UTF-8';
+      $message['subject'] = OfferMailTestLabel::prefixSubject(
+        $params['subject'] ?? ''
+      );
+      $build = [
+        '#theme' => 'asu_application_offer_notification_mail',
+        '#project_name' => $params['project_name'] ?? '',
+        '#apartment_number' => $params['apartment_number'] ?? '',
+        '#customer_name' => $params['customer_name'] ?? '',
+        '#customer_email' => $params['customer_email'] ?? '',
+        '#valid_until' => $params['valid_until'] ?? '',
+        '#action' => $params['action'] ?? '',
+      ];
+      $body = (string) \Drupal::service('renderer')->renderPlain($build);
+      $message['body'][] = OfferMailTestLabel::prefixBody($body);
+      break;
+
+    case 'offer_created_notification':
+      $message['from'] = \Drupal::config('system.site')->get('mail');
+      $message['headers']['Content-Type'] = 'text/plain; charset=UTF-8';
+      $message['subject'] = OfferMailTestLabel::prefixSubject(
+        $params['subject'] ?? ''
+      );
+      $message['body'][] = OfferMailTestLabel::prefixBody(
+        (string) ($params['body'] ?? '')
+      );
       break;
   }
 }
@@ -500,9 +560,12 @@ function asu_application_preprocess_asu_application(array &$variables) {
 function asu_application_preprocess_views_view(&$variables) {
   if ($variables['view']->id() == 'applications') {
     $variables['#attached']['library'][] = 'asu_application/application_submit';
+    $variables['#attached']['library'][] = 'asuntotuotanto/application-apartment-listing';
     $variables['#attached']['drupalSettings']['asuApplication']['hasExistingApplication'] = TRUE;
+    $variables['#attached']['drupalSettings']['asuApplicationOffer'] = _asu_application_get_offer_drupal_settings();
     // Keep application-row unread badges in sync with user read state.
     $variables['view']->element['#cache']['contexts'][] = 'user';
+    $variables['view']->element['#cache']['contexts'][] = 'languages:language_interface';
     $variables['view']->element['#cache']['max-age'] = 0;
 
     $current_user = \Drupal::currentUser();

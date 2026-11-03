@@ -296,6 +296,7 @@ final class SearchMapper {
       'project_state_of_sale' => $this->getEnumFromTermField($project, 'field_state_of_sale'),
       'project_street_address' => $this->getScalar($project, 'field_street_address'),
       'project_upcoming_description' => $this->getScalar($project, 'field_upcoming_description'),
+      'project_attachment_urls' => $this->getLinkUrlsFromField($project, 'field_attachments_url'),
       'project_url' => $this->nodeUrl($project),
       'project_uuid' => $project->uuid(),
       'project_postal_code' => $this->getScalar($project, 'field_postal_code'),
@@ -1004,6 +1005,7 @@ final class SearchMapper {
     if ($baseUrl) {
       return rtrim($baseUrl, '/') . $path;
     }
+
     $request = $this->requestStack->getCurrentRequest();
     $host = $request ? $request->getSchemeAndHttpHost() : '';
 
