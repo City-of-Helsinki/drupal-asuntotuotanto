@@ -63,7 +63,7 @@ first updates live rows, and the second doesn't apply the ASU rules.
 ```
 oc exec <drupal-pod> -- drush asu:sql:sanitized-dump
 # Prints: Sanitized dump saved to /tmp/sanitized_YYYYMMDDHHMMSS.sql
-oc cp <drupal-pod>:/tmp/sanitized_YYYYMMDDHHMMSS.sql ./drupal.sql
+oc cp <drupal-pod>:/tmp/sanitized_YYYYMMDDHHMMSS.sql ./sanitized_YYYYMMDDHHMMSS.sql
 oc exec <drupal-pod> -- rm /tmp/sanitized_YYYYMMDDHHMMSS.sql
 ```
 
@@ -96,14 +96,16 @@ How it behaves:
 
 ### Restore a Drupal dump locally
 
-```
-# 1. Empty the local database and import the dump
-docker compose exec app drush sql:drop -y
-docker compose exec -T app drush sql:cli < drupal.sql
+Put the dump file in the project directory, then:
 
-# 2. Bring the database up to date with your branch and clear caches
-docker compose exec app drush deploy
 ```
+make restore-sanitized-dump DUMP=sanitized_YYYYMMDDHHMMSS.sql
+```
+
+It shows the target database and asks you to type `yes` (`YES=1` skips the
+prompt). Then it drops all tables, imports the dump and runs `drush deploy`
+(database updates, config import, cache clear). `DUMP` must be a path inside
+the project, because the container only sees the project directory.
 
 You can now log in as any user with password `localdev`, e.g. via
 `drush uli --name=<username>`. Customer SAML logins don't map to restored users.
@@ -124,24 +126,21 @@ into, or no Drupal user can reach the backend.
 2. Restore the backend dump (see the
    [apartment-application-service README](https://github.com/City-of-Helsinki/apartment-application-service#anonymized-database-dump))
    and the Drupal dump ([above](#restore-a-drupal-dump-locally)).
-3. In the **target** backend, generate the fix. Its `SANITIZED_DUMP_PASSWORD`
-   must equal the value used when the backend dump was made:
+3. Re-link them, with both local dev stacks running:
 
    ```
-   # in apartment-application-service
-   docker compose exec -T django ./manage.py drupal_restore_credentials_sql \
-     --i-know-this-is-a-restored-dump > fix.sql
+   make relink-backend-credentials
    ```
 
-4. Apply it here and clear caches:
+   It runs `./manage.py drupal_restore_credentials_sql
+   --i-know-this-is-a-restored-dump` in the Django container
+   (`DJANGO_CONTAINER`, default `apartment-application-backend`), applies the
+   output here and clears caches. The backend's `SANITIZED_DUMP_PASSWORD` must
+   equal the value used when the backend dump was made.
 
-   ```
-   docker compose exec -T app drush sql:cli < fix.sql
-   docker compose exec app drush cr
-   ```
-
-On a test server, use `oc exec <django-pod> -- ...` for step 3, then copy
-`fix.sql` into the Drupal pod with `oc cp` and run
+On a test server, do step 3 by hand:
+`oc exec <django-pod> -- ./manage.py drupal_restore_credentials_sql --i-know-this-is-a-restored-dump > fix.sql`,
+then copy `fix.sql` into the Drupal pod with `oc cp` and run
 `oc exec <drupal-pod> -- drush sql:query --file=/tmp/fix.sql` and
 `oc exec <drupal-pod> -- drush cr`.
 
