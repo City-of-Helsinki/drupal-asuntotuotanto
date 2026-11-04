@@ -62,7 +62,9 @@ make create-sanitized-dump
 ```
 
 This writes `sanitized_YYYYMMDDHHMMSS.sql` and keeps the four newest dumps in
-that directory. The dump is written to a `.tmp` file first and renamed only when
+that directory. Without `--directory` the drush command writes to the system
+temp directory (`/tmp` on the pods), because the Drupal root is not writable
+there. The dump is written to a `.tmp` file first and renamed only when
 it succeeds; older dumps are deleted only after that, so a failed dump leaves
 existing ones untouched. Copy the file out of the pod afterwards. Do not commit
 dump files (`*.sql` is gitignored).

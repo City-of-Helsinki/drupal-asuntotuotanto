@@ -45,6 +45,9 @@ final class SanitizedDumpManager {
     if (!is_dir($directory) && !mkdir($directory, 0775, TRUE) && !is_dir($directory)) {
       throw new \RuntimeException(sprintf('Unable to create dump directory %s.', $directory));
     }
+    if (!is_writable($directory)) {
+      throw new \RuntimeException(sprintf('Dump directory %s is not writable. Pass a writable one with --directory.', $directory));
+    }
 
     $info = Database::getConnectionInfo('default')['default'];
     if (($info['driver'] ?? '') !== 'mysql') {
@@ -126,7 +129,10 @@ final class SanitizedDumpManager {
         'no-data' => $this->resolveStructureTables(),
         'gdpr-expressions' => SanitizerConfig::expressions(),
         'gdpr-replacements' => SanitizerConfig::replacements(),
-      ]
+      ],
+      // Same PDO options as Drupal, e.g. the TLS settings in
+      // azure.settings.php that Azure MySQL requires.
+      $info['pdo'] ?? [],
     );
     $dump->start($path);
   }
