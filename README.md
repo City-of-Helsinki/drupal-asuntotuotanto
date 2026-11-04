@@ -44,66 +44,112 @@ $ make shell
 ## Anonymized database dump
 
 Production personal data must never be copied into local or shared environments
-as-is. Use the sanitized dump command, which runs a read-only dump and rewrites
-PII in the dump stream. Production rows are not updated.
+as-is. Copy production data only through the sanitized dump: it reads the
+database, replaces personal data in the output, and never changes production
+rows.
 
-### Create a dump (production)
+Drupal and the backend (apartment-application-service) each have their own
+dump. Drupal users can only use the site together with their backend profiles,
+so in almost every case you want **both**, made at about the same time, and
+restored together (see [Restore together with the backend](#restore-together-with-the-backend)).
 
-On a production application pod (or any environment with real data):
+Do **not** use `drush sql:sanitize` or `drush sql:dump-gdpr` for this. The
+first updates live rows, and the second doesn't apply the ASU rules.
+
+### Create a dump
+
+**On a server (OpenShift)**, run it in the Drupal pod and copy the file out:
 
 ```
-drush asu:sql:sanitized-dump
+oc exec <drupal-pod> -- drush asu:sql:sanitized-dump
+# Prints: Sanitized dump saved to /tmp/sanitized_YYYYMMDDHHMMSS.sql
+oc cp <drupal-pod>:/tmp/sanitized_YYYYMMDDHHMMSS.sql ./sanitized_YYYYMMDDHHMMSS.sql
+oc exec <drupal-pod> -- rm /tmp/sanitized_YYYYMMDDHHMMSS.sql
 ```
 
-Or from the project Makefile (writes under `SANITIZED_DUMP_DIR`, default `.`):
+Without `--directory` the dump goes to the system temp directory (`/tmp` on the
+pods), because the Drupal root is not writable there. Pass
+`--directory=<path>` to write it somewhere else, e.g. a mounted volume if `/tmp`
+is too small.
+
+**Locally**:
 
 ```
-make create-sanitized-dump
+make create-sanitized-dump   # writes ./sanitized_*.sql (change with SANITIZED_DUMP_DIR)
 ```
 
-This writes `sanitized_YYYYMMDDHHMMSS.sql` and keeps the four newest dumps in
-that directory. Without `--directory` the drush command writes to the system
-temp directory (`/tmp` on the pods), because the Drupal root is not writable
-there. The dump is written to a `.tmp` file first and renamed only when
-it succeeds; older dumps are deleted only after that, so a failed dump leaves
-existing ones untouched. Copy the file out of the pod afterwards. Do not commit
-dump files (`*.sql` is gitignored).
+How it behaves:
 
-Do **not** use `drush sql:sanitize` on production — that command updates live
-rows. The command uses the `druidfi/gdpr-mysqldump` library directly; the
-`gdpr_dumper` Drupal module (and its `drush sql:dump-gdpr`, which does not apply
-the ASU rules) is not installed.
+- The output file is `sanitized_YYYYMMDDHHMMSS.sql`. The four newest dumps in
+  the directory are kept and older ones are deleted (change with `--keep`).
+- A failed dump leaves no partial file and does not delete older dumps.
+- The dump refuses to run if a custom table has a column without an
+  anonymization rule (see [below](#what-is-kept-and-adding-fields)).
+- Session, log, cache, flood, login history, `authmap`, `honeypot_user` (IP
+  addresses) and `key_value_expire` (tempstore, e.g. draft forms) tables are
+  dumped without data.
+- All users' passwords become `localdev`. To use another password, set
+  `ASU_SANITIZED_DUMP_PASSWORD_HASH` to a Drupal password hash when dumping,
+  e.g. from `drush php:eval "echo \Drupal::service('password')->hash('secret');"`.
+  A plain password in the variable is refused.
+- Never commit dump files (`*.sql` is gitignored).
 
-Data of session, log, cache, flood, login history, `authmap`, `honeypot_user`
-(IP addresses) and `key_value_expire` (tempstore, e.g. draft forms) tables is
-left out of the dump.
+### Restore a Drupal dump locally
+
+Put the dump file in the project directory, then:
+
+```
+make restore-sanitized-dump DUMP=sanitized_YYYYMMDDHHMMSS.sql
+```
+
+It shows the target database and asks you to type `yes` (`YES=1` skips the
+prompt). Then it drops all tables, imports the dump and runs `drush deploy`
+(database updates, config import, cache clear). `DUMP` must be a path inside
+the project, because the container only sees the project directory.
+
+You can now log in as any user with password `localdev`, e.g. via
+`drush uli --name=<username>`. Customer SAML logins don't map to restored users.
+Until you re-link them to the backend (next section), users can't see their
+backend data.
 
 ### Restore together with the backend
 
 Drupal users are linked to backend profiles by Drupal `users.uuid` == Django
-`Profile.id`, which both dumps keep. The masked copies in
-`field_backend_profile` / `field_backend_password` must be recomputed for the
-target environment:
+`Profile.id`, and both dumps keep that link. Drupal also stores the profile id
+and backend password in masked form (`field_backend_profile`,
+`field_backend_password`), encoded with the **source** backend's
+`HASHIDS_SALT`. Those values must be recomputed for the environment you restore
+into, or no Drupal user can reach the backend.
 
-1. Import this dump into MariaDB and the backend's sanitized dump into Postgres
-   (see the [apartment-application-service README](https://github.com/City-of-Helsinki/apartment-application-service/blob/main/README.md#anonymized-database-dump)).
-2. In the backend container, generate the fix and apply it here:
+1. Create the backend dump first and the Drupal dump right after it. Users
+   created between the two dumps won't match.
+2. Restore the backend dump (see the
+   [apartment-application-service README](https://github.com/City-of-Helsinki/apartment-application-service#anonymized-database-dump))
+   and the Drupal dump ([above](#restore-a-drupal-dump-locally)).
+3. Re-link them, with both local dev stacks running:
 
-```
-./manage.py drupal_restore_credentials_sql --i-know-this-is-a-restored-dump > fix.sql
-drush sql:query --file=fix.sql
-```
+   ```
+   make relink-backend-credentials
+   ```
 
-3. Run `drush cr`. Until step 2 is done, Drupal users cannot reach the backend.
+   It runs `./manage.py drupal_restore_credentials_sql
+   --i-know-this-is-a-restored-dump` in the Django container
+   (`DJANGO_CONTAINER`, default `apartment-application-backend`), applies the
+   output here and clears caches. The backend's `SANITIZED_DUMP_PASSWORD` must
+   equal the value used when the backend dump was made.
 
-An end-to-end check of this cycle against the local dev stacks is in
-apartment-application-service:
-[docs/sanitized-dump-restore-check.md](https://github.com/City-of-Helsinki/apartment-application-service/blob/main/docs/sanitized-dump-restore-check.md).
+On a test server, do step 3 by hand:
+`oc exec <django-pod> -- ./manage.py drupal_restore_credentials_sql --i-know-this-is-a-restored-dump > fix.sql`,
+then copy `fix.sql` into the Drupal pod with `oc cp` and run
+`oc exec <drupal-pod> -- drush sql:query --file=/tmp/fix.sql` and
+`oc exec <drupal-pod> -- drush cr`.
 
-User passwords in the dump are set to `localdev`. To use another password, set
-`ASU_SANITIZED_DUMP_PASSWORD_HASH` to a Drupal password hash when dumping, e.g.
-from `drush php:eval "echo \Drupal::service('password')->hash('secret');"`.
-A plain password in the variable is refused.
+> **Never apply `fix.sql` to production.** It sets every Drupal user's backend
+> password to `SANITIZED_DUMP_PASSWORD`.
+
+To test the whole cycle against the local dev stacks, follow
+[docs/sanitized-dump-restore-check.md](https://github.com/City-of-Helsinki/apartment-application-service/blob/main/docs/sanitized-dump-restore-check.md)
+in apartment-application-service.
 
 ### What is kept, and adding fields
 
