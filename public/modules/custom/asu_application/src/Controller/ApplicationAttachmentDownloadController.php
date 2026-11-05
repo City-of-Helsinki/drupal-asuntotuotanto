@@ -48,18 +48,25 @@ final class ApplicationAttachmentDownloadController extends ControllerBase {
    */
   public function open(int $attachment_id) {
     if (!$this->currentUserAccount->isAuthenticated()) {
-      $destination = '/user/application/attachments/' . $attachment_id . '/download';
+      $destination = '/user/application/attachments/' . $attachment_id . '/open';
       $loginUrl = '/user/login?destination=' . rawurlencode($destination);
       return new RedirectResponse($loginUrl, 302);
     }
 
-    return $this->download($attachment_id);
+    return $this->buildFileResponse($attachment_id, TRUE);
   }
 
   /**
    * Download endpoint with strict ACL checks.
    */
   public function download(int $attachment_id) {
+    return $this->buildFileResponse($attachment_id, FALSE);
+  }
+
+  /**
+   * Resolves and streams an attachment with requested disposition preference.
+   */
+  private function buildFileResponse(int $attachment_id, bool $preferInline) {
     if (!$this->currentUserAccount->isAuthenticated()) {
       $this->getLogger('asu_application')->warning('attachment_download_denied', [
         'event' => 'attachment_download_denied',
@@ -101,16 +108,33 @@ final class ApplicationAttachmentDownloadController extends ControllerBase {
 
     $displayName = $this->sanitizeFilename((string) ($resolved['display_name'] ?? $file->getFilename()));
     $mimeType = (string) ($resolved['mime_type'] ?? $file->getMimeType() ?: 'application/octet-stream');
+    $disposition = $preferInline && $this->supportsInlinePreview($mimeType)
+      ? ResponseHeaderBag::DISPOSITION_INLINE
+      : ResponseHeaderBag::DISPOSITION_ATTACHMENT;
 
     $response = new BinaryFileResponse($realPath, 200);
     $response->headers->set('Content-Type', $mimeType);
     $response->setContentDisposition(
-      ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+      $disposition,
       $displayName,
       $displayName,
     );
 
     return $response;
+  }
+
+  /**
+   * Determines whether attachment type can be safely previewed inline.
+   */
+  private function supportsInlinePreview(string $mimeType): bool {
+    $mimeType = strtolower(trim($mimeType));
+
+    return in_array($mimeType, [
+      'application/pdf',
+      'image/jpeg',
+      'image/png',
+      'text/plain',
+    ], TRUE);
   }
 
   /**
