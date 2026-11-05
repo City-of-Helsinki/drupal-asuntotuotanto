@@ -118,6 +118,32 @@ asu_application.messages:
   requirements:
     _entity_access: 'asu_application.view'
 
+asu_application.attachment_download:
+  path: "/user/application/attachments/{attachment_id}/download"
+  defaults:
+    _controller: '\Drupal\asu_application\Controller\ApplicationAttachmentDownloadController::download'
+  methods: [GET]
+  requirements:
+    _access: "TRUE"
+    attachment_id: '\d+'
+
+asu_application.attachment_open:
+  path: "/user/application/attachments/{attachment_id}/open"
+  defaults:
+    _controller: '\Drupal\asu_application\Controller\ApplicationAttachmentDownloadController::open'
+  methods: [GET]
+  requirements:
+    _access: "TRUE"
+    attachment_id: '\d+'
+
+asu_application.attachment_upload:
+  path: "/user/application/attachments/upload"
+  defaults:
+    _controller: '\Drupal\asu_application\Controller\ApplicationAttachmentUploadController::upload'
+  methods: [POST]
+  requirements:
+    _access: "TRUE"
+
 asu_application.summary_project:
   path: "/admin/asu/project/{node}/applications/summary"
   defaults:

@@ -13,6 +13,15 @@ msgstr "Takaisin hakemukseen"
 msgid "Conversation"
 msgstr "Viestiketju"
 
+msgid "Files in message (@count)"
+msgstr "Tiedostot viestissä (@count)"
+
+msgid "Open"
+msgstr "Avaa"
+
+msgid "Download"
+msgstr "Lataa"
+
 msgid "No messages yet."
 msgstr "Ei viestejä vielä."
 

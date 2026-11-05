@@ -14,6 +14,7 @@ use Drupal\Core\Render\Markup;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\Url;
 use Drupal\Component\Utility\Html;
+use Drupal\asu_application\ApplicationAttachmentManager;
 use Drupal\asu_application\ApplicationMessageManager;
 use Drupal\asu_application\Entity\Application;
 use Drupal\asu_application\Notification\ApplicationProjectResolverTrait;
@@ -40,6 +41,7 @@ final class ApplicationMessageForm extends FormBase {
    */
   public function __construct(
     private readonly ApplicationMessageManager $messageManager,
+    private readonly ApplicationAttachmentManager $attachmentManager,
     private readonly MailManagerInterface $mailManager,
     private readonly DateFormatterInterface $dateFormatter,
     private readonly AccountProxyInterface $currentUser,
@@ -54,14 +56,15 @@ final class ApplicationMessageForm extends FormBase {
    */
   public static function create(ContainerInterface $container): self {
     return new self(
-      $container->get('asu_application.message_manager'),
-      $container->get('plugin.manager.mail'),
-      $container->get('date.formatter'),
-      $container->get('current_user'),
-      $container->get('asu_api.backendapi'),
-      $container->get('entity_type.manager'),
-      $container->get('request_stack'),
-    );
+          $container->get('asu_application.message_manager'),
+          $container->get('asu_application.attachment_manager'),
+          $container->get('plugin.manager.mail'),
+          $container->get('date.formatter'),
+          $container->get('current_user'),
+          $container->get('asu_api.backendapi'),
+          $container->get('entity_type.manager'),
+          $container->get('request_stack'),
+      );
   }
 
   /**
@@ -82,11 +85,13 @@ final class ApplicationMessageForm extends FormBase {
     $this->application = $asu_application;
     $projectLabel = $this->resolveApplicationProjectLabel($asu_application);
     $thread = $this->messageManager->loadThread((int) $asu_application->id());
+    $messageIds = array_map(static fn ($message): int => (int) $message->id(), $thread);
+    $attachmentsByMessageId = $this->attachmentManager->getAttachmentsByMessageIds($messageIds);
     $currentUid = (int) $this->currentUser->id();
     $viewerRole = $this->messageManager->resolveViewerRole($currentUid);
     $lastReadAt = $currentUid > 0
-      ? $this->messageManager->getThreadLastRead($currentUid, (int) $asu_application->id())
-      : 0;
+        ? $this->messageManager->getThreadLastRead($currentUid, (int) $asu_application->id())
+        : 0;
 
     if ($currentUid > 0) {
       $this->messageManager->markThreadRead($currentUid, (int) $asu_application->id());
@@ -121,7 +126,7 @@ final class ApplicationMessageForm extends FormBase {
       ],
     ];
 
-    $this->buildThreadSection($form, $thread, $lastReadAt, $viewerRole);
+    $this->buildThreadSection($form, $thread, $attachmentsByMessageId, $lastReadAt, $viewerRole);
 
     $form['message'] = [
       '#type' => 'textarea',
@@ -168,25 +173,25 @@ final class ApplicationMessageForm extends FormBase {
     $recipientMail = $this->resolveApplicationRecipientMail($this->application, $salesperson);
     $projectLabel = $this->resolveApplicationProjectLabel($this->application);
     $recipientLangcode = ($salesperson && method_exists($salesperson, 'getPreferredLangcode') && $salesperson->getPreferredLangcode() !== '')
-      ? $salesperson->getPreferredLangcode()
-      : ($this->currentUser->getPreferredLangcode() ?: 'fi');
+        ? $salesperson->getPreferredLangcode()
+        : ($this->currentUser->getPreferredLangcode() ?: 'fi');
 
     $this->messageManager->createMessage(
-      (int) $this->application->id(),
-      (int) $this->application->getProjectId(),
-      $body,
-      'customer',
-      (int) $this->currentUser->id(),
-      $salesperson ? (int) $salesperson->id() : NULL,
-      $recipientMail,
-    );
+          (int) $this->application->id(),
+          (int) $this->application->getProjectId(),
+          $body,
+          'customer',
+          (int) $this->currentUser->id(),
+          $salesperson ? (int) $salesperson->id() : NULL,
+          $recipientMail,
+      );
 
     if ($recipientMail !== '') {
       $subject = (string) $this->t(
-        'New message about application @id',
-        ['@id' => (string) $this->application->id()],
-        ['langcode' => $recipientLangcode],
-      );
+            'New message about application @id',
+            ['@id' => (string) $this->application->id()],
+            ['langcode' => $recipientLangcode],
+        );
       $salesThreadUrl = $this->getSalesThreadUrl();
       $senderName = $this->resolveSenderName();
       $lines = [
@@ -196,26 +201,32 @@ final class ApplicationMessageForm extends FormBase {
         (string) $this->t('Application ID: @id', ['@id' => (string) $this->application->id()], ['langcode' => $recipientLangcode]),
         (string) $this->t('Sender: @name', ['@name' => $senderName], ['langcode' => $recipientLangcode]),
       ];
-      $lines = array_merge($lines, [
-        '',
-        (string) $this->t('Message content:', [], ['langcode' => $recipientLangcode]),
-        '',
-        $body,
-        '',
-      ]);
+      $lines = array_merge(
+            $lines, [
+              '',
+              (string) $this->t('Message content:', [], ['langcode' => $recipientLangcode]),
+              '',
+              $body,
+              '',
+            ]
+        );
 
       if ($salesThreadUrl !== '') {
         $lines[] = (string) $this->t('Open chat: @url', ['@url' => $salesThreadUrl], ['langcode' => $recipientLangcode]);
       }
 
-      $lines = array_merge($lines, [
-        (string) $this->t('This is an automated message. Please do not reply to this email.', [], ['langcode' => $recipientLangcode]),
-      ]);
+      $lines = array_merge(
+            $lines, [
+              (string) $this->t('This is an automated message. Please do not reply to this email.', [], ['langcode' => $recipientLangcode]),
+            ]
+        );
 
-      $this->mailManager->mail('asu_application', 'application_message_notification', $recipientMail, $recipientLangcode, [
-        'subject' => $subject,
-        'message_lines' => $lines,
-      ], NULL, TRUE);
+      $this->mailManager->mail(
+            'asu_application', 'application_message_notification', $recipientMail, $recipientLangcode, [
+              'subject' => $subject,
+              'message_lines' => $lines,
+            ], NULL, TRUE
+        );
     }
     else {
       $this->messenger()->addWarning($this->t('The message was saved, but no salesperson email address was found.'));
@@ -230,11 +241,11 @@ final class ApplicationMessageForm extends FormBase {
    */
   private function resolveSenderName(): string {
     return $this->resolveNotificationSenderName(
-      $this->currentUser,
-      $this->backendApi,
-      $this->entityTypeManager,
-      (string) $this->t('Customer'),
-    );
+          $this->currentUser,
+          $this->backendApi,
+          $this->entityTypeManager,
+          (string) $this->t('Customer'),
+      );
   }
 
   /**
@@ -279,8 +290,8 @@ final class ApplicationMessageForm extends FormBase {
       if (!array_key_exists($senderUid, $senderNamesByUid)) {
         $sender = $this->entityTypeManager->getStorage('user')->load($senderUid);
         $senderNamesByUid[$senderUid] = $sender && $sender->getDisplayName() !== ''
-          ? $sender->getDisplayName()
-          : '';
+                ? $sender->getDisplayName()
+                : '';
       }
 
       if ($senderNamesByUid[$senderUid] !== '') {
@@ -295,8 +306,8 @@ final class ApplicationMessageForm extends FormBase {
     }
 
     return $senderRole === 'sales'
-      ? (string) $this->t('Sales agent')
-      : (string) $this->t('Customer');
+        ? (string) $this->t('Sales agent')
+        : (string) $this->t('Customer');
   }
 
   /**
@@ -324,12 +335,14 @@ final class ApplicationMessageForm extends FormBase {
    *   Form render array.
    * @param array<int, mixed> $thread
    *   Thread messages.
+   * @param array<int, array<int, array<string, mixed>>> $attachmentsByMessageId
+   *   Attachments indexed by message id.
    * @param int $lastReadAt
    *   Viewer last-read timestamp.
    * @param string $viewerRole
    *   Viewer role side.
    */
-  private function buildThreadSection(array &$form, array $thread, int $lastReadAt, string $viewerRole): void {
+  private function buildThreadSection(array &$form, array $thread, array $attachmentsByMessageId, int $lastReadAt, string $viewerRole): void {
     if ($thread === []) {
       $form['thread_empty'] = [
         '#type' => 'item',
@@ -342,7 +355,13 @@ final class ApplicationMessageForm extends FormBase {
     $items = [];
     $senderNamesByUid = [];
     foreach ($thread as $message) {
-      $items[] = $this->buildThreadItemMarkup($message, $senderNamesByUid, $lastReadAt, $viewerRole);
+      $items[] = $this->buildThreadItemMarkup(
+            $message,
+            $senderNamesByUid,
+            $attachmentsByMessageId[(int) $message->id()] ?? [],
+            $lastReadAt,
+            $viewerRole,
+        );
     }
 
     $form['thread'] = [
@@ -358,26 +377,99 @@ final class ApplicationMessageForm extends FormBase {
   /**
    * Builds one message item HTML for the thread list.
    */
-  private function buildThreadItemMarkup($message, array &$senderNamesByUid, int $lastReadAt, string $viewerRole): Markup {
+  private function buildThreadItemMarkup($message, array &$senderNamesByUid, array $attachments, int $lastReadAt, string $viewerRole): Markup {
     $senderLabel = $this->resolveMessageSenderName($message, $senderNamesByUid);
     $created = (int) ($message->get('created')->value ?? 0);
     $senderRole = (string) ($message->get('sender_role')->value ?? 'customer');
     $isUnread = $created > $lastReadAt
-      && $this->isIncomingMessageForViewer($senderRole, $viewerRole);
+        && $this->isIncomingMessageForViewer($senderRole, $viewerRole);
+    $isOutgoing = !$this->isIncomingMessageForViewer($senderRole, $viewerRole);
     $body = nl2br(Html::escape((string) $message->get('body')->value));
     $timestamp = $created > 0 ? $this->dateFormatter->format($created, 'custom', 'd.m.Y H:i') : '';
-    $messageClasses = 'application-message-form__message' . ($isUnread ? ' application-message-form__message--new' : '');
+    $messageClasses = 'application-message-form__message'
+        . ($isUnread ? ' application-message-form__message--new' : '')
+        . ($isOutgoing ? ' application-message-form__message--outgoing' : ' application-message-form__message--incoming');
     $newLabel = $isUnread
-      ? '<span class="application-message-form__new-label">' . Html::escape((string) $this->t('New')) . '</span>'
-      : '';
+        ? '<span class="application-message-form__new-label">' . Html::escape((string) $this->t('New')) . '</span>'
+        : '';
+    $attachmentsMarkup = '';
+    if ($attachments !== []) {
+      $attachmentItems = [];
+      foreach ($attachments as $attachment) {
+        if (!is_array($attachment)) {
+          continue;
+        }
+
+        $name = Html::escape((string) ($attachment['display_name'] ?? 'attachment'));
+        $openUrl = (string) ($attachment['open_url'] ?? '');
+        $downloadUrl = (string) ($attachment['download_url'] ?? '');
+
+        if (($openUrl === '' || !str_starts_with($openUrl, '/')) && str_starts_with($downloadUrl, '/')) {
+          $openUrl = str_replace('/download', '/open', $downloadUrl);
+        }
+
+        if ($downloadUrl === '' || !str_starts_with($downloadUrl, '/') || $openUrl === '' || !str_starts_with($openUrl, '/')) {
+          continue;
+        }
+
+        $size = $this->formatAttachmentSize((int) ($attachment['size_bytes'] ?? 0));
+        $openHref = Html::escape($openUrl);
+        $downloadHref = Html::escape($downloadUrl);
+        $attachmentItems[] = '<li class="application-message-form__attachment-item">'
+                . '<span class="application-message-form__attachment-file" title="' . $name . '">'
+                . '<span class="application-message-form__attachment-name">' . $name . '</span>'
+                . '<span class="application-message-form__attachment-size"> (' . Html::escape($size) . ')</span>'
+                . '</span>'
+                . '<span class="application-message-form__attachment-actions">'
+                . '<a class="hds-button hds-button--secondary" href="' . $openHref . '">' . Html::escape((string) $this->t('Open')) . '</a>'
+                . '<a class="hds-button hds-button--secondary" href="' . $downloadHref . '">' . Html::escape((string) $this->t('Download')) . '</a>'
+                . '</span>'
+                . '</li>';
+      }
+
+      if ($attachmentItems !== []) {
+        $attachmentsMarkup = '<div class="application-message-form__attachments">'
+                . '<strong>' . Html::escape((string) $this->t('Files in message (@count)', ['@count' => count($attachmentItems)])) . '</strong>'
+                . '<ul>' . implode('', $attachmentItems) . '</ul>'
+                . '</div>';
+      }
+    }
 
     return Markup::create(
-      '<div class="' . $messageClasses . '">'
-      . '<p><strong>' . Html::escape($senderLabel) . '</strong>'
-      . ($timestamp !== '' ? ' <span>' . Html::escape($timestamp) . '</span>' : '')
-      . $newLabel
-      . '</p><div>' . $body . '</div></div>'
-    );
+          '<div class="' . $messageClasses . '">'
+          . '<div class="application-message-form__message-header">'
+          . '<strong class="application-message-form__sender">' . Html::escape($senderLabel) . '</strong>'
+          . ($timestamp !== '' ? ' <span class="application-message-form__message-meta">' . Html::escape($timestamp) . '</span>' : '')
+          . $newLabel
+          . '</div>'
+          . '<div class="application-message-form__message-body">' . $body . '</div>'
+          . $attachmentsMarkup
+          . '</div>'
+      );
+  }
+
+  /**
+   * Formats attachment size for compact display.
+   */
+  private function formatAttachmentSize(int $sizeBytes): string {
+    if ($sizeBytes <= 0) {
+      return '0B';
+    }
+
+    $units = ['B', 'KB', 'MB', 'GB'];
+    $value = (float) $sizeBytes;
+    $unitIndex = 0;
+
+    while ($value >= 1024 && $unitIndex < count($units) - 1) {
+      $value /= 1024;
+      $unitIndex++;
+    }
+
+    if ($unitIndex === 0) {
+      return (string) ((int) $value) . $units[$unitIndex];
+    }
+
+    return number_format($value, 1, '.', '') . $units[$unitIndex];
   }
 
 }

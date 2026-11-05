@@ -11,7 +11,6 @@
         "composer/installers": "^2.3",
         "cweagans/composer-patches": "^2.0",
         "dinbror/blazy": "^1.8",
-        "druidfi/gdpr-mysqldump": "^2.0",
         "druidfi/omen": "^0.9.0",
         "drupal/api_tools": "^1.0",
         "drupal/auto_entitylabel": "^3.4",
@@ -72,7 +71,7 @@
         "drupal/restui": "^1.22",
         "drupal/route_condition": "^2.0",
         "drupal/samlauth": "^3.13",
-        "drupal/simple_oauth": "5.2.5",
+        "drupal/simple_oauth": "5.2.6",
         "drupal/siteimprove": "^3.0",
         "drupal/slick": "^3.0",
         "drupal/symfony_mailer_lite": "^2.0",
@@ -178,9 +177,7 @@
             "drupal/simple_oauth": {
                 "[D11] Allow installing simple_oauth 5.x on Drupal 11": "patches/simple_oauth-drupal11-core-version.patch",
                 "[D11] Fix simple_oauth normalizer signatures for Symfony 7": "patches/simple_oauth-symfony7-normalizer-signatures.patch",
-                "[D11] Replace watchdog_exception() usage": "patches/simple_oauth-drupal11-watchdog-exception.patch",
                 "[Symfony 7] Fix BasicAuthSwap handle signature": "patches/simple_oauth-symfony7-basicauthswap-handle-signature.patch",
-                "[PHP 7.4+] Initialize ResourceServer subject property": "patches/simple_oauth-resource-server-subject-init.patch",
                 "[D11.1] Implement EntityInterface::getBundleEntity/getOriginal/setOriginal on TokenAuthUser": "patches/simple_oauth-d11-entity-interface-methods.patch"
             },
             "drupal/config_terms": {
