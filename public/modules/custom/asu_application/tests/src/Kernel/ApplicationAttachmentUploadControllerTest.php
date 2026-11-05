@@ -61,9 +61,9 @@ final class ApplicationAttachmentUploadControllerTest extends KernelTestBase {
   private User $salesDenied;
 
   /**
-    * Service account authorized via REST permission.
+   * Service account authorized via REST permission.
    */
-    private AccountInterface $serviceClientAccount;
+  private AccountInterface $serviceClientAccount;
 
   /**
    * {@inheritdoc}
@@ -79,10 +79,12 @@ final class ApplicationAttachmentUploadControllerTest extends KernelTestBase {
     $this->installEntitySchema('application_type');
     $this->installSchema('system', ['sequences']);
 
-    ApplicationType::create([
-      'id' => 'hitas',
-      'label' => 'Hitas',
-    ])->save();
+    ApplicationType::create(
+          [
+            'id' => 'hitas',
+            'label' => 'Hitas',
+          ]
+      )->save();
     $this->container->get('entity_type.bundle.info')->clearCachedBundles();
 
     $this->installEntitySchema('asu_application');
@@ -108,80 +110,124 @@ final class ApplicationAttachmentUploadControllerTest extends KernelTestBase {
     }
     $restClientRole->save();
 
-    $owner = User::create([
-      'name' => 'upload-owner',
-      'mail' => 'upload-owner@example.com',
-      'status' => 1,
-    ]);
+    $owner = User::create(
+          [
+            'name' => 'upload-owner',
+            'mail' => 'upload-owner@example.com',
+            'status' => 1,
+          ]
+      );
     $owner->addRole('customer');
     $owner->save();
     $this->customerOwner = $owner;
 
-    $this->salesAllowed = User::create([
-      'name' => 'sales-allowed',
-      'mail' => 'sales-allowed@example.com',
-      'status' => 1,
-    ]);
+    $this->salesAllowed = User::create(
+          [
+            'name' => 'sales-allowed',
+            'mail' => 'sales-allowed@example.com',
+            'status' => 1,
+          ]
+      );
     $this->salesAllowed->addRole('sales');
     $this->salesAllowed->addRole('upload_admin');
     $this->salesAllowed->save();
 
-    $this->salesDenied = User::create([
-      'name' => 'sales-denied',
-      'mail' => 'sales-denied@example.com',
-      'status' => 1,
-    ]);
+    $this->salesDenied = User::create(
+          [
+            'name' => 'sales-denied',
+            'mail' => 'sales-denied@example.com',
+            'status' => 1,
+          ]
+      );
     $this->salesDenied->addRole('sales');
     $this->salesDenied->save();
 
     $this->serviceClientAccount = new class() implements AccountInterface {
+
+      /**
+       * Returns fixed service account id.
+       */
       public function id() {
         return 9001;
       }
 
+      /**
+       * Returns service account roles.
+       */
       public function getRoles($exclude_locked_roles = FALSE) {
         return $exclude_locked_roles ? ['rest_client'] : ['authenticated', 'rest_client'];
       }
 
+      /**
+       * Grants only REST post permission.
+       */
       public function hasPermission(string $permission) {
         return $permission === 'restful post asu_application_messages';
       }
 
+      /**
+       * Indicates authenticated account.
+       */
       public function isAuthenticated() {
         return TRUE;
       }
 
+      /**
+       * Indicates non-anonymous account.
+       */
       public function isAnonymous() {
         return FALSE;
       }
 
+      /**
+       * Returns preferred content language.
+       */
       public function getPreferredLangcode($fallback_to_default = TRUE) {
         return 'fi';
       }
 
+      /**
+       * Returns preferred admin language.
+       */
       public function getPreferredAdminLangcode($fallback_to_default = TRUE) {
         return 'fi';
       }
 
+      /**
+       * Returns account machine name.
+       */
       public function getAccountName() {
         return 'service-client';
       }
 
+      /**
+       * Returns display name.
+       */
       public function getDisplayName() {
         return 'Service Client';
       }
 
+      /**
+       * Returns no email for service account.
+       */
       public function getEmail() {
         return NULL;
       }
 
+      /**
+       * Returns fixed timezone.
+       */
       public function getTimeZone() {
         return 'UTC';
       }
 
+      /**
+       * Returns fixed access timestamp.
+       */
       public function getLastAccessedTime() {
         return 0;
       }
+
     };
 
     $this->container->get('current_user')->setAccount($owner);
@@ -192,11 +238,13 @@ final class ApplicationAttachmentUploadControllerTest extends KernelTestBase {
     }
     $this->container->get('request_stack')->push($request);
 
-    $this->application = Application::create([
-      'bundle' => 'hitas',
-      'project_id' => 42,
-      'status' => 1,
-    ]);
+    $this->application = Application::create(
+          [
+            'bundle' => 'hitas',
+            'project_id' => 42,
+            'status' => 1,
+          ]
+      );
     $this->application->save();
 
     // Ensure attachment tables and settings are present.
@@ -220,11 +268,13 @@ final class ApplicationAttachmentUploadControllerTest extends KernelTestBase {
 
     // Kernel fileinfo can report variant MIME labels for fixture files.
     $this->config('asu_application.settings')
-      ->set('attachments.allowed_mime_types', [
-        'application/pdf',
-        'application/x-pdf',
-        'application/octet-stream',
-      ])
+      ->set(
+              'attachments.allowed_mime_types', [
+                'application/pdf',
+                'application/x-pdf',
+                'application/octet-stream',
+              ]
+          )
       ->set('attachments.max_file_size_bytes', 20971520)
       ->set('attachments.rate_limit.upload_per_user', 20)
       ->set('attachments.rate_limit.window_seconds', 60)
@@ -253,16 +303,16 @@ final class ApplicationAttachmentUploadControllerTest extends KernelTestBase {
    */
   public function testServiceClientSalesContextUploadSuccess(): void {
     $response = $this->uploadAs(
-      $this->serviceClientAccount,
-      'service-ok.pdf',
-      'application/pdf',
-      $this->pdfFixture(64),
-      [
-        'sender_role' => 'sales',
-        'viewer_role' => 'sales',
-        'sales_shared' => '1',
-      ],
-    );
+          $this->serviceClientAccount,
+          'service-ok.pdf',
+          'application/pdf',
+          $this->pdfFixture(64),
+          [
+            'sender_role' => 'sales',
+            'viewer_role' => 'sales',
+            'sales_shared' => '1',
+          ],
+      );
 
     $this->assertSame(201, $response->getStatusCode());
     $payload = json_decode((string) $response->getContent(), TRUE);
@@ -275,27 +325,29 @@ final class ApplicationAttachmentUploadControllerTest extends KernelTestBase {
    */
   public function testOctetStreamPdfExtensionIsAccepted(): void {
     $this->config('asu_application.settings')
-      ->set('attachments.allowed_mime_types', [
-        'application/pdf',
-        'image/jpeg',
-        'image/png',
-        'text/plain',
-        'application/msword',
-        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-      ])
+      ->set(
+              'attachments.allowed_mime_types', [
+                'application/pdf',
+                'image/jpeg',
+                'image/png',
+                'text/plain',
+                'application/msword',
+                'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+              ]
+          )
       ->save();
 
     $response = $this->uploadAs(
-      $this->serviceClientAccount,
-      'from-django.pdf',
-      'application/octet-stream',
-      $this->pdfFixture(96),
-      [
-        'sender_role' => 'sales',
-        'viewer_role' => 'sales',
-        'sales_shared' => '1',
-      ],
-    );
+          $this->serviceClientAccount,
+          'from-django.pdf',
+          'application/octet-stream',
+          $this->pdfFixture(96),
+          [
+            'sender_role' => 'sales',
+            'viewer_role' => 'sales',
+            'sales_shared' => '1',
+          ],
+      );
 
     $this->assertSame(201, $response->getStatusCode());
     $payload = json_decode((string) $response->getContent(), TRUE);
@@ -303,27 +355,29 @@ final class ApplicationAttachmentUploadControllerTest extends KernelTestBase {
   }
 
   /**
-   * Generic octet-stream upload fails when content signature mismatches extension.
+   * Generic octet-stream upload fails when signature mismatches extension.
    */
   public function testOctetStreamExtensionMismatchReturns422(): void {
     $this->config('asu_application.settings')
-      ->set('attachments.allowed_mime_types', [
-        'application/pdf',
-        'text/plain',
-      ])
+      ->set(
+              'attachments.allowed_mime_types', [
+                'application/pdf',
+                'text/plain',
+              ]
+          )
       ->save();
 
     $response = $this->uploadAs(
-      $this->serviceClientAccount,
-      'spoofed.pdf',
-      'application/octet-stream',
-      "not-a-pdf\n",
-      [
-        'sender_role' => 'sales',
-        'viewer_role' => 'sales',
-        'sales_shared' => '1',
-      ],
-    );
+          $this->serviceClientAccount,
+          'spoofed.pdf',
+          'application/octet-stream',
+          "not-a-pdf\n",
+          [
+            'sender_role' => 'sales',
+            'viewer_role' => 'sales',
+            'sales_shared' => '1',
+          ],
+      );
 
     $this->assertSame(422, $response->getStatusCode());
     $payload = json_decode((string) $response->getContent(), TRUE);
@@ -352,11 +406,13 @@ final class ApplicationAttachmentUploadControllerTest extends KernelTestBase {
    */
   public function testTooLargeReturns422(): void {
     $this->config('asu_application.settings')
-      ->set('attachments.allowed_mime_types', [
-        'application/pdf',
-        'application/x-pdf',
-        'application/octet-stream',
-      ])
+      ->set(
+              'attachments.allowed_mime_types', [
+                'application/pdf',
+                'application/x-pdf',
+                'application/octet-stream',
+              ]
+          )
       ->set('attachments.max_file_size_bytes', 2)
       ->save();
 
@@ -384,14 +440,14 @@ final class ApplicationAttachmentUploadControllerTest extends KernelTestBase {
    */
   public function testCustomerUploadForbidden(): void {
     $response = $this->uploadAs(
-      $this->customerOwner,
-      'customer.pdf',
-      'application/pdf',
-      $this->pdfFixture(64),
-      [
-        'sender_role' => 'customer',
-      ],
-    );
+          $this->customerOwner,
+          'customer.pdf',
+          'application/pdf',
+          $this->pdfFixture(64),
+          [
+            'sender_role' => 'customer',
+          ],
+      );
 
     $this->assertSame(403, $response->getStatusCode());
     $payload = json_decode((string) $response->getContent(), TRUE);
@@ -400,35 +456,35 @@ final class ApplicationAttachmentUploadControllerTest extends KernelTestBase {
   }
 
   /**
-   * sales_shared and viewer_role participate in ACL decisions.
+   * Sales_shared and viewer_role participate in ACL decisions.
    */
   public function testSalesSharedAndViewerRoleAffectAcl(): void {
     $roleMismatch = $this->uploadAs(
-      $this->serviceClientAccount,
-      'role-mismatch.pdf',
-      'application/pdf',
-      $this->pdfFixture(64),
-      [
-        'sender_role' => 'sales',
-        'viewer_role' => 'customer',
-        'sales_shared' => '1',
-      ],
-    );
+          $this->serviceClientAccount,
+          'role-mismatch.pdf',
+          'application/pdf',
+          $this->pdfFixture(64),
+          [
+            'sender_role' => 'sales',
+            'viewer_role' => 'customer',
+            'sales_shared' => '1',
+          ],
+      );
     $this->assertSame(403, $roleMismatch->getStatusCode());
     $rolePayload = json_decode((string) $roleMismatch->getContent(), TRUE);
     $this->assertSame('viewer_role_mismatch', $rolePayload['code']);
 
     $missingShared = $this->uploadAs(
-      $this->serviceClientAccount,
-      'shared-required.pdf',
-      'application/pdf',
-      $this->pdfFixture(64),
-      [
-        'sender_role' => 'sales',
-        'viewer_role' => 'sales',
-        'sales_shared' => '0',
-      ],
-    );
+          $this->serviceClientAccount,
+          'shared-required.pdf',
+          'application/pdf',
+          $this->pdfFixture(64),
+          [
+            'sender_role' => 'sales',
+            'viewer_role' => 'sales',
+            'sales_shared' => '0',
+          ],
+      );
     $this->assertSame(403, $missingShared->getStatusCode());
     $sharedPayload = json_decode((string) $missingShared->getContent(), TRUE);
     $this->assertSame('sales_shared_required', $sharedPayload['code']);
@@ -472,16 +528,16 @@ final class ApplicationAttachmentUploadControllerTest extends KernelTestBase {
    */
   public function testMissingFileReturns422(): void {
     $request = $this->buildUploadRequest(
-      'nofile.pdf',
-      'application/pdf',
-      $this->pdfFixture(64),
-      [
-        'sender_role' => 'sales',
-        'viewer_role' => 'sales',
-        'sales_shared' => '1',
-      ],
-      FALSE,
-    );
+          'nofile.pdf',
+          'application/pdf',
+          $this->pdfFixture(64),
+          [
+            'sender_role' => 'sales',
+            'viewer_role' => 'sales',
+            'sales_shared' => '1',
+          ],
+          FALSE,
+      );
     $this->container->get('request_stack')->push($request);
     \Drupal::currentUser()->setAccount($this->serviceClientAccount);
 
@@ -518,12 +574,12 @@ final class ApplicationAttachmentUploadControllerTest extends KernelTestBase {
     file_put_contents($tmpPath, $content);
 
     $uploaded = new UploadedFile(
-      $tmpPath,
-      $filename,
-      $mimeType,
-      NULL,
-      TRUE,
-    );
+          $tmpPath,
+          $filename,
+          $mimeType,
+          NULL,
+          TRUE,
+      );
 
     $postData = [
       'application_id' => (int) $this->application->id(),

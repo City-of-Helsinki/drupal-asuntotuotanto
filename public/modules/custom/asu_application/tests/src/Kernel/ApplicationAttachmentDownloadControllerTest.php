@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\asu_application\Kernel;
 
+use Drupal\file\Entity\File;
+use Drupal\Core\File\FileSystemInterface;
+use Drupal\Core\Session\AnonymousUserSession;
 use Drupal\asu_application\Controller\ApplicationAttachmentDownloadController;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\user\Entity\User;
@@ -85,7 +88,7 @@ final class ApplicationAttachmentDownloadControllerTest extends KernelTestBase {
     $attachmentId = $this->createAttachment('offer.txt', 'text/plain');
     $this->linkAttachmentToMessage($messageId, $attachmentId);
 
-    \Drupal::currentUser()->setAccount(new \Drupal\Core\Session\AnonymousUserSession());
+    \Drupal::currentUser()->setAccount(new AnonymousUserSession());
     $controller = $this->controller();
     $response = $controller->download($attachmentId);
 
@@ -157,7 +160,7 @@ final class ApplicationAttachmentDownloadControllerTest extends KernelTestBase {
    * Email deep-link redirects anonymous users to login with destination.
    */
   public function testOpenRouteRedirectsAnonymousToLogin(): void {
-    \Drupal::currentUser()->setAccount(new \Drupal\Core\Session\AnonymousUserSession());
+    \Drupal::currentUser()->setAccount(new AnonymousUserSession());
 
     $controller = $this->controller();
     $response = $controller->open(123);
@@ -170,11 +173,13 @@ final class ApplicationAttachmentDownloadControllerTest extends KernelTestBase {
    * Creates a user account.
    */
   private function createUser(string $email): User {
-    $user = User::create([
-      'name' => $email,
-      'mail' => $email,
-      'status' => 1,
-    ]);
+    $user = User::create(
+          [
+            'name' => $email,
+            'mail' => $email,
+            'status' => 1,
+          ]
+      );
     $user->save();
 
     return $user;
@@ -185,14 +190,16 @@ final class ApplicationAttachmentDownloadControllerTest extends KernelTestBase {
    */
   private function createMessageForRecipient(string $recipientEmail): int {
     $storage = $this->container->get('entity_type.manager')->getStorage('asu_application_message');
-    $message = $storage->create([
-      'application_id' => 9001,
-      'project_id' => 5001,
-      'sender_role' => 'sales',
-      'recipient_mail' => $recipientEmail,
-      'body' => 'Attachment test message',
-      'created' => 1700000000,
-    ]);
+    $message = $storage->create(
+          [
+            'application_id' => 9001,
+            'project_id' => 5001,
+            'sender_role' => 'sales',
+            'recipient_mail' => $recipientEmail,
+            'body' => 'Attachment test message',
+            'created' => 1700000000,
+          ]
+      );
     $message->save();
 
     return (int) $message->id();
@@ -210,31 +217,35 @@ final class ApplicationAttachmentDownloadControllerTest extends KernelTestBase {
     int $archived = 0,
   ): int {
     $fileSystem = $this->container->get('file_system');
-    $uri = $fileSystem->saveData('file-content', 'temporary://' . $filename, \Drupal\Core\File\FileSystemInterface::EXISTS_REPLACE);
+    $uri = $fileSystem->saveData('file-content', 'temporary://' . $filename, FileSystemInterface::EXISTS_REPLACE);
 
-    $file = \Drupal\file\Entity\File::create([
-      'uri' => $uri,
-      'filename' => $filename,
-      'filemime' => $mimeType,
-      'status' => 1,
-    ]);
+    $file = File::create(
+          [
+            'uri' => $uri,
+            'filename' => $filename,
+            'filemime' => $mimeType,
+            'status' => 1,
+          ]
+      );
     $file->save();
 
     $insertId = (int) $this->container->get('database')->insert('asu_application_attachment')
-      ->fields([
-        'display_name' => $filename,
-        'mime_type' => $mimeType,
-        'size_bytes' => 1024,
-        'storage_uri' => (string) $uri,
-        'file_id' => (int) $file->id(),
-        'media_id' => 0,
-        'active' => $active,
-        'customer_visible' => $customerVisible,
-        'revoked' => $revoked,
-        'archived' => $archived,
-        'created' => 1700000000,
-        'created_by' => 1,
-      ])
+      ->fields(
+              [
+                'display_name' => $filename,
+                'mime_type' => $mimeType,
+                'size_bytes' => 1024,
+                'storage_uri' => (string) $uri,
+                'file_id' => (int) $file->id(),
+                'media_id' => 0,
+                'active' => $active,
+                'customer_visible' => $customerVisible,
+                'revoked' => $revoked,
+                'archived' => $archived,
+                'created' => 1700000000,
+                'created_by' => 1,
+              ]
+          )
       ->execute();
 
     return $insertId;
@@ -245,13 +256,15 @@ final class ApplicationAttachmentDownloadControllerTest extends KernelTestBase {
    */
   private function linkAttachmentToMessage(int $messageId, int $attachmentId): void {
     $this->container->get('database')->insert('asu_application_message_attachment')
-      ->fields([
-        'message_id' => $messageId,
-        'attachment_id' => $attachmentId,
-        'ordering' => 0,
-        'attached_at' => 1700000000,
-        'attached_by' => 1,
-      ])
+      ->fields(
+              [
+                'message_id' => $messageId,
+                'attachment_id' => $attachmentId,
+                'ordering' => 0,
+                'attached_at' => 1700000000,
+                'attached_by' => 1,
+              ]
+          )
       ->execute();
   }
 
@@ -260,10 +273,10 @@ final class ApplicationAttachmentDownloadControllerTest extends KernelTestBase {
    */
   private function requestDownload(User $user, int $attachmentId) {
     $request = Request::create('/user/application/attachments/' . $attachmentId . '/download', 'GET');
-      $current = $this->container->get('request_stack')->getCurrentRequest();
-      if ($current && $current->hasSession()) {
-        $request->setSession($current->getSession());
-      }
+    $current = $this->container->get('request_stack')->getCurrentRequest();
+    if ($current && $current->hasSession()) {
+      $request->setSession($current->getSession());
+    }
     $this->container->get('request_stack')->push($request);
 
     \Drupal::currentUser()->setAccount($user);

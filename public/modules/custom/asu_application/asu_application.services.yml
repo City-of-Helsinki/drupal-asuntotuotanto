@@ -37,7 +37,6 @@ services:
       - '@logger.channel.asu_application'
       - '@flood'
       - '@config.factory'
-      - '@file.repository'
       - '@file_system'
 
   asu_application.application_subscriber:

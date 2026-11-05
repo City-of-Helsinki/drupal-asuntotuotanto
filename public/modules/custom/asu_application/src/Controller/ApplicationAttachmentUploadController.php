@@ -216,6 +216,10 @@ final class ApplicationAttachmentUploadController extends ControllerBase {
   /**
    * Logs denied upload attempts without leaking sensitive request content.
    *
+   * @param string $reason
+   *   Denial reason key.
+   * @param int $uid
+   *   Authenticated user id.
    * @param array<string, mixed> $context
    *   Additional context fields.
    */
