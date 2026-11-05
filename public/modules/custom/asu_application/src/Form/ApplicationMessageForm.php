@@ -377,9 +377,12 @@ final class ApplicationMessageForm extends FormBase {
     $senderRole = (string) ($message->get('sender_role')->value ?? 'customer');
     $isUnread = $created > $lastReadAt
       && $this->isIncomingMessageForViewer($senderRole, $viewerRole);
+    $isOutgoing = !$this->isIncomingMessageForViewer($senderRole, $viewerRole);
     $body = nl2br(Html::escape((string) $message->get('body')->value));
     $timestamp = $created > 0 ? $this->dateFormatter->format($created, 'custom', 'd.m.Y H:i') : '';
-    $messageClasses = 'application-message-form__message' . ($isUnread ? ' application-message-form__message--new' : '');
+    $messageClasses = 'application-message-form__message'
+      . ($isUnread ? ' application-message-form__message--new' : '')
+      . ($isOutgoing ? ' application-message-form__message--outgoing' : ' application-message-form__message--incoming');
     $newLabel = $isUnread
       ? '<span class="application-message-form__new-label">' . Html::escape((string) $this->t('New')) . '</span>'
       : '';
@@ -392,18 +395,35 @@ final class ApplicationMessageForm extends FormBase {
         }
 
         $name = Html::escape((string) ($attachment['display_name'] ?? 'attachment'));
+        $openUrl = (string) ($attachment['open_url'] ?? '');
         $downloadUrl = (string) ($attachment['download_url'] ?? '');
-        if ($downloadUrl === '' || !str_starts_with($downloadUrl, '/')) {
+
+        if (($openUrl === '' || !str_starts_with($openUrl, '/')) && str_starts_with($downloadUrl, '/')) {
+          $openUrl = str_replace('/download', '/open', $downloadUrl);
+        }
+
+        if ($downloadUrl === '' || !str_starts_with($downloadUrl, '/') || $openUrl === '' || !str_starts_with($openUrl, '/')) {
           continue;
         }
 
-        $href = Html::escape($downloadUrl);
-        $attachmentItems[] = '<li><a href="' . $href . '">' . $name . '</a></li>';
+        $size = $this->formatAttachmentSize((int) ($attachment['size_bytes'] ?? 0));
+        $openHref = Html::escape($openUrl);
+        $downloadHref = Html::escape($downloadUrl);
+        $attachmentItems[] = '<li class="application-message-form__attachment-item">'
+          . '<span class="application-message-form__attachment-file" title="' . $name . '">'
+          . '<span class="application-message-form__attachment-name">' . $name . '</span>'
+          . '<span class="application-message-form__attachment-size"> (' . Html::escape($size) . ')</span>'
+          . '</span>'
+          . '<span class="application-message-form__attachment-actions">'
+          . '<a class="hds-button hds-button--secondary" href="' . $openHref . '">' . Html::escape((string) $this->t('Open')) . '</a>'
+          . '<a class="hds-button hds-button--secondary" href="' . $downloadHref . '">' . Html::escape((string) $this->t('Download')) . '</a>'
+          . '</span>'
+          . '</li>';
       }
 
       if ($attachmentItems !== []) {
         $attachmentsMarkup = '<div class="application-message-form__attachments">'
-          . '<strong>' . Html::escape((string) $this->t('Attachments')) . ':</strong>'
+          . '<strong>' . Html::escape((string) $this->t('Files in message (@count)', ['@count' => count($attachmentItems)])) . '</strong>'
           . '<ul>' . implode('', $attachmentItems) . '</ul>'
           . '</div>';
       }
@@ -411,13 +431,39 @@ final class ApplicationMessageForm extends FormBase {
 
     return Markup::create(
       '<div class="' . $messageClasses . '">'
-      . '<p><strong>' . Html::escape($senderLabel) . '</strong>'
-      . ($timestamp !== '' ? ' <span>' . Html::escape($timestamp) . '</span>' : '')
+      . '<div class="application-message-form__message-header">'
+      . '<strong class="application-message-form__sender">' . Html::escape($senderLabel) . '</strong>'
+      . ($timestamp !== '' ? ' <span class="application-message-form__message-meta">' . Html::escape($timestamp) . '</span>' : '')
       . $newLabel
-      . '</p><div>' . $body . '</div>'
+      . '</div>'
+      . '<div class="application-message-form__message-body">' . $body . '</div>'
       . $attachmentsMarkup
       . '</div>'
     );
+  }
+
+  /**
+   * Formats attachment size for compact display.
+   */
+  private function formatAttachmentSize(int $sizeBytes): string {
+    if ($sizeBytes <= 0) {
+      return '0B';
+    }
+
+    $units = ['B', 'KB', 'MB', 'GB'];
+    $value = (float) $sizeBytes;
+    $unitIndex = 0;
+
+    while ($value >= 1024 && $unitIndex < count($units) - 1) {
+      $value /= 1024;
+      $unitIndex++;
+    }
+
+    if ($unitIndex === 0) {
+      return (string) ((int) $value) . $units[$unitIndex];
+    }
+
+    return number_format($value, 1, '.', '') . $units[$unitIndex];
   }
 
 }

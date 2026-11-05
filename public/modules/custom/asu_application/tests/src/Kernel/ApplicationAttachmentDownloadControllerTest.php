@@ -58,6 +58,23 @@ final class ApplicationAttachmentDownloadControllerTest extends KernelTestBase {
     $this->assertInstanceOf(BinaryFileResponse::class, $response);
     $this->assertSame(200, $response->getStatusCode());
     $this->assertSame('application/pdf', (string) $response->headers->get('Content-Type'));
+    $this->assertStringContainsString('attachment', (string) $response->headers->get('Content-Disposition'));
+  }
+
+  /**
+   * Open endpoint serves previewable files inline for authenticated users.
+   */
+  public function testCustomerCanOpenAttachmentInline(): void {
+    $customer = $this->createUser('customer-open@example.com');
+    $messageId = $this->createMessageForRecipient('customer-open@example.com');
+    $attachmentId = $this->createAttachment('offer-open.pdf', 'application/pdf');
+    $this->linkAttachmentToMessage($messageId, $attachmentId);
+
+    $response = $this->requestOpen($customer, $attachmentId);
+
+    $this->assertInstanceOf(BinaryFileResponse::class, $response);
+    $this->assertSame(200, $response->getStatusCode());
+    $this->assertStringContainsString('inline', (string) $response->headers->get('Content-Disposition'));
   }
 
   /**
@@ -146,7 +163,7 @@ final class ApplicationAttachmentDownloadControllerTest extends KernelTestBase {
     $response = $controller->open(123);
 
     $this->assertSame(302, $response->getStatusCode());
-    $this->assertStringContainsString('/user/login?destination=%2Fuser%2Fapplication%2Fattachments%2F123%2Fdownload', (string) $response->headers->get('Location'));
+    $this->assertStringContainsString('/user/login?destination=%2Fuser%2Fapplication%2Fattachments%2F123%2Fopen', (string) $response->headers->get('Location'));
   }
 
   /**
@@ -253,6 +270,23 @@ final class ApplicationAttachmentDownloadControllerTest extends KernelTestBase {
     $controller = $this->controller();
 
     return $controller->download($attachmentId);
+  }
+
+  /**
+   * Executes an open request as a user.
+   */
+  private function requestOpen(User $user, int $attachmentId) {
+    $request = Request::create('/user/application/attachments/' . $attachmentId . '/open', 'GET');
+    $current = $this->container->get('request_stack')->getCurrentRequest();
+    if ($current && $current->hasSession()) {
+      $request->setSession($current->getSession());
+    }
+    $this->container->get('request_stack')->push($request);
+
+    \Drupal::currentUser()->setAccount($user);
+    $controller = $this->controller();
+
+    return $controller->open($attachmentId);
   }
 
   /**

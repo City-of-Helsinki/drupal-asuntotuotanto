@@ -450,6 +450,7 @@ final class ApplicationAttachmentManager {
         'display_name' => (string) $row['display_name'],
         'mime_type' => (string) $row['mime_type'],
         'size_bytes' => (int) $row['size_bytes'],
+        'open_url' => '/user/application/attachments/' . $attachmentId . '/open',
         'download_url' => '/user/application/attachments/' . $attachmentId . '/download',
       ];
     }
