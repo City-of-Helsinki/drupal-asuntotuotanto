@@ -178,7 +178,6 @@
                 "[D11] Allow installing simple_oauth 5.x on Drupal 11": "patches/simple_oauth-drupal11-core-version.patch",
                 "[D11] Fix simple_oauth normalizer signatures for Symfony 7": "patches/simple_oauth-symfony7-normalizer-signatures.patch",
                 "[Symfony 7] Fix BasicAuthSwap handle signature": "patches/simple_oauth-symfony7-basicauthswap-handle-signature.patch",
-                "[PHP 7.4+] Initialize ResourceServer subject property": "patches/simple_oauth-resource-server-subject-init.patch",
                 "[D11.1] Implement EntityInterface::getBundleEntity/getOriginal/setOriginal on TokenAuthUser": "patches/simple_oauth-d11-entity-interface-methods.patch"
             },
             "drupal/config_terms": {
