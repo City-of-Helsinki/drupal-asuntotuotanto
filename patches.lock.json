@@ -1,5 +1,5 @@
 {
-    "_hash": "5c60dd1aaf7da39c763a0131db5fdf6e8a377053011ade15d0a8096427ec33a7",
+    "_hash": "5fbb8c68298e497e0b1834b680625243e62d54b2cbfadb2f5887262a1b497a97",
     "patches": {
         "drupal/helfi_platform_config": [
             {
@@ -49,16 +49,6 @@
                 "description": "[D11] Fix simple_oauth normalizer signatures for Symfony 7",
                 "url": "patches/simple_oauth-symfony7-normalizer-signatures.patch",
                 "sha256": "ad39d0a2b503ee3aeacf12fc2c77a7ff545a8649aa05e9ea33c683e90eaed9a0",
-                "depth": 1,
-                "extra": {
-                    "provenance": "root"
-                }
-            },
-            {
-                "package": "drupal/simple_oauth",
-                "description": "[D11] Replace watchdog_exception() usage",
-                "url": "patches/simple_oauth-drupal11-watchdog-exception.patch",
-                "sha256": "c7898af92e634b042d40c8b2005bfcccf7edfebdcffd4002a8a9c5783b7027b9",
                 "depth": 1,
                 "extra": {
                     "provenance": "root"
