@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\asu_application\Kernel;
 
+use Drupal\file\Entity\File;
+use Drupal\Core\File\FileSystemInterface;
 use Drupal\asu_application\ApplicationAttachmentManager;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\user\Entity\User;
@@ -59,20 +61,22 @@ final class ApplicationAttachmentInfrastructureTest extends KernelTestBase {
 
     $db = $this->container->get('database');
     $db->insert('asu_application_attachment')
-      ->fields([
-        'display_name' => 'idempotent.pdf',
-        'mime_type' => 'application/pdf',
-        'size_bytes' => 1000,
-        'storage_uri' => 'private://idempotent.pdf',
-        'file_id' => 1,
-        'media_id' => 0,
-        'active' => 1,
-        'customer_visible' => 1,
-        'revoked' => 0,
-        'archived' => 0,
-        'created' => 1700000000,
-        'created_by' => 1,
-      ])
+      ->fields(
+              [
+                'display_name' => 'idempotent.pdf',
+                'mime_type' => 'application/pdf',
+                'size_bytes' => 1000,
+                'storage_uri' => 'private://idempotent.pdf',
+                'file_id' => 1,
+                'media_id' => 0,
+                'active' => 1,
+                'customer_visible' => 1,
+                'revoked' => 0,
+                'archived' => 0,
+                'created' => 1700000000,
+                'created_by' => 1,
+              ]
+          )
       ->execute();
 
     $countBefore = (int) $db->query('SELECT COUNT(*) FROM {asu_application_attachment}')->fetchField();
@@ -120,20 +124,22 @@ final class ApplicationAttachmentInfrastructureTest extends KernelTestBase {
 
     $db = $this->container->get('database');
     $db->insert('asu_application_attachment')
-      ->fields([
-        'display_name' => 'too-big.pdf',
-        'mime_type' => 'application/pdf',
-        'size_bytes' => 100,
-        'storage_uri' => 'private://too-big.pdf',
-        'file_id' => 1,
-        'media_id' => 0,
-        'active' => 1,
-        'customer_visible' => 1,
-        'revoked' => 0,
-        'archived' => 0,
-        'created' => 1700000000,
-        'created_by' => 1,
-      ])
+      ->fields(
+              [
+                'display_name' => 'too-big.pdf',
+                'mime_type' => 'application/pdf',
+                'size_bytes' => 100,
+                'storage_uri' => 'private://too-big.pdf',
+                'file_id' => 1,
+                'media_id' => 0,
+                'active' => 1,
+                'customer_visible' => 1,
+                'revoked' => 0,
+                'archived' => 0,
+                'created' => 1700000000,
+                'created_by' => 1,
+              ]
+          )
       ->execute();
 
     $id = (int) $db->select('asu_application_attachment', 'a')
@@ -164,62 +170,72 @@ final class ApplicationAttachmentInfrastructureTest extends KernelTestBase {
       ->save();
 
     $fileSystem = $this->container->get('file_system');
-    $uri = $fileSystem->saveData('rate-limit-content', 'temporary://rate-limit.txt', \Drupal\Core\File\FileSystemInterface::EXISTS_REPLACE);
+    $uri = $fileSystem->saveData('rate-limit-content', 'temporary://rate-limit.txt', FileSystemInterface::EXISTS_REPLACE);
 
-    $file = \Drupal\file\Entity\File::create([
-      'uri' => $uri,
-      'filename' => 'rate-limit.txt',
-      'filemime' => 'text/plain',
-      'status' => 1,
-    ]);
+    $file = File::create(
+          [
+            'uri' => $uri,
+            'filename' => 'rate-limit.txt',
+            'filemime' => 'text/plain',
+            'status' => 1,
+          ]
+      );
     $file->save();
 
     $db = $this->container->get('database');
     $attachmentId = (int) $db->insert('asu_application_attachment')
-      ->fields([
-        'display_name' => 'rate-limit.txt',
-        'mime_type' => 'text/plain',
-        'size_bytes' => 10,
-        'storage_uri' => (string) $uri,
-        'file_id' => (int) $file->id(),
-        'media_id' => 0,
-        'active' => 1,
-        'customer_visible' => 1,
-        'revoked' => 0,
-        'archived' => 0,
-        'created' => 1700000000,
-        'created_by' => 1,
-      ])
+      ->fields(
+              [
+                'display_name' => 'rate-limit.txt',
+                'mime_type' => 'text/plain',
+                'size_bytes' => 10,
+                'storage_uri' => (string) $uri,
+                'file_id' => (int) $file->id(),
+                'media_id' => 0,
+                'active' => 1,
+                'customer_visible' => 1,
+                'revoked' => 0,
+                'archived' => 0,
+                'created' => 1700000000,
+                'created_by' => 1,
+              ]
+          )
       ->execute();
 
     $this->assertGreaterThan(0, $attachmentId);
 
     $storage = $this->container->get('entity_type.manager')->getStorage('asu_application_message');
-    $message = $storage->create([
-      'application_id' => 9010,
-      'project_id' => 7001,
-      'sender_role' => 'sales',
-      'recipient_mail' => 'ratelimit@example.com',
-      'body' => 'rate-limit message',
-      'created' => 1700000000,
-    ]);
+    $message = $storage->create(
+          [
+            'application_id' => 9010,
+            'project_id' => 7001,
+            'sender_role' => 'sales',
+            'recipient_mail' => 'ratelimit@example.com',
+            'body' => 'rate-limit message',
+            'created' => 1700000000,
+          ]
+      );
     $message->save();
 
     $db->insert('asu_application_message_attachment')
-      ->fields([
-        'message_id' => (int) $message->id(),
-        'attachment_id' => $attachmentId,
-        'ordering' => 0,
-        'attached_at' => 1700000000,
-        'attached_by' => 1,
-      ])
+      ->fields(
+              [
+                'message_id' => (int) $message->id(),
+                'attachment_id' => $attachmentId,
+                'ordering' => 0,
+                'attached_at' => 1700000000,
+                'attached_by' => 1,
+              ]
+          )
       ->execute();
 
-    $user = User::create([
-      'name' => 'ratelimit-user',
-      'mail' => 'ratelimit@example.com',
-      'status' => 1,
-    ]);
+    $user = User::create(
+          [
+            'name' => 'ratelimit-user',
+            'mail' => 'ratelimit@example.com',
+            'status' => 1,
+          ]
+      );
     $user->save();
 
     $first = $this->attachmentManager->resolveDownload($attachmentId, $user, '127.0.0.1');

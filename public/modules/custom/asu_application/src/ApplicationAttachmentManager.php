@@ -4,13 +4,11 @@ declare(strict_types=1);
 
 namespace Drupal\asu_application;
 
-use PDO;
 use Drupal\Core\Database\Connection;
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\file\Entity\File;
-use Drupal\file\FileRepositoryInterface;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\user\UserInterface;
 use Psr\Log\LoggerInterface;
@@ -70,7 +68,6 @@ final class ApplicationAttachmentManager {
     private readonly LoggerInterface $logger,
     private readonly FloodInterface $flood,
     private readonly ConfigFactoryInterface $configFactory,
-    private readonly FileRepositoryInterface $fileRepository,
     private readonly FileSystemInterface $fileSystem,
   ) {
   }
@@ -252,7 +249,7 @@ final class ApplicationAttachmentManager {
       ->fields('a')
       ->condition('id', $ids, 'IN')
       ->execute()
-      ->fetchAllAssoc('id', PDO::FETCH_ASSOC);
+      ->fetchAllAssoc('id', \PDO::FETCH_ASSOC);
 
     $valid = [];
     $errors = [];
@@ -311,7 +308,7 @@ final class ApplicationAttachmentManager {
         continue;
       }
 
-      $file = File::load($fileId);
+      $file = $this->entityTypeManager->getStorage('file')->load($fileId);
       if (!$file instanceof File) {
         $errors[(int) $index] = 'file_not_found';
         continue;
@@ -431,7 +428,7 @@ final class ApplicationAttachmentManager {
     $query->orderBy('ma.ordering', 'ASC');
     $query->orderBy('ma.attached_at', 'ASC');
 
-    $rows = $query->execute()->fetchAll(PDO::FETCH_ASSOC);
+    $rows = $query->execute()->fetchAll(\PDO::FETCH_ASSOC);
 
     foreach ($rows as $row) {
       if (!is_array($row)) {
@@ -531,7 +528,7 @@ final class ApplicationAttachmentManager {
       return ['status' => 403, 'error' => 'forbidden'];
     }
 
-    $file = File::load((int) $row['file_id']);
+    $file = $this->entityTypeManager->getStorage('file')->load((int) $row['file_id']);
     if (!$file instanceof File || $file->getFileUri() === '') {
       $this->logDenied($attachmentId, $account, 'file_missing');
       return ['status' => 404, 'error' => 'not_found'];
@@ -584,6 +581,8 @@ final class ApplicationAttachmentManager {
   /**
    * Checks if account can access at least one message in given context.
    *
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   Current user account.
    * @param int[] $messageIds
    *   Message ids.
    */
