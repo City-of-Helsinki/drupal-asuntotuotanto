@@ -19,6 +19,7 @@ module:
   asu_noindex: 0
   asu_project_subscription: 0
   asu_rest: 0
+  asu_sanitized_dump: 0
   asu_tasklist: 0
   asu_translation: 0
   asu_user: 0

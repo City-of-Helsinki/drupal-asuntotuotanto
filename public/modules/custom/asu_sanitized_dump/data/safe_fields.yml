@@ -1,0 +1,77 @@
+# Fields of PII entity types that are safe to dump unchanged.
+#
+# Ids, references, flags, timestamps and fixed-vocabulary values. Keys linking
+# to the backend (users.uuid, field_backend_profile, field_backend_id) must be
+# kept for the restored data to work.
+#
+# Every field of SanitizerConfig::PII_ENTITY_TYPES must either have a rule in
+# SanitizerConfig::expressions() or be listed here; SanitizerCoverageKernelTest
+# enforces this.
+user:
+  - uid
+  - uuid
+  - langcode
+  - preferred_langcode
+  - preferred_admin_langcode
+  - timezone
+  - status
+  - created
+  - changed
+  - access
+  - login
+  - default_langcode
+  - roles
+  - field_backend_profile
+  - field_email_is_valid
+asu_application:
+  - id
+  - vid
+  - bundle
+  - uuid
+  - status
+  - uid
+  - parent_id
+  - project_id
+  - project
+  - field_backend_id
+  - has_children
+  - created_admin
+  - created_by
+  - create_to_django
+  - created
+  - changed
+  - field_locked
+  # Fixed error messages looked up by backend error code.
+  - error
+  - revision_timestamp
+  - revision_uid
+  - revision_default
+  - apartment
+  - field_agreement_policy
+  - field_aso_changer
+  - field_data_agreement_policy
+  - field_hitas_owner
+  - field_is_new_permit_number
+  # Kept on purpose: drives HASO queue ordering (also kept in Django).
+  - field_right_of_residence_number
+asu_application_message:
+  - id
+  - uuid
+  - application_id
+  - project_id
+  - sender_uid
+  - salesperson_uid
+  - sender_role
+  - created
+  - changed
+asu_project_subscription:
+  - id
+  - uuid
+  - langcode
+  - project
+  - uid
+  - is_confirmed
+  - unsubscribed_at
+  - last_notified_state
+  - created
+  - changed

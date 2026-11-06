@@ -1,0 +1,6 @@
+services:
+  asu_sanitized_dump.commands:
+    class: Drupal\asu_sanitized_dump\Commands\SanitizedDumpCommands
+    arguments: ['@asu_sanitized_dump.dump_manager']
+    tags:
+      - { name: drush.command }
