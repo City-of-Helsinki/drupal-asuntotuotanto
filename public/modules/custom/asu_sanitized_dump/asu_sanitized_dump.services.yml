@@ -1,0 +1,6 @@
+services:
+  asu_sanitized_dump.dump_retention:
+    class: Drupal\asu_sanitized_dump\Dump\DumpRetention
+  asu_sanitized_dump.dump_manager:
+    class: Drupal\asu_sanitized_dump\Dump\SanitizedDumpManager
+    arguments: ['@asu_sanitized_dump.dump_retention']

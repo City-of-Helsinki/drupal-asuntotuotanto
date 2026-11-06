@@ -24,6 +24,7 @@ public/sites/default/local.settings.php
 public/sites/default/local.services.yml
 
 *.sql
+sanitized_*.sql.tmp
 *.env.local
 
 # Ignore OSX generated files
@@ -34,3 +35,5 @@ public/sites/default/local.services.yml
 !*.keepme
 .phpunit.*
 compose-dev.yaml
+
+.claude
