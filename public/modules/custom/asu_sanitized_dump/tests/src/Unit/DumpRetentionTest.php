@@ -46,14 +46,14 @@ final class DumpRetentionTest extends UnitTestCase {
   /**
    * Prune keeps the four newest dumps and deletes older ones.
    *
-   * - Five sanitized_*.sql files exist with increasing mtimes
+   * - Five drupal_sanitized_*.sql files exist with increasing mtimes
    * - After prune(keep=4), the oldest file is removed
    * - The four newest paths remain.
    */
   public function testPruneKeepsFourNewest(): void {
     $created = [];
     for ($i = 1; $i <= 5; $i++) {
-      $path = $this->directory . "/sanitized_2026010{$i}120000.sql";
+      $path = $this->directory . "/drupal_sanitized_2026010{$i}120000.sql";
       file_put_contents($path, "dump-$i");
       touch($path, 1_700_000_000 + $i);
       clearstatcache(TRUE, $path);
@@ -78,7 +78,7 @@ final class DumpRetentionTest extends UnitTestCase {
   public function testPruneOrdersByNameNotMtime(): void {
     $created = [];
     for ($i = 1; $i <= 5; $i++) {
-      $path = $this->directory . "/sanitized_2026010{$i}120000.sql";
+      $path = $this->directory . "/drupal_sanitized_2026010{$i}120000.sql";
       file_put_contents($path, "dump-$i");
       touch($path, 1_700_000_000 - $i);
       clearstatcache(TRUE, $path);
@@ -91,14 +91,33 @@ final class DumpRetentionTest extends UnitTestCase {
   }
 
   /**
+   * Prune only touches Drupal dumps.
+   *
+   * - Five Drupal dumps and older backend (django_) dumps share a directory
+   * - prune(keep=4) deletes only the oldest Drupal dump.
+   */
+  public function testPruneLeavesBackendDumps(): void {
+    for ($i = 1; $i <= 5; $i++) {
+      file_put_contents($this->directory . "/drupal_sanitized_2026020{$i}120000.sql", "drupal-$i");
+    }
+    $backend = $this->directory . '/django_sanitized_20260101120000.sql';
+    file_put_contents($backend, 'django');
+
+    $deleted = (new DumpRetention())->prune($this->directory, 4);
+
+    $this->assertSame([$this->directory . '/drupal_sanitized_20260201120000.sql'], $deleted);
+    $this->assertFileExists($backend);
+  }
+
+  /**
    * Prune is a no-op when fewer than keep files exist.
    *
    * - Two dump files exist
    * - prune(keep=4) deletes nothing.
    */
   public function testPruneNoOpWhenUnderLimit(): void {
-    file_put_contents($this->directory . '/sanitized_20260101120000.sql', 'a');
-    file_put_contents($this->directory . '/sanitized_20260102120000.sql', 'b');
+    file_put_contents($this->directory . '/drupal_sanitized_20260101120000.sql', 'a');
+    file_put_contents($this->directory . '/drupal_sanitized_20260102120000.sql', 'b');
 
     $deleted = (new DumpRetention())->prune($this->directory, 4);
 

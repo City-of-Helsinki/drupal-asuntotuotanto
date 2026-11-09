@@ -32,7 +32,7 @@ final class SanitizedDumpManager {
    * @param string $directory
    *   Target directory (must be writable).
    * @param int $keep
-   *   Number of newest sanitized_*.sql files to keep after creating.
+   *   Number of newest drupal_sanitized_*.sql files to keep after creating.
    *
    * @return string
    *   Absolute path of the created dump file.
@@ -71,7 +71,7 @@ final class SanitizedDumpManager {
    * @param string $directory
    *   Existing target directory.
    * @param int $keep
-   *   Number of newest sanitized_*.sql files to keep after creating.
+   *   Number of newest drupal_sanitized_*.sql files to keep after creating.
    * @param callable $write
    *   Writes the dump to the path it is given.
    *
@@ -82,7 +82,7 @@ final class SanitizedDumpManager {
    *   When writing fails or produces an empty file.
    */
   public function writeAndRotate(string $directory, int $keep, callable $write): string {
-    $outfile = $directory . '/sanitized_' . date('YmdHis') . '.sql';
+    $outfile = $directory . '/' . DumpRetention::FILE_PREFIX . date('YmdHis') . '.sql';
     $tmpfile = $outfile . '.tmp';
 
     try {
