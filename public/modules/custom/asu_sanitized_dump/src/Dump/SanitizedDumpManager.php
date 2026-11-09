@@ -40,7 +40,7 @@ final class SanitizedDumpManager {
    * @throws \Exception
    *   When the dump command fails.
    */
-  public function createDump(string $directory, int $keep = 4): string {
+  public function createDump(string $directory, int $keep = 5): string {
     $directory = rtrim($directory, '/\\');
     if (!is_dir($directory) && !mkdir($directory, 0775, TRUE) && !is_dir($directory)) {
       throw new \RuntimeException(sprintf('Unable to create dump directory %s.', $directory));
