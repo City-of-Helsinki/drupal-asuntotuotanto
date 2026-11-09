@@ -62,9 +62,9 @@ first updates live rows, and the second doesn't apply the ASU rules.
 
 ```
 oc exec <drupal-pod> -- drush asu:sql:sanitized-dump
-# Prints: Sanitized dump saved to /tmp/sanitized_YYYYMMDDHHMMSS.sql
-oc cp <drupal-pod>:/tmp/sanitized_YYYYMMDDHHMMSS.sql ./sanitized_YYYYMMDDHHMMSS.sql
-oc exec <drupal-pod> -- rm /tmp/sanitized_YYYYMMDDHHMMSS.sql
+# Prints: Sanitized dump saved to /tmp/drupal_sanitized_YYYYMMDDHHMMSS.sql
+oc cp <drupal-pod>:/tmp/drupal_sanitized_YYYYMMDDHHMMSS.sql ./drupal_sanitized_YYYYMMDDHHMMSS.sql
+oc exec <drupal-pod> -- rm /tmp/drupal_sanitized_YYYYMMDDHHMMSS.sql
 ```
 
 Without `--directory` the dump goes to the system temp directory (`/tmp` on the
@@ -75,12 +75,12 @@ is too small.
 **Locally**:
 
 ```
-make create-sanitized-dump   # writes ./sanitized_*.sql (change with SANITIZED_DUMP_DIR)
+make create-sanitized-dump   # writes ./drupal_sanitized_*.sql (change with SANITIZED_DUMP_DIR)
 ```
 
 How it behaves:
 
-- The output file is `sanitized_YYYYMMDDHHMMSS.sql`. The four newest dumps in
+- The output file is `drupal_sanitized_YYYYMMDDHHMMSS.sql`. The four newest dumps in
   the directory are kept and older ones are deleted (change with `--keep`).
 - A failed dump leaves no partial file and does not delete older dumps.
 - The dump refuses to run if a custom table has a column without an
@@ -99,7 +99,7 @@ How it behaves:
 Put the dump file in the project directory, then:
 
 ```
-make restore-sanitized-dump DUMP=sanitized_YYYYMMDDHHMMSS.sql
+make restore-sanitized-dump DUMP=drupal_sanitized_YYYYMMDDHHMMSS.sql
 ```
 
 It shows the target database and asks you to type `yes` (`YES=1` skips the

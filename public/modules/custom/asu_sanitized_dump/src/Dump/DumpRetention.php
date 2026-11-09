@@ -10,7 +10,12 @@ namespace Drupal\asu_sanitized_dump\Dump;
 final class DumpRetention {
 
   /**
-   * Delete older sanitized_*.sql files, keeping the newest ones.
+   * Filename prefix of Drupal dumps; the backend's dumps use "django_".
+   */
+  public const FILE_PREFIX = 'drupal_sanitized_';
+
+  /**
+   * Delete older drupal_sanitized_*.sql files, keeping the newest ones.
    *
    * @param string $directory
    *   Directory that may contain sanitized dumps.
@@ -21,7 +26,7 @@ final class DumpRetention {
    *   Paths that were deleted.
    */
   public function prune(string $directory, int $keep = 4): array {
-    $pattern = rtrim($directory, '/\\') . '/sanitized_*.sql';
+    $pattern = rtrim($directory, '/\\') . '/' . self::FILE_PREFIX . '*.sql';
     $files = glob($pattern) ?: [];
     if ($files === []) {
       return [];
