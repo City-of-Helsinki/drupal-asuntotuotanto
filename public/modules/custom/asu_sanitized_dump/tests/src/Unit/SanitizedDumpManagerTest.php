@@ -41,7 +41,7 @@ final class SanitizedDumpManagerTest extends UnitTestCase {
     $this->manager = new SanitizedDumpManager(new DumpRetention());
 
     for ($i = 1; $i <= 4; $i++) {
-      file_put_contents($this->directory . "/sanitized_2026010{$i}120000.sql", "old-$i");
+      file_put_contents($this->directory . "/drupal_sanitized_2026010{$i}120000.sql", "old-$i");
     }
   }
 
@@ -74,9 +74,10 @@ final class SanitizedDumpManagerTest extends UnitTestCase {
     );
 
     $this->assertFileExists($path);
+    $this->assertMatchesRegularExpression('/\/drupal_sanitized_\d{14}\.sql$/', $path);
     $this->assertSame('new dump', file_get_contents($path));
-    $this->assertCount(4, glob($this->directory . '/sanitized_*.sql'));
-    $this->assertFileDoesNotExist($this->directory . '/sanitized_20260101120000.sql');
+    $this->assertCount(4, glob($this->directory . '/drupal_sanitized_*.sql'));
+    $this->assertFileDoesNotExist($this->directory . '/drupal_sanitized_20260101120000.sql');
     $this->assertSame([], glob($this->directory . '/*.tmp'));
   }
 
@@ -105,7 +106,7 @@ final class SanitizedDumpManagerTest extends UnitTestCase {
       $this->assertSame('connection lost', $e->getMessage());
     }
 
-    $this->assertCount(4, glob($this->directory . '/sanitized_*.sql'));
+    $this->assertCount(4, glob($this->directory . '/drupal_sanitized_*.sql'));
     $this->assertSame([], glob($this->directory . '/*.tmp'));
   }
 
@@ -129,7 +130,7 @@ final class SanitizedDumpManagerTest extends UnitTestCase {
       );
     }
     finally {
-      $this->assertCount(4, glob($this->directory . '/sanitized_*.sql'));
+      $this->assertCount(4, glob($this->directory . '/drupal_sanitized_*.sql'));
       $this->assertSame([], glob($this->directory . '/*.tmp'));
     }
   }

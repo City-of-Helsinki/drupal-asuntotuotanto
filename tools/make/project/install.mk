@@ -45,7 +45,7 @@ SANITIZED_COMMA := ,
 PHONY += restore-sanitized-dump
 restore-sanitized-dump: ## Replace the database with a sanitized dump (DUMP=file.sql, YES=1 skips the prompt).
 	@test -n "$(DUMP)" || { echo "Usage: make restore-sanitized-dump DUMP=file.sql [YES=1]" >&2; exit 1; }
-	@case "$(DUMP)" in /*|../*) echo "DUMP must be a path inside the project, e.g. DUMP=sanitized_20261104120000.sql" >&2; exit 1;; esac
+	@case "$(DUMP)" in /*|../*) echo "DUMP must be a path inside the project, e.g. DUMP=drupal_sanitized_20261104120000.sql" >&2; exit 1;; esac
 	@test -s "$(DUMP)" || { echo "Dump file $(DUMP) does not exist or is empty." >&2; exit 1; }
 	$(call step,This drops all tables in this Drupal database and imports $(DUMP):)
 	$(call drush,status --fields=db-hostname$(SANITIZED_COMMA)db-name)

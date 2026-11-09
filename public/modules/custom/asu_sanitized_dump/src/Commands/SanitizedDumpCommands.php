@@ -36,9 +36,9 @@ final class SanitizedDumpCommands extends DrushCommands {
    *   Path to the created dump file.
    */
   #[CLI\Command(name: 'asu:sql:sanitized-dump', aliases: ['asu-sanitized-dump'])]
-  #[CLI\Option(name: 'directory', description: 'Directory for sanitized_*.sql (default: system temp directory, e.g. /tmp).')]
+  #[CLI\Option(name: 'directory', description: 'Directory for drupal_sanitized_*.sql (default: system temp directory, e.g. /tmp).')]
   #[CLI\Option(name: 'keep', description: 'Number of newest sanitized dumps to keep after creating (default: 4).')]
-  #[CLI\Usage(name: 'drush asu:sql:sanitized-dump', description: 'Write sanitized_YYYYMMDDHHMMSS.sql to the temp directory and prune older dumps.')]
+  #[CLI\Usage(name: 'drush asu:sql:sanitized-dump', description: 'Write drupal_sanitized_YYYYMMDDHHMMSS.sql to the temp directory and prune older dumps.')]
   #[CLI\Usage(name: 'drush asu:sql:sanitized-dump --directory=/app/dumps', description: 'Write the dump under /app/dumps.')]
   public function sanitizedDump(
     array $options = [
