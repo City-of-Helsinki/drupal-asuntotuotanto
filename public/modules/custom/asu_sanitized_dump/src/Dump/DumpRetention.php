@@ -25,7 +25,7 @@ final class DumpRetention {
    * @return string[]
    *   Paths that were deleted.
    */
-  public function prune(string $directory, int $keep = 4): array {
+  public function prune(string $directory, int $keep = 5): array {
     $pattern = rtrim($directory, '/\\') . '/' . self::FILE_PREFIX . '*.sql';
     $files = glob($pattern) ?: [];
     if ($files === []) {
