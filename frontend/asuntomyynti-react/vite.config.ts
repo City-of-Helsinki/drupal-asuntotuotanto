@@ -6,6 +6,14 @@ import { defineConfig } from 'vite';
 const backendOrigin = process.env.VITE_BACKEND_ORIGIN || 'https://asuntotuotanto.docker.so';
 const drupalOrigin = process.env.VITE_DEV_ORIGIN || 'https://asuntotuotanto.docker.so';
 
+const allowedDevOrigins = [
+  drupalOrigin,
+  drupalOrigin.replace(/^https:\/\//, 'http://'),
+  drupalOrigin.replace(/^http:\/\//, 'https://'),
+];
+
+const isLoopbackOrigin = (origin: string) => /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/i.test(origin);
+
 export default defineConfig({
   plugins: [react(), ...(process.env.VITE_HTTPS === 'true' ? [basicSsl()] : [])],
   build: {
@@ -27,7 +35,15 @@ export default defineConfig({
   },
   server: {
     host: '0.0.0.0',
-    cors: { origin: drupalOrigin },
+    cors: {
+      origin: (origin, callback) => {
+        if (!origin || allowedDevOrigins.includes(origin) || isLoopbackOrigin(origin)) {
+          callback(null, true);
+          return;
+        }
+        callback(new Error(`CORS blocked for origin: ${origin}`));
+      },
+    },
     proxy: {
       '/fi': { target: backendOrigin, changeOrigin: true, secure: false },
       '/sv': { target: backendOrigin, changeOrigin: true, secure: false },
