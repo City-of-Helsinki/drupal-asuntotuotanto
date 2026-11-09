@@ -80,7 +80,7 @@ make create-sanitized-dump   # writes ./drupal_sanitized_*.sql (change with SANI
 
 How it behaves:
 
-- The output file is `drupal_sanitized_YYYYMMDDHHMMSS.sql`. The four newest dumps in
+- The output file is `drupal_sanitized_YYYYMMDDHHMMSS.sql`. The five newest dumps in
   the directory are kept and older ones are deleted (change with `--keep`).
 - A failed dump leaves no partial file and does not delete older dumps.
 - The dump refuses to run if a custom table has a column without an
