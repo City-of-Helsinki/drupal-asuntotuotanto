@@ -202,6 +202,17 @@ final class SearchMapperElasticsearchParityTest extends SearchMapperKernelTestBa
   }
 
   /**
+   * Apartment listing emits showing_times as list for Django compatibility.
+   */
+  public function testApartmentListingShowingTimesIsList(): void {
+    $mapped = $this->mapApartmentListing('Parent project', 'A 1');
+
+    $this->assertArrayHasKey('showing_times', $mapped);
+    $this->assertIsArray($mapped['showing_times']);
+    $this->assertSame([], $mapped['showing_times']);
+  }
+
+  /**
    * Apartment listing includes publish_on_etuovi and publish_on_oikotie.
    *
    * List endpoints (/apartments, /projects/{uuid}/apartments) must expose these

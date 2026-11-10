@@ -108,7 +108,7 @@ final class SearchMapper {
       'room_count' => $this->toNumber($this->getScalar($apartment, 'field_apartment_structure')),
       'sales_price' => $this->toCents($this->getScalar($apartment, 'field_sales_price')),
       'services_description' => $this->getScalar($apartment, 'field_services_description'),
-      'showing_times' => $this->formatDateTime($this->getScalar($apartment, 'field_showing_time')),
+      'showing_times' => $this->formatDateTimeList($this->getScalar($apartment, 'field_showing_time')),
       'stock_end_number' => $stockEnd,
       'stock_start_number' => $stockStart,
       'storage_description' => $this->getScalar($apartment, 'field_storage_description'),
@@ -803,6 +803,14 @@ final class SearchMapper {
       return asu_content_convert_datetime($value);
     }
     return $value;
+  }
+
+  /**
+   * Format a single datetime value as an ApartmentDocument-compatible list.
+   */
+  private function formatDateTimeList(string $value): array {
+    $formatted = $this->formatDateTime($value);
+    return $formatted === '' ? [] : [$formatted];
   }
 
   /**
