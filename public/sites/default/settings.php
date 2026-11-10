@@ -352,6 +352,43 @@ if ($tfa_key = getenv('TFA_ENCRYPTION_KEY')) {
   $config['key.key.tfa']['key_provider_settings']['base64_encoded'] = TRUE;
 }
 
+// Audit log (helfi_api_base AuditLog + php-resilient-logger).
+// Entries are stored in the helfi_audit_logs table and shipped to Elastic by
+// `drush helfi:audit-log:submit-unsent-entries` (see crons/audit-log.sh).
+// Logged entity types: helfi_api_base.audit_log_entity_types in services.yml.
+if ($audit_log_index = getenv('AUDIT_LOG_ES_INDEX')) {
+  $settings['resilient_logger'] = [
+    // Asuntotuotanto is not a project known to helfi_api_base's environment
+    // resolver, so origin/environment must be set explicitly (the audit log
+    // drush commands fail with "'origin' must be a non-empty string"
+    // otherwise). Mirrors RESILIENT_LOGGER in the Django backend.
+    'origin' => 'ASUNTOTUOTANTO_DRUPAL',
+    'environment' => getenv('AUDIT_LOG_ENV') ?: (getenv('APP_ENV') ?: 'development'),
+    'sources' => [
+      [
+        'class' => 'Drupal\helfi_api_base\AuditLog\Sources\AuditLogSource',
+      ],
+    ],
+    'targets' => [
+      [
+        'class' => 'ResilientLogger\Targets\ElasticsearchLogTarget',
+        'es_url' => getenv('AUDIT_LOG_ES_URL') ?: '',
+        'es_username' => getenv('AUDIT_LOG_ES_USERNAME') ?: '',
+        'es_password' => getenv('AUDIT_LOG_ES_PASSWORD') ?: '',
+        'es_index' => $audit_log_index,
+      ],
+    ],
+    'store_old_entries_days' => 30,
+    'batch_limit' => 5000,
+    'chunk_size' => 500,
+    'schedule_submit_unsent_entries' => '+15min',
+    'schedule_clear_sent_entries' => 'first day of next month midnight',
+  ];
+}
+
+// Disable entity audit logging for CLI commands (drush deploy, imports etc.).
+$settings['auditlog_entity_hooks_disable'] = PHP_SAPI === 'cli';
+
 /**
  * Deployment preflight checks.
  *
