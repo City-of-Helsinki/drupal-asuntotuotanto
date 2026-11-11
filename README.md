@@ -185,9 +185,8 @@ What gets logged:
 - Nothing is logged from CLI (drush), see `auditlog_entity_hooks_disable` in
   `settings.php`.
 
-Entries are written to the `helfi_audit_logs` table. The cron script
-`docker/openshift/crons/audit-log.sh` sends them to Elasticsearch every 15
-minutes and clears sent entries older than 30 days:
+Entries are written to the `helfi_audit_logs` table. These drush commands send
+unsent entries to Elasticsearch and clear sent entries older than 30 days:
 
 ```shell
 drush helfi:audit-log:submit-unsent-entries

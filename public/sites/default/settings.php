@@ -354,7 +354,7 @@ if ($tfa_key = getenv('TFA_ENCRYPTION_KEY')) {
 
 // Audit log (helfi_api_base AuditLog + php-resilient-logger).
 // Entries are stored in the helfi_audit_logs table and shipped to Elastic by
-// `drush helfi:audit-log:submit-unsent-entries` (see crons/audit-log.sh).
+// `drush helfi:audit-log:submit-unsent-entries`.
 // Logged entity types: helfi_api_base.audit_log_entity_types in services.yml.
 if ($audit_log_index = getenv('AUDIT_LOG_ES_INDEX')) {
   $settings['resilient_logger'] = [
