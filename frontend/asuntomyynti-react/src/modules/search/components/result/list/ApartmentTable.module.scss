@@ -1,0 +1,167 @@
+.apartmentList {
+  padding: 0 var(--spacing-l);
+  background-color: white;
+  overflow: auto;
+
+  @media (max-width: 1099px) {
+    padding: 0 var(--spacing-m);
+  }
+
+  @media (max-width: 991px) {
+    padding: 0 var(--spacing-s);
+  }
+
+  @media (max-width: 768px) {
+    padding: 0;
+  }
+}
+
+.apartmentListTable {
+  width: 100%;
+  margin: 0;
+  border-top: 1px solid var(--color-black-20);
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  list-style: none;
+
+  @media (min-width: 1100px) {
+    display: table;
+  }
+}
+
+.apartmentListHeaders {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  text-align: left;
+  width: 100%;
+
+  @media (min-width: 1100px) {
+    display: table-row;
+  }
+
+  @media (max-width: 768px) {
+    display: none;
+  }
+}
+
+.headerCell {
+  white-space: nowrap;
+  padding-top: var(--spacing-s);
+  padding-right: var(--spacing-m);
+  flex: 1;
+
+  @media (min-width: 1100px) {
+    display: table-cell;
+    vertical-align: top;
+  }
+
+  &.headerCellSortable {
+    padding-top: 0;
+  }
+
+  &.headerCellNarrow {
+    @media (min-width: 1100px) {
+      width: 1%;
+    }
+  }
+
+  &.headerCellSpacer {
+    @media (max-width: 1099px) {
+      display: none;
+    }
+  }
+
+  &.headerCellApartment {
+    @media (min-width: 992px) and (max-width: 1099px) {
+      min-width: 200px;
+    }
+  }
+
+  &.headerCellSpan {
+    span {
+      display: flex;
+      align-items: center;
+      min-height: 24px;
+    }
+  }
+}
+
+.sortButton {
+  background: none;
+  padding: var(--spacing-s) 0;
+  border: solid transparent;
+  border-width: 0 0 2px 0;
+  display: flex;
+  flex-flow: row nowrap;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+
+  &:hover, &:focus {
+    border-bottom-color: var(--color-black-50);
+
+    .sortArrow {
+      visibility: visible;
+    }
+  }
+}
+
+.sortArrow {
+  color: var(--color-black-50);
+  margin-left: 8px;
+  visibility: hidden;
+}
+
+.sortButton.activeSort {
+  color: var(--color-black);
+  border-bottom-color: var(--color-black);
+
+  .sortArrow {
+    visibility: visible;
+    color: inherit !important;
+  }
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: var(--spacing-m) 0;
+
+  @media (max-width: 768px) {
+    padding: var(--spacing-s) 0;
+  }
+}
+
+.paginationButton {
+  flex-shrink: 0;
+  all: unset;
+  height: 40px;
+  width: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 5px;
+  font-weight: bold;
+  font-size: var(--fontsize-body-s);
+
+  &.active {
+    border: 2px solid var(--color-black-90);
+  }
+
+  &:focus {
+    outline: 2px solid var(--color-coat-of-arms);
+  }
+}
+
+.paginationButton:hover:not([disabled]) {
+  cursor: pointer;
+}
+
+.paginationButton[disabled] {
+  color: var(--color-black-20);
+}
