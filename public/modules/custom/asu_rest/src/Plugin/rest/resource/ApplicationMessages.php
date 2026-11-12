@@ -152,6 +152,7 @@ final class ApplicationMessages extends ResourceBase {
     }
 
     $coApplicantEmail = trim((string) ($data['co_applicant_email'] ?? ''));
+    $mainApplicantEmail = trim((string) ($data['main_applicant_email'] ?? ''));
 
     $newAttachments = is_array($data['new_attachments'] ?? NULL) ? $data['new_attachments'] : [];
     $newAttachmentResult = $this->attachmentManager->createAttachments(
@@ -200,7 +201,11 @@ final class ApplicationMessages extends ResourceBase {
     $messageAttachments = $this->absolutizeAttachmentUrls($attachmentsByMessageId[(int) $message->id()] ?? []);
 
     if ($senderRole === 'sales') {
-      $customerRecipients = $this->messageManager->resolveCustomerRecipients($application, $coApplicantEmail);
+      $customerRecipients = $this->messageManager->resolveCustomerRecipients(
+        $application,
+        $coApplicantEmail,
+        $mainApplicantEmail,
+      );
       foreach ($customerRecipients as $recipient) {
         $buyerMail = (string) ($recipient['mail'] ?? '');
         if ($buyerMail === '') {
