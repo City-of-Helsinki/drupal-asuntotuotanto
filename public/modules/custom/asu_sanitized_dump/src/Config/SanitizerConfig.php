@@ -181,6 +181,8 @@ final class SanitizerConfig {
       'feeds_log',
       // Visitor IP addresses.
       'honeypot_user',
+      // Audit log entries: account names, IP addresses, field diffs.
+      'helfi_audit_logs',
       // Private tempstore and other expiring state, e.g. draft form values.
       'key_value_expire',
     ];

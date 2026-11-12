@@ -168,3 +168,42 @@ listed in `CUSTOM_TABLES` with their safe columns. Before dumping, the command
 reads their live columns and refuses to run if any column has neither a rule
 nor a safe listing. A new custom table that can hold personal data must be
 added to `CUSTOM_TABLES` by hand.
+
+## Audit logging
+
+Audit logging uses the `AuditLog` of `helfi_api_base` together with
+`php-resilient-logger`, the same way the Django backend does.
+
+What gets logged:
+
+- Create, update and delete of `node`, `user`, `asu_application`,
+  `asu_application_payment` and `asu_application_message` entities. Updates
+  of revisionable entities include a field diff. The list is
+  `helfi_api_base.audit_log_entity_types` in
+  `public/sites/default/services.yml`.
+- User login and logout.
+- Nothing is logged from CLI (drush), see `auditlog_entity_hooks_disable` in
+  `settings.php`.
+
+Entries are written to the `helfi_audit_logs` table. These drush commands send
+unsent entries to Elasticsearch and clear sent entries older than 30 days:
+
+```shell
+drush helfi:audit-log:submit-unsent-entries
+drush helfi:audit-log:clear-sent-entries
+```
+
+Sending is enabled when `AUDIT_LOG_ES_INDEX` is set:
+
+| Variable | Description |
+|---|---|
+| `AUDIT_LOG_ES_URL` | Elasticsearch URL |
+| `AUDIT_LOG_ES_INDEX` | Index / data stream (from Platta) |
+| `AUDIT_LOG_ES_USERNAME` | Elasticsearch username |
+| `AUDIT_LOG_ES_PASSWORD` | Elasticsearch password |
+| `AUDIT_LOG_ENV` | Optional, `environment` field of the entries. Defaults to `APP_ENV`. |
+
+Entries have `origin: ASUNTOTUOTANTO_DRUPAL` (Django uses
+`APARTMENT_APPLICATION_SERVICE`). Without `AUDIT_LOG_ES_INDEX`, entries pile up
+in the table and both commands do nothing. The table is dumped without data in
+sanitized dumps.
