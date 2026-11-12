@@ -239,9 +239,13 @@ final class ApplicationMessages extends ResourceBase {
         }
 
         foreach ($messageAttachments as $attachment) {
-          $downloadUrl = $this->buildAbsoluteUrl(str_replace('/download', '/open', (string) $attachment['download_url']));
-          $lines[] = (string) $this->t('Attachment: @name', ['@name' => (string) $attachment['display_name']], ['langcode' => $buyerLangcode]);
-          $lines[] = (string) $this->t('Open attachment: @url', ['@url' => $downloadUrl], ['langcode' => $buyerLangcode]);
+          $openUrl = $this->buildAttachmentOpenUrl((string) ($attachment['download_url'] ?? ''));
+          if ($openUrl === '') {
+            continue;
+          }
+
+          $lines[] = '';
+          $lines[] = (string) $this->t('Open attachment: @url', ['@url' => $openUrl], ['langcode' => $buyerLangcode]);
         }
 
         $lines[] = (string) $this->t('This is an automated message. Please do not reply to this email.', [], ['langcode' => $buyerLangcode]);
@@ -362,6 +366,10 @@ final class ApplicationMessages extends ResourceBase {
    * Builds an absolute URL using configured public base URL when available.
    */
   private function buildAbsoluteUrl(string $path): string {
+    if (preg_match('#^https?://#i', $path) === 1) {
+      return $path;
+    }
+
     $baseUrl = getenv('ASU_ASUNTOTUOTANTO_URL');
     if ($baseUrl) {
       return rtrim($baseUrl, '/') . $path;
@@ -371,6 +379,22 @@ final class ApplicationMessages extends ResourceBase {
     $host = $request ? $request->getSchemeAndHttpHost() : '';
 
     return $host . $path;
+  }
+
+  /**
+   * Builds customer attachment open URL from attachment download URL.
+   */
+  private function buildAttachmentOpenUrl(string $downloadUrl): string {
+    $downloadUrl = trim($downloadUrl);
+    if ($downloadUrl === '') {
+      return '';
+    }
+
+    if (preg_match('#^https?://#i', $downloadUrl) === 1) {
+      return str_replace('/download', '/open', $downloadUrl);
+    }
+
+    return $this->buildAbsoluteUrl(str_replace('/download', '/open', $downloadUrl));
   }
 
   /**

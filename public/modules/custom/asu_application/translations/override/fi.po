@@ -73,6 +73,9 @@ msgstr "Viestin sisältö: @url"
 msgid "Open chat: @url"
 msgstr "Avaa chat: @url"
 
+msgid "Open attachment: @url"
+msgstr "Avaa liite: @url"
+
 msgid "This is an automated message. Please do not reply to this email."
 msgstr "Tämä on automaattinen viesti. Älä vastaa tähän sähköpostiin."
 
