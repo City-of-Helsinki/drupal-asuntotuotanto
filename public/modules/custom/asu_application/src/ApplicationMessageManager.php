@@ -241,8 +241,8 @@ final class ApplicationMessageManager {
    *
    * @param \Drupal\asu_application\Entity\Application $application
    *   Application entity.
-    * @param string $fallbackEmail
-    *   Fallback owner email candidate from API payload.
+   * @param string $fallbackEmail
+   *   Fallback owner email candidate from API payload.
    *
    * @return array<int, array{uid:int, mail:string, langcode:string}>
    *   Owner recipient or empty list.
