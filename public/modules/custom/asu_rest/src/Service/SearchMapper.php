@@ -59,6 +59,15 @@ final class SearchMapper {
     $maintenanceFee = $this->getScalar($apartment, 'field_maintenance_fee');
     $stockStart = $this->getScalar($apartment, 'field_stock_start_number');
     $stockEnd = $this->getScalar($apartment, 'field_stock_end_number');
+    $showingTime = $project
+      ? $this->getScalar($project, 'field_project_showing_time')
+      : '';
+    if ($showingTime === '') {
+      $showingTime = $this->getScalar($apartment, 'field_showing_time');
+    }
+    if ($this->isPastDateTime($showingTime)) {
+      $showingTime = '';
+    }
 
     // Full ApartmentDocument key set on list and detail endpoints so consumers
     // (Django portals, PDF, serializers) do not depend on
@@ -108,7 +117,7 @@ final class SearchMapper {
       'room_count' => $this->toNumber($this->getScalar($apartment, 'field_apartment_structure')),
       'sales_price' => $this->toCents($this->getScalar($apartment, 'field_sales_price')),
       'services_description' => $this->getScalar($apartment, 'field_services_description'),
-      'showing_times' => $this->formatDateTimeList($this->getScalar($apartment, 'field_showing_time')),
+      'showing_times' => $this->formatDateTimeList($showingTime),
       'stock_end_number' => $stockEnd,
       'stock_start_number' => $stockStart,
       'storage_description' => $this->getScalar($apartment, 'field_storage_description'),
@@ -811,6 +820,22 @@ final class SearchMapper {
   private function formatDateTimeList(string $value): array {
     $formatted = $this->formatDateTime($value);
     return $formatted === '' ? [] : [$formatted];
+  }
+
+  /**
+   * Check whether a datetime string is in the past.
+   */
+  private function isPastDateTime(string $value): bool {
+    if ($value === '') {
+      return FALSE;
+    }
+
+    $timestamp = strtotime($value . ' UTC');
+    if ($timestamp === FALSE) {
+      return FALSE;
+    }
+
+    return $timestamp < time();
   }
 
   /**
