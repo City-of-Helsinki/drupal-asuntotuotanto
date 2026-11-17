@@ -492,7 +492,7 @@ msgid "Update"
 msgstr "Päivitys"
 
 msgid "Open"
-msgstr "Avoin"
+msgstr "Avaa"
 
 msgid "Blank"
 msgstr "Tyhjä"

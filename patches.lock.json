@@ -1,5 +1,5 @@
 {
-    "_hash": "5c60dd1aaf7da39c763a0131db5fdf6e8a377053011ade15d0a8096427ec33a7",
+    "_hash": "b5e91bc9389e6a9a8acea8b663ca32b1bf42a3f59f5305577d3f9feff03e1ca0",
     "patches": {
         "drupal/helfi_platform_config": [
             {
@@ -56,29 +56,9 @@
             },
             {
                 "package": "drupal/simple_oauth",
-                "description": "[D11] Replace watchdog_exception() usage",
-                "url": "patches/simple_oauth-drupal11-watchdog-exception.patch",
-                "sha256": "c7898af92e634b042d40c8b2005bfcccf7edfebdcffd4002a8a9c5783b7027b9",
-                "depth": 1,
-                "extra": {
-                    "provenance": "root"
-                }
-            },
-            {
-                "package": "drupal/simple_oauth",
                 "description": "[Symfony 7] Fix BasicAuthSwap handle signature",
                 "url": "patches/simple_oauth-symfony7-basicauthswap-handle-signature.patch",
                 "sha256": "02ecd91139ed05d645daaafbd21565d558a7883ec25f6920132d39916d8b130a",
-                "depth": 1,
-                "extra": {
-                    "provenance": "root"
-                }
-            },
-            {
-                "package": "drupal/simple_oauth",
-                "description": "[PHP 7.4+] Initialize ResourceServer subject property",
-                "url": "patches/simple_oauth-resource-server-subject-init.patch",
-                "sha256": "0b83d07995161ebd9eab25e865aab11678f3b847bb1a4852393207c8e3d38a3f",
                 "depth": 1,
                 "extra": {
                     "provenance": "root"

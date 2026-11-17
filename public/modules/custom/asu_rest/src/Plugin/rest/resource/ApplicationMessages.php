@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\asu_rest\Plugin\rest\resource;
 
 use Drupal\asu_api\Api\BackendApi\BackendApi;
+use Drupal\asu_application\ApplicationAttachmentManager;
 use Drupal\asu_application\ApplicationMessageManager;
 use Drupal\asu_application\Entity\Application;
 use Drupal\asu_application\Notification\SenderNameResolverTrait;
@@ -49,6 +50,7 @@ final class ApplicationMessages extends ResourceBase {
     private readonly MailManagerInterface $mailManager,
     private readonly BackendApi $backendApi,
     private readonly EntityTypeManagerInterface $entityTypeManager,
+    private readonly ApplicationAttachmentManager $attachmentManager,
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $serializer_formats, $logger);
   }
@@ -69,6 +71,7 @@ final class ApplicationMessages extends ResourceBase {
       $container->get('plugin.manager.mail'),
       $container->get('asu_api.backendapi'),
       $container->get('entity_type.manager'),
+      $container->get('asu_application.attachment_manager'),
     );
   }
 
@@ -86,6 +89,8 @@ final class ApplicationMessages extends ResourceBase {
     }
 
     $messages = $this->messageManager->loadThread($application_id);
+    $messageIds = array_map(static fn ($message): int => (int) $message->id(), $messages);
+    $attachmentsByMessageId = $this->attachmentManager->getAttachmentsByMessageIds($messageIds);
     $items = [];
 
     foreach ($messages as $message) {
@@ -99,6 +104,7 @@ final class ApplicationMessages extends ResourceBase {
         'recipient_mail' => (string) $message->get('recipient_mail')->value,
         'body' => (string) $message->get('body')->value,
         'created' => (int) $message->get('created')->value,
+        'attachments' => $this->absolutizeAttachmentUrls($attachmentsByMessageId[(int) $message->id()] ?? []),
       ];
     }
 
@@ -146,6 +152,31 @@ final class ApplicationMessages extends ResourceBase {
     }
 
     $coApplicantEmail = trim((string) ($data['co_applicant_email'] ?? ''));
+    $mainApplicantEmail = trim((string) ($data['main_applicant_email'] ?? ''));
+
+    $newAttachments = is_array($data['new_attachments'] ?? NULL) ? $data['new_attachments'] : [];
+    $newAttachmentResult = $this->attachmentManager->createAttachments(
+      $newAttachments,
+      $this->currentUser->isAuthenticated() ? (int) $this->currentUser->id() : 0,
+    );
+    if ($newAttachmentResult['errors'] !== []) {
+      return new ModifiedResourceResponse([
+        'error' => 'invalid_new_attachments',
+        'message' => 'Some new attachments are invalid or unsupported.',
+        'details' => $newAttachmentResult['errors'],
+      ], 422, $this->getTestingHeaders());
+    }
+
+    $attachmentIds = $this->normalizeAttachmentIds($data['attachment_ids'] ?? []);
+    $attachmentIds = array_values(array_unique(array_merge($attachmentIds, $newAttachmentResult['created_ids'])));
+    $validation = $this->attachmentManager->validateAttachableIds($attachmentIds);
+    if ($validation['errors'] !== []) {
+      return new ModifiedResourceResponse([
+        'error' => 'invalid_attachments',
+        'message' => 'Some attachments are invalid or unavailable.',
+        'details' => $validation['errors'],
+      ], 422, $this->getTestingHeaders());
+    }
 
     $salesperson = $senderRole === 'sales' ? $this->messageManager->resolveSalesperson($application) : NULL;
     $salespersonUid = $salesperson ? (int) $salesperson->id() : NULL;
@@ -160,8 +191,21 @@ final class ApplicationMessages extends ResourceBase {
       (string) ($data['recipient_mail'] ?? ''),
     );
 
+    $this->attachmentManager->attachToMessage(
+      (int) $message->id(),
+      $validation['valid_ids'],
+      $this->currentUser->isAuthenticated() ? (int) $this->currentUser->id() : 0,
+    );
+
+    $attachmentsByMessageId = $this->attachmentManager->getAttachmentsByMessageIds([(int) $message->id()]);
+    $messageAttachments = $this->absolutizeAttachmentUrls($attachmentsByMessageId[(int) $message->id()] ?? []);
+
     if ($senderRole === 'sales') {
-      $customerRecipients = $this->messageManager->resolveCustomerRecipients($application, $coApplicantEmail);
+      $customerRecipients = $this->messageManager->resolveCustomerRecipients(
+        $application,
+        $coApplicantEmail,
+        $mainApplicantEmail,
+      );
       foreach ($customerRecipients as $recipient) {
         $buyerMail = (string) ($recipient['mail'] ?? '');
         if ($buyerMail === '') {
@@ -194,6 +238,16 @@ final class ApplicationMessages extends ResourceBase {
           $lines[] = (string) $this->t('Open chat: @url', ['@url' => $customerThreadUrl], ['langcode' => $buyerLangcode]);
         }
 
+        foreach ($messageAttachments as $attachment) {
+          $openUrl = $this->buildAttachmentOpenUrl((string) ($attachment['download_url'] ?? ''));
+          if ($openUrl === '') {
+            continue;
+          }
+
+          $lines[] = '';
+          $lines[] = (string) $this->t('Open attachment: @url', ['@url' => $openUrl], ['langcode' => $buyerLangcode]);
+        }
+
         $lines[] = (string) $this->t('This is an automated message. Please do not reply to this email.', [], ['langcode' => $buyerLangcode]);
 
         $this->mailManager->mail('asu_application', 'application_message_notification', $buyerMail, $buyerLangcode, [
@@ -215,8 +269,55 @@ final class ApplicationMessages extends ResourceBase {
         'recipient_mail' => (string) $message->get('recipient_mail')->value,
         'body' => (string) $message->get('body')->value,
         'created' => (int) $message->get('created')->value,
+        'attachments' => $messageAttachments,
       ],
     ], 200, $this->getTestingHeaders());
+  }
+
+  /**
+   * Converts relative attachment URLs to absolute URLs.
+   *
+   * @param array<int, array<string, mixed>> $attachments
+   *   Attachment payload.
+   *
+   * @return array<int, array<string, mixed>>
+   *   Payload with absolute URLs.
+   */
+  private function absolutizeAttachmentUrls(array $attachments): array {
+    foreach ($attachments as $index => $attachment) {
+      if (!is_array($attachment)) {
+        continue;
+      }
+
+      $attachments[$index]['download_url'] = $this->buildAbsoluteUrl((string) ($attachment['download_url'] ?? ''));
+    }
+
+    return $attachments;
+  }
+
+  /**
+   * Normalizes attachment id payload.
+   *
+   * @param mixed $raw
+   *   Request value for attachment ids.
+   *
+   * @return int[]
+   *   Unique positive ids.
+   */
+  private function normalizeAttachmentIds(mixed $raw): array {
+    if (!is_array($raw)) {
+      return [];
+    }
+
+    $ids = [];
+    foreach ($raw as $value) {
+      $id = (int) $value;
+      if ($id > 0) {
+        $ids[] = $id;
+      }
+    }
+
+    return array_values(array_unique($ids));
   }
 
   /**
@@ -265,6 +366,10 @@ final class ApplicationMessages extends ResourceBase {
    * Builds an absolute URL using configured public base URL when available.
    */
   private function buildAbsoluteUrl(string $path): string {
+    if (preg_match('#^https?://#i', $path) === 1) {
+      return $path;
+    }
+
     $baseUrl = getenv('ASU_ASUNTOTUOTANTO_URL');
     if ($baseUrl) {
       return rtrim($baseUrl, '/') . $path;
@@ -274,6 +379,22 @@ final class ApplicationMessages extends ResourceBase {
     $host = $request ? $request->getSchemeAndHttpHost() : '';
 
     return $host . $path;
+  }
+
+  /**
+   * Builds customer attachment open URL from attachment download URL.
+   */
+  private function buildAttachmentOpenUrl(string $downloadUrl): string {
+    $downloadUrl = trim($downloadUrl);
+    if ($downloadUrl === '') {
+      return '';
+    }
+
+    if (preg_match('#^https?://#i', $downloadUrl) === 1) {
+      return str_replace('/download', '/open', $downloadUrl);
+    }
+
+    return $this->buildAbsoluteUrl(str_replace('/download', '/open', $downloadUrl));
   }
 
   /**

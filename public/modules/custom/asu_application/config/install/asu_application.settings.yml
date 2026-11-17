@@ -1,0 +1,14 @@
+attachments:
+  allowed_mime_types:
+    - application/pdf
+    - image/jpeg
+    - image/png
+    - text/plain
+    - application/msword
+    - application/vnd.openxmlformats-officedocument.wordprocessingml.document
+  max_file_size_bytes: 20971520
+  rate_limit:
+    per_user: 30
+    per_attachment: 20
+    upload_per_user: 20
+    window_seconds: 60

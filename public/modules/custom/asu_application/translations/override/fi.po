@@ -13,6 +13,15 @@ msgstr "Takaisin hakemukseen"
 msgid "Conversation"
 msgstr "Viestiketju"
 
+msgid "Files in message (@count)"
+msgstr "Tiedostot viestissä (@count)"
+
+msgid "Open"
+msgstr "Avaa"
+
+msgid "Download"
+msgstr "Lataa"
+
 msgid "No messages yet."
 msgstr "Ei viestejä vielä."
 
@@ -63,6 +72,9 @@ msgstr "Viestin sisältö: @url"
 
 msgid "Open chat: @url"
 msgstr "Avaa chat: @url"
+
+msgid "Open attachment: @url"
+msgstr "Avaa liite: @url"
 
 msgid "This is an automated message. Please do not reply to this email."
 msgstr "Tämä on automaattinen viesti. Älä vastaa tähän sähköpostiin."
