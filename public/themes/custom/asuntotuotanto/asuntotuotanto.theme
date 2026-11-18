@@ -980,7 +980,17 @@ function asuntotuotanto_preprocess_node(&$variables) {
           $variables['street_number'] = $street_number ?? NULL;
         }
 
-        $variables['application_url'] = $project->getApplicationUrl($apartment->field_apartment_number->value ?? NULL);
+        // Use the apartment-level URL so state of sale and node id are passed;
+        // HITAS post-period reservations need FREE_FOR_RESERVATIONS to get the
+        // application form instead of the contact form.
+        $variables['application_url'] = $apartment->getApplicationUrl();
+        // After the period, non-HASO projects take reservations for free
+        // apartments only ("Make a reservation", as in the search UI); the
+        // after-application CTA is HASO wording.
+        $variables['is_post_period_reservation'] = $is_application_period_in_the_past
+          && $can_apply_afterwards
+          && $project->getOwnershipType() !== 'haso';
+        $variables['apartment_is_free_for_reservations'] = $apartment->isFree();
         $variables['coordinate_lat'] = $coordinate_lat;
         $variables['coordinate_lon'] = $coordinate_lon;
         $variables['city'] = $city;

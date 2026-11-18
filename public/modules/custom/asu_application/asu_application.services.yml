@@ -15,6 +15,12 @@ services:
   asu_application.reservation_apartment_preselector:
     class: Drupal\asu_application\Service\ReservationApartmentPreselector
 
+  asu_application.canceled_reservation_checker:
+    class: Drupal\asu_application\Service\CanceledReservationChecker
+    arguments:
+      - '@entity_type.manager'
+      - '@current_user'
+
   logger.channel.asu_application:
     parent: logger.channel_base
     arguments: [ 'asu_application' ]

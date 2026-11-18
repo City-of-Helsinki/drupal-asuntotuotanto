@@ -61,7 +61,13 @@ final class Initialize extends ResourceBase {
       $user = User::load(\Drupal::currentUser()->id());
       $userApplications = Applications::applicationsByUser($user->id());
       $response['user'] = $this->getUser($user);
-      $response['user']['applications'] = $this->getUserApplications($userApplications);
+      // The search UI tells the user they have an application in every
+      // listed project; a canceled reservation must not block a new one.
+      $response['user']['applications'] = $this->getUserApplications(
+        $userApplications->withoutCanceled(
+          \Drupal::service('asu_application.canceled_reservation_checker')
+        )
+      );
       $response['user']['application_project_pairs'] = $userApplications
         ->getApplicationsProjectPairs();
       // @todo Followed projects.

@@ -2,6 +2,7 @@
 
 namespace Drupal\asu_application;
 
+use Drupal\asu_application\Service\CanceledReservationChecker;
 use Drupal\user\Entity\User;
 
 /**
@@ -117,6 +118,24 @@ class Applications {
    */
   public static function applicationsByUser(string $userId): self {
     return new self($userId);
+  }
+
+  /**
+   * Return a copy without applications whose reservations are all canceled.
+   *
+   * @param \Drupal\asu_application\Service\CanceledReservationChecker $checker
+   *   Canceled reservation checker.
+   *
+   * @return static
+   *   Applications that are still active.
+   */
+  public function withoutCanceled(CanceledReservationChecker $checker): self {
+    $active = clone $this;
+    $active->applications = array_filter(
+      $this->applications,
+      static fn ($application) => !$checker->isApplicationCanceled($application)
+    );
+    return $active;
   }
 
   /**

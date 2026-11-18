@@ -43819,3 +43819,6 @@ msgstr "Valittu huoneisto"
 
 msgid "Make a reservation for @project"
 msgstr "Tee varaus kohteeseen @project"
+
+msgid "Make a reservation"
+msgstr "Tee varaus"

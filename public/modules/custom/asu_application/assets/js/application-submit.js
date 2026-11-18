@@ -106,26 +106,27 @@
         return;
       }
 
+      // Badge sync only matters where message buttons are rendered. The
+      // confirm handlers below must attach regardless: the application form
+      // has no message buttons but needs the replace-application dialog.
       const root = context.querySelector ? context : document;
-      if (!root.querySelector(".application-message-button[data-application-id]")) {
-        return;
-      }
-
-      once("application-submit-badge-sync", "body", context).forEach(function () {
-        syncApplicationMessageBadges();
-
-        window.addEventListener("pageshow", function () {
+      if (root.querySelector(".application-message-button[data-application-id]")) {
+        once("application-submit-badge-sync", "body", context).forEach(function () {
           syncApplicationMessageBadges();
-        });
 
-        document.addEventListener("visibilitychange", function () {
-          if (document.visibilityState === "visible") {
+          window.addEventListener("pageshow", function () {
             syncApplicationMessageBadges();
-          }
-        });
-      });
+          });
 
-      syncApplicationMessageBadges();
+          document.addEventListener("visibilitychange", function () {
+            if (document.visibilityState === "visible") {
+              syncApplicationMessageBadges();
+            }
+          });
+        });
+
+        syncApplicationMessageBadges();
+      }
 
       once(
         "application-submit-init",
