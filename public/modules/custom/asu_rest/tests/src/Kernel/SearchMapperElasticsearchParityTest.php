@@ -213,6 +213,48 @@ final class SearchMapperElasticsearchParityTest extends SearchMapperKernelTestBa
   }
 
   /**
+   * Apartment listing prefers project showing time when available.
+   */
+  public function testApartmentListingShowingTimesUseProjectField(): void {
+    $this->createNodeField('field_project_showing_time', 'project', 'string', 'Project showing time');
+    $this->createNodeField('field_showing_time', 'apartment', 'string', 'Apartment showing time');
+
+    $projectTime = '2099-11-16T12:00:00+02:00';
+    $apartmentTime = '2099-11-16T13:00:00+02:00';
+
+    $project = $this->createProjectNode('Project with showing time', [
+      'field_project_showing_time' => $projectTime,
+    ]);
+    $apartment = $this->createApartmentNode('A 3', [
+      'field_showing_time' => $apartmentTime,
+    ]);
+
+    $this->mapper->primeProjectLookupWithKnownProject([$apartment], $project);
+    $mapped = $this->mapper->mapApartmentListing($apartment);
+
+    $this->assertArrayHasKey('showing_times', $mapped);
+    $this->assertSame([$projectTime], $mapped['showing_times']);
+  }
+
+  /**
+   * Apartment listing omits showing time when selected value is in the past.
+   */
+  public function testApartmentListingShowingTimesExcludePastValues(): void {
+    $this->createNodeField('field_project_showing_time', 'project', 'string', 'Project showing time');
+
+    $project = $this->createProjectNode('Project with past showing time', [
+      'field_project_showing_time' => '2000-01-01T10:00:00+02:00',
+    ]);
+    $apartment = $this->createApartmentNode('A 4');
+
+    $this->mapper->primeProjectLookupWithKnownProject([$apartment], $project);
+    $mapped = $this->mapper->mapApartmentListing($apartment);
+
+    $this->assertArrayHasKey('showing_times', $mapped);
+    $this->assertSame([], $mapped['showing_times']);
+  }
+
+  /**
    * Apartment listing includes publish_on_etuovi and publish_on_oikotie.
    *
    * List endpoints (/apartments, /projects/{uuid}/apartments) must expose these
