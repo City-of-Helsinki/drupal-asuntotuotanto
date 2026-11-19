@@ -200,6 +200,16 @@
 					href: application_url
 					}
 				%}
+			{% elseif is_post_period_reservation %}
+				{% if apartment_is_free_for_reservations %}
+					{% include '@asuntotuotanto/button/button.html.twig' with {
+						type: 'primary',
+						disabled: false,
+						label: 'Make a reservation'|t,
+						href: application_url
+						}
+					%}
+				{% endif %}
 			{% elseif can_apply_afterwards == 1 %}
 				{% include '@asuntotuotanto/button/button.html.twig' with {
 									type: 'primary',
