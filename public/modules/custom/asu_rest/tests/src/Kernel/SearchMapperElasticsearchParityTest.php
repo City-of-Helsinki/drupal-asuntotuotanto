@@ -234,6 +234,33 @@ final class SearchMapperElasticsearchParityTest extends SearchMapperKernelTestBa
 
     $this->assertArrayHasKey('showing_times', $mapped);
     $this->assertSame([$projectTime], $mapped['showing_times']);
+    $this->assertArrayHasKey('showing_end_times', $mapped);
+    $this->assertSame([], $mapped['showing_end_times']);
+  }
+
+  /**
+   * Apartment listing maps showing end time from apartment duration.
+   */
+  public function testApartmentListingShowingEndTimesFromApartmentDuration(): void {
+    $this->createNodeField('field_showing_time', 'apartment', 'string', 'Apartment showing time');
+    $this->createNodeField('field_showing_duration_minutes', 'apartment', 'integer', 'Apartment showing duration');
+
+    $showingStart = '2099-11-16T12:00:00+02:00';
+    $showingEnd = '2099-11-16T12:30:00+02:00';
+
+    $project = $this->createProjectNode('Project without showing time');
+    $apartment = $this->createApartmentNode('A 5', [
+      'field_showing_time' => $showingStart,
+      'field_showing_duration_minutes' => 30,
+    ]);
+
+    $this->mapper->primeProjectLookupWithKnownProject([$apartment], $project);
+    $mapped = $this->mapper->mapApartmentListing($apartment);
+
+    $this->assertArrayHasKey('showing_times', $mapped);
+    $this->assertArrayHasKey('showing_end_times', $mapped);
+    $this->assertSame([$showingStart], $mapped['showing_times']);
+    $this->assertSame([$showingEnd], $mapped['showing_end_times']);
   }
 
   /**
