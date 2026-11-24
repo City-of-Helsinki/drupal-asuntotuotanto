@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Drupal\asu_apartment_search\Asset;
 
 /**
- * Builds a Drupal asset library that loads the app from Vite during development.
+ * Builds a Drupal asset library that loads the app from Vite in development.
  */
 final class DevLibraryBuilder {
 
@@ -32,7 +32,9 @@ final class DevLibraryBuilder {
       isset($parts['fragment']) ||
       (isset($parts['path']) && $parts['path'] !== '')
     ) {
-      throw new \InvalidArgumentException('The Vite development origin must be an HTTP(S) origin without a path.');
+      throw new \InvalidArgumentException(
+        'The Vite development origin must be an HTTP(S) origin without a path.'
+      );
     }
 
     $origin = rtrim($origin, '/');
