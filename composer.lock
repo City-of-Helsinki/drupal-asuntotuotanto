@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "bd83bb17e4f218435d5959303dd67332",
+    "content-hash": "3ed1deb8a3ebd55e3cf5e6b5251a0db8",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -1001,6 +1001,54 @@
                 "issues": "https://github.com/City-of-Helsinki/php-logger-extra/issues"
             },
             "time": "2025-11-25T11:22:47+00:00"
+        },
+        {
+            "name": "city-of-helsinki/php-resilient-logger",
+            "version": "2.0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/City-of-Helsinki/php-resilient-logger.git",
+                "reference": "3bd0723bbbaa2360a3128a173e141649c0a95a77"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/City-of-Helsinki/php-resilient-logger/zipball/3bd0723bbbaa2360a3128a173e141649c0a95a77",
+                "reference": "3bd0723bbbaa2360a3128a173e141649c0a95a77",
+                "shasum": ""
+            },
+            "require": {
+                "elasticsearch/elasticsearch": "^8.0",
+                "monolog/monolog": "^2.0 || ^3.0",
+                "php": ">=8.1",
+                "sebastian/diff": "^5.0 || ^6.0 || ^7.0"
+            },
+            "require-dev": {
+                "behat/mink": "^1.12",
+                "phpspec/prophecy": "^1.20",
+                "phpspec/prophecy-phpunit": "^2.3",
+                "phpstan/phpstan": "^1.12 || ^2.0",
+                "phpunit/phpunit": "^10.5 || ^11.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "ResilientLogger\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "ResilientLogger\\Tests\\": "tests/src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "PHP resilient logger for monolog",
+            "support": {
+                "source": "https://github.com/City-of-Helsinki/php-resilient-logger/tree/2.0.3",
+                "issues": "https://github.com/City-of-Helsinki/php-resilient-logger/issues"
+            },
+            "time": "2026-08-26T09:30:23+00:00"
         },
         {
             "name": "commerceguys/addressing",
@@ -4854,7 +4902,7 @@
             "extra": {
                 "drupal": {
                     "version": "8.x-1.8",
-                    "datestamp": "1787767893",
+                    "datestamp": "1787858234",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -5992,20 +6040,22 @@
         },
         {
             "name": "drupal/helfi_api_base",
-            "version": "2.8.24",
+            "version": "2.9.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/City-of-Helsinki/drupal-module-helfi-api-base.git",
-                "reference": "66ecbeccf90549c9944b8a48909355b65b8acfa0"
+                "reference": "95c7f66f72cc55d7d2305cdfce1a6317803388a8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/City-of-Helsinki/drupal-module-helfi-api-base/zipball/66ecbeccf90549c9944b8a48909355b65b8acfa0",
-                "reference": "66ecbeccf90549c9944b8a48909355b65b8acfa0",
+                "url": "https://api.github.com/repos/City-of-Helsinki/drupal-module-helfi-api-base/zipball/95c7f66f72cc55d7d2305cdfce1a6317803388a8",
+                "reference": "95c7f66f72cc55d7d2305cdfce1a6317803388a8",
                 "shasum": ""
             },
             "require": {
                 "city-of-helsinki/php-logger-extra": "^1.0",
+                "city-of-helsinki/php-resilient-logger": "^2.0",
+                "drupal/diff": "^2.0",
                 "drupal/entity": "^1.0",
                 "drupal/health_check": "^3.0",
                 "drupal/monolog": "^3.0",
@@ -6043,10 +6093,10 @@
             ],
             "description": "Helfi - API Base",
             "support": {
-                "source": "https://github.com/City-of-Helsinki/drupal-module-helfi-api-base/tree/2.8.24",
+                "source": "https://github.com/City-of-Helsinki/drupal-module-helfi-api-base/tree/2.9.2",
                 "issues": "https://github.com/City-of-Helsinki/drupal-module-helfi-api-base/issues"
             },
-            "time": "2026-06-25T09:52:27+00:00"
+            "time": "2026-11-10T06:55:26+00:00"
         },
         {
             "name": "drupal/helfi_azure_fs",
@@ -8405,7 +8455,7 @@
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/raven.git",
-                "reference": "9a812ea63db0bfdfbe2c2f10d51d1eb0e3e11cc9"
+                "reference": "932eb40defb5d55b6683381a1a887541f43b0afb"
             },
             "require": {
                 "drupal/core": "^10.2 || ^11",
@@ -8423,8 +8473,8 @@
                     "dev-6.x": "6.x-dev"
                 },
                 "drupal": {
-                    "version": "6.0.16+3-dev",
-                    "datestamp": "1755288408",
+                    "version": "6.0.17+1-dev",
+                    "datestamp": "1793503891",
                     "security-coverage": {
                         "status": "not-covered",
                         "message": "Dev releases are not covered by Drupal security advisories."
@@ -8444,6 +8494,10 @@
             ],
             "description": "Integrates with Sentry application monitoring and error tracking platform (sentry.io).",
             "homepage": "https://www.drupal.org/project/raven",
+            "keywords": [
+                "Actively maintained",
+                "Administration tools"
+            ],
             "support": {
                 "source": "https://git.drupalcode.org/project/raven",
                 "issues": "https://www.drupal.org/project/issues/raven"
@@ -8799,6 +8853,10 @@
             ],
             "description": "Integration of Drupal with the Redis key-value store.",
             "homepage": "https://www.drupal.org/project/redis",
+            "keywords": [
+                "Actively maintained",
+                "Integrations"
+            ],
             "support": {
                 "source": "https://git.drupalcode.org/project/redis"
             }
@@ -10733,16 +10791,16 @@
         },
         {
             "name": "drush/drush",
-            "version": "13.7.4",
+            "version": "13.8.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/drush-ops/drush.git",
-                "reference": "90123a96db5a4d2e0faa97242eef69785aa0e67d"
+                "reference": "a5529118232c722c052ad6ae3be587df43c7d6fa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/drush-ops/drush/zipball/90123a96db5a4d2e0faa97242eef69785aa0e67d",
-                "reference": "90123a96db5a4d2e0faa97242eef69785aa0e67d",
+                "url": "https://api.github.com/repos/drush-ops/drush/zipball/a5529118232c722c052ad6ae3be587df43c7d6fa",
+                "reference": "a5529118232c722c052ad6ae3be587df43c7d6fa",
                 "shasum": ""
             },
             "require": {
@@ -10870,7 +10928,7 @@
                 "issues": "https://github.com/drush-ops/drush/issues",
                 "security": "https://github.com/drush-ops/drush/security/advisories",
                 "slack": "https://drupal.slack.com/messages/C62H9CWQM",
-                "source": "https://github.com/drush-ops/drush/tree/13.7.4"
+                "source": "https://github.com/drush-ops/drush/tree/13.8.0"
             },
             "funding": [
                 {
@@ -10878,7 +10936,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-06-15T20:22:19+00:00"
+            "time": "2026-09-08T18:24:55+00:00"
         },
         {
             "name": "egulias/email-validator",
@@ -21552,7 +21610,7 @@
         },
         {
             "name": "drupal/core-dev",
-            "version": "11.3.20",
+            "version": "11.3.22",
             "source": {
                 "type": "git",
                 "url": "https://github.com/drupal/core-dev.git",
@@ -21602,7 +21660,7 @@
             ],
             "description": "require-dev dependencies from drupal/drupal; use in addition to drupal/core-recommended to run tests from drupal/core.",
             "support": {
-                "source": "https://github.com/drupal/core-dev/tree/11.3.20"
+                "source": "https://github.com/drupal/core-dev/tree/11.3.22"
             },
             "time": "2026-05-20T15:34:10+00:00"
         },
