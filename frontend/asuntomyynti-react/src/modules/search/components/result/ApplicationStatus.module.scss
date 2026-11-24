@@ -1,0 +1,47 @@
+.statusCircle {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  display: inline-block;
+
+  & + span {
+    margin-left: 8px;
+    font-size: 16px;
+  }
+
+  &.statusCircleFree {
+    background-color: var(--color-copper-dark);
+    border-color: var(--color-copper-dark);
+  }
+
+  &.statusCircleNone {
+    background-color: transparent;
+    border-color: var(--color-copper-dark);
+  }
+
+  &.statusCircleFew {
+    background-color: var(--color-copper-dark);
+    border-color: var(--color-copper-dark);
+  }
+
+  &.statusCircleSome {
+    background-color: var(--color-alert);
+    border-color: var(--color-alert);
+  }
+
+  &.statusCircleLots {
+    background-color: var(--color-metro-dark);
+    border-color: var(--color-metro-dark);
+  }
+
+  &.statusCircleReserved {
+    background-color: var(--color-brick);
+    border-color: var(--color-brick);
+  }
+
+  &.statusCircleSold {
+    background-color: var(--color-brick);
+    border-color: var(--color-brick);
+  }
+}

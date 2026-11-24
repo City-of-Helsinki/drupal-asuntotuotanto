@@ -1,0 +1,72 @@
+.mapProjectDetailWrap {
+  position: relative;
+  z-index: 2;
+  background-color: #fff;
+  border-bottom: 1px solid var(--color-black-20);
+  text-align: left;
+  padding: var(--spacing-xs);
+
+  a {
+    color: inherit;
+    text-decoration: none;
+
+    &:hover,
+    &:focus {
+      text-decoration: none;
+
+      p,
+      h3 {
+        text-decoration: underline;
+      }
+
+      .labelWrap {
+        text-decoration: none;
+      }
+    }
+  }
+}
+
+.mapProjectDetails {
+  padding-right: 40px;
+}
+
+.mapProjectDetailsContent {
+  display: flex;
+  flex-wrap: nowrap;
+  flex-direction: row;
+}
+
+.mapProjectDetailText {
+  h3 {
+    font-size: var(--fontsize-heading-s);
+    margin: 0;
+  }
+
+  p {
+    margin: var(--spacing-3-xs) 0;
+  }
+}
+
+.mapProjectDetailImage {
+  height: 75px;
+  width: 75px;
+  margin-right: var(--spacing-xs);
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.mapApartments {
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  overflow: hidden;
+  overflow-y: auto;
+  background-color: #fff;
+}

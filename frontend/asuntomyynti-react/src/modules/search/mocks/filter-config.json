@@ -1,0 +1,128 @@
+{
+  "filters": {
+    "project_building_type": {
+      "label": "Rakennuksen tyyppi",
+      "items": [
+        "Kerrostalo",
+        "Pientalo",
+        "Rivitalo"
+      ],
+      "suffix": null
+    },
+    "project_district_hitas": {
+      "label": "Kaupunginosa / alue",
+      "items": [
+        "Kamppi",
+        "Käpylä",
+        "Kaarela",
+        "Karhusaari",
+        "Konala",
+        "Kaartinkaupunki"
+      ],
+      "suffix": null
+    },
+    "project_district_haso": {
+      "label": "Kaupunginosa / alue",
+      "items": [
+        "Kamppi"
+      ],
+      "suffix": null
+    },
+    "project_new_development_status": {
+      "label": "Uudiskohteen tila",
+      "items": [
+        "Ennakkomarkkinoinnissa",
+        "Muuttovalmis",
+        "Rakenteilla",
+        "Suunnitteilla"
+      ],
+      "suffix": null
+    },
+    "project_state_of_sale": {
+      "label": "State of sale",
+      "items": [
+        "for_sale",
+        "pre_marketing",
+        "processing",
+        "ready"
+      ],
+      "suffix": null
+    },
+    "properties": {
+      "label": "Additional selections",
+      "items": [
+        "project_has_elevator",
+        "project_has_sauna",
+        "has_apartment_sauna",
+        "has_terrace",
+        "has_balcony",
+        "has_yard",
+        "TOP_FLOOR",
+        "BOTTOM_FLOOR",
+        "NOT_TOP_FLOOR",
+        "NOT_BOTTOM_FLOOR",
+        "SINGLE_LEVEL",
+        "HAS_FRENCH_BALCONY"
+      ],
+      "suffix": null
+    },
+    "room_count": {
+      "label": "Room count",
+      "items": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5+"
+      ],
+      "suffix": "rooms"
+    },
+    "living_area": {
+      "items": [
+        "At least",
+        "At most"
+      ],
+      "label": "area, m2",
+      "suffix": "m2"
+    },
+    "price": {
+      "items": [
+        "Price at most"
+      ],
+      "label": "Price at most",
+      "suffix": "Eur"
+    }
+  },
+  "static_content": {
+    "hitas_instruction_text": "Miten Hitas-haku etenee? Olemme koonneet tietoa Hitas-asunnoista omalle sivulleen. Tutustuthan siihen ennen kuin jätät hakemuksen.",
+    "hitas_instruction_text_mobile": "Miten Hitas-haku etenee ?",
+    "hitas_instruction_icon_text": "Ohjeet",
+    "hitas_instruction_url": "/oppaat/hitas",
+    "haso_instruction_text": "How applying for haso apartments works ? What is required from the applicant ? Read our buyers guide for haso apartments before proceeding with the application.",
+    "haso_instruction_text_mobile": "How applying for haso apartments works ?",
+    "haso_instruction_icon_text": "Instructions",
+    "haso_instruction_url": "/oppaat/haso"
+  },
+  "apartment_application_status": {
+    "30": "LOW",
+    "31": "LOW",
+    "32": "LOW",
+    "33": "LOW",
+    "34": "LOW",
+    "37": "LOW",
+    "40": "LOW",
+    "50": "LOW",
+    "52": "LOW",
+    "53": "LOW",
+    "54": "LOW",
+    "56": "LOW",
+    "59": "LOW"
+  },
+  "token": "abc",
+  "user": {
+    "user_id": 0,
+    "email_address": null,
+    "username": "",
+    "applications": []
+  }
+}

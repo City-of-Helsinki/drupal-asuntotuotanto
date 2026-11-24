@@ -1,0 +1,15 @@
+.priceInput {
+  position: relative;
+  & *:nth-child(2)::after {
+    content: '000 \20AC'; // -> 000 €
+    display: flex;
+    position: absolute;
+    right: 10px;
+    top: 0;
+    font-size: 18px;
+    font-weight: bold;
+    height: 100%;
+    color: #b9bbbb;
+    align-items: center;
+  }
+}

@@ -1,0 +1,24 @@
+.header {
+  margin-top: 0;
+  font-size: 24px;
+  line-height: 29px;
+}
+
+.buttonWrapper {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 48px;
+  @media (max-width: 476px) {
+    flex-direction: column;
+  }
+  & > * {
+    margin-left: 20px;
+    @media (max-width: 476px) {
+      margin: 0 0 10px 0;
+    }
+  }
+}
+
+.fieldWrapper {
+  margin-bottom: 24px;
+}

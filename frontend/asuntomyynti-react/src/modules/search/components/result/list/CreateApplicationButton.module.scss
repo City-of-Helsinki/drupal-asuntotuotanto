@@ -1,0 +1,14 @@
+.createApplicationButton {
+  text-decoration: none;
+  height: 56px;
+  white-space: nowrap;
+
+  @media (max-width: 768px) {
+    width: 100%;
+  }
+
+  @media (min-width: 769px) {
+    height: 36px;
+    min-height: unset !important;
+  }
+}

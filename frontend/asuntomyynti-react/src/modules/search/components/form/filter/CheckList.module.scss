@@ -1,0 +1,31 @@
+.container {
+  @media (max-width: 768px) {
+    padding-bottom: 20px;
+  }
+
+  legend {
+    font-weight: bold;
+  }
+}
+
+.item {
+  label {
+    width: 100%;
+    overflow-wrap: break-word;
+    hyphens: auto;
+
+    &::after {
+      --background-unselected: #fff;
+    }
+  }
+}
+
+.isWrapped .item:hover {
+  background: var(--color-black-10);
+}
+
+.isWrapped {
+  legend {
+    display: none;
+  }
+}
