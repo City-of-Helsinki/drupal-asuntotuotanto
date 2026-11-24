@@ -16,6 +16,12 @@ This is an **Open Source Drupal project**. It serves as the content management s
 - be sure to refresh patches.lock.json after creating/editing patches
 - the agent shall not refer to itself using human pronouns or feign a human persona. It should use **passive tense** to describe what its doing
 
+## Tool Usage & Permissions
+- **CRITICAL:** ALWAYS use your native `Read`, `Edit`, and `Write` tools for all file operations. 
+- DO NOT use the `Bash` tool to inspect or modify files (e.g., avoid `cat`, `sed`, `awk`, `grep`, `echo`, or shell redirection).
+- Using custom Bash commands for file operations triggers manual permission prompts and breaks unattended workflows. 
+- Reserve the `Bash` tool strictly for compiling, running tests, git operations, and executing necessary project scripts.
+
 ## Security & Sensitive Data
 **STRICT RULE:** This is a public repository.
 * **NEVER** output or suggest code containing real secrets, passwords, API keys, or tokens.

@@ -16,6 +16,7 @@ use Drupal\Core\Url;
 use Drupal\asu_application\Entity\Application;
 use Drupal\asu_application\Event\ApplicationEvent;
 use Drupal\asu_application\Event\SalesApplicationEvent;
+use Drupal\asu_application\Service\CanceledReservationChecker;
 use Drupal\asu_application\Service\ReservationApartmentPreselector;
 use Drupal\asu_application\Service\SoldApartmentApplicationPolicy;
 use Drupal\asu_content\Entity\Apartment;
@@ -95,6 +96,13 @@ class ApplicationForm extends ContentEntityForm implements TrustedCallbackInterf
   protected ReservationApartmentPreselector $reservationApartmentPreselector;
 
   /**
+   * Detects applications whose Django reservations are all canceled.
+   *
+   * @var \Drupal\asu_application\Service\CanceledReservationChecker
+   */
+  protected CanceledReservationChecker $canceledReservationChecker;
+
+  /**
    * Summary of application.
    *
    * @var application
@@ -135,6 +143,9 @@ class ApplicationForm extends ContentEntityForm implements TrustedCallbackInterf
     );
     $instance->reservationApartmentPreselector = $container->get(
       'asu_application.reservation_apartment_preselector'
+    );
+    $instance->canceledReservationChecker = $container->get(
+      'asu_application.canceled_reservation_checker'
     );
 
     return $instance;
@@ -294,6 +305,17 @@ HTML;
             'uid' => $owner->id(),
             'project_id' => $project_id,
           ]);
+
+        // After the period, a reservation whose reservations were all
+        // canceled (or whose offer was rejected) in Django no longer blocks
+        // a new reservation. Django accepts a new one then; during the
+        // period the old application is still replaced instead.
+        if ($isHitasPostPeriodReservation) {
+          $applications = array_filter(
+            $applications,
+            fn (Application $application) => !$this->canceledReservationChecker->isApplicationCanceled($application)
+          );
+        }
 
         if (!empty($applications)) {
           $url = reset($applications)->toUrl()->toString() . '/edit';

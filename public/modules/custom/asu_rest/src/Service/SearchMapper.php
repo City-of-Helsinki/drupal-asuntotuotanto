@@ -59,6 +59,21 @@ final class SearchMapper {
     $maintenanceFee = $this->getScalar($apartment, 'field_maintenance_fee');
     $stockStart = $this->getScalar($apartment, 'field_stock_start_number');
     $stockEnd = $this->getScalar($apartment, 'field_stock_end_number');
+    $showingSourceNode = $apartment;
+    $showingTime = $project
+      ? $this->getScalar($project, 'field_project_showing_time')
+      : '';
+    if ($showingTime !== '' && $project) {
+      $showingSourceNode = $project;
+    }
+    if ($showingTime === '') {
+      $showingTime = $this->getScalar($apartment, 'field_showing_time');
+      $showingSourceNode = $apartment;
+    }
+    if ($this->isPastDateTime($showingTime)) {
+      $showingTime = '';
+    }
+    $showingEndTime = $this->resolveShowingEndTime($showingSourceNode, $showingTime);
 
     // Full ApartmentDocument key set on list and detail endpoints so consumers
     // (Django portals, PDF, serializers) do not depend on
@@ -108,7 +123,8 @@ final class SearchMapper {
       'room_count' => $this->toNumber($this->getScalar($apartment, 'field_apartment_structure')),
       'sales_price' => $this->toCents($this->getScalar($apartment, 'field_sales_price')),
       'services_description' => $this->getScalar($apartment, 'field_services_description'),
-      'showing_times' => $this->formatDateTimeList($this->getScalar($apartment, 'field_showing_time')),
+      'showing_times' => $this->formatDateTimeList($showingTime),
+      'showing_end_times' => $this->formatDateTimeList($showingEndTime),
       'stock_end_number' => $stockEnd,
       'stock_start_number' => $stockStart,
       'storage_description' => $this->getScalar($apartment, 'field_storage_description'),
@@ -811,6 +827,135 @@ final class SearchMapper {
   private function formatDateTimeList(string $value): array {
     $formatted = $this->formatDateTime($value);
     return $formatted === '' ? [] : [$formatted];
+  }
+
+  /**
+   * Resolve showing end time from daterange fields or duration minutes.
+   */
+  private function resolveShowingEndTime(Node $node, string $showingStartTime): string {
+    if ($showingStartTime === '') {
+      return '';
+    }
+
+    $rangeFields = [
+      'field_project_showing_time_range',
+      'field_showing_time_range',
+    ];
+
+    foreach ($rangeFields as $fieldName) {
+      if (!$node->hasField($fieldName) || $node->get($fieldName)->isEmpty()) {
+        continue;
+      }
+
+      $fallbackEnd = '';
+      foreach ($node->get($fieldName)->getValue() as $item) {
+        $start = isset($item['value']) && is_string($item['value']) ? $item['value'] : '';
+        $end = isset($item['end_value']) && is_string($item['end_value']) ? $item['end_value'] : '';
+        if ($end === '') {
+          continue;
+        }
+
+        if ($fallbackEnd === '') {
+          $fallbackEnd = $end;
+        }
+
+        if ($start !== '' && $start === $showingStartTime) {
+          return $end;
+        }
+      }
+
+      if ($fallbackEnd !== '') {
+        return $fallbackEnd;
+      }
+    }
+
+    $duration = $this->resolveShowingDurationMinutes($node);
+    if ($duration === NULL) {
+      return '';
+    }
+
+    $timestamp = $this->parseDateTimeToTimestamp($showingStartTime);
+    if ($timestamp === NULL) {
+      return '';
+    }
+
+    $withTimezone = $this->addMinutesToDateTime($showingStartTime, $duration);
+    if ($withTimezone !== NULL) {
+      return $withTimezone;
+    }
+
+    return gmdate('Y-m-d\TH:i:s', $timestamp + ($duration * 60));
+  }
+
+  /**
+   * Add minutes to datetime string and keep timezone when available.
+   */
+  private function addMinutesToDateTime(string $value, int $minutes): ?string {
+    try {
+      $dateTime = new \DateTimeImmutable($value);
+    }
+    catch (\Exception) {
+      return NULL;
+    }
+
+    return $dateTime
+      ->modify('+' . $minutes . ' minutes')
+      ->format('Y-m-d\\TH:i:sP');
+  }
+
+  /**
+   * Resolve optional showing duration field value in minutes.
+   */
+  private function resolveShowingDurationMinutes(Node $node): ?int {
+    $durationFields = [
+      'field_project_showing_duration_minutes',
+      'field_showing_duration_minutes',
+    ];
+
+    foreach ($durationFields as $fieldName) {
+      if (!$node->hasField($fieldName) || $node->get($fieldName)->isEmpty()) {
+        continue;
+      }
+
+      $raw = (string) $node->get($fieldName)->value;
+      if ($raw !== '' && is_numeric($raw)) {
+        $minutes = (int) $raw;
+        if ($minutes > 0) {
+          return $minutes;
+        }
+      }
+    }
+
+    return NULL;
+  }
+
+  /**
+   * Parse a datetime value to unix timestamp.
+   */
+  private function parseDateTimeToTimestamp(string $value): ?int {
+    if ($value === '') {
+      return NULL;
+    }
+
+    $timestamp = strtotime($value);
+    if ($timestamp !== FALSE) {
+      return $timestamp;
+    }
+
+    $timestamp = strtotime($value . ' UTC');
+    return $timestamp === FALSE ? NULL : $timestamp;
+  }
+
+  /**
+   * Check whether a datetime string is in the past.
+   */
+  private function isPastDateTime(string $value): bool {
+    $timestamp = $this->parseDateTimeToTimestamp($value);
+    if ($timestamp === NULL) {
+      return FALSE;
+    }
+
+    return $timestamp < time();
   }
 
   /**

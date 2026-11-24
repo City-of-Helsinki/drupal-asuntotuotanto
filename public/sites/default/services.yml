@@ -1,4 +1,12 @@
 parameters:
+  # Entity types audit logged by helfi_api_base (CREATE/UPDATE/DELETE).
+  # Overrides the module default, so node and user are listed explicitly.
+  helfi_api_base.audit_log_entity_types:
+    - { entity_type: 'node' }
+    - { entity_type: 'user' }
+    - { entity_type: 'asu_application' }
+    - { entity_type: 'asu_application_payment' }
+    - { entity_type: 'asu_application_message' }
   session.storage.options:
     # Default ini options for sessions.
     #

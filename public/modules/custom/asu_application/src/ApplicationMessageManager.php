@@ -174,8 +174,13 @@ final class ApplicationMessageManager {
    * @return array<int, array{uid:int, mail:string, langcode:string}>
    *   Unique recipients by email.
    */
-  public function resolveCustomerRecipients(Application $application, ?string $fallbackCoApplicantEmail = NULL): array {
-    $recipients = $this->getOwnerRecipients($application);
+  public function resolveCustomerRecipients(
+    Application $application,
+    ?string $fallbackCoApplicantEmail = NULL,
+    ?string $fallbackMainApplicantEmail = NULL,
+  ): array {
+    $fallbackMainApplicantEmail = trim((string) ($fallbackMainApplicantEmail ?? ''));
+    $recipients = $this->getOwnerRecipients($application, $fallbackMainApplicantEmail);
     $fallbackCoApplicantEmail = trim((string) ($fallbackCoApplicantEmail ?? ''));
     $mappingRow = $this->loadCoApplicantMapping((int) $application->id());
 
@@ -236,20 +241,31 @@ final class ApplicationMessageManager {
    *
    * @param \Drupal\asu_application\Entity\Application $application
    *   Application entity.
+   * @param string $fallbackEmail
+   *   Fallback owner email candidate from API payload.
    *
    * @return array<int, array{uid:int, mail:string, langcode:string}>
    *   Owner recipient or empty list.
    */
-  private function getOwnerRecipients(Application $application): array {
+  private function getOwnerRecipients(Application $application, string $fallbackEmail = ''): array {
     $owner = $application->getOwner();
-    if (!$owner || !$owner->getEmail()) {
+    if (!$owner) {
+      return [];
+    }
+
+    $ownerEmail = trim((string) $owner->getEmail());
+    if ($ownerEmail === '' && filter_var($fallbackEmail, FILTER_VALIDATE_EMAIL)) {
+      $ownerEmail = $fallbackEmail;
+    }
+
+    if ($ownerEmail === '') {
       return [];
     }
 
     return [
       [
         'uid' => (int) $owner->id(),
-        'mail' => (string) $owner->getEmail(),
+        'mail' => $ownerEmail,
         'langcode' => method_exists($owner, 'getPreferredLangcode')
           ? ($owner->getPreferredLangcode() ?: 'fi')
           : 'fi',
